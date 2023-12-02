@@ -1,0 +1,15 @@
+<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g id="Group">
+        <circle id="Oval" cx="48.0029" cy="48" r="48" fill="#FAF8FF" />
+        <g id="pause 1" clip-path="url(#clip0_109_1315)">
+            <path id="Vector"
+                d="M34.8027 63.3992H43.6027V32.5992H34.8027V63.3992ZM52.4027 32.5992V63.3992H61.2027V32.5992H52.4027Z"
+                fill="#222222" />
+        </g>
+    </g>
+    <defs>
+        <clipPath id="clip0_109_1315">
+            <rect width="26.4" height="26.4" fill="white" transform="matrix(2 0 0 2 21.6025 21.6)" />
+        </clipPath>
+    </defs>
+</svg>
