@@ -18,7 +18,7 @@ prepare_react_native_project!
 # ```js
 # module.exports = {
 #   dependencies: {
-#     ...(process.env.NO_FLIPPER ? { 'react-native-flipper': { platforms: { ios: null } } } : {}),
+#     ...(process.env.NO_FLIPPER ? { 'react-native-fl~ipper': { platforms: { ios: null } } } : {}),
 # ```
 flipper_config = ENV['NO_FLIPPER'] == "1" ? FlipperConfiguration.disabled : FlipperConfiguration.enabled
 

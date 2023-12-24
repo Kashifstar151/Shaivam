@@ -3,39 +3,47 @@ import { Platform, StatusBar, Text, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/dist/AntDesign'
 import BackIcon from "../../src/assets/Images/BackIcon.svg"
 import WhiteBackButton from "../../src/assets/Images/arrow (1) 1.svg"
-
+import NandiLogo from "../../src/assets/Images/NandiLogo.svg"
 
 const BackButton = ({ secondText, firstText, middleText, color, navigation, secondMiddleText, rightIcon }) => {
     return (
-        <View style={{ paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 40 : StatusBar.currentHeight - 20, paddingHorizontal: 15 }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10 }}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    {color ? <WhiteBackButton /> : <BackIcon />}
-                </TouchableOpacity>
-                <View>
+        <View style={{ paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 40 : 0, paddingHorizontal: 15 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
+                <View style={{ flexDirection: 'row', marginTop: 10, paddingHorizontal: 5 }}>
+                    <TouchableOpacity style={{ alignSelf: 'center' }} onPress={() => navigation.goBack()}>
+                        {!color ? <WhiteBackButton /> : <BackIcon />}
+                    </TouchableOpacity>
+                    <View>
+                        {
+                            middleText &&
+                            <View style={{ paddingHorizontal: 10 }}>
+                                <Text style={{ fontSize: 14, fontWeight: '500', color: '#FFFFFF' }}>{middleText}</Text>
+                            </View>
+                        }
+                        {
+                            secondMiddleText && <View style={{ paddingHorizontal: 10, marginTop: 5 }}>
+                                <Text style={{ fontSize: 14, fontWeight: '500', color: '#FFFFFF' }}>{secondMiddleText}</Text>
+                            </View>
+                        }
 
-                    {
-                        middleText &&
-                        <View style={{ alignItems: 'center' }}>
-                            <Text style={{ fontSize: 14, fontWeight: '500' }}>{middleText}</Text>
-                        </View>
-                    }
-                    {
-                        secondMiddleText &&
-                        <View style={{ alignItems: 'center' }}>
-                            <Text style={{ fontSize: 14, fontWeight: '500', color: '#C1554E', fontFamily: 'AnekTamil-Regular' }}>{secondMiddleText}</Text>
-                        </View>
-                    }
+                    </View>
                 </View>
-                <TouchableOpacity>
-                    {rightIcon}
-                </TouchableOpacity>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    {
+                        rightIcon &&
+                        <TouchableOpacity style={{ paddingHorizontal: 5 }}>
+                            <Icon name='sharealt' size={24} color='white' />
+                        </TouchableOpacity>
+                    }
+
+                    <NandiLogo />
+                </View>
             </View>
-            <Text style={{ marginHorizontal: 10, fontFamily: 'Lora-Regular', fontSize: 24, fontWeight: '700', color: 'white' }}>{firstText}</Text>
             {
-                secondText &&
-                <Text style={{ marginHorizontal: 10, fontFamily: 'mulish-Regular', fontSize: 14, fontWeight: '400', color: 'white' }}>Lorem impsum dolor set lorem impsiun alsjf </Text>
+                firstText &&
+                <Text style={{ marginHorizontal: 10, fontFamily: 'Lora-Regular', fontSize: 24, fontWeight: '700', color: 'white' }}>{firstText}</Text>
             }
+
         </View>
     )
 }

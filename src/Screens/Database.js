@@ -9,7 +9,9 @@ import { useEffect } from 'react';
 import { AppState, PermissionsAndroid } from 'react-native';
 // const databaseName = 'main.db';
 // const database = SQLite.openDatabase({ name: databaseName, });
-const database = SQLite.openDatabase({ name: 'songData.db', createFromLocation: 1 });
+const database = SQLite.openDatabase({ name: 'main.db', createFromLocation: 1 });
+const offlineDatabase = SQLite.openDatabase({ name: 'SongsData.db', createFromLocation: 1 });
+
 
 
 // export const initDatabase = () => {
@@ -23,12 +25,11 @@ const database = SQLite.openDatabase({ name: 'songData.db', createFromLocation: 
 //     });
 // };
 export const attachDb = (link) => {
-
     RNFetchBlob
         .config({
             fileCache: true,
         })
-        .fetch('GET', 'https://shaivamfiles.fra1.cdn.digitaloceanspaces.com/sqlitedump/SongsData.zip', {
+        .fetch('GET', 'https://shaivamfiles.fra1.cdn.digitaloceanspaces.com/sqlitedump/thirumurai_songsData1.zip', {
             //some headers ..
         })
         .then((res) => {
@@ -47,7 +48,7 @@ export const attachDb = (link) => {
                             database.transaction(async (tx) => {
                                 await tx.executeSql(
                                     'ATTACH DATABASE ? AS Updated_db',
-                                    [`${jsonFilePath}/thirumuraiData.db`],
+                                    [`${jsonFilePath}/thirumurai_songsData1.db`],
                                     (tx, results) => {
                                         console.log("🚀 ~ file: Database.js:49 ~ database.transaction ~ results:", tx, results)
                                     }
@@ -83,12 +84,12 @@ export const offlineDataBAse = () => {
             );
             // tx.executeSql('COMMIT;'); 
         }, (error) => {
-            console.log("🚀 ~ file: Database.js:56 ~ database.transaction ~ error:", error)
+            // console.log("🚀 ~ file: Database.js:56 ~ database.transaction ~ error:", error)
 
         });
 
     } catch (error) {
-        console.log("🚀 ~ file: Database.js:53 ~ unzipDownloadFile ~ error:", error)
+        // console.log("🚀 ~ file: Database.js:53 ~ unzipDownloadFile ~ error:", error)
     }
 }
 
@@ -138,6 +139,30 @@ function unzipDownloadFile(target, cb) {
             console.log("🚀 ~ file: Database.js:130 ~ .then ~ error:", error)
 
         })
+}
+
+export async function getSqlData(query, callbacks) {
+    console.log("🚀 ~ file: Database.js:146 ~ getSqlData ~ query:", query)
+    await offlineDatabase.transaction(tx => {
+        tx.executeSql(query, [], (_, results) => {
+            // console.log("🚀 ~ file: Database.js:149 ~ tx.executeSql ~ results:", results)
+            let arr = []
+            if (results?.rows?.length > 0) {
+                for (let i = 0; i < results?.rows?.length; i++) {
+                    const tableName = results.rows.item(i);
+                    console.log(" offline Database data", tableName);
+                    arr.push(tableName)
+                    // console.log("🚀 ~ file: ThrimuraiSong.js:57 ~ tx.executeSql ~ arr:", JSON.stringify(arr, 0, 2))
+                }
+                callbacks(arr)
+            } else {
+                console.log('No tables found.');
+                callbacks({ error: 'error in database' })
+            }
+        })
+    }, (error) => {
+        console.error("error occured in fetching data", error);
+    })
 }
 
 export default database;
