@@ -11,12 +11,14 @@ import { RouteTexts } from './RouteText'
 import SQLite from 'react-native-sqlite-storage';
 import * as RNFS from 'react-native-fs'
 import { useNetInfo } from '@react-native-community/netinfo';
+import SearchScreen from '../Screens/Thrimurai/ThrimuraiSong/SearchScreen'
 
 const Route = () => {
     const Stack = createNativeStackNavigator()
+    const database = SQLite.openDatabase({ name: 'songData.db', createFromLocation: 1 });
     const netInfo = useNetInfo();
     const databaseName = 'main.db';
-    const database = SQLite.openDatabase({ name: databaseName, });
+    // const database = SQLite.openDatabase({ name: databaseName, });
     useEffect(() => {
         AppState.addEventListener('change', (nextAppState) => {
             if (nextAppState === 'background' || nextAppState === 'inactive') {
@@ -24,7 +26,7 @@ const Route = () => {
             }
         });
         requestFilePermissions()
-        offlineDataBAse()
+        // offlineDataBAse()
         // checkConnection()
         // checkFileExist()
         // attachDb()
@@ -71,14 +73,14 @@ const Route = () => {
     }
     const checkFileExist = () => {
         RNFS.exists(`${RNFS.ExternalDirectoryPath}/Thrimurai/thirumurai.db`).then((res) => {
-            console.log("🚀 ~ file: route.js:51 ~ RNFS.xists ~ res:", res)
+            // console.log("🚀 ~ file: route.js:51 ~ RNFS.xists ~ res:", res)
             if (res == true) {
                 // InitializeDatabase()
             } else {
                 attachDb()
             }
         }).catch((error) => {
-            console.log("🚀 ~ file: route.js:52 ~ RNFS.exists ~ error:", error)
+            // console.log("🚀 ~ file: route.js:52 ~ RNFS.exists ~ error:", error)
 
         })
     }
@@ -128,6 +130,7 @@ const Route = () => {
                 }}>
                 {/* <Stack.Screen name="Home" component={HomeScreen} /> */}
                 <Stack.Screen name="Thrimurai" component={ThrimuraiList} />
+                <Stack.Screen name={RouteTexts.SEARCH_SCREEN} component={SearchScreen} />
                 <Stack.Screen name={RouteTexts.THIRIMURAI_HEADING} component={ThrimuraiHeadingPage} />
                 <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={ThrimuraiSong} />
             </Stack.Navigator>

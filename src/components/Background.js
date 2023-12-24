@@ -3,8 +3,8 @@ import { Platform, Dimensions, Image, ImageBackground, StatusBar, View } from 'r
 
 const Background = props => {
     return (
-        <View style={{ marginTop: Platform.OS == 'ios' ? StatusBar.currentHeight : 0 }}>
-            <ImageBackground source={require('../../assets/Images/Background.png')} style={{ height: 200, borderRadius: 10, width: Dimensions.get('window').width }} imageStyle={{ borderBottomLeftRadius: 15, borderBottomRightRadius: 15 }} >
+        <View style={{ marginTop: Platform.OS == 'ios' ? StatusBar.currentHeight : 0, borderBottomColor: '#8F3630', borderBottomWidth: 1 }}>
+            <ImageBackground source={require('../../assets/Images/Background.png')} style={{ paddingVertical: 0, borderRadius: 10, width: Dimensions.get('window').width }}>
                 {/* <View style={{ backgroundColor: '#AA4A44', position: 'absolute', height: 220, width: '100%' }}> */}
                 {props.children}
                 {/* </View> */}

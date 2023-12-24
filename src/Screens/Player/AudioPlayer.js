@@ -13,13 +13,16 @@ import TrackPlayer, {
     Event,
     State
 } from 'react-native-track-player';
+import { getSqlData } from '../Database';
 
-const AudioPlayer = ({ navigation }) => {
+const AudioPlayer = ({ navigation, songsData }) => {
     const [selectedOdhuvar, setSelectedOdhuvar] = useState(null)
     const [paused, setPaused] = useState(false)
     const [ThumbImage, setThumbImage] = useState(null)
+    const [Odhuvar, setOdhuvar] = useState(null)
     const playBackState = usePlaybackState()
     useEffect(() => {
+        getAllSongs()
         setUpPlayer()
         Icon.getImageSource('circle', 15, 'white')
             .then(source => {
@@ -27,6 +30,10 @@ const AudioPlayer = ({ navigation }) => {
                 return setThumbImage({ thumbIcon: source })
             })
     }, [])
+
+    const getAllSongs = () => {
+        getSqlData(`SELECT * FROM odhuvars WHERE Pathigam=${songsData[0]?.title}`, h)
+    }
     const odhuvar = [
         {
             id: 3787,
