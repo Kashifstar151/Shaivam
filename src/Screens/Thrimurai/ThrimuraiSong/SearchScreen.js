@@ -19,9 +19,11 @@ const SearchScreen = ({ navigation, route }) => {
         // setSearchText(e)
         getSqlData(`SELECT * FROM thirumurais WHERE search_thirumurai_title LIKE '%${searchText}%' ORDER BY Thirumurai_title  ASC LIMIT 10 OFFSET 0 ; `, callbacks => {
             setSearchedResult(callbacks)
+
         })
         getSqlData(`SELECT * FROM thirumurai_songs WHERE song_no LIKE '%${searchText}%' LIMIT 10 OFFSET 0;`, callbacks => {
             setRawSongs(callbacks)
+            // setSearchText(e)
         })
     }
     const highlight = (item, index, key) => {
@@ -49,8 +51,6 @@ const SearchScreen = ({ navigation, route }) => {
             </View>
         )
     }
-
-
     const renderResult = (item, index, key) => {
         return (
             <Pressable style={{ marginVertical: 10 }} >
@@ -63,14 +63,13 @@ const SearchScreen = ({ navigation, route }) => {
                     key !== 'title' ? null :
                         <Text>सम्पूर्ण ऋग्वेद पारायणम् Complete ...</Text>
                 }
-                {/* <Text>सम्पूर्ण ऋग्वेद पारायणम् Complete ...</Text> */}
             </Pressable>
         )
     }
     return (
         <View style={styles.main}>
             <Background>
-                <HeaderWithTextInput placeholder={'Search for any( முதல்-திருமுறை )'} navigation={navigation} setState={(e) => getDataFromSql(e)} state={searchText} setOnFocus={setOnFocus} />
+                <HeaderWithTextInput onSubmitEditing={getDataFromSql} placeholder={'Search for any( முதல்-திருமுறை )'} navigation={navigation} setState={(e) => setSearchText(e)} state={searchText} setOnFocus={setOnFocus} />
                 <View style={{ paddingHorizontal: 20, height: 50, alignItems: 'center', flexDirection: 'row', marginBottom: 10 }}>
                     <Text style={{ color: 'white' }}>Search In -</Text>
                     <FlatList showsHorizontalScrollIndicator={false} horizontal data={thrimurais} renderItem={({ item, index }) => (

@@ -7,6 +7,7 @@ import { getSqlData } from '../Database';
 
 
 const RenderAudios = ({ navigation, songs, data }) => {
+    console.log("🚀 ~ file: RenderAudios.js:10 ~ RenderAudios ~ data:", songs)
     let key = true
     const database = SQLite.openDatabase({ name: key ? 'SongsData.db' : 'main.db', createFromLocation: 1 });
     // console.log("🚀 ~ file: RenderAudios.js:7 ~ RenderAudios ~ data:", data)
@@ -15,8 +16,9 @@ const RenderAudios = ({ navigation, songs, data }) => {
         getDtataFromSql()
     }, [])
     const getDtataFromSql = async () => {
-        const query = `SELECT Thirumurai_title, prevId FROM thirumurais WHERE  fkTrimuria=1 AND pann ='நட்டபாடை' ORDER BY  titleNo ASC  LIMIT 10 OFFSET 0`;
+        const query = `SELECT Thirumurai_title, prevId FROM thirumurais WHERE  fkTrimuria=1 AND pann='${songs?.pann}' ORDER BY  titleNo ASC  LIMIT 10 OFFSET 0`;
         getSqlData(query, callbacks => {
+            console.log("🚀 ~ file: RenderAudios.js:42 ~ getDtataFromSql ~ callbacks:", callbacks)
             setAudioData(callbacks)
         })
         // await database.transaction(tx => {
