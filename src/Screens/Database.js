@@ -70,28 +70,26 @@ export const attachDb = (link) => {
         });
 
 }
-export const offlineDataBAse = () => {
-    const path = RNFS.MainBundlePath
-    console.log("🚀 ~ file: Database.js:73 ~ offlineDataBAse ~ path:", path)
-    try {
-        database.transaction(async (tx) => {
-            await tx.executeSql(
-                'ATTACH DATABASE ? AS Updated_db',
-                [`/thirumuraiData.sqlite`],
-                (tx, results) => {
-                    console.log("🚀 ~ file: Database.js:49 ~ database.transaction ~ results:", tx, results)
-                }
-            );
-            // tx.executeSql('COMMIT;'); 
-        }, (error) => {
-            // console.log("🚀 ~ file: Database.js:56 ~ database.transaction ~ error:", error)
+// export const offlineDataBAse = () => {
+//     const path = RNFS.MainBundlePath
+//     console.log("🚀 ~ file: Database.js:73 ~ offlineDataBAse ~ path:", path)
+//     try {
+//         database.transaction(async (tx) => {
+//             await tx.executeSql(
+//                 'ATTACH DATABASE ? AS Updated_db',
+//                 [`/thirumuraiData.sqlite`],
+//                 (tx, results) => {
+//                     console.log("🚀 ~ file: Database.js:49 ~ database.transaction ~ results:", tx, results)
+//                 }
+//             );
+//             // tx.executeSql('COMMIT;'); 
+//         }, (error) => {
 
-        });
+//         });
 
-    } catch (error) {
-        // console.log("🚀 ~ file: Database.js:53 ~ unzipDownloadFile ~ error:", error)
-    }
-}
+//     } catch (error) {
+//     }
+// }
 
 async function requestFilePermissions() {
     try {

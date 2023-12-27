@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import React, { useEffect } from 'react'
-import { Alert, AppState, PermissionsAndroid, } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Alert, AppState, LogBox, PermissionsAndroid, } from 'react-native'
 import { attachDb, connectDataBaseToFolder, initDatabase, offlineDataBAse, StoreData } from '../Screens/Database'
 import HomeScreen from '../Screens/Home/HomeScreen'
 import ThrimuraiHeadingPage from '../Screens/Thrimurai/ThrimuraiHeadingPage/ThrimuraiHeadingPage'
@@ -10,16 +10,18 @@ import ThrimuraiSong from '../Screens/Thrimurai/ThrimuraiSong/ThrimuraiSong'
 import { RouteTexts } from './RouteText'
 import SQLite from 'react-native-sqlite-storage';
 import * as RNFS from 'react-native-fs'
-import { useNetInfo } from '@react-native-community/netinfo';
+import { addEventListener, useNetInfo } from '@react-native-community/netinfo';
 import SearchScreen from '../Screens/Thrimurai/ThrimuraiSong/SearchScreen'
 
 const Route = () => {
     const Stack = createNativeStackNavigator()
     const database = SQLite.openDatabase({ name: 'songData.db', createFromLocation: 1 });
     const netInfo = useNetInfo();
+    const [isConnected, setIsConnected] = useState(false)
     const databaseName = 'main.db';
     // const database = SQLite.openDatabase({ name: databaseName, });
     useEffect(() => {
+        LogBox.ignoreAllLogs();
         AppState.addEventListener('change', (nextAppState) => {
             if (nextAppState === 'background' || nextAppState === 'inactive') {
                 database.close();
@@ -27,13 +29,25 @@ const Route = () => {
         });
         requestFilePermissions()
         // offlineDataBAse()
-        // checkConnection()
+        const unsubscribe = addEventListener(state => {
+            console.log("Connection type", state.type);
+            console.log("Is connected?", state.isConnected);
+            if (state.isConnected) {
+                setIsConnected(true)
+                checkConnection(true)
+            } else {
+                checkConnection(false)
+            }
+        });
+        unsubscribe();
+
         // checkFileExist()
         // attachDb()
         // connectDataBaseToFolder()
     }, [])
-    const checkConnection = () => {
-        if (netInfo.isConnected) {
+    const checkConnection = (connected) => {
+        // console.log("netInfo", netInfo)
+        if (connected) {
             Alert.alert('New Update Available', "Click ok to sync latest data", [
 
                 {

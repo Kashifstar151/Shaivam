@@ -47,7 +47,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     }, [])
     const retrieveData = async () => {
         // const query = 'SELECT * FROM thirumurai_songs WHERE refId=1311';
-        getSqlData('SELECT * FROM thirumurai_songs WHERE refId=1311', callbacks => {
+        getSqlData(query, callbacks => {
             setThrimurais(callbacks)
         })
         // await database.transaction(tx => {

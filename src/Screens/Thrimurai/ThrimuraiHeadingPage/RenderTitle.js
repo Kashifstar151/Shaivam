@@ -65,7 +65,7 @@ const RenderTitle = ({ data, navigation }) => {
                 selectedChapter == index &&
                 <View style={{ marginBottom: 10 }}>
                     {/* <FlatList renderItem={({ item, index }) => renderAudios(item, index)} data={item.songLyrics} /> */}
-                    <RenderAudios songs={item.songLyrics} navigation={navigation} />
+                    <RenderAudios songs={item} navigation={navigation} />
                 </View>
             }
 

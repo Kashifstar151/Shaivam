@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Slider from '@react-native-community/slider';
 import ShuffleIcon from "../../assets/Images/music (1).svg"
 import Icon from "react-native-vector-icons/dist/AntDesign"
@@ -11,29 +11,31 @@ import TrackPlayer, {
     RepeatMode,
     usePlaybackState,
     Event,
-    State
+    State,
+    useProgress,
 } from 'react-native-track-player';
 import { getSqlData } from '../Database';
 
-const AudioPlayer = ({ navigation, songsData }) => {
+const AudioPlayer = ({ navigation, songsData, route, title, songs }) => {
+    // const { params } = route
+    // console.log("🚀 ~ file: AudioPlayer.js:19 ~ AudioPlayer ~ songsData:", JSON.stringify(songsData, 0, 2))
+    const { position, duration } = useProgress()
+    console.log("🚀 ~ file: AudioPlayer.js:110 ~ handlePlay ~ position:", position, duration)
     const [selectedOdhuvar, setSelectedOdhuvar] = useState(null)
     const [paused, setPaused] = useState(false)
     const [ThumbImage, setThumbImage] = useState(null)
-    const [Odhuvar, setOdhuvar] = useState(null)
+    const [Odhuvar, setOdhuvar] = useState(songsData)
     const playBackState = usePlaybackState()
     useEffect(() => {
-        getAllSongs()
-        setUpPlayer()
-        Icon.getImageSource('circle', 15, 'white')
+        Icon.getImageSource('circle', 18, '#C1554E')
             .then(source => {
                 // console.log("🚀 ~ file: AudioPlayer.js:26 ~ useEffect ~ source:", source)
                 return setThumbImage({ thumbIcon: source })
             })
     }, [])
-
-    const getAllSongs = () => {
-        getSqlData(`SELECT * FROM odhuvars WHERE Pathigam=${songsData[0]?.title}`, h)
-    }
+    useEffect(() => {
+        setUpPlayer()
+    }, [songsData])
     const odhuvar = [
         {
             id: 3787,
@@ -66,31 +68,34 @@ const AudioPlayer = ({ navigation, songsData }) => {
             }
         }
     ]
+
     const song = [
         {
-
-            id: '1',
-            url: "https://shaivam.org/gallery/audio/satguru/sam-thkkappu-muzhuvathum/tis-sat-sam-thkkappu-muzhu-part-1-179-1-136-madhar-madappidi.mp3",
-            title: 'Satgurunatha Odhuvar',
-            artist: 'tobylane',
-            duration: 120,
-
+            "category_name": "முதல்-திருமுறை",
+            "thirumariasiriyar": "திருஞானசம்பந்தர்  ",
+            "url": "https://shaivam.org/gallery/audio/madurai-muthukkumaran/thirugnanasambandar-thirukkadaikkappu-muzhuvathum/tis-md-mthkumaran-sam-thkkappu-muzhu-part-1-001-1-1-thodudaiya-seviyan.mp3",
+            "thalamOdhuvar_Tamilname": "மதுரை முத்துக்குமரன்",
+            "artist": "Madurai Muthukkumaran",
+            "title": "01.001 தோடுடைய செவியன்",
+            "id": 67
         },
         {
-
-            id: '2',
-            url: "https://shaivam.org/gallery/audio/madurai-muthukkumaran/thirugnanasambandar-thirukkadaikkappu-muzhuvathum/tis-md-mthkumaran-sam-thkkappu-muzhu-part-1-179-1-136-madhar-madappidi.mp3",
-            title: 'Satgurunatha',
-            artist: 'tobylane',
-            duration: 120,
-
+            "category_name": "முதல்-திருமுறை",
+            "thirumariasiriyar": "திருஞானசம்பந்தர்",
+            "url": "https://shaivam.org/gallery/audio/satguru/sam-thkkappu-muzhuvathum/tis-sat-sam-thkkappu-muzhu-part-1-001-1-1-thodudaiya-seviyan.mp3",
+            "thalamOdhuvar_Tamilname": "சற்குருநாத ஓதுவார்",
+            "artist": "Satgurunatha Odhuvar",
+            "title": "01.001 தோடுடைய செவியன்",
+            "id": 249
         },
         {
-            id: '3',
-            title: "Madurai Muthukkumaran",
-            artist: "மதுரை முத்துக்குமரன்",
-            url: "https://shaivam.org/gallery/audio/madurai-muthukkumaran/thirugnanasambandar-thirukkadaikkappu-muzhuvathum/tis-md-mthkumaran-sam-thkkappu-muzhu-part-1-179-1-136-madhar-madappidi.mp3",
-            duration: 120,
+            "category_name": "முதல்-திருமுறை",
+            "thirumariasiriyar": "திருஞானசம்பந்தர்",
+            "url": "https://shaivam.org/gallery/audio/thiruthani-swaminathan/nalamiku-padhikangal/tis-tns-np-01-thodudaiya-seviyan.mp3",
+            "thalamOdhuvar_Tamilname": "திருத்தணி சுவாமிநாதன்",
+            "artist": "Thiruthani Swaminathan",
+            "title": "01.001 தோடுடைய செவியன்",
+            "id": 286
         }
     ]
     const handlePause = async () => {
@@ -107,10 +112,10 @@ const AudioPlayer = ({ navigation, songsData }) => {
                 {
                     selectedOdhuvar?.id == item?.id ?
                         <TouchableOpacity onPress={() => setSelectedOdhuvar(item)} style={{ paddingHorizontal: 7, backgroundColor: '#E0AAA7', marginLeft: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 15 }}>
-                            <Text style={[styles.AudioText, { color: '#3A1917', fontWeight: '700' }]}>{item?.attributes?.Odhuvar_Tamilname}</Text>
+                            <Text style={[styles.AudioText, { color: '#3A1917', fontWeight: '700' }]}>{item?.category_name}</Text>
                         </TouchableOpacity> :
                         <TouchableOpacity onPress={() => setSelectedOdhuvar(item)} style={{ paddingHorizontal: 7, backgroundColor: '#292929', marginLeft: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 15 }}>
-                            <Text style={styles.AudioText}>{item?.attributes?.Odhuvar_Tamilname}</Text>
+                            <Text style={styles.AudioText}>{item?.category_name}</Text>
                         </TouchableOpacity>
                 }
             </>
@@ -118,6 +123,7 @@ const AudioPlayer = ({ navigation, songsData }) => {
         )
     }
     const handleNext = async () => {
+        // console.log("Trackplayer", TrackPlayer.getCurrentTrack())
         await TrackPlayer.skipToNext()
         await TrackPlayer.play()
         setPaused(true)
@@ -149,9 +155,10 @@ const AudioPlayer = ({ navigation, songsData }) => {
                 ],
                 progressUpdateEventInterval: 2,
             });
-            await TrackPlayer.add(song)
+            await TrackPlayer.add(songsData)
+            // await TrackPlayer.setRepeatMode()
         } catch (error) {
-            console.log("🚀 ~ file: AudioPlayer.js:102 ~ setUpPlayer ~ error:", error)
+            // console.log("🚀 ~ file: AudioPlayer.js:102 ~ setUpPlayer ~ error:", error)
         }
     }
     return (
@@ -161,21 +168,26 @@ const AudioPlayer = ({ navigation, songsData }) => {
                     <Text style={styles.headingText}>Odhuvar</Text>
                     <Text style={styles.headingText}>(Select One)</Text>
                 </View>
-                <FlatList horizontal data={odhuvar} renderItem={({ item, index }) => renderAudios(item, index)} />
+                <FlatList horizontal data={songsData} renderItem={({ item, index }) => renderAudios(item, index)} />
 
             </View>
-            <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 10 }}>
+            <View style={{ justifyContent: 'center', marginTop: 10 }}>
                 <Slider
-                    // thumbTouchSize={10}
+
+                    value={position}
                     thumbImage={ThumbImage}
-                    style={{ width: Dimensions.get('window').width - 30, }}
+                    style={{ width: Dimensions.get('window').width - 30, alignSelf: 'center' }}
                     minimumValue={0}
-                    maximumValue={1}
+                    maximumValue={duration}
                     minimumTrackTintColor="#C1554E"
                     maximumTrackTintColor="#EFEFEF"
-
+                    thumbTintColor='#C1554E'
                 />
-                <View>
+                <View style={{ justifyContent: 'space-between', flexDirection: 'row', paddingHorizontal: 20 }}>
+                    <Text style={{ color: 'white' }}>{new Date(position * 1000).toISOString().substring(15, 19)}</Text>
+                    <Text style={{ color: 'white' }}>
+                        {new Date((duration) * 1000).toISOString().substring(14, 19)}
+                    </Text>
                 </View>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 15, paddingHorizontal: 20, alignItems: 'center' }}>
