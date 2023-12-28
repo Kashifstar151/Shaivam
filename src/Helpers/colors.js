@@ -100,4 +100,17 @@ export default {
             ? { startColor: '#BAE6C6', stopColor: '#8EC99F' }
             : this.darkCardGrad;
     },
+
+    // search box
+    searchBox: function () {
+        return colorScheme === 'light'
+            ? { bgColor: '#8F3630', textColor: '#FF9D9D' }
+            : { bgColor: '#2A2A2A', textColor: '#777777' };
+    },
+
+    iconHeadingColor: function () {
+        return colorScheme === 'light'
+            ? { inactive: '#FFE0E0', active: '#8F3630', bgColor: '#F3DDDC', textColor: '#FFE0E0' }
+            : { inactive: '#777777', active: '#FFFFFF', bgColor: '#C2534C', textColor: '#777777' };
+    },
 };
