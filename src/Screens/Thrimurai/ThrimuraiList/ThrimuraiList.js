@@ -47,25 +47,12 @@ const ThrimuraiList = ({ navigation }) => {
         // }
     }, []);
     const retrieveData = async () => {
-        // const databaselistquery = 'PRAGMA database_list'
-        const categoryList = 'SELECT * FROM category';
-        // await database.transaction(tx => {
-        //     tx.executeSql(categoryList, [], (_, results) => {
-        //         let arr = []
-        //         if (results?.rows?.length > 0) {
-        //             for (let i = 0; i < results?.rows?.length; i++) {
-        //                 const tableName = results.rows.item(i);
-        //                 console.log("Row data", tableName);
-        //                 arr.push(tableName)
-        //             }
-        //         } else {
-        //             console.log('No tables found.');
-        //         }
-        //         setThrimurais(arr)
-        //     })
-        getSqlData('SELECT * FROM category', (callbacks) => {
-            setThrimurais(callbacks);
-        });
+        getSqlData('SELECT * FROM category', callbacks => {
+            setThrimurais(callbacks)
+        })
+        getSqlData('SELECT * FROM strotras', callbacks => {
+            // setThrimurais(callbacks)
+        })
         // }, (error) => {
         //     console.error("error occured in fetching data at route", error);
         // })
@@ -140,10 +127,6 @@ const ThrimuraiList = ({ navigation }) => {
             }}
         >
             <Background>
-                {/* {
-                    onFocus ?
-                        <HeaderWithTextInput onBlur={onFocus} onFocus={onFocus} setOnFocus={setOnFocus} setState={setSearchText} state={searchText} placeholder={'Search for anything (Eg - தோடுடைய செவியன்) '} />
-                        : */}
                 <>
                     <BackButton color={true} middleText={'Thirumurais'} />
                     <View style={styles.inputcontainer}>

@@ -18,7 +18,7 @@ import { getSqlData } from '../Database';
 
 const AudioPlayer = ({ navigation, songsData, route, title, songs }) => {
     // const { params } = route
-    // console.log("🚀 ~ file: AudioPlayer.js:19 ~ AudioPlayer ~ songsData:", JSON.stringify(songsData, 0, 2))
+    console.log("🚀 ~ file: AudioPlayer.js:19 ~ AudioPlayer ~ songsData:", JSON.stringify(songsData, 0, 2))
     const { position, duration } = useProgress()
     console.log("🚀 ~ file: AudioPlayer.js:110 ~ handlePlay ~ position:", position, duration)
     const [selectedOdhuvar, setSelectedOdhuvar] = useState(null)
@@ -34,7 +34,9 @@ const AudioPlayer = ({ navigation, songsData, route, title, songs }) => {
             })
     }, [])
     useEffect(() => {
-        setUpPlayer()
+        if (songsData?.length > 0) {
+            setUpPlayer()
+        }
     }, [songsData])
     const odhuvar = [
         {
@@ -101,10 +103,12 @@ const AudioPlayer = ({ navigation, songsData, route, title, songs }) => {
     const handlePause = async () => {
         setPaused(false)
         await TrackPlayer.pause()
+        await TrackPlayer.getActiveTrack()
     }
     const handlePlay = async () => {
         setPaused(true)
         await TrackPlayer.play()
+        await TrackPlayer.getActiveTrack()
     }
     const renderAudios = (item, index) => {
         return (
