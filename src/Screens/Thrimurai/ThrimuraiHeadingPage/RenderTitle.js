@@ -7,20 +7,23 @@ import RenderAudios from '../RenderAudios';
 import { getSqlData } from '../../Database';
 
 const RenderTitle = ({ data, navigation }) => {
-    let key = true
-    const database = SQLite.openDatabase({ name: key ? 'SongsData.db' : 'main.db', createFromLocation: 1 });
+    let key = true;
+    const database = SQLite.openDatabase({
+        name: key ? 'SongsData.db' : 'main.db',
+        createFromLocation: 1,
+    });
     // const database = SQLite.openDatabase({ name: 'SongsData.db', createFromLocation: 1 });
-    const [selectedChapter, setSelectedChapter] = useState(null)
-    const [TitleData, setTitleData] = useState([])
+    const [selectedChapter, setSelectedChapter] = useState(null);
+    const [TitleData, setTitleData] = useState([]);
 
     useEffect(() => {
-        getDtataFromSql()
-    }, [])
+        getDtataFromSql();
+    }, []);
     const getDtataFromSql = async () => {
-        const query = `SELECT pann, prevId FROM thirumurais where fkTrimuria=${data.prevId} GROUP BY pann ORDER BY titleNo ASC`
-        getSqlData(query, callbacks => {
-            setTitleData(callbacks)
-        })
+        const query = `SELECT pann, prevId FROM thirumurais where fkTrimuria=${data.prevId} and pann NOTNULL GROUP BY pann ORDER BY titleNo ASC`;
+        getSqlData(query, (callbacks) => {
+            setTitleData(callbacks);
+        });
         // await database.transaction(tx => {
 
         //     tx.executeSql(query, [], (_, results) => {
@@ -39,45 +42,61 @@ const RenderTitle = ({ data, navigation }) => {
         // }, (error) => {
         //     console.error("error occured in fetching data", error);
         // })
-    }
+    };
     const renderTitle = (item, index) => (
         <>
-            <View style={{ justifyContent: 'space-between', flexDirection: 'row', paddingHorizontal: 25, alignItems: 'center', paddingBottom: 10, borderBottomColor: colors.grey3, borderBottomWidth: 1, }}>
+            <View
+                style={{
+                    justifyContent: 'space-between',
+                    flexDirection: 'row',
+                    paddingHorizontal: 25,
+                    alignItems: 'center',
+                    paddingBottom: 10,
+                    borderBottomColor: colors.grey3,
+                    borderBottomWidth: 1,
+                }}
+            >
                 <View style={{ width: '95%' }}>
-
-                    <Text style={selectedChapter == index ? [styles.titleText, { color: '#222222' }] : styles.titleText}>{item?.pann}</Text>
+                    <Text
+                        style={
+                            selectedChapter == index
+                                ? [styles.titleText, { color: colors.screenTheme.textColor }]
+                                : styles.titleText
+                        }
+                    >
+                        {item?.pann}
+                    </Text>
                 </View>
-                {selectedChapter !== null && selectedChapter == index ?
+                {selectedChapter !== null && selectedChapter == index ? (
                     <TouchableOpacity onPress={() => setSelectedChapter(null)}>
-                        {
-                            <Icon name='keyboard-arrow-down' size={24} />
-                        }
-                    </TouchableOpacity> :
-                    <TouchableOpacity onPress={() => setSelectedChapter(index)}>
-                        {
-                            <Icon name='keyboard-arrow-right' size={24} />
-                        }
+                        {<Icon name="keyboard-arrow-down" size={24} />}
                     </TouchableOpacity>
-                }
-
+                ) : (
+                    <TouchableOpacity onPress={() => setSelectedChapter(index)}>
+                        {<Icon name="keyboard-arrow-right" size={24} />}
+                    </TouchableOpacity>
+                )}
             </View>
-            {
-                selectedChapter == index &&
+            {selectedChapter == index && (
                 <View style={{ marginBottom: 10 }}>
                     {/* <FlatList renderItem={({ item, index }) => renderAudios(item, index)} data={item.songLyrics} /> */}
                     <RenderAudios songs={item} navigation={navigation} />
                 </View>
-            }
-
+            )}
         </>
-    )
+    );
     return (
         <View style={{ marginTop: 0 }}>
             <FlatList data={TitleData} renderItem={({ item, index }) => renderTitle(item, index)} />
         </View>
-    )
-}
+    );
+};
 export const styles = StyleSheet.create({
-    titleText: { fontFamily: 'AnekTamil-Regular', fontSize: 14, fontWeight: '500', color: '#222222' }
-})
+    titleText: {
+        fontFamily: 'AnekTamil-Regular',
+        fontSize: 14,
+        fontWeight: '500',
+        color: colors.screenTheme.textColor,
+    },
+});
 export default RenderTitle
