@@ -4,6 +4,7 @@ import Background from '../../../components/Background'
 import HeaderWithTextInput from '../../../components/HeaderWithTextInput'
 import CenterIcon from "../../../assets/Images/Vector (3).svg"
 import { getSqlData } from '../../Database'
+import { colors } from '../../../Helpers';
 
 const SearchScreen = ({ navigation, route }) => {
     const { thrimurais } = route?.params
@@ -96,9 +97,9 @@ const SearchScreen = ({ navigation, route }) => {
     )
 }
 export const styles = StyleSheet.create({
-    main: { flex: 1 },
+    main: { flex: 1, backgroundColor: colors.screenTheme.backgroundColor },
     titleText: { fontFamily: 'AnekTamil-Bold', fontSize: 14, color: 'black', fontWeight: '700' },
-    searchresult: { fontSize: 18, color: '#222222', fontFamily: 'Lora-Bold' }
-})
+    searchresult: { fontSize: 18, color: '#222222', fontFamily: 'Lora-Bold' },
+});
 
 export default SearchScreen

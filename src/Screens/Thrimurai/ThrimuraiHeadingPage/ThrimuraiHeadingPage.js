@@ -276,7 +276,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     );
 };
 export const styles = StyleSheet.create({
-    main: { flex: 1 },
+    main: { flex: 1, backgroundColor: colors.screenTheme.backgroundColor },
     mainContainer: {
         shadowColor: '#FFFFFF',
         shadowOffset: { height: 8, width: 10 },
