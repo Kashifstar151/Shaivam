@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React, { useEffect, useState } from 'react'
 import { Alert, AppState, LogBox, PermissionsAndroid, } from 'react-native'
-import { attachDb, connectDataBaseToFolder, initDatabase, offlineDataBAse, StoreData } from '../Screens/Database'
+import { attachDb } from '../Screens/Database'
 import HomeScreen from '../Screens/Home/HomeScreen'
 import ThrimuraiHeadingPage from '../Screens/Thrimurai/ThrimuraiHeadingPage/ThrimuraiHeadingPage'
 import ThrimuraiList from '../Screens/Thrimurai/ThrimuraiList/ThrimuraiList'
@@ -12,9 +12,11 @@ import SQLite from 'react-native-sqlite-storage';
 import * as RNFS from 'react-native-fs'
 import { addEventListener, useNetInfo } from '@react-native-community/netinfo';
 import SearchScreen from '../Screens/Thrimurai/ThrimuraiSong/SearchScreen'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Route = () => {
     const Stack = createNativeStackNavigator()
+    const database1 = SQLite.openDatabase({ name: 'main.db' });
     const database = SQLite.openDatabase({ name: 'songData.db', createFromLocation: 1 });
     const netInfo = useNetInfo();
     const [isConnected, setIsConnected] = useState(false)
@@ -46,7 +48,6 @@ const Route = () => {
         // connectDataBaseToFolder()
     }, [])
     const checkConnection = (connected) => {
-        // console.log("netInfo", netInfo)
         if (connected) {
             Alert.alert('New Update Available', "Click ok to sync latest data", [
 
@@ -85,17 +86,17 @@ const Route = () => {
             console.warn(err);
         }
     }
-    const checkFileExist = () => {
+    const checkFileExist = async () => {
         RNFS.exists(`${RNFS.ExternalDirectoryPath}/Thrimurai/thirumurai.db`).then((res) => {
-            // console.log("🚀 ~ file: route.js:51 ~ RNFS.xists ~ res:", res)
             if (res == true) {
                 // InitializeDatabase()
+                AsyncStorage.setItem('@database', JSON.stringify({ name: 'songData.db', createFromLocation: 1 }))
             } else {
                 attachDb()
+                AsyncStorage.setItem('@database', JSON.stringify({ name: 'main.db' }))
             }
         }).catch((error) => {
-            // console.log("🚀 ~ file: route.js:52 ~ RNFS.exists ~ error:", error)
-
+            console.log("🚀 ~ file: route.js:99 ~ RNFS.exists ~ error:", error)
         })
     }
     const InitializeDatabase = () => {
@@ -104,7 +105,6 @@ const Route = () => {
                 console.log("🚀 ~ file: route.js:50 ~ unzipDownloadFile ~ files:", files)
                 const fileNames = files.map(fileInfo => fileInfo.name);
                 console.log('File names in the directory:', fileNames);
-
                 try {
                     database.transaction(async (tx) => {
                         await tx.executeSql(
