@@ -6,7 +6,7 @@ import { colors } from '../Helpers'
 import BackIcon from "../../src/assets/Images/BackIcon.svg"
 import WhiteBackButton from "../../src/assets/Images/arrow (1) 1.svg"
 
-const HeaderWithTextInput = ({ navigation, color, rightIcon, setState, state, setOnFocus, placeholder }) => {
+const HeaderWithTextInput = ({ navigation, color, rightIcon, setState, state, setOnFocus, placeholder, onSubmitEditing }) => {
     return (
         <View style={{ paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 40 : 0, paddingHorizontal: 15, }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10, alignItems: 'center' }}>
@@ -16,6 +16,7 @@ const HeaderWithTextInput = ({ navigation, color, rightIcon, setState, state, se
                 <View style={color ? [styles.inputcontainer, { backgroundColor: '#F3F3F3' }] : styles.inputcontainer}>
                     <Icon name='search1' size={28} color={color ? '#777777' : colors.grey1} />
                     <TextInput
+                        onSubmitEditing={onSubmitEditing}
                         onBlur={() => setOnFocus(false)}
                         onFocus={() => setOnFocus(true)}
                         placeholder={placeholder}
