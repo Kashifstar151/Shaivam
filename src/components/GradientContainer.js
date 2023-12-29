@@ -12,6 +12,7 @@ const GradientContainer = ({ Icon, LeftImage, RightImage, colors, name }) => {
                 width: '100%',
                 borderRadius: 10,
                 justifyContent: 'center',
+                overflow: 'hidden',
             }}
             colors={colors}
         >
