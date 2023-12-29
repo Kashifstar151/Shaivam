@@ -326,7 +326,7 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         paddingHorizontal: 20,
     },
-    chapterNameTexts: { color: '#222222', fontSize: 14, fontWeight: '600' },
+    chapterNameTexts: { color: colors.screenTheme.textColor, fontSize: 14, fontWeight: '600' },
     chapterTexts: { fontSize: 12, fontWeight: '500', color: '#777777', marginTop: 5 },
     titleText: { fontFamily: 'AnekTamil-Regular', fontSize: 14, fontWeight: '500' },
 });
