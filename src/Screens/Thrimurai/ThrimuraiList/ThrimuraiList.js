@@ -26,8 +26,8 @@ import { attachDb, getSqlData, StoreData } from '../../Database';
 import SQLite from 'react-native-sqlite-storage';
 import { colors } from '../../../Helpers';
 import HeaderWithTextInput from '../../../components/HeaderWithTextInput';
-import EllipseSVGRight from '../../../components/EllipseSVGRight';
-import EllispseSVGLeft from '../../../components/EllispseSVGLeft';
+import EllipseSVGRight from '../../../components/SVGs/EllipseSVGRight';
+import EllispseSVGLeft from '../../../components/SVGs/EllispseSVGLeft';
 import colorConst from '../../../Helpers/colors';
 
 const ThrimuraiList = ({ navigation }) => {
@@ -157,7 +157,7 @@ const ThrimuraiList = ({ navigation }) => {
                             }
                             placeholder={'Search for anything (Eg - தோடுடைய செவியன்)'}
                             onChangeText={(e) => setSearchText(e)}
-                            placeholderTextColor={'#FF9D9D'}
+                            placeholderTextColor={colorConst.searchBox().textColor}
                             value={searchText}
                             style={{ fontSize: 12, paddingHorizontal: 5, color: '#FF9D9D' }}
                         />
@@ -475,7 +475,7 @@ export const styles = StyleSheet.create({
         marginHorizontal: 15,
         borderRadius: 10,
         paddingHorizontal: 10,
-        backgroundColor: '#8F3630',
+        backgroundColor: colorConst.searchBox().bgColor,
         width: Dimensions.get('window').width - 30,
         height: 50,
         marginBottom: 10,
