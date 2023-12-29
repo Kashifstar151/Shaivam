@@ -13,7 +13,7 @@ const Background = (props) => {
         >
             <ImageBackground
                 source={
-                    colorConst.colorscheme === 'light'
+                    colorConst.screenTheme.colorscheme === 'light'
                         ? require('../../assets/Images/Background.png')
                         : require('../../assets/Images/BackgroundCommon.png')
                 }
