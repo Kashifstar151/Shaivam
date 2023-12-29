@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import RenderAudios from './RenderAudios'
 import Icon from "react-native-vector-icons/dist/MaterialIcons"
+import { colors } from '../../Helpers';
 // import { styles } from "../Thrimurai/ThrimuraiHeadingPage/ThrimuraiHeadingPagex"
 
 const Varakatrimurai = ({ navigation }) => {
@@ -188,11 +189,18 @@ const Varakatrimurai = ({ navigation }) => {
     )
 }
 export const styles = StyleSheet.create({
-
-    chapterBox: { alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#F9F9F9', height: 60, width: Dimensions.get('window').width, marginBottom: 4, flexDirection: 'row', paddingHorizontal: 20 },
+    chapterBox: {
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backgroundColor: colors.screenTheme.backgroundColor,
+        height: 60,
+        width: Dimensions.get('window').width,
+        marginBottom: 4,
+        flexDirection: 'row',
+        paddingHorizontal: 20,
+    },
     chapterNameTexts: { color: '#222222', fontSize: 14, fontWeight: '600' },
     chapterTexts: { fontSize: 12, fontWeight: '500', color: '#777777', marginTop: 5 },
-
-})
+});
 
 export default Varakatrimurai
