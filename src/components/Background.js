@@ -21,7 +21,6 @@ const Background = (props) => {
                     paddingVertical: 0,
                     borderRadius: 10,
                     width: Dimensions.get('window').width,
-                    backgroundColor: 'red',
                 }}
             >
                 {/* <View style={{ backgroundColor: '#AA4A44', position: 'absolute', height: 220, width: '100%' }}> */}
