@@ -110,7 +110,19 @@ export default {
 
     iconHeadingColor: function () {
         return colorScheme === 'light'
-            ? { inactive: '#FFE0E0', active: '#8F3630', bgColor: '#F3DDDC', textColor: '#FFE0E0' }
-            : { inactive: '#777777', active: '#FFFFFF', bgColor: '#C2534C', textColor: '#777777' };
+            ? {
+                  inactive: '#FFE0E0',
+                  active: '#8F3630',
+                  bgColor: '#F3DDDC',
+                  activeTextColor: '#8F3630',
+                  inactiveTextColor: '#F3DDDC',
+              }
+            : {
+                  inactive: '#777777',
+                  active: '#FFFFFF',
+                  bgColor: '#C2534C',
+                  activeTextColor: '#8F3630',
+                  inactiveTextColor: '#FFE0E0',
+              };
     },
 };

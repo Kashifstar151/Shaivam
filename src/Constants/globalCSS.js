@@ -9,5 +9,5 @@ export const light = {
     colorscheme: 'light',
     backgroundColor: '#fff',
     textColor: '#000000',
-    cardBgColor: '#C1554E',
+    cardBgColor: '#F9F9F9',
 };

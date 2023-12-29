@@ -10,14 +10,28 @@ const ThrimuraiHeader = ({ selectedHeader, setSelectedheader, item }) => {
                     onPress={() => setSelectedheader(item)}
                 >
                     {item?.activeIcon}
-                    <Text style={[styles.headerText, { color: 'white', fontWeight: '700' }]}>
+                    <Text
+                        style={[
+                            styles.headerText,
+                            { fontWeight: '700', color: colors.iconHeadingColor().activeTextColor },
+                        ]}
+                    >
                         {item.name}
                     </Text>
                 </TouchableOpacity>
             ) : (
                 <TouchableOpacity style={styles.headerBox} onPress={() => setSelectedheader(item)}>
                     {item?.Icon}
-                    <Text style={styles.headerText}>{item.name}</Text>
+                    <Text
+                        style={[
+                            styles.headerText,
+                            {
+                                color: colors.iconHeadingColor().inactiveTextColor,
+                            },
+                        ]}
+                    >
+                        {item.name}
+                    </Text>
                 </TouchableOpacity>
             )}
         </View>
@@ -31,7 +45,6 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
     },
     headerText: {
-        color: colors.iconHeadingColor().textColor,
         fontSize: 12,
         fontFamily: 'Mulish-regular',
         fontWeight: '500',
@@ -40,7 +53,6 @@ export const styles = StyleSheet.create({
         // padding: 15,
         height: 70,
         width: Dimensions.get('window').width / 4,
-        // paddingHorizontal: 10,
         backgroundColor: colors.iconHeadingColor().bgColor,
         justifyContent: 'center',
         alignItems: 'center',
