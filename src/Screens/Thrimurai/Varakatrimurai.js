@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
-import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import RenderAudios from './RenderAudios'
-import Icon from "react-native-vector-icons/dist/MaterialIcons"
-import { colors } from '../../Helpers';
+import React, { useContext, useState } from 'react';
+import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import RenderAudios from './RenderAudios';
+import Icon from 'react-native-vector-icons/dist/MaterialIcons';
+import { ThemeContext } from '../../Context/ThemeContext';
+// import { colors } from '../../Helpers';
 // import { styles } from "../Thrimurai/ThrimuraiHeadingPage/ThrimuraiHeadingPagex"
 
 const Varakatrimurai = ({ navigation }) => {
+    const { theme } = useContext(ThemeContext);
     const [selectedTitle, setSelectedTitle] = useState(null);
     const data = [
         {
@@ -175,9 +177,11 @@ const Varakatrimurai = ({ navigation }) => {
     ];
     const renderContents = (item, index) => (
         <>
-            <View style={styles.chapterBox}>
+            <View style={[styles.chapterBox, { backgroundColor: theme.backgroundColor }]}>
                 <View style={{ justifyContent: 'center' }}>
-                    <Text style={styles.chapterNameTexts}>{item.name}</Text>
+                    <Text style={[styles.chapterNameTexts, { color: theme.textColor }]}>
+                        {item.name}
+                    </Text>
                     {/* <Text style={styles.chapterTexts}>{item.chapters}</Text> */}
                 </View>
                 <TouchableOpacity onPress={() => setSelectedTitle(index)}>
@@ -206,15 +210,15 @@ export const styles = StyleSheet.create({
     chapterBox: {
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: colors.screenTheme.backgroundColor,
+
         height: 60,
         width: Dimensions.get('window').width,
         marginBottom: 4,
         flexDirection: 'row',
         paddingHorizontal: 20,
     },
-    chapterNameTexts: { color: colors.screenTheme.textColor, fontSize: 14, fontWeight: '600' },
+    chapterNameTexts: { fontSize: 14, fontWeight: '600' },
     chapterTexts: { fontSize: 12, fontWeight: '500', color: '#777777', marginTop: 5 },
 });
 
-export default Varakatrimurai
+export default Varakatrimurai;

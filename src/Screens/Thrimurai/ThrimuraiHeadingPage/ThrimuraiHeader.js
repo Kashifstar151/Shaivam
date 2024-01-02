@@ -1,19 +1,24 @@
-import React from 'react'
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { colors } from '../../../Helpers';
+import React, { useContext } from 'react';
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ThemeContext } from '../../../Context/ThemeContext';
+// import { theme } from '../../../Helpers';
 const ThrimuraiHeader = ({ selectedHeader, setSelectedheader, item }) => {
+    const { theme } = useContext(ThemeContext);
     return (
         <View>
             {selectedHeader.name == item.name ? (
                 <TouchableOpacity
-                    style={styles.selectedHeaderBox}
+                    style={[
+                        styles.selectedHeaderBox,
+                        { backgroundColor: theme.iconHeadingColor.bgColor },
+                    ]}
                     onPress={() => setSelectedheader(item)}
                 >
                     {item?.activeIcon}
                     <Text
                         style={[
                             styles.headerText,
-                            { fontWeight: '700', color: colors.iconHeadingColor().activeTextColor },
+                            { fontWeight: '700', color: theme.iconHeadingColor.activeTextColor },
                         ]}
                     >
                         {item.name}
@@ -26,7 +31,7 @@ const ThrimuraiHeader = ({ selectedHeader, setSelectedheader, item }) => {
                         style={[
                             styles.headerText,
                             {
-                                color: colors.iconHeadingColor().inactiveTextColor,
+                                color: theme.iconHeadingColor.inactiveTextColor,
                             },
                         ]}
                     >
@@ -53,7 +58,7 @@ export const styles = StyleSheet.create({
         // padding: 15,
         height: 70,
         width: Dimensions.get('window').width / 4,
-        backgroundColor: colors.iconHeadingColor().bgColor,
+
         justifyContent: 'center',
         alignItems: 'center',
         shadowColor: '#72322E',
@@ -62,4 +67,4 @@ export const styles = StyleSheet.create({
         shadowRadius: 1,
     },
 });
-export default ThrimuraiHeader
+export default ThrimuraiHeader;

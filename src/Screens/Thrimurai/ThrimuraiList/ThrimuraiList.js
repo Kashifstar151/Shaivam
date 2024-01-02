@@ -16,7 +16,7 @@ import Header from '../../../components/Header';
 import SearchInput from '../../../components/SearchInput';
 import LinearGradient from 'react-native-linear-gradient';
 import GradientContainer from '../../../components/GradientContainer';
-import BookIcon from '../../../../assets/Images/Vector.svg';
+// import BookIcon from '../../../../assets/Images/Vector.svg';
 import MusicContainer from '../../../../assets/Images/Frame 83.svg';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import { RouteTexts } from '../../../navigation/RouteText';
@@ -28,7 +28,8 @@ import { colors } from '../../../Helpers';
 import HeaderWithTextInput from '../../../components/HeaderWithTextInput';
 import EllipseSVGRight from '../../../components/SVGs/EllipseSVGRight';
 import EllispseSVGLeft from '../../../components/SVGs/EllispseSVGLeft';
-import colorConst from '../../../Helpers/colors';
+import { ThemeContext } from '../../../Context/ThemeContext';
+import BookIcon from '../../../components/SVGs/BookIcon';
 
 const ThrimuraiList = ({ navigation }) => {
     const [searchText, setSearchText] = useState(null);
@@ -47,12 +48,12 @@ const ThrimuraiList = ({ navigation }) => {
         // }
     }, []);
     const retrieveData = async () => {
-        getSqlData('SELECT * FROM category', callbacks => {
-            setThrimurais(callbacks)
-        })
-        getSqlData('SELECT * FROM strotras', callbacks => {
+        getSqlData('SELECT * FROM category', (callbacks) => {
+            setThrimurais(callbacks);
+        });
+        getSqlData('SELECT * FROM strotras', (callbacks) => {
             // setThrimurais(callbacks)
-        })
+        });
         // }, (error) => {
         //     console.error("error occured in fetching data at route", error);
         // })
@@ -117,19 +118,25 @@ const ThrimuraiList = ({ navigation }) => {
         },
     ];
 
+    const { theme } = useContext(ThemeContext);
+    console.log('🚀 ~ file: ThrimuraiList.js:121 ~ theme:', theme);
+
     return (
         <ScrollView
             style={{
-                // backgroundColor: theme.backgroundColor,
-                backgroundColor: colorConst.screenTheme.backgroundColor,
-
+                backgroundColor: theme.backgroundColor,
                 flex: 1,
             }}
         >
             <Background>
                 <>
                     <BackButton color={true} middleText={'Thirumurais'} />
-                    <View style={styles.inputcontainer}>
+                    <View
+                        style={[
+                            styles.inputcontainer,
+                            { backgroundColor: theme.searchBox.bgColor },
+                        ]}
+                    >
                         <Icon name="search" size={28} color={colors.grey1} />
                         <TextInput
                             onBlur={() => setOnFocus(false)}
@@ -140,7 +147,7 @@ const ThrimuraiList = ({ navigation }) => {
                             }
                             placeholder={'Search for anything (Eg - தோடுடைய செவியன்)'}
                             onChangeText={(e) => setSearchText(e)}
-                            placeholderTextColor={colorConst.searchBox().textColor}
+                            placeholderTextColor={theme.searchBox.textColor}
                             value={searchText}
                             style={{ fontSize: 12, paddingHorizontal: 5, color: '#FF9D9D' }}
                         />
@@ -155,7 +162,7 @@ const ThrimuraiList = ({ navigation }) => {
                 <Text
                     style={{
                         // color: theme.textColor,
-                        color: colorConst.screenTheme.textColor,
+                        color: theme.textColor,
                         fontFamily: 'Lora-Bold',
                         fontSize: 18,
                     }}
@@ -177,19 +184,20 @@ const ThrimuraiList = ({ navigation }) => {
                     >
                         {/* yellow */}
                         <GradientContainer
-                            Icon={<BookIcon />}
+                            textColor={theme.textColor}
+                            Icon={<BookIcon fill={theme.textColor} />}
                             name={`${thrimurais[0]?.name}(1-7)`}
-                            colors={colorConst.yellowGradcolors()}
+                            colors={theme.yellowGradcolors}
                             RightImage={
                                 <EllipseSVGRight
-                                    startColor={colorConst.yellowGradBallRight().startColor}
-                                    stopColor={colorConst.yellowGradBallRight().stopColor}
+                                    startColor={theme.yellowGradBallRight.startColor}
+                                    stopColor={theme.yellowGradBallRight.stopColor}
                                 />
                             }
                             LeftImage={
                                 <EllispseSVGLeft
-                                    startColor={colorConst.yellowGradBallLeft().startColor}
-                                    stopColor={colorConst.yellowGradBallLeft().stopColor}
+                                    startColor={theme.yellowGradBallRight.startColor}
+                                    stopColor={theme.yellowGradBallRight.stopColor}
                                 />
                             }
                         />
@@ -206,19 +214,20 @@ const ThrimuraiList = ({ navigation }) => {
                     >
                         {/* red */}
                         <GradientContainer
-                            Icon={<BookIcon />}
+                            textColor={theme.textColor}
+                            Icon={<BookIcon fill={theme.textColor} />}
                             name={thrimurais[8]?.name}
-                            colors={colorConst.redGradcolors()}
+                            colors={theme.redGradcolors}
                             RightImage={
                                 <EllipseSVGRight
-                                    startColor={colorConst.redGradBallRight().startColor}
-                                    stopColor={colorConst.redGradBallRight().stopColor}
+                                    startColor={theme.redGradBallRight.startColor}
+                                    stopColor={theme.redGradBallRight.stopColor}
                                 />
                             }
                             LeftImage={
                                 <EllispseSVGLeft
-                                    startColor={colorConst.redGradBallLeft().startColor}
-                                    stopColor={colorConst.redGradBallLeft().stopColor}
+                                    startColor={theme.redGradBallLeft.startColor}
+                                    stopColor={theme.redGradBallLeft.stopColor}
                                 />
                             }
                         />
@@ -235,19 +244,20 @@ const ThrimuraiList = ({ navigation }) => {
                     >
                         {/* green */}
                         <GradientContainer
+                            textColor={theme.textColor}
                             name={thrimurais[9]?.name}
-                            Icon={<BookIcon />}
-                            colors={colorConst.greenGradcolors()}
+                            Icon={<BookIcon fill={theme.textColor} />}
+                            colors={theme.greenGradcolors}
                             RightImage={
                                 <EllipseSVGRight
-                                    startColor={colorConst.greenGradBallRight().startColor}
-                                    stopColor={colorConst.greenGradBallRight().stopColor}
+                                    startColor={theme.greenGradBallRight.startColor}
+                                    stopColor={theme.greenGradBallRight.stopColor}
                                 />
                             }
                             LeftImage={
                                 <EllispseSVGLeft
-                                    startColor={colorConst.greenGradBallLeft().startColor}
-                                    stopColor={colorConst.greenGradBallLeft().stopColor}
+                                    startColor={theme.greenGradBallLeft.startColor}
+                                    stopColor={theme.greenGradBallLeft.stopColor}
                                 />
                             }
                         />
@@ -263,19 +273,20 @@ const ThrimuraiList = ({ navigation }) => {
                         }
                     >
                         <GradientContainer
-                            Icon={<BookIcon />}
+                            textColor={theme.textColor}
+                            Icon={<BookIcon fill={theme.textColor} />}
                             name={thrimurais[9]?.name}
-                            colors={colorConst.yellowGradcolors()}
+                            colors={theme.yellowGradcolors}
                             RightImage={
                                 <EllipseSVGRight
-                                    startColor={colorConst.yellowGradBallRight().startColor}
-                                    stopColor={colorConst.yellowGradBallRight().stopColor}
+                                    startColor={theme.yellowGradBallRight.startColor}
+                                    stopColor={theme.yellowGradBallRight.stopColor}
                                 />
                             }
                             LeftImage={
                                 <EllispseSVGLeft
-                                    startColor={colorConst.yellowGradBallLeft().startColor}
-                                    stopColor={colorConst.yellowGradBallLeft().stopColor}
+                                    startColor={theme.yellowGradBallLeft.startColor}
+                                    stopColor={theme.yellowGradBallLeft.stopColor}
                                 />
                             }
                         />
@@ -291,19 +302,20 @@ const ThrimuraiList = ({ navigation }) => {
                         }
                     >
                         <GradientContainer
-                            Icon={<BookIcon />}
+                            textColor={theme.textColor}
+                            Icon={<BookIcon fill={theme.textColor} />}
                             name={thrimurais[10]?.name}
-                            colors={colorConst.redGradcolors()}
+                            colors={theme.redGradcolors}
                             RightImage={
                                 <EllipseSVGRight
-                                    startColor={colorConst.redGradBallRight().startColor}
-                                    stopColor={colorConst.redGradBallRight().stopColor}
+                                    startColor={theme.redGradBallRight.startColor}
+                                    stopColor={theme.redGradBallRight.stopColor}
                                 />
                             }
                             LeftImage={
                                 <EllispseSVGLeft
-                                    startColor={colorConst.redGradBallLeft().startColor}
-                                    stopColor={colorConst.redGradBallLeft().stopColor}
+                                    startColor={theme.redGradBallLeft.startColor}
+                                    stopColor={theme.redGradBallLeft.stopColor}
                                 />
                             }
                         />
@@ -319,19 +331,20 @@ const ThrimuraiList = ({ navigation }) => {
                         }
                     >
                         <GradientContainer
+                            textColor={theme.textColor}
                             name={thrimurais[11]?.name}
-                            Icon={<BookIcon />}
-                            colors={colorConst.greenGradcolors()}
+                            Icon={<BookIcon fill={theme.textColor} />}
+                            colors={theme.greenGradcolors}
                             RightImage={
                                 <EllipseSVGRight
-                                    startColor={colorConst.greenGradBallRight().startColor}
-                                    stopColor={colorConst.greenGradBallRight().stopColor}
+                                    startColor={theme.greenGradBallRight.startColor}
+                                    stopColor={theme.greenGradBallRight.stopColor}
                                 />
                             }
                             LeftImage={
                                 <EllispseSVGLeft
-                                    startColor={colorConst.greenGradBallLeft().startColor}
-                                    stopColor={colorConst.greenGradBallLeft().stopColor}
+                                    startColor={theme.greenGradBallLeft.startColor}
+                                    stopColor={theme.greenGradBallLeft.stopColor}
                                 />
                             }
                         />
@@ -347,19 +360,20 @@ const ThrimuraiList = ({ navigation }) => {
                         }
                     >
                         <GradientContainer
+                            textColor={theme.textColor}
                             name={thrimurais[12]?.name}
-                            Icon={<BookIcon />}
-                            colors={colorConst.yellowGradcolors()}
+                            Icon={<BookIcon fill={theme.textColor} />}
+                            colors={theme.yellowGradcolors}
                             RightImage={
                                 <EllipseSVGRight
-                                    startColor={colorConst.yellowGradBallRight().startColor}
-                                    stopColor={colorConst.yellowGradBallRight().stopColor}
+                                    startColor={theme.yellowGradBallRight.startColor}
+                                    stopColor={theme.yellowGradBallRight.stopColor}
                                 />
                             }
                             LeftImage={
                                 <EllispseSVGLeft
-                                    startColor={colorConst.yellowGradBallLeft().startColor}
-                                    stopColor={colorConst.yellowGradBallLeft().stopColor}
+                                    startColor={theme.yellowGradBallLeft.startColor}
+                                    stopColor={theme.yellowGradBallLeft.stopColor}
                                 />
                             }
                         />
@@ -375,19 +389,20 @@ const ThrimuraiList = ({ navigation }) => {
                         }
                     >
                         <GradientContainer
+                            textColor={theme.textColor}
                             name={thrimurais[13]?.name}
-                            Icon={<BookIcon />}
-                            colors={colorConst.redGradcolors()}
+                            Icon={<BookIcon fill={theme.textColor} />}
+                            colors={theme.redGradcolors}
                             RightImage={
                                 <EllipseSVGRight
-                                    startColor={colorConst.redGradBallRight().startColor}
-                                    stopColor={colorConst.redGradBallRight().stopColor}
+                                    startColor={theme.redGradBallRight.startColor}
+                                    stopColor={theme.redGradBallRight.stopColor}
                                 />
                             }
                             LeftImage={
                                 <EllispseSVGLeft
-                                    startColor={colorConst.redGradBallLeft().startColor}
-                                    stopColor={colorConst.redGradBallLeft().stopColor}
+                                    startColor={theme.redGradBallLeft.startColor}
+                                    stopColor={theme.redGradBallLeft.stopColor}
                                 />
                             }
                         />
@@ -420,6 +435,7 @@ const ThrimuraiList = ({ navigation }) => {
                                                     fontSize: 14,
                                                     fontWeight: '600',
                                                     fontFamily: 'Mulish-Regular',
+                                                    color: theme.textColor,
                                                 }}
                                             >
                                                 {item.songName}
@@ -429,6 +445,7 @@ const ThrimuraiList = ({ navigation }) => {
                                                     fontSize: 12,
                                                     fontWeight: '400',
                                                     fontFamily: 'Mulish-Regular',
+                                                    color: theme.textColor,
                                                 }}
                                             >
                                                 {item.description}
@@ -458,7 +475,7 @@ export const styles = StyleSheet.create({
         marginHorizontal: 15,
         borderRadius: 10,
         paddingHorizontal: 10,
-        backgroundColor: colorConst.searchBox().bgColor,
+
         width: Dimensions.get('window').width - 30,
         height: 50,
         marginBottom: 10,

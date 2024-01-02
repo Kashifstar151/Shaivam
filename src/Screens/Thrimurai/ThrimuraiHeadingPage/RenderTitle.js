@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react'
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import Icon from "react-native-vector-icons/dist/MaterialIcons"
+import React, { useContext, useEffect, useState } from 'react';
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import SQLite from 'react-native-sqlite-storage';
 import { colors } from '../../../Helpers';
 import RenderAudios from '../RenderAudios';
 import { getSqlData } from '../../Database';
+import { ThemeContext } from '../../../Context/ThemeContext';
 
 const RenderTitle = ({ data, navigation }) => {
     let key = true;
+    const { theme } = useContext(ThemeContext);
     const database = SQLite.openDatabase({
         name: key ? 'SongsData.db' : 'main.db',
         createFromLocation: 1,
@@ -60,8 +62,8 @@ const RenderTitle = ({ data, navigation }) => {
                     <Text
                         style={
                             selectedChapter == index
-                                ? [styles.titleText, { color: colors.screenTheme.textColor }]
-                                : styles.titleText
+                                ? [styles.titleText, { color: theme.textColor }]
+                                : [styles.titleText, { color: theme.textColor }]
                         }
                     >
                         {item?.pann}
@@ -96,7 +98,6 @@ export const styles = StyleSheet.create({
         fontFamily: 'AnekTamil-Regular',
         fontSize: 14,
         fontWeight: '500',
-        color: colors.screenTheme.textColor,
     },
 });
-export default RenderTitle
+export default RenderTitle;
