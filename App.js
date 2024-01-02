@@ -8,17 +8,15 @@ import { GestureHandlerRootView } from "react-native-gesture-handler"
 import SQLite from 'react-native-sqlite-storage';
 
 const App = () => {
-
-
-  return (
-    // <View>
-    <SafeAreaView style={{ flex: 1 }}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <Route />
-      </GestureHandlerRootView>
-    </SafeAreaView>
-    // </View>
-  )
-}
+    return (
+      // <View>
+      <SafeAreaView style={{ flex: 1 }}>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+              <Route />
+          </GestureHandlerRootView>
+      </SafeAreaView>
+      // </View>
+  );
+};
 
 export default App

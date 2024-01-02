@@ -12,11 +12,13 @@ import Background from '../../../components/Background'
 import SettingIcon from "../../../assets/Images/Settings (1) 1.svg"
 import SQLite from 'react-native-sqlite-storage';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import { getSqlData } from '../../Database'
 
 const ThrimuraiSong = ({ route, navigation }) => {
     let key = true
     const database = SQLite.openDatabase({ name: key ? 'SongsData.db' : 'main.db', createFromLocation: 1 });
     const { data } = route.params
+    // console.log("🚀 ~ file: ThrimuraiSong.js:20 ~ ThrimuraiSong ~ data:", data)
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
@@ -30,6 +32,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const [DarkMode, setDarkMode] = useState(true)
     const [WordSplit, setWordSplit] = useState(true)
     const [songDetails, setSongDetails] = useState(null)
+    const [songs, setSongs] = useState([])
 
     const handlePress = () => {
         console.log(true)
@@ -43,28 +46,35 @@ const ThrimuraiSong = ({ route, navigation }) => {
     useEffect(() => {
         getSOngData()
     }, [])
-    const getSOngData = async () => {
-        const query = `SELECT * from thirumurai_songs where  thirumuraiId = ${data.prevId} and title NOTNULL`;
-        await database.transaction(tx => {
-
-            tx.executeSql(query, [], (_, results) => {
-                let arr = []
-                if (results?.rows?.length > 0) {
-                    for (let i = 0; i < results?.rows?.length; i++) {
-                        const tableName = results.rows.item(i);
-                        console.log("Row data AUDIO details", tableName);
-                        arr.push(tableName)
-                        // console.log("🚀 ~ file: ThrimuraiSong.js:57 ~ tx.executeSql ~ arr:", JSON.stringify(arr, 0, 2))
-
-                    }
-                    setSongDetails(arr)
-                } else {
-                    console.log('No tables found.');
-                }
+    const getSOngData = () => {
+        const query = `SELECT * from thirumurai_songs where refId=${data?.prevId} and title NOTNULL`;
+        getSqlData(query, callbacks => {
+            setSongDetails(callbacks)
+            const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`
+            getSqlData(query2, callbacks => {
+                console.log("🚀 ~ file: ThrimuraiSong.js:58 ~ getSOngData ~ callbacks:", callbacks)
+                setSongs(callbacks)
             })
-        }, (error) => {
-            console.error("error occured in fetching data", error);
         })
+
+        // await database.transaction(tx => {
+        //     tx.executeSql(query, [], (_, results) => {
+        //         let arr = []
+        //         if (results?.rows?.length > 0) {
+        //             for (let i = 0; i < results?.rows?.length; i++) {
+        //                 const tableName = results.rows.item(i);
+        //                 console.log("Row data AUDIO details", tableName);
+        //                 arr.push(tableName)
+        //                 // console.log("🚀 ~ file: ThrimuraiSong.js:57 ~ tx.executeSql ~ arr:", JSON.stringify(arr, 0, 2))
+        //             }
+        //             setSongDetails(arr)
+        //         } else {
+        //             console.log('No tables found.');
+        //         }
+        //     })
+        // }, (error) => {
+        //     console.error("error occured in fetching data", error);
+        // })
     }
 
     // useEffect(() => {
@@ -84,48 +94,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
                     <DownArrow />
                 </TouchableOpacity>
             </View>
-            {/* <View style={styles.moreOptionContainer}>
-                <Text style={styles.transcriptText}>Transcript</Text>
-                <View style={{ flexDirection: 'row', }}>
-                    <View style={styles.addMinusIcon}>
-                        <AntDesign name='minus' color='white' />
-                    </View>
-                    <TextIcon />
-                    <View style={styles.addMinusIcon}>
-                        <Icon name='add' color='white' />
-                    </View>
-                    <View style={styles.partitionContainer} />
-                    <TouchableOpacity>
-                        <FullScreenIcon />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ marginHorizontal: 5 }}>
-                        <Icon name='content-copy' size={24} />
-                    </TouchableOpacity>
-                </View>
-            </View> */}
-
-            {/* <View style={styles.TranslationContainer}>
-                <Text style={styles.translationText}>Tranlation</Text>
-                <View style={{ marginHorizontal: 20 }}>
-                    <FlatList horizontal data={language} renderItem={({ item, index }) => (
-                        <>
-                            {
-                                selectedLang == item ?
-                                    <TouchableOpacity style={[styles.languageBox, { backgroundColor: '#C1554E' }]} onPress={() => setSelectedLang(item)}>
-                                        <Text style={[styles.languageOptionText, { color: 'white', fontWeight: '700' }]}>{item}</Text>
-                                    </TouchableOpacity> :
-
-                                    <TouchableOpacity style={styles.languageBox} onPress={() => setSelectedLang(item)}>
-                                        <Text style={styles.languageOptionText}>{item}</Text>
-                                    </TouchableOpacity>
-                            }
-                        </>
-                    )} />
-                </View>
-            </View> */}
-
-
-
             <ScrollView style={styles.lyricsContainer}>
                 <View style={{ paddingBottom: 300, paddingHorizontal: 20 }}>
 
@@ -212,7 +180,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                 ref={bottomSheetRef}
                 snapPoints={snapPoints}
                 index={1} >
-                <AudioPlayer songDetails={songDetails} />
+                <AudioPlayer songsData={songs} title={songDetails?.[0]?.title} />
             </BottomSheet>
         </View >
     )

@@ -1,3 +1,6 @@
+import { Appearance } from 'react-native';
+import { dark, light } from '../Constants/globalCSS';
+const colorScheme = Appearance.getColorScheme();
 export default {
     primaryColor: '#EDCB76',
     primaryDarkColor: '#0D0D0D',
@@ -42,4 +45,84 @@ export default {
     grey8: '#1e1e1e',
     grey9: '#2C2C2C',
     black: '#121212',
+
+    //dynamic color schema based on theme
+
+    // global
+    screenTheme: colorScheme === 'dark' ? dark : light,
+    greyForCard: ['#333333', '#333333'],
+    darkCardGrad: { startColor: '#404040', stopColor: '#404040' },
+
+    // yellow card
+    yellowGradCard: ['#FEE8B3', '#FEE199'],
+    yellowGradBallRight: function () {
+        return colorScheme === 'light'
+            ? { startColor: '#FFD87A', stopColor: '#FFE9B4' }
+            : this.darkCardGrad;
+    },
+    yellowGradBallLeft: function () {
+        return colorScheme === 'light'
+            ? { startColor: '#FFF3D6', stopColor: '#FEDC8B' }
+            : this.darkCardGrad;
+    },
+    yellowGradcolors: function () {
+        return colorScheme === 'light' ? this.yellowGradCard : this.greyForCard;
+    },
+
+    // red card
+    redGradCard: ['#E5B8B5', '#FD9991'],
+    redGradcolors: function () {
+        return colorScheme === 'light' ? this.redGradCard : this.greyForCard;
+    },
+    redGradBallRight: function () {
+        return colorScheme === 'light'
+            ? { startColor: '#FD9991', stopColor: '#E5B8B5' }
+            : this.darkCardGrad;
+    },
+    redGradBallLeft: function () {
+        return colorScheme === 'light'
+            ? { startColor: '#FFF3D6', stopColor: '#E5B8B5' }
+            : this.darkCardGrad;
+    },
+
+    // green card
+    greenGradCard: ['#AFD9BB', '#60B278'],
+    greenGradcolors: function () {
+        return colorScheme === 'light' ? this.greenGradCard : this.greyForCard;
+    },
+    greenGradBallRight: function () {
+        return colorScheme === 'light'
+            ? { startColor: '#BAE6C6', stopColor: '#8EC99F' }
+            : this.darkCardGrad;
+    },
+    greenGradBallLeft: function () {
+        return colorScheme === 'light'
+            ? { startColor: '#BAE6C6', stopColor: '#8EC99F' }
+            : this.darkCardGrad;
+    },
+
+    // search box
+    searchBox: function () {
+        return colorScheme === 'light'
+            ? { bgColor: '#8F3630', textColor: '#FF9D9D' }
+            : { bgColor: '#2A2A2A', textColor: '#777777' };
+    },
+
+    iconHeadingColor: function () {
+        return colorScheme === 'light'
+            ? {
+                  inactive: '#FFE0E0',
+                  active: '#8F3630',
+                  bgColor: '#F3DDDC',
+                  activeTextColor: '#8F3630',
+                  inactiveTextColor: '#F3DDDC',
+              }
+            : {
+                  inactive: '#777777',
+                  active: '#FFFFFF',
+                  bgColor: '#C2534C',
+                  activeTextColor: '#8F3630',
+                  inactiveTextColor: '#FFE0E0',
+              };
+    },
 };
