@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
     Dimensions,
     FlatList,
@@ -13,7 +13,8 @@ import Background from '../../../components/Background';
 import HeaderWithTextInput from '../../../components/HeaderWithTextInput';
 import CenterIcon from '../../../assets/Images/Vector (3).svg';
 import { getSqlData } from '../../Database';
-import { colors } from '../../../Helpers';
+// import { colors } from '../../../Helpers';
+import { ThemeContext } from '../../../Context/ThemeContext';
 
 const SearchScreen = ({ navigation, route }) => {
     const { thrimurais } = route?.params;
@@ -21,6 +22,7 @@ const SearchScreen = ({ navigation, route }) => {
     const [searchResult, setSearchedResult] = useState([]);
     const [onFocus, setOnFocus] = useState(false);
     const [rawSongs, setRawSongs] = useState(null);
+    const { theme } = useContext(ThemeContext);
     useEffect(() => {
         getDataFromSql();
     }, []);
@@ -70,12 +72,13 @@ const SearchScreen = ({ navigation, route }) => {
                                                     marginHorizontal: 4,
                                                     borderRadius: 5,
                                                     backgroundColor:
-                                                        colors.screenTheme.colorscheme === 'light'
+                                                        theme.colorscheme === 'light'
                                                             ? 'yellow'
                                                             : '#C1554E',
+                                                    color: theme.textColor,
                                                 },
                                             ]
-                                          : [styles.titleText]
+                                          : [styles.titleText, { color: theme.textColor }]
                                   }
                               >
                                   {res}
@@ -101,12 +104,18 @@ const SearchScreen = ({ navigation, route }) => {
                                                 {
                                                     fontWeight: '500',
                                                     backgroundColor:
-                                                        colors.screenTheme.colorscheme === 'light'
+                                                        theme.colorscheme === 'light'
                                                             ? 'yellow'
                                                             : '#C1554E',
                                                 },
                                             ]
-                                          : [styles.titleText, { fontWeight: '500' }]
+                                          : [
+                                                styles.titleText,
+                                                {
+                                                    fontWeight: '500',
+                                                    color: theme.textColor,
+                                                },
+                                            ]
                                   }
                               >
                                   {res}
@@ -116,6 +125,7 @@ const SearchScreen = ({ navigation, route }) => {
             </View>
         );
     };
+
     const renderResult = (item, index, key) => {
         return (
             <Pressable style={{ marginVertical: 10 }}>
@@ -126,7 +136,7 @@ const SearchScreen = ({ navigation, route }) => {
         );
     };
     return (
-        <View style={styles.main}>
+        <View style={[styles.main, { backgroundColor: theme.backgroundColor }]}>
             <Background>
                 <HeaderWithTextInput
                     onSubmitEditing={getDataFromSql}
@@ -154,7 +164,7 @@ const SearchScreen = ({ navigation, route }) => {
                             <TouchableOpacity
                                 style={{
                                     marginLeft: 5,
-                                    backgroundColor: colors.searchBox().bgColor,
+                                    backgroundColor: theme.searchBox.bgColor,
                                     height: 30,
                                     borderRadius: 20,
                                     justifyContent: 'center',
@@ -164,7 +174,7 @@ const SearchScreen = ({ navigation, route }) => {
                             >
                                 <Text
                                     style={{
-                                        color: colors.searchBox().textColor,
+                                        color: theme.searchBox.textColor,
                                         fontFamily: 'Mulish-Regular',
                                     }}
                                 >{`Thrimurai ${index + 1}`}</Text>
@@ -200,11 +210,11 @@ const SearchScreen = ({ navigation, route }) => {
     );
 };
 export const styles = StyleSheet.create({
-    main: { flex: 1, backgroundColor: colors.screenTheme.backgroundColor },
+    main: { flex: 1 },
     titleText: {
         fontFamily: 'AnekTamil-Bold',
         fontSize: 14,
-        color: colors.screenTheme.textColor,
+
         fontWeight: '700',
     },
     searchresult: { fontSize: 18, color: '#222222', fontFamily: 'Lora-Bold' },

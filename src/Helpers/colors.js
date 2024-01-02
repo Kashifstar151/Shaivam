@@ -1,5 +1,5 @@
 import { Appearance } from 'react-native';
-import { dark, light } from '../Constants/globalCSS';
+import { darkTheme, lightTheme } from '../Constants/globalCSS';
 const colorScheme = Appearance.getColorScheme();
 const darkCardGrad = { startColor: '#404040', stopColor: '#404040' };
 const greyForCard = ['#333333', '#333333'];
@@ -52,7 +52,7 @@ export default {
     //dynamic color schema based on theme
 
     // global
-    screenTheme: colorScheme === 'dark' ? dark : light,
+    // screenTheme: colorScheme === 'dark' ? darkTheme : lightTheme,
     greyForCard: ['#333333', '#333333'],
     darkCardGrad: { startColor: '#404040', stopColor: '#404040' },
 
