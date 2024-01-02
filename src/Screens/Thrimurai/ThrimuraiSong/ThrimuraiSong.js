@@ -15,6 +15,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-na
 import { getSqlData } from '../../Database'
 import { useIsFocused } from '@react-navigation/native'
 import TrackPlayer from 'react-native-track-player'
+import { colors } from '../../../Helpers'
 
 const ThrimuraiSong = ({ route, navigation }) => {
     let key = true
@@ -56,7 +57,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
         };
     }, [isFocused])
     const getSOngData = () => {
-        const query = `SELECT * from thirumurai_songs where refId=${data?.prevId} and title NOTNULL`;
+        const query = `SELECT * from thirumurai_songs where refId=${data?.prevId} and title NOTNULL ORDER`;
         getSqlData(query, callbacks => {
             setSongDetails(callbacks)
             const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`
@@ -81,13 +82,19 @@ const ThrimuraiSong = ({ route, navigation }) => {
             </View>
             <ScrollView style={styles.lyricsContainer} nestedScrollEnabled>
                 <View style={{ paddingBottom: 300, paddingHorizontal: 20 }}>
-
                     {
-                        songDetails?.length > 0 && songDetails?.map((res) => (
+                        songDetails?.length > 0 &&
+                        songDetails?.map((res, index) => (
 
-                            <Text style={[styles.lyricsText, { fontSize: fontSizeCount, }]}>
-                                {res?.rawSong}
-                            </Text>
+
+                            <View style={{ borderBottomColor: colors.grey3, borderBottomWidth: 1, paddingBottom: 7, flexDirection: 'row' }}>
+                                <Text style={[styles.lyricsText, { fontSize: fontSizeCount, }]}>
+                                    {res?.rawSong}
+                                </Text>
+                                <Text style={[styles.lyricsText, { fontSize: fontSizeCount, alignSelf: 'flex-end' }]}>
+                                    {res?.song_no}
+                                </Text>
+                            </View>
 
                         ))
                     }

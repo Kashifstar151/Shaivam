@@ -190,7 +190,7 @@ export async function getSqlData(query, callbacks) {
     const databasename = JSON.parse(data)
     console.log("🚀 ~ file: Database.js:142 ~ getSqlData ~ data:", JSON.parse(data))
     if (databasename?.name !== "songData.db") {
-        alert(true)
+        // alert(true)
         await database.transaction(tx => {
             tx.executeSql(query, [], (_, results) => {
                 // console.log("🚀 ~ file: Database.js:149 ~ tx.executeSql ~ results:", results)

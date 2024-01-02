@@ -6,24 +6,60 @@ import { colors } from '../Helpers'
 import BackIcon from "../../src/assets/Images/BackIcon.svg"
 import WhiteBackButton from "../../src/assets/Images/arrow (1) 1.svg"
 
-const HeaderWithTextInput = ({ navigation, color, rightIcon, setState, state, setOnFocus, placeholder, onSubmitEditing }) => {
+const HeaderWithTextInput = ({
+    navigation,
+    color,
+    rightIcon,
+    setState,
+    state,
+    setOnFocus,
+    placeholder,
+    onSubmitEditing,
+}) => {
     return (
-        <View style={{ paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 40 : 0, paddingHorizontal: 15, }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10, alignItems: 'center' }}>
-                <TouchableOpacity style={{ alignSelf: 'center' }} onPress={() => navigation.goBack()}>
+        <View
+            style={{
+                paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 40 : 0,
+                paddingHorizontal: 15,
+            }}
+        >
+            <View
+                style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginTop: 10,
+                    alignItems: 'center',
+                }}
+            >
+                <TouchableOpacity
+                    style={{ alignSelf: 'center' }}
+                    onPress={() => navigation.goBack()}
+                >
                     <BackIcon />
                 </TouchableOpacity>
-                <View style={color ? [styles.inputcontainer, { backgroundColor: '#F3F3F3' }] : styles.inputcontainer}>
-                    <Icon name='search1' size={28} color={color ? '#777777' : colors.grey1} />
+                <View
+                    style={
+                        color
+                            ? [styles.inputcontainer, { backgroundColor: '#F3F3F3' }]
+                            : styles.inputcontainer
+                    }
+                >
+                    <Icon name="search1" size={28} color={color ? '#777777' : colors.grey1} />
                     <TextInput
                         onSubmitEditing={onSubmitEditing}
                         onBlur={() => setOnFocus(false)}
                         onFocus={() => setOnFocus(true)}
                         placeholder={placeholder}
                         onChangeText={(e) => setState(e)}
-                        placeholderTextColor={color ? '#777777' : '#FF9D9D'}
+                        placeholderTextColor={colors.searchBox().textColor}
                         value={state}
-                        style={{ fontSize: 12, paddingHorizontal: 5, color: '#FF9D9D', width: '90%' }} />
+                        style={{
+                            fontSize: 12,
+                            paddingHorizontal: 5,
+                            color: colors.searchBox().textColor,
+                            width: '90%',
+                        }}
+                    />
                 </View>
                 {/* <View style={{ flexDirection: 'row', marginTop: 10, paddingHorizontal: 5 }}>
                 <TouchableOpacity style={{ alignSelf: 'center' }} onPress={() => navigation.goBack()}>
@@ -45,22 +81,30 @@ const HeaderWithTextInput = ({ navigation, color, rightIcon, setState, state, se
                 </View> */}
                 {/* </View> */}
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    {
-                        rightIcon &&
+                    {rightIcon && (
                         <TouchableOpacity style={{ paddingHorizontal: 5 }}>
-                            <Icon name='sharealt' size={24} color='white' />
+                            <Icon name="sharealt" size={24} color="white" />
                         </TouchableOpacity>
-                    }
+                    )}
                     <NandiLogo />
                 </View>
             </View>
             {/* <Text style={{ marginHorizontal: 10, fontFamily: 'Lora-Regular', fontSize: 24, fontWeight: '700', color: 'white' }}>{firstText}</Text> */}
         </View>
-
-    )
-}
+    );
+};
 export const styles = StyleSheet.create({
-    inputcontainer: { width: '80%', marginHorizontal: 5, borderRadius: 10, paddingHorizontal: 10, backgroundColor: '#8F3630', height: 50, marginBottom: 10, flexDirection: 'row', alignItems: 'center' }
-})
+    inputcontainer: {
+        width: '80%',
+        marginHorizontal: 5,
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        backgroundColor: colors.searchBox().bgColor,
+        height: 50,
+        marginBottom: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+});
 
 export default HeaderWithTextInput

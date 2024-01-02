@@ -11,18 +11,15 @@ import { RouteTexts } from './RouteText'
 import SQLite from 'react-native-sqlite-storage';
 import * as RNFS from 'react-native-fs'
 import { addEventListener, useNetInfo } from '@react-native-community/netinfo';
-import SearchScreen from '../Screens/Thrimurai/ThrimuraiSong/SearchScreen'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import LottieView from 'lottie-react-native';
+import SearchScreen from '../Screens/Thrimurai/Searchscreen/SearchScreen'
 
 const Route = () => {
     const Stack = createNativeStackNavigator()
-    const database1 = SQLite.openDatabase({ name: 'main.db' });
     const database = SQLite.openDatabase({ name: 'songData.db', createFromLocation: 1 });
-    const netInfo = useNetInfo();
     const [showDownloading, setShowDownloading] = useState(false)
     const [isConnected, setIsConnected] = useState(false)
-    const databaseName = 'main.db';
     // const database = SQLite.openDatabase({ name: databaseName, });
     useEffect(() => {
         LogBox.ignoreAllLogs();
@@ -55,7 +52,7 @@ const Route = () => {
 
                 {
                     text: 'Cancel',
-                    onPress: () => onCancel()
+                    onPress: () => console.log(true)
                 },
                 {
                     text: 'Ok',
