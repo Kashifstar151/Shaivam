@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React, { useEffect, useState } from 'react'
-import { Alert, AppState, LogBox, PermissionsAndroid, } from 'react-native'
+import { Alert, AppState, LogBox, PermissionsAndroid, View, } from 'react-native'
 import { attachDb } from '../Screens/Database'
 import HomeScreen from '../Screens/Home/HomeScreen'
 import ThrimuraiHeadingPage from '../Screens/Thrimurai/ThrimuraiHeadingPage/ThrimuraiHeadingPage'
@@ -13,12 +13,14 @@ import * as RNFS from 'react-native-fs'
 import { addEventListener, useNetInfo } from '@react-native-community/netinfo';
 import SearchScreen from '../Screens/Thrimurai/ThrimuraiSong/SearchScreen'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import LottieView from 'lottie-react-native';
 
 const Route = () => {
     const Stack = createNativeStackNavigator()
     const database1 = SQLite.openDatabase({ name: 'main.db' });
     const database = SQLite.openDatabase({ name: 'songData.db', createFromLocation: 1 });
     const netInfo = useNetInfo();
+    const [showDownloading, setShowDownloading] = useState(false)
     const [isConnected, setIsConnected] = useState(false)
     const databaseName = 'main.db';
     // const database = SQLite.openDatabase({ name: databaseName, });
@@ -53,7 +55,7 @@ const Route = () => {
 
                 {
                     text: 'Cancel',
-                    onPress: () => console.log(true)
+                    onPress: () => onCancel()
                 },
                 {
                     text: 'Ok',
@@ -64,6 +66,13 @@ const Route = () => {
             Alert.alert('You are offline!');
         }
     };
+    const onCancel = () => {
+        AsyncStorage.setItem('@database', JSON.stringify({ name: 'songData.db', createFromLocation: 1 }))
+        setShowDownloading(true)
+        setTimeout(() => {
+            setShowDownloading(false)
+        }, 2000)
+    }
     async function requestFilePermissions() {
         try {
             const granted = await PermissionsAndroid.request(
@@ -87,12 +96,24 @@ const Route = () => {
         }
     }
     const checkFileExist = async () => {
-        RNFS.exists(`${RNFS.ExternalDirectoryPath}/Thrimurai/thirumurai.db`).then((res) => {
+        RNFS.exists(`${RNFS.ExternalDirectoryPath}/Thrimurai/thirumurai.db`).then(async (res) => {
             if (res == true) {
                 // InitializeDatabase()
                 AsyncStorage.setItem('@database', JSON.stringify({ name: 'songData.db', createFromLocation: 1 }))
+                setShowDownloading(true)
+                setTimeout(() => {
+                    setShowDownloading(false)
+                }, 2000)
             } else {
-                attachDb()
+                setShowDownloading(true)
+                const promise = attachDb()
+                promise.then((res) => {
+                    console.log("res", res)
+                    setShowDownloading(false)
+                }).catch((error) => {
+                    console.log("error", error)
+                    setShowDownloading(false)
+                })
                 AsyncStorage.setItem('@database', JSON.stringify({ name: 'main.db' }))
             }
         }).catch((error) => {
@@ -137,18 +158,29 @@ const Route = () => {
     }
 
     return (
-        <NavigationContainer>
-            <Stack.Navigator
-                screenOptions={{
-                    headerShown: false
-                }}>
-                {/* <Stack.Screen name="Home" component={HomeScreen} /> */}
-                <Stack.Screen name="Thrimurai" component={ThrimuraiList} />
-                <Stack.Screen name={RouteTexts.SEARCH_SCREEN} component={SearchScreen} />
-                <Stack.Screen name={RouteTexts.THIRIMURAI_HEADING} component={ThrimuraiHeadingPage} />
-                <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={ThrimuraiSong} />
-            </Stack.Navigator>
-        </NavigationContainer>
+
+        <>
+            {
+                showDownloading ?
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <LottieView style={{ height: 200, width: 200 }} source={require('../assets/JSON/Animation - 1704052511281.json')} autoPlay loop />
+                    </View>
+                    :
+                    <NavigationContainer>
+                        <Stack.Navigator
+                            screenOptions={{
+                                headerShown: false
+                            }}>
+                            {/* <Stack.Screen name="Home" component={HomeScreen} /> */}
+                            <Stack.Screen name="Thrimurai" component={ThrimuraiList} />
+                            <Stack.Screen name={RouteTexts.SEARCH_SCREEN} component={SearchScreen} />
+                            <Stack.Screen name={RouteTexts.THIRIMURAI_HEADING} component={ThrimuraiHeadingPage} />
+                            <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={ThrimuraiSong} />
+                        </Stack.Navigator>
+                    </NavigationContainer>
+            }
+        </>
+
     )
 }
 

@@ -13,10 +13,13 @@ import SettingIcon from "../../../assets/Images/Settings (1) 1.svg"
 import SQLite from 'react-native-sqlite-storage';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { getSqlData } from '../../Database'
+import { useIsFocused } from '@react-navigation/native'
+import TrackPlayer from 'react-native-track-player'
 
 const ThrimuraiSong = ({ route, navigation }) => {
     let key = true
     const database = SQLite.openDatabase({ name: key ? 'SongsData.db' : 'main.db', createFromLocation: 1 });
+    const isFocused = useIsFocused
     const { data } = route.params
     // console.log("🚀 ~ file: ThrimuraiSong.js:20 ~ ThrimuraiSong ~ data:", data)
     const translateX = useSharedValue(0);
@@ -44,43 +47,25 @@ const ThrimuraiSong = ({ route, navigation }) => {
         translateX.value = 50;
     }
     useEffect(() => {
-        getSOngData()
-    }, [])
+        if (isFocused) {
+            getSOngData()
+        }
+        return () => {
+            TrackPlayer.stop();
+            TrackPlayer.reset();
+        };
+    }, [isFocused])
     const getSOngData = () => {
         const query = `SELECT * from thirumurai_songs where refId=${data?.prevId} and title NOTNULL`;
         getSqlData(query, callbacks => {
             setSongDetails(callbacks)
             const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`
             getSqlData(query2, callbacks => {
-                console.log("🚀 ~ file: ThrimuraiSong.js:58 ~ getSOngData ~ callbacks:", callbacks)
+                // console.log("🚀 ~ file: ThrimuraiSong.js:58 ~ getSOngData ~ callbacks:", callbacks)
                 setSongs(callbacks)
             })
         })
-
-        // await database.transaction(tx => {
-        //     tx.executeSql(query, [], (_, results) => {
-        //         let arr = []
-        //         if (results?.rows?.length > 0) {
-        //             for (let i = 0; i < results?.rows?.length; i++) {
-        //                 const tableName = results.rows.item(i);
-        //                 console.log("Row data AUDIO details", tableName);
-        //                 arr.push(tableName)
-        //                 // console.log("🚀 ~ file: ThrimuraiSong.js:57 ~ tx.executeSql ~ arr:", JSON.stringify(arr, 0, 2))
-        //             }
-        //             setSongDetails(arr)
-        //         } else {
-        //             console.log('No tables found.');
-        //         }
-        //     })
-        // }, (error) => {
-        //     console.error("error occured in fetching data", error);
-        // })
     }
-
-    // useEffect(() => {
-    //     bottomSheetRef.current.open()
-    // }, [])
-    // console.log("🚀 ~ file: ThrimuraiSong.js:7 ~ ThrimuraiSong ~ data:", data)
     return (
 
         <View style={{ flex: 1 }}>
@@ -94,7 +79,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                     <DownArrow />
                 </TouchableOpacity>
             </View>
-            <ScrollView style={styles.lyricsContainer}>
+            <ScrollView style={styles.lyricsContainer} nestedScrollEnabled>
                 <View style={{ paddingBottom: 300, paddingHorizontal: 20 }}>
 
                     {
@@ -180,7 +165,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                 ref={bottomSheetRef}
                 snapPoints={snapPoints}
                 index={1} >
-                <AudioPlayer songsData={songs} title={songDetails?.[0]?.title} />
+                <AudioPlayer prevId={data?.prevId} songsData={songs} title={songDetails?.[0]?.title} />
             </BottomSheet>
         </View >
     )

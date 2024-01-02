@@ -34,9 +34,8 @@ const ThrimuraiList = ({ navigation }) => {
     }, [])
 
     useEffect(() => {
-        // if (selectedHeader == 'Panmurai') {
         retrieveData()
-        // }
+
     }, []);
     const retrieveData = async () => {
         getSqlData('SELECT * FROM category', callbacks => {
