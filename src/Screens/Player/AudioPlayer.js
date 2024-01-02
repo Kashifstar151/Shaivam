@@ -119,11 +119,11 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
             });
 
             await TrackPlayer.add(song)
-            const queue = await TrackPlayer.getQueue();
-            console.log("Current queue:", queue);
+            // const queue = await TrackPlayer.getQueue();
+            // console.log("Current queue:", queue);
             // await TrackPlayer.setRepeatMode()
         } catch (error) {
-            console.log("🚀 ~ file: AudioPlayer.js:102 ~ setUpPlayer ~ error:", error)
+            // console.log("🚀 ~ file: AudioPlayer.js:102 ~ setUpPlayer ~ error:", error)
             // TrackPlayer.reset()
             await TrackPlayer.updateOptions({
                 android: {
@@ -155,7 +155,7 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                     <Text style={styles.headingText}>Odhuvar</Text>
                     <Text style={styles.headingText}>(Select One)</Text>
                 </View>
-                <FlatList contentContainerStyle={{ backgroundColor: 'white' }} horizontal data={Odhuvar} renderItem={({ item, index }) => renderAudios(item, index)} />
+                <FlatList horizontal data={Odhuvar} renderItem={({ item, index }) => renderAudios(item, index)} />
             </View>
             <View style={{ justifyContent: 'center', marginTop: 10 }}>
                 <Slider
