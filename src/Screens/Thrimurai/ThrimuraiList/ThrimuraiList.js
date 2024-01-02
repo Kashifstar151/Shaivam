@@ -135,11 +135,14 @@ const ThrimuraiList = ({ navigation }) => {
                             onFocus={() =>
                                 navigation.navigate(RouteTexts.SEARCH_SCREEN, {
                                     thrimurais: thrimurais,
+                                    allThirumirai: true,
+                                    query1: `SELECT * FROM thirumurais WHERE search_thirumurai_title LIKE`,
+                                    query2: `ORDER BY Thirumurai_title  ASC LIMIT 10 OFFSET 0;`
                                 })
                             }
                             placeholder={'Search for anything (Eg - தோடுடைய செவியன்)'}
                             onChangeText={(e) => setSearchText(e)}
-                            placeholderTextColor={'#FF9D9D'}
+                            placeholderTextColor={colorConst.searchBox().textColor}
                             value={searchText}
                             style={{ fontSize: 12, paddingHorizontal: 5, color: '#FF9D9D' }}
                         />
@@ -174,7 +177,6 @@ const ThrimuraiList = ({ navigation }) => {
                             })
                         }
                     >
-                        {/* yellow */}
                         <GradientContainer
                             Icon={<BookIcon />}
                             name={`${thrimurais[0]?.name}(1-7)`}
@@ -457,7 +459,7 @@ export const styles = StyleSheet.create({
         marginHorizontal: 15,
         borderRadius: 10,
         paddingHorizontal: 10,
-        backgroundColor: '#8F3630',
+        backgroundColor: colorConst.searchBox().bgColor,
         width: Dimensions.get('window').width - 30,
         height: 50,
         marginBottom: 10,

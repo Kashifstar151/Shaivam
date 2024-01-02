@@ -12,8 +12,8 @@ const RenderAudios = ({ navigation, songs, data }) => {
     const database = SQLite.openDatabase({ name: key ? 'SongsData.db' : 'main.db', createFromLocation: 1 });
     const [audioData, setAudioData] = useState([])
     useEffect(() => {
-        getDtataFromSql()
-    }, [])
+        getDtataFromSql();
+    }, []);
     const getDtataFromSql = async () => {
         const query = `SELECT Thirumurai_title, prevId FROM thirumurais WHERE  fkTrimuria=1 AND pann='${songs?.pann}' ORDER BY  titleNo ASC  LIMIT 10 OFFSET 0`;
         getSqlData(query, callbacks => {
@@ -31,14 +31,26 @@ const RenderAudios = ({ navigation, songs, data }) => {
             <View style={{ backgroundColor: '#F2F0F8', height: 40, width: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 6 }}>
                 <MusicIcon1 />
             </View>
-            <Text style={{ marginHorizontal: 10, fontSize: 12, fontFamily: 'AnekTamil-Regular', fontWeight: '500' }}>{item.Thirumurai_title}</Text>
+            <Text
+                style={{
+                    marginHorizontal: 10,
+                    fontSize: 12,
+                    fontFamily: 'AnekTamil-Regular',
+                    fontWeight: '500',
+                }}
+            >
+                {item.Thirumurai_title}
+            </Text>
         </Pressable>
-    )
+    );
     return (
         <View>
-            <FlatList renderItem={({ item, index }) => renderAudios(item, index)} data={audioData} />
+            <FlatList
+                renderItem={({ item, index }) => renderAudios(item, index)}
+                data={audioData}
+            />
         </View>
-    )
-}
+    );
+};
 
 export default RenderAudios
