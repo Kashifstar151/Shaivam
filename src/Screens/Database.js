@@ -6,7 +6,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import { decode } from 'base-64';
 import base64 from 'react-native-base64'
 import { useEffect } from 'react';
-import { AppState, PermissionsAndroid } from 'react-native';
+import { Alert, AppState, PermissionsAndroid } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // const databaseName = 'main.db';
 // const database = SQLite.openDatabase({ name: databaseName, });
@@ -22,51 +22,99 @@ const offlineDatabase = SQLite.openDatabase({ name: 'SongsData.db', createFromLo
 //         );
 //     });
 // };
-export const attachDb = (link) => {
-    RNFetchBlob
-        .config({
-            fileCache: true,
-        })
-        .fetch('GET', 'https://shaivamfiles.fra1.cdn.digitaloceanspaces.com/sqlitedump/thirumurai_songsData2.zip', {
-            //some headers ..
-        })
-        .then((res) => {
-            // the temp file path
-            console.log('The file saved to', res.path())
-            // const filePath = RNFS.DocumentDirectoryPath + '/myData.db';
-            // Unzip will be called here!
-            unzipDownloadFile(res.path(), async (jsonFilePath) => {
-                console.log("🚀 ~ file: Database.js:35 ~ unzipDownloadFile ~ jsonFilePath:", jsonFilePath)
-                RNFS.readDir(jsonFilePath)
-                    .then((files) => {
-                        console.log("🚀 ~ file: Database.js:50 ~ unzipDownloadFile ~ files:", files)
-                        const fileNames = files.map(fileInfo => fileInfo.name);
-                        console.log('File names in the directory:', fileNames);
-                        try {
-                            database.transaction(async (tx) => {
-                                await tx.executeSql(
-                                    'ATTACH DATABASE ? AS Updated_db',
-                                    [`${jsonFilePath}/thirumurai_songsData2.db`],
-                                    async (tx, results) => {
-                                        console.log("🚀 ~ file: Database.js:49 ~ database.transaction ~ results:", tx, results)
-                                        const data = await AsyncStorage.getItem('@database')
-                                        console.log("🚀 ~ file: Database.js:53 ~ async ~ data:", data)
-                                    }
-                                );
-                            }, async (error) => {
-                                const data = await AsyncStorage.getItem('@database')
-                                console.log("🚀 ~ file: Database.js:53 ~ async ~ data:", data)
-                                console.log("🚀 ~ file: Database.js:56 ~ database.transaction ~ error:", error)
-                            });
-                        } catch (error) {
-                            console.log("🚀 ~ file: Database.js:53 ~ unzipDownloadFile ~ error:", error)
-                        }
-                    })
-                    .catch(error => console.error('Error reading directory:', error));
+export async function attachDb() {
+    return new Promise((resolve, reject) => {
+        RNFetchBlob
+            .config({
+                fileCache: true,
+            })
+            .fetch('GET', 'https://shaivamfiles.fra1.cdn.digitaloceanspaces.com/sqlitedump/thirumurai_songsData2.zip', {
+                //some headers ..
+            })
+            .then((res) => {
+                // the temp file path
+                console.log('The file saved to', res.path())
+                // const filePath = RNFS.DocumentDirectoryPath + '/myData.db';
+                // Unzip will be called here!
+                unzipDownloadFile(res.path(), async (jsonFilePath) => {
+                    console.log("🚀 ~ file: Database.js:35 ~ unzipDownloadFile ~ jsonFilePath:", jsonFilePath)
+                    RNFS.readDir(jsonFilePath)
+                        .then((files) => {
+                            console.log("🚀 ~ file: Database.js:50 ~ unzipDownloadFile ~ files:", files)
+                            const fileNames = files.map(fileInfo => fileInfo.name);
+                            console.log('File names in the directory:', fileNames);
+                            try {
+                                database.transaction(async (tx) => {
+                                    await tx.executeSql(
+                                        'ATTACH DATABASE ? AS Updated_db',
+                                        [`${jsonFilePath}/thirumurai_songsData2.db`],
+                                        async (tx, results) => {
+                                            console.log("🚀 ~ file: Database.js:49 ~ database.transaction ~ results:", tx, results)
+                                            const data = await AsyncStorage.getItem('@database')
+                                            resolve(tx)
+                                            // console.log("🚀 ~ file: Database.js:53 ~ async ~ data:", data)
+                                        }
+                                    );
+                                }, async (error) => {
+                                    const data = await AsyncStorage.getItem('@database')
+                                    // console.log("🚀 ~ file: Database.js:53 ~ async ~ data:", data)
+                                    console.log("🚀 ~ file: Database.js:56 ~ database.transaction ~ error:", error)
+                                    reject(error)
+                                });
+                            } catch (error) {
+                                console.log("🚀 ~ file: Database.js:53 ~ unzipDownloadFile ~ error:", error)
+                            }
+                        })
+                        .catch(error => console.error('Error reading directory:', error));
+                });
             });
-        });
-
+    })
 }
+// export const attachDb = (link) => {
+//     RNFetchBlob
+//         .config({
+//             fileCache: true,
+//         })
+//         .fetch('GET', 'https://shaivamfiles.fra1.cdn.digitaloceanspaces.com/sqlitedump/thirumurai_songsData2.zip', {
+//             //some headers ..
+//         })
+//         .then((res) => {
+//             // the temp file path
+//             console.log('The file saved to', res.path())
+//             // const filePath = RNFS.DocumentDirectoryPath + '/myData.db';
+//             // Unzip will be called here!
+//             unzipDownloadFile(res.path(), async (jsonFilePath) => {
+//                 console.log("🚀 ~ file: Database.js:35 ~ unzipDownloadFile ~ jsonFilePath:", jsonFilePath)
+//                 RNFS.readDir(jsonFilePath)
+//                     .then((files) => {
+//                         console.log("🚀 ~ file: Database.js:50 ~ unzipDownloadFile ~ files:", files)
+//                         const fileNames = files.map(fileInfo => fileInfo.name);
+//                         console.log('File names in the directory:', fileNames);
+//                         try {
+//                             database.transaction(async (tx) => {
+//                                 await tx.executeSql(
+//                                     'ATTACH DATABASE ? AS Updated_db',
+//                                     [`${jsonFilePath}/thirumurai_songsData2.db`],
+//                                     async (tx, results) => {
+//                                         console.log("🚀 ~ file: Database.js:49 ~ database.transaction ~ results:", tx, results)
+//                                         const data = await AsyncStorage.getItem('@database')
+//                                         // console.log("🚀 ~ file: Database.js:53 ~ async ~ data:", data)
+//                                     }
+//                                 );
+//                             }, async (error) => {
+//                                 const data = await AsyncStorage.getItem('@database')
+//                                 // console.log("🚀 ~ file: Database.js:53 ~ async ~ data:", data)
+//                                 console.log("🚀 ~ file: Database.js:56 ~ database.transaction ~ error:", error)
+//                             });
+//                         } catch (error) {
+//                             console.log("🚀 ~ file: Database.js:53 ~ unzipDownloadFile ~ error:", error)
+//                         }
+//                     })
+//                     .catch(error => console.error('Error reading directory:', error));
+//             });
+//         });
+//     return data
+// }
 // export const offlineDataBAse = () => {
 //     const path = RNFS.MainBundlePath
 //     console.log("🚀 ~ file: Database.js:73 ~ offlineDataBAse ~ path:", path)
@@ -139,9 +187,10 @@ function unzipDownloadFile(target, cb) {
 export async function getSqlData(query, callbacks) {
     // console.log("🚀 ~ file: Database.js:146 ~ getSqlData ~ query:", query)
     const data = await AsyncStorage.getItem('@database')
-    console.log("🚀 ~ file: Database.js:142 ~ getSqlData ~ data:", data)
-    if (data !== null) {
-
+    const databasename = JSON.parse(data)
+    console.log("🚀 ~ file: Database.js:142 ~ getSqlData ~ data:", JSON.parse(data))
+    if (databasename?.name !== "songData.db") {
+        alert(true)
         await database.transaction(tx => {
             tx.executeSql(query, [], (_, results) => {
                 // console.log("🚀 ~ file: Database.js:149 ~ tx.executeSql ~ results:", results)

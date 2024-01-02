@@ -25,7 +25,6 @@ const BackButton = ({ secondText, firstText, middleText, color, navigation, seco
                                 <Text style={{ fontSize: 14, fontWeight: '500', color: '#FFFFFF' }}>{secondMiddleText}</Text>
                             </View>
                         }
-
                     </View>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>

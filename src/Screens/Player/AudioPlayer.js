@@ -15,12 +15,14 @@ import TrackPlayer, {
     useProgress,
 } from 'react-native-track-player';
 import { getSqlData } from '../Database';
+import { useIsFocused } from '@react-navigation/native';
 
-const AudioPlayer = ({ navigation, songsData, route, title, songs }) => {
+const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => {
     // const { params } = route
     console.log("🚀 ~ file: AudioPlayer.js:19 ~ AudioPlayer ~ songsData:", JSON.stringify(songsData, 0, 2))
+    const isFocuced = useIsFocused
     const { position, duration } = useProgress()
-    console.log("🚀 ~ file: AudioPlayer.js:110 ~ handlePlay ~ position:", position, duration)
+    // console.log("🚀 ~ file: AudioPlayer.js:110 ~ handlePlay ~ position:", position, duration)
     const [selectedOdhuvar, setSelectedOdhuvar] = useState(null)
     const [paused, setPaused] = useState(false)
     const [ThumbImage, setThumbImage] = useState(null)
@@ -34,79 +36,31 @@ const AudioPlayer = ({ navigation, songsData, route, title, songs }) => {
             })
     }, [])
     useEffect(() => {
-        if (songsData?.length > 0) {
-            setUpPlayer()
-        }
-    }, [songsData])
-    const odhuvar = [
-        {
-            id: 3787,
-            attributes: {
-                Odhuvarname: "Madurai Muthukkumaran",
-                Odhuvar_Tamilname: "மதுரை முத்துக்குமரன்",
-                Audio_Url: "https://shaivam.org/gallery/audio/madurai-muthukkumaran/thirugnanasambandar-thirukkadaikkappu-muzhuvathum/tis-md-mthkumaran-sam-thkkappu-muzhu-part-1-179-1-136-madhar-madappidi.mp3",
-                rawSong: "விண்ணுறு மால்வரை போல்விடை யேறுவர் ஆறுசூ\n  டுவர் விரி சுரி யொளிகொள் தோடுநின் றிலங்கக்\nகண்ணுற நின்றொளி ருங்கதிர் வெண்மதிக் கண்ணியர்\n  கழிந் தவ ரிழிந் திடும் முடைதலை கலனாப்\nபெண்ணுற நின்றவர் தம்முரு வம்மயன் மால்தொழவ் \n  வரி வையைப் பிணைந் திணைந் தணைந்ததும் பிரியார்\nதண்ணிதழ் முல்லையொ டெண்ணிதழ் மௌவல் மருங்கலர்\n  கருங் கழிந் நெருங் குநற் றரும புரம்பதியே.",
-
-            }
-        },
-        {
-            id: 3788,
-            attributes: {
-                Odhuvarname: "Satgurunatha Odhuvar",
-                Odhuvar_Tamilname: "சற்குருநாத ஓதுவார்",
-                Audio_Url: "https://shaivam.org/gallery/audio/satguru/sam-thkkappu-muzhuvathum/tis-sat-sam-thkkappu-muzhu-part-1-179-1-136-madhar-madappidi.mp3",
-                rawSong: "விண்ணுறு மால்வரை போல்விடை யேறுவர் ஆறுசூ\n  டுவர் விரி சுரி யொளிகொள் தோடுநின் றிலங்கக்\nகண்ணுற நின்றொளி ருங்கதிர் வெண்மதிக் கண்ணியர்\n  கழிந் தவ ரிழிந் திடும் முடைதலை கலனாப்\nபெண்ணுற நின்றவர் தம்முரு வம்மயன் மால்தொழவ் \n  வரி வையைப் பிணைந் திணைந் தணைந்ததும் பிரியார்\nதண்ணிதழ் முல்லையொ டெண்ணிதழ் மௌவல் மருங்கலர்\n  கருங் கழிந் நெருங் குநற் றரும புரம்பதியே.",
-
-            }
-        },
-        {
-            id: 3789,
-            attributes: {
-                Odhuvarname: "Satgurunatha Odhuvar",
-                Odhuvar_Tamilname: "சற்குருநாத ஓதுவார்",
-                Audio_Url: "https://shaivam.org/gallery/audio/satguru/sam-thkkappu-muzhuvathum/tis-sat-sam-thkkappu-muzhu-part-1-179-1-136-madhar-madappidi.mp3",
-                rawSong: "விண்ணுறு மால்வரை போல்விடை யேறுவர் ஆறுசூ\n  டுவர் விரி சுரி யொளிகொள் தோடுநின் றிலங்கக்\nகண்ணுற நின்றொளி ருங்கதிர் வெண்மதிக் கண்ணியர்\n  கழிந் தவ ரிழிந் திடும் முடைதலை கலனாப்\nபெண்ணுற நின்றவர் தம்முரு வம்மயன் மால்தொழவ் \n  வரி வையைப் பிணைந் திணைந் தணைந்ததும் பிரியார்\nதண்ணிதழ் முல்லையொ டெண்ணிதழ் மௌவல் மருங்கலர்\n  கருங் கழிந் நெருங் குநற் றரும புரம்பதியே.",
-
-            }
-        }
-    ]
-
-    const song = [
-        {
-            "category_name": "முதல்-திருமுறை",
-            "thirumariasiriyar": "திருஞானசம்பந்தர்  ",
-            "url": "https://shaivam.org/gallery/audio/madurai-muthukkumaran/thirugnanasambandar-thirukkadaikkappu-muzhuvathum/tis-md-mthkumaran-sam-thkkappu-muzhu-part-1-001-1-1-thodudaiya-seviyan.mp3",
-            "thalamOdhuvar_Tamilname": "மதுரை முத்துக்குமரன்",
-            "artist": "Madurai Muthukkumaran",
-            "title": "01.001 தோடுடைய செவியன்",
-            "id": 67
-        },
-        {
-            "category_name": "முதல்-திருமுறை",
-            "thirumariasiriyar": "திருஞானசம்பந்தர்",
-            "url": "https://shaivam.org/gallery/audio/satguru/sam-thkkappu-muzhuvathum/tis-sat-sam-thkkappu-muzhu-part-1-001-1-1-thodudaiya-seviyan.mp3",
-            "thalamOdhuvar_Tamilname": "சற்குருநாத ஓதுவார்",
-            "artist": "Satgurunatha Odhuvar",
-            "title": "01.001 தோடுடைய செவியன்",
-            "id": 249
-        },
-        {
-            "category_name": "முதல்-திருமுறை",
-            "thirumariasiriyar": "திருஞானசம்பந்தர்",
-            "url": "https://shaivam.org/gallery/audio/thiruthani-swaminathan/nalamiku-padhikangal/tis-tns-np-01-thodudaiya-seviyan.mp3",
-            "thalamOdhuvar_Tamilname": "திருத்தணி சுவாமிநாதன்",
-            "artist": "Thiruthani Swaminathan",
-            "title": "01.001 தோடுடைய செவியன்",
-            "id": 286
-        }
-    ]
+        console.log("playBackState", playBackState)
+        getSOngData()
+    }, [songsData, isFocuced])
+    const getSOngData = () => {
+        const query = `SELECT * from thirumurai_songs where refId=${prevId} and title NOTNULL`;
+        getSqlData(query, callbacks => {
+            // setSongDetails(callbacks)
+            const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`
+            getSqlData(query2, async callbacks => {
+                console.log("🚀 ~ file: ThrimuraiSong.js:58 ~ getSOngData ~ callbacks:", callbacks)
+                // setSongs(callbacks)
+                setOdhuvar(callbacks)
+                setUpPlayer(callbacks);
+            })
+        })
+    }
     const handlePause = async () => {
         setPaused(false)
+        // console.log("playBackState", playBackState)
         await TrackPlayer.pause()
         await TrackPlayer.getActiveTrack()
     }
     const handlePlay = async () => {
         setPaused(true)
+        // console.log("playBackState", playBackState)
         await TrackPlayer.play()
         await TrackPlayer.getActiveTrack()
     }
@@ -116,10 +70,10 @@ const AudioPlayer = ({ navigation, songsData, route, title, songs }) => {
                 {
                     selectedOdhuvar?.id == item?.id ?
                         <TouchableOpacity onPress={() => setSelectedOdhuvar(item)} style={{ paddingHorizontal: 7, backgroundColor: '#E0AAA7', marginLeft: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 15 }}>
-                            <Text style={[styles.AudioText, { color: '#3A1917', fontWeight: '700' }]}>{item?.category_name}</Text>
+                            <Text style={[styles.AudioText, { color: '#3A1917', fontWeight: '700' }]}>{item?.thalamOdhuvar_Tamilname}</Text>
                         </TouchableOpacity> :
                         <TouchableOpacity onPress={() => setSelectedOdhuvar(item)} style={{ paddingHorizontal: 7, backgroundColor: '#292929', marginLeft: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 15 }}>
-                            <Text style={styles.AudioText}>{item?.category_name}</Text>
+                            <Text style={styles.AudioText}>{item?.thalamOdhuvar_Tamilname}</Text>
                         </TouchableOpacity>
                 }
             </>
@@ -137,9 +91,13 @@ const AudioPlayer = ({ navigation, songsData, route, title, songs }) => {
         await TrackPlayer.play()
         setPaused(true)
     }
-    const setUpPlayer = async () => {
+    const setUpPlayer = async (song) => {
         try {
-            await TrackPlayer.setupPlayer();
+            // console.log(true)
+            if (!TrackPlayer._initialized) {
+                await TrackPlayer.setupPlayer();
+                // additional setup logic if needed
+            }
             await TrackPlayer.updateOptions({
                 android: {
                     appKilledPlaybackBehavior:
@@ -159,10 +117,35 @@ const AudioPlayer = ({ navigation, songsData, route, title, songs }) => {
                 ],
                 progressUpdateEventInterval: 2,
             });
-            await TrackPlayer.add(songsData)
+
+            await TrackPlayer.add(song)
+            const queue = await TrackPlayer.getQueue();
+            console.log("Current queue:", queue);
             // await TrackPlayer.setRepeatMode()
         } catch (error) {
-            // console.log("🚀 ~ file: AudioPlayer.js:102 ~ setUpPlayer ~ error:", error)
+            console.log("🚀 ~ file: AudioPlayer.js:102 ~ setUpPlayer ~ error:", error)
+            // TrackPlayer.reset()
+            await TrackPlayer.updateOptions({
+                android: {
+                    appKilledPlaybackBehavior:
+                        AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
+                },
+                capabilities: [
+                    Capability.Play,
+                    Capability.Pause,
+                    Capability.SkipToNext,
+                    Capability.SkipToPrevious,
+                    Capability.SeekTo,
+                ],
+                compactCapabilities: [
+                    Capability.Play,
+                    Capability.Pause,
+                    Capability.SkipToNext,
+                ],
+                progressUpdateEventInterval: 2,
+            });
+
+            await TrackPlayer.add(song)
         }
     }
     return (
@@ -172,8 +155,7 @@ const AudioPlayer = ({ navigation, songsData, route, title, songs }) => {
                     <Text style={styles.headingText}>Odhuvar</Text>
                     <Text style={styles.headingText}>(Select One)</Text>
                 </View>
-                <FlatList horizontal data={songsData} renderItem={({ item, index }) => renderAudios(item, index)} />
-
+                <FlatList contentContainerStyle={{ backgroundColor: 'white' }} horizontal data={Odhuvar} renderItem={({ item, index }) => renderAudios(item, index)} />
             </View>
             <View style={{ justifyContent: 'center', marginTop: 10 }}>
                 <Slider
