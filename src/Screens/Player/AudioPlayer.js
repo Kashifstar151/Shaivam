@@ -145,12 +145,12 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                 progressUpdateEventInterval: 2,
             });
 
-            await TrackPlayer.add(song);
-            const queue = await TrackPlayer.getQueue();
-            console.log('Current queue:', queue);
+            await TrackPlayer.add(song)
+            // const queue = await TrackPlayer.getQueue();
+            // console.log("Current queue:", queue);
             // await TrackPlayer.setRepeatMode()
         } catch (error) {
-            // console.log('🚀 ~ file: AudioPlayer.js:102 ~ setUpPlayer ~ error:', error);
+            // console.log("🚀 ~ file: AudioPlayer.js:102 ~ setUpPlayer ~ error:", error)
             // TrackPlayer.reset()
             await TrackPlayer.updateOptions({
                 android: {

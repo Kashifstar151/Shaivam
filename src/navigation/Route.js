@@ -11,16 +11,15 @@ import { RouteTexts } from './RouteText';
 import SQLite from 'react-native-sqlite-storage';
 import * as RNFS from 'react-native-fs';
 import { addEventListener, useNetInfo } from '@react-native-community/netinfo';
-import SearchScreen from '../Screens/Thrimurai/ThrimuraiSong/SearchScreen';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import LottieView from 'lottie-react-native';
+import SearchScreen from '../Screens/Thrimurai/Searchscreen/SearchScreen'
 
 const Route = () => {
-    const Stack = createNativeStackNavigator();
-    const database1 = SQLite.openDatabase({ name: 'main.db' });
+    const Stack = createNativeStackNavigator()
     const database = SQLite.openDatabase({ name: 'songData.db', createFromLocation: 1 });
-    const netInfo = useNetInfo();
-    const [isConnected, setIsConnected] = useState(false);
-    const databaseName = 'main.db';
+    const [showDownloading, setShowDownloading] = useState(false)
+    const [isConnected, setIsConnected] = useState(false)
     // const database = SQLite.openDatabase({ name: databaseName, });
     useEffect(() => {
         LogBox.ignoreAllLogs();
@@ -52,7 +51,7 @@ const Route = () => {
             Alert.alert('New Update Available', 'Click ok to sync latest data', [
                 {
                     text: 'Cancel',
-                    onPress: () => console.log(true),
+                    onPress: () => console.log(true)
                 },
                 {
                     text: 'Ok',
