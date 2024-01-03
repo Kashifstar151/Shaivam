@@ -100,6 +100,16 @@ export default {
             activeTextColor: '#8F3630',
             inactiveTextColor: '#F3DDDC',
         },
+
+        setting: {
+            backgroundColor: '#F3DDDC',
+            headingTxtColor: '#C1544E',
+            borderColor: '#C1554E',
+        },
+
+        settingText: {
+            color: '#C1544E',
+        },
     },
     dark: {
         // yellow
@@ -127,6 +137,17 @@ export default {
             bgColor: '#C2534C',
             activeTextColor: '#8F3630',
             inactiveTextColor: '#FFE0E0',
+        },
+
+        // setting
+        setting: {
+            backgroundColor: '#333333',
+            headingTxtColor: '#C1544E',
+            borderColor: '#C1554E',
+        },
+
+        settingText: {
+            color: '#777777',
         },
     },
 

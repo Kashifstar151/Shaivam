@@ -102,22 +102,29 @@ const ThrimuraiSong = ({ route, navigation }) => {
             </View>
             <ScrollView style={styles.lyricsContainer} nestedScrollEnabled>
                 <View style={{ paddingBottom: 300, paddingHorizontal: 20 }}>
-                    {
-                        songDetails?.length > 0 &&
+                    {songDetails?.length > 0 &&
                         songDetails?.map((res, index) => (
-
-
-                            <View style={{ borderBottomColor: colors.grey3, borderBottomWidth: 1, paddingBottom: 7, flexDirection: 'row' }}>
-                                <Text style={[styles.lyricsText, { fontSize: fontSizeCount, }]}>
+                            <View
+                                style={{
+                                    borderBottomColor: colors.grey3,
+                                    borderBottomWidth: 1,
+                                    paddingBottom: 7,
+                                    flexDirection: 'row',
+                                }}
+                            >
+                                <Text style={[styles.lyricsText, { fontSize: fontSizeCount }]}>
                                     {res?.rawSong}
                                 </Text>
-                                <Text style={[styles.lyricsText, { fontSize: fontSizeCount, alignSelf: 'flex-end' }]}>
+                                <Text
+                                    style={[
+                                        styles.lyricsText,
+                                        { fontSize: fontSizeCount, alignSelf: 'flex-end' },
+                                    ]}
+                                >
                                     {res?.song_no}
                                 </Text>
                             </View>
-
-                        ))
-                    }
+                        ))}
                 </View>
                 <View style={{ position: 'absolute', right: 0, zIndex: 10 }}>
                     {showSetting ? (
@@ -125,7 +132,14 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
                                 <TouchableOpacity style={styles.InsiderSettingButton}>
                                     <SettingIcon />
-                                    <Text style={styles.settingText}>Setting</Text>
+                                    <Text
+                                        style={[
+                                            styles.settingText,
+                                            { color: theme.settingText.color },
+                                        ]}
+                                    >
+                                        Settings
+                                    </Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     style={styles.clearIcon}
@@ -231,7 +245,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                     ) : (
                         <TouchableOpacity style={styles.settingButton} onPress={handlePress}>
                             <SettingIcon />
-                            <Text style={styles.settingText}>Setting</Text>
+                            <Text style={styles.settingText}>Settings</Text>
                         </TouchableOpacity>
                     )}
                 </View>
@@ -328,13 +342,11 @@ export const styles = StyleSheet.create({
         borderColor: '#C1554E',
         borderWidth: 1,
     },
-    settingText: { color: '#C1544E', fontSize: 10, fontWeight: '700' },
+    settingText: { fontSize: 10, fontWeight: '700' },
     animatedView: {
-        backgroundColor: '#F3DDDC',
         zIndex: 10,
         alignSelf: 'flex-end',
         height: 250,
-        borderColor: '#C1554E',
         borderWidth: 1,
         borderRadius: 5,
     },
