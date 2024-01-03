@@ -110,6 +110,14 @@ export default {
         settingText: {
             color: '#C1544E',
         },
+
+        lyricsText: {
+            color: '#000',
+        },
+
+        settingBtn: {
+            backgroundColor: '#F3DDDC',
+        },
     },
     dark: {
         // yellow
@@ -147,7 +155,15 @@ export default {
         },
 
         settingText: {
+            color: '##FFFFFF',
+        },
+
+        lyricsText: {
             color: '#777777',
+        },
+
+        settingBtn: {
+            backgroundColor: '#333333',
         },
     },
 
