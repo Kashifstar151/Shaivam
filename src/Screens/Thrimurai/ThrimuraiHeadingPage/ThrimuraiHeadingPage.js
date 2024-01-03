@@ -197,11 +197,19 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                     </View>
                     {selectedTitle !== null && selectedTitle == index ? (
                         <TouchableOpacity onPress={() => setSelectedTitle(null)}>
-                            <Icon name="horizontal-rule" size={24} />
+                            <Icon
+                                name="horizontal-rule"
+                                size={24}
+                                color={theme.colorscheme === 'light' ? '#000' : colors.grey1}
+                            />
                         </TouchableOpacity>
                     ) : (
                         <TouchableOpacity onPress={() => setSelectedTitle(index)}>
-                            <Icon name="add" size={24} />
+                            <Icon
+                                name="add"
+                                size={24}
+                                color={theme.colorscheme === 'light' ? '#000' : colors.grey1}
+                            />
                         </TouchableOpacity>
                     )}
                 </View>

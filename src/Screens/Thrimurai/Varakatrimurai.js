@@ -175,27 +175,34 @@ const Varakatrimurai = ({ navigation }) => {
             name: 'Author_name 4',
         },
     ];
-    const renderContents = (item, index) => (
-        <>
-            <View style={[styles.chapterBox, { backgroundColor: theme.backgroundColor }]}>
-                <View style={{ justifyContent: 'center' }}>
-                    <Text style={[styles.chapterNameTexts, { color: theme.textColor }]}>
-                        {item.name}
-                    </Text>
-                    {/* <Text style={styles.chapterTexts}>{item.chapters}</Text> */}
+    const renderContents = (item, index) => {
+        return (
+            <>
+                <View style={[styles.chapterBox, { backgroundColor: theme.backgroundColor }]}>
+                    <View style={{ justifyContent: 'center' }}>
+                        <Text style={[styles.chapterNameTexts, { color: theme.textColor }]}>
+                            {item.name}
+                        </Text>
+                        {/* <Text style={styles.chapterTexts}>{item.chapters}</Text> */}
+                    </View>
+                    <TouchableOpacity onPress={() => setSelectedTitle(index)}>
+                        <Icon
+                            name="add"
+                            size={24}
+                            color={theme.colorscheme === 'light' ? '#000' : '#fff'}
+                        />
+                    </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress={() => setSelectedTitle(index)}>
-                    <Icon name="add" size={24} />
-                </TouchableOpacity>
-            </View>
-            {selectedTitle == index && (
-                <View style={{ marginTop: 10 }}>
-                    {/* <FlatList data={item?.title} renderItem={({ item, index }) => renderTitle(item, index)} /> */}
-                    <RenderAudios songs={item?.songLyrics} navigation={navigation} />
-                </View>
-            )}
-        </>
-    );
+                {selectedTitle == index && (
+                    <View style={{ marginTop: 10 }}>
+                        {/* <FlatList data={item?.title} renderItem={({ item, index }) => renderTitle(item, index)} /> */}
+                        <RenderAudios songs={item?.songLyrics} navigation={navigation} />
+                    </View>
+                )}
+            </>
+        );
+    };
+
     return (
         <View>
             <FlatList

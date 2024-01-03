@@ -71,11 +71,23 @@ const RenderTitle = ({ data, navigation }) => {
                 </View>
                 {selectedChapter !== null && selectedChapter == index ? (
                     <TouchableOpacity onPress={() => setSelectedChapter(null)}>
-                        {<Icon name="keyboard-arrow-down" size={24} />}
+                        {
+                            <Icon
+                                name="keyboard-arrow-down"
+                                size={24}
+                                color={theme.colorScheme === 'light' ? '#000' : colors.grey1}
+                            />
+                        }
                     </TouchableOpacity>
                 ) : (
                     <TouchableOpacity onPress={() => setSelectedChapter(index)}>
-                        {<Icon name="keyboard-arrow-right" size={24} />}
+                        {
+                            <Icon
+                                name="keyboard-arrow-right"
+                                size={24}
+                                color={theme.colorScheme === 'light' ? '#000' : colors.grey1}
+                            />
+                        }
                     </TouchableOpacity>
                 )}
             </View>
