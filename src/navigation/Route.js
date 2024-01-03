@@ -51,7 +51,7 @@ const Route = () => {
             Alert.alert('New Update Available', 'Click ok to sync latest data', [
                 {
                     text: 'Cancel',
-                    onPress: () => console.log(true)
+                    onPress: () => onCancel()
                 },
                 {
                     text: 'Ok',
