@@ -26,6 +26,7 @@ import { getSqlData } from '../../Database';
 import { useIsFocused } from '@react-navigation/native';
 import TrackPlayer from 'react-native-track-player';
 import { ThemeContext } from '../../../Context/ThemeContext';
+import { colors } from '../../../Helpers';
 
 const ThrimuraiSong = ({ route, navigation }) => {
     let key = true;
@@ -71,16 +72,16 @@ const ThrimuraiSong = ({ route, navigation }) => {
         };
     }, [isFocused]);
     const getSOngData = () => {
-        const query = `SELECT * from thirumurai_songs where refId=${data?.prevId} and title NOTNULL ORDER`;
+        const query = `SELECT * from thirumurai_songs where refId=${data?.prevId} and title NOTNULL ORDER BY song_no ASC`;
         getSqlData(query, callbacks => {
+            console.log("🚀 ~ file: ThrimuraiSong.js:69 ~ getSOngData ~ callbacks:", callbacks)
             setSongDetails(callbacks)
             const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`
             getSqlData(query2, callbacks => {
-                // console.log("🚀 ~ file: ThrimuraiSong.js:58 ~ getSOngData ~ callbacks:", callbacks)
-                setSongs(callbacks);
-            });
-        });
-    };
+                setSongs(callbacks)
+            })
+        })
+    }
     return (
         <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
             <Background>
