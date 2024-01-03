@@ -62,6 +62,17 @@ const Route = () => {
             Alert.alert('You are offline!');
         }
     };
+
+    const onCancel = () => {
+        AsyncStorage.setItem(
+            '@database',
+            JSON.stringify({ name: 'songData.db', createFromLocation: 1 })
+        );
+        setShowDownloading(true);
+        setTimeout(() => {
+            setShowDownloading(false);
+        }, 2000);
+    };
     async function requestFilePermissions() {
         try {
             const granted = await PermissionsAndroid.request(
