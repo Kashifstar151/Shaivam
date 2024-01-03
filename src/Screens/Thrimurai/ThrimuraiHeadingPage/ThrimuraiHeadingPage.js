@@ -61,10 +61,6 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     ];
     const [selectedHeader, setSelectedheader] = useState(headerData[0]);
     const [selectedTitle, setSelectedTitle] = useState(null);
-    const [selectedChapter, setSelectedChapter] = useState(null);
-    const [data, setData] = useState();
-    const [onFocus, setOnFocus] = useState(false);
-    const database = SQLite.openDatabase({ name: 'SongsData.db', createFromLocation: 1 });
     const [searchedText, setSearchedText] = useState(null);
     /* Get latest DB from the disk */
     const [thrimurais, setThrimurais] = useState(list);
@@ -261,7 +257,15 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                     <SearchInput
                         setState={setSearchedText}
                         state={searchedText}
-                        setOnFocus={setOnFocus}
+
+                        setOnFocus={() =>
+                            navigation.navigate(RouteTexts.SEARCH_SCREEN, {
+                                // thrimurais: thrimurais,
+                                query1: `SELECT * FROM thirumurais WHERE search_thirumurai_title LIKE`,
+                                query2: `AND fkTrimuria <=7 LIMIT 10 OFFSET 0`,
+                                allThirumirai: false
+
+                            })}
                         placeholder={'Search for anything (Eg - தோடுடைய செவியன்) '}
                     />
                 </View>

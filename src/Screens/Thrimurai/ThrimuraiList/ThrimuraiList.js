@@ -40,12 +40,11 @@ const ThrimuraiList = ({ navigation }) => {
         name: 'SongsData.db',
         createFromLocation: 1,
     });
-    useEffect(() => {}, []);
+    useEffect(() => { }, []);
 
     useEffect(() => {
-        // if (selectedHeader == 'Panmurai') {
-        retrieveData();
-        // }
+        retrieveData()
+
     }, []);
     const retrieveData = async () => {
         getSqlData('SELECT * FROM category', (callbacks) => {
@@ -143,6 +142,9 @@ const ThrimuraiList = ({ navigation }) => {
                             onFocus={() =>
                                 navigation.navigate(RouteTexts.SEARCH_SCREEN, {
                                     thrimurais: thrimurais,
+                                    allThirumirai: true,
+                                    query1: `SELECT * FROM thirumurais WHERE search_thirumurai_title LIKE`,
+                                    query2: `ORDER BY Thirumurai_title  ASC LIMIT 10 OFFSET 0;`
                                 })
                             }
                             placeholder={'Search for anything (Eg - தோடுடைய செவியன்)'}
@@ -182,7 +184,6 @@ const ThrimuraiList = ({ navigation }) => {
                             })
                         }
                     >
-                        {/* yellow */}
                         <GradientContainer
                             textColor={theme.textColor}
                             Icon={<BookIcon fill={theme.textColor} />}

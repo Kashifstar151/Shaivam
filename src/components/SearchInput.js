@@ -16,7 +16,7 @@ const SearchInput = ({ placeholder, setState, state, color, setOnFocus }) => {
             <Icon name="search" size={28} color={color ? '#777777' : colors.grey1} />
             <TextInput
                 onBlur={() => setOnFocus(false)}
-                onFocus={() => setOnFocus(true)}
+                onFocus={() => setOnFocus()}
                 placeholder={placeholder}
                 onChangeText={(e) => setState(e)}
                 placeholderTextColor={theme.searchBox.textColor}

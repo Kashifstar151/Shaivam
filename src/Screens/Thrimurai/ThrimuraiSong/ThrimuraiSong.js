@@ -71,11 +71,11 @@ const ThrimuraiSong = ({ route, navigation }) => {
         };
     }, [isFocused]);
     const getSOngData = () => {
-        const query = `SELECT * from thirumurai_songs where refId=${data?.prevId} and title NOTNULL`;
-        getSqlData(query, (callbacks) => {
-            setSongDetails(callbacks);
-            const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`;
-            getSqlData(query2, (callbacks) => {
+        const query = `SELECT * from thirumurai_songs where refId=${data?.prevId} and title NOTNULL ORDER`;
+        getSqlData(query, callbacks => {
+            setSongDetails(callbacks)
+            const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`
+            getSqlData(query2, callbacks => {
                 // console.log("🚀 ~ file: ThrimuraiSong.js:58 ~ getSOngData ~ callbacks:", callbacks)
                 setSongs(callbacks);
             });
@@ -102,17 +102,22 @@ const ThrimuraiSong = ({ route, navigation }) => {
             </View>
             <ScrollView style={styles.lyricsContainer} nestedScrollEnabled>
                 <View style={{ paddingBottom: 300, paddingHorizontal: 20 }}>
-                    {songDetails?.length > 0 &&
-                        songDetails?.map((res) => (
-                            <Text
-                                style={[
-                                    styles.lyricsText,
-                                    { fontSize: fontSizeCount, color: theme.textColor },
-                                ]}
-                            >
-                                {res?.rawSong}
-                            </Text>
-                        ))}
+                    {
+                        songDetails?.length > 0 &&
+                        songDetails?.map((res, index) => (
+
+
+                            <View style={{ borderBottomColor: colors.grey3, borderBottomWidth: 1, paddingBottom: 7, flexDirection: 'row' }}>
+                                <Text style={[styles.lyricsText, { fontSize: fontSizeCount, }]}>
+                                    {res?.rawSong}
+                                </Text>
+                                <Text style={[styles.lyricsText, { fontSize: fontSizeCount, alignSelf: 'flex-end' }]}>
+                                    {res?.song_no}
+                                </Text>
+                            </View>
+
+                        ))
+                    }
                 </View>
                 <View style={{ position: 'absolute', right: 0, zIndex: 10 }}>
                     {showSetting ? (
