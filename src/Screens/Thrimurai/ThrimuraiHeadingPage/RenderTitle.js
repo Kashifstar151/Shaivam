@@ -75,7 +75,7 @@ const RenderTitle = ({ data, navigation }) => {
                             <Icon
                                 name="keyboard-arrow-down"
                                 size={24}
-                                color={theme.colorScheme === 'light' ? '#000' : colors.grey1}
+                                color={theme.colorscheme === 'light' ? '#000' : colors.grey1}
                             />
                         }
                     </TouchableOpacity>
@@ -85,7 +85,7 @@ const RenderTitle = ({ data, navigation }) => {
                             <Icon
                                 name="keyboard-arrow-right"
                                 size={24}
-                                color={theme.colorScheme === 'light' ? '#000' : colors.grey1}
+                                color={theme.colorscheme === 'light' ? '#000' : colors.grey1}
                             />
                         }
                     </TouchableOpacity>
