@@ -73,15 +73,15 @@ const ThrimuraiSong = ({ route, navigation }) => {
     }, [isFocused]);
     const getSOngData = () => {
         const query = `SELECT * from thirumurai_songs where refId=${data?.prevId} and title NOTNULL ORDER BY song_no ASC`;
-        getSqlData(query, callbacks => {
-            console.log("🚀 ~ file: ThrimuraiSong.js:69 ~ getSOngData ~ callbacks:", callbacks)
-            setSongDetails(callbacks)
-            const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`
-            getSqlData(query2, callbacks => {
-                setSongs(callbacks)
-            })
-        })
-    }
+        getSqlData(query, (callbacks) => {
+            // console.log('🚀 ~ file: ThrimuraiSong.js:69 ~ getSOngData ~ callbacks:', callbacks);
+            setSongDetails(callbacks);
+            const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`;
+            getSqlData(query2, (callbacks) => {
+                setSongs(callbacks);
+            });
+        });
+    };
     return (
         <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
             <Background>
@@ -113,13 +113,22 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                     flexDirection: 'row',
                                 }}
                             >
-                                <Text style={[styles.lyricsText, { fontSize: fontSizeCount }]}>
+                                <Text
+                                    style={[
+                                        styles.lyricsText,
+                                        { fontSize: fontSizeCount, color: theme.lyricsText.color },
+                                    ]}
+                                >
                                     {res?.rawSong}
                                 </Text>
                                 <Text
                                     style={[
                                         styles.lyricsText,
-                                        { fontSize: fontSizeCount, alignSelf: 'flex-end' },
+                                        {
+                                            fontSize: fontSizeCount,
+                                            alignSelf: 'flex-end',
+                                            color: theme.lyricsText.color,
+                                        },
                                     ]}
                                 >
                                     {res?.song_no}
@@ -129,7 +138,9 @@ const ThrimuraiSong = ({ route, navigation }) => {
                 </View>
                 <View style={{ position: 'absolute', right: 0, zIndex: 10 }}>
                     {showSetting ? (
-                        <Animated.View style={[styles.animatedView, animatedStyles]}>
+                        <Animated.View
+                            style={[styles.animatedView, animatedStyles, { ...theme.setting }]}
+                        >
                             <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
                                 <TouchableOpacity style={styles.InsiderSettingButton}>
                                     <SettingIcon />
@@ -146,7 +157,11 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                     style={styles.clearIcon}
                                     onPress={() => closeAnimatedView()}
                                 >
-                                    <Icon name="clear" size={24} color="black" />
+                                    <Icon
+                                        name="clear"
+                                        size={24}
+                                        color={theme.colorscheme === 'light' ? '#000' : '#fff'}
+                                    />
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.TranslationContainer}>
@@ -244,7 +259,13 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             </View>
                         </Animated.View>
                     ) : (
-                        <TouchableOpacity style={styles.settingButton} onPress={handlePress}>
+                        <TouchableOpacity
+                            style={[
+                                styles.settingButton,
+                                { backgroundColor: theme.settingBtn.backgroundColor },
+                            ]}
+                            onPress={handlePress}
+                        >
                             <SettingIcon />
                             <Text style={styles.settingText}>Settings</Text>
                         </TouchableOpacity>
@@ -325,7 +346,6 @@ export const styles = StyleSheet.create({
     },
     lyricsContainer: { flexGrow: 1, paddingHorizontal: 0, marginTop: 10 },
     lyricsText: {
-        color: '#222222',
         fontWeight: '500',
         fontFamily: 'AnekTamil-Regular',
         lineHeight: 30,
@@ -339,7 +359,6 @@ export const styles = StyleSheet.create({
         right: '0%',
         height: 30,
         borderRadius: 5,
-        backgroundColor: '#F3DDDC',
         borderColor: '#C1554E',
         borderWidth: 1,
     },
