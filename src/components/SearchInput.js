@@ -1,14 +1,16 @@
-import React from 'react'
-import { Alert, Dimensions, StyleSheet, TextInput, View } from 'react-native'
-import Icon from "react-native-vector-icons/dist/MaterialIcons"
-import { colors } from "../Helpers"
+import React, { useContext } from 'react';
+import { Alert, Dimensions, StyleSheet, TextInput, View } from 'react-native';
+import Icon from 'react-native-vector-icons/dist/MaterialIcons';
+import { colors } from '../Helpers';
+import { ThemeContext } from '../Context/ThemeContext';
 const SearchInput = ({ placeholder, setState, state, color, setOnFocus }) => {
+    const { theme } = useContext(ThemeContext);
     return (
         <View
             style={
                 color
                     ? [styles.inputcontainer, { backgroundColor: '#F3F3F3' }]
-                    : styles.inputcontainer
+                    : [styles.inputcontainer, { backgroundColor: theme.searchBox.bgColor }]
             }
         >
             <Icon name="search" size={28} color={color ? '#777777' : colors.grey1} />
@@ -17,19 +19,19 @@ const SearchInput = ({ placeholder, setState, state, color, setOnFocus }) => {
                 onFocus={() => setOnFocus(true)}
                 placeholder={placeholder}
                 onChangeText={(e) => setState(e)}
-                placeholderTextColor={colors.searchBox().textColor}
+                placeholderTextColor={theme.searchBox.textColor}
                 value={state}
                 style={{ fontSize: 12, paddingHorizontal: 5, color: '#FF9D9D' }}
             />
         </View>
     );
-}
+};
 export const styles = StyleSheet.create({
     inputcontainer: {
         marginHorizontal: 15,
         borderRadius: 10,
         paddingHorizontal: 10,
-        backgroundColor: colors.searchBox().bgColor,
+
         width: Dimensions.get('window').width - 30,
         height: 55,
         marginBottom: 10,
@@ -37,4 +39,4 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
     },
 });
-export default SearchInput
+export default SearchInput;

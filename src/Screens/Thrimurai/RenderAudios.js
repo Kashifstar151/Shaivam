@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react'
-import { FlatList, Pressable, Text, View } from 'react-native'
-import MusicIcon1 from "../../assets/Images/music 1.svg"
-import { RouteTexts } from '../../navigation/RouteText'
+import React, { useContext, useEffect, useState } from 'react';
+import { FlatList, Pressable, Text, View } from 'react-native';
+import MusicIcon1 from '../../assets/Images/music 1.svg';
+import { RouteTexts } from '../../navigation/RouteText';
 import SQLite from 'react-native-sqlite-storage';
 import { getSqlData } from '../Database';
-import { colors } from '../../Helpers';
+import { ThemeContext } from '../../Context/ThemeContext';
 
 const RenderAudios = ({ navigation, songs, data }) => {
-    console.log('🚀 ~ file: RenderAudios.js:10 ~ RenderAudios ~ data:', songs);
     let key = true;
     const database = SQLite.openDatabase({
         name: key ? 'SongsData.db' : 'main.db',
         createFromLocation: 1,
     });
+    const { theme } = useContext(ThemeContext);
     // console.log("🚀 ~ file: RenderAudios.js:7 ~ RenderAudios ~ data:", data)
     const [audioData, setAudioData] = useState([]);
     useEffect(() => {
@@ -21,7 +21,6 @@ const RenderAudios = ({ navigation, songs, data }) => {
     const getDtataFromSql = async () => {
         const query = `SELECT Thirumurai_title, prevId FROM thirumurais WHERE  fkTrimuria=1 AND pann='${songs?.pann}' ORDER BY  titleNo ASC  LIMIT 10 OFFSET 0`;
         getSqlData(query, (callbacks) => {
-            console.log('🚀 ~ file: RenderAudios.js:42 ~ getDtataFromSql ~ callbacks:', callbacks);
             setAudioData(callbacks);
         });
         // await database.transaction(tx => {
@@ -60,7 +59,7 @@ const RenderAudios = ({ navigation, songs, data }) => {
         >
             <View
                 style={{
-                    backgroundColor: colors.screenTheme.backgroundColor,
+                    backgroundColor: theme.backgroundColor,
                     height: 40,
                     width: 40,
                     justifyContent: 'center',
@@ -76,6 +75,7 @@ const RenderAudios = ({ navigation, songs, data }) => {
                     fontSize: 12,
                     fontFamily: 'AnekTamil-Regular',
                     fontWeight: '500',
+                    color: theme.textColor,
                 }}
             >
                 {item.Thirumurai_title}
@@ -92,4 +92,4 @@ const RenderAudios = ({ navigation, songs, data }) => {
     );
 };
 
-export default RenderAudios
+export default RenderAudios;
