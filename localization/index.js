@@ -6,7 +6,6 @@ import 'moment/min/locales';
 import moment from 'moment';
 import en from './en';
 import hi from './hi';
-import 'intl-pluralrules';
 
 export const AVAILABLE_LANGUAGES = {
     en,
@@ -14,8 +13,6 @@ export const AVAILABLE_LANGUAGES = {
 };
 
 const STORE_LANGUAGE_KEY = 'settings.lang';
-
-const AVALAILABLE_LANG_CODES = Object.keys(AVAILABLE_LANGUAGES);
 
 const languageDetector = {
     type: 'languageDetector',
