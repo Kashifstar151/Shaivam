@@ -30,8 +30,32 @@ import EllipseSVGRight from '../../../components/SVGs/EllipseSVGRight';
 import EllispseSVGLeft from '../../../components/SVGs/EllispseSVGLeft';
 import { ThemeContext } from '../../../Context/ThemeContext';
 import BookIcon from '../../../components/SVGs/BookIcon';
+import { useTranslation } from 'react-i18next';
+import '../../../../localization';
 
 const ThrimuraiList = ({ navigation }) => {
+    const LANGS = [
+        { lngCode: 'en', label: 'English' },
+        { lngCode: 'hi', label: 'हिन्दी' },
+        { lngCode: 'ar', label: 'Arabic' },
+        { lngCode: 'as', label: 'Assamese' },
+        { lngCode: 'gu', label: 'Gujarati' },
+        { lngCode: 'he', label: 'Hebrew' },
+        { lngCode: 'ja', label: 'Japanese' },
+        { lngCode: 'kn', label: 'Kannada' },
+        { lngCode: 'ml', label: 'Malayalam' },
+        { lngCode: 'od', label: 'Odia' },
+        { lngCode: 'pa', label: 'Punjabi' },
+        { lngCode: 'si', label: 'Sinhala' },
+        { lngCode: 'ta', label: 'Tamil' },
+        { lngCode: 'te', label: 'Telugu' },
+        { lngCode: 'ur', label: 'Urdu' },
+    ];
+
+    const { t, i18n } = useTranslation();
+    const selectedLngCode = i18n.language;
+    const setLng = (lngCode) => i18n.changeLanguage(lngCode);
+
     const [searchText, setSearchText] = useState(null);
     const [thrimurais, setThrimurais] = useState([]);
     const [onFocus, setOnFocus] = useState(false);
@@ -40,11 +64,10 @@ const ThrimuraiList = ({ navigation }) => {
         name: 'SongsData.db',
         createFromLocation: 1,
     });
-    useEffect(() => { }, []);
+    useEffect(() => {}, []);
 
     useEffect(() => {
-        retrieveData()
-
+        retrieveData();
     }, []);
     const retrieveData = async () => {
         getSqlData('SELECT * FROM category', (callbacks) => {
@@ -118,7 +141,6 @@ const ThrimuraiList = ({ navigation }) => {
     ];
 
     const { theme } = useContext(ThemeContext);
-    console.log('🚀 ~ file: ThrimuraiList.js:121 ~ theme:', theme);
 
     return (
         <ScrollView
@@ -144,7 +166,7 @@ const ThrimuraiList = ({ navigation }) => {
                                     thrimurais: thrimurais,
                                     allThirumirai: true,
                                     query1: `SELECT * FROM thirumurais WHERE search_thirumurai_title LIKE`,
-                                    query2: `ORDER BY Thirumurai_title  ASC LIMIT 10 OFFSET 0;`
+                                    query2: `ORDER BY Thirumurai_title  ASC LIMIT 10 OFFSET 0;`,
                                 })
                             }
                             placeholder={'Search for anything (Eg - தோடுடைய செவியன்)'}
@@ -187,7 +209,8 @@ const ThrimuraiList = ({ navigation }) => {
                         <GradientContainer
                             textColor={theme.textColor}
                             Icon={<BookIcon fill={theme.textColor} />}
-                            name={`${thrimurais[0]?.name}(1-7)`}
+                            name={`${t('(1st bar Yellow)')}`}
+                            // name={`${thrimurais[0]?.name}(1-7)`}
                             colors={theme.yellowGradcolors}
                             RightImage={
                                 <EllipseSVGRight
@@ -217,7 +240,8 @@ const ThrimuraiList = ({ navigation }) => {
                         <GradientContainer
                             textColor={theme.textColor}
                             Icon={<BookIcon fill={theme.textColor} />}
-                            name={thrimurais[8]?.name}
+                            name={t('(2nd bar pink)')}
+                            // name={thrimurais[8]?.name}
                             colors={theme.redGradcolors}
                             RightImage={
                                 <EllipseSVGRight
@@ -246,7 +270,8 @@ const ThrimuraiList = ({ navigation }) => {
                         {/* green */}
                         <GradientContainer
                             textColor={theme.textColor}
-                            name={thrimurais[9]?.name}
+                            name={t('(3rd bar Green)')}
+                            // name={thrimurais[9]?.name}
                             Icon={<BookIcon fill={theme.textColor} />}
                             colors={theme.greenGradcolors}
                             RightImage={
@@ -276,7 +301,8 @@ const ThrimuraiList = ({ navigation }) => {
                         <GradientContainer
                             textColor={theme.textColor}
                             Icon={<BookIcon fill={theme.textColor} />}
-                            name={thrimurais[9]?.name}
+                            name={t('(4th bar yellow)')}
+                            // name={thrimurais[9]?.name}
                             colors={theme.yellowGradcolors}
                             RightImage={
                                 <EllipseSVGRight
@@ -305,7 +331,8 @@ const ThrimuraiList = ({ navigation }) => {
                         <GradientContainer
                             textColor={theme.textColor}
                             Icon={<BookIcon fill={theme.textColor} />}
-                            name={thrimurais[10]?.name}
+                            name={t('(5th bar pink)')}
+                            // name={thrimurais[10]?.name}
                             colors={theme.redGradcolors}
                             RightImage={
                                 <EllipseSVGRight
@@ -333,7 +360,8 @@ const ThrimuraiList = ({ navigation }) => {
                     >
                         <GradientContainer
                             textColor={theme.textColor}
-                            name={thrimurais[11]?.name}
+                            name={t('(6th bar Green)')}
+                            // name={thrimurais[11]?.name}
                             Icon={<BookIcon fill={theme.textColor} />}
                             colors={theme.greenGradcolors}
                             RightImage={
@@ -362,7 +390,8 @@ const ThrimuraiList = ({ navigation }) => {
                     >
                         <GradientContainer
                             textColor={theme.textColor}
-                            name={thrimurais[12]?.name}
+                            name={t('(7th bar yellow)')}
+                            // name={thrimurais[12]?.name}
                             Icon={<BookIcon fill={theme.textColor} />}
                             colors={theme.yellowGradcolors}
                             RightImage={
@@ -379,7 +408,7 @@ const ThrimuraiList = ({ navigation }) => {
                             }
                         />
                     </Pressable>
-                    <Pressable
+                    {/* <Pressable
                         style={styles.boxCommon}
                         onPress={() =>
                             navigation.navigate(RouteTexts.THIRIMURAI_HEADING, {
@@ -391,7 +420,8 @@ const ThrimuraiList = ({ navigation }) => {
                     >
                         <GradientContainer
                             textColor={theme.textColor}
-                            name={thrimurais[13]?.name}
+                            name={t('(3rd bar Green)')}
+                            // name={thrimurais[13]?.name}
                             Icon={<BookIcon fill={theme.textColor} />}
                             colors={theme.redGradcolors}
                             RightImage={
@@ -407,7 +437,7 @@ const ThrimuraiList = ({ navigation }) => {
                                 />
                             }
                         />
-                    </Pressable>
+                    </Pressable> */}
                     <View style={styles.boxCommon}>
                         <Text style={styles.playlistHeading}>Recently Playlist</Text>
                         <FlatList
