@@ -4,7 +4,7 @@ import { View } from 'react-native'
 const Temples = () => {
     return (
         <View>
-
+                
         </View>
     )
 }

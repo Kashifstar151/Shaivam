@@ -1,7 +1,7 @@
 import { Appearance } from 'react-native';
 import { dark, light } from '../Constants/globalCSS';
 const colorScheme = Appearance.getColorScheme();
-console.log("🚀 ~ file: colors.js:4 ~ colorScheme:", colorScheme)
+// console.log("🚀 ~ file: colors.js:4 ~ colorScheme:", colorScheme)
 export default {
     primaryColor: '#EDCB76',
     primaryDarkColor: '#0D0D0D',
@@ -100,30 +100,5 @@ export default {
         return colorScheme === 'light'
             ? { startColor: '#BAE6C6', stopColor: '#8EC99F' }
             : this.darkCardGrad;
-    },
-
-    // search box
-    searchBox: function () {
-        return colorScheme === 'light'
-            ? { bgColor: '#8F3630', textColor: '#FF9D9D' }
-            : { bgColor: '#2A2A2A', textColor: '#777777' };
-    },
-
-    iconHeadingColor: function () {
-        return colorScheme === 'light'
-            ? {
-                  inactive: '#FFE0E0',
-                  active: '#8F3630',
-                  bgColor: '#F3DDDC',
-                  activeTextColor: '#8F3630',
-                  inactiveTextColor: '#F3DDDC',
-              }
-            : {
-                  inactive: '#777777',
-                  active: '#FFFFFF',
-                  bgColor: '#C2534C',
-                  activeTextColor: '#8F3630',
-                  inactiveTextColor: '#FFE0E0',
-              };
     },
 };
