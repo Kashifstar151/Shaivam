@@ -167,14 +167,14 @@ const Route = () => {
                     headerShown: false,
                 }}
             >
-                {/* <Stack.Screen name="Home" component={HomeScreen} /> */}
-                <Stack.Screen name="Thrimurai" component={ThrimuraiList} />
+                <Stack.Screen name="Home" component={HomeScreen} />
+                {/* <Stack.Screen name="Thrimurai" component={ThrimuraiList} />
                 <Stack.Screen name={RouteTexts.SEARCH_SCREEN} component={SearchScreen} />
                 <Stack.Screen
                     name={RouteTexts.THIRIMURAI_HEADING}
                     component={ThrimuraiHeadingPage}
                 />
-                <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={ThrimuraiSong} />
+                <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={ThrimuraiSong} /> */}
             </Stack.Navigator>
         </NavigationContainer>
     );
