@@ -1,11 +1,11 @@
-export const dark = {
+export const darkTheme = {
     colorscheme: 'dark',
     backgroundColor: '#242424',
     textColor: '#fff',
     cardBgColor: '#333333',
 };
 
-export const light = {
+export const lightTheme = {
     colorscheme: 'light',
     backgroundColor: '#fff',
     textColor: '#000000',

@@ -1,8 +1,10 @@
-import React from 'react'
-import { Platform, Dimensions, Image, ImageBackground, StatusBar, View } from 'react-native'
-import colorConst from '../Helpers/colors';
+import React, { useContext } from 'react';
+import { Platform, Dimensions, Image, ImageBackground, StatusBar, View } from 'react-native';
+// import colorConst from '../Helpers/colors';
+import { ThemeContext } from '../Context/ThemeContext';
 
 const Background = (props) => {
+    const { theme } = useContext(ThemeContext);
     return (
         <View
             style={{
@@ -13,7 +15,7 @@ const Background = (props) => {
         >
             <ImageBackground
                 source={
-                    colorConst.screenTheme.colorscheme === 'light'
+                    theme.colorscheme === 'light'
                         ? require('../../assets/Images/Background.png')
                         : require('../../assets/Images/BackgroundCommon.png')
                 }

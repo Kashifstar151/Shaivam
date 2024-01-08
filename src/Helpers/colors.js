@@ -1,7 +1,9 @@
 import { Appearance } from 'react-native';
-import { dark, light } from '../Constants/globalCSS';
+import { darkTheme, lightTheme } from '../Constants/globalCSS';
 const colorScheme = Appearance.getColorScheme();
-// console.log("🚀 ~ file: colors.js:4 ~ colorScheme:", colorScheme)
+const darkCardGrad = { startColor: '#404040', stopColor: '#404040' };
+const greyForCard = ['#333333', '#333333'];
+
 export default {
     primaryColor: '#EDCB76',
     primaryDarkColor: '#0D0D0D',
@@ -50,7 +52,7 @@ export default {
     //dynamic color schema based on theme
 
     // global
-    screenTheme: colorScheme === 'dark' ? dark : light,
+    // screenTheme: colorScheme === 'dark' ? darkTheme : lightTheme,
     greyForCard: ['#333333', '#333333'],
     darkCardGrad: { startColor: '#404040', stopColor: '#404040' },
 
@@ -68,6 +70,101 @@ export default {
     },
     yellowGradcolors: function () {
         return colorScheme === 'light' ? this.yellowGradCard : this.greyForCard;
+    },
+
+    // new format
+    light: {
+        // yellow
+        yellowGradBallRight: { startColor: '#FFD87A', stopColor: '#FFE9B4' },
+        yellowGradBallLeft: { startColor: '#FFF3D6', stopColor: '#FEDC8B' },
+        yellowGradcolors: ['#FEE8B3', '#FEE199'],
+
+        // red
+        redGradcolors: ['#E5B8B5', '#FD9991'],
+        redGradBallRight: { startColor: '#FD9991', stopColor: '#E5B8B5' },
+        redGradBallLeft: { startColor: '#FFF3D6', stopColor: '#E5B8B5' },
+
+        // green
+        greenGradcolors: ['#AFD9BB', '#60B278'],
+        greenGradBallRight: { startColor: '#BAE6C6', stopColor: '#8EC99F' },
+        greenGradBallLeft: { startColor: '#BAE6C6', stopColor: '#8EC99F' },
+
+        // search box
+        searchBox: { bgColor: '#8F3630', textColor: '#FF9D9D' },
+
+        // iconHeadingColor
+        iconHeadingColor: {
+            inactive: '#FFE0E0',
+            active: '#8F3630',
+            bgColor: '#F3DDDC',
+            activeTextColor: '#8F3630',
+            inactiveTextColor: '#F3DDDC',
+        },
+
+        setting: {
+            backgroundColor: '#F3DDDC',
+            headingTxtColor: '#C1544E',
+            borderColor: '#C1554E',
+        },
+
+        settingText: {
+            color: '#C1544E',
+        },
+
+        lyricsText: {
+            color: '#000',
+        },
+
+        settingBtn: {
+            backgroundColor: '#F3DDDC',
+        },
+    },
+    dark: {
+        // yellow
+        yellowGradBallRight: darkCardGrad,
+        yellowGradBallLeft: darkCardGrad,
+        yellowGradcolors: greyForCard,
+
+        // red
+        redGradcolors: greyForCard,
+        redGradBallRight: darkCardGrad,
+        redGradBallLeft: darkCardGrad,
+
+        // green
+        greenGradcolors: greyForCard,
+        greenGradBallRight: darkCardGrad,
+        greenGradBallLeft: darkCardGrad,
+
+        // search box
+        searchBox: { bgColor: '#2A2A2A', textColor: '#777777' },
+
+        // iconHeadingColor,
+        iconHeadingColor: {
+            inactive: '#777777',
+            active: '#FFFFFF',
+            bgColor: '#C2534C',
+            activeTextColor: '#8F3630',
+            inactiveTextColor: '#FFE0E0',
+        },
+
+        // setting
+        setting: {
+            backgroundColor: '#333333',
+            headingTxtColor: '#C1544E',
+            borderColor: '#C1554E',
+        },
+
+        settingText: {
+            color: '##FFFFFF',
+        },
+
+        lyricsText: {
+            color: '#777777',
+        },
+
+        settingBtn: {
+            backgroundColor: '#333333',
+        },
     },
 
     // red card

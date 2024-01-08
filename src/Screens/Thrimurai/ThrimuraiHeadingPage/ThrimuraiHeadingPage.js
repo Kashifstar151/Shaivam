@@ -1,8 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import { Dimensions, FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import BackButton from '../../../components/BackButton'
-import SearchInput from '../../../components/SearchInput'
-import MusicIcon from "../../../assets/Images/PanmuraiLogo.svg"
+import React, { useContext, useEffect, useState } from 'react';
+import {
+    Dimensions,
+    FlatList,
+    Pressable,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native';
+import BackButton from '../../../components/BackButton';
+import SearchInput from '../../../components/SearchInput';
+import MusicIcon from '../../../assets/Images/PanmuraiLogo.svg';
 import Icon2 from '../../../assets/Images/ThalamuraiLogo.svg';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import { RouteTexts } from '../../../navigation/RouteText';
@@ -22,30 +30,33 @@ import { colors } from '../../../Helpers';
 import ThalamuraiLogo from '../../../components/SVGs/ThalamuraiLogo';
 import ValarutramuraiLogo from '../../../components/SVGs/ValarutramuraiLogo';
 import AkarthiLogo from '../../../components/SVGs/AkarthiLogo';
+import { ThemeContext } from '../../../Context/ThemeContext';
 
 const ThrimuraiHeadingPage = ({ route, navigation }) => {
+    const { theme } = useContext(ThemeContext);
+
     const isFocuced = useIsFocused;
     const { page, list, query } = route.params;
     const headerData = [
         {
             name: 'Panmurai',
-            Icon: <PanmuraiLogo fill={colors.iconHeadingColor().inactive} />,
-            activeIcon: <PanmuraiLogo fill={colors.iconHeadingColor().active} />,
+            Icon: <PanmuraiLogo fill={theme.iconHeadingColor.inactive} />,
+            activeIcon: <PanmuraiLogo fill={theme.iconHeadingColor.active} />,
         },
         {
             name: 'Thalamurai',
-            Icon: <ThalamuraiLogo fill={colors.iconHeadingColor().inactive} />,
-            activeIcon: <ThalamuraiLogo fill={colors.iconHeadingColor().active} />,
+            Icon: <ThalamuraiLogo fill={theme.iconHeadingColor.inactive} />,
+            activeIcon: <ThalamuraiLogo fill={theme.iconHeadingColor.active} />,
         },
         {
             name: 'Varalatrumurai',
-            Icon: <ValarutramuraiLogo fill={colors.iconHeadingColor().inactive} />,
-            activeIcon: <ValarutramuraiLogo fill={colors.iconHeadingColor().active} />,
+            Icon: <ValarutramuraiLogo fill={theme.iconHeadingColor.inactive} />,
+            activeIcon: <ValarutramuraiLogo fill={theme.iconHeadingColor.active} />,
         },
         {
             name: 'Akarthi',
-            Icon: <AkarthiLogo fill={colors.iconHeadingColor().inactive} />,
-            activeIcon: <AkarthiLogo fill={colors.iconHeadingColor().active} />,
+            Icon: <AkarthiLogo fill={theme.iconHeadingColor.inactive} />,
+            activeIcon: <AkarthiLogo fill={theme.iconHeadingColor.active} />,
         },
     ];
     const [selectedHeader, setSelectedheader] = useState(headerData[0]);
@@ -58,9 +69,9 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     }, []);
     const retrieveData = async () => {
         // const query = 'SELECT * FROM thirumurai_songs WHERE refId=1311';
-        getSqlData(query, callbacks => {
-            setThrimurais(callbacks)
-        })
+        getSqlData(query, (callbacks) => {
+            setThrimurais(callbacks);
+        });
         // await database.transaction(tx => {
         //     tx.executeSql(query, [], (_, results) => {
         //         let arr = []
@@ -173,18 +184,28 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const renderContents = (item, index) => {
         return (
             <>
-                <View style={styles.chapterBox}>
+                <View style={[styles.chapterBox, { backgroundColor: theme.cardBgColor }]}>
                     <View style={{ justifyContent: 'center' }}>
-                        <Text style={styles.chapterNameTexts}>{item.name}</Text>
+                        <Text style={[styles.chapterNameTexts, { color: theme.textColor }]}>
+                            {item.name}
+                        </Text>
                         <Text style={styles.chapterTexts}>1.001 - 1.134</Text>
                     </View>
                     {selectedTitle !== null && selectedTitle == index ? (
                         <TouchableOpacity onPress={() => setSelectedTitle(null)}>
-                            <Icon name="horizontal-rule" size={24} />
+                            <Icon
+                                name="horizontal-rule"
+                                size={24}
+                                color={theme.colorscheme === 'light' ? '#000' : colors.grey1}
+                            />
                         </TouchableOpacity>
                     ) : (
                         <TouchableOpacity onPress={() => setSelectedTitle(index)}>
-                            <Icon name="add" size={24} />
+                            <Icon
+                                name="add"
+                                size={24}
+                                color={theme.colorscheme === 'light' ? '#000' : colors.grey1}
+                            />
                         </TouchableOpacity>
                     )}
                 </View>
@@ -225,7 +246,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     //     </Pressable>
     // )
     return (
-        <View style={styles.main}>
+        <View style={[styles.main, { backgroundColor: theme.backgroundColor }]}>
             <Background>
                 <View>
                     <BackButton
@@ -261,7 +282,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                     horizontal
                 />
             </Background>
-            <View style={{ backgroundColor: colors.screenTheme.backgroundColor }}>
+            <View style={{ backgroundColor: theme.backgroundColor }}>
                 {selectedHeader.name == 'Akarthi' ? (
                     <View style={{ marginTop: 10 }}>
                         <RenderAudios navigation={navigation} />
@@ -280,7 +301,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     );
 };
 export const styles = StyleSheet.create({
-    main: { flex: 1, backgroundColor: colors.screenTheme.backgroundColor },
+    main: { flex: 1 },
     mainContainer: {
         shadowColor: '#FFFFFF',
         shadowOffset: { height: 8, width: 10 },
@@ -323,15 +344,15 @@ export const styles = StyleSheet.create({
     chapterBox: {
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: colors.screenTheme.cardBgColor,
+
         height: 60,
         width: Dimensions.get('window').width,
         marginBottom: 4,
         flexDirection: 'row',
         paddingHorizontal: 20,
     },
-    chapterNameTexts: { color: colors.screenTheme.textColor, fontSize: 14, fontWeight: '600' },
+    chapterNameTexts: { fontSize: 14, fontWeight: '600' },
     chapterTexts: { fontSize: 12, fontWeight: '500', color: '#777777', marginTop: 5 },
     titleText: { fontFamily: 'AnekTamil-Regular', fontSize: 14, fontWeight: '500' },
 });
-export default ThrimuraiHeadingPage
+export default ThrimuraiHeadingPage;
