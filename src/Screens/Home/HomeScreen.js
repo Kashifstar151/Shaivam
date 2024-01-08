@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
     Dimensions,
     Image,
@@ -8,6 +8,7 @@ import {
     Text,
     View,
     TouchableOpacity,
+    ImageBackground,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CardComponents from '../../components/CardComponents';
@@ -17,6 +18,8 @@ import SearchInput from '../../components/SearchInput';
 import { colors } from '../../Helpers';
 import { useTranslation } from 'react-i18next';
 import '../../../localization';
+import { ThemeContext } from '../../Context/ThemeContext';
+import bgImg from '../../assets/Images/';
 
 const LANGS = [
     { lngCode: 'en', label: 'English' },
@@ -40,24 +43,27 @@ const HomeScreen = () => {
     const { t, i18n } = useTranslation();
     const selectedLngCode = i18n.language;
     const setLng = (lngCode) => i18n.changeLanguage(lngCode);
+    const { theme } = useContext(ThemeContext);
     return (
         // <SafeAreaView>
 
         <View style={{ flex: 1 }}>
-            <View style={styles.firstContainer}>
+            {/* <View style={styles.firstContainer}>
                 <Header />
                 <SearchInput />
                 <HeadingText text={'Shaivam Exclusive'} />
                 <Text
                     style={{ color: colors.grey3, fontSize: 12, marginTop: 5, fontWeight: '600' }}
                 >
-                    Scroll through and check out what Shaiva, offers {t('Thirumurais')}
+                    Scroll through and check out what Shaiva, offers
                 </Text>
                 <View style={{ marginVertical: 20 }}>
                     <CardComponents />
                 </View>
-            </View>
-            <View style={styles.secondContainer}>
+            </View> */}
+
+            {/* test case for language implementation */}
+            {/* <View style={styles.secondContainer}>
                 <View>
                     {LANGS.map((l) => {
                         const selected = l.lngCode === selectedLngCode;
@@ -82,6 +88,15 @@ const HomeScreen = () => {
                         );
                     })}
                 </View>
+            </View> */}
+
+            <View
+                style={[
+                    styles.firstContainer,
+                    // { background: 'url("../../assets/Images/Background.png")' },
+                ]}
+            >
+                <ImageBackground source={bgImg} resizeMode="cover"></ImageBackground>
             </View>
         </View>
         // </SafeAreaView>
@@ -90,9 +105,7 @@ const HomeScreen = () => {
 export const styles = StyleSheet.create({
     main: { flex: 1 },
     firstContainer: {
-        backgroundColor: '#AA4A44',
         height: Dimensions.get('window').height / 2.5,
-        paddingHorizontal: 15,
     },
     secondContainer: { backgroundColor: 'white' },
     headerContainer: {
