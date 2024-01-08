@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { FlatList, Pressable, Text, View } from 'react-native'
-import MusicIcon1 from "../../assets/Images/music 1.svg"
-import { RouteTexts } from '../../navigation/RouteText'
+import React, { useContext, useEffect, useState } from 'react';
+import { FlatList, Pressable, Text, View } from 'react-native';
+import MusicIcon1 from '../../assets/Images/music 1.svg';
+import { RouteTexts } from '../../navigation/RouteText';
 import SQLite from 'react-native-sqlite-storage';
 import { getSqlData } from '../Database';
-import TrackPlayer from 'react-native-track-player';
-
+import { ThemeContext } from '../../Context/ThemeContext';
 
 const RenderAudios = ({ navigation, songs, data }) => {
-    let key = true
-    const database = SQLite.openDatabase({ name: key ? 'SongsData.db' : 'main.db', createFromLocation: 1 });
-    const [audioData, setAudioData] = useState([])
+    const { theme } = useContext(ThemeContext);
+    const [audioData, setAudioData] = useState([]);
     useEffect(() => {
         getDtataFromSql();
     }, []);
@@ -37,6 +35,7 @@ const RenderAudios = ({ navigation, songs, data }) => {
                     fontSize: 12,
                     fontFamily: 'AnekTamil-Regular',
                     fontWeight: '500',
+                    color: theme.textColor,
                 }}
             >
                 {item.Thirumurai_title}
@@ -53,4 +52,4 @@ const RenderAudios = ({ navigation, songs, data }) => {
     );
 };
 
-export default RenderAudios
+export default RenderAudios;

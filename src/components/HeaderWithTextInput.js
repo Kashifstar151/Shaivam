@@ -1,10 +1,19 @@
-import React from 'react'
-import { Dimensions, Platform, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
-import Icon from 'react-native-vector-icons/dist/AntDesign'
-import NandiLogo from "../../src/assets/Images/NandiLogo.svg"
-import { colors } from '../Helpers'
-import BackIcon from "../../src/assets/Images/BackIcon.svg"
-import WhiteBackButton from "../../src/assets/Images/arrow (1) 1.svg"
+import React, { useContext } from 'react';
+import {
+    Dimensions,
+    Platform,
+    StatusBar,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+    View,
+} from 'react-native';
+import Icon from 'react-native-vector-icons/dist/AntDesign';
+import NandiLogo from '../../src/assets/Images/NandiLogo.svg';
+import { colors } from '../Helpers';
+import BackIcon from '../../src/assets/Images/BackIcon.svg';
+import WhiteBackButton from '../../src/assets/Images/arrow (1) 1.svg';
+import { ThemeContext } from '../Context/ThemeContext';
 
 const HeaderWithTextInput = ({
     navigation,
@@ -16,6 +25,7 @@ const HeaderWithTextInput = ({
     placeholder,
     onSubmitEditing,
 }) => {
+    const { theme } = useContext(ThemeContext);
     return (
         <View
             style={{
@@ -40,8 +50,13 @@ const HeaderWithTextInput = ({
                 <View
                     style={
                         color
-                            ? [styles.inputcontainer, { backgroundColor: '#F3F3F3' }]
-                            : styles.inputcontainer
+                            ? [
+                                  styles.inputcontainer,
+                                  {
+                                      backgroundColor: '#F3F3F3',
+                                  },
+                              ]
+                            : [styles.inputcontainer, { backgroundColor: theme.searchBox.bgColor }]
                     }
                 >
                     <Icon name="search1" size={28} color={color ? '#777777' : colors.grey1} />
@@ -51,12 +66,12 @@ const HeaderWithTextInput = ({
                         onFocus={() => setOnFocus(true)}
                         placeholder={placeholder}
                         onChangeText={(e) => setState(e)}
-                        placeholderTextColor={colors.searchBox().textColor}
+                        placeholderTextColor={theme.searchBox.textColor}
                         value={state}
                         style={{
                             fontSize: 12,
                             paddingHorizontal: 5,
-                            color: colors.searchBox().textColor,
+                            color: theme.searchBox.textColor,
                             width: '90%',
                         }}
                     />
@@ -99,7 +114,7 @@ export const styles = StyleSheet.create({
         marginHorizontal: 5,
         borderRadius: 10,
         paddingHorizontal: 10,
-        backgroundColor: colors.searchBox().bgColor,
+
         height: 50,
         marginBottom: 10,
         flexDirection: 'row',
@@ -107,4 +122,4 @@ export const styles = StyleSheet.create({
     },
 });
 
-export default HeaderWithTextInput
+export default HeaderWithTextInput;
