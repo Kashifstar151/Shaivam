@@ -13,7 +13,7 @@ const RenderAudios = ({ navigation, songs, data }) => {
         getDtataFromSql();
     }, []);
     const getDtataFromSql = async () => {
-        const query = `SELECT Thirumurai_title, prevId FROM thirumurais WHERE  fkTrimuria=1 AND pann='${songs?.pann}' ORDER BY  titleNo ASC  LIMIT 10 OFFSET 0`;
+        const query = `SELECT Thirumurai_title, prevId FROM thirumurais WHERE  fkTrimuria='${songs?.fkTrimuria}' AND pann='${songs?.pann}' ORDER BY  titleNo ASC  LIMIT 10 OFFSET 0`;
         getSqlData(query, callbacks => {
             setAudioData(callbacks)
         })
