@@ -31,6 +31,8 @@ import ThalamuraiLogo from '../../../components/SVGs/ThalamuraiLogo';
 import ValarutramuraiLogo from '../../../components/SVGs/ValarutramuraiLogo';
 import AkarthiLogo from '../../../components/SVGs/AkarthiLogo';
 import { ThemeContext } from '../../../Context/ThemeContext';
+import { useTranslation } from 'react-i18next';
+
 
 const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const { theme } = useContext(ThemeContext);
@@ -141,6 +143,8 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     //     setLoadingText('Loading ...');
     // };
 
+    const { t, i18n } = useTranslation();
+
     const song = [
         {
             id: '1',
@@ -187,7 +191,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                 <View style={[styles.chapterBox, { backgroundColor: theme.cardBgColor }]}>
                     <View style={{ justifyContent: 'center' }}>
                         <Text style={[styles.chapterNameTexts, { color: theme.textColor }]}>
-                            {item.name}
+                            {t(item.name)}
                         </Text>
                         <Text style={styles.chapterTexts}>1.001 - 1.134</Text>
                     </View>
