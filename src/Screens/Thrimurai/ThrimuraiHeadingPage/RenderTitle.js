@@ -22,7 +22,7 @@ const RenderTitle = ({ data, navigation }) => {
         getDtataFromSql();
     }, []);
     const getDtataFromSql = async () => {
-        const query = `SELECT pann, prevId FROM thirumurais where fkTrimuria=${data.prevId} and pann NOTNULL GROUP BY pann ORDER BY titleNo ASC`;
+        const query = `SELECT pann, prevId,fkTrimuria FROM thirumurais where fkTrimuria=${data.prevId} and pann NOTNULL GROUP BY pann ORDER BY titleNo ASC`;
         getSqlData(query, (callbacks) => {
             setTitleData(callbacks);
         });
