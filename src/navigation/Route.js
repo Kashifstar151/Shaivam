@@ -14,6 +14,7 @@ import { addEventListener, useNetInfo } from '@react-native-community/netinfo';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import LottieView from 'lottie-react-native';
 import SearchScreen from '../Screens/Thrimurai/Searchscreen/SearchScreen'
+import BottomTabs from './BottomTab/BottomTabs'
 
 const Route = () => {
     const Stack = createNativeStackNavigator()
@@ -168,11 +169,12 @@ const Route = () => {
                             screenOptions={{
                                 headerShown: false
                             }}>
+                            <Stack.Screen name={RouteTexts.BOTTOM_TABS} component={BottomTabs} />
                             {/* <Stack.Screen name="Home" component={HomeScreen} /> */}
-                            <Stack.Screen name="Thrimurai" component={ThrimuraiList} />
+                            {/* <Stack.Screen name="Thrimurai" component={ThrimuraiList} />
                             <Stack.Screen name={RouteTexts.SEARCH_SCREEN} component={SearchScreen} />
                             <Stack.Screen name={RouteTexts.THIRIMURAI_HEADING} component={ThrimuraiHeadingPage} />
-                            <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={ThrimuraiSong} />
+                            <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={ThrimuraiSong} /> */}
                         </Stack.Navigator>
                     </NavigationContainer>
             }
