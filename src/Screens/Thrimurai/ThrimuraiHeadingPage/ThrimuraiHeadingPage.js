@@ -33,10 +33,79 @@ import AkarthiLogo from '../../../components/SVGs/AkarthiLogo';
 import { ThemeContext } from '../../../Context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 
+const RenderContents = ({
+    item,
+    index,
+    selectedTitle,
+    setSelectedTitle,
+    navigation,
+    range,
+    setRange,
+}) => {
+    console.log('🚀 ~ file: ThrimuraiHeadingPage.js:45 ~ range:', range);
+    const { theme } = useContext(ThemeContext);
+    const { t, i18n } = useTranslation();
 
+    useEffect(() => {
+        const query = `SELECT (
+  (SELECT CAST(titleNo AS TEXT) FROM thirumurais WHERE fkTrimuria=${item.prevId} AND titleNo IS NOT NULL ORDER BY titleNo ASC LIMIT 1)  || '-' ||  (SELECT CAST(titleNo AS TEXT) FROM thirumurais WHERE fkTrimuria=${item.prevId} ORDER BY titleNo DESC LIMIT 1)
+) AS result;`;
+
+        let rangeStr;
+        getSqlData(query, (clk) => {
+            const rangeArr = clk[0].result.split('-');
+            if (rangeArr[1].length === 3) {
+                rangeStr = `${item.prevId}.00${rangeArr[0]} - ${item.prevId}.${rangeArr[1]}`;
+            } else if (rangeArr[1].length === 2) {
+                rangeStr = `${item.prevId}.00${rangeArr[0]} - ${item.prevId}.0${rangeArr[1]}`;
+            } else if (rangeArr[1].length === 1) {
+                rangeStr = `${item.prevId}.00${rangeArr[0]} - ${item.prevId}.00${rangeArr[1]}`;
+            }
+            setRange((prev) => ({ ...prev, [item.prevId]: rangeStr }));
+        });
+    }, []);
+
+    // useEffect(() => {
+    //     console.log('The range has been upddated==>', range);
+    // }, [range]);
+    return (
+        <>
+            <View style={[styles.chapterBox, { backgroundColor: theme.cardBgColor }]}>
+                <View style={{ justifyContent: 'center' }}>
+                    <Text style={[styles.chapterNameTexts, { color: theme.textColor }]}>
+                        {t(item.name)}
+                    </Text>
+                    <Text style={styles.chapterTexts}>
+                        {range[item.prevId]}
+                        {/* {item.prevId} */}
+                    </Text>
+                </View>
+                {selectedTitle !== null && selectedTitle == index ? (
+                    <TouchableOpacity onPress={() => setSelectedTitle(null)}>
+                        <Icon
+                            name="horizontal-rule"
+                            size={24}
+                            color={theme.colorscheme === 'light' ? '#000' : colors.grey1}
+                        />
+                    </TouchableOpacity>
+                ) : (
+                    <TouchableOpacity onPress={() => setSelectedTitle(index)}>
+                        <Icon
+                            name="add"
+                            size={24}
+                            color={theme.colorscheme === 'light' ? '#000' : colors.grey1}
+                        />
+                    </TouchableOpacity>
+                )}
+            </View>
+            {selectedTitle == index && <RenderTitle data={item} navigation={navigation} />}
+            {/* <Text>hdfjksafjk</Text> */}
+        </>
+    );
+};
 const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const { theme } = useContext(ThemeContext);
-
+    const [range, setRange] = useState({});
     const isFocuced = useIsFocused;
     const { page, list, query } = route.params;
     const headerData = [
@@ -64,7 +133,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const [selectedHeader, setSelectedheader] = useState(headerData[0]);
     const [selectedTitle, setSelectedTitle] = useState(null);
     const [searchedText, setSearchedText] = useState(null);
-    /* Get latest DB from the disk */
+    / Get latest DB from the disk /;
     const [thrimurais, setThrimurais] = useState(list);
     useEffect(() => {
         retrieveData();
@@ -75,17 +144,17 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
             setThrimurais(callbacks);
         });
         // await database.transaction(tx => {
-        //     tx.executeSql(query, [], (_, results) => {
-        //         let arr = []
-        //         if (results?.rows?.length > 0) {
-        //             for (let i = 0; i < results?.rows?.length; i++) {
-        //                 const tableName = results.rows.item(i);
-        //                 console.log("Row data", tableName);
-        //                 arr.push(tableName)
-        //             }
-        //         } else {
-        //             console.log('No tables found.');
-        //         }
+        // tx.executeSql(query, [], (_, results) => {
+        // let arr = []
+        // if (results?.rows?.length > 0) {
+        // for (let i = 0; i < results?.rows?.length; i++) {
+        // const tableName = results.rows.item(i);
+        // console.log("Row data", tableName);
+        // arr.push(tableName)
+        // }
+        // } else {
+        // console.log('No tables found.');
+        // }
 
         //         setThrimurais(arr)
         //         // console.log("🚀 ~ file: ThrimuraiHeadingPage.js:221 ~ tx.executeSql ~ arr:", arr)
@@ -143,8 +212,6 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     //     setLoadingText('Loading ...');
     // };
 
-    const { t, i18n } = useTranslation();
-
     const song = [
         {
             id: '1',
@@ -185,38 +252,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     //         </>
     //     )
     // }
-    const renderContents = (item, index) => {
-        return (
-            <>
-                <View style={[styles.chapterBox, { backgroundColor: theme.cardBgColor }]}>
-                    <View style={{ justifyContent: 'center' }}>
-                        <Text style={[styles.chapterNameTexts, { color: theme.textColor }]}>
-                            {t(item.name)}
-                        </Text>
-                        <Text style={styles.chapterTexts}>1.001 - 1.134</Text>
-                    </View>
-                    {selectedTitle !== null && selectedTitle == index ? (
-                        <TouchableOpacity onPress={() => setSelectedTitle(null)}>
-                            <Icon
-                                name="horizontal-rule"
-                                size={24}
-                                color={theme.colorscheme === 'light' ? '#000' : colors.grey1}
-                            />
-                        </TouchableOpacity>
-                    ) : (
-                        <TouchableOpacity onPress={() => setSelectedTitle(index)}>
-                            <Icon
-                                name="add"
-                                size={24}
-                                color={theme.colorscheme === 'light' ? '#000' : colors.grey1}
-                            />
-                        </TouchableOpacity>
-                    )}
-                </View>
-                {selectedTitle == index && <RenderTitle data={item} navigation={navigation} />}
-            </>
-        );
-    };
+
     // const renderTitle = (item, index) => (
     //     <>
     //         <View style={{ justifyContent: 'space-between', flexDirection: 'row', paddingHorizontal: 25, height: 40, alignItems: 'center' }}>
@@ -261,15 +297,14 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                     <SearchInput
                         setState={setSearchedText}
                         state={searchedText}
-
                         setOnFocus={() =>
                             navigation.navigate(RouteTexts.SEARCH_SCREEN, {
                                 // thrimurais: thrimurais,
                                 query1: `SELECT * FROM thirumurais WHERE search_thirumurai_title LIKE`,
                                 query2: `AND fkTrimuria <=7 LIMIT 10 OFFSET 0`,
-                                allThirumirai: false
-
-                            })}
+                                allThirumirai: false,
+                            })
+                        }
                         placeholder={'Search for anything (Eg - தோடுடைய செவியன்) '}
                     />
                 </View>
@@ -297,7 +332,18 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                     <FlatList
                         contentContainerStyle={{ marginTop: 10, paddingBottom: 250 }}
                         data={thrimurais}
-                        renderItem={({ item, index }) => renderContents(item, index)}
+                        renderItem={({ item, index }) => (
+                            // renderContents(item, index)
+                            <RenderContents
+                                item={item}
+                                index={index}
+                                selectedTitle={selectedTitle}
+                                setSelectedTitle={setSelectedTitle}
+                                navigation={navigation}
+                                range={range}
+                                setRange={setRange}
+                            />
+                        )}
                     />
                 )}
             </View>
@@ -360,3 +406,4 @@ export const styles = StyleSheet.create({
     titleText: { fontFamily: 'AnekTamil-Regular', fontSize: 14, fontWeight: '500' },
 });
 export default ThrimuraiHeadingPage;
+
