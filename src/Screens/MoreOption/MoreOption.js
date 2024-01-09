@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
 
-export const Temples = () => {
+const MoreOption = () => {
     return (
         <View>
 
@@ -9,4 +9,4 @@ export const Temples = () => {
     )
 }
 
-export default Temples
+export default MoreOption
