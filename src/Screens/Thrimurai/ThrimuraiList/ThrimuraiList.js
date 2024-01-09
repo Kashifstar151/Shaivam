@@ -185,7 +185,6 @@ const ThrimuraiList = ({ navigation }) => {
             <View style={{ marginTop: 10, paddingHorizontal: 10 }}>
                 <Text
                     style={{
-                        // color: theme.textColor,
                         color: theme.textColor,
                         fontFamily: 'Lora-Bold',
                         fontSize: 18,
