@@ -53,7 +53,7 @@ const Route = () => {
 
                 {
                     text: 'Cancel',
-                    onPress: () => onCancel()
+                    onPress: () => console.log(true)
                 },
                 {
                     text: 'Ok',
