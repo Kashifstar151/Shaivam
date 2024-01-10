@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
     Dimensions,
     Image,
@@ -46,10 +46,19 @@ const HomeScreen = () => {
     const selectedLngCode = i18n.language;
     const setLng = (lngCode) => i18n.changeLanguage(lngCode);
     const { theme } = useContext(ThemeContext);
+    const [compHeight, setCompHeight] = useState();
+    const handleLayout = (event) => {
+        const { height } = event.nativeEvent.layout;
+        setCompHeight(height);
+    };
+
+    useEffect(() => {
+        console.log('The component height ==> ', compHeight);
+    }, [compHeight]);
     return (
         // <SafeAreaView>
 
-        <ScrollView style={{ flex: 1, backgroundColor: 'green', overflow: 'visible' }}>
+        <ScrollView style={{ flex: 1, overflow: 'visible' }}>
             {/* <View style={styles.firstContainer}>
                 <Header />
                 <SearchInput />
@@ -122,9 +131,18 @@ const HomeScreen = () => {
                     </View>
                 </ImageBackground>
             </View>
-            <View style={{ paddingHorizontal: 15 }}>
+            <View
+                style={{
+                    paddingHorizontal: 15,
+                    paddingTop: 15,
+                    marginTop: compHeight ? -compHeight / 2 : 0,
+                }}
+                onLayout={handleLayout}
+            >
                 <CardComponents />
             </View>
+
+            <Text style={{ color: 'black' }}>fhjkdhj</Text>
 
             {/* <View>
                 <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
