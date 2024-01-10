@@ -164,6 +164,7 @@ export const styles = StyleSheet.create({
     main: { flex: 1 },
     firstContainer: {
         height: Dimensions.get('window').height / 2.5,
+        // paddingHorizontal: 15,
     },
     secondContainer: { backgroundColor: 'white' },
     headerContainer: {

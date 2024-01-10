@@ -6,6 +6,14 @@ import NotificationIcon from '../assets/Images/NotificationIcon.svg';
 import DarModeEnableIcon from '../assets/Images/DarkModeon.svg';
 import DarkModeDisableIcon from '../assets/Images/DarkModeOff.svg';
 
+import React from 'react'
+import { Image, Pressable, StatusBar, StyleSheet, Text, View } from 'react-native'
+import Icon from "react-native-vector-icons/dist/MaterialIcons"
+import { colors } from "../Helpers"
+import NotificationIcon from "../assets/Images/NotificationIcon.svg"
+import DarModeEnableIcon from "../assets/Images/DarkModeon.svg"
+import DarkModeDisableIcon from "../assets/Images/DarkModeOff.svg"
+
 const Header = () => {
     return (
         <View style={styles.headerContainer}>
@@ -29,25 +37,15 @@ const Header = () => {
                 <Pressable style={styles.notificationContainer}>
                     <NotificationIcon />
                     {/* <Icon name="notifications" size={24} color='white' /> */}
+
                 </Pressable>
             </View>
+
         </View>
     );
 };
 export const styles = StyleSheet.create({
-    headerContainer: {
-        paddingHorizontal: 10,
-        paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 40 : 20,
-        justifyContent: 'space-between',
-        flexDirection: 'row',
-    },
-    notificationContainer: {
-        marginLeft: 10,
-        height: 40,
-        width: 40,
-        borderRadius: 20,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-});
-export default Header;
+    headerContainer: { paddingHorizontal: 10, paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 40 : 20, justifyContent: 'space-between', flexDirection: 'row' },
+    notificationContainer: { marginLeft: 10, height: 40, width: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' }
+})
+export default Header
