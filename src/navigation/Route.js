@@ -14,6 +14,7 @@ import { addEventListener, useNetInfo } from '@react-native-community/netinfo';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import LottieView from 'lottie-react-native';
 import SearchScreen from '../Screens/Thrimurai/Searchscreen/SearchScreen'
+import BottomTabs from './BottomTab/BottomTabs';
 
 const Route = () => {
     const Stack = createNativeStackNavigator()
@@ -22,6 +23,10 @@ const Route = () => {
     const [isConnected, setIsConnected] = useState(false)
     // const database = SQLite.openDatabase({ name: databaseName, });
     useEffect(() => {
+        AsyncStorage.setItem(
+            '@database',
+            JSON.stringify({ name: 'songData.db', createFromLocation: 1 })
+        );
         LogBox.ignoreAllLogs();
         AppState.addEventListener('change', (nextAppState) => {
             if (nextAppState === 'background' || nextAppState === 'inactive') {
@@ -47,21 +52,20 @@ const Route = () => {
         // connectDataBaseToFolder()
     }, [])
     const checkConnection = (connected) => {
-        if (connected) {
-            Alert.alert('New Update Available', "Click ok to sync latest data", [
-
-                {
-                    text: 'Cancel',
-                    onPress: () => onCancel()
-                },
-                {
-                    text: 'Ok',
-                    onPress: () => checkFileExist()
-                },
-            ]);
-        } else {
-            Alert.alert('You are offline!');
-        }
+        // if (connected) {
+        //     Alert.alert('New Update Available', "Click ok to sync latest data", [
+        //         {
+        //             text: 'Cancel',
+        //             onPress: () => onCancel()
+        //         },
+        //         {
+        //             text: 'Ok',
+        //             onPress: () => checkFileExist()
+        //         },
+        //     ]);
+        // } else {
+        //     Alert.alert('You are offline!');
+        // }
     };
     const onCancel = () => {
         AsyncStorage.setItem('@database', JSON.stringify({ name: 'songData.db', createFromLocation: 1 }))
@@ -93,92 +97,69 @@ const Route = () => {
         }
     }
     const checkFileExist = async () => {
-        RNFS.exists(`${RNFS.ExternalDirectoryPath}/Thrimurai/thirumurai_songsData2.db`).then(async (res) => {
-            if (res == true) {
-                // InitializeDatabase()
-                AsyncStorage.setItem('@database', JSON.stringify({ name: 'songData.db', createFromLocation: 1 }))
-                setShowDownloading(true)
-                setTimeout(() => {
-                    setShowDownloading(false)
-                }, 2000)
-            } else {
-                setShowDownloading(true)
-                const promise = attachDb()
-                promise.then((res) => {
-                    console.log("res", res)
-                    setShowDownloading(false)
-                }).catch((error) => {
-                    console.log("error", error)
-                    setShowDownloading(false)
-                })
-                AsyncStorage.setItem('@database', JSON.stringify({ name: 'main.db' }))
-            }
-        }).catch((error) => {
-            console.log("🚀 ~ file: route.js:99 ~ RNFS.exists ~ error:", error)
-        })
-    }
-    const InitializeDatabase = () => {
-        RNFS.readDir(`${RNFS.ExternalDirectoryPath}/Thrimurai`)
-            .then((files) => {
-                console.log("🚀 ~ file: route.js:50 ~ unzipDownloadFile ~ files:", files)
-                const fileNames = files.map(fileInfo => fileInfo.name);
-                console.log('File names in the directory:', fileNames);
-                try {
-                    database.transaction(async (tx) => {
-                        await tx.executeSql(
-                            'ATTACH DATABASE ? AS Updated_db',
-                            [`${RNFS.ExternalDirectoryPath}/Thrimurai/thirumuraiData.db`],
-                            (tx, results) => {
-                                console.log("🚀 ~ file: Database.js:49 ~ database.transaction ~ results:", tx, results)
-                            }
-                        );
-                        tx.executeSql('COMMIT;');
-                    }, (error) => {
-                        console.log("🚀 ~ file: route.js:101 ~ database.transaction ~ error:", error)
-                    });
-                    // database.transaction(async (tx) => {
-                    //     await tx.executeSql(
-                    //         'ATTACH DATABASE ? AS Updated_db',
-                    //         [`${RNFS.ExternalDirectoryPath}/Thrimurai/thirumuraiSecond.db`],
-                    //         (tx, results) => {
-                    //             console.log("🚀 ~ file: Database.js:49 ~ database.transaction ~ results:", tx, results)
-                    //         }
-                    //     );
-                    //     tx.executeSql('COMMIT;');
-                    // });
-                } catch (error) {
-                    console.log("🚀 ~ file: route.js:53 ~ unzipDownloadFile ~ error:", error)
+        RNFS.exists(`${RNFS.ExternalDirectoryPath}/Thrimurai/thirumurai_songsData2.db`)
+            .then(async (res) => {
+                if (res == true) {
+                    // InitializeDatabase()
+                    AsyncStorage.setItem(
+                        '@database',
+                        JSON.stringify({ name: 'songData.db', createFromLocation: 1 })
+                    );
+                    setShowDownloading(true);
+                    setTimeout(() => {
+                        setShowDownloading(false);
+                    }, 2000);
+                } else {
+                    setShowDownloading(true);
+                    const promise = attachDb();
+                    promise
+                        .then((res) => {
+                            console.log('res', res);
+                            setShowDownloading(false);
+                        })
+                        .catch((error) => {
+                            console.log('error', error);
+                            setShowDownloading(false);
+                        });
+                    AsyncStorage.setItem('@database', JSON.stringify({ name: 'main.db' }));
                 }
-                // You can now use the file names for further processing
             })
-            .catch(error => console.error('Error reading directory:', error));
+            .catch((error) => {
+                console.log('🚀 ~ file: route.js:99 ~ RNFS.exists ~ error:', error);
+            });
     }
 
     return (
-
         <>
-            {
-                showDownloading ?
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                        <LottieView style={{ height: 200, width: 200 }} source={require('../assets/JSON/Animation - 1704052511281.json')} autoPlay loop />
-                    </View>
-                    :
-                    <NavigationContainer>
-                        <Stack.Navigator
-                            screenOptions={{
-                                headerShown: false
-                            }}>
-                            {/* <Stack.Screen name="Home" component={HomeScreen} /> */}
-                            <Stack.Screen name="Thrimurai" component={ThrimuraiList} />
-                            <Stack.Screen name={RouteTexts.SEARCH_SCREEN} component={SearchScreen} />
-                            <Stack.Screen name={RouteTexts.THIRIMURAI_HEADING} component={ThrimuraiHeadingPage} />
-                            <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={ThrimuraiSong} />
-                        </Stack.Navigator>
-                    </NavigationContainer>
-            }
+            {showDownloading ? (
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <LottieView
+                        style={{ height: 200, width: 200 }}
+                        source={require('../assets/JSON/Animation - 1704052511281.json')}
+                        autoPlay
+                        loop
+                    />
+                </View>
+            ) : (
+                <NavigationContainer>
+                    <Stack.Navigator
+                        screenOptions={{
+                            headerShown: false,
+                        }}
+                    >
+                        {/* <Stack.Screen name="Home" component={HomeScreen} /> */}
+                        <Stack.Screen name="Thrimurai" component={ThrimuraiList} />
+                        <Stack.Screen name={RouteTexts.SEARCH_SCREEN} component={SearchScreen} />
+                        <Stack.Screen
+                            name={RouteTexts.THIRIMURAI_HEADING}
+                            component={ThrimuraiHeadingPage}
+                        />
+                        <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={ThrimuraiSong} />
+                    </Stack.Navigator>
+                </NavigationContainer>
+            )}
         </>
-
-    )
+    );
 }
 
 export default Route
