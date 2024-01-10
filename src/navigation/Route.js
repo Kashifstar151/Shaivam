@@ -67,10 +67,10 @@ const Route = () => {
     };
     const onCancel = () => {
         AsyncStorage.setItem('@database', JSON.stringify({ name: 'songData.db', createFromLocation: 1 }))
-        setShowDownloading(true)
-        setTimeout(() => {
-            setShowDownloading(false)
-        }, 2000)
+        // setShowDownloading(true)
+        // setTimeout(() => {
+        //     setShowDownloading(false)
+        // }, 2000)
     }
     async function requestFilePermissions() {
         try {
@@ -134,8 +134,8 @@ const Route = () => {
                             screenOptions={{
                                 headerShown: false
                             }}>
-                            {/* <Stack.Screen name={RouteTexts.BOTTOM_TABS} component={BottomTabs} /> */}
-                            {/* <Stack.Screen name="Home" component={HomeScreen} /> */}
+                            <Stack.Screen name={RouteTexts.BOTTOM_TABS} component={BottomTabs} />
+                            <Stack.Screen name="Home" component={HomeScreen} />
                             <Stack.Screen name="Thrimurai" component={ThrimuraiList} />
                             <Stack.Screen name={RouteTexts.SEARCH_SCREEN} component={SearchScreen} />
                             <Stack.Screen name={RouteTexts.THIRIMURAI_HEADING} component={ThrimuraiHeadingPage} />

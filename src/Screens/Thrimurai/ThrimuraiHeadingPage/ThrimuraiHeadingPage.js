@@ -36,7 +36,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const { theme } = useContext(ThemeContext);
 
     const isFocuced = useIsFocused;
-    const { page, list, query } = route.params;
+    const { page, list, query, prevId } = route.params;
     const headerData = [
         {
             name: 'Panmurai',
@@ -65,10 +65,10 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     /* Get latest DB from the disk */
     const [thrimurais, setThrimurais] = useState(list);
     useEffect(() => {
-        retrieveData();
+        retrieveData(query);
     }, []);
     const retrieveData = async () => {
-        // const query = 'SELECT * FROM thirumurai_songs WHERE refId=1311';
+        const query = `SELECT name ,prevId FROM  category WHERE prevId${prevId}`;
         getSqlData(query, (callbacks) => {
             setThrimurais(callbacks);
         });

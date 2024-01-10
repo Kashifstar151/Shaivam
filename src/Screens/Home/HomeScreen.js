@@ -45,21 +45,25 @@ const HomeScreen = () => {
         // <SafeAreaView>
 
         <View style={{ flex: 1 }}>
-            {/* <View style={styles.firstContainer}> */}
             <Background>
-
-                <Header />
-                <SearchInput />
-                <HeadingText text={'Shaivam Exclusive'} />
-                <Text
-                    style={{ color: colors.grey3, fontSize: 12, marginTop: 5, fontWeight: '600' }}
-                >
-                    Scroll through and check out what Shaiva, offers {t('Thirumurais')}
-                </Text>
-                <View style={{ marginVertical: 20 }}>
-                    <CardComponents />
+                <View style={{ paddingBottom: 20, height: Dimensions.get('window').height / 2.6 }}>
+                    <View style={{ marginBottom: 14 }}>
+                        <Header />
+                    </View>
+                    <SearchInput />
+                    <View style={{ paddingHorizontal: 15, marginBottom: 10 }}>
+                        <HeadingText text={'Shaivam Exclusive'} />
+                        <Text
+                            style={{ color: colors.grey3, fontSize: 12, marginTop: 5, fontWeight: '600' }}
+                        >
+                            Scroll through and check out what Shaiva, offers {t('Thirumurais')}
+                        </Text>
+                    </View>
                 </View>
             </Background>
+            <View style={{ marginVertical: 20, position: 'absolute', top: Dimensions.get('window').height / 4.5, zIndex: 10 }}>
+                <CardComponents />
+            </View>
             {/* </View> */}
             <View style={styles.secondContainer}>
                 <View>
