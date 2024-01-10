@@ -38,7 +38,7 @@ const GradientContainer = ({ Icon, LeftImage, RightImage, colors, name, textColo
                     >
                         {name}
                     </Text>
-                    <Text
+                    {/* <Text
                         style={{
                             fontFamily: 'mulish-regular',
                             fontWeight: '600',
@@ -47,7 +47,7 @@ const GradientContainer = ({ Icon, LeftImage, RightImage, colors, name, textColo
                         }}
                     >
                         1.001 - 1.136
-                    </Text>
+                    </Text> */}
                 </View>
             </View>
             <View style={{ position: 'absolute', right: 0, top: 0 }}>{RightImage}</View>
