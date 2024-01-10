@@ -19,7 +19,9 @@ import { colors } from '../../Helpers';
 import { useTranslation } from 'react-i18next';
 import '../../../localization';
 import { ThemeContext } from '../../Context/ThemeContext';
-import bgImg from '../../assets/Images/';
+import bgImg from '../../../assets/Images/Background.png';
+import bgImgDark from '../../../assets/Images/BackgroundCommon.png';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const LANGS = [
     { lngCode: 'en', label: 'English' },
@@ -47,7 +49,7 @@ const HomeScreen = () => {
     return (
         // <SafeAreaView>
 
-        <View style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1, backgroundColor: 'green', overflow: 'visible' }}>
             {/* <View style={styles.firstContainer}>
                 <Header />
                 <SearchInput />
@@ -55,7 +57,7 @@ const HomeScreen = () => {
                 <Text
                     style={{ color: colors.grey3, fontSize: 12, marginTop: 5, fontWeight: '600' }}
                 >
-                    Scroll through and check out what Shaiva, offers
+                    Scroll through and check out what Shaiva, offers {t("Thirumurais")}
                 </Text>
                 <View style={{ marginVertical: 20 }}>
                     <CardComponents />
@@ -90,15 +92,71 @@ const HomeScreen = () => {
                 </View>
             </View> */}
 
-            <View
-                style={[
-                    styles.firstContainer,
-                    // { background: 'url("../../assets/Images/Background.png")' },
-                ]}
-            >
-                <ImageBackground source={bgImg} resizeMode="cover"></ImageBackground>
+            <View style={[styles.firstContainer]}>
+                <ImageBackground
+                    source={theme.colorscheme === 'light' ? bgImg : bgImgDark}
+                    resizeMode="cover"
+                    style={{
+                        flex: 1,
+                        paddingHorizontal: 15,
+                    }}
+                >
+                    <Header />
+                    <SearchInput
+                        extraPad={false}
+                        styleOverwrite={{ marginHorizontalUnset: true, paddingTop: 24 }}
+                    />
+
+                    <View style={{ marginTop: 24 }}>
+                        <HeadingText text={'Shaivam Exclusive'} />
+                        <Text
+                            style={{
+                                color: colors.grey3,
+                                fontSize: 12,
+                                marginTop: 5,
+                                fontWeight: '600',
+                            }}
+                        >
+                            Scroll through and check out what Shaiva, offers {t('Thirumurais')}
+                        </Text>
+                    </View>
+                </ImageBackground>
             </View>
-        </View>
+            <View style={{ paddingHorizontal: 15 }}>
+                <CardComponents />
+            </View>
+
+            {/* <View>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+            </View> */}
+        </ScrollView>
         // </SafeAreaView>
     );
 };
