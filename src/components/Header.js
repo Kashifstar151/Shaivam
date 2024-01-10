@@ -6,14 +6,6 @@ import NotificationIcon from '../assets/Images/NotificationIcon.svg';
 import DarModeEnableIcon from '../assets/Images/DarkModeon.svg';
 import DarkModeDisableIcon from '../assets/Images/DarkModeOff.svg';
 
-import React from 'react'
-import { Image, Pressable, StatusBar, StyleSheet, Text, View } from 'react-native'
-import Icon from "react-native-vector-icons/dist/MaterialIcons"
-import { colors } from "../Helpers"
-import NotificationIcon from "../assets/Images/NotificationIcon.svg"
-import DarModeEnableIcon from "../assets/Images/DarkModeon.svg"
-import DarkModeDisableIcon from "../assets/Images/DarkModeOff.svg"
-
 const Header = () => {
     return (
         <View style={styles.headerContainer}>
