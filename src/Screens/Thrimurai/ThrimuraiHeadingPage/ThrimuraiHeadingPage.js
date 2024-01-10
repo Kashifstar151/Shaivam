@@ -138,6 +138,8 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     useEffect(() => {
         retrieveData(query);
     }, []);
+
+    const { t } = useTranslation();
     const retrieveData = async () => {
         const query = `SELECT name ,prevId FROM  category WHERE prevId${prevId}`;
         getSqlData(query, (callbacks) => {
@@ -305,7 +307,8 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                                 allThirumirai: false,
                             })
                         }
-                        placeholder={'Search for anything (Eg - தோடுடைய செவியன்) '}
+                        // placeholder={'Search for anything (Eg - தோடுடைய செவியன்) '}
+                        placeholder={t('Search for any Thirumurai here')}
                     />
                 </View>
                 <FlatList
