@@ -44,25 +44,42 @@ const RenderItem = ({ item }) => {
 
                 <View
                     style={{
-                        paddingTop: 12,
                         flexDirection: 'row',
                         flexWrap: 'wrap',
-                        justifyContent: 'flex-start',
                         width: '100%',
                     }}
                 >
                     {item.subComp.map((i, _) => (
                         <View
                             style={{
+                                margin: 4,
+                                width: '47%',
+                                flexDirection: 'row',
                                 padding: 12,
-                                flex: 1,
-                                width: '50%',
-                                backgroundColor: 'blue',
-                                margin: 2,
+                                alignItems: 'center',
+                                backgroundColor: 'white',
+                                opacity: 0.7,
+                                borderRadius: 15,
                             }}
                         >
-                            <View style={{ borderRightWidth: 2 }}>{i.icon}</View>
-                            <Text>{i.title}</Text>
+                            {i.icon}
+                            <View
+                                style={{
+                                    borderRightWidth: 1,
+                                    marginHorizontal: 12,
+                                    height: 20,
+                                    borderRightColor: item.gradient[1],
+                                }}
+                            ></View>
+                            <Text
+                                style={{
+                                    flexWrap: 'wrap',
+                                    alignContent: 'center',
+                                    flex: 1,
+                                }}
+                            >
+                                {i.title}
+                            </Text>
                         </View>
                     ))}
                 </View>
