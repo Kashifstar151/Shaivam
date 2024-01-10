@@ -42,10 +42,27 @@ const RenderItem = ({ item }) => {
                     <OmIcon />
                 </View>
 
-                <View style={{ paddingTop: 12, flexDirection: 'row' }}>
+                <View
+                    style={{
+                        paddingTop: 12,
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                        justifyContent: 'flex-start',
+                        width: '100%',
+                    }}
+                >
                     {item.subComp.map((i, _) => (
-                        <View style={{ padding: 12 }}>
-                            <View>{i.icon}</View>
+                        <View
+                            style={{
+                                padding: 12,
+                                flex: 1,
+                                width: '50%',
+                                backgroundColor: 'blue',
+                                margin: 2,
+                            }}
+                        >
+                            <View style={{ borderRightWidth: 2 }}>{i.icon}</View>
+                            <Text>{i.title}</Text>
                         </View>
                     ))}
                 </View>
@@ -66,10 +83,10 @@ const CardComponents = () => {
             textColor: '#4C3600',
 
             subComp: [
-                { icon: <BookIcon />, title: 'Thirumurais' },
-                { icon: <ScrollRoll />, title: 'Vedas' },
-                { icon: <OmLetterSvg />, title: 'Stotras' },
-                { icon: <OmLetterSvg />, title: 'Shaiva Siddanta' },
+                { icon: <BookIcon fill={theme.textColor} />, title: 'Thirumurais' },
+                { icon: <ScrollRoll fill={theme.textColor} />, title: 'Vedas' },
+                { icon: <OmLetterSvg fill={theme.textColor} />, title: 'Stotras' },
+                { icon: <OmLetterSvg fill={theme.textColor} />, title: 'Shaiva Siddanta' },
             ],
         },
         {
@@ -81,10 +98,10 @@ const CardComponents = () => {
 
             textColor: '#000',
             subComp: [
-                { icon: <BookIcon />, title: 'Shaivam TV' },
-                { icon: <ScrollRoll />, title: 'Radio' },
-                { icon: <OmLetterSvg />, title: 'Temples' },
-                { icon: <OmLetterSvg />, title: 'Calender' },
+                { icon: <BookIcon fill={theme.textColor} />, title: 'Shaivam TV' },
+                { icon: <ScrollRoll fill={theme.textColor} />, title: 'Radio' },
+                { icon: <OmLetterSvg fill={theme.textColor} />, title: 'Temples' },
+                { icon: <OmLetterSvg fill={theme.textColor} />, title: 'Calender' },
             ],
         },
         {
@@ -95,10 +112,10 @@ const CardComponents = () => {
                 theme.colorscheme === 'light' ? ['#FEE8B3', '#FDD166'] : ['#333333', '#333333'],
             textColor: '#4C3600',
             subComp: [
-                { icon: <BookIcon />, title: 'Kaala Puja' },
-                { icon: <ScrollRoll />, title: 'Favourites' },
-                { icon: <OmLetterSvg />, title: 'Quiz' },
-                { icon: <OmLetterSvg />, title: 'Website' },
+                { icon: <BookIcon fill={theme.textColor} />, title: 'Kaala Puja' },
+                { icon: <ScrollRoll fill={theme.textColor} />, title: 'Favourites' },
+                { icon: <OmLetterSvg fill={theme.textColor} />, title: 'Quiz' },
+                { icon: <OmLetterSvg fill={theme.textColor} />, title: 'Website' },
             ],
         },
     ];
