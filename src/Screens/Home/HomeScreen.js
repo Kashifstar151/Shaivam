@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useContext, useEffect, useState, useRef } from 'react';
 import {
     Dimensions,
     Image,
@@ -8,6 +8,8 @@ import {
     Text,
     View,
     TouchableOpacity,
+    ImageBackground,
+    ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CardComponents from '../../components/CardComponents';
@@ -17,7 +19,9 @@ import SearchInput from '../../components/SearchInput';
 import { colors } from '../../Helpers';
 import { useTranslation } from 'react-i18next';
 import '../../../localization';
-import Background from '../../components/Background';
+import { ThemeContext } from '../../Context/ThemeContext';
+import bgImg from '../../../assets/Images/Background.png';
+import bgImgDark from '../../../assets/Images/BackgroundCommon.png';
 
 const LANGS = [
     { lngCode: 'en', label: 'English' },
@@ -37,35 +41,44 @@ const LANGS = [
     { lngCode: 'ur', label: 'Urdu' },
 ];
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
+    console.log('the re-render ');
     const { t, i18n } = useTranslation();
     const selectedLngCode = i18n.language;
     const setLng = (lngCode) => i18n.changeLanguage(lngCode);
+    const { theme } = useContext(ThemeContext);
+    const [compHeight, setCompHeight] = useState();
+    const handleLayout = useCallback(
+        (event) => {
+            const { height } = event.nativeEvent.layout;
+            setCompHeight(height);
+        },
+        [setCompHeight, compHeight]
+    );
+
+    useEffect(() => {
+        console.log('The component height ==> ', compHeight);
+    }, [compHeight]);
     return (
         // <SafeAreaView>
 
-        <View style={{ flex: 1 }}>
-            <Background>
-                <View style={{ paddingBottom: 20, height: Dimensions.get('window').height / 2.6 }}>
-                    <View style={{ marginBottom: 14 }}>
-                        <Header />
-                    </View>
-                    <SearchInput />
-                    <View style={{ paddingHorizontal: 15, marginBottom: 10 }}>
-                        <HeadingText text={'Shaivam Exclusive'} />
-                        <Text
-                            style={{ color: colors.grey3, fontSize: 12, marginTop: 5, fontWeight: '600' }}
-                        >
-                            Scroll through and check out what Shaiva, offers {t('Thirumurais')}
-                        </Text>
-                    </View>
+        <ScrollView style={{ flex: 1, overflow: 'visible' }}>
+            {/* <View style={styles.firstContainer}>
+                <Header />
+                <SearchInput />
+                <HeadingText text={'Shaivam Exclusive'} />
+                <Text
+                    style={{ color: colors.grey3, fontSize: 12, marginTop: 5, fontWeight: '600' }}
+                >
+                    Scroll through and check out what Shaiva, offers {t("Thirumurais")}
+                </Text>
+                <View style={{ marginVertical: 20 }}>
+                    <CardComponents />
                 </View>
-            </Background>
-            <View style={{ marginVertical: 20, position: 'absolute', top: Dimensions.get('window').height / 4.5, zIndex: 10 }}>
-                <CardComponents />
-            </View>
-            {/* </View> */}
-            <View style={styles.secondContainer}>
+            </View> */}
+
+            {/* test case for language implementation */}
+            {/* <View style={styles.secondContainer}>
                 <View>
                     {LANGS.map((l) => {
                         const selected = l.lngCode === selectedLngCode;
@@ -90,15 +103,90 @@ const HomeScreen = () => {
                         );
                     })}
                 </View>
+            </View> */}
+
+            <View style={[styles.firstContainer]}>
+                <ImageBackground
+                    source={theme.colorscheme === 'light' ? bgImg : bgImgDark}
+                    resizeMode="cover"
+                    style={{
+                        flex: 1,
+                        paddingHorizontal: 15,
+                    }}
+                >
+                    <Header />
+                    <SearchInput
+                        extraPad={false}
+                        styleOverwrite={{ marginHorizontalUnset: true, paddingTop: 24 }}
+                    />
+
+                    <View style={{ marginTop: 24 }}>
+                        <HeadingText text={'Shaivam Exclusive'} />
+                        <Text
+                            style={{
+                                color: colors.grey3,
+                                fontSize: 12,
+                                marginTop: 5,
+                                fontWeight: '600',
+                            }}
+                        >
+                            Scroll through and check out what Shaiva, offers {t('Thirumurais')}
+                        </Text>
+                    </View>
+                </ImageBackground>
             </View>
-        </View>
+            <View
+                style={{
+                    paddingHorizontal: 15,
+                    paddingTop: 15,
+                    marginTop: compHeight ? -compHeight / 2 : 0,
+                }}
+                onLayout={handleLayout}
+            >
+                <CardComponents navigation={navigation} />
+
+                <View>
+                    <Text>fhjd</Text>
+                </View>
+            </View>
+
+            {/* <View>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
+            </View> */}
+        </ScrollView>
         // </SafeAreaView>
     );
 };
 export const styles = StyleSheet.create({
     main: { flex: 1 },
     firstContainer: {
-        backgroundColor: '#AA4A44',
         height: Dimensions.get('window').height / 2.5,
         // paddingHorizontal: 15,
     },

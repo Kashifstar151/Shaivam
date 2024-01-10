@@ -24,48 +24,69 @@ const offlineDatabase = SQLite.openDatabase({ name: 'SongsData.db', createFromLo
 // };
 export async function attachDb() {
     return new Promise((resolve, reject) => {
-        RNFetchBlob
-            .config({
-                fileCache: true,
-            })
-            .fetch('GET', 'https://shaivamfiles.fra1.cdn.digitaloceanspaces.com/sqlitedump/thirumurai_songsData2.zip', {
-                //some headers ..
-            })
+        RNFetchBlob.config({
+            fileCache: true,
+        })
+            .fetch(
+                'GET',
+                'https://shaivamfiles.fra1.cdn.digitaloceanspaces.com/sqlitedump/thirumurai_songsData1.zip'
+            )
             .then((res) => {
                 // the temp file path
-                console.log('The file saved to', res.path())
+                console.log('The file saved to', res.path());
                 // const filePath = RNFS.DocumentDirectoryPath + '/myData.db';
                 // Unzip will be called here!
                 unzipDownloadFile(res.path(), async (jsonFilePath) => {
-                    console.log("🚀 ~ file: Database.js:35 ~ unzipDownloadFile ~ jsonFilePath:", jsonFilePath)
+                    console.log(
+                        '🚀 ~ file: Database.js:35 ~ unzipDownloadFile ~ jsonFilePath:',
+                        jsonFilePath
+                    );
                     RNFS.readDir(jsonFilePath)
                         .then((files) => {
-                            console.log("🚀 ~ file: Database.js:50 ~ unzipDownloadFile ~ files:", files)
-                            const fileNames = files.map(fileInfo => fileInfo.name);
+                            console.log(
+                                '🚀 ~ file: Database.js:50 ~ unzipDownloadFile ~ files:',
+                                files
+                            );
+                            const fileNames = files.map((fileInfo) => fileInfo.name);
                             console.log('File names in the directory:', fileNames);
                             try {
-                                database.transaction(async (tx) => {
-                                    await tx.executeSql(
-                                        'ATTACH DATABASE ? AS Updated_db',
-                                        [`${jsonFilePath}/thirumurai_songsData2.db`],
-                                        async (tx, results) => {
-                                            console.log("🚀 ~ file: Database.js:49 ~ database.transaction ~ results:", tx, results)
-                                            const data = await AsyncStorage.getItem('@database')
-                                            resolve(tx)
-                                            // console.log("🚀 ~ file: Database.js:53 ~ async ~ data:", data)
-                                        }
-                                    );
-                                }, async (error) => {
-                                    const data = await AsyncStorage.getItem('@database')
-                                    // console.log("🚀 ~ file: Database.js:53 ~ async ~ data:", data)
-                                    console.log("🚀 ~ file: Database.js:56 ~ database.transaction ~ error:", error)
-                                    reject(error)
-                                });
+                                database.transaction(
+                                    async (tx) => {
+                                        await tx.executeSql(
+                                            'ATTACH DATABASE ? AS Updated_db',
+                                            [`${jsonFilePath}/thirumurai_songsData2.db`],
+                                            async (tx, results) => {
+                                                console.log(
+                                                    '🚀 ~ file: Database.js:49 ~ database.transaction ~ results:',
+                                                    tx,
+                                                    results
+                                                );
+                                                const data = await AsyncStorage.getItem(
+                                                    '@database'
+                                                );
+                                                resolve(tx);
+                                                // console.log("🚀 ~ file: Database.js:53 ~ async ~ data:", data)
+                                            }
+                                        );
+                                    },
+                                    async (error) => {
+                                        const data = await AsyncStorage.getItem('@database');
+                                        // console.log("🚀 ~ file: Database.js:53 ~ async ~ data:", data)
+                                        console.log(
+                                            '🚀 ~ file: Database.js:56 ~ database.transaction ~ error:',
+                                            error
+                                        );
+                                        reject(error);
+                                    }
+                                );
                             } catch (error) {
-                                console.log("🚀 ~ file: Database.js:53 ~ unzipDownloadFile ~ error:", error)
+                                console.log(
+                                    '🚀 ~ file: Database.js:53 ~ unzipDownloadFile ~ error:',
+                                    error
+                                );
                             }
                         })
-                        .catch(error => console.error('Error reading directory:', error));
+                        .catch((error) => console.error('Error reading directory:', error));
                 });
             });
     })

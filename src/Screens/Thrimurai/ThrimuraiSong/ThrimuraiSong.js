@@ -27,6 +27,8 @@ import { useIsFocused } from '@react-navigation/native';
 import TrackPlayer from 'react-native-track-player';
 import { ThemeContext } from '../../../Context/ThemeContext';
 import { colors } from '../../../Helpers';
+import { useTranslation } from 'react-i18next';
+import '../../../../localization';
 
 const ThrimuraiSong = ({ route, navigation }) => {
     let key = true;
@@ -52,6 +54,26 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const [songDetails, setSongDetails] = useState(null);
     const [songs, setSongs] = useState([]);
     const { theme } = useContext(ThemeContext);
+    const { t, i18n } = useTranslation();
+    const selectedLngCode = i18n.language;
+    const langMap = {
+        en: 'en-IN',
+        ar: 'ar',
+        as: 'as',
+        bn: 'bn',
+        hi: 'DV',
+        gu: 'gu',
+        he: 'he',
+        ja: 'JP-KA',
+        kn: 'kn-IN',
+        ml: 'ml',
+        or: 'or',
+        pa: 'pa',
+        si: 'si-LK',
+        te: 'te',
+        ur: 'ur',
+        ta: 'en',
+    };
 
     const handlePress = () => {
         console.log(true);
@@ -72,9 +94,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
         };
     }, [isFocused]);
     const getSOngData = () => {
-        const query = `SELECT * from thirumurai_songs where refId=${data?.prevId} and title NOTNULL ORDER BY song_no ASC`;
+        const query = `SELECT * from thirumurai_songs where refId=${data?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY song_no ASC`;
         getSqlData(query, (callbacks) => {
-            // console.log('🚀 ~ file: ThrimuraiSong.js:69 ~ getSOngData ~ callbacks:', callbacks);
             setSongDetails(callbacks);
             const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`;
             getSqlData(query2, (callbacks) => {
@@ -97,7 +118,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
             <View style={styles.headerContainer}>
                 <TouchableOpacity style={styles.textContainer}>
                     <DownArrow />
-                    <Text style={styles.headerText}>Thirumurai Details</Text>
+                    <Text style={styles.headerText}>{t('Thirumurai Details')}</Text>
                     <DownArrow />
                 </TouchableOpacity>
             </View>

@@ -6,46 +6,12 @@ import { colors } from '../../../Helpers';
 import RenderAudios from '../RenderAudios';
 import { getSqlData } from '../../Database';
 import { ThemeContext } from '../../../Context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 
-const RenderTitle = ({ data, navigation }) => {
-    let key = true;
+const RenderEachTitle = ({ item, index, navigation, selectedChapter, setSelectedChapter }) => {
     const { theme } = useContext(ThemeContext);
-    const database = SQLite.openDatabase({
-        name: key ? 'SongsData.db' : 'main.db',
-        createFromLocation: 1,
-    });
-    // const database = SQLite.openDatabase({ name: 'SongsData.db', createFromLocation: 1 });
-    const [selectedChapter, setSelectedChapter] = useState(null);
-    const [TitleData, setTitleData] = useState([]);
-
-    useEffect(() => {
-        getDtataFromSql();
-    }, []);
-    const getDtataFromSql = async () => {
-        const query = `SELECT pann, prevId FROM thirumurais where fkTrimuria=${data.prevId} and pann NOTNULL GROUP BY pann ORDER BY titleNo ASC`;
-        getSqlData(query, (callbacks) => {
-            setTitleData(callbacks);
-        });
-        // await database.transaction(tx => {
-
-        //     tx.executeSql(query, [], (_, results) => {
-        //         let arr = []
-        //         if (results?.rows?.length > 0) {
-        //             for (let i = 0; i < results?.rows?.length; i++) {
-        //                 const tableName = results.rows.item(i);
-        //                 console.log("Row data title", tableName);
-        //                 arr.push(tableName)
-        //             }
-        //         } else {
-        //             console.log('No tables found.');
-        //         }
-        //         setTitleData(arr)
-        //     })
-        // }, (error) => {
-        //     console.error("error occured in fetching data", error);
-        // })
-    };
-    const renderTitle = (item, index) => (
+    const { t } = useTranslation();
+    return (
         <>
             <View
                 style={{
@@ -66,7 +32,7 @@ const RenderTitle = ({ data, navigation }) => {
                                 : [styles.titleText, { color: theme.textColor }]
                         }
                     >
-                        {item?.pann}
+                        {t(item?.pann)}
                     </Text>
                 </View>
                 {selectedChapter !== null && selectedChapter == index ? (
@@ -99,9 +65,60 @@ const RenderTitle = ({ data, navigation }) => {
             )}
         </>
     );
+};
+
+const RenderTitle = ({ data, navigation }) => {
+    let key = true;
+    const database = SQLite.openDatabase({
+        name: key ? 'SongsData.db' : 'main.db',
+        createFromLocation: 1,
+    });
+    // const database = SQLite.openDatabase({ name: 'SongsData.db', createFromLocation: 1 });
+    const [selectedChapter, setSelectedChapter] = useState(null);
+    const [TitleData, setTitleData] = useState([]);
+
+    useEffect(() => {
+        getDtataFromSql();
+    }, []);
+    const getDtataFromSql = async () => {
+        const query = `SELECT pann, prevId,fkTrimuria FROM thirumurais where fkTrimuria=${data.prevId} and pann NOTNULL GROUP BY pann ORDER BY titleNo ASC`;
+        getSqlData(query, (callbacks) => {
+            setTitleData(callbacks);
+        });
+        // await database.transaction(tx => {
+
+        //     tx.executeSql(query, [], (_, results) => {
+        //         let arr = []
+        //         if (results?.rows?.length > 0) {
+        //             for (let i = 0; i < results?.rows?.length; i++) {
+        //                 const tableName = results.rows.item(i);
+        //                 console.log("Row data title", tableName);
+        //                 arr.push(tableName)
+        //             }
+        //         } else {
+        //             console.log('No tables found.');
+        //         }
+        //         setTitleData(arr)
+        //     })
+        // }, (error) => {
+        //     console.error("error occured in fetching data", error);
+        // })
+    };
+
     return (
         <View style={{ marginTop: 0 }}>
-            <FlatList data={TitleData} renderItem={({ item, index }) => renderTitle(item, index)} />
+            <FlatList
+                data={TitleData}
+                renderItem={({ item, index }) => (
+                    <RenderEachTitle
+                        item={item}
+                        index={index}
+                        navigation={navigation}
+                        selectedChapter={selectedChapter}
+                        setSelectedChapter={setSelectedChapter}
+                    />
+                )}
+            />
         </View>
     );
 };

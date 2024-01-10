@@ -1,7 +1,12 @@
+import { useContext } from "react";
 import { Text, View } from "react-native";
-import { colors } from "../../../Helpers";
+import { ThemeContext } from "../../../Context/ThemeContext";
+
+import colors from "../../../Helpers/colors";
 const HighlightedText = ({ text, highlight, lyrics }) => {
+    const { theme } = useContext(ThemeContext);
     if (!text) return null;
+
     highlight = highlight.replace(/\s/g, '');
     const escapedHighlight = highlight.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const regex = new RegExp(
@@ -15,7 +20,7 @@ const HighlightedText = ({ text, highlight, lyrics }) => {
         <Text style={{
             fontFamily: 'AnekTamil-Bold',
             fontSize: 14,
-            color: colors.screenTheme.textColor,
+            color: theme.textColor,
             fontWeight: lyrics ? '400' : '700',
         }}>
             {parts.map((part, i) =>

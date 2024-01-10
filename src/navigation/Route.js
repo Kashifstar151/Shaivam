@@ -49,21 +49,20 @@ const Route = () => {
         // connectDataBaseToFolder()
     }, [])
     const checkConnection = (connected) => {
-        if (connected) {
-            Alert.alert('New Update Available', "Click ok to sync latest data", [
-
-                {
-                    text: 'Cancel',
-                    onPress: () => onCancel()
-                },
-                {
-                    text: 'Ok',
-                    onPress: () => checkFileExist()
-                },
-            ]);
-        } else {
-            Alert.alert('You are offline!');
-        }
+        // if (connected) {
+        //     Alert.alert('New Update Available', "Click ok to sync latest data", [
+        //         {
+        //             text: 'Cancel',
+        //             onPress: () => onCancel()
+        //         },
+        //         {
+        //             text: 'Ok',
+        //             onPress: () => checkFileExist()
+        //         },
+        //     ]);
+        // } else {
+        //     Alert.alert('You are offline!');
+        // }
     };
     const onCancel = () => {
         AsyncStorage.setItem('@database', JSON.stringify({ name: 'songData.db', createFromLocation: 1 }))
@@ -121,31 +120,37 @@ const Route = () => {
     }
 
     return (
-
         <>
-            {
-                showDownloading ?
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                        <LottieView style={{ height: 200, width: 200 }} source={require('../assets/JSON/Animation - 1704052511281.json')} autoPlay loop />
-                    </View>
-                    :
-                    <NavigationContainer>
-                        <Stack.Navigator
-                            screenOptions={{
-                                headerShown: false
-                            }}>
-                            {/* <Stack.Screen name={RouteTexts.BOTTOM_TABS} component={BottomTabs} />
-                            <Stack.Screen name="Home" component={HomeScreen} /> */}
-                            <Stack.Screen name="Thrimurai" component={ThrimuraiList} />
-                            <Stack.Screen name={RouteTexts.SEARCH_SCREEN} component={SearchScreen} />
-                            <Stack.Screen name={RouteTexts.THIRIMURAI_HEADING} component={ThrimuraiHeadingPage} />
-                            <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={ThrimuraiSong} />
-                        </Stack.Navigator>
-                    </NavigationContainer>
-            }
+            {showDownloading ? (
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <LottieView
+                        style={{ height: 200, width: 200 }}
+                        source={require('../assets/JSON/Animation - 1704052511281.json')}
+                        autoPlay
+                        loop
+                    />
+                </View>
+            ) : (
+                <NavigationContainer>
+                    <Stack.Navigator
+                        screenOptions={{
+                            headerShown: false,
+                        }}
+                    >
+                        <Stack.Screen name={RouteTexts.BOTTOM_TABS} component={BottomTabs} />
+                        <Stack.Screen name="Home" component={HomeScreen} />
+                        <Stack.Screen name="Thrimurai" component={ThrimuraiList} />
+                        <Stack.Screen name={RouteTexts.SEARCH_SCREEN} component={SearchScreen} />
+                        <Stack.Screen
+                            name={RouteTexts.THIRIMURAI_HEADING}
+                            component={ThrimuraiHeadingPage}
+                        />
+                        <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={ThrimuraiSong} />
+                    </Stack.Navigator>
+                </NavigationContainer>
+            )}
         </>
-
-    )
+    );
 }
 
 export default Route

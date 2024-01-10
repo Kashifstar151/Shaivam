@@ -14,8 +14,6 @@ export const ThemeContextProvider = ({ children }) => {
             setTheme(colorscheme === 'light' ? light : dark);
             AsyncStorage.setItem('theme', colorscheme);
         }
-
-        console.log('the theme of the screen==>', dark);
     }, [colorscheme]);
 
     return (

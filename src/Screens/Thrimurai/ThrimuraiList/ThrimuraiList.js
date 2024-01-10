@@ -31,7 +31,7 @@ import EllispseSVGLeft from '../../../components/SVGs/EllispseSVGLeft';
 import { ThemeContext } from '../../../Context/ThemeContext';
 import BookIcon from '../../../components/SVGs/BookIcon';
 import { useTranslation } from 'react-i18next';
-import '../../../../localization';
+// import '../../../../localization';
 
 const ThrimuraiList = ({ navigation }) => {
     const LANGS = [
@@ -53,8 +53,8 @@ const ThrimuraiList = ({ navigation }) => {
     ];
 
     const { t, i18n } = useTranslation();
-    const selectedLngCode = i18n.language;
-    const setLng = (lngCode) => i18n.changeLanguage(lngCode);
+    // const selectedLngCode = i18n.language;
+    // const setLng = (lngCode) => i18n.changeLanguage(lngCode);
 
     const [searchText, setSearchText] = useState(null);
     const [thrimurais, setThrimurais] = useState([]);
@@ -151,7 +151,7 @@ const ThrimuraiList = ({ navigation }) => {
         >
             <Background>
                 <>
-                    <BackButton color={true} middleText={'Thirumurais'} />
+                    <BackButton color={true} middleText={'Thirumurais'} navigation={navigation} />
                     <View
                         style={[
                             styles.inputcontainer,
@@ -185,7 +185,6 @@ const ThrimuraiList = ({ navigation }) => {
             <View style={{ marginTop: 10, paddingHorizontal: 10 }}>
                 <Text
                     style={{
-                        // color: theme.textColor,
                         color: theme.textColor,
                         fontFamily: 'Lora-Bold',
                         fontSize: 18,
