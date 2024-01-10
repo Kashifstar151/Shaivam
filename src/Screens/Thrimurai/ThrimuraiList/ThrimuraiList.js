@@ -64,7 +64,7 @@ const ThrimuraiList = ({ navigation }) => {
         name: 'SongsData.db',
         createFromLocation: 1,
     });
-    useEffect(() => {}, []);
+    useEffect(() => { }, []);
 
     useEffect(() => {
         retrieveData();
@@ -203,6 +203,7 @@ const ThrimuraiList = ({ navigation }) => {
                                 page: 1,
                                 list: thrimurais.slice(0, 7),
                                 query: 'SELECT name ,prevId FROM  category WHERE prevId<=7',
+                                prevId: '<=7'
                             })
                         }
                     >
@@ -233,6 +234,7 @@ const ThrimuraiList = ({ navigation }) => {
                                 page: 2,
                                 list: thrimurais.slice(7, 14),
                                 query: 'SELECT name ,prevId FROM  category WHERE prevId=8',
+                                prevId: '=8'
                             })
                         }
                     >
@@ -264,6 +266,7 @@ const ThrimuraiList = ({ navigation }) => {
                                 page: 1,
                                 list: thrimurais.slice(0, 7),
                                 query: 'SELECT name ,prevId FROM  category WHERE prevId=9',
+                                prevId: '=9'
                             })
                         }
                     >
@@ -295,6 +298,7 @@ const ThrimuraiList = ({ navigation }) => {
                                 page: 1,
                                 list: thrimurais.slice(0, 7),
                                 query: 'SELECT name ,prevId FROM  category WHERE prevId=10',
+                                prevId: '=10'
                             })
                         }
                     >
@@ -325,6 +329,7 @@ const ThrimuraiList = ({ navigation }) => {
                                 page: 2,
                                 list: thrimurais.slice(7, 14),
                                 query: 'SELECT name ,prevId FROM  category WHERE prevId=11',
+                                prevId: '=11'
                             })
                         }
                     >
@@ -355,6 +360,7 @@ const ThrimuraiList = ({ navigation }) => {
                                 page: 1,
                                 list: thrimurais.slice(0, 7),
                                 query: 'SELECT name ,prevId FROM  category WHERE prevId=12',
+                                prevId: '=12'
                             })
                         }
                     >
@@ -385,6 +391,7 @@ const ThrimuraiList = ({ navigation }) => {
                                 page: 1,
                                 list: thrimurais.slice(0, 7),
                                 query: 'SELECT name ,prevId FROM  category WHERE prevId=13',
+                                prevId: '=13'
                             })
                         }
                     >
