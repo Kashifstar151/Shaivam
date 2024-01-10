@@ -53,7 +53,7 @@ const RenderItem = ({ item }) => {
                         <View
                             style={{
                                 margin: 4,
-                                width: '47%',
+                                width: '47.2%',
                                 flexDirection: 'row',
                                 padding: 12,
                                 alignItems: 'center',

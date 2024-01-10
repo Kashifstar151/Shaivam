@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState, useRef } from 'react';
 import {
     Dimensions,
     Image,
@@ -9,6 +9,7 @@ import {
     View,
     TouchableOpacity,
     ImageBackground,
+    ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CardComponents from '../../components/CardComponents';
@@ -21,7 +22,6 @@ import '../../../localization';
 import { ThemeContext } from '../../Context/ThemeContext';
 import bgImg from '../../../assets/Images/Background.png';
 import bgImgDark from '../../../assets/Images/BackgroundCommon.png';
-import { ScrollView } from 'react-native-gesture-handler';
 
 const LANGS = [
     { lngCode: 'en', label: 'English' },
@@ -42,15 +42,17 @@ const LANGS = [
 ];
 
 const HomeScreen = () => {
+    console.log('the re-render ');
     const { t, i18n } = useTranslation();
     const selectedLngCode = i18n.language;
     const setLng = (lngCode) => i18n.changeLanguage(lngCode);
     const { theme } = useContext(ThemeContext);
     const [compHeight, setCompHeight] = useState();
-    const handleLayout = (event) => {
+    const handleLayout = useCallback((event) => {
+        console.log('kya hua ');
         const { height } = event.nativeEvent.layout;
         setCompHeight(height);
-    };
+    }, []);
 
     useEffect(() => {
         console.log('The component height ==> ', compHeight);
@@ -140,9 +142,11 @@ const HomeScreen = () => {
                 onLayout={handleLayout}
             >
                 <CardComponents />
-            </View>
 
-            <Text style={{ color: 'black' }}>fhjkdhj</Text>
+                <View>
+                    <Text>fhjd</Text>
+                </View>
+            </View>
 
             {/* <View>
                 <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
