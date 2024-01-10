@@ -48,11 +48,13 @@ const HomeScreen = () => {
     const setLng = (lngCode) => i18n.changeLanguage(lngCode);
     const { theme } = useContext(ThemeContext);
     const [compHeight, setCompHeight] = useState();
-    const handleLayout = useCallback((event) => {
-        console.log('kya hua ');
-        const { height } = event.nativeEvent.layout;
-        setCompHeight(height);
-    }, []);
+    const handleLayout = useCallback(
+        (event) => {
+            const { height } = event.nativeEvent.layout;
+            setCompHeight(height);
+        },
+        [setCompHeight, compHeight]
+    );
 
     useEffect(() => {
         console.log('The component height ==> ', compHeight);
