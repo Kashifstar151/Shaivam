@@ -3,14 +3,28 @@ import { Alert, Dimensions, StyleSheet, TextInput, View } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import { colors } from '../Helpers';
 import { ThemeContext } from '../Context/ThemeContext';
-const SearchInput = ({ placeholder, setState, state, color, setOnFocus }) => {
+const SearchInput = ({ placeholder, setState, state, color, setOnFocus, styleOverwrite }) => {
     const { theme } = useContext(ThemeContext);
     return (
         <View
             style={
                 color
-                    ? [styles.inputcontainer, { backgroundColor: '#F3F3F3' }]
-                    : [styles.inputcontainer, { backgroundColor: theme.searchBox.bgColor }]
+                    ? [
+                          styles.inputcontainer,
+                          {
+                              backgroundColor: '#F3F3F3',
+                              marginHorizontal: styleOverwrite.marginHorizontalUnset ? 0 : 15,
+                              marginTop: styleOverwrite.paddingTop,
+                          },
+                      ]
+                    : [
+                          styles.inputcontainer,
+                          {
+                              backgroundColor: theme.searchBox.bgColor,
+                              marginHorizontal: styleOverwrite.marginHorizontalUnset ? 0 : 15,
+                              marginTop: styleOverwrite.paddingTop,
+                          },
+                      ]
             }
         >
             <Icon name="search" size={28} color={color ? '#777777' : colors.grey1} />
@@ -28,7 +42,6 @@ const SearchInput = ({ placeholder, setState, state, color, setOnFocus }) => {
 };
 export const styles = StyleSheet.create({
     inputcontainer: {
-        marginHorizontal: 15,
         borderRadius: 10,
         paddingHorizontal: 10,
 
