@@ -17,6 +17,7 @@ import SearchInput from '../../components/SearchInput';
 import { colors } from '../../Helpers';
 import { useTranslation } from 'react-i18next';
 import '../../../localization';
+import Background from '../../components/Background';
 
 const LANGS = [
     { lngCode: 'en', label: 'English' },
@@ -44,7 +45,9 @@ const HomeScreen = () => {
         // <SafeAreaView>
 
         <View style={{ flex: 1 }}>
-            <View style={styles.firstContainer}>
+            {/* <View style={styles.firstContainer}> */}
+            <Background>
+
                 <Header />
                 <SearchInput />
                 <HeadingText text={'Shaivam Exclusive'} />
@@ -56,7 +59,8 @@ const HomeScreen = () => {
                 <View style={{ marginVertical: 20 }}>
                     <CardComponents />
                 </View>
-            </View>
+            </Background>
+            {/* </View> */}
             <View style={styles.secondContainer}>
                 <View>
                     {LANGS.map((l) => {
@@ -92,7 +96,7 @@ export const styles = StyleSheet.create({
     firstContainer: {
         backgroundColor: '#AA4A44',
         height: Dimensions.get('window').height / 2.5,
-        paddingHorizontal: 15,
+        // paddingHorizontal: 15,
     },
     secondContainer: { backgroundColor: 'white' },
     headerContainer: {

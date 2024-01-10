@@ -23,6 +23,7 @@ const Route = () => {
     const [isConnected, setIsConnected] = useState(false)
     // const database = SQLite.openDatabase({ name: databaseName, });
     useEffect(() => {
+        AsyncStorage.setItem('@database', JSON.stringify({ name: 'songData.db', createFromLocation: 1 }))
         LogBox.ignoreAllLogs();
         AppState.addEventListener('change', (nextAppState) => {
             if (nextAppState === 'background' || nextAppState === 'inactive') {
@@ -53,7 +54,7 @@ const Route = () => {
 
                 {
                     text: 'Cancel',
-                    onPress: () => console.log(true)
+                    onPress: () => onCancel()
                 },
                 {
                     text: 'Ok',
@@ -118,42 +119,6 @@ const Route = () => {
             console.log("🚀 ~ file: route.js:99 ~ RNFS.exists ~ error:", error)
         })
     }
-    const InitializeDatabase = () => {
-        RNFS.readDir(`${RNFS.ExternalDirectoryPath}/Thrimurai`)
-            .then((files) => {
-                console.log("🚀 ~ file: route.js:50 ~ unzipDownloadFile ~ files:", files)
-                const fileNames = files.map(fileInfo => fileInfo.name);
-                console.log('File names in the directory:', fileNames);
-                try {
-                    database.transaction(async (tx) => {
-                        await tx.executeSql(
-                            'ATTACH DATABASE ? AS Updated_db',
-                            [`${RNFS.ExternalDirectoryPath}/Thrimurai/thirumuraiData.db`],
-                            (tx, results) => {
-                                console.log("🚀 ~ file: Database.js:49 ~ database.transaction ~ results:", tx, results)
-                            }
-                        );
-                        tx.executeSql('COMMIT;');
-                    }, (error) => {
-                        console.log("🚀 ~ file: route.js:101 ~ database.transaction ~ error:", error)
-                    });
-                    // database.transaction(async (tx) => {
-                    //     await tx.executeSql(
-                    //         'ATTACH DATABASE ? AS Updated_db',
-                    //         [`${RNFS.ExternalDirectoryPath}/Thrimurai/thirumuraiSecond.db`],
-                    //         (tx, results) => {
-                    //             console.log("🚀 ~ file: Database.js:49 ~ database.transaction ~ results:", tx, results)
-                    //         }
-                    //     );
-                    //     tx.executeSql('COMMIT;');
-                    // });
-                } catch (error) {
-                    console.log("🚀 ~ file: route.js:53 ~ unzipDownloadFile ~ error:", error)
-                }
-                // You can now use the file names for further processing
-            })
-            .catch(error => console.error('Error reading directory:', error));
-    }
 
     return (
 
@@ -169,12 +134,12 @@ const Route = () => {
                             screenOptions={{
                                 headerShown: false
                             }}>
-                            <Stack.Screen name={RouteTexts.BOTTOM_TABS} component={BottomTabs} />
+                            {/* <Stack.Screen name={RouteTexts.BOTTOM_TABS} component={BottomTabs} /> */}
                             {/* <Stack.Screen name="Home" component={HomeScreen} /> */}
-                            {/* <Stack.Screen name="Thrimurai" component={ThrimuraiList} />
+                            <Stack.Screen name="Thrimurai" component={ThrimuraiList} />
                             <Stack.Screen name={RouteTexts.SEARCH_SCREEN} component={SearchScreen} />
                             <Stack.Screen name={RouteTexts.THIRIMURAI_HEADING} component={ThrimuraiHeadingPage} />
-                            <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={ThrimuraiSong} /> */}
+                            <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={ThrimuraiSong} />
                         </Stack.Navigator>
                     </NavigationContainer>
             }
