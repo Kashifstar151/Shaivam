@@ -70,6 +70,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const retrieveData = async () => {
         const query = `SELECT name ,prevId FROM  category WHERE prevId${prevId}`;
         getSqlData(query, (callbacks) => {
+            // console.log("🚀 ~ file: ThrimuraiHeadingPage.js:73 ~ getSqlData ~ callbacks:", callbacks)
             setThrimurais(callbacks);
         });
         // await database.transaction(tx => {
@@ -264,7 +265,6 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                                 query1: `SELECT * FROM thirumurais WHERE search_thirumurai_title LIKE`,
                                 query2: `AND fkTrimuria <=7 LIMIT 10 OFFSET 0`,
                                 allThirumirai: false
-
                             })}
                         placeholder={'Search for anything (Eg - தோடுடைய செவியன்) '}
                     />

@@ -55,7 +55,7 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
             // setSongDetails(callbacks)
             const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`;
             getSqlData(query2, async (callbacks) => {
-                console.log('🚀 ~ file: ThrimuraiSong.js:58 ~ getSOngData ~ callbacks:', callbacks);
+                // console.log('🚀 ~ file: ThrimuraiSong.js:58 ~ getSOngData ~ callbacks:', callbacks);
                 // setSongs(callbacks)
                 setOdhuvar(callbacks);
                 setUpPlayer(callbacks);
@@ -190,6 +190,7 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                 <Slider
                     value={position}
                     thumbImage={ThumbImage}
+                    onValueChange={(value) => TrackPlayer.seekTo(value)}
                     style={{ width: Dimensions.get('window').width - 30, alignSelf: 'center' }}
                     minimumValue={0}
                     maximumValue={duration}
@@ -205,7 +206,7 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                     }}
                 >
                     <Text style={{ color: 'white' }}>
-                        {new Date(position * 1000).toISOString().substring(15, 19)}
+                        {new Date(position * 1000).toISOString().substring(14, 19)}
                     </Text>
                     <Text style={{ color: 'white' }}>
                         {new Date(duration * 1000).toISOString().substring(14, 19)}
