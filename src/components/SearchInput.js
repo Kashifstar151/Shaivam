@@ -13,7 +13,7 @@ const SearchInput = ({ placeholder, setState, state, color, setOnFocus, styleOve
                           styles.inputcontainer,
                           {
                               backgroundColor: '#F3F3F3',
-                              marginHorizontal: styleOverwrite.marginHorizontalUnset ? 0 : 15,
+                              marginHorizontal: styleOverwrite?.marginHorizontalUnset ? 0 : 15,
                               marginTop: styleOverwrite.paddingTop,
                           },
                       ]
@@ -21,8 +21,8 @@ const SearchInput = ({ placeholder, setState, state, color, setOnFocus, styleOve
                           styles.inputcontainer,
                           {
                               backgroundColor: theme.searchBox.bgColor,
-                              marginHorizontal: styleOverwrite.marginHorizontalUnset ? 0 : 15,
-                              marginTop: styleOverwrite.paddingTop,
+                              marginHorizontal: styleOverwrite?.marginHorizontalUnset ? 0 : 15,
+                              marginTop: styleOverwrite?.paddingTop,
                           },
                       ]
             }
