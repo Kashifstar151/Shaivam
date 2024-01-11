@@ -151,7 +151,7 @@ const ThrimuraiList = ({ navigation }) => {
         >
             <Background>
                 <>
-                    <BackButton color={true} middleText={'Thirumurais'} />
+                    <BackButton color={true} middleText={'Thirumurais'} navigation={navigation} />
                     <View
                         style={[
                             styles.inputcontainer,

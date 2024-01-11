@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Dimensions, FlatList, Text, View } from 'react-native';
+import { Dimensions, FlatList, Text, View, Pressable } from 'react-native';
 import OmIcon from './SVGs/OmIcon';
 import LinearGradient from 'react-native-linear-gradient';
 import { ThemeContext } from '../Context/ThemeContext';
@@ -8,7 +8,8 @@ import OmLetterSvg from './SVGs/OmLetterSvg';
 import StrotasSVG from './SVGs/StrotasSVG';
 import ShaivaSVG from './SVGs/ShaivaSVG';
 
-const RenderItem = ({ item }) => {
+
+const RenderItem = ({ item, navigation }) => {
     return (
         <LinearGradient
             colors={item.gradient}
@@ -58,7 +59,8 @@ const RenderItem = ({ item }) => {
                     }}
                 >
                     {item.subComp.map((i, _) => (
-                        <View
+                        <Pressable
+                            onPress={i?.title == 'Thirumurais' ? () => navigation.navigate('Thrimurai') : () => alert(true)}
                             style={{
                                 margin: 4,
                                 width: '47.2%',
@@ -89,7 +91,7 @@ const RenderItem = ({ item }) => {
                             >
                                 {i.title}
                             </Text>
-                        </View>
+                        </Pressable>
                     ))}
                 </View>
             </View>
@@ -97,7 +99,7 @@ const RenderItem = ({ item }) => {
     );
 };
 
-const CardComponents = () => {
+const CardComponents = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
     const data = [
         {
@@ -149,8 +151,7 @@ const CardComponents = () => {
         <View style={{ paddingLeft: 0 }}>
             <FlatList
                 horizontal
-                style={{ overflow: 'visible' }}
-                renderItem={({ item, index }) => <RenderItem item={item} />}
+                renderItem={({ item, index }) => <RenderItem item={item} navigation={navigation} />}
                 data={data}
             />
         </View>
