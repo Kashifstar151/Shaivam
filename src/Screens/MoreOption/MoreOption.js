@@ -1,12 +1,15 @@
-import React from 'react'
-import { FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
+import { Dimensions, FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import RBSheet from 'react-native-raw-bottom-sheet'
 import Icon from 'react-native-vector-icons/dist/MaterialIcons'
 import Background from '../../components/Background'
 import ConstantHeader from '../../components/ConstantHeader'
 import Header from '../../components/Header'
 import { colors } from '../../Helpers'
+import ChooseLanguage from './ChooseLanguage'
 
 const MoreOption = () => {
+    const SheetRef = useRef(null)
     const option = [
         { title: 'Language', Description: 'Your Selection', },
         { title: 'Favourite Odhuvar', Description: 'Your Selection' },
@@ -17,10 +20,16 @@ const MoreOption = () => {
         { title: 'Rate the app', Description: 'Your Selection' },
         { title: 'About', Description: 'Your Selection' },
     ]
+    const [selectedLanguage, setSelectedLanguage] = useState(null)
+    const navigationHandler = (item) => {
+        if (item.title == 'Language') {
+            SheetRef.current.open()
+        }
+    }
     const rednderItem = (item, index) => {
         // console.log("🚀 ~ file: MoreOption.js:19 ~ rednderItem ~ item:", item)
         return (
-            <Pressable style={styles.list}>
+            <Pressable style={styles.list} onPress={() => navigationHandler(item)} >
                 <View style={{ flexDirection: 'row' }}>
                     <View style={styles.imageContainer}>
 
@@ -45,6 +54,11 @@ const MoreOption = () => {
             </Background>
             <View style={styles.container}>
                 <FlatList contentContainerStyle={{ marginTop: 20 }} renderItem={({ item, index }) => rednderItem(item, index)} data={option} />
+            </View>
+            <View >
+                <RBSheet closeOnDragDown ref={SheetRef} height={Dimensions.get('window').height / 2}>
+                    <ChooseLanguage setSelected={setSelectedLanguage} selected={selectedLanguage} />
+                </RBSheet>
             </View>
         </View>
     )
