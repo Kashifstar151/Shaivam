@@ -118,6 +118,14 @@ export default {
         settingBtn: {
             backgroundColor: '#F3DDDC',
         },
+
+        // homepage
+
+        // --->card start
+        gradientHomeCardYellow: ['#FEE8B3', '#FDD166'],
+        gradientHomeCardGreen: ['#AFD9BB', '#60B278'],
+        textColorHomeCardYellow: '#4C3600',
+        // --->card end
     },
     dark: {
         // yellow
@@ -165,6 +173,14 @@ export default {
         settingBtn: {
             backgroundColor: '#333333',
         },
+
+        // homepage
+
+        // --->card start
+        gradientHomeCardYellow: greyForCard,
+        gradientHomeCardGreen: greyForCard,
+        textColorHomeCardYellow: '#fff',
+        // --->card end
     },
 
     // red card
