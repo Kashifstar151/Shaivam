@@ -143,6 +143,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const retrieveData = async () => {
         const query = `SELECT name ,prevId FROM  category WHERE prevId${prevId}`;
         getSqlData(query, (callbacks) => {
+            // console.log("🚀 ~ file: ThrimuraiHeadingPage.js:73 ~ getSqlData ~ callbacks:", callbacks)
             setThrimurais(callbacks);
         });
         // await database.transaction(tx => {

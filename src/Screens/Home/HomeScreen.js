@@ -93,7 +93,7 @@ const SongAndAudio = ({ item, index, theme }) => {
     // return<Text>dhjkshajk</Text>;
 };
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
     console.log('the re-render ');
     const { t, i18n } = useTranslation();
     const selectedLngCode = i18n.language;
@@ -132,48 +132,6 @@ const HomeScreen = () => {
 
     return (
         <ScrollView style={{ flex: 1, overflow: 'visible' }}>
-            {/* <View style={styles.firstContainer}>
-                <Header />
-                <SearchInput />
-                <HeadingText text={'Shaivam Exclusive'} />
-                <Text
-                    style={{ color: colors.grey3, fontSize: 12, marginTop: 5, fontWeight: '600' }}
-                >
-                    Scroll through and check out what Shaiva, offers {t("Thirumurais")}
-                </Text>
-                <View style={{ marginVertical: 20 }}>
-                    <CardComponents />
-                </View>
-            </View> */}
-
-            {/* test case for language implementation */}
-            {/* <View style={styles.secondContainer}>
-                <View>
-                    {LANGS.map((l) => {
-                        const selected = l.lngCode === selectedLngCode;
-                        return (
-                            <TouchableOpacity
-                                onPress={() => setLng(l.lngCode)}
-                                key={l.lngCode}
-                                disabled={selected}
-                            >
-                                <View style={[styles.row, selected ? styles.selectedRow : {}]}>
-                                    <Text
-                                        style={[
-                                            selected ? styles.selectedText : styles.text,
-                                            { color: 'black' },
-                                        ]}
-                                    >
-                                        {l.label}
-                                    </Text>
-                                    {selected && <Text>👍</Text>}
-                                </View>
-                            </TouchableOpacity>
-                        );
-                    })}
-                </View>
-            </View> */}
-
             <View style={[styles.firstContainer]}>
                 <ImageBackground
                     source={theme.colorscheme === 'light' ? bgImg : bgImgDark}
@@ -212,9 +170,8 @@ const HomeScreen = () => {
                 }}
                 onLayout={handleLayout}
             >
-                <CardComponents />
+                <CardComponents navigation={navigation} />
             </View>
-
             <View style={{ padding: 15 }}>
                 <Text style={{ fontSize: 18, fontWeight: '700', color: theme.textColor }}>
                     Songs & Audios

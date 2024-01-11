@@ -15,6 +15,7 @@ import CenterIcon from '../../../assets/Images/Vector (3).svg';
 import { getSqlData } from '../../Database';
 // import { colors } from '../../../Helpers';
 import { ThemeContext } from '../../../Context/ThemeContext';
+import HighlightedText from './HighlightedText';
 
 const SearchScreen = ({ navigation, route }) => {
     const { thrimurais } = route?.params;
@@ -61,67 +62,69 @@ const SearchScreen = ({ navigation, route }) => {
             >
                 {key == 'title'
                     ? parts?.map((res, i) => (
-                          <View style={res == searchText ? { flexDirection: 'row' } : null}>
-                              <Text
-                                  style={
-                                      res == searchText
-                                          ? [
-                                                styles.titleText,
-                                                {
-                                                    paddingHorizontal: 5,
-                                                    marginHorizontal: 4,
-                                                    borderRadius: 5,
-                                                    backgroundColor:
-                                                        theme.colorscheme === 'light'
-                                                            ? 'yellow'
-                                                            : '#C1554E',
-                                                    color: theme.textColor,
-                                                },
-                                            ]
-                                          : [styles.titleText, { color: theme.textColor }]
-                                  }
-                              >
-                                  {res}
-                              </Text>
-                          </View>
-                      ))
+                        <HighlightedText text={res} highlight={searchText} />
+                        //   <View style={res == searchText ? { flexDirection: 'row' } : null}>
+                        //       <Text
+                        //           style={
+                        //               res == searchText
+                        //                   ? [
+                        //                         styles.titleText,
+                        //                         {
+                        //                             paddingHorizontal: 5,
+                        //                             marginHorizontal: 4,
+                        //                             borderRadius: 5,
+                        //                             backgroundColor:
+                        //                                 theme.colorscheme === 'light'
+                        //                                     ? 'yellow'
+                        //                                     : '#C1554E',
+                        //                             color: theme.textColor,
+                        //                         },
+                        //                     ]
+                        //                   : [styles.titleText, { color: theme.textColor }]
+                        //           }
+                        //       >
+                        //           {res}
+                        //       </Text>
+                        //   </View>
+                    ))
                     : parts?.map((res, i) => (
-                          <View
-                              style={
-                                  res == searchText
-                                      ? {
-                                            flexDirection: 'row',
-                                            padding: 10,
-                                        }
-                                      : null
-                              }
-                          >
-                              <Text
-                                  style={
-                                      res == searchText
-                                          ? [
-                                                styles.titleText,
-                                                {
-                                                    fontWeight: '500',
-                                                    backgroundColor:
-                                                        theme.colorscheme === 'light'
-                                                            ? 'yellow'
-                                                            : '#C1554E',
-                                                },
-                                            ]
-                                          : [
-                                                styles.titleText,
-                                                {
-                                                    fontWeight: '500',
-                                                    color: theme.textColor,
-                                                },
-                                            ]
-                                  }
-                              >
-                                  {res}
-                              </Text>
-                          </View>
-                      ))}
+                        <HighlightedText text={res} highlight={searchText} lyrics={true} />
+                        // <View
+                        //     style={
+                        //         res == searchText
+                        //             ? {
+                        //                 flexDirection: 'row',
+                        //                 padding: 10,
+                        //             }
+                        //             : null
+                        //     }
+                        // >
+                        //     <Text
+                        //         style={
+                        //             res == searchText
+                        //                 ? [
+                        //                     styles.titleText,
+                        //                     {
+                        //                         fontWeight: '500',
+                        //                         backgroundColor:
+                        //                             theme.colorscheme === 'light'
+                        //                                 ? 'yellow'
+                        //                                 : '#C1554E',
+                        //                     },
+                        //                 ]
+                        //                 : [
+                        //                     styles.titleText,
+                        //                     {
+                        //                         fontWeight: '500',
+                        //                         color: theme.textColor,
+                        //                     },
+                        //                 ]
+                        //         }
+                        //     >
+                        //         {res}
+                        //     </Text>
+                        // </View>
+                    ))}
             </View>
         );
     };
