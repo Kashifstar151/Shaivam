@@ -100,10 +100,11 @@ const HomeScreen = ({ navigation }) => {
     const setLng = (lngCode) => i18n.changeLanguage(lngCode);
     const { theme } = useContext(ThemeContext);
     const [compHeight, setCompHeight] = useState();
+    const [dimentionsOfText1, setDimentionsOfText1] = useState();
     const handleLayout = useCallback(
         (event) => {
             const { height } = event.nativeEvent.layout;
-            setCompHeight(Math.floor(height));
+            setCompHeight(Math.trunc(height));
         },
         [setCompHeight, compHeight]
     );
@@ -172,6 +173,7 @@ const HomeScreen = ({ navigation }) => {
             >
                 <CardComponents navigation={navigation} />
             </View>
+
             <View style={{ padding: 15 }}>
                 <Text style={{ fontSize: 18, fontWeight: '700', color: theme.textColor }}>
                     Songs & Audios
@@ -186,34 +188,44 @@ const HomeScreen = ({ navigation }) => {
                 </View>
             </View>
 
+            {/* playlist 2 */}
             <View
                 style={{
                     backgroundColor: 'red',
-                    left: 0,
-                    overflow: 'visible',
-                    height: 230,
+                    height: 260,
                     marginBottom: 230,
                 }}
             >
                 <Text
                     style={{
-                        backgroundColor: 'green',
-                        transform: [{ rotate: '-90deg' }],
-                        transformOrigin: '10px',
                         position: 'absolute',
-                        left: 0,
+                        transform: [
+                            {
+                                translateX: -dimentionsOfText1.width / 2 + dimentionsOfText1.height,
+                            },
+                            { translateY: (260 + dimentionsOfText1.width) / 2 },
+                            { rotate: '-90deg' },
+                            { translateX: dimentionsOfText1.width / 2 },
+                        ],
+
+                        fontSize: 18,
+                        fontWeight: 'bold',
+                    }}
+                    onLayout={(event) => {
+                        const { width, height } = event.nativeEvent.layout;
+                        setDimentionsOfText1({ width, height });
                     }}
                 >
-                    nfndcnmsnfmfmdsjak
+                    PLAYLIST
                 </Text>
-                {/* <View>
+                <View style={{ position: 'relative', left: dimentionsOfText1.height * 2 }}>
                     <View>
                         <Text>box</Text>
                     </View>
                     <View>
                         <Text>card</Text>
                     </View>
-                </View> */}
+                </View>
             </View>
         </ScrollView>
     );
