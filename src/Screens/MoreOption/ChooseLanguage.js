@@ -18,17 +18,30 @@ const ChooseLanguage = ({ selected, setSelected }) => {
                 <Text style={styles.headingText}>Select Your Language</Text>
                 <Text style={styles.descriptionText}>Changes will be made across the app</Text>
             </View>
-            <FlatList contentContainerStyle={{ marginTop: 10 }} data={language} renderItem={({ item, index }) => (
-                <Pressable style={styles.list}>
-                    <Text style={styles.listText}>{item.name}</Text>
-                    <TouchableOpacity style={selected?.name == item.name ? styles.selectView : styles.unSelectedView} onPress={() => setSelected(item)}>
-                        <Icon name='check' color={selected?.name == item.name ? 'white' : '#777777'} size={12} />
-                    </TouchableOpacity>
-                </Pressable>
-            )
-            } />
-        </View >
-    )
+            <FlatList
+                contentContainerStyle={{ marginTop: 10 }}
+                data={language}
+                renderItem={({ item, index }) => (
+                    <Pressable style={styles.list} onPress={() => setSelected(item)}>
+                        <Text style={styles.listText}>{item.name}</Text>
+                        <TouchableOpacity
+                            style={
+                                selected?.name == item.name
+                                    ? styles.selectView
+                                    : styles.unSelectedView
+                            }
+                        >
+                            <Icon
+                                name="check"
+                                color={selected?.name == item.name ? 'white' : '#777777'}
+                                size={12}
+                            />
+                        </TouchableOpacity>
+                    </Pressable>
+                )}
+            />
+        </View>
+    );
 }
 export const styles = StyleSheet.create({
     headingText: { fontFamily: 'Lora-SemiBold', color: '#222222', fontSize: 16 },
