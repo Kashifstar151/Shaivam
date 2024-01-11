@@ -4,8 +4,9 @@ import OmIcon from './SVGs/OmIcon';
 import LinearGradient from 'react-native-linear-gradient';
 import { ThemeContext } from '../Context/ThemeContext';
 import BookIcon from './SVGs/BookIcon';
-import ScrollRoll from './SVGs/ScrollRoll';
 import OmLetterSvg from './SVGs/OmLetterSvg';
+import StrotasSVG from './SVGs/StrotasSVG';
+import ShaivaSVG from './SVGs/ShaivaSVG';
 
 const RenderItem = ({ item }) => {
     return (
@@ -24,13 +25,20 @@ const RenderItem = ({ item }) => {
             }}
         >
             <View style={{ flex: 1 }}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        paddingBottom: 11,
+                    }}
+                >
                     <View style={{ justifyContent: 'center' }}>
                         <Text
                             style={{
                                 fontSize: 16,
                                 fontWeight: '600',
                                 color: item.textColor,
+                                paddingBottom: 5,
                             }}
                         >
                             {item?.text}
@@ -76,6 +84,7 @@ const RenderItem = ({ item }) => {
                                     flexWrap: 'wrap',
                                     alignContent: 'center',
                                     flex: 1,
+                                    color: item.textColor,
                                 }}
                             >
                                 {i.title}
@@ -95,44 +104,43 @@ const CardComponents = () => {
             text: 'Sacred Texts',
             description: 'Listed to all shiva related audios here',
             id: 1,
-            gradient:
-                theme.colorscheme === 'light' ? ['#FEE8B3', '#FDD166'] : ['#333333', '#333333'],
-            textColor: '#4C3600',
+            gradient: theme.gradientHomeCardYellow,
+            textColor: theme.textColorHomeCardYellow,
 
             subComp: [
-                { icon: <BookIcon fill={theme.textColor} />, title: 'Thirumurais' },
-                { icon: <ScrollRoll fill={theme.textColor} />, title: 'Vedas' },
-                { icon: <OmLetterSvg fill={theme.textColor} />, title: 'Stotras' },
-                { icon: <OmLetterSvg fill={theme.textColor} />, title: 'Shaiva Siddanta' },
+                { icon: <BookIcon fill={theme.textColorHomeCardYellow} />, title: 'Thirumurais' },
+                { icon: <OmLetterSvg fill={theme.textColorHomeCardYellow} />, title: 'Stotras' },
+                { icon: <StrotasSVG fill={theme.textColorHomeCardYellow} />, title: 'Vedas' },
+                {
+                    icon: <ShaivaSVG fill={theme.textColorHomeCardYellow} />,
+                    title: 'Shaiva Siddanta',
+                },
             ],
         },
         {
             text: 'Shaivam media',
             description: 'Listed to all shiva related audios here',
             id: 2,
-            gradient:
-                theme.colorscheme === 'light' ? ['#AFD9BB', '#60B278'] : ['#333333', '#333333'],
-
-            textColor: '#000',
+            gradient: theme.gradientHomeCardGreen,
+            textColor: theme.textColor,
             subComp: [
                 { icon: <BookIcon fill={theme.textColor} />, title: 'Shaivam TV' },
-                { icon: <ScrollRoll fill={theme.textColor} />, title: 'Radio' },
                 { icon: <OmLetterSvg fill={theme.textColor} />, title: 'Temples' },
-                { icon: <OmLetterSvg fill={theme.textColor} />, title: 'Calender' },
+                { icon: <StrotasSVG fill={theme.textColor} />, title: 'Radio' },
+                { icon: <ShaivaSVG fill={theme.textColor} />, title: 'Calender' },
             ],
         },
         {
             text: 'More Features',
             description: 'Listed to all shiva related audios here',
             id: 3,
-            gradient:
-                theme.colorscheme === 'light' ? ['#FEE8B3', '#FDD166'] : ['#333333', '#333333'],
-            textColor: '#4C3600',
+            gradient: theme.gradientHomeCardYellow,
+            textColor: theme.textColorHomeCardYellow,
             subComp: [
-                { icon: <BookIcon fill={theme.textColor} />, title: 'Kaala Puja' },
-                { icon: <ScrollRoll fill={theme.textColor} />, title: 'Favourites' },
-                { icon: <OmLetterSvg fill={theme.textColor} />, title: 'Quiz' },
-                { icon: <OmLetterSvg fill={theme.textColor} />, title: 'Website' },
+                { icon: <BookIcon fill={theme.textColorHomeCardYellow} />, title: 'Kaala Puja' },
+                { icon: <OmLetterSvg fill={theme.textColorHomeCardYellow} />, title: 'Quiz' },
+                { icon: <StrotasSVG fill={theme.textColorHomeCardYellow} />, title: 'Favourites' },
+                { icon: <ShaivaSVG fill={theme.textColorHomeCardYellow} />, title: 'Website' },
             ],
         },
     ];
@@ -141,6 +149,7 @@ const CardComponents = () => {
         <View style={{ paddingLeft: 0 }}>
             <FlatList
                 horizontal
+                style={{ overflow: 'visible' }}
                 renderItem={({ item, index }) => <RenderItem item={item} />}
                 data={data}
             />
