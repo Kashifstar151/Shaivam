@@ -150,6 +150,7 @@ const CardComponents = ({ navigation }) => {
     return (
         <View style={{ paddingLeft: 0 }}>
             <FlatList
+                style={{ overflow: 'visible' }}
                 horizontal
                 renderItem={({ item, index }) => <RenderItem item={item} navigation={navigation} />}
                 data={data}
