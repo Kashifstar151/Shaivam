@@ -10,7 +10,10 @@ import {
     TouchableOpacity,
     ImageBackground,
     ScrollView,
+    FlatList,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/dist/MaterialIcons';
+import MusicContainer from '../../../assets/Images/Frame 83.svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CardComponents from '../../components/CardComponents';
 import Header from '../../components/Header';
@@ -41,6 +44,55 @@ const LANGS = [
     { lngCode: 'ur', label: 'Urdu' },
 ];
 
+const SongAndAudio = ({ item, index, theme }) => {
+    return (
+        <View
+            style={{
+                flexDirection: 'row',
+                margin: 10,
+                alignItems: 'center',
+                justifyContent: 'space-between',
+            }}
+        >
+            <View
+                style={{
+                    paddingHorizontal: 0,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                }}
+            >
+                <MusicContainer />
+                <View style={{ paddingHorizontal: 10 }}>
+                    <Text
+                        style={{
+                            fontSize: 14,
+                            fontWeight: '600',
+                            fontFamily: 'Mulish-Regular',
+                            color: theme.textColor,
+                        }}
+                    >
+                        {item.songName}
+                    </Text>
+                    <Text
+                        style={{
+                            fontSize: 12,
+                            fontWeight: '400',
+                            fontFamily: 'Mulish-Regular',
+                            color: theme.textColor,
+                        }}
+                    >
+                        {item.description}
+                    </Text>
+                </View>
+            </View>
+            <TouchableOpacity>
+                <Icon name="more-vert" size={22} />
+            </TouchableOpacity>
+        </View>
+    );
+    // return<Text>dhjkshajk</Text>;
+};
+
 const HomeScreen = () => {
     console.log('the re-render ');
     const { t, i18n } = useTranslation();
@@ -59,6 +111,25 @@ const HomeScreen = () => {
     useEffect(() => {
         console.log('The component height ==> ', compHeight);
     }, [compHeight]);
+
+    const data = [
+        {
+            id: 1,
+            songName: 'Ashtakam-1 Adhyayam-1',
+            description: 'सम्पूर्ण ऋग्वेद पारायणम् Complete ...',
+        },
+        {
+            id: 2,
+            songName: 'Ashtakam-2 Adhyayam-2',
+            description: 'सम्पूर्ण ऋग्वेद पाराणम् Complete ...',
+        },
+        {
+            id: 3,
+            songName: 'Ashtakam-2 Adhyayam-2',
+            description: 'सम्पूर्ण ऋग्वेद पाराणम् Complete ...',
+        },
+    ];
+
     return (
         <ScrollView style={{ flex: 1, overflow: 'visible' }}>
             {/* <View style={styles.firstContainer}>
@@ -148,6 +219,44 @@ const HomeScreen = () => {
                 <Text style={{ fontSize: 18, fontWeight: '700', color: theme.textColor }}>
                     Songs & Audios
                 </Text>
+
+                <View style={styles.boxCommon}>
+                    <FlatList
+                        key={(item) => item?.id}
+                        data={data}
+                        renderItem={({ item, index }) => <SongAndAudio item={item} theme={theme} />}
+                    />
+                </View>
+            </View>
+
+            <View
+                style={{
+                    backgroundColor: 'red',
+                    left: 0,
+                    overflow: 'visible',
+                    height: 230,
+                    marginBottom: 230,
+                }}
+            >
+                <Text
+                    style={{
+                        backgroundColor: 'green',
+                        transform: [{ rotate: '-90deg' }],
+                        transformOrigin: '10px',
+                        position: 'absolute',
+                        left: 0,
+                    }}
+                >
+                    nfndcnmsnfmfmdsjak
+                </Text>
+                {/* <View>
+                    <View>
+                        <Text>box</Text>
+                    </View>
+                    <View>
+                        <Text>card</Text>
+                    </View>
+                </View> */}
             </View>
         </ScrollView>
     );
