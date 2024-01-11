@@ -51,7 +51,7 @@ const HomeScreen = () => {
     const handleLayout = useCallback(
         (event) => {
             const { height } = event.nativeEvent.layout;
-            setCompHeight(height);
+            setCompHeight(Math.floor(height));
         },
         [setCompHeight, compHeight]
     );
@@ -60,8 +60,6 @@ const HomeScreen = () => {
         console.log('The component height ==> ', compHeight);
     }, [compHeight]);
     return (
-        // <SafeAreaView>
-
         <ScrollView style={{ flex: 1, overflow: 'visible' }}>
             {/* <View style={styles.firstContainer}>
                 <Header />
@@ -138,50 +136,20 @@ const HomeScreen = () => {
             <View
                 style={{
                     paddingHorizontal: 15,
-                    paddingTop: 15,
+                    paddingTop: 12,
                     marginTop: compHeight ? -compHeight / 2 : 0,
                 }}
                 onLayout={handleLayout}
             >
                 <CardComponents />
-
-                <View>
-                    <Text>fhjd</Text>
-                </View>
             </View>
 
-            {/* <View>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-                <Text style={{ backgroundColor: 'blue', fontSize: 80 }}>hdjkshjkfh</Text>
-            </View> */}
+            <View style={{ padding: 15 }}>
+                <Text style={{ fontSize: 18, fontWeight: '700', color: theme.textColor }}>
+                    Songs & Audios
+                </Text>
+            </View>
         </ScrollView>
-        // </SafeAreaView>
     );
 };
 export const styles = StyleSheet.create({
