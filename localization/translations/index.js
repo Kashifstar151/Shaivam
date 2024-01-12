@@ -14,3 +14,4 @@ export { default as ta } from './Tamil.json';
 export { default as te } from './Telugu.json';
 export { default as ur } from './Urdu.json';
 export { default as pa } from './Punjabi.json';
+export { default as hd } from './Hindi(Devanagari).json';

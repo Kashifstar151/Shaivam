@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as RNLocalize from 'react-native-localize';
 import 'moment/min/locales';
 import moment from 'moment';
-import { ar, as, bn, en, gu, he, hi, ja, kn, ml, od, si, ta, te, ur, pa } from './translations';
+import { ar, as, bn, en, gu, he, hi, ja, kn, ml, od, si, ta, te, ur, pa, hd } from './translations';
 
 export const AVAILABLE_LANGUAGES = {
     en: {
@@ -54,6 +54,10 @@ export const AVAILABLE_LANGUAGES = {
     },
     ur: {
         translation: ur,
+    },
+    // adding hindi dev naagri
+    hd: {
+        translation: hd,
     },
 };
 const STORE_LANGUAGE_KEY = 'settings.lang';
