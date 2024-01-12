@@ -9,7 +9,7 @@ import StrotasSVG from './SVGs/StrotasSVG';
 import ShaivaSVG from './SVGs/ShaivaSVG';
 
 
-const RenderItem = ({ item, navigation }) => {
+const RenderItem = ({ item, navigation, theme }) => {
     return (
         <LinearGradient
             colors={item.gradient}
@@ -48,7 +48,7 @@ const RenderItem = ({ item, navigation }) => {
                             {item?.description}
                         </Text>
                     </View>
-                    <OmIcon />
+                    <OmIcon fill={theme === 'light' ? '#4C3600' : '#fff'} />
                 </View>
 
                 <View
@@ -60,15 +60,19 @@ const RenderItem = ({ item, navigation }) => {
                 >
                     {item.subComp.map((i, _) => (
                         <Pressable
-                            onPress={i?.title == 'Thirumurais' ? () => navigation.navigate('Thrimurai') : () => alert(true)}
+                            onPress={
+                                i?.title == 'Thirumurais'
+                                    ? () => navigation.navigate('Thrimurai')
+                                    : () => alert(true)
+                            }
                             style={{
                                 margin: 4,
                                 width: '47.2%',
                                 flexDirection: 'row',
                                 padding: 12,
                                 alignItems: 'center',
-                                backgroundColor: 'white',
-                                opacity: 0.7,
+                                backgroundColor: theme === 'light' ? 'white' : '#494949',
+                                opacity: theme === 'light' ? 0.7 : 1,
                                 borderRadius: 15,
                             }}
                         >
@@ -138,6 +142,7 @@ const CardComponents = ({ navigation }) => {
             id: 3,
             gradient: theme.gradientHomeCardYellow,
             textColor: theme.textColorHomeCardYellow,
+
             subComp: [
                 { icon: <BookIcon fill={theme.textColorHomeCardYellow} />, title: 'Kaala Puja' },
                 { icon: <OmLetterSvg fill={theme.textColorHomeCardYellow} />, title: 'Quiz' },
@@ -152,7 +157,9 @@ const CardComponents = ({ navigation }) => {
             <FlatList
                 style={{ overflow: 'visible' }}
                 horizontal
-                renderItem={({ item, index }) => <RenderItem item={item} navigation={navigation} />}
+                renderItem={({ item, index }) => (
+                    <RenderItem item={item} navigation={navigation} theme={theme.colorscheme} />
+                )}
                 data={data}
             />
         </View>
