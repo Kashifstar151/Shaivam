@@ -33,8 +33,8 @@ const Route = () => {
         requestFilePermissions()
         // offlineDataBAse()
         const unsubscribe = addEventListener(state => {
-            console.log("Connection type", state.type);
-            console.log("Is connected?", state.isConnected);
+            // console.log("Connection type", state.type);
+            // console.log("Is connected?", state.isConnected);
             if (state.isConnected) {
                 setIsConnected(true)
                 checkConnection(true)
@@ -49,20 +49,20 @@ const Route = () => {
         // connectDataBaseToFolder()
     }, [])
     const checkConnection = (connected) => {
-        // if (connected) {
-        //     Alert.alert('New Update Available', "Click ok to sync latest data", [
-        //         {
-        //             text: 'Cancel',
-        //             onPress: () => onCancel()
-        //         },
-        //         {
-        //             text: 'Ok',
-        //             onPress: () => checkFileExist()
-        //         },
-        //     ]);
-        // } else {
-        //     Alert.alert('You are offline!');
-        // }
+        if (connected) {
+            Alert.alert('New Update Available', "Click ok to sync latest data", [
+                {
+                    text: 'Cancel',
+                    onPress: () => onCancel()
+                },
+                {
+                    text: 'Ok',
+                    onPress: () => checkFileExist()
+                },
+            ]);
+        } else {
+            Alert.alert('You are offline!');
+        }
     };
     const onCancel = () => {
         AsyncStorage.setItem('@database', JSON.stringify({ name: 'songData.db', createFromLocation: 1 }))

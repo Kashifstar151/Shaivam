@@ -6,7 +6,8 @@ import SQLite from 'react-native-sqlite-storage';
 import { getSqlData } from '../Database';
 import { ThemeContext } from '../../Context/ThemeContext';
 
-const RenderAudios = ({ navigation, songs, data }) => {
+const RenderAudios = ({ navigation, songs, data, thalam }) => {
+    console.log("🚀 ~ RenderAudios ~ songs:", songs)
     const { theme } = useContext(ThemeContext);
     const [audioData, setAudioData] = useState([]);
     useEffect(() => {
@@ -14,7 +15,9 @@ const RenderAudios = ({ navigation, songs, data }) => {
     }, []);
     const getDtataFromSql = async () => {
         const query = `SELECT Thirumurai_title, prevId FROM thirumurais WHERE  fkTrimuria='${songs?.fkTrimuria}' AND pann='${songs?.pann}' ORDER BY  titleNo ASC  LIMIT 10 OFFSET 0`;
-        getSqlData(query, callbacks => {
+        const query2 = `SELECT * from thirumurai_songs WHERE refId = ${songs.prevId} and country= '${songs?.country}'ORDER BY song_no ASC`
+        getSqlData(thalam ? query2 : query, callbacks => {
+            console.log(" sjf🚀 ~ getDtataFromSql ~ callbacks:", JSON.stringify(callbacks, 0, 2))
             setAudioData(callbacks)
         })
     }

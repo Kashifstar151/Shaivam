@@ -8,7 +8,7 @@ import { getSqlData } from '../../Database';
 import { ThemeContext } from '../../../Context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 
-const RenderEachTitle = ({ item, index, navigation, selectedChapter, setSelectedChapter }) => {
+const RenderEachTitle = ({ item, index, navigation, selectedChapter, setSelectedChapter, thalam }) => {
     const { theme } = useContext(ThemeContext);
     const { t } = useTranslation();
     return (
@@ -60,14 +60,15 @@ const RenderEachTitle = ({ item, index, navigation, selectedChapter, setSelected
             {selectedChapter == index && (
                 <View style={{ marginBottom: 10 }}>
                     {/* <FlatList renderItem={({ item, index }) => renderAudios(item, index)} data={item.songLyrics} /> */}
-                    <RenderAudios songs={item} navigation={navigation} />
+                    <RenderAudios thalam={thalam} songs={item} navigation={navigation} />
                 </View>
             )}
         </>
     );
 };
 
-const RenderTitle = ({ data, navigation }) => {
+const RenderTitle = ({ data, navigation, thalam }) => {
+    console.log("🚀 ~ RenderTitle ~ data:", data)
     let key = true;
     const database = SQLite.openDatabase({
         name: key ? 'SongsData.db' : 'main.db',
@@ -82,27 +83,12 @@ const RenderTitle = ({ data, navigation }) => {
     }, []);
     const getDtataFromSql = async () => {
         const query = `SELECT pann, prevId,fkTrimuria FROM thirumurais where fkTrimuria=${data.prevId} and pann NOTNULL GROUP BY pann ORDER BY titleNo ASC`;
-        getSqlData(query, (callbacks) => {
+        const query2 = `Select * from thirumurais where country= '${data}' ORDER BY  title 
+        ASC LIMIT 10 OFFSET 0`
+        getSqlData(thalam ? query2 : query, (callbacks) => {
+            console.log("🚀 ~ getSqlData ~ callbacks:", JSON.stringify(callbacks, 0, 2))
             setTitleData(callbacks);
         });
-        // await database.transaction(tx => {
-
-        //     tx.executeSql(query, [], (_, results) => {
-        //         let arr = []
-        //         if (results?.rows?.length > 0) {
-        //             for (let i = 0; i < results?.rows?.length; i++) {
-        //                 const tableName = results.rows.item(i);
-        //                 console.log("Row data title", tableName);
-        //                 arr.push(tableName)
-        //             }
-        //         } else {
-        //             console.log('No tables found.');
-        //         }
-        //         setTitleData(arr)
-        //     })
-        // }, (error) => {
-        //     console.error("error occured in fetching data", error);
-        // })
     };
 
     return (
@@ -111,6 +97,7 @@ const RenderTitle = ({ data, navigation }) => {
                 data={TitleData}
                 renderItem={({ item, index }) => (
                     <RenderEachTitle
+                        thalam={thalam}
                         item={item}
                         index={index}
                         navigation={navigation}

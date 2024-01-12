@@ -94,8 +94,9 @@ const ThrimuraiSong = ({ route, navigation }) => {
         };
     }, [isFocused]);
     const getSOngData = () => {
-        const query = `SELECT * from thirumurai_songs where refId=${data?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY song_no ASC`;
+        const query = `SELECT * from thirumurai_songs where refId=${data?.prevId} and title NOTNULL and locale='en' ORDER BY song_no ASC`;
         getSqlData(query, (callbacks) => {
+            console.log("33🚀 ~ getSqlData ~ callbacks:", callbacks)
             setSongDetails(callbacks);
             const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`;
             getSqlData(query2, (callbacks) => {

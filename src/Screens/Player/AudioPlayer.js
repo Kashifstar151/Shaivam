@@ -52,10 +52,11 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
     const getSOngData = () => {
         const query = `SELECT * from thirumurai_songs where refId=${prevId} and title NOTNULL`;
         getSqlData(query, (callbacks) => {
+            console.log("🚀 ~ getSqlData ~ callbacks: 22", callbacks)
             // setSongDetails(callbacks)
             const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`;
             getSqlData(query2, async (callbacks) => {
-                // console.log('🚀 ~ file: ThrimuraiSong.js:58 ~ getSOngData ~ callbacks:', callbacks);
+                console.log('🚀 ~ file: ThrimuraiSong.js:58 ~ getSOngData ~ callbacks:', callbacks);
                 // setSongs(callbacks)
                 setOdhuvar(callbacks);
                 setUpPlayer(callbacks);

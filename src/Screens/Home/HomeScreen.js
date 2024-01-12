@@ -51,7 +51,7 @@ const HomeScreen = ({ navigation }) => {
     const handleLayout = useCallback(
         (event) => {
             const { height } = event.nativeEvent.layout;
-            setCompHeight(height);
+            setCompHeight(Math.trunc(height));
         },
         [setCompHeight, compHeight]
     );
