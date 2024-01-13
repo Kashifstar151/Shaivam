@@ -32,7 +32,7 @@ local.properties
 *.iml
 *.hprof
 .cxx/
-app/src/main/assets/www/SongsData.db
+/android/app/src/main/assets/www/SongsData.db
 # node.js
 #
 node_modules/
