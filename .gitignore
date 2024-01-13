@@ -25,13 +25,14 @@ ios/.xcode.env.local
 # Android/IntelliJ
 #
 build/
+
 .idea
 .gradle
 local.properties
 *.iml
 *.hprof
 .cxx/
-
+app/src/main/assets/www/SongsData.db
 # node.js
 #
 node_modules/
