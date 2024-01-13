@@ -32,7 +32,7 @@ const RenderEachTitle = ({ item, index, navigation, selectedChapter, setSelected
                                 : [styles.titleText, { color: theme.textColor }]
                         }
                     >
-                        {t(item?.pann)}
+                        {thalam ? t(item?.titleS) : t(item?.pann)}
                     </Text>
                 </View>
                 {selectedChapter !== null && selectedChapter == index ? (
@@ -90,7 +90,6 @@ const RenderTitle = ({ data, navigation, thalam }) => {
             setTitleData(callbacks);
         });
     };
-
     return (
         <View style={{ marginTop: 0 }}>
             <FlatList

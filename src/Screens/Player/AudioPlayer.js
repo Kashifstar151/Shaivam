@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import {
     Alert,
     Dimensions,
-    FlatList,
+
     StyleSheet,
     Text,
     TouchableOpacity,
@@ -24,6 +24,7 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 import { getSqlData } from '../Database';
 import { useIsFocused } from '@react-navigation/native';
+import { FlatList } from 'react-native-gesture-handler';
 
 const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => {
     // const { params } = route
@@ -50,13 +51,13 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
         getSOngData();
     }, [songsData, isFocuced]);
     const getSOngData = () => {
-        const query = `SELECT * from thirumurai_songs where refId=${prevId} and title NOTNULL`;
+        const query = `SELECT * from thirumurai_songs where prevId=${prevId} and title NOTNULL`;
         getSqlData(query, (callbacks) => {
-            console.log("🚀 ~ getSqlData ~ callbacks: 22", callbacks)
+            // console.log("🚀 ~ getSqlData ~ callbacks: 22", callbacks)
             // setSongDetails(callbacks)
             const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`;
             getSqlData(query2, async (callbacks) => {
-                console.log('🚀 ~ file: ThrimuraiSong.js:58 ~ getSOngData ~ callbacks:', callbacks);
+                // console.log('🚀 ~ file: ThrimuraiSong.js:58 ~ getSOngData ~ callbacks:', callbacks);
                 // setSongs(callbacks)
                 setOdhuvar(callbacks);
                 setUpPlayer(callbacks);

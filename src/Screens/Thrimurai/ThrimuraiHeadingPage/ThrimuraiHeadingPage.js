@@ -56,6 +56,7 @@ const RenderContents = ({
         let rangeStr;
         getSqlData(query, (clk) => {
             const rangeArr = clk[0].result.split('-');
+            // console.log("🚀 ~ getSqlData ~ clk:", rangeArr)
             if (rangeArr[1].length === 3) {
                 rangeStr = `${item.prevId}.00${rangeArr[0]} - ${item.prevId}.${rangeArr[1]}`;
             } else if (rangeArr[1].length === 2) {
@@ -141,7 +142,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const retrieveData = async () => {
         const query = `SELECT name ,prevId FROM  category WHERE prevId${prevId}`;
         getSqlData(query, (callbacks) => {
-            // console.log("🚀 ~ file: ThrimuraiHeadingPage.js:73 ~ getSqlData ~ callbacks:", callbacks)
+            console.log("🚀 ~ file: ThrimuraiHeadingPage.js:73 ~ getSqlData ~ callbacks:", callbacks)
             setThrimurais(callbacks);
         });
     }

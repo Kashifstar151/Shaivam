@@ -51,58 +51,59 @@ const LANGS = [
     { lngCode: 'ur', label: 'Urdu' },
 ];
 
-const SongAndAudio = ({ item, index, theme }) => {
-    return (
-        <View
-            style={{
-                flexDirection: 'row',
-                margin: 10,
-                alignItems: 'center',
-                justifyContent: 'space-between',
-            }}
-        >
-            <View
-                style={{
-                    paddingHorizontal: 0,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                }}
-            >
-                <MusicContainer />
-                <View style={{ paddingHorizontal: 10 }}>
-                    <Text
-                        style={{
-                            fontSize: 14,
-                            fontWeight: '600',
-                            fontFamily: 'Mulish-Regular',
-                            color: theme.textColor,
-                        }}
-                    >
-                        {item.songName}
-                    </Text>
-                    <Text
-                        style={{
-                            fontSize: 12,
-                            fontWeight: '400',
-                            fontFamily: 'Mulish-Regular',
-                            color: theme.textColor,
-                        }}
-                    >
-                        {item.description}
-                    </Text>
-                </View>
-            </View>
-            <TouchableOpacity>
-                <Icon name="more-vert" size={22} />
-            </TouchableOpacity>
-        </View>
-    );
-    // return<Text>dhjkshajk</Text>;
-};
+// const SongAndAudio = ({ item, index }) => {
+//     const { theme } = useContext(ThemeContext);
+//     return (
+//         <View
+//             style={{
+//                 flexDirection: 'row',
+//                 margin: 10,
+//                 alignItems: 'center',
+//                 justifyContent: 'space-between',
+//             }}
+//         >
+//             <View
+//                 style={{
+//                     paddingHorizontal: 0,
+//                     flexDirection: 'row',
+//                     alignItems: 'center',
+//                 }}
+//             >
+//                 <MusicContainer />
+//                 <View style={{ paddingHorizontal: 10 }}>
+//                     <Text
+//                         style={{
+//                             fontSize: 14,
+//                             fontWeight: '600',
+//                             fontFamily: 'Mulish-Regular',
+//                             color: theme.textColor,
+//                         }}
+//                     >
+//                         {item.songName}
+//                     </Text>
+//                     <Text
+//                         style={{
+//                             fontSize: 12,
+//                             fontWeight: '400',
+//                             fontFamily: 'Mulish-Regular',
+//                             color: theme.textColor,
+//                         }}
+//                     >
+//                         {item.description}
+//                     </Text>
+//                 </View>
+//             </View>
+//             <TouchableOpacity>
+//                 <Icon name="more-vert" size={22} />
+//             </TouchableOpacity>
+//         </View>
+//     );
+//     // return<Text>dhjkshajk</Text>;
+// };
 
 const HomeScreen = ({ navigation }) => {
     const { t } = useTranslation();
-    const { theme } = useContext(ThemeContext);
+    const { theme } = useContext(ThemeContext)
     const [compHeight, setCompHeight] = useState();
     const [textInsidePlaylistCard, setTextInsidePlaylistCard] = useState(0);
     const [playlistCardHeight, setPlaylistCardHeight] = useState(0);
@@ -266,11 +267,11 @@ const HomeScreen = ({ navigation }) => {
                 </Text>
 
                 <View style={styles.boxCommon}>
-                    <FlatList
+                    {/* <FlatList
                         key={(item) => item?.id}
                         data={data}
                         renderItem={({ item, index }) => <SongAndAudio item={item} theme={theme} />}
-                    />
+                    /> */}
                 </View>
             </View>
 
@@ -403,7 +404,7 @@ const HomeScreen = ({ navigation }) => {
                     <HeadingAndView
                         viewBtnColor={'#C1554E'}
                         title={'Upcoming Events'}
-                        onPress={() => {}}
+                        onPress={() => { }}
                     />
                 </View>
 
@@ -440,7 +441,7 @@ const HomeScreen = ({ navigation }) => {
                     <HeadingAndView
                         viewBtnColor={'#C1554E'}
                         title={'Nearby Temples'}
-                        onPress={() => {}}
+                        onPress={() => { }}
                     />
                 </View>
                 <FlatList
