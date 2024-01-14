@@ -5,18 +5,33 @@ import { RouteTexts } from '../../navigation/RouteText';
 import SQLite from 'react-native-sqlite-storage';
 import { getSqlData } from '../Database';
 import { ThemeContext } from '../../Context/ThemeContext';
+import { useIsFocused } from '@react-navigation/native';
 
-const RenderAudios = ({ navigation, songs, data, thalam }) => {
+const RenderAudios = ({ akarthi, navigation, songs, data, thalam }) => {
     console.log("🚀 ~ RenderAudios ~ songs:", songs)
+    const isFocused = useIsFocused()
     const { theme } = useContext(ThemeContext);
     const [audioData, setAudioData] = useState([]);
     useEffect(() => {
-        getDtataFromSql();
-    }, []);
+        if (akarthi) {
+            getSongsData()
+        } else {
+            getDtataFromSql();
+        }
+    }, [isFocused]);
     const getDtataFromSql = async () => {
         const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${songs?.fkTrimuria}' AND pann='${songs?.pann}' ORDER BY  titleNo ASC  LIMIT 10 OFFSET 0`;
         const query2 = `SELECT * from thirumurai_songs WHERE prevId = ${songs.prevId} and country= '${songs?.country}'ORDER BY song_no ASC`
         getSqlData(thalam ? query2 : query, callbacks => {
+            console.log(" sjf🚀 ~ getDtataFromSql ~ callbacks:", JSON.stringify(callbacks, 0, 2))
+            setAudioData(callbacks)
+        })
+    }
+    const getSongsData = async () => {
+
+        const query = `SELECT * FROM thirumurais`;
+        console.log("🚀 ~ getSongsData ~ query:", query)
+        getSqlData(query, callbacks => {
             console.log(" sjf🚀 ~ getDtataFromSql ~ callbacks:", JSON.stringify(callbacks, 0, 2))
             setAudioData(callbacks)
         })
@@ -41,7 +56,7 @@ const RenderAudios = ({ navigation, songs, data, thalam }) => {
                     color: theme.textColor,
                 }}
             >
-                {thalam ? item?.title : item?.title}
+                {thalam ? item?.title : item?.titleS}
             </Text>
         </Pressable>
     );

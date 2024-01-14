@@ -142,7 +142,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const retrieveData = async () => {
         const query = `SELECT name ,prevId FROM  category WHERE prevId${prevId}`;
         getSqlData(query, (callbacks) => {
-            console.log("🚀 ~ file: ThrimuraiHeadingPage.js:73 ~ getSqlData ~ callbacks:", callbacks)
+            // console.log("🚀 ~ file: ThrimuraiHeadingPage.js:73 ~ getSqlData ~ callbacks:", callbacks)
             setThrimurais(callbacks);
         });
     }
@@ -186,7 +186,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
             <View style={{ backgroundColor: theme.backgroundColor }}>
                 {selectedHeader.name == 'Akarthi' ? (
                     <View style={{ marginTop: 10 }}>
-                        <RenderAudios navigation={navigation} />
+                        <RenderAudios akarthi={true} navigation={navigation} />
                     </View>
                 ) : selectedHeader.name == 'Varalatrumurai' ? (
                     <Varakatrimurai navigation={navigation} />
