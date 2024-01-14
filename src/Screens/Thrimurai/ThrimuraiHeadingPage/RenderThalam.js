@@ -6,7 +6,7 @@ import { ThemeContext } from '../../../Context/ThemeContext'
 import RenderAudios from '../RenderAudios'
 import RenderTitle from './RenderTitle'
 
-const RenderThalam = ({ item, index, navigation }) => {
+const RenderThalam = ({ item, index, navigation, ThalamHeaders }) => {
     const { theme } = useContext(ThemeContext);
     const [selectedTitle, setSelectedTitle] = useState(null)
     return (
@@ -16,7 +16,6 @@ const RenderThalam = ({ item, index, navigation }) => {
                     <Text style={[styles.chapterNameTexts, { color: theme.textColor }]}>
                         {t(item)}
                     </Text>
-
                 </View>
                 {selectedTitle !== null && selectedTitle == index ? (
                     <TouchableOpacity onPress={() => setSelectedTitle(null)}>
@@ -36,7 +35,7 @@ const RenderThalam = ({ item, index, navigation }) => {
                     </TouchableOpacity>
                 )}
             </View>
-            {selectedTitle == index && <RenderTitle data={item} navigation={navigation} thalam={true} />}
+            {selectedTitle == index && <RenderTitle ThalamHeaders={ThalamHeaders} data={item} navigation={navigation} thalam={true} />}
         </View>
     )
 }

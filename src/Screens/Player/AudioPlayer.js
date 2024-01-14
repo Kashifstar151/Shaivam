@@ -57,7 +57,7 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
             // setSongDetails(callbacks)
             const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`;
             getSqlData(query2, async (callbacks) => {
-                // console.log('🚀 ~ file: ThrimuraiSong.js:58 ~ getSOngData ~ callbacks:', callbacks);
+                console.log('🚀 ~ file: ThrimuraiSong.js:58 ~ getSOngData ~ callbacks:', callbacks);
                 // setSongs(callbacks)
                 setOdhuvar(callbacks);
                 setUpPlayer(callbacks);

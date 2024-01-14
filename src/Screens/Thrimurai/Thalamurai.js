@@ -165,7 +165,7 @@ const Thalamurai = ({ navigation }) => {
                         </View>
                         {
                             ThalamHeaders == index &&
-                            <FlatList data={ThalamHeaders == 0 ? nadu : Thalam} renderItem={({ item, index }) => <RenderThalam item={item} index={index} navigation={navigation} />} />
+                            <FlatList data={ThalamHeaders == 0 ? nadu : Thalam} renderItem={({ item, index }) => <RenderThalam item={item} index={index} navigation={navigation} ThalamHeaders={ThalamHeaders} />} />
                         }
                     </>
                 )}

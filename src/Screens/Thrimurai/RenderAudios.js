@@ -11,6 +11,7 @@ const RenderAudios = ({ akarthi, navigation, songs, data, thalam }) => {
     console.log("🚀 ~ RenderAudios ~ songs:", songs)
     const isFocused = useIsFocused()
     const { theme } = useContext(ThemeContext);
+    const [dataLength, setDataLength] = useState(20)
     const [audioData, setAudioData] = useState([]);
     useEffect(() => {
         if (akarthi) {
@@ -20,7 +21,7 @@ const RenderAudios = ({ akarthi, navigation, songs, data, thalam }) => {
         }
     }, [isFocused]);
     const getDtataFromSql = async () => {
-        const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${songs?.fkTrimuria}' AND pann='${songs?.pann}' ORDER BY  titleNo ASC  LIMIT 10 OFFSET 0`;
+        const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${songs?.fkTrimuria}' AND pann='${songs?.pann}' ORDER BY  titleNo ASC  LIMIT 10 OFFSET 1`;
         const query2 = `SELECT * from thirumurai_songs WHERE prevId = ${songs.prevId} and country= '${songs?.country}'ORDER BY song_no ASC`
         getSqlData(thalam ? query2 : query, callbacks => {
             console.log(" sjf🚀 ~ getDtataFromSql ~ callbacks:", JSON.stringify(callbacks, 0, 2))
@@ -28,12 +29,15 @@ const RenderAudios = ({ akarthi, navigation, songs, data, thalam }) => {
         })
     }
     const getSongsData = async () => {
-
-        const query = `SELECT * FROM thirumurais`;
+        const query = `SELECT * FROM thirumurais ASC  LIMIT ${dataLength} OFFSET 0`;
         console.log("🚀 ~ getSongsData ~ query:", query)
         getSqlData(query, callbacks => {
             console.log(" sjf🚀 ~ getDtataFromSql ~ callbacks:", JSON.stringify(callbacks, 0, 2))
+            // if (callbacks?.Length > 0) {
+            //     set
+            // }
             setAudioData(callbacks)
+            setDataLength(dataLength + 10)
         })
     }
     const navigationHandler = (item) => {
@@ -65,6 +69,7 @@ const RenderAudios = ({ akarthi, navigation, songs, data, thalam }) => {
             <FlatList
                 renderItem={({ item, index }) => renderAudios(item, index)}
                 data={audioData}
+                onEndReached={akarthi ? () => getSongsData() : null}
             />
         </View>
     );

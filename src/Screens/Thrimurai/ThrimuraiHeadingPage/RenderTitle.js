@@ -67,7 +67,7 @@ const RenderEachTitle = ({ item, index, navigation, selectedChapter, setSelected
     );
 };
 
-const RenderTitle = ({ data, navigation, thalam }) => {
+const RenderTitle = ({ data, navigation, thalam, ThalamHeaders }) => {
     console.log("🚀 ~ RenderTitle ~ data:", data)
     let key = true;
     const database = SQLite.openDatabase({
@@ -83,7 +83,7 @@ const RenderTitle = ({ data, navigation, thalam }) => {
     }, []);
     const getDtataFromSql = async () => {
         const query = `SELECT pann, prevId,fkTrimuria FROM thirumurais where fkTrimuria=${data.prevId} and pann NOTNULL GROUP BY pann ORDER BY titleNo ASC`;
-        const query2 = `Select * from thirumurais where country= '${data}' ORDER BY  title 
+        const query2 = `Select * from thirumurais where ${ThalamHeaders == 0 ? 'country' : 'thalam'}= '${data}' ORDER BY  title 
         ASC LIMIT 10 OFFSET 0`
         getSqlData(thalam ? query2 : query, (callbacks) => {
             console.log("🚀 ~ getSqlData ~ callbacks:", JSON.stringify(callbacks, 0, 2))
