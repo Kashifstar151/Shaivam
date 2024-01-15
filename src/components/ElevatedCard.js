@@ -2,11 +2,10 @@ import React from 'react';
 import { View } from 'react-native';
 
 const ElevatedCard = ({ children, theme }) => {
-    console.log('🚀 ~ file: ElevatedCard.js:5 ~ ElevatedCard ~ theme:', theme);
     return (
         <View
             style={{
-                elevation: 10,
+                elevation: theme?.colorscheme === 'light' ? 10: 0,
                 shadowColor: '#a0a0a0',
                 marginHorizontal: 15,
                 marginBottom: 5,
