@@ -2,9 +2,15 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import RightDirSVG from '../../components/SVGs/RightDirSVG';
 
-const HeadingAndView = ({ title, onPress, viewBtnColor }) => {
+const HeadingAndView = ({ title, onPress, viewBtnColor, theme }) => {
     return (
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <View
+            style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                color: theme?.textColor,
+            }}
+        >
             <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{title}</Text>
 
             <Pressable style={{ flexDirection: 'row', rowGap: 8 }} onPress={onPress}>
