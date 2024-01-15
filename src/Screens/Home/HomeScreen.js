@@ -117,11 +117,6 @@ const HomeScreen = ({ navigation }) => {
         },
         [setCompHeight, compHeight]
     );
-
-    // useEffect(() => {
-    //     console.log('The component height ==> ', compHeight);
-    // }, [compHeight]);
-
     const data = [
         {
             id: 1,
@@ -329,7 +324,6 @@ const HomeScreen = ({ navigation }) => {
                             style={{ flexDirection: 'row', justifyContent: 'space-between' }}
                             onLayout={(event) => {
                                 const { height } = event.nativeEvent.layout;
-                                // console.log('The text layout has heighty of ===> ', height);
                                 setTextInsidePlaylistCard(height);
                             }}
                         >
