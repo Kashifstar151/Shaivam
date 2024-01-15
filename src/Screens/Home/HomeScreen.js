@@ -118,9 +118,9 @@ const HomeScreen = ({ navigation }) => {
         [setCompHeight, compHeight]
     );
 
-    useEffect(() => {
-        console.log('The component height ==> ', compHeight);
-    }, [compHeight]);
+    // useEffect(() => {
+    //     console.log('The component height ==> ', compHeight);
+    // }, [compHeight]);
 
     const data = [
         {
@@ -329,7 +329,7 @@ const HomeScreen = ({ navigation }) => {
                             style={{ flexDirection: 'row', justifyContent: 'space-between' }}
                             onLayout={(event) => {
                                 const { height } = event.nativeEvent.layout;
-                                console.log('The text layout has heighty of ===> ', height);
+                                // console.log('The text layout has heighty of ===> ', height);
                                 setTextInsidePlaylistCard(height);
                             }}
                         >
@@ -441,6 +441,10 @@ const HomeScreen = ({ navigation }) => {
                         viewBtnColor={'#C1554E'}
                         title={'Nearby Temples'}
                         onPress={() => {}}
+                        theme={{
+                            textColor: theme.textColor,
+                            colorscheme: theme.colorscheme,
+                        }}
                     />
                 </View>
                 <FlatList
@@ -451,7 +455,7 @@ const HomeScreen = ({ navigation }) => {
                     key={(item) => item?.id}
                     data={nearByTempleData}
                     renderItem={({ item, index }) => (
-                        <ElevatedCard>
+                        <ElevatedCard theme={{ colorscheme: theme.colorscheme }}>
                             <PlaceCard
                                 img={item.img}
                                 templeName={item.templeName}
