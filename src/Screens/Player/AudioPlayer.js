@@ -1,13 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import {
-    Alert,
-    Dimensions,
-    FlatList,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-} from 'react-native';
+import { Alert, Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Slider from '@react-native-community/slider';
 import ShuffleIcon from '../../assets/Images/music (1).svg';
 import Icon from 'react-native-vector-icons/dist/AntDesign';
@@ -24,6 +16,7 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 import { getSqlData } from '../Database';
 import { useIsFocused } from '@react-navigation/native';
+import { FlatList } from 'react-native-gesture-handler';
 
 const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => {
     // const { params } = route
@@ -50,12 +43,11 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
         getSOngData();
     }, [songsData, isFocuced]);
     const getSOngData = () => {
-        const query = `SELECT * from thirumurai_songs where refId=${prevId} and title NOTNULL`;
+        const query = `SELECT * from thirumurai_songs where prevId=${prevId} and title NOTNULL`;
         getSqlData(query, (callbacks) => {
             // setSongDetails(callbacks)
             const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`;
             getSqlData(query2, async (callbacks) => {
-                // console.log('🚀 ~ file: ThrimuraiSong.js:58 ~ getSOngData ~ callbacks:', callbacks);
                 // setSongs(callbacks)
                 setOdhuvar(callbacks);
                 setUpPlayer(callbacks);
@@ -145,7 +137,7 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                 progressUpdateEventInterval: 2,
             });
 
-            await TrackPlayer.add(song)
+            await TrackPlayer.add(song);
             // const queue = await TrackPlayer.getQueue();
             // console.log("Current queue:", queue);
             // await TrackPlayer.setRepeatMode()
