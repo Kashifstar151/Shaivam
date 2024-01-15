@@ -32,6 +32,8 @@ import ValarutramuraiLogo from '../../../components/SVGs/ValarutramuraiLogo';
 import AkarthiLogo from '../../../components/SVGs/AkarthiLogo';
 import { ThemeContext } from '../../../Context/ThemeContext';
 import { useTranslation } from 'react-i18next';
+import RenderThalam from './RenderThalam';
+import Thalamurai from '../Thalamurai';
 
 const RenderContents = ({
     item,
@@ -41,14 +43,14 @@ const RenderContents = ({
     navigation,
     range,
     setRange,
+    flagShowAudio,
 }) => {
-    console.log('🚀 ~ file: ThrimuraiHeadingPage.js:45 ~ range:', range);
     const { theme } = useContext(ThemeContext);
     const { t, i18n } = useTranslation();
 
     useEffect(() => {
         const query = `SELECT (
-  (SELECT CAST(titleNo AS TEXT) FROM thirumurais WHERE fkTrimuria=${item.prevId} AND titleNo IS NOT NULL ORDER BY titleNo ASC LIMIT 1)  || '-' ||  (SELECT CAST(titleNo AS TEXT) FROM thirumurais WHERE fkTrimuria=${item.prevId} ORDER BY titleNo DESC LIMIT 1)
+  (SELECT CAST(titleNo AS TEXT) FROM thirumurais WHERE fkTrimuria=${item?.prevId} AND titleNo IS NOT NULL ORDER BY titleNo ASC LIMIT 1)  || '-' ||  (SELECT CAST(titleNo AS TEXT) FROM thirumurais WHERE fkTrimuria=${item.prevId} ORDER BY titleNo DESC LIMIT 1)
 ) AS result;`;
 
         let rangeStr;
@@ -65,9 +67,7 @@ const RenderContents = ({
         });
     }, []);
 
-    // useEffect(() => {
-    //     console.log('The range has been upddated==>', range);
-    // }, [range]);
+    console.log('the click ==>', item);
     return (
         <>
             <View style={[styles.chapterBox, { backgroundColor: theme.cardBgColor }]}>
@@ -98,8 +98,9 @@ const RenderContents = ({
                     </TouchableOpacity>
                 )}
             </View>
-            {selectedTitle == index && <RenderTitle data={item} navigation={navigation} />}
-            {/* <Text>hdfjksafjk</Text> */}
+            {selectedTitle == index && (
+                <RenderTitle data={item} navigation={navigation} flagShowAudio={flagShowAudio} />
+            )}
         </>
     );
 };
@@ -107,7 +108,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const { theme } = useContext(ThemeContext);
     const [range, setRange] = useState({});
     const isFocuced = useIsFocused;
-    const { page, list, query, prevId } = route.params;
+    const { page, list, query, prevId, flagShowAudio } = route.params;
     const headerData = [
         {
             name: 'Panmurai',
@@ -138,7 +139,6 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     useEffect(() => {
         retrieveData(query);
     }, []);
-
     const { t } = useTranslation();
     const retrieveData = async () => {
         const query = `SELECT name ,prevId FROM  category WHERE prevId${prevId}`;
@@ -146,148 +146,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
             // console.log("🚀 ~ file: ThrimuraiHeadingPage.js:73 ~ getSqlData ~ callbacks:", callbacks)
             setThrimurais(callbacks);
         });
-        // await database.transaction(tx => {
-        // tx.executeSql(query, [], (_, results) => {
-        // let arr = []
-        // if (results?.rows?.length > 0) {
-        // for (let i = 0; i < results?.rows?.length; i++) {
-        // const tableName = results.rows.item(i);
-        // console.log("Row data", tableName);
-        // arr.push(tableName)
-        // }
-        // } else {
-        // console.log('No tables found.');
-        // }
-
-        //         setThrimurais(arr)
-        //         // console.log("🚀 ~ file: ThrimuraiHeadingPage.js:221 ~ tx.executeSql ~ arr:", arr)
-        //     })
-        // }, (error) => {
-        //     console.error("error occured in fetching data", error);
-        // })
     };
-
-    /* Get latest DB from the server */
-    // const getLatestVersion = async () => {
-    //     const res = await fetch('http://192.168.1.2:3000/api/latest-db');
-    //     const { data } = await res.json();
-    //     /* Refresh the UI */
-    //     setData(data);
-
-    //     /* Save the data */
-    //     console.log('Saving latest version...');
-    //     await AsyncStorage.setItem('latestDB', JSON.stringify(data));
-    //     console.log('Saved latest version.');
-    // };
-
-    /* To compare two versions */
-
-    /* Callback for the update button */
-    // const handleFetchUpdate = async () => {
-    //     setLoading(true);
-    //     let updateAvailable = false;
-
-    //     /* Check the latest version */
-    //     const res = await fetch('http://192.168.1.2:3000/api/latest-version');
-    //     const { version } = await res.json();
-
-    //     /* Check existing version */
-    //     const savedVersion = await AsyncStorage.getItem('version');
-    //     if (savedVersion) {
-    //         console.log('Saved Version:', savedVersion);
-    //         console.log('Latest Version:', version);
-    //         setLoadingText(`Latest: ${version}, Saved: ${savedVersion}`);
-    //         /* Check if a later version is available */
-    //         if (compareStr(savedVersion, version) === -1) {
-    //             updateAvailable = true;
-    //         }
-    //     } else {
-    //         console.log('There is no saved version');
-    //         updateAvailable = true;
-    //     }
-
-    //     if (updateAvailable) {
-    //         setLoadingText('Fetching latest version ...');
-    //         await getLatestVersion();
-    //         await AsyncStorage.setItem('version', version);
-    //     }
-    //     setLoading(false);
-    //     setLoadingText('Loading ...');
-    // };
-
-    const song = [
-        {
-            id: '1',
-            url: 'https://shaivam.org/gallery/audio/satguru/sam-thkkappu-muzhuvathum/tis-sat-sam-thkkappu-muzhu-part-1-179-1-136-madhar-madappidi.mp3',
-            title: 'Satgurunatha Odhuvar',
-            artist: 'tobylane',
-            duration: 120,
-        },
-        {
-            id: '2',
-            url: 'https://shaivam.org/gallery/audio/madurai-muthukkumaran/thirugnanasambandar-thirukkadaikkappu-muzhuvathum/tis-md-mthkumaran-sam-thkkappu-muzhu-part-1-179-1-136-madhar-madappidi.mp3',
-            title: 'Satgurunatha',
-            artist: 'tobylane',
-            duration: 120,
-        },
-        {
-            id: '3',
-            title: 'Madurai Muthukkumaran',
-            artist: 'மதுரை முத்துக்குமரன்',
-            url: 'https://shaivam.org/gallery/audio/madurai-muthukkumaran/thirugnanasambandar-thirukkadaikkappu-muzhuvathum/tis-md-mthkumaran-sam-thkkappu-muzhu-part-1-179-1-136-madhar-madappidi.mp3',
-            duration: 120,
-        },
-    ];
-    // const renderCategories = (item, index) => {
-    //     return (
-    //         <>
-    //             {
-    //                 selectedHeader.name == item.name ?
-    //                     <TouchableOpacity style={styles.selectedHeaderBox} onPress={() => setSelectedheader(item)}>
-    //                         {item.Icon}
-    //                         <Text style={[styles.headerText, { color: 'white', fontWeight: '700' }]}>{item.name}</Text>
-    //                     </TouchableOpacity> :
-    //                     <TouchableOpacity style={styles.headerBox} onPress={() => setSelectedheader(item)}>
-    //                         {item.Icon}
-    //                         <Text style={styles.headerText}>{item.name}</Text>
-    //                     </TouchableOpacity>
-    //             }
-    //         </>
-    //     )
-    // }
-
-    // const renderTitle = (item, index) => (
-    //     <>
-    //         <View style={{ justifyContent: 'space-between', flexDirection: 'row', paddingHorizontal: 25, height: 40, alignItems: 'center' }}>
-    //             <Text style={selectedChapter == index ? [styles.titleText, { color: '#C1554E' }] : styles.titleText}>{item.name}</Text>
-    //             <TouchableOpacity onPress={() => setSelectedChapter(index)}>
-    //                 {
-
-    //                     <Icon name={selectedChapter == index ? 'keyboard-arrow-down' : 'keyboard-arrow-right'} size={24} />
-    //                 }
-    //             </TouchableOpacity>
-    //         </View>
-    //         {
-    //             selectedChapter == index &&
-    //             <View style={{ marginBottom: 10 }}>
-    //                 {/* <FlatList renderItem={({ item, index }) => renderAudios(item, index)} data={item.songLyrics} /> */}
-    //                 <RenderAudios songs={item.songLyrics} navigation={navigation} />
-    //             </View>
-    //         }
-
-    //     </>
-    // )
-    // const renderAudios = (item, index) => (
-    //     <Pressable style={{ alignItems: 'center', marginVertical: 5, width: '100%', paddingHorizontal: 20, flexDirection: 'row' }}
-    //         onPress={() => navigation.navigate(RouteTexts.THRIMURAI_SONG, {
-    //             data: item
-    //         })}>
-    //         <View style={{ backgroundColor: '#F2F0F8', height: 40, width: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 6 }}>
-    //             <MusicIcon1 />
-    //         </View>
-    //         <Text style={{ marginHorizontal: 10, fontSize: 12, fontFamily: 'AnekTamil-Regular', fontWeight: '500' }}>{item.attributes?.title}</Text>
-    //     </Pressable>
-    // )
     return (
         <View style={[styles.main, { backgroundColor: theme.backgroundColor }]}>
             <Background>
@@ -328,10 +187,12 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
             <View style={{ backgroundColor: theme.backgroundColor }}>
                 {selectedHeader.name == 'Akarthi' ? (
                     <View style={{ marginTop: 10 }}>
-                        <RenderAudios navigation={navigation} />
+                        <RenderAudios akarthi={true} navigation={navigation} />
                     </View>
                 ) : selectedHeader.name == 'Varalatrumurai' ? (
                     <Varakatrimurai navigation={navigation} />
+                ) : selectedHeader?.name == 'Thalamurai' ? (
+                    <Thalamurai navigation={navigation} />
                 ) : (
                     <FlatList
                         contentContainerStyle={{ marginTop: 10, paddingBottom: 250 }}
@@ -346,6 +207,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                                 navigation={navigation}
                                 range={range}
                                 setRange={setRange}
+                                flagShowAudio={flagShowAudio}
                             />
                         )}
                     />
@@ -410,4 +272,3 @@ export const styles = StyleSheet.create({
     titleText: { fontFamily: 'AnekTamil-Regular', fontSize: 14, fontWeight: '500' },
 });
 export default ThrimuraiHeadingPage;
-
