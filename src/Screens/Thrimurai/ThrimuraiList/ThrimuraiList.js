@@ -202,7 +202,8 @@ const ThrimuraiList = ({ navigation }) => {
                                 page: 1,
                                 list: thrimurais.slice(0, 7),
                                 query: 'SELECT name ,prevId FROM  category WHERE prevId<=7',
-                                prevId: '<=7'
+                                prevId: '<=7',
+                                flagShowAudio: false,
                             })
                         }
                     >
@@ -233,7 +234,8 @@ const ThrimuraiList = ({ navigation }) => {
                                 page: 2,
                                 list: thrimurais.slice(7, 14),
                                 query: 'SELECT name ,prevId FROM  category WHERE prevId=8',
-                                prevId: '=8'
+                                prevId: '=8',
+                                flagShowAudio: true,
                             })
                         }
                     >
@@ -265,7 +267,8 @@ const ThrimuraiList = ({ navigation }) => {
                                 page: 1,
                                 list: thrimurais.slice(0, 7),
                                 query: 'SELECT name ,prevId FROM  category WHERE prevId=9',
-                                prevId: '=9'
+                                prevId: '=9',
+                                flagShowAudio: true,
                             })
                         }
                     >
@@ -297,7 +300,8 @@ const ThrimuraiList = ({ navigation }) => {
                                 page: 1,
                                 list: thrimurais.slice(0, 7),
                                 query: 'SELECT name ,prevId FROM  category WHERE prevId=10',
-                                prevId: '=10'
+                                prevId: '=10',
+                                flagShowAudio: true,
                             })
                         }
                     >
@@ -328,7 +332,8 @@ const ThrimuraiList = ({ navigation }) => {
                                 page: 2,
                                 list: thrimurais.slice(7, 14),
                                 query: 'SELECT name ,prevId FROM  category WHERE prevId=11',
-                                prevId: '=11'
+                                prevId: '=11',
+                                flagShowAudio: true,
                             })
                         }
                     >
@@ -359,7 +364,7 @@ const ThrimuraiList = ({ navigation }) => {
                                 page: 1,
                                 list: thrimurais.slice(0, 7),
                                 query: 'SELECT name ,prevId FROM  category WHERE prevId=12',
-                                prevId: '=12'
+                                prevId: '=12',
                             })
                         }
                     >
@@ -390,7 +395,8 @@ const ThrimuraiList = ({ navigation }) => {
                                 page: 1,
                                 list: thrimurais.slice(0, 7),
                                 query: 'SELECT name ,prevId FROM  category WHERE prevId=13',
-                                prevId: '=13'
+                                prevId: '=13',
+                                flagShowAudio: true,
                             })
                         }
                     >
