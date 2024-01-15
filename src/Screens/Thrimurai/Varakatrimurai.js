@@ -3,12 +3,23 @@ import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from '
 import RenderAudios from './RenderAudios';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import { ThemeContext } from '../../Context/ThemeContext';
+import { getSqlData } from '../Database';
 // import { colors } from '../../Helpers';
 // import { styles } from "../Thrimurai/ThrimuraiHeadingPage/ThrimuraiHeadingPagex"
 
 const Varakatrimurai = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
     const [selectedTitle, setSelectedTitle] = useState(null);
+    const [authordata, setAuthorData] = useState(null)
+
+    useEffect(() => {
+        console.log('🚀 ~ getSongsData ~ query:', query);
+
+        getSqlData('select * from thirumurais GROUP BY author ', (cb) => {
+            // console.log("🚀 ~ useEffect ~ cb:", JSON.stringify(cb, 0, 2))
+            setAuthorData(cb);
+        });
+    }, []);
     const data = [
         {
             id: 1,
@@ -181,7 +192,7 @@ const Varakatrimurai = ({ navigation }) => {
                 <View style={[styles.chapterBox, { backgroundColor: theme.backgroundColor }]}>
                     <View style={{ justifyContent: 'center' }}>
                         <Text style={[styles.chapterNameTexts, { color: theme.textColor }]}>
-                            {item.name}
+                            {item?.author}
                         </Text>
                         {/* <Text style={styles.chapterTexts}>{item.chapters}</Text> */}
                     </View>
@@ -196,7 +207,7 @@ const Varakatrimurai = ({ navigation }) => {
                 {selectedTitle == index && (
                     <View style={{ marginTop: 10 }}>
                         {/* <FlatList data={item?.title} renderItem={({ item, index }) => renderTitle(item, index)} /> */}
-                        <RenderAudios songs={item?.songLyrics} navigation={navigation} />
+                        <RenderAudios songs={item} navigation={navigation} />
                     </View>
                 )}
             </>
@@ -207,7 +218,7 @@ const Varakatrimurai = ({ navigation }) => {
         <View>
             <FlatList
                 contentContainerStyle={{ marginTop: 20 }}
-                data={data}
+                data={authordata}
                 renderItem={({ item, index }) => renderContents(item, index)}
             />
         </View>
@@ -218,13 +229,13 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
 
-        height: 60,
+        height: 50,
         width: Dimensions.get('window').width,
         marginBottom: 4,
         flexDirection: 'row',
         paddingHorizontal: 20,
     },
-    chapterNameTexts: { fontSize: 14, fontWeight: '600' },
+    chapterNameTexts: { fontSize: 12, fontWeight: '600' },
     chapterTexts: { fontSize: 12, fontWeight: '500', color: '#777777', marginTop: 5 },
 });
 
