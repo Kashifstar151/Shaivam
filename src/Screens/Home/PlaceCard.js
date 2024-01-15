@@ -11,8 +11,6 @@ const PlaceCard = ({ img, templeName, address, theme }) => {
                 flexDirection: 'row',
                 columnGap: 16,
                 alignItems: 'center',
-                backgroundColor: theme.colorscheme === 'light' ? '#fff' : '#333333',
-                borderRadius: 10,
             }}
         >
             <View>
