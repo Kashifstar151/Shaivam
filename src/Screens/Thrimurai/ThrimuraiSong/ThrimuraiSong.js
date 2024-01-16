@@ -56,7 +56,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const { t, i18n } = useTranslation();
     const selectedLngCode = i18n.language;
     const langMap = {
-        en: 'en-IN',
+        en: 'RoI',
         ar: 'ar',
         as: 'as',
         bn: 'bn',
