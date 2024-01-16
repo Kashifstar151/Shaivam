@@ -1,7 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import {
+    ActivityIndicator,
     Dimensions,
     FlatList,
+    Modal,
     Pressable,
     StyleSheet,
     Text,
@@ -45,6 +47,7 @@ const RenderContents = ({
     setRange,
     flagShowAudio,
 }) => {
+    // console.log("🚀 ~ item:", item)
     const { theme } = useContext(ThemeContext);
     const { t, i18n } = useTranslation();
 
@@ -55,6 +58,7 @@ const RenderContents = ({
 
         let rangeStr;
         getSqlData(query, (clk) => {
+            console.log("🚀 ~ getSqlData ~ clk:", clk)
             const rangeArr = clk[0].result.split('-');
             if (rangeArr[1].length === 3) {
                 rangeStr = `${item.prevId}.00${rangeArr[0]} - ${item.prevId}.${rangeArr[1]}`;
@@ -67,7 +71,7 @@ const RenderContents = ({
         });
     }, []);
 
-    console.log('the click ==>', item);
+    // console.log('the click ==>', item);
     return (
         <>
             <View style={[styles.chapterBox, { backgroundColor: theme.cardBgColor }]}>
@@ -134,16 +138,18 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const [selectedHeader, setSelectedheader] = useState(headerData[0]);
     const [selectedTitle, setSelectedTitle] = useState(null);
     const [searchedText, setSearchedText] = useState(null);
+    const [showLoading, setShowLoading] = useState(false);
     / Get latest DB from the disk /;
-    const [thrimurais, setThrimurais] = useState(list);
+    const [thrimurais, setThrimurais] = useState(null);
     useEffect(() => {
         retrieveData(query);
     }, []);
     const { t } = useTranslation();
     const retrieveData = async () => {
+        setShowLoading(true)
         const query = `SELECT name ,prevId FROM  category WHERE prevId${prevId}`;
         getSqlData(query, (callbacks) => {
-            // console.log("🚀 ~ file: ThrimuraiHeadingPage.js:73 ~ getSqlData ~ callbacks:", callbacks)
+            setShowLoading(false)
             setThrimurais(callbacks);
         });
     };
@@ -184,35 +190,42 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                     horizontal
                 />
             </Background>
-            <View style={{ backgroundColor: theme.backgroundColor }}>
-                {selectedHeader.name == 'Akarthi' ? (
-                    <View style={{ marginTop: 10 }}>
-                        <RenderAudios akarthi={true} navigation={navigation} />
+            {showLoading ?
+                <Modal transparent presentationStyle='overFullScreen'>
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <ActivityIndicator size={'small'} />
                     </View>
-                ) : selectedHeader.name == 'Varalatrumurai' ? (
-                    <Varakatrimurai navigation={navigation} />
-                ) : selectedHeader?.name == 'Thalamurai' ? (
-                    <Thalamurai navigation={navigation} />
-                ) : (
-                    <FlatList
-                        contentContainerStyle={{ marginTop: 10, paddingBottom: 250 }}
-                        data={thrimurais}
-                        renderItem={({ item, index }) => (
-                            // renderContents(item, index)
-                            <RenderContents
-                                item={item}
-                                index={index}
-                                selectedTitle={selectedTitle}
-                                setSelectedTitle={setSelectedTitle}
-                                navigation={navigation}
-                                range={range}
-                                setRange={setRange}
-                                flagShowAudio={flagShowAudio}
-                            />
-                        )}
-                    />
-                )}
-            </View>
+                </Modal> :
+                <View style={{ backgroundColor: theme.backgroundColor }}>
+                    {selectedHeader.name == 'Akarthi' ? (
+                        <View style={{ marginTop: 10 }}>
+                            <RenderAudios akarthi={true} navigation={navigation} />
+                        </View>
+                    ) : selectedHeader.name == 'Varalatrumurai' ? (
+                        <Varakatrimurai navigation={navigation} />
+                    ) : selectedHeader?.name == 'Thalamurai' ? (
+                        <Thalamurai navigation={navigation} />
+                    ) : (
+                        <FlatList
+                            contentContainerStyle={{ marginTop: 10, paddingBottom: 250 }}
+                            data={thrimurais}
+                            renderItem={({ item, index }) => (
+                                // renderContents(item, index)
+                                <RenderContents
+                                    item={item}
+                                    index={index}
+                                    selectedTitle={selectedTitle}
+                                    setSelectedTitle={setSelectedTitle}
+                                    navigation={navigation}
+                                    range={range}
+                                    setRange={setRange}
+                                    flagShowAudio={flagShowAudio}
+                                />
+                            )}
+                        />
+                    )}
+                </View>
+            }
         </View>
     );
 };

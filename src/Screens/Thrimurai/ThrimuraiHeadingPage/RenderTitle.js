@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import SQLite from 'react-native-sqlite-storage';
 import { colors } from '../../../Helpers';
@@ -108,11 +108,12 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
 
     const [selectedChapter, setSelectedChapter] = useState(null);
     const [TitleData, setTitleData] = useState([]);
-
+    const [showLoading, setShowLoading] = useState(false)
     useEffect(() => {
         getDtataFromSql();
     }, []);
     const getDtataFromSql = async () => {
+        setShowLoading(true)
         let query;
         if (data?.prevId < 7) {
             query = `SELECT pann, prevId,fkTrimuria FROM thirumurais where fkTrimuria=${data.prevId} and pann NOTNULL GROUP BY pann ORDER BY titleNo ASC LIMIT 10 OFFSET 0`;
@@ -124,26 +125,36 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
             }= '${data}' ORDER BY  titleNo 
         ASC LIMIT 10 OFFSET 0`;
         getSqlData(thalam ? query2 : query, (callbacks) => {
-            console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
+            setShowLoading(false)
+            // console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
             setTitleData(callbacks);
         });
     };
     return (
         <View style={{ marginTop: 0 }}>
-            <FlatList
-                data={TitleData}
-                renderItem={({ item, index }) => (
-                    <RenderEachTitle
-                        thalam={thalam}
-                        item={item}
-                        index={index}
-                        navigation={navigation}
-                        selectedChapter={selectedChapter}
-                        setSelectedChapter={setSelectedChapter}
-                        flagShowAudio={flagShowAudio}
+            {
+                showLoading ?
+                    <Modal transparent presentationStyle='overFullScreen'>
+                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                            <ActivityIndicator size={'small'} />
+                        </View>
+                    </Modal> :
+                    <FlatList
+                        data={TitleData}
+                        renderItem={({ item, index }) => (
+                            <RenderEachTitle
+                                thalam={thalam}
+                                item={item}
+                                index={index}
+                                navigation={navigation}
+                                selectedChapter={selectedChapter}
+                                setSelectedChapter={setSelectedChapter}
+                                flagShowAudio={flagShowAudio}
+                            />
+                        )}
                     />
-                )}
-            />
+            }
+
         </View>
     );
 };
