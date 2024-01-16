@@ -1,13 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-    Dimensions,
-    FlatList,
-    Pressable,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-} from 'react-native';
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import { colors } from '../../Helpers';
 import { useTranslation } from 'react-i18next';
@@ -43,7 +35,7 @@ const ChooseLanguage = ({ selected, setSelected }) => {
                 renderItem={({ item, index }) => (
                     <Pressable style={styles.list} onPress={() => handleClick(item)}>
                         <Text style={styles.listText}>{item.name}</Text>
-                        <TouchableOpacity
+                        <View
                             style={
                                 selected?.name == item.name
                                     ? styles.selectView
@@ -55,7 +47,7 @@ const ChooseLanguage = ({ selected, setSelected }) => {
                                 color={selected?.name == item.name ? 'white' : '#777777'}
                                 size={12}
                             />
-                        </TouchableOpacity>
+                        </View>
                     </Pressable>
                 )}
             />
