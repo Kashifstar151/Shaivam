@@ -21,7 +21,7 @@ const RenderAudios = ({ akarthi, navigation, songs, data, thalam }) => {
     }, [isFocused]);
     const getDtataFromSql = async () => {
         const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${songs?.fkTrimuria}' AND pann='${songs?.pann}' ORDER BY  titleNo ASC  LIMIT 10 OFFSET 1`;
-        const query2 = `SELECT * from thirumurai_songs WHERE prevId = ${songs.prevId} and country= '${songs?.country}'ORDER BY song_no ASC`;
+        const query2 = `SELECT * from thirumurai_songs WHERE prevId = ${songs.prevId} and country= '${songs?.country}'ORDER BY song_no ASC LIMIT 10 OFFSET 1`;
         getSqlData(thalam ? query2 : query, (callbacks) => {
             setAudioData(callbacks);
         });

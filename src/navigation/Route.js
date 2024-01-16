@@ -47,7 +47,7 @@ const Route = () => {
         // checkFileExist()
         // attachDb()
         // connectDataBaseToFolder()
-    }, [])   
+    }, [])
 
     const checkConnection = (connected) => {
         if (connected) {

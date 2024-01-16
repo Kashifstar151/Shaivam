@@ -397,7 +397,7 @@ const HomeScreen = ({ navigation }) => {
                     <HeadingAndView
                         viewBtnColor={'#C1554E'}
                         title={'Upcoming Events'}
-                        onPress={() => {}}
+                        onPress={() => { }}
                     />
                 </View>
 
@@ -434,7 +434,7 @@ const HomeScreen = ({ navigation }) => {
                     <HeadingAndView
                         viewBtnColor={'#C1554E'}
                         title={'Nearby Temples'}
-                        onPress={() => {}}
+                        onPress={() => { }}
                         theme={{
                             textColor: theme.textColor,
                             colorscheme: theme.colorscheme,

@@ -18,10 +18,10 @@ const RenderEachTitle = ({
     thalam,
     flagShowAudio,
 }) => {
-    console.log('🚀 ~ file: RenderTitle.js:21 ~ flagShowAudio:', flagShowAudio);
+    // console.log('🚀 ~ file: RenderTitle.js:21 ~ flagShowAudio:', flagShowAudio);
     const { theme } = useContext(ThemeContext);
     const { t } = useTranslation();
-    console.log('the col===>', JSON.stringify(item));
+    // console.log('the col===>', JSON.stringify(item));
     return (
         <>
             {!flagShowAudio ? (
@@ -95,7 +95,7 @@ const RenderEachTitle = ({
                     )}
                 </>
             ) : (
-                <RenderAudios thalam={thalam} songs={item} navigation={navigation} />
+                <RenderAudios songs={item} navigation={navigation} />
                 // <Text>The 8 the col </Text>
             )}
         </>
@@ -115,14 +115,13 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
     const getDtataFromSql = async () => {
         let query;
         if (data?.prevId < 7) {
-            query = `SELECT pann, prevId,fkTrimuria FROM thirumurais where fkTrimuria=${data.prevId} and pann NOTNULL GROUP BY pann ORDER BY titleNo ASC`;
+            query = `SELECT pann, prevId,fkTrimuria FROM thirumurais where fkTrimuria=${data.prevId} and pann NOTNULL GROUP BY pann ORDER BY titleNo ASC LIMIT 10 OFFSET 0`;
         } else {
-            query = `SELECT * FROM thirumurais where fkTrimuria=${data.prevId}  ORDER BY titleNo ASC`;
+            query = `SELECT * FROM thirumurais where fkTrimuria=${data.prevId}  ORDER BY titleNo ASC LIMIT 10 OFFSET 0`;
         }
         // const query = `SELECT pann, prevId,fkTrimuria FROM thirumurais where fkTrimuria=${data.prevId} and pann NOTNULL GROUP BY pann ORDER BY titleNo ASC`;
-        const query2 = `Select * from thirumurais where ${
-            ThalamHeaders == 0 ? 'country' : 'thalam'
-        }= '${data}' ORDER BY  titleNo 
+        const query2 = `Select * from thirumurais where ${ThalamHeaders == 0 ? 'country' : 'thalam'
+            }= '${data}' ORDER BY  titleNo 
         ASC LIMIT 10 OFFSET 0`;
         getSqlData(thalam ? query2 : query, (callbacks) => {
             console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));

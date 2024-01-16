@@ -211,8 +211,8 @@ export async function getSqlData(query, callbacks) {
                 if (results?.rows?.length > 0) {
                     for (let i = 0; i < results?.rows?.length; i++) {
                         const tableName = results.rows.item(i);
-                        console.log(" offline Database data", tableName);
-                        arr.push(tableName)
+                        // console.log(" offline Database data", tableName);
+                        arr.push(tableName);
                         // console.log("🚀 ~ file: ThrimuraiSong.js:57 ~ tx.executeSql ~ arr:", JSON.stringify(arr, 0, 2))
                     }
                     callbacks(arr)
