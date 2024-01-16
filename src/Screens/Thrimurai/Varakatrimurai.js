@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import RenderAudios from './RenderAudios';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
@@ -13,11 +13,13 @@ const Varakatrimurai = ({ navigation }) => {
     const [authordata, setAuthorData] = useState(null)
 
     useEffect(() => {
-        getSqlData('select * from thirumurais GROUP BY author ', cb => {
+        console.log('🚀 ~ getSongsData ~ query:', query);
+
+        getSqlData('select * from thirumurais GROUP BY author ', (cb) => {
             // console.log("🚀 ~ useEffect ~ cb:", JSON.stringify(cb, 0, 2))
-            setAuthorData(cb)
-        })
-    }, [])
+            setAuthorData(cb);
+        });
+    }, []);
     const data = [
         {
             id: 1,

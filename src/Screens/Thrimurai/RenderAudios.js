@@ -8,47 +8,60 @@ import { ThemeContext } from '../../Context/ThemeContext';
 import { useIsFocused } from '@react-navigation/native';
 
 const RenderAudios = ({ akarthi, navigation, songs, data, thalam }) => {
-    console.log("🚀 ~ RenderAudios ~ songs:", songs)
-    const isFocused = useIsFocused()
+    const isFocused = useIsFocused();
     const { theme } = useContext(ThemeContext);
-    const [dataLength, setDataLength] = useState(20)
+    const [dataLength, setDataLength] = useState(20);
     const [audioData, setAudioData] = useState([]);
     useEffect(() => {
         if (akarthi) {
-            getSongsData()
+            getSongsData();
         } else {
             getDtataFromSql();
         }
     }, [isFocused]);
     const getDtataFromSql = async () => {
         const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${songs?.fkTrimuria}' AND pann='${songs?.pann}' ORDER BY  titleNo ASC  LIMIT 10 OFFSET 1`;
-        const query2 = `SELECT * from thirumurai_songs WHERE prevId = ${songs.prevId} and country= '${songs?.country}'ORDER BY song_no ASC`
-        getSqlData(thalam ? query2 : query, callbacks => {
-            console.log(" sjf🚀 ~ getDtataFromSql ~ callbacks:", JSON.stringify(callbacks, 0, 2))
-            setAudioData(callbacks)
-        })
-    }
+        const query2 = `SELECT * from thirumurai_songs WHERE prevId = ${songs.prevId} and country= '${songs?.country}'ORDER BY song_no ASC LIMIT 10 OFFSET 1`;
+        getSqlData(thalam ? query2 : query, (callbacks) => {
+            setAudioData(callbacks);
+        });
+    };
     const getSongsData = async () => {
         const query = `SELECT * FROM thirumurais ASC  LIMIT ${dataLength} OFFSET 0`;
-        console.log("🚀 ~ getSongsData ~ query:", query)
-        getSqlData(query, callbacks => {
-            console.log(" sjf🚀 ~ getDtataFromSql ~ callbacks:", JSON.stringify(callbacks, 0, 2))
+        getSqlData(query, (callbacks) => {
             // if (callbacks?.Length > 0) {
             //     set
             // }
-            setAudioData(callbacks)
-            setDataLength(dataLength + 10)
-        })
-    }
+            setAudioData(callbacks);
+            setDataLength(dataLength + 10);
+        });
+    };
     const navigationHandler = (item) => {
         navigation.navigate(RouteTexts.THRIMURAI_SONG, {
-            data: item
-        })
-    }
+            data: item,
+        });
+    };
     const renderAudios = (item, index) => (
-        <Pressable style={{ alignItems: 'center', marginVertical: 5, width: '100%', paddingHorizontal: 20, flexDirection: 'row' }}
-            onPress={() => navigationHandler(item)}>
-            <View style={{ backgroundColor: '#F2F0F8', height: 40, width: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 6 }}>
+        <Pressable
+            style={{
+                alignItems: 'center',
+                marginVertical: 5,
+                width: '100%',
+                paddingHorizontal: 20,
+                flexDirection: 'row',
+            }}
+            onPress={() => navigationHandler(item)}
+        >
+            <View
+                style={{
+                    backgroundColor: '#F2F0F8',
+                    height: 40,
+                    width: 40,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderRadius: 6,
+                }}
+            >
                 <MusicIcon1 />
             </View>
             <Text

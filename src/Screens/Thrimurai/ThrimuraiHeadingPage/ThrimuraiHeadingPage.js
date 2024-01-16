@@ -43,8 +43,8 @@ const RenderContents = ({
     navigation,
     range,
     setRange,
+    flagShowAudio,
 }) => {
-    // console.log('🚀 ~ file: ThrimuraiHeadingPage.js:45 ~ range:', range);
     const { theme } = useContext(ThemeContext);
     const { t, i18n } = useTranslation();
 
@@ -56,7 +56,6 @@ const RenderContents = ({
         let rangeStr;
         getSqlData(query, (clk) => {
             const rangeArr = clk[0].result.split('-');
-            // console.log("🚀 ~ getSqlData ~ clk:", rangeArr)
             if (rangeArr[1].length === 3) {
                 rangeStr = `${item.prevId}.00${rangeArr[0]} - ${item.prevId}.${rangeArr[1]}`;
             } else if (rangeArr[1].length === 2) {
@@ -67,6 +66,8 @@ const RenderContents = ({
             setRange((prev) => ({ ...prev, [item.prevId]: rangeStr }));
         });
     }, []);
+
+    console.log('the click ==>', item);
     return (
         <>
             <View style={[styles.chapterBox, { backgroundColor: theme.cardBgColor }]}>
@@ -97,17 +98,17 @@ const RenderContents = ({
                     </TouchableOpacity>
                 )}
             </View>
-            {selectedTitle == index && <RenderTitle data={item} navigation={navigation} />}
-            {/* <Text>hdfjksafjk</Text> */}
+            {selectedTitle == index && (
+                <RenderTitle data={item} navigation={navigation} flagShowAudio={flagShowAudio} />
+            )}
         </>
     );
 };
 const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const { theme } = useContext(ThemeContext);
     const [range, setRange] = useState({});
-
     const isFocuced = useIsFocused;
-    const { page, list, query, prevId } = route.params;
+    const { page, list, query, prevId, flagShowAudio } = route.params;
     const headerData = [
         {
             name: 'Panmurai',
@@ -145,7 +146,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
             // console.log("🚀 ~ file: ThrimuraiHeadingPage.js:73 ~ getSqlData ~ callbacks:", callbacks)
             setThrimurais(callbacks);
         });
-    }
+    };
     return (
         <View style={[styles.main, { backgroundColor: theme.backgroundColor }]}>
             <Background>
@@ -190,26 +191,27 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                     </View>
                 ) : selectedHeader.name == 'Varalatrumurai' ? (
                     <Varakatrimurai navigation={navigation} />
-                ) : selectedHeader?.name == 'Thalamurai' ?
+                ) : selectedHeader?.name == 'Thalamurai' ? (
                     <Thalamurai navigation={navigation} />
-                    : (
-                        <FlatList
-                            contentContainerStyle={{ marginTop: 10, paddingBottom: 250 }}
-                            data={thrimurais}
-                            renderItem={({ item, index }) => (
-                                // renderContents(item, index)
-                                <RenderContents
-                                    item={item}
-                                    index={index}
-                                    selectedTitle={selectedTitle}
-                                    setSelectedTitle={setSelectedTitle}
-                                    navigation={navigation}
-                                    range={range}
-                                    setRange={setRange}
-                                />
-                            )}
-                        />
-                    )}
+                ) : (
+                    <FlatList
+                        contentContainerStyle={{ marginTop: 10, paddingBottom: 250 }}
+                        data={thrimurais}
+                        renderItem={({ item, index }) => (
+                            // renderContents(item, index)
+                            <RenderContents
+                                item={item}
+                                index={index}
+                                selectedTitle={selectedTitle}
+                                setSelectedTitle={setSelectedTitle}
+                                navigation={navigation}
+                                range={range}
+                                setRange={setRange}
+                                flagShowAudio={flagShowAudio}
+                            />
+                        )}
+                    />
+                )}
             </View>
         </View>
     );
@@ -270,4 +272,3 @@ export const styles = StyleSheet.create({
     titleText: { fontFamily: 'AnekTamil-Regular', fontSize: 14, fontWeight: '500' },
 });
 export default ThrimuraiHeadingPage;
-

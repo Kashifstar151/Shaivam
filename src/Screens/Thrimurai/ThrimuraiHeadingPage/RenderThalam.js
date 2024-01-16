@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/dist/MaterialIcons'
 import { ThemeContext } from '../../../Context/ThemeContext'
 import RenderAudios from '../RenderAudios'
 import RenderTitle from './RenderTitle'
+import { colors } from '../../../Helpers';
 
 const RenderThalam = ({ item, index, navigation, ThalamHeaders }) => {
     const { theme } = useContext(ThemeContext);

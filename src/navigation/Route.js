@@ -48,6 +48,7 @@ const Route = () => {
         // attachDb()
         // connectDataBaseToFolder()
     }, [])
+
     const checkConnection = (connected) => {
         if (connected) {
             Alert.alert('New Update Available', "Click ok to sync latest data", [

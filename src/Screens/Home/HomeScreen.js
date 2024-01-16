@@ -51,59 +51,58 @@ const LANGS = [
     { lngCode: 'ur', label: 'Urdu' },
 ];
 
-// const SongAndAudio = ({ item, index }) => {
-//     const { theme } = useContext(ThemeContext);
-//     return (
-//         <View
-//             style={{
-//                 flexDirection: 'row',
-//                 margin: 10,
-//                 alignItems: 'center',
-//                 justifyContent: 'space-between',
-//             }}
-//         >
-//             <View
-//                 style={{
-//                     paddingHorizontal: 0,
-//                     flexDirection: 'row',
-//                     alignItems: 'center',
-//                 }}
-//             >
-//                 <MusicContainer />
-//                 <View style={{ paddingHorizontal: 10 }}>
-//                     <Text
-//                         style={{
-//                             fontSize: 14,
-//                             fontWeight: '600',
-//                             fontFamily: 'Mulish-Regular',
-//                             color: theme.textColor,
-//                         }}
-//                     >
-//                         {item.songName}
-//                     </Text>
-//                     <Text
-//                         style={{
-//                             fontSize: 12,
-//                             fontWeight: '400',
-//                             fontFamily: 'Mulish-Regular',
-//                             color: theme.textColor,
-//                         }}
-//                     >
-//                         {item.description}
-//                     </Text>
-//                 </View>
-//             </View>
-//             <TouchableOpacity>
-//                 <Icon name="more-vert" size={22} />
-//             </TouchableOpacity>
-//         </View>
-//     );
-//     // return<Text>dhjkshajk</Text>;
-// };
+const SongAndAudio = ({ item, index, theme }) => {
+    return (
+        <View
+            style={{
+                flexDirection: 'row',
+                margin: 10,
+                alignItems: 'center',
+                justifyContent: 'space-between',
+            }}
+        >
+            <View
+                style={{
+                    paddingHorizontal: 0,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                }}
+            >
+                <MusicContainer />
+                <View style={{ paddingHorizontal: 10 }}>
+                    <Text
+                        style={{
+                            fontSize: 14,
+                            fontWeight: '600',
+                            fontFamily: 'Mulish-Regular',
+                            color: theme.textColor,
+                        }}
+                    >
+                        {item.songName}
+                    </Text>
+                    <Text
+                        style={{
+                            fontSize: 12,
+                            fontWeight: '400',
+                            fontFamily: 'Mulish-Regular',
+                            color: theme.textColor,
+                        }}
+                    >
+                        {item.description}
+                    </Text>
+                </View>
+            </View>
+            <TouchableOpacity>
+                <Icon name="more-vert" size={22} />
+            </TouchableOpacity>
+        </View>
+    );
+    // return<Text>dhjkshajk</Text>;
+};
 
 const HomeScreen = ({ navigation }) => {
     const { t } = useTranslation();
-    const { theme } = useContext(ThemeContext)
+    const { theme } = useContext(ThemeContext);
     const [compHeight, setCompHeight] = useState();
     const [textInsidePlaylistCard, setTextInsidePlaylistCard] = useState(0);
     const [playlistCardHeight, setPlaylistCardHeight] = useState(0);
@@ -118,11 +117,6 @@ const HomeScreen = ({ navigation }) => {
         },
         [setCompHeight, compHeight]
     );
-
-    useEffect(() => {
-        console.log('The component height ==> ', compHeight);
-    }, [compHeight]);
-
     const data = [
         {
             id: 1,
@@ -267,11 +261,11 @@ const HomeScreen = ({ navigation }) => {
                 </Text>
 
                 <View style={styles.boxCommon}>
-                    {/* <FlatList
+                    <FlatList
                         key={(item) => item?.id}
                         data={data}
                         renderItem={({ item, index }) => <SongAndAudio item={item} theme={theme} />}
-                    /> */}
+                    />
                 </View>
             </View>
 
@@ -330,7 +324,6 @@ const HomeScreen = ({ navigation }) => {
                             style={{ flexDirection: 'row', justifyContent: 'space-between' }}
                             onLayout={(event) => {
                                 const { height } = event.nativeEvent.layout;
-                                console.log('The text layout has heighty of ===> ', height);
                                 setTextInsidePlaylistCard(height);
                             }}
                         >
@@ -442,6 +435,10 @@ const HomeScreen = ({ navigation }) => {
                         viewBtnColor={'#C1554E'}
                         title={'Nearby Temples'}
                         onPress={() => { }}
+                        theme={{
+                            textColor: theme.textColor,
+                            colorscheme: theme.colorscheme,
+                        }}
                     />
                 </View>
                 <FlatList
@@ -452,7 +449,7 @@ const HomeScreen = ({ navigation }) => {
                     key={(item) => item?.id}
                     data={nearByTempleData}
                     renderItem={({ item, index }) => (
-                        <ElevatedCard>
+                        <ElevatedCard theme={{ colorscheme: theme.colorscheme }}>
                             <PlaceCard
                                 img={item.img}
                                 templeName={item.templeName}

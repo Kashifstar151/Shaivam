@@ -1,13 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import {
-    Alert,
-    Dimensions,
-
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-} from 'react-native';
+import { Alert, Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Slider from '@react-native-community/slider';
 import ShuffleIcon from '../../assets/Images/music (1).svg';
 import Icon from 'react-native-vector-icons/dist/AntDesign';
@@ -53,11 +45,9 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
     const getSOngData = () => {
         const query = `SELECT * from thirumurai_songs where prevId=${prevId} and title NOTNULL`;
         getSqlData(query, (callbacks) => {
-            // console.log("🚀 ~ getSqlData ~ callbacks: 22", callbacks)
             // setSongDetails(callbacks)
             const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`;
             getSqlData(query2, async (callbacks) => {
-                console.log('🚀 ~ file: ThrimuraiSong.js:58 ~ getSOngData ~ callbacks:', callbacks);
                 // setSongs(callbacks)
                 setOdhuvar(callbacks);
                 setUpPlayer(callbacks);
@@ -147,7 +137,7 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                 progressUpdateEventInterval: 2,
             });
 
-            await TrackPlayer.add(song)
+            await TrackPlayer.add(song);
             // const queue = await TrackPlayer.getQueue();
             // console.log("Current queue:", queue);
             // await TrackPlayer.setRepeatMode()

@@ -29,7 +29,7 @@ export async function attachDb() {
         })
             .fetch(
                 'GET',
-                'https://shaivamfiles.fra1.cdn.digitaloceanspaces.com/sqlitedump/thirumurai_songsData1.zip'
+                'https://shaivamfiles.fra1.cdn.digitaloceanspaces.com/sqlitedump/thirumuraiSongs_4.zip'
             )
             .then((res) => {
                 // the temp file path
@@ -37,16 +37,8 @@ export async function attachDb() {
                 // const filePath = RNFS.DocumentDirectoryPath + '/myData.db';
                 // Unzip will be called here!
                 unzipDownloadFile(res.path(), async (jsonFilePath) => {
-                    console.log(
-                        '🚀 ~ file: Database.js:35 ~ unzipDownloadFile ~ jsonFilePath:',
-                        jsonFilePath
-                    );
                     RNFS.readDir(jsonFilePath)
                         .then((files) => {
-                            console.log(
-                                '🚀 ~ file: Database.js:50 ~ unzipDownloadFile ~ files:',
-                                files
-                            );
                             const fileNames = files.map((fileInfo) => fileInfo.name);
                             console.log('File names in the directory:', fileNames);
                             try {
@@ -219,7 +211,7 @@ export async function getSqlData(query, callbacks) {
                 if (results?.rows?.length > 0) {
                     for (let i = 0; i < results?.rows?.length; i++) {
                         const tableName = results.rows.item(i);
-                        console.log(" offline Database data", tableName);
+                        // console.log(" offline Database data", tableName);
                         arr.push(tableName)
                         // console.log("🚀 ~ file: ThrimuraiSong.js:57 ~ tx.executeSql ~ arr:", JSON.stringify(arr, 0, 2))
                     }

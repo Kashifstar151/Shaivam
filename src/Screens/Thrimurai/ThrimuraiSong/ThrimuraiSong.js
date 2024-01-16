@@ -38,7 +38,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
     });
     const isFocused = useIsFocused;
     const { data } = route.params;
-    // console.log("🚀 ~ file: ThrimuraiSong.js:20 ~ ThrimuraiSong ~ data:", data)
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
@@ -96,7 +95,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const getSOngData = () => {
         const query = `SELECT * from thirumurai_songs where prevId=${data?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY song_no ASC`;
         getSqlData(query, (callbacks) => {
-            console.log("🚀 ~ getSqlData ~ callbacks:", callbacks)
             setSongDetails(callbacks);
             const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`;
             getSqlData(query2, (callbacks) => {
@@ -108,9 +106,9 @@ const ThrimuraiSong = ({ route, navigation }) => {
         <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
             <Background>
                 <BackButton
-                    secondMiddleText={'1.001 தோடுடைய செவியன்'}
+                    secondMiddleText={data?.titleS}
                     color={true}
-                    middleText={'முதல்-திருமுறை'}
+                    // middleText={data}
                     navigation={navigation}
                     rightIcon={<ShareIcon />}
                     data={data}
@@ -295,7 +293,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
                 </View>
             </ScrollView>
             <BottomSheet
-
                 handleIndicatorStyle={{ backgroundColor: '#FFF7E6' }}
                 handleStyle={{
                     backgroundColor: '#222222',
