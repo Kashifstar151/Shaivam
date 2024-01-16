@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import RenderAudios from './RenderAudios';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
@@ -10,13 +10,10 @@ import { getSqlData } from '../Database';
 const Varakatrimurai = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
     const [selectedTitle, setSelectedTitle] = useState(null);
-    const [authordata, setAuthorData] = useState(null)
+    const [authordata, setAuthorData] = useState(null);
 
     useEffect(() => {
-        console.log('🚀 ~ getSongsData ~ query:', query);
-
-        getSqlData('select * from thirumurais GROUP BY author ', (cb) => {
-            // console.log("🚀 ~ useEffect ~ cb:", JSON.stringify(cb, 0, 2))
+        getSqlData('select * from thirumurais WHERE author NOT NULL GROUP BY author ', (cb) => {
             setAuthorData(cb);
         });
     }, []);

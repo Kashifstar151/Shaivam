@@ -27,7 +27,7 @@ const RenderAudios = ({ akarthi, navigation, songs, data, thalam }) => {
         });
     };
     const getSongsData = async () => {
-        const query = `SELECT * FROM thirumurais ASC  LIMIT ${dataLength} OFFSET 0`;
+        const query = `SELECT * FROM thirumurais ASC where title OR titleS NOT NULL LIMIT ${dataLength} OFFSET 0`;
         getSqlData(query, (callbacks) => {
             // if (callbacks?.Length > 0) {
             //     set
