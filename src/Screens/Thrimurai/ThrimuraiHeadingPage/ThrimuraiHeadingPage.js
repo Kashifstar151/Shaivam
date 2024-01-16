@@ -190,12 +190,13 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                     horizontal
                 />
             </Background>
-            {showLoading ?
-                <Modal transparent presentationStyle='overFullScreen'>
+            {showLoading ? (
+                <Modal transparent presentationStyle="overFullScreen">
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <ActivityIndicator size={'small'} />
                     </View>
-                </Modal> :
+                </Modal>
+            ) : (
                 <View style={{ backgroundColor: theme.backgroundColor }}>
                     {selectedHeader.name == 'Akarthi' ? (
                         <View style={{ marginTop: 10 }}>
@@ -225,7 +226,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                         />
                     )}
                 </View>
-            }
+            )}
         </View>
     );
 };

@@ -4,25 +4,29 @@ import RenderAudios from './RenderAudios';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import { ThemeContext } from '../../Context/ThemeContext';
 import { getSqlData } from '../Database';
+import { useTranslation } from 'react-i18next';
 
 const Varakatrimurai = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
     const [selectedTitle, setSelectedTitle] = useState(null);
     const [authordata, setAuthorData] = useState(null);
+    const { t } = useTranslation();
 
     useEffect(() => {
-        getSqlData('select * from thirumurais WHERE author NOT NULL GROUP BY author ', (cb) => {
-            setAuthorData(cb);
-        });
+        getSqlData(
+            'select * from thirumurais WHERE author NOT NULL and author in ("திருஞானசம்பந்தர்","திருநாவுக்கரசர்","சுந்தரர்") GROUP BY author ',
+            (cb) => {
+                setAuthorData(cb);
+            }
+        );
     }, []);
     const renderContents = (item, index) => {
-        console.log('The  selected title ================================>', selectedTitle);
         return (
             <>
                 <View style={[styles.chapterBox, { backgroundColor: theme.backgroundColor }]}>
                     <View style={{ justifyContent: 'center' }}>
                         <Text style={[styles.chapterNameTexts, { color: theme.textColor }]}>
-                            {item?.author}
+                            {t(item?.author)}
                         </Text>
                     </View>
                     {selectedTitle !== null && selectedTitle === index ? (
@@ -56,7 +60,7 @@ const Varakatrimurai = ({ navigation }) => {
     return (
         <View>
             <FlatList
-                contentContainerStyle={{ marginTop: 20 }}
+                contentContainerStyle={{ marginTop: 20, overflow: 'scroll' }}
                 data={authordata}
                 renderItem={({ item, index }) => renderContents(item, index)}
             />
