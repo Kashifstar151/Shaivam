@@ -222,7 +222,7 @@ export async function getSqlData(query, callbacks) {
                 }
             })
         }, (error) => {
-            console.error("error occured in fetching data", error);
+            console.error('error occured in fetching data at 1', error);
         })
     } else {
         await offlineDatabase.transaction(tx => {
@@ -243,7 +243,7 @@ export async function getSqlData(query, callbacks) {
                 }
             })
         }, (error) => {
-            console.error("error occured in fetching data", error);
+            console.error('error occured in fetching data at 2', error);
         })
     }
 }
