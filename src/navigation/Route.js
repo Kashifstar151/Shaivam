@@ -23,6 +23,7 @@ const Route = () => {
     const [isConnected, setIsConnected] = useState(false)
     // const database = SQLite.openDatabase({ name: databaseName, });
     useEffect(() => {
+        checkConnection(true)
         AsyncStorage.setItem('@database', JSON.stringify({ name: 'songData.db', createFromLocation: 1 }))
         LogBox.ignoreAllLogs();
         AppState.addEventListener('change', (nextAppState) => {
@@ -95,9 +96,10 @@ const Route = () => {
         }
     }
     const checkFileExist = async () => {
-        RNFS.exists(`${RNFS.ExternalDirectoryPath}/Thrimurai/thirumurai_songsData2.db`).then(async (res) => {
+        RNFS.exists(`${RNFS.ExternalDirectoryPath}/Thrimurai/thirumuraiSongs_4.db`).then(async (res) => {
             if (res == true) {
                 // InitializeDatabase()
+                console.log(true)
                 AsyncStorage.setItem('@database', JSON.stringify({ name: 'songData.db', createFromLocation: 1 }))
                 setShowDownloading(true)
                 setTimeout(() => {
@@ -105,6 +107,7 @@ const Route = () => {
                 }, 2000)
             } else {
                 setShowDownloading(true)
+                console.log(false)
                 const promise = attachDb()
                 promise.then((res) => {
                     console.log("res", res)
