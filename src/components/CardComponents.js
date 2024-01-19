@@ -24,87 +24,83 @@ const RenderItem = ({ item, navigation, theme }) => {
                 marginRight: 15,
                 marginTop: 15,
                 padding: 15,
+                justifyContent: 'center',
             }}
         >
             <View
                 style={{
-                    flex: 1,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    paddingBottom: 11,
                 }}
             >
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        paddingBottom: 11,
-                    }}
-                >
-                    <View style={{ justifyContent: 'center' }}>
+                <View style={{ justifyContent: 'center' }}>
+                    <Text
+                        style={{
+                            fontSize: RFValue(14, 540),
+                            fontWeight: '600',
+                            color: item.textColor,
+                            paddingBottom: 5,
+                        }}
+                    >
+                        {item?.text}
+                    </Text>
+                    <Text style={{ fontSize: RFValue(10, 540), color: item.textColor }}>
+                        {item?.description}
+                    </Text>
+                </View>
+                <OmIcon fill={theme === 'light' ? '#4C3600' : '#fff'} />
+            </View>
+
+            <View
+                style={{
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    width: '100%',
+                    marginVertical: 'auto',
+                }}
+            >
+                {item.subComp.map((i, _) => (
+                    <Pressable
+                        onPress={
+                            i?.title == 'Thirumurais'
+                                ? () => navigation.navigate('Thrimurai')
+                                : () => alert(true)
+                        }
+                        style={{
+                            margin: 4,
+                            width: '47.2%',
+                            flexDirection: 'row',
+                            padding: 12,
+                            alignItems: 'center',
+                            backgroundColor: theme === 'light' ? 'white' : '#494949',
+                            opacity: theme === 'light' ? 0.7 : 1,
+                            borderRadius: 15,
+                            overflow: 'hidden',
+                            flexWrap: 'nowrap',
+                        }}
+                    >
+                        {i.icon}
+                        <View
+                            style={{
+                                borderRightWidth: 1,
+                                marginHorizontal: 12,
+                                height: 20,
+                                borderRightColor: item.gradient[1],
+                            }}
+                        ></View>
                         <Text
                             style={{
-                                fontSize: RFValue(14),
-                                fontWeight: '600',
+                                alignContent: 'center',
+                                flex: 1,
                                 color: item.textColor,
-                                paddingBottom: 5,
+                                fontSize: RFValue(10, 540),
                             }}
                         >
-                            {item?.text}
+                            {i.title}
                         </Text>
-                        <Text style={{ fontSize: RFValue(10), color: item.textColor }}>
-                            {item?.description}
-                        </Text>
-                    </View>
-                    <OmIcon fill={theme === 'light' ? '#4C3600' : '#fff'} />
-                </View>
-
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        flexWrap: 'wrap',
-                        width: '100%',
-                    }}
-                >
-                    {item.subComp.map((i, _) => (
-                        <Pressable
-                            onPress={
-                                i?.title == 'Thirumurais'
-                                    ? () => navigation.navigate('Thrimurai')
-                                    : () => alert(true)
-                            }
-                            style={{
-                                margin: 4,
-                                width: '47.2%',
-                                flexDirection: 'row',
-                                padding: 12,
-                                alignItems: 'center',
-                                backgroundColor: theme === 'light' ? 'white' : '#494949',
-                                opacity: theme === 'light' ? 0.7 : 1,
-                                borderRadius: 15,
-                                overflow: 'hidden',
-                                flexWrap: 'nowrap',
-                            }}
-                        >
-                            {i.icon}
-                            <View
-                                style={{
-                                    borderRightWidth: 1,
-                                    marginHorizontal: 12,
-                                    height: 20,
-                                    borderRightColor: item.gradient[1],
-                                }}
-                            ></View>
-                            <Text
-                                style={{
-                                    alignContent: 'center',
-                                    flex: 1,
-                                    color: item.textColor,
-                                    fontSize: RFValue(10),
-                                }}
-                            >
-                                {i.title}
-                            </Text>
-                        </Pressable>
-                    ))}
-                </View>
+                    </Pressable>
+                ))}
             </View>
         </LinearGradient>
     );
