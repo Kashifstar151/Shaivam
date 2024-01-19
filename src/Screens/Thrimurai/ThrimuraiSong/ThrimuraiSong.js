@@ -9,6 +9,7 @@ import {
     Text,
     TouchableOpacity,
     View,
+    Animated as AnimatedRN,
 } from 'react-native';
 import BackButton from '../../../components/BackButton';
 import ShareIcon from '../../../assets/Images/share-1.svg';
@@ -29,6 +30,9 @@ import { ThemeContext } from '../../../Context/ThemeContext';
 import { colors } from '../../../Helpers';
 import { useTranslation } from 'react-i18next';
 import '../../../../localization';
+import { changeLanguage } from 'i18next';
+import AruliyavarSVG from '../../../components/SVGs/AruliyavarSVG';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 const ThrimuraiSong = ({ route, navigation }) => {
     let key = true;
@@ -37,7 +41,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
         createFromLocation: 1,
     });
     const isFocused = useIsFocused;
-    const { data } = route.params;
+    const { data } = route.params || {};
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
@@ -56,7 +60,10 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const { t, i18n } = useTranslation();
     const selectedLngCode = i18n.language;
     const langMap = {
-        en: 'RoI',
+        enR: 'RoI',
+        English: 'en-IN',
+        Hindi: 'hi-t',
+        Tamil: 'en',
         ar: 'ar',
         as: 'as',
         bn: 'bn',
@@ -74,6 +81,22 @@ const ThrimuraiSong = ({ route, navigation }) => {
         ta: 'en',
     };
 
+    const changeTranlation = (item) => {
+        switch (item) {
+            case 'Tamil':
+                setSelectedLang(langMap[item]);
+                break;
+            case 'English':
+                setSelectedLang(langMap[item]);
+                break;
+            case 'Hindi':
+                setSelectedLang(langMap[item]);
+                break;
+            default:
+                setSelectedLang(selectedLngCode);
+                break;
+        }
+    };
     const handlePress = () => {
         console.log(true);
         setShowSetting(true);
@@ -92,8 +115,15 @@ const ThrimuraiSong = ({ route, navigation }) => {
             TrackPlayer.reset();
         };
     }, [isFocused]);
+    const [metaData, setMetaData] = useState({
+        author: '',
+        country: '',
+        thalam: '',
+        pann: '',
+    });
+
     const getSOngData = () => {
-        const query = `SELECT * from thirumurai_songs where prevId=${data?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY song_no ASC`;
+        const query = `SELECT pann,thalam,rawSong,author,country,song_no from thirumurai_songs where prevId=${data?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY song_no ASC`;
         getSqlData(query, (callbacks) => {
             setSongDetails(callbacks);
             const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`;
@@ -102,6 +132,42 @@ const ThrimuraiSong = ({ route, navigation }) => {
             });
         });
     };
+    const [showDetail, setShowDetail] = useState(false);
+    // const visibilityVal = useRef(new AnimatedRN.Value(0)).current;
+    const makeTheViewVisible = () => {
+        setShowDetail(!showDetail);
+        // console.log('the log for the opacity of the view', visibilityVal);
+        // if (!showDetail) {
+        //     AnimatedRN.timing(visibilityVal, {
+        //         toValue: 1,
+        //         duration: 3000,
+        //         useNativeDriver: true,
+        //     }).start(() => {
+        //         setShowDetail(true);
+        //     });
+        // } else {
+        //     AnimatedRN.timing(visibilityVal, {
+        //         toValue: 0,
+        //         duration: 3000,
+        //         useNativeDriver: true,
+        //     }).start(() => {
+        //         setShowDetail(false);
+        //     });
+        // }
+    };
+    useEffect(() => {
+        if (data?.prevId) {
+            getSqlData(
+                `SELECT author,thalam,country,pann from thirumurais WHERE prevId=${data?.prevId}`,
+                (cb) => {
+                    setMetaData((prev) => {
+                        const { author, country, thalam, pann } = cb[0];
+                        return { author, country, thalam, pann };
+                    });
+                }
+            );
+        }
+    }, [data]);
     return (
         <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
             <Background>
@@ -115,7 +181,76 @@ const ThrimuraiSong = ({ route, navigation }) => {
                 />
             </Background>
             <View style={styles.headerContainer}>
-                <TouchableOpacity style={styles.textContainer}>
+                {/* <AnimatedRN.View
+                    style={[
+                        styles.detailsSection,
+                        {
+                            display: showDetail ? 'flex' : 'none',
+                            opacity: visibilityVal,
+                            // transform: [{ translateY: 10 }],
+                        },
+                    ]}
+                >
+                    <Text>hdfsjfhhjkd</Text>
+                </AnimatedRN.View> */}
+
+                <View
+                    style={[
+                        styles.detailsSection,
+                        {
+                            display: showDetail ? 'flex' : 'none',
+                            // opacity: visibilityVal,
+                            // transform: [{ translateY: 10 }],
+                        },
+                    ]}
+                >
+                    <>
+                        <View style={styles.container}>
+                            <View style={[styles.iconContainer, { backgroundColor: '#E0AAA7' }]}>
+                                <AruliyavarSVG fill="#000" />
+                            </View>
+                            <View style={styles.textSectionDD}>
+                                <Text style={styles.titleDropDown}>Aruliyavar</Text>
+                                <Text style={styles.valueDropDown}>
+                                    {metaData?.author || 'Not Available'}
+                                </Text>
+                            </View>
+                        </View>
+
+                        <View style={styles.container}>
+                            <View style={[styles.iconContainer, { backgroundColor: '#E0AAA7' }]}>
+                                <AruliyavarSVG fill="#000" />
+                            </View>
+                            <View style={styles.textSectionDD}>
+                                <Text style={styles.titleDropDown}>Nadu</Text>
+                                <Text style={styles.valueDropDown}>
+                                    {metaData?.country || 'Not Available'}
+                                </Text>
+                            </View>
+                        </View>
+
+                        <View style={styles.container}>
+                            <View style={[styles.iconContainer, { backgroundColor: '#E0AAA7' }]}>
+                                <AruliyavarSVG fill="#000" />
+                            </View>
+                            <View style={styles.textSectionDD}>
+                                <Text style={styles.titleDropDown}>Pann</Text>
+                                <Text style={styles.valueDropDown}>{metaData?.pann}</Text>
+                            </View>
+                        </View>
+
+                        <View style={styles.container}>
+                            <View style={[styles.iconContainer, { backgroundColor: '#E0AAA7' }]}>
+                                <AruliyavarSVG fill="#000" />
+                            </View>
+                            <View style={styles.textSectionDD}>
+                                <Text style={styles.titleDropDown}>Thalam</Text>
+                                <Text style={styles.valueDropDown}>{metaData?.thalam}</Text>
+                            </View>
+                        </View>
+                    </>
+                </View>
+                <TouchableOpacity style={styles.textContainer} onPress={makeTheViewVisible}>
                     <DownArrow />
                     <Text style={styles.headerText}>{t('Thirumurai Details')}</Text>
                     <DownArrow />
@@ -198,7 +333,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                                             styles.languageBox,
                                                             { backgroundColor: '#C1554E' },
                                                         ]}
-                                                        onPress={() => setSelectedLang(item)}
+                                                        onPress={() => changeTranlation(item)}
                                                     >
                                                         <Text
                                                             style={[
@@ -209,16 +344,16 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                                                 },
                                                             ]}
                                                         >
-                                                            {item}
+                                                            {t(item)}
                                                         </Text>
                                                     </TouchableOpacity>
                                                 ) : (
                                                     <TouchableOpacity
                                                         style={styles.languageBox}
-                                                        onPress={() => setSelectedLang(item)}
+                                                        onPress={() => changeTranlation(item)}
                                                     >
                                                         <Text style={styles.languageOptionText}>
-                                                            {item}
+                                                            {t(item)}
                                                         </Text>
                                                     </TouchableOpacity>
                                                 )}
@@ -313,10 +448,32 @@ const ThrimuraiSong = ({ route, navigation }) => {
     );
 };
 export const styles = StyleSheet.create({
+    titleDropDown: { fontSize: RFValue(10, 580), color: '#777777' },
+    valueDropDown: { fontSize: RFValue(12, 580), color: '#777777' },
+    iconContainer: {
+        padding: 6,
+        borderRadius: 1000,
+    },
+
+    container: {
+        flexDirection: 'row',
+        width: '48%',
+        gap: 8,
+        alignItems: 'center',
+    },
+    detailsSection: {
+        // position: "absolute",
+        padding: 16,
+        borderBottomColor: '#E0AAA7',
+        borderBottomWidth: 1,
+        flexWrap: 'wrap',
+        flexDirection: 'row',
+        gap: 8,
+        justifyContent: 'center',
+    },
     headerContainer: {
         backgroundColor: '#F3DDDC',
         width: Dimensions.get('window').width,
-        height: 50,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -327,7 +484,12 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 5,
         color: '#777777',
     },
-    textContainer: { flexDirection: 'row', paddingHorizontal: 10, alignItems: 'center' },
+    textContainer: {
+        flexDirection: 'row',
+        paddingHorizontal: 10,
+        alignItems: 'center',
+        paddingVertical: 8,
+    },
     moreOptionContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
