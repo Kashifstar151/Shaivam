@@ -112,7 +112,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const { theme } = useContext(ThemeContext);
     const [range, setRange] = useState({});
     const isFocuced = useIsFocused;
-    const { page, list, query, prevId, flagShowAudio } = route.params;
+    const { page, list, query, prevId, flagShowAudio, name } = route.params;
     const headerData = [
         {
             name: 'Panmurai',
@@ -157,11 +157,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
         <View style={[styles.main, { backgroundColor: theme.backgroundColor }]}>
             <Background>
                 <View>
-                    <BackButton
-                        navigation={navigation}
-                        color={true}
-                        middleText={'தோடுடைய செவியன்'}
-                    />
+                    <BackButton navigation={navigation} color={true} middleText={name} />
                     <SearchInput
                         setState={setSearchedText}
                         state={searchedText}

@@ -64,7 +64,7 @@ const ThrimuraiList = ({ navigation }) => {
         name: 'SongsData.db',
         createFromLocation: 1,
     });
-    useEffect(() => { }, []);
+    useEffect(() => {}, []);
 
     useEffect(() => {
         retrieveData();
@@ -204,6 +204,7 @@ const ThrimuraiList = ({ navigation }) => {
                                 query: 'SELECT name ,prevId FROM  category WHERE prevId<=7',
                                 prevId: '<=7',
                                 flagShowAudio: false,
+                                name: `${t('(1st bar Yellow)')}`,
                             })
                         }
                     >
