@@ -58,7 +58,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const [songs, setSongs] = useState([]);
     const { theme } = useContext(ThemeContext);
     const { t, i18n } = useTranslation();
-    const selectedLngCode = i18n.language;
+    const [selectedLngCode, setSelectedLngCode] = useState(i18n.language);
     const langMap = {
         enR: 'RoI',
         English: 'en-IN',
@@ -81,19 +81,27 @@ const ThrimuraiSong = ({ route, navigation }) => {
         ta: 'en',
     };
 
+    useEffect(() => {
+        getSOngData();
+    }, [selectedLngCode]);
+
     const changeTranlation = (item) => {
         switch (item) {
             case 'Tamil':
-                setSelectedLang(langMap[item]);
+                setSelectedLang('Tamil');
+                setSelectedLngCode(item);
                 break;
             case 'English':
-                setSelectedLang(langMap[item]);
+                setSelectedLang('English');
+                setSelectedLngCode(item);
                 break;
             case 'Hindi':
-                setSelectedLang(langMap[item]);
+                setSelectedLang('Hindi');
+                setSelectedLngCode(item);
                 break;
             default:
-                setSelectedLang(selectedLngCode);
+                setSelectedLang('Original');
+                setSelectedLngCode(i18n.language);
                 break;
         }
     };
