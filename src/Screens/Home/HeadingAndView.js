@@ -11,7 +11,9 @@ const HeadingAndView = ({ title, onPress, viewBtnColor, theme }) => {
                 color: theme?.textColor,
             }}
         >
-            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{title}</Text>
+            <Text style={{ fontSize: 18, fontWeight: 'bold', color: theme?.textColor }}>
+                {title}
+            </Text>
 
             <Pressable style={{ flexDirection: 'row', rowGap: 8 }} onPress={onPress}>
                 <Text style={{ color: viewBtnColor }}>View All</Text>
