@@ -397,7 +397,8 @@ const HomeScreen = ({ navigation }) => {
                     <HeadingAndView
                         viewBtnColor={'#C1554E'}
                         title={'Upcoming Events'}
-                        onPress={() => { }}
+                        theme={{ textColor: theme.textColor }}
+                        onPress={() => {}}
                     />
                 </View>
 
@@ -409,7 +410,7 @@ const HomeScreen = ({ navigation }) => {
                     key={(item) => item?.id}
                     data={eventData}
                     renderItem={({ item, index }) => (
-                        <ElevatedCard>
+                        <ElevatedCard theme={{ colorscheme: theme.colorscheme }}>
                             <EventCard
                                 date={item.date}
                                 timing={item.timing}
@@ -434,7 +435,7 @@ const HomeScreen = ({ navigation }) => {
                     <HeadingAndView
                         viewBtnColor={'#C1554E'}
                         title={'Nearby Temples'}
-                        onPress={() => { }}
+                        onPress={() => {}}
                         theme={{
                             textColor: theme.textColor,
                             colorscheme: theme.colorscheme,
