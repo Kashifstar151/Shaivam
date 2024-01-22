@@ -201,7 +201,7 @@ export async function getSqlData(query, callbacks) {
     // console.log("🚀 ~ file: Database.js:146 ~ getSqlData ~ query:", query)
     const data = await AsyncStorage.getItem('@database')
     const databasename = JSON.parse(data)
-    console.log("🚀 ~ file: Database.js:142 ~ getSqlData ~ data:", JSON.parse(data))
+    // console.log("🚀 ~ file: Database.js:142 ~ getSqlData ~ data:", JSON.parse(data))
     if (databasename?.name !== "songData.db") {
         // alert(true)
         await database.transaction(tx => {
@@ -232,7 +232,7 @@ export async function getSqlData(query, callbacks) {
                 if (results?.rows?.length > 0) {
                     for (let i = 0; i < results?.rows?.length; i++) {
                         const tableName = results.rows.item(i);
-                        console.log(" offline Database data", tableName);
+                        // console.log(" offline Database data", tableName);
                         arr.push(tableName)
                         // console.log("🚀 ~ file: ThrimuraiSong.js:57 ~ tx.executeSql ~ arr:", JSON.stringify(arr, 0, 2))
                     }
