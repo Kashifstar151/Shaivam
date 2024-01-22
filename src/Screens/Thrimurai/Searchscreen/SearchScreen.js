@@ -30,28 +30,25 @@ const SearchScreen = ({ navigation, route }) => {
     const getDataFromSql = (e) => {
         // setSearchText(e)
         getSqlData(
-            `SELECT * FROM thirumurais WHERE search_thirumurai_title LIKE '%${searchText}%' ORDER BY Thirumurai_title  ASC LIMIT 10 OFFSET 0 ; `,
+            `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${searchText}%' LIMIT 10 ;`,
+            // `SELECT * FROM thirumurais WHERE search_title='%திருஞானசம்பந்தர்தேவாரம்-1.031-திருக்குரங்கணின்முட்டம்-விழுநீர்மழுவாள்படை%' LIMIT 10 OFFSET 0;`,
             (callbacks) => {
+                console.log("🚀 ~ getDataFromSql ~ callbacks:", JSON.stringify(callbacks, 0, 2))
                 setSearchedResult(callbacks);
             }
         );
         getSqlData(
-            `SELECT * FROM thirumurai_songs WHERE song_no LIKE '%${searchText}%' LIMIT 10 OFFSET 0;`,
+            `SELECT * FROM thirumurai_songs WHERE searchTitle LIKE '%${searchText}%' AND locale='en-IN' ORDER BY songNo ASC LIMIT 10 OFFSET 0;`,
             (callbacks) => {
                 setRawSongs(callbacks);
+                console.log("🚀 ~ getDataFromSql ~ callbacks:", callbacks)
                 // setSearchText(e)
             }
         );
     };
     const highlight = (item, index, key) => {
-        // console.log("🚀 ~ file: SearchScreen.js:28 ~ highlight ~ item:", item)
-        // const regex = new RegExp(`\\b${searchText}\\b`, 'gi');
-
         const parts =
-            key == 'title' ? item?.Thirumurai_title?.split(' ') : item?.rawSong?.split(' ');
-        // console.log("🚀 ~ file: SearchScreen.js:31 ~ highlight ~ regex:", parts)
-        // const parts2 = item?.rawSong.split(regex);
-        // let parts = key == 'title' ? item?.Thirumurai_title?.split(' ') : item?.rawSong
+            key == 'title' ? item?.title?.split(' ') : item?.rawSong?.split(' ');
         return (
             <View
                 style={{
@@ -63,67 +60,10 @@ const SearchScreen = ({ navigation, route }) => {
                 {key == 'title'
                     ? parts?.map((res, i) => (
                         <HighlightedText text={res} highlight={searchText} />
-                        //   <View style={res == searchText ? { flexDirection: 'row' } : null}>
-                        //       <Text
-                        //           style={
-                        //               res == searchText
-                        //                   ? [
-                        //                         styles.titleText,
-                        //                         {
-                        //                             paddingHorizontal: 5,
-                        //                             marginHorizontal: 4,
-                        //                             borderRadius: 5,
-                        //                             backgroundColor:
-                        //                                 theme.colorscheme === 'light'
-                        //                                     ? 'yellow'
-                        //                                     : '#C1554E',
-                        //                             color: theme.textColor,
-                        //                         },
-                        //                     ]
-                        //                   : [styles.titleText, { color: theme.textColor }]
-                        //           }
-                        //       >
-                        //           {res}
-                        //       </Text>
-                        //   </View>
                     ))
                     : parts?.map((res, i) => (
                         <HighlightedText text={res} highlight={searchText} lyrics={true} />
-                        // <View
-                        //     style={
-                        //         res == searchText
-                        //             ? {
-                        //                 flexDirection: 'row',
-                        //                 padding: 10,
-                        //             }
-                        //             : null
-                        //     }
-                        // >
-                        //     <Text
-                        //         style={
-                        //             res == searchText
-                        //                 ? [
-                        //                     styles.titleText,
-                        //                     {
-                        //                         fontWeight: '500',
-                        //                         backgroundColor:
-                        //                             theme.colorscheme === 'light'
-                        //                                 ? 'yellow'
-                        //                                 : '#C1554E',
-                        //                     },
-                        //                 ]
-                        //                 : [
-                        //                     styles.titleText,
-                        //                     {
-                        //                         fontWeight: '500',
-                        //                         color: theme.textColor,
-                        //                     },
-                        //                 ]
-                        //         }
-                        //     >
-                        //         {res}
-                        //     </Text>
-                        // </View>
+
                     ))}
             </View>
         );
