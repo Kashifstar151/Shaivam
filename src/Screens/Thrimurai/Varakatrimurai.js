@@ -47,7 +47,9 @@ const Varakatrimurai = ({ navigation }) => {
                         </TouchableOpacity>
                     )}
                 </View>
-                {selectedTitle == index && <RenderAudios songs={item} navigation={navigation} />}
+                {selectedTitle == index && (
+                    <RenderAudios songs={item} navigation={navigation} varakatimurai={true} />
+                )}
             </>
         );
     };

@@ -7,7 +7,7 @@ import { getSqlData } from '../Database';
 import { ThemeContext } from '../../Context/ThemeContext';
 import { useIsFocused } from '@react-navigation/native';
 
-const RenderAudios = ({ akarthi, navigation, songs, data, thalam }) => {
+const RenderAudios = ({ akarthi, navigation, songs, data, thalam, varakatimurai }) => {
     const isFocused = useIsFocused();
     const { theme } = useContext(ThemeContext);
     const [dataLength, setDataLength] = useState(20);
@@ -22,7 +22,8 @@ const RenderAudios = ({ akarthi, navigation, songs, data, thalam }) => {
     const getDtataFromSql = async () => {
         const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${songs?.fkTrimuria}' AND pann='${songs?.pann}' ORDER BY  titleNo ASC  LIMIT 10 OFFSET 1`;
         const query2 = `SELECT * from thirumurai_songs WHERE prevId = ${songs.prevId} and country= '${songs?.country}'ORDER BY song_no ASC LIMIT 10 OFFSET 1`;
-        getSqlData(thalam ? query2 : query, (callbacks) => {
+        const query3 = `SELECT * FROM thirumurais WHERE  authorNo='${songs?.authorNo}' ORDER BY createdAt ASC  LIMIT 10 OFFSET 1`;
+        getSqlData(thalam ? query2 : varakatimurai ? query3 : query, (callbacks) => {
             setAudioData(callbacks);
         });
     };
