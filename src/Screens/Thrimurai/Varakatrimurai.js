@@ -1,15 +1,17 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useContext, useState, useEffect, useRef } from 'react';
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import RenderAudios from './RenderAudios';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import { ThemeContext } from '../../Context/ThemeContext';
 import { getSqlData } from '../Database';
 import { useTranslation } from 'react-i18next';
+import { FlatList } from 'react-native-gesture-handler';
 
 const Varakatrimurai = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
     const [selectedTitle, setSelectedTitle] = useState(null);
     const [authordata, setAuthorData] = useState(null);
+    const flatListRef = useRef(null)
     const { t } = useTranslation();
 
     useEffect(() => {
@@ -20,9 +22,10 @@ const Varakatrimurai = ({ navigation }) => {
             }
         );
     }, []);
+
     const renderContents = (item, index) => {
         return (
-            <>
+            <View>
                 <View style={[styles.chapterBox, { backgroundColor: theme.backgroundColor }]}>
                     <View style={{ justifyContent: 'center' }}>
                         <Text style={[styles.chapterNameTexts, { color: theme.textColor }]}>
@@ -50,14 +53,16 @@ const Varakatrimurai = ({ navigation }) => {
                 {selectedTitle == index && (
                     <RenderAudios songs={item} navigation={navigation} varakatimurai={true} />
                 )}
-            </>
+            </View>
         );
     };
 
     return (
         <View>
             <FlatList
-                contentContainerStyle={{ marginTop: 20, overflow: 'scroll' }}
+                nestedScrollEnabled
+                ref={flatListRef}
+                contentContainerStyle={{ marginTop: 20, paddingBottom: 250 }}
                 data={authordata}
                 renderItem={({ item, index }) => renderContents(item, index)}
             />
