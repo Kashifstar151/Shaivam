@@ -8,6 +8,7 @@ import RenderTitle from './RenderTitle'
 import { colors } from '../../../Helpers';
 
 const RenderThalam = ({ item, index, navigation, ThalamHeaders }) => {
+    console.log("🚀 ~ RenderThalam ~ ThalamHeaders:", ThalamHeaders)
     const { theme } = useContext(ThemeContext);
     const [selectedTitle, setSelectedTitle] = useState(null)
     return (
@@ -36,7 +37,7 @@ const RenderThalam = ({ item, index, navigation, ThalamHeaders }) => {
                     </TouchableOpacity>
                 )}
             </View>
-            {selectedTitle == index && <RenderTitle ThalamHeaders={ThalamHeaders} data={item} navigation={navigation} thalam={true} />}
+            {selectedTitle == index && <RenderAudios ThalamHeaders={ThalamHeaders} songs={item} navigation={navigation} thalam={true} />}
         </View>
     )
 }
