@@ -108,53 +108,53 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
 
     const [selectedChapter, setSelectedChapter] = useState(null);
     const [TitleData, setTitleData] = useState([]);
-    const [showLoading, setShowLoading] = useState(false)
+    const [showLoading, setShowLoading] = useState(false);
     useEffect(() => {
         getDtataFromSql();
     }, []);
     const getDtataFromSql = async () => {
-        setShowLoading(true)
+        setShowLoading(true);
         let query;
-        if (data?.prevId < 7) {
-            query = `SELECT pann, prevId,fkTrimuria FROM thirumurais where fkTrimuria=${data.prevId} and pann NOTNULL GROUP BY pann ORDER BY titleNo ASC LIMIT 10 OFFSET 0`;
+        if (data?.prevId <= 7) {
+            query = `SELECT pann, prevId,fkTrimuria FROM thirumurais where fkTrimuria=${data.prevId} and pann IS NOT NULL GROUP BY pann ORDER BY titleNo ASC LIMIT 10 OFFSET 0`;
         } else {
             query = `SELECT * FROM thirumurais where fkTrimuria=${data.prevId}  ORDER BY titleNo ASC LIMIT 10 OFFSET 0`;
         }
         // const query = `SELECT pann, prevId,fkTrimuria FROM thirumurais where fkTrimuria=${data.prevId} and pann NOTNULL GROUP BY pann ORDER BY titleNo ASC`;
-        const query2 = `Select * from thirumurais where ${ThalamHeaders == 0 ? 'country' : 'thalam'
-            }= '${data}' ORDER BY  titleNo 
+        const query2 = `Select * from thirumurais where ${
+            ThalamHeaders == 0 ? 'country' : 'thalam'
+        }= '${data}' ORDER BY  titleNo 
         ASC LIMIT 10 OFFSET 0`;
         getSqlData(thalam ? query2 : query, (callbacks) => {
-            setShowLoading(false)
             // console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
+            setShowLoading(false);
             setTitleData(callbacks);
         });
     };
     return (
         <View style={{ marginTop: 0 }}>
-            {
-                showLoading ?
-                    <Modal transparent presentationStyle='overFullScreen'>
-                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                            <ActivityIndicator size={'small'} />
-                        </View>
-                    </Modal> :
-                    <FlatList
-                        data={TitleData}
-                        renderItem={({ item, index }) => (
-                            <RenderEachTitle
-                                thalam={thalam}
-                                item={item}
-                                index={index}
-                                navigation={navigation}
-                                selectedChapter={selectedChapter}
-                                setSelectedChapter={setSelectedChapter}
-                                flagShowAudio={flagShowAudio}
-                            />
-                        )}
-                    />
-            }
-
+            {showLoading ? (
+                <Modal transparent presentationStyle="overFullScreen">
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <ActivityIndicator size={'small'} />
+                    </View>
+                </Modal>
+            ) : (
+                <FlatList
+                    data={TitleData}
+                    renderItem={({ item, index }) => (
+                        <RenderEachTitle
+                            thalam={thalam}
+                            item={item}
+                            index={index}
+                            navigation={navigation}
+                            selectedChapter={selectedChapter}
+                            setSelectedChapter={setSelectedChapter}
+                            flagShowAudio={flagShowAudio}
+                        />
+                    )}
+                />
+            )}
         </View>
     );
 };
