@@ -163,7 +163,7 @@ export default {
         },
 
         settingText: {
-            color: '##FFFFFF',
+            color: '#FFFFFF',
         },
 
         lyricsText: {
