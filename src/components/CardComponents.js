@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Dimensions, FlatList, Text, View, Pressable } from 'react-native';
+import { Dimensions, FlatList, Text, View, Pressable, StyleSheet } from 'react-native';
 import OmIcon from './SVGs/OmIcon';
 import LinearGradient from 'react-native-linear-gradient';
 import { ThemeContext } from '../Context/ThemeContext';
@@ -16,16 +16,7 @@ const RenderItem = ({ item, navigation, theme }) => {
             useAngle={true}
             angle={130}
             angleCenter={{ x: 0, y: 0 }}
-            style={{
-                width: Dimensions.get('window').width - 70,
-                backgroundColor: 'red',
-                minHeight: 200,
-                borderRadius: 15,
-                marginRight: 15,
-                marginTop: 15,
-                padding: 15,
-                justifyContent: 'center',
-            }}
+            style={styles.linearGradientBox}
         >
             <View
                 style={{
@@ -39,8 +30,8 @@ const RenderItem = ({ item, navigation, theme }) => {
                         style={{
                             fontSize: RFValue(14, 540),
                             fontWeight: '600',
-                            color: item.textColor,
                             paddingBottom: 5,
+                            color: item.textColor,
                         }}
                     >
                         {item?.text}
@@ -52,14 +43,7 @@ const RenderItem = ({ item, navigation, theme }) => {
                 <OmIcon fill={theme === 'light' ? '#4C3600' : '#fff'} />
             </View>
 
-            <View
-                style={{
-                    flexDirection: 'row',
-                    flexWrap: 'wrap',
-                    width: '100%',
-                    marginVertical: 'auto',
-                }}
-            >
+            <View style={styles.viewBoxForSubComp}>
                 {item.subComp.map((i, _) => (
                     <Pressable
                         onPress={
@@ -67,35 +51,25 @@ const RenderItem = ({ item, navigation, theme }) => {
                                 ? () => navigation.navigate('Thrimurai')
                                 : () => alert(true)
                         }
-                        style={{
-                            margin: 4,
-                            width: '47.2%',
-                            flexDirection: 'row',
-                            padding: 12,
-                            alignItems: 'center',
-                            backgroundColor: theme === 'light' ? 'white' : '#494949',
-                            opacity: theme === 'light' ? 0.7 : 1,
-                            borderRadius: 15,
-                            overflow: 'hidden',
-                            flexWrap: 'nowrap',
-                        }}
+                        style={[
+                            styles.subComp,
+                            {
+                                backgroundColor: theme === 'light' ? 'white' : '#494949',
+                                opacity: theme === 'light' ? 0.7 : 1,
+                            },
+                        ]}
                     >
                         {i.icon}
                         <View
-                            style={{
-                                borderRightWidth: 1,
-                                marginHorizontal: 12,
-                                height: 20,
-                                borderRightColor: item.gradient[1],
-                            }}
+                            style={[styles.seperator, { borderRightColor: item.gradient[1] }]}
                         ></View>
                         <Text
-                            style={{
-                                alignContent: 'center',
-                                flex: 1,
-                                color: item.textColor,
-                                fontSize: RFValue(10, 540),
-                            }}
+                            style={[
+                                styles.subCompText,
+                                {
+                                    color: item.textColor,
+                                },
+                            ]}
                         >
                             {i.title}
                         </Text>
@@ -168,5 +142,46 @@ const CardComponents = ({ navigation }) => {
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    linearGradientBox: {
+        width: Dimensions.get('window').width - 70,
+        backgroundColor: 'red',
+        minHeight: 200,
+        borderRadius: 15,
+        marginRight: 15,
+        marginTop: 15,
+        padding: 15,
+        justifyContent: 'center',
+    },
+    viewBoxForSubComp: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        width: '100%',
+        marginVertical: 'auto',
+    },
+    subComp: {
+        margin: 4,
+        width: (Dimensions.get('window').width - 70) / 2 - 24,
+        flexDirection: 'row',
+        padding: 12,
+        alignItems: 'center',
+        borderRadius: 15,
+        overflow: 'hidden',
+        flexWrap: 'nowrap',
+    },
+
+    seperator: {
+        borderRightWidth: 1,
+        marginHorizontal: 12,
+        height: 20,
+    },
+
+    subCompText: {
+        alignContent: 'center',
+        flex: 1,
+        fontSize: RFValue(10, 540),
+    },
+});
 
 export default CardComponents;
