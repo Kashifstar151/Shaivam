@@ -1,10 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import RenderAudios from './RenderAudios';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import { ThemeContext } from '../../Context/ThemeContext';
 import { getSqlData } from '../Database';
 import { useTranslation } from 'react-i18next';
+import { FlatList } from 'react-native-gesture-handler';
 
 const Varakatrimurai = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
@@ -55,9 +56,12 @@ const Varakatrimurai = ({ navigation }) => {
     };
 
     return (
-        <View>
+        <View style={{ overflow: 'scroll' }}>
             <FlatList
-                contentContainerStyle={{ marginTop: 20, overflow: 'scroll' }}
+                contentContainerStyle={{
+                    marginTop: 20,
+                    overflow: 'scroll',
+                }}
                 data={authordata}
                 renderItem={({ item, index }) => renderContents(item, index)}
             />
