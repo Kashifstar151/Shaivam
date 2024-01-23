@@ -25,20 +25,13 @@ ios/.xcode.env.local
 # Android/IntelliJ
 #
 build/
-<<<<<<< HEAD
-
-=======
->>>>>>> 4aa02f08afcf55929ba284e4a4c230baf2ea29ea
 .idea
 .gradle
 local.properties
 *.iml
 *.hprof
 .cxx/
-<<<<<<< HEAD
 /android/app/src/main/assets/www/SongsData.db
-=======
->>>>>>> 4aa02f08afcf55929ba284e4a4c230baf2ea29ea
 # node.js
 #
 node_modules/

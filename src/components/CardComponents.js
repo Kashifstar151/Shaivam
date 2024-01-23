@@ -7,7 +7,7 @@ import BookIcon from './SVGs/BookIcon';
 import OmLetterSvg from './SVGs/OmLetterSvg';
 import StrotasSVG from './SVGs/StrotasSVG';
 import ShaivaSVG from './SVGs/ShaivaSVG';
-
+import { RFValue } from 'react-native-responsive-fontsize';
 
 const RenderItem = ({ item, navigation, theme }) => {
     return (
@@ -19,85 +19,88 @@ const RenderItem = ({ item, navigation, theme }) => {
             style={{
                 width: Dimensions.get('window').width - 70,
                 backgroundColor: 'red',
-                height: 200,
+                minHeight: 200,
                 borderRadius: 15,
                 marginRight: 15,
+                marginTop: 15,
                 padding: 15,
+                justifyContent: 'center',
             }}
         >
-            <View style={{ flex: 1 }}>
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        paddingBottom: 11,
-                    }}
-                >
-                    <View style={{ justifyContent: 'center' }}>
+            <View
+                style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    paddingBottom: 11,
+                }}
+            >
+                <View style={{ justifyContent: 'center' }}>
+                    <Text
+                        style={{
+                            fontSize: RFValue(14, 540),
+                            fontWeight: '600',
+                            color: item.textColor,
+                            paddingBottom: 5,
+                        }}
+                    >
+                        {item?.text}
+                    </Text>
+                    <Text style={{ fontSize: RFValue(10, 540), color: item.textColor }}>
+                        {item?.description}
+                    </Text>
+                </View>
+                <OmIcon fill={theme === 'light' ? '#4C3600' : '#fff'} />
+            </View>
+
+            <View
+                style={{
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    width: '100%',
+                    marginVertical: 'auto',
+                }}
+            >
+                {item.subComp.map((i, _) => (
+                    <Pressable
+                        onPress={
+                            i?.title == 'Thirumurais'
+                                ? () => navigation.navigate('Thrimurai')
+                                : () => alert(true)
+                        }
+                        style={{
+                            margin: 4,
+                            width: '47.2%',
+                            flexDirection: 'row',
+                            padding: 12,
+                            alignItems: 'center',
+                            backgroundColor: theme === 'light' ? 'white' : '#494949',
+                            opacity: theme === 'light' ? 0.7 : 1,
+                            borderRadius: 15,
+                            overflow: 'hidden',
+                            flexWrap: 'nowrap',
+                        }}
+                    >
+                        {i.icon}
+                        <View
+                            style={{
+                                borderRightWidth: 1,
+                                marginHorizontal: 12,
+                                height: 20,
+                                borderRightColor: item.gradient[1],
+                            }}
+                        ></View>
                         <Text
                             style={{
-                                fontSize: 16,
-                                fontWeight: '600',
+                                alignContent: 'center',
+                                flex: 1,
                                 color: item.textColor,
-                                paddingBottom: 5,
+                                fontSize: RFValue(10, 540),
                             }}
                         >
-                            {item?.text}
+                            {i.title}
                         </Text>
-                        <Text style={{ fontSize: 12, color: item.textColor }}>
-                            {item?.description}
-                        </Text>
-                    </View>
-                    <OmIcon fill={theme === 'light' ? '#4C3600' : '#fff'} />
-                </View>
-
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        flexWrap: 'wrap',
-                        width: '100%',
-                    }}
-                >
-                    {item.subComp.map((i, _) => (
-                        <Pressable
-                            onPress={
-                                i?.title == 'Thirumurais'
-                                    ? () => navigation.navigate('Thrimurai')
-                                    : () => alert(true)
-                            }
-                            style={{
-                                margin: 4,
-                                width: '47.2%',
-                                flexDirection: 'row',
-                                padding: 12,
-                                alignItems: 'center',
-                                backgroundColor: theme === 'light' ? 'white' : '#494949',
-                                opacity: theme === 'light' ? 0.7 : 1,
-                                borderRadius: 15,
-                            }}
-                        >
-                            {i.icon}
-                            <View
-                                style={{
-                                    borderRightWidth: 1,
-                                    marginHorizontal: 12,
-                                    height: 20,
-                                    borderRightColor: item.gradient[1],
-                                }}
-                            ></View>
-                            <Text
-                                style={{
-                                    flexWrap: 'wrap',
-                                    alignContent: 'center',
-                                    flex: 1,
-                                    color: item.textColor,
-                                }}
-                            >
-                                {i.title}
-                            </Text>
-                        </Pressable>
-                    ))}
-                </View>
+                    </Pressable>
+                ))}
             </View>
         </LinearGradient>
     );

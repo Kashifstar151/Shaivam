@@ -5,7 +5,7 @@ const ElevatedCard = ({ children, theme }) => {
     return (
         <View
             style={{
-                elevation: theme?.colorscheme === 'light' ? 10 : 0,
+                elevation: theme?.colorscheme === 'light' ? 10: 0,
                 shadowColor: '#a0a0a0',
                 marginHorizontal: 15,
                 marginBottom: 5,

@@ -14,7 +14,7 @@ const Varakatrimurai = ({ navigation }) => {
 
     useEffect(() => {
         getSqlData(
-            'select * from thirumurais WHERE author NOT NULL and author in ("திருஞானசம்பந்தர்","திருநாவுக்கரசர்","சுந்தரர்") GROUP BY author ',
+            'select * from thirumurais WHERE authorNo IS NOT NULL GROUP BY authorNo ',
             (cb) => {
                 setAuthorData(cb);
             }
@@ -48,10 +48,7 @@ const Varakatrimurai = ({ navigation }) => {
                     )}
                 </View>
                 {selectedTitle == index && (
-                    <View style={{ marginTop: 10 }}>
-                        {/* <FlatList data={item?.title} renderItem={({ item, index }) => renderTitle(item, index)} /> */}
-                        <RenderAudios songs={item} navigation={navigation} />
-                    </View>
+                    <RenderAudios songs={item} navigation={navigation} varakatimurai={true} />
                 )}
             </>
         );
