@@ -21,6 +21,372 @@ const Varakatrimurai = ({ navigation }) => {
             }
         );
     }, []);
+    const data = [
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'kya',
+            name: 'bs aise hi',
+        },
+        {
+            i: 'waah',
+            name: 'bs aise hi',
+        },
+        ,
+        {
+            i: 'tera dhokha',
+            name: 'bs aise hi',
+        },
+    ];
     const renderContents = (item, index) => {
         return (
             <>
@@ -48,9 +414,13 @@ const Varakatrimurai = ({ navigation }) => {
                         </TouchableOpacity>
                     )}
                 </View>
-                {selectedTitle == index && (
-                    <RenderAudios songs={item} navigation={navigation} varakatimurai={true} />
-                )}
+                {selectedTitle == index &&
+                    // <RenderAudios songs={item} navigation={navigation} varakatimurai={true} />
+                    data.map((item) => (
+                        <Text>
+                            {item.i} = == === ={item.name}
+                        </Text>
+                    ))}
             </>
         );
     };
