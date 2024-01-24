@@ -222,33 +222,13 @@ const HomeScreen = ({ navigation }) => {
                         flex: 1,
                         paddingHorizontal: 15,
                     }}
-                >
-                    <Header />
-                    <SearchInput
-                        extraPad={false}
-                        styleOverwrite={{ marginHorizontalUnset: true, paddingTop: 24 }}
-                    />
-
-                    <View style={{ marginTop: 24 }}>
-                        <HeadingText text={'Shaivam Exclusive'} />
-                        <Text
-                            style={{
-                                color: colors.grey3,
-                                fontSize: 12,
-                                marginTop: 5,
-                                fontWeight: '600',
-                            }}
-                        >
-                            Scroll through and check out what Shaiva, offers {t('Thirumurais')}
-                        </Text>
-                    </View>
-                </ImageBackground>
+                ></ImageBackground>
             </View>
             <View
                 style={{
                     paddingHorizontal: 15,
                     paddingTop: 12,
-                    marginTop: compHeight ? -compHeight / 2 : 0,
+                    marginTop: compHeight ? -compHeight + 80 : 0,
                 }}
                 onLayout={handleLayout}
             >
@@ -364,7 +344,6 @@ const HomeScreen = ({ navigation }) => {
                             overflow: 'hidden',
                         }}
                     >
-                        {/* <CardComponents /> */}
                         <FlatList
                             style={{ overflow: 'visible' }}
                             horizontal

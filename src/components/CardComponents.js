@@ -8,6 +8,11 @@ import OmLetterSvg from './SVGs/OmLetterSvg';
 import StrotasSVG from './SVGs/StrotasSVG';
 import ShaivaSVG from './SVGs/ShaivaSVG';
 import { RFValue } from 'react-native-responsive-fontsize';
+import HeadingText from './HeadingText';
+import { colors } from '../Helpers';
+import { t } from 'i18next';
+import Header from './Header';
+import SearchInput from './SearchInput';
 
 const RenderItem = ({ item, navigation, theme }) => {
     return (
@@ -131,6 +136,24 @@ const CardComponents = ({ navigation }) => {
 
     return (
         <View style={{ paddingLeft: 0 }}>
+            <View style={{ marginTop: 24 }}>
+                <Header />
+                <SearchInput
+                    extraPad={false}
+                    styleOverwrite={{ marginHorizontalUnset: true, paddingTop: 24 }}
+                />
+                <HeadingText text={'Shaivam Exclusive'} />
+                <Text
+                    style={{
+                        color: colors.grey3,
+                        fontSize: 12,
+                        marginTop: 5,
+                        fontWeight: '600',
+                    }}
+                >
+                    Scroll through and check out what Shaiva, offers {t('Thirumurais')}
+                </Text>
+            </View>
             <FlatList
                 style={{ overflow: 'visible' }}
                 horizontal
@@ -145,7 +168,7 @@ const CardComponents = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     linearGradientBox: {
-        width: Dimensions.get('window').width - 70,
+        width: Dimensions.get('window').width * 0.85,
         backgroundColor: 'red',
         minHeight: 200,
         borderRadius: 15,
@@ -162,7 +185,7 @@ const styles = StyleSheet.create({
     },
     subComp: {
         margin: 4,
-        width: (Dimensions.get('window').width - 70) / 2 - 24,
+        width: (Dimensions.get('window').width * 0.85) / 2 - 24,
         flexDirection: 'row',
         padding: 12,
         alignItems: 'center',
