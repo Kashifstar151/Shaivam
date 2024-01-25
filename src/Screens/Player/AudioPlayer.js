@@ -82,7 +82,7 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                         }}
                     >
                         <Text style={[styles.AudioText, { color: '#3A1917', fontWeight: '700' }]}>
-                            {item?.thalamOdhuvar_Tamilname}
+                            {item?.thalamOdhuvarTamilname}
                         </Text>
                     </TouchableOpacity>
                 ) : (
@@ -97,7 +97,7 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                             borderRadius: 15,
                         }}
                     >
-                        <Text style={styles.AudioText}>{item?.thalamOdhuvar_Tamilname}</Text>
+                        <Text style={styles.AudioText}>{item?.thalamOdhuvarTamilname}</Text>
                     </TouchableOpacity>
                 )}
             </>

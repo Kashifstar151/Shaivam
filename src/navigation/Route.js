@@ -95,31 +95,38 @@ const Route = () => {
         }
     }
     const checkFileExist = async () => {
-        RNFS.exists(`${RNFS.ExternalDirectoryPath}/Thrimurai/thirumuraiSongs_6.db`).then(async (res) => {
-            if (res == true) {
-                // InitializeDatabase()
-                console.log(true)
-                AsyncStorage.setItem('@database', JSON.stringify({ name: 'songData.db', createFromLocation: 1 }))
-                setShowDownloading(true)
-                setTimeout(() => {
-                    setShowDownloading(false)
-                }, 2000)
-            } else {
-                setShowDownloading(true)
-                console.log(false)
-                const promise = attachDb()
-                promise.then((res) => {
-                    console.log("res", res)
-                    setShowDownloading(false)
-                }).catch((error) => {
-                    console.log("error", error)
-                    setShowDownloading(false)
-                })
-                AsyncStorage.setItem('@database', JSON.stringify({ name: 'main.db' }))
-            }
-        }).catch((error) => {
-            console.log("🚀 ~ file: route.js:99 ~ RNFS.exists ~ error:", error)
-        })
+        RNFS.exists(`${RNFS.ExternalDirectoryPath}/Thrimurai/thirumuraiSongs_7.db`)
+            .then(async (res) => {
+                if (res == true) {
+                    // InitializeDatabase()
+                    console.log(true);
+                    AsyncStorage.setItem(
+                        '@database',
+                        JSON.stringify({ name: 'songData.db', createFromLocation: 1 })
+                    );
+                    setShowDownloading(true);
+                    setTimeout(() => {
+                        setShowDownloading(false);
+                    }, 2000);
+                } else {
+                    setShowDownloading(true);
+                    console.log(false);
+                    const promise = attachDb();
+                    promise
+                        .then((res) => {
+                            console.log('res', res);
+                            setShowDownloading(false);
+                        })
+                        .catch((error) => {
+                            console.log('error', error);
+                            setShowDownloading(false);
+                        });
+                    AsyncStorage.setItem('@database', JSON.stringify({ name: 'main.db' }));
+                }
+            })
+            .catch((error) => {
+                console.log('🚀 ~ file: route.js:99 ~ RNFS.exists ~ error:', error);
+            });
     }
 
     return (

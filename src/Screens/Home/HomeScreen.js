@@ -228,7 +228,7 @@ const HomeScreen = ({ navigation }) => {
                 style={{
                     paddingHorizontal: 15,
                     paddingTop: 12,
-                    marginTop: compHeight ? -compHeight + 80 : 0,
+                    marginTop: compHeight ? -compHeight * 0.7 : 0,
                 }}
                 onLayout={handleLayout}
             >

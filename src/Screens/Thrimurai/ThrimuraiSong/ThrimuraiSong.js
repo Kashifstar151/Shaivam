@@ -133,7 +133,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     });
 
     const getSOngData = () => {
-        const query = `SELECT pann,thalam,rawSong,author,country,song_no from thirumurai_songs where prevId=${data?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY song_no ASC`;
+        const query = `SELECT pann,thalam,rawSong,author,country,songNo from thirumurai_songs where prevId=${data?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
         getSqlData(query, (callbacks) => {
             setSongDetails(callbacks);
             const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`;
@@ -296,7 +296,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                         },
                                     ]}
                                 >
-                                    {res?.song_no}
+                                    {res?.songNo}
                                 </Text>
                             </View>
                         ))}
