@@ -42,6 +42,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     });
     const isFocused = useIsFocused;
     const { data } = route.params || {};
+    console.log("🚀 ~ ThrimuraiSong ~ data:", data)
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
@@ -131,8 +132,9 @@ const ThrimuraiSong = ({ route, navigation }) => {
     });
 
     const getSOngData = () => {
-        const query = `SELECT pann,thalam,rawSong,author,country,song_no from thirumurai_songs where prevId=${data?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY song_no ASC`;
+        const query = `SELECT * from thirumurai_songs where prevId=${data?.prevId} and title NOTNULL and locale='en-IN'`;
         getSqlData(query, (callbacks) => {
+            console.log("🚀 ~ getSqlData ~ callbacks:", JSON.stringify(callbacks, 0, 2))
             setSongDetails(callbacks);
             const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`;
             getSqlData(query2, (callbacks) => {

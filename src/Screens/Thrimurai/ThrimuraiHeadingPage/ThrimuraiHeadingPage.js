@@ -47,7 +47,6 @@ const RenderContents = ({
     setRange,
     flagShowAudio,
 }) => {
-    // console.log("🚀 ~ item:", item)
     const { theme } = useContext(ThemeContext);
     const { t, i18n } = useTranslation();
 
@@ -113,6 +112,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const [range, setRange] = useState({});
     const isFocuced = useIsFocused;
     const { page, list, query, prevId, flagShowAudio, name } = route.params;
+    console.log("🚀 ~ ThrimuraiHeadingPage ~ prevId:", prevId)
     const headerData = [
         {
             name: 'Panmurai',
@@ -163,7 +163,6 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                         state={searchedText}
                         setOnFocus={() =>
                             navigation.navigate(RouteTexts.SEARCH_SCREEN, {
-                                // thrimurais: thrimurais,
                                 query1: `SELECT * FROM thirumurais WHERE search_thirumurai_title LIKE`,
                                 query2: `AND fkTrimuria <=7 LIMIT 10 OFFSET 0`,
                                 allThirumirai: false,
@@ -173,18 +172,37 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                         placeholder={t('Search for any Thirumurai here')}
                     />
                 </View>
-                <FlatList
-                    contentContainerStyle={{ marginTop: 10 }}
-                    data={headerData}
-                    renderItem={({ item, index }) => (
-                        <ThrimuraiHeader
-                            selectedHeader={selectedHeader}
-                            setSelectedheader={setSelectedheader}
-                            item={item}
-                        />
-                    )}
-                    horizontal
-                />
+                {
+                    prevId == '<=7' &&
+                    <FlatList
+                        contentContainerStyle={{ marginTop: 10 }}
+                        data={headerData}
+                        renderItem={({ item, index }) => (
+                            <ThrimuraiHeader
+                                selectedHeader={selectedHeader}
+                                setSelectedheader={setSelectedheader}
+                                item={item}
+                            />
+                        )}
+                        horizontal
+                    />
+                }
+                {
+                    prevId == '=9' &&
+                    <FlatList
+                        contentContainerStyle={{ marginTop: 10 }}
+                        data={headerData}
+                        renderItem={({ item, index }) => (
+                            <ThrimuraiHeader
+                                selectedHeader={selectedHeader}
+                                setSelectedheader={setSelectedheader}
+                                item={item}
+                            />
+                        )}
+                        horizontal
+                    />
+                }
+
             </Background>
             {showLoading ?
                 // <Modal transparent presentationStyle='overFullScreen'>
