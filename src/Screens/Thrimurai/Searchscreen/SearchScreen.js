@@ -38,10 +38,10 @@ const SearchScreen = ({ navigation, route }) => {
             }
         );
         getSqlData(
-            `SELECT * FROM thirumurai_songs WHERE searchTitle LIKE '%${searchText}%' AND locale='en-IN' ORDER BY songNo ASC LIMIT 10 OFFSET 0;`,
+            `SELECT * FROM thirumurai_songs WHERE searchTitle LIKE '%${searchText}%'  ORDER BY songNo ASC LIMIT 10 OFFSET 0;`,
             (callbacks) => {
                 setRawSongs(callbacks);
-                console.log("🚀 ~ getDataFromSql ~ callbacks:", callbacks)
+                console.log('🚀 ~ getDataFromSql ~ callbacks:', callbacks);
                 // setSearchText(e)
             }
         );
