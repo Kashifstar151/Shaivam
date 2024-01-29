@@ -10,6 +10,7 @@ import {
     TouchableOpacity,
     View,
     Animated as AnimatedRN,
+    useColorScheme,
 } from 'react-native';
 import BackButton from '../../../components/BackButton';
 import ShareIcon from '../../../assets/Images/share-1.svg';
@@ -33,8 +34,11 @@ import '../../../../localization';
 import { changeLanguage } from 'i18next';
 import AruliyavarSVG from '../../../components/SVGs/AruliyavarSVG';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { dark, light } from '../../../Helpers/GlobalStyles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ThrimuraiSong = ({ route, navigation }) => {
+    const colorScheme = useColorScheme();
     let key = true;
     const database = SQLite.openDatabase({
         name: key ? 'SongsData.db' : 'main.db',
@@ -52,11 +56,11 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const language = ['Original', 'Tamil', 'English', 'Hindi'];
     const [selectedLang, setSelectedLang] = useState('Original');
     const [fontSizeCount, setFontSizeCount] = useState(12);
-    const [darkMode, setDarkMode] = useState(true);
+    const [darkMode, setDarkMode] = useState(colorScheme === 'dark' ? true : false);
     const [tamilSplit, setTamilSplit] = useState(false);
     const [songDetails, setSongDetails] = useState(null);
     const [songs, setSongs] = useState([]);
-    const { theme } = useContext(ThemeContext);
+    const { theme, setTheme } = useContext(ThemeContext);
     const { t, i18n } = useTranslation();
     const [selectedLngCode, setSelectedLngCode] = useState(i18n.language);
     const langMap = {
@@ -84,6 +88,11 @@ const ThrimuraiSong = ({ route, navigation }) => {
     useEffect(() => {
         getSOngData();
     }, [selectedLngCode]);
+
+    useEffect(() => {
+        setTheme(darkMode ? dark : light);
+        AsyncStorage.setItem('theme', colorScheme);
+    }, [darkMode]);
 
     const changeTranlation = (item) => {
         switch (item) {
