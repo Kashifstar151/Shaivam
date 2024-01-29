@@ -52,8 +52,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const language = ['Original', 'Tamil', 'English', 'Hindi'];
     const [selectedLang, setSelectedLang] = useState('Original');
     const [fontSizeCount, setFontSizeCount] = useState(12);
-    const [DarkMode, setDarkMode] = useState(true);
-    const [WordSplit, setWordSplit] = useState(true);
+    const [darkMode, setDarkMode] = useState(true);
+    const [tamilSplit, setTamilSplit] = useState(false);
     const [songDetails, setSongDetails] = useState(null);
     const [songs, setSongs] = useState([]);
     const { theme } = useContext(ThemeContext);
@@ -84,7 +84,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
     useEffect(() => {
         getSOngData();
     }, [selectedLngCode]);
-
 
     const changeTranlation = (item) => {
         switch (item) {
@@ -133,7 +132,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     });
 
     const getSOngData = () => {
-        const query = `SELECT pann,thalam,rawSong,author,country,songNo from thirumurai_songs where prevId=${data?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
+        const query = `SELECT pann,thalam,rawSong,tamilSplit,author,country,songNo from thirumurai_songs where prevId=${data?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
         getSqlData(query, (callbacks) => {
             setSongDetails(callbacks);
             const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`;
@@ -178,6 +177,14 @@ const ThrimuraiSong = ({ route, navigation }) => {
             );
         }
     }, [data]);
+
+    const toggleSwitch = (value, callbacks) => {
+        callbacks(!value);
+    };
+
+    useEffect(() => {
+        console.log('the state ==>', tamilSplit, darkMode);
+    }, [tamilSplit, darkMode]);
     return (
         <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
             <Background>
@@ -190,7 +197,12 @@ const ThrimuraiSong = ({ route, navigation }) => {
                     data={data}
                 />
             </Background>
-            <View style={styles.headerContainer}>
+            <View
+                style={[
+                    styles.headerContainer,
+                    { backgroundColor: theme.colorscheme === 'dark' ? '#333333' : '#F1DBDA' },
+                ]}
+            >
                 {/* <AnimatedRN.View
                     style={[
                         styles.detailsSection,
@@ -216,8 +228,18 @@ const ThrimuraiSong = ({ route, navigation }) => {
                 >
                     <>
                         <View style={styles.container}>
-                            <View style={[styles.iconContainer, { backgroundColor: '#E0AAA7' }]}>
-                                <AruliyavarSVG fill="#000" />
+                            <View
+                                style={[
+                                    styles.iconContainer,
+                                    {
+                                        backgroundColor:
+                                            theme.colorscheme === 'dark' ? '#2B2B2B' : '#E0AAA7',
+                                    },
+                                ]}
+                            >
+                                <AruliyavarSVG
+                                    fill={theme.colorscheme === 'dark' ? '#787878' : '#3A1917'}
+                                />
                             </View>
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>Aruliyavar</Text>
@@ -228,8 +250,18 @@ const ThrimuraiSong = ({ route, navigation }) => {
                         </View>
 
                         <View style={styles.container}>
-                            <View style={[styles.iconContainer, { backgroundColor: '#E0AAA7' }]}>
-                                <AruliyavarSVG fill="#000" />
+                            <View
+                                style={[
+                                    styles.iconContainer,
+                                    {
+                                        backgroundColor:
+                                            theme.colorscheme === 'dark' ? '#2B2B2B' : '#E0AAA7',
+                                    },
+                                ]}
+                            >
+                                <AruliyavarSVG
+                                    fill={theme.colorscheme === 'dark' ? '#787878' : '#3A1917'}
+                                />
                             </View>
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>Nadu</Text>
@@ -240,8 +272,18 @@ const ThrimuraiSong = ({ route, navigation }) => {
                         </View>
 
                         <View style={styles.container}>
-                            <View style={[styles.iconContainer, { backgroundColor: '#E0AAA7' }]}>
-                                <AruliyavarSVG fill="#000" />
+                            <View
+                                style={[
+                                    styles.iconContainer,
+                                    {
+                                        backgroundColor:
+                                            theme.colorscheme === 'dark' ? '#2B2B2B' : '#E0AAA7',
+                                    },
+                                ]}
+                            >
+                                <AruliyavarSVG
+                                    fill={theme.colorscheme === 'dark' ? '#787878' : '#3A1917'}
+                                />
                             </View>
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>Pann</Text>
@@ -250,8 +292,18 @@ const ThrimuraiSong = ({ route, navigation }) => {
                         </View>
 
                         <View style={styles.container}>
-                            <View style={[styles.iconContainer, { backgroundColor: '#E0AAA7' }]}>
-                                <AruliyavarSVG fill="#000" />
+                            <View
+                                style={[
+                                    styles.iconContainer,
+                                    {
+                                        backgroundColor:
+                                            theme.colorscheme === 'dark' ? '#2B2B2B' : '#E0AAA7',
+                                    },
+                                ]}
+                            >
+                                <AruliyavarSVG
+                                    fill={theme.colorscheme === 'dark' ? '#787878' : '#3A1917'}
+                                />
                             </View>
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>Thalam</Text>
@@ -284,7 +336,9 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                         { fontSize: fontSizeCount, color: theme.lyricsText.color },
                                     ]}
                                 >
-                                    {res?.rawSong}
+                                    {!tamilSplit
+                                        ? res?.rawSong || 'Not Available'
+                                        : res?.tamilSplit || 'Not Available'}
                                 </Text>
                                 <Text
                                     style={[
@@ -391,7 +445,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                 </View>
                                 <View style={styles.otherOption}>
                                     <View>
-                                        <Text style={styles.otherOptionText}>Word Split</Text>
+                                        <Text style={styles.otherOptionText}>Tamil Split</Text>
                                         <Text
                                             style={{
                                                 fontFamily: 'Mulish-Regular',
@@ -403,11 +457,19 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                             Turn on to view thirumurais as songs
                                         </Text>
                                     </View>
-                                    <Switch value={WordSplit} />
+                                    <Switch
+                                        trackColor={{ false: '#767577', true: '#81b0ff' }}
+                                        thumbColor={tamilSplit ? '#f5dd4b' : '#f4f3f4'}
+                                        ios_backgroundColor="#3e3e3e"
+                                        onValueChange={() =>
+                                            toggleSwitch(tamilSplit, setTamilSplit)
+                                        }
+                                        value={tamilSplit}
+                                    />
                                 </View>
                                 <View style={styles.otherOption}>
                                     <View>
-                                        <Text style={styles.otherOptionText}>Word Split</Text>
+                                        <Text style={styles.otherOptionText}>Dark Mode</Text>
                                         <Text
                                             style={{
                                                 fontFamily: 'Mulish-Regular',
@@ -419,7 +481,13 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                             Turn on to view thirumurais as songs
                                         </Text>
                                     </View>
-                                    <Switch value={DarkMode} />
+                                    <Switch
+                                        trackColor={{ false: '#767577', true: '#81b0ff' }}
+                                        thumbColor={darkMode ? '#f5dd4b' : '#f4f3f4'}
+                                        ios_backgroundColor="#3e3e3e"
+                                        onValueChange={() => toggleSwitch(darkMode, setDarkMode)}
+                                        value={darkMode}
+                                    />
                                 </View>
                             </View>
                         </Animated.View>
@@ -459,12 +527,19 @@ const ThrimuraiSong = ({ route, navigation }) => {
 };
 export const styles = StyleSheet.create({
     titleDropDown: { fontSize: RFValue(10, 580), color: '#777777' },
-    valueDropDown: { fontSize: RFValue(12, 580), color: '#777777' },
+    valueDropDown: {
+        fontSize: RFValue(12, 580),
+        color: '#777777',
+    },
     iconContainer: {
         padding: 6,
         borderRadius: 1000,
     },
 
+    textSectionDD: {
+        flex: 1,
+        flexDirection: 'column',
+    },
     container: {
         flexDirection: 'row',
         width: '48%',
@@ -482,7 +557,6 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     headerContainer: {
-        backgroundColor: '#F3DDDC',
         width: Dimensions.get('window').width,
         justifyContent: 'center',
         alignItems: 'center',
