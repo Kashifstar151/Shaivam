@@ -227,8 +227,7 @@ const HomeScreen = ({ navigation }) => {
             <View
                 style={{
                     paddingHorizontal: 15,
-                    paddingTop: 12,
-                    marginTop: compHeight ? -compHeight * 0.7 : 0,
+                    marginTop: -Dimensions.get('window').height / 2.3,
                 }}
                 onLayout={handleLayout}
             >
@@ -450,7 +449,6 @@ export const styles = StyleSheet.create({
     main: { flex: 1 },
     firstContainer: {
         height: Dimensions.get('window').height / 2.5,
-        // paddingHorizontal: 15,
     },
     secondContainer: { backgroundColor: 'white' },
     headerContainer: {
