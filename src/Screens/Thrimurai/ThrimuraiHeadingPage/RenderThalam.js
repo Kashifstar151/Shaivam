@@ -37,7 +37,10 @@ const RenderThalam = ({ item, index, navigation, ThalamHeaders }) => {
                     </TouchableOpacity>
                 )}
             </View>
-            {selectedTitle == index && <RenderAudios ThalamHeaders={ThalamHeaders} songs={item} navigation={navigation} thalam={true} />}
+            {selectedTitle == index &&
+                <RenderTitle data={item} navigation={navigation} thalam={true} />
+                // <RenderAudios ThalamHeaders={ThalamHeaders} songs={item} navigation={navigation} thalam={true} />
+            }
         </View>
     )
 }

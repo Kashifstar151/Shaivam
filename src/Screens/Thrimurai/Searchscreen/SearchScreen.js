@@ -16,10 +16,11 @@ import { getSqlData } from '../../Database';
 // import { colors } from '../../../Helpers';
 import { ThemeContext } from '../../../Context/ThemeContext';
 import HighlightedText from './HighlightedText';
+import { RouteTexts } from '../../../navigation/RouteText';
 
 const SearchScreen = ({ navigation, route }) => {
     const { thrimurais } = route?.params;
-    const [searchText, setSearchText] = useState('தேவாரம்');
+    const [searchText, setSearchText] = useState();
     const [searchResult, setSearchedResult] = useState([]);
     const [onFocus, setOnFocus] = useState(false);
     const [rawSongs, setRawSongs] = useState(null);
@@ -28,12 +29,13 @@ const SearchScreen = ({ navigation, route }) => {
         getDataFromSql();
     }, []);
     const getDataFromSql = (e) => {
-        // setSearchText(e)
+
+
         getSqlData(
             `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${searchText}%' LIMIT 10 ;`,
             // `SELECT * FROM thirumurais WHERE search_title='%திருஞானசம்பந்தர்தேவாரம்-1.031-திருக்குரங்கணின்முட்டம்-விழுநீர்மழுவாள்படை%' LIMIT 10 OFFSET 0;`,
             (callbacks) => {
-                console.log("🚀 ~ getDataFromSql ~ callbacks:", JSON.stringify(callbacks, 0, 2))
+                // console.log("🚀 ~ getDataFromSql ~ callbacks:", JSON.stringify(callbacks, 0, 2))
                 setSearchedResult(callbacks);
             }
         );
@@ -47,8 +49,10 @@ const SearchScreen = ({ navigation, route }) => {
         );
     };
     const highlight = (item, index, key) => {
-        const parts =
-            key == 'title' ? item?.title?.split(' ') : item?.rawSong?.split(' ');
+        // console.log("🚀 ~ highlight ~ item:", JSON.stringify(item))
+        const textContent = key === 'title' ? item?.title : item?.rawSong;
+        const cleanedText = textContent.replace(/\s+/g, ' ').trim();
+        const parts = cleanedText.split(' ');
         return (
             <View
                 style={{
@@ -63,7 +67,6 @@ const SearchScreen = ({ navigation, route }) => {
                     ))
                     : parts?.map((res, i) => (
                         <HighlightedText text={res} highlight={searchText} lyrics={true} />
-
                     ))}
             </View>
         );
@@ -71,7 +74,9 @@ const SearchScreen = ({ navigation, route }) => {
 
     const renderResult = (item, index, key) => {
         return (
-            <Pressable style={{ marginVertical: 10 }}>
+            <Pressable style={{ marginVertical: 10 }} onPress={() => navigation.navigate(RouteTexts.THRIMURAI_SONG, {
+                data: item,
+            })}>
                 {key == 'title' ? null : <Text>Lyrics</Text>}
                 {highlight(item, index, key)}
                 {key !== 'title' ? null : <Text>सम्पूर्ण ऋग्वेद पारायणम् Complete ...</Text>}

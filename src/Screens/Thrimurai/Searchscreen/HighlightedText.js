@@ -3,6 +3,7 @@ import { Text, View } from "react-native";
 import { ThemeContext } from "../../../Context/ThemeContext";
 
 const HighlightedText = ({ text, highlight, lyrics }) => {
+    console.log("🚀 ~ HighlightedText ~ text:", text)
     const { theme } = useContext(ThemeContext);
     if (!text) return null;
 
@@ -19,6 +20,7 @@ const HighlightedText = ({ text, highlight, lyrics }) => {
                 fontSize: 14,
                 color: theme.textColor,
                 fontWeight: lyrics ? '400' : '700',
+                marginRight: 2
             }}
         >
             {parts.map((part, i) =>

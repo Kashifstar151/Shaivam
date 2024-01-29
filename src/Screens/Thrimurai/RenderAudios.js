@@ -62,6 +62,7 @@ const RenderAudios = ({  akarthi, navigation, songs, data, thalam, ThalamHeaders
     //     });
     // }
     const navigationHandler = (item) => {
+        // console.log("🚀 ~ navigationHandler ~ item:", item)
         navigation.navigate(RouteTexts.THRIMURAI_SONG, {
             data: item,
         });
