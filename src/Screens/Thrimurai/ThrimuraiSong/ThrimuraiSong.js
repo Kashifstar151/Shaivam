@@ -253,7 +253,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>Aruliyavar</Text>
                                 <Text style={styles.valueDropDown}>
-                                    {metaData?.author || 'Not Available'}
+                                    {metaData?.author || 'Comming Soon '}
                                 </Text>
                             </View>
                         </View>
@@ -275,7 +275,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>Nadu</Text>
                                 <Text style={styles.valueDropDown}>
-                                    {metaData?.country || 'Not Available'}
+                                    {metaData?.country || 'Coming Soon '}
                                 </Text>
                             </View>
                         </View>
@@ -346,8 +346,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                     ]}
                                 >
                                     {!tamilSplit
-                                        ? res?.rawSong || 'Not Available'
-                                        : res?.tamilSplit || 'Not Available'}
+                                        ? res?.rawSong || 'Coming Soon '
+                                        : res?.tamilSplit || 'Coming Soon '}
                                 </Text>
                                 <Text
                                     style={[
