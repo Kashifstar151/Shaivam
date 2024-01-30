@@ -133,7 +133,7 @@ const SearchScreen = ({ navigation, route }) => {
                     />
                 </View>
             </Background>
-            {searchResult?.length > 0 || rawSongs.length > 0 ? (
+            {searchResult?.length > 0 || rawSongs?.length > 0 ? (
                 <ScrollView style={{ marginTop: 10, paddingHorizontal: 10 }}>
                     <Text style={styles.searchresult}>Search Result({searchResult?.length})</Text>
                     <FlatList
