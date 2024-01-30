@@ -20,11 +20,11 @@ const HighlightedText = ({ text, highlight, lyrics }) => {
                 fontSize: 14,
                 color: theme.textColor,
                 fontWeight: lyrics ? '400' : '700',
-                marginRight: 2
+                marginRight: 3,
             }}
         >
             {parts.map((part, i) =>
-                regex.test(part) ? (
+                regex.test(part) && part.length > 2 ? (
                     <Text
                         key={key++}
                         style={{
