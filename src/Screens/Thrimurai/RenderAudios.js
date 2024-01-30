@@ -25,7 +25,7 @@ const RenderAudios = ({  akarthi, navigation, songs, data, thalam, ThalamHeaders
         const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${songs?.fkTrimuria}' AND pann='${songs?.pann}' ORDER BY  titleNo `;
         // const query2 = `SELECT * from thirumurai_songs WHERE prevId = ${songs.prevId} and country= '${songs}'ORDER BY song_no ASC LIMIT 10 OFFSET 1`;
         const templleQuery = `Select * from thirumurais WHERE ${ThalamHeaders == 0 ? 'country' : 'thalam'}='${songs}' ORDER BY  title ASC LIMIT 10 OFFSET ${pageSize}`
-        const query3 = `SELECT * FROM thirumurais WHERE  authorNo='${songs?.authorNo}' ORDER BY createdAt ASC  LIMIT 10 OFFSET 1`;
+        const query3 = `SELECT * FROM thirumurais WHERE  authorNo='${songs?.authorNo}' ORDER BY authorNo ASC  LIMIT 10 OFFSET 1`;
         getSqlData(thalam ? templleQuery : varakatimurai ? query3 : query, (callbacks) => {
             setAudioData(callbacks);
         });
