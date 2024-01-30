@@ -1,18 +1,16 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import OpenBookSVG from './SVGs/OpenBookSVG';
 
 const EventCard = ({ date, timing, title, theme }) => {
     return (
         <View
-            style={{
-                padding: 18,
-                flexDirection: 'row',
-                columnGap: 16,
-                alignItems: 'center',
-                backgroundColor: theme.colorscheme === 'light' ? '#fff' : '#333333',
-                borderRadius: 10,
-            }}
+            style={[
+                styles.topContainer,
+                {
+                    backgroundColor: theme.colorscheme === 'light' ? '#fff' : '#333333',
+                },
+            ]}
         >
             <View>
                 <Text style={{ color: theme.textColor }}>{date.day}</Text>
@@ -43,5 +41,15 @@ const EventCard = ({ date, timing, title, theme }) => {
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    topContainer: {
+        padding: 18,
+        flexDirection: 'row',
+        columnGap: 16,
+        alignItems: 'center',
+        borderRadius: 10,
+    },
+});
 
 export default EventCard;

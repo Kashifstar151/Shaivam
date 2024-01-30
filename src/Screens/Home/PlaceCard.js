@@ -16,9 +16,10 @@ const PlaceCard = ({ img, templeName, address, theme }) => {
             <View>
                 <Image
                     source={{
-                        uri: 'https://unsplash.com/photos/a-very-tall-building-with-a-very-tall-spire-2yLvDS_jOZg',
+                        uri: 'http://www.photo-paysage.com/albums/userpics/10001/Cascade_-15.JPG',
                     }}
-                    style={{ width: 50, height: 50, resizeMode: 'cover' }}
+                    style={{ width: 50, height: 50 }}
+                    resizeMode="contain"
                 />
             </View>
             <View
