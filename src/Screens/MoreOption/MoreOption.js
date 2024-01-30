@@ -53,15 +53,23 @@ const MoreOption = () => {
                 <ConstantHeader />
             </Background>
             <View style={styles.container}>
-                <FlatList contentContainerStyle={{ marginTop: 20 }} renderItem={({ item, index }) => rednderItem(item, index)} data={option} />
+                <FlatList
+                    contentContainerStyle={{ marginTop: 20 }}
+                    renderItem={({ item, index }) => rednderItem(item, index)}
+                    data={option}
+                />
             </View>
-            <View >
-                <RBSheet closeOnDragDown ref={SheetRef} height={Dimensions.get('window').height / 2}>
+            <View>
+                <RBSheet
+                    closeOnDragDown
+                    ref={SheetRef}
+                    height={Dimensions.get('window').height / 2}
+                >
                     <ChooseLanguage setSelected={setSelectedLanguage} selected={selectedLanguage} />
                 </RBSheet>
             </View>
         </View>
-    )
+    );
 }
 export const styles = StyleSheet.create({
     main: {},
