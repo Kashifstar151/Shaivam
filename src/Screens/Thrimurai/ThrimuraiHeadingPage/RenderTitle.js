@@ -17,6 +17,7 @@ const RenderEachTitle = ({
     setSelectedChapter,
     thalam,
     flagShowAudio,
+    ThalamHeaders,
 }) => {
     // console.log('🚀 ~ file: RenderTitle.js:21 ~ flagShowAudio:', flagShowAudio);
     const { theme } = useContext(ThemeContext);
@@ -52,7 +53,11 @@ const RenderEachTitle = ({
                                         : [styles.titleText, { color: theme.textColor }]
                                 }
                             >
-                                {thalam ? t(item?.title) : t(item?.pann)}
+                                {thalam && ThalamHeaders === 0
+                                    ? t(item?.thalam)
+                                    : thalam && ThalamHeaders !== 0
+                                    ? t(item?.titleS)
+                                    : t(item?.pann)}
                             </Text>
                         </View>
                         {!thalam ? (
@@ -108,8 +113,8 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
 
     const [selectedChapter, setSelectedChapter] = useState(null);
     const [TitleData, setTitleData] = useState([]);
-    const [showLoading, setShowLoading] = useState(false)
-    const [pageSize, setPageSize] = useState(10)
+    const [showLoading, setShowLoading] = useState(false);
+    const [pageSize, setPageSize] = useState(10);
     useEffect(() => {
         getDtataFromSql();
     }, []);
@@ -122,9 +127,11 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
             query = `SELECT * FROM thirumurais where fkTrimuria=${data.prevId}  ORDER BY titleNo ASC LIMIT ${pageSize} OFFSET 0`;
         }
         // const query = `SELECT pann, prevId,fkTrimuria FROM thirumurais where fkTrimuria=${data.prevId} and pann NOTNULL GROUP BY pann ORDER BY titleNo ASC`;
-        const query2 = `Select * from thirumurais where ${ThalamHeaders == 0 ? 'country' : 'thalam'}= '${data}' ORDER BY  titleNo ASC LIMIT ${pageSize} OFFSET 0`;
+        const query2 = `Select * from thirumurais where ${
+            ThalamHeaders === 0 ? 'country' : 'thalam'
+        }='${data}' GROUP BY thalam ORDER BY  titleNo ASC LIMIT ${pageSize} OFFSET 0`;
         getSqlData(thalam ? query2 : query, (callbacks) => {
-            setShowLoading(false)
+            setShowLoading(false);
             setTitleData(callbacks);
         });
     };
@@ -149,6 +156,7 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
                             selectedChapter={selectedChapter}
                             setSelectedChapter={setSelectedChapter}
                             flagShowAudio={flagShowAudio}
+                            ThalamHeaders={ThalamHeaders}
                         />
                     )}
                 />
