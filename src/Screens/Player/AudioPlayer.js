@@ -18,6 +18,53 @@ import { getSqlData } from '../Database';
 import { useIsFocused } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
 
+const RenderAudios = ({ item, index, clb, selectedOdhuvar, setSelectedOdhuvar }) => {
+    console.log('🚀 ~ file: AudioPlayer.js:70 ~ RenderAudios ~ clb:', clb);
+
+    const setItemForPlayer = (item) => {
+        console.log('🚀 ~ file: AudioPlayer.js:73 ~ setItemForPlayer ~ item:', item);
+        setSelectedOdhuvar(item);
+        clb(index);
+    };
+    return (
+        <>
+            {selectedOdhuvar?.id == item?.id ? (
+                <TouchableOpacity
+                    onPress={() => {
+                        setItemForPlayer(item);
+                    }}
+                    style={{
+                        paddingHorizontal: 7,
+                        backgroundColor: '#E0AAA7',
+                        marginLeft: 10,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: 15,
+                    }}
+                >
+                    <Text style={[styles.AudioText, { color: '#3A1917', fontWeight: '700' }]}>
+                        {item?.thalamOdhuvarTamilname}
+                    </Text>
+                </TouchableOpacity>
+            ) : (
+                <TouchableOpacity
+                    onPress={() => setItemForPlayer(item)}
+                    style={{
+                        paddingHorizontal: 7,
+                        backgroundColor: '#292929',
+                        marginLeft: 10,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: 15,
+                    }}
+                >
+                    <Text style={styles.AudioText}>{item?.thalamOdhuvarTamilname}</Text>
+                </TouchableOpacity>
+            )}
+        </>
+    );
+};
+
 const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => {
     // const { params } = route
     console.log(
@@ -66,43 +113,7 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
         await TrackPlayer.play();
         await TrackPlayer.getActiveTrack();
     };
-    const renderAudios = (item, index) => {
-        return (
-            <>
-                {selectedOdhuvar?.id == item?.id ? (
-                    <TouchableOpacity
-                        onPress={() => setSelectedOdhuvar(item)}
-                        style={{
-                            paddingHorizontal: 7,
-                            backgroundColor: '#E0AAA7',
-                            marginLeft: 10,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderRadius: 15,
-                        }}
-                    >
-                        <Text style={[styles.AudioText, { color: '#3A1917', fontWeight: '700' }]}>
-                            {item?.thalamOdhuvarTamilname}
-                        </Text>
-                    </TouchableOpacity>
-                ) : (
-                    <TouchableOpacity
-                        onPress={() => setSelectedOdhuvar(item)}
-                        style={{
-                            paddingHorizontal: 7,
-                            backgroundColor: '#292929',
-                            marginLeft: 10,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderRadius: 15,
-                        }}
-                    >
-                        <Text style={styles.AudioText}>{item?.thalamOdhuvarTamilname}</Text>
-                    </TouchableOpacity>
-                )}
-            </>
-        );
-    };
+
     const handleNext = async () => {
         // console.log("Trackplayer", TrackPlayer.getCurrentTrack())
         await TrackPlayer.skipToNext();
@@ -114,7 +125,15 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
         await TrackPlayer.play();
         setPaused(true);
     };
+
+    const playById = async (id) => {
+        console.log('The player ==>', id);
+        await TrackPlayer.skip(id);
+        await TrackPlayer.play();
+        setPaused(true);
+    };
     const setUpPlayer = async (song) => {
+        console.log('🚀 ~ file: AudioPlayer.js:124 ~ setUpPlayer ~ song:', song);
         try {
             // console.log(true)
             if (!TrackPlayer._initialized) {
@@ -175,7 +194,15 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                     contentContainerStyle={{ backgroundColor: '#222222' }}
                     horizontal
                     data={Odhuvar}
-                    renderItem={({ item, index }) => renderAudios(item, index)}
+                    renderItem={({ item, index }) => (
+                        <RenderAudios
+                            item={item}
+                            index={index}
+                            clb={playById}
+                            selectedOdhuvar={selectedOdhuvar}
+                            setSelectedOdhuvar={setSelectedOdhuvar}
+                        />
+                    )}
                 />
             </View>
             <View style={{ justifyContent: 'center', marginTop: 10 }}>
