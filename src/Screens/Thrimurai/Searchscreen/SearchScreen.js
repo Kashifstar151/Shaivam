@@ -13,7 +13,6 @@ import Background from '../../../components/Background';
 import HeaderWithTextInput from '../../../components/HeaderWithTextInput';
 import CenterIcon from '../../../assets/Images/Vector (3).svg';
 import { getSqlData } from '../../Database';
-// import { colors } from '../../../Helpers';
 import { ThemeContext } from '../../../Context/ThemeContext';
 import HighlightedText from './HighlightedText';
 import { RouteTexts } from '../../../navigation/RouteText';
@@ -29,24 +28,24 @@ const SearchScreen = ({ navigation, route }) => {
         getDataFromSql();
     }, []);
     const getDataFromSql = (e) => {
-
-
-        getSqlData(
-            `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${searchText}%' LIMIT 10 ;`,
-            // `SELECT * FROM thirumurais WHERE search_title='%திருஞானசம்பந்தர்தேவாரம்-1.031-திருக்குரங்கணின்முட்டம்-விழுநீர்மழுவாள்படை%' LIMIT 10 OFFSET 0;`,
-            (callbacks) => {
-                // console.log("🚀 ~ getDataFromSql ~ callbacks:", JSON.stringify(callbacks, 0, 2))
-                setSearchedResult(callbacks);
-            }
-        );
-        getSqlData(
-            `SELECT * FROM thirumurai_songs WHERE searchTitle LIKE '%${searchText}%'  ORDER BY songNo ASC LIMIT 10 OFFSET 0;`,
-            (callbacks) => {
-                setRawSongs(callbacks);
-                console.log('🚀 ~ getDataFromSql ~ callbacks:', callbacks);
-                // setSearchText(e)
-            }
-        );
+        if (searchText && searchText.length >= 2) {
+            getSqlData(
+                `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${searchText}%' LIMIT 10 ;`,
+                // `SELECT * FROM thirumurais WHERE search_title='%திருஞானசம்பந்தர்தேவாரம்-1.031-திருக்குரங்கணின்முட்டம்-விழுநீர்மழுவாள்படை%' LIMIT 10 OFFSET 0;`,
+                (callbacks) => {
+                    // console.log("🚀 ~ getDataFromSql ~ callbacks:", JSON.stringify(callbacks, 0, 2))
+                    setSearchedResult(callbacks);
+                }
+            );
+            getSqlData(
+                `SELECT * FROM thirumurai_songs WHERE searchTitle LIKE '%${searchText}%'  ORDER BY songNo ASC LIMIT 10 OFFSET 0;`,
+                (callbacks) => {
+                    setRawSongs(callbacks);
+                    console.log('🚀 ~ getDataFromSql ~ callbacks:', callbacks);
+                    // setSearchText(e)
+                }
+            );
+        }
     };
     const highlight = (item, index, key) => {
         // console.log("🚀 ~ highlight ~ item:", JSON.stringify(item))
@@ -62,21 +61,24 @@ const SearchScreen = ({ navigation, route }) => {
                 }}
             >
                 {key == 'title'
-                    ? parts?.map((res, i) => (
-                        <HighlightedText text={res} highlight={searchText} />
-                    ))
+                    ? parts?.map((res, i) => <HighlightedText text={res} highlight={searchText} />)
                     : parts?.map((res, i) => (
-                        <HighlightedText text={res} highlight={searchText} lyrics={true} />
-                    ))}
+                          <HighlightedText text={res} highlight={searchText} lyrics={true} />
+                      ))}
             </View>
         );
     };
 
     const renderResult = (item, index, key) => {
         return (
-            <Pressable style={{ marginVertical: 10 }} onPress={() => navigation.navigate(RouteTexts.THRIMURAI_SONG, {
-                data: item,
-            })}>
+            <Pressable
+                style={{ marginVertical: 10 }}
+                onPress={() =>
+                    navigation.navigate(RouteTexts.THRIMURAI_SONG, {
+                        data: item,
+                    })
+                }
+            >
                 {key == 'title' ? null : <Text>Lyrics</Text>}
                 {highlight(item, index, key)}
                 {key !== 'title' ? null : <Text>सम्पूर्ण ऋग्वेद पारायणम् Complete ...</Text>}
