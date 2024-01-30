@@ -8,9 +8,8 @@ import RenderTitle from './RenderTitle'
 import { colors } from '../../../Helpers';
 
 const RenderThalam = ({ item, index, navigation, ThalamHeaders }) => {
-    console.log("🚀 ~ RenderThalam ~ ThalamHeaders:", ThalamHeaders)
     const { theme } = useContext(ThemeContext);
-    const [selectedTitle, setSelectedTitle] = useState(null)
+    const [selectedTitle, setSelectedTitle] = useState(null);
     return (
         <View>
             <View style={[styles.chapterBox, { backgroundColor: theme.cardBgColor }]}>
@@ -37,13 +36,20 @@ const RenderThalam = ({ item, index, navigation, ThalamHeaders }) => {
                     </TouchableOpacity>
                 )}
             </View>
-            {selectedTitle == index &&
-                <RenderTitle data={item} navigation={navigation} thalam={true} />
+            {
+                selectedTitle == index && (
+                    <RenderTitle
+                        data={item}
+                        navigation={navigation}
+                        thalam={true}
+                        ThalamHeaders={ThalamHeaders}
+                    />
+                )
                 // <RenderAudios ThalamHeaders={ThalamHeaders} songs={item} navigation={navigation} thalam={true} />
             }
         </View>
-    )
-}
+    );
+};
 export const styles = StyleSheet.create({
     chapterBox: {
         alignItems: 'center',
