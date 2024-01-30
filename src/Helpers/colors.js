@@ -90,7 +90,13 @@ export default {
         greenGradBallLeft: { startColor: '#BAE6C6', stopColor: '#8EC99F' },
 
         // search box
+
         searchBox: { bgColor: '#8F3630', textColor: '#FF9D9D' },
+
+        searchContext: {
+            unSelected: { bgColor: '#8F3630', textColor: '#FF9D9D' },
+            selected: { bgColor: '#F3DDDC', textColor: '#8F3630' },
+        },
 
         // iconHeadingColor
         iconHeadingColor: {
@@ -144,6 +150,12 @@ export default {
         greenGradBallLeft: darkCardGrad,
 
         // search box
+
+        searchContext: {
+            unSelected: { bgColor: '#353535', textColor: '#777777' },
+            selected: { bgColor: '#C1554E', textColor: '#FFFFFF' },
+        },
+
         searchBox: { bgColor: '#2A2A2A', textColor: '#777777' },
 
         // iconHeadingColor,
