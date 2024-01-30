@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import {
+    Alert,
     Dimensions,
     FlatList,
     Pressable,
@@ -24,9 +25,21 @@ const SearchScreen = ({ navigation, route }) => {
     const [onFocus, setOnFocus] = useState(false);
     const [rawSongs, setRawSongs] = useState(null);
     const { theme } = useContext(ThemeContext);
+
+    const [fktrimuria, setFkTrimuria] = useState(null);
+
+    const setIndexOfFkTrimurai = (idx) => {
+        if (idx !== fktrimuria) {
+            setFkTrimuria(idx);
+        } else {
+            setFkTrimuria(null);
+        }
+    };
+
     useEffect(() => {
         getDataFromSql();
-    }, []);
+    }, [fktrimuria]);
+
     const getDataFromSql = (e) => {
         if (searchText && searchText.length >= 2) {
             getSqlData(
@@ -38,7 +51,9 @@ const SearchScreen = ({ navigation, route }) => {
                 }
             );
             getSqlData(
-                `SELECT * FROM thirumurai_songs WHERE searchTitle LIKE '%${searchText}%'  ORDER BY songNo ASC LIMIT 10 OFFSET 0;`,
+                `SELECT * FROM thirumurai_songs WHERE searchTitle LIKE '%${searchText}%' ${
+                    fktrimuria ? `and fkTrimuria=${fktrimuria}` : ''
+                }  ORDER BY songNo ASC LIMIT 10 OFFSET 0;`,
                 (callbacks) => {
                     setRawSongs(callbacks);
                     console.log('🚀 ~ getDataFromSql ~ callbacks:', callbacks);
@@ -114,20 +129,31 @@ const SearchScreen = ({ navigation, route }) => {
                             <TouchableOpacity
                                 style={{
                                     marginLeft: 5,
-                                    backgroundColor: theme.searchBox.bgColor,
+                                    // backgroundColor: theme.searchBox.bgColor,
+                                    backgroundColor:
+                                        fktrimuria !== item?.id
+                                            ? theme.searchContext.unSelected.bgColor
+                                            : theme.searchContext.selected.bgColor,
+
                                     height: 30,
                                     borderRadius: 20,
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                     paddingHorizontal: 12,
                                 }}
+                                onPress={() => {
+                                    setIndexOfFkTrimurai(item?.id);
+                                }}
                             >
                                 <Text
                                     style={{
-                                        color: theme.searchBox.textColor,
+                                        color:
+                                            fktrimuria !== item?.id
+                                                ? theme.searchContext.unSelected.textColor
+                                                : theme.searchContext.selected.textColor,
                                         fontFamily: 'Mulish-Regular',
                                     }}
-                                >{`Thrimurai ${index + 1}`}</Text>
+                                >{`Thrimurai ${item?.id}`}</Text>
                             </TouchableOpacity>
                         )}
                     />
