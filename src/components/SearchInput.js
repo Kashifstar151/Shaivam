@@ -35,7 +35,11 @@ const SearchInput = ({ placeholder, setState, state, color, setOnFocus, styleOve
                 onChangeText={(e) => setState(e)}
                 placeholderTextColor={theme.searchBox.textColor}
                 value={state}
-                style={{ fontSize: 12, paddingHorizontal: 5, color: '#FF9D9D' }}
+                style={{
+                    fontSize: 12,
+                    paddingHorizontal: 5,
+                    color: '#FF9D9D',
+                }}
             />
         </View>
     );
@@ -44,7 +48,7 @@ export const styles = StyleSheet.create({
     inputcontainer: {
         borderRadius: 10,
         paddingHorizontal: 10,
-
+        overflow: 'hidden',
         width: Dimensions.get('window').width - 30,
         height: 55,
         marginBottom: 10,

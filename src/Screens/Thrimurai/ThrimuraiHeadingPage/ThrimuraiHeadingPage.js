@@ -170,6 +170,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                         }
                         // placeholder={'Search for anything (Eg - தோடுடைய செவியன்) '}
                         placeholder={t('Search for any Thirumurai here')}
+                        styleOverwrite={{ paddingTop: 10 }}
                     />
                 </View>
                 {prevId == '<=7' && (
