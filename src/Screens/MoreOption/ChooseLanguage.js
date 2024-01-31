@@ -1,17 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import { colors } from '../../Helpers';
 import { useTranslation } from 'react-i18next';
+import { ThemeContext } from '../../Context/ThemeContext';
 
 const ChooseLanguage = ({ selected, setSelected }) => {
     const { i18n } = useTranslation();
     const language = [
-        { name: 'English', lngCode: 'en', isSelected: false },
+        { name: 'English', lngCode: 'en-IN', isSelected: false },
         { name: 'Hindi', lngCode: 'hi', isSelected: false },
         { name: 'Malayalam', lngCode: 'ml', isSelected: false },
         { name: 'Kannada', lngCode: 'kn', isSelected: false },
-        { name: 'Tamil', lngCode: 'ta', isSelected: false },
+        { name: 'Tamil', lngCode: 'en', isSelected: false },
     ];
 
     const handleClick = (item) => {
@@ -23,8 +24,10 @@ const ChooseLanguage = ({ selected, setSelected }) => {
     useEffect(() => {
         console.log('the play is ==>', selected);
     }, [selected]);
+
+    const { theme } = useContext(ThemeContext);
     return (
-        <View style={{ flex: 1, marginTop: 10 }}>
+        <View style={{ flex: 1, marginTop: 10, backgroundColor: theme.backgroundColor }}>
             <View style={{ paddingHorizontal: 10 }}>
                 <Text style={styles.headingText}>Select Your Language</Text>
                 <Text style={styles.descriptionText}>Changes will be made across the app</Text>
@@ -34,7 +37,9 @@ const ChooseLanguage = ({ selected, setSelected }) => {
                 data={language}
                 renderItem={({ item, index }) => (
                     <Pressable style={styles.list} onPress={() => handleClick(item)}>
-                        <Text style={styles.listText}>{item.name}</Text>
+                        <Text style={[styles.listText, { color: theme.textColor }]}>
+                            {item.name}
+                        </Text>
                         <View
                             style={
                                 selected?.name == item.name

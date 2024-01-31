@@ -7,7 +7,7 @@ import moment from 'moment';
 import { ar, as, bn, en, gu, he, hi, ja, kn, ml, od, si, ta, te, ur, pa, hd } from './translations';
 
 export const AVAILABLE_LANGUAGES = {
-    en: {
+    'en-IN': {
         translation: en,
     },
     hi: {
@@ -46,7 +46,7 @@ export const AVAILABLE_LANGUAGES = {
     si: {
         translation: si,
     },
-    ta: {
+    en: {
         translation: ta,
     },
     te: {
@@ -97,7 +97,7 @@ i18n.use(languageDetector)
         interpolation: {
             escapeValue: false, // not needed for react!!
         },
-        fallbackLng: 'en',
+        fallbackLng: 'en-IN',
     });
 
 i18n.on('languageChanged', (lng) => moment.locale(lng));
