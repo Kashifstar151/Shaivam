@@ -58,7 +58,7 @@ const RenderEachTitle = ({
                                     : t(item?.pann)}
                             </Text>
                         </View>
-                        {thalam && ThalamHeaders === 0 ? (
+                        {!thalam || (thalam && ThalamHeaders === 0) ? (
                             selectedChapter !== null && selectedChapter == index ? (
                                 <TouchableOpacity onPress={() => setSelectedChapter(null)}>
                                     {
