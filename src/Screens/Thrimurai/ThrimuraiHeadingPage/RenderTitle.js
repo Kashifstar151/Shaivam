@@ -52,40 +52,41 @@ const RenderEachTitle = ({
                                         : [styles.titleText, { color: theme.textColor }]
                                 }
                             >
-                                {thalam ? t(item?.title) : t(item?.pann)}
+                                {t(item?.pann)}
                             </Text>
                         </View>
-                        {!thalam ? (
-                            selectedChapter !== null && selectedChapter == index ? (
-                                <TouchableOpacity onPress={() => setSelectedChapter(null)}>
-                                    {
-                                        <Icon
-                                            name="keyboard-arrow-down"
-                                            size={24}
-                                            color={
-                                                theme.colorscheme === 'light'
-                                                    ? '#000'
-                                                    : colors.grey1
-                                            }
-                                        />
-                                    }
-                                </TouchableOpacity>
-                            ) : (
-                                <TouchableOpacity onPress={() => setSelectedChapter(index)}>
-                                    {
-                                        <Icon
-                                            name="keyboard-arrow-right"
-                                            size={24}
-                                            color={
-                                                theme.colorscheme === 'light'
-                                                    ? '#000'
-                                                    : colors.grey1
-                                            }
-                                        />
-                                    }
-                                </TouchableOpacity>
-                            )
-                        ) : null}
+                        {/* {!thalam ? ( */}
+                        {selectedChapter !== null && selectedChapter == index ? (
+                            <TouchableOpacity onPress={() => setSelectedChapter(null)}>
+                                {
+                                    <Icon
+                                        name="keyboard-arrow-down"
+                                        size={24}
+                                        color={
+                                            theme.colorscheme === 'light'
+                                                ? '#000'
+                                                : colors.grey1
+                                        }
+                                    />
+                                }
+                            </TouchableOpacity>
+                        ) : (
+                            <TouchableOpacity onPress={() => setSelectedChapter(index)}>
+                                {
+                                    <Icon
+                                        name="keyboard-arrow-right"
+                                        size={24}
+                                        color={
+                                            theme.colorscheme === 'light'
+                                                ? '#000'
+                                                : colors.grey1
+                                        }
+                                    />
+                                }
+                            </TouchableOpacity>
+                        )
+                        }
+                        {/* ) : null} */}
                     </Pressable>
                     {selectedChapter == index && (
                         <View style={{ marginBottom: 10 }}>
@@ -114,9 +115,9 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
         getDtataFromSql();
     }, []);
     const getDtataFromSql = async () => {
-        setShowLoading(true)
+        setShowLoading(true);
         let query;
-        if (data?.prevId < 7) {
+        if (data?.prevId <= 7) {
             query = `SELECT pann, prevId,fkTrimuria FROM thirumurais where fkTrimuria=${data.prevId} and pann NOTNULL GROUP BY pann ORDER BY titleNo ASC LIMIT ${pageSize} OFFSET 0`;
         } else {
             query = `SELECT * FROM thirumurais where fkTrimuria=${data.prevId}  ORDER BY titleNo ASC LIMIT ${pageSize} OFFSET 0`;
@@ -124,6 +125,7 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
         // const query = `SELECT pann, prevId,fkTrimuria FROM thirumurais where fkTrimuria=${data.prevId} and pann NOTNULL GROUP BY pann ORDER BY titleNo ASC`;
         const query2 = `Select * from thirumurais where ${ThalamHeaders == 0 ? 'country' : 'thalam'}= '${data}' ORDER BY  titleNo ASC LIMIT ${pageSize} OFFSET 0`;
         getSqlData(thalam ? query2 : query, (callbacks) => {
+            console.log("🚀 ~ getSqlData ~ callbacks:", callbacks)
             setShowLoading(false)
             setTitleData(callbacks);
         });
@@ -131,29 +133,28 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
 
     return (
         <View style={{ marginTop: 0 }}>
-            {
-                showLoading ?
-                    <Modal transparent presentationStyle='overFullScreen'>
-                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                            <ActivityIndicator size={'small'} />
-                        </View>
-                    </Modal> :
-                    <FlatList
-                        data={TitleData}
-                        renderItem={({ item, index }) => (
-                            <RenderEachTitle
-                                thalam={thalam}
-                                item={item}
-                                index={index}
-                                navigation={navigation}
-                                selectedChapter={selectedChapter}
-                                setSelectedChapter={setSelectedChapter}
-                                flagShowAudio={flagShowAudio}
-                            />
-                        )}
-                    />
-            }
-
+            {showLoading ? (
+                <Modal transparent presentationStyle="overFullScreen">
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <ActivityIndicator size={'small'} />
+                    </View>
+                </Modal>
+            ) : (
+                <FlatList
+                    data={TitleData}
+                    renderItem={({ item, index }) => (
+                        <RenderEachTitle
+                            thalam={thalam}
+                            item={item}
+                            index={index}
+                            navigation={navigation}
+                            selectedChapter={selectedChapter}
+                            setSelectedChapter={setSelectedChapter}
+                            flagShowAudio={flagShowAudio}
+                        />
+                    )}
+                />
+            )}
         </View>
     );
 };

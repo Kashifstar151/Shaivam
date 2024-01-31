@@ -366,6 +366,7 @@ const ThrimuraiList = ({ navigation }) => {
                                 list: thrimurais.slice(0, 7),
                                 query: 'SELECT name ,prevId FROM  category WHERE prevId=12',
                                 prevId: '=12',
+                                flagShowAudio: true,
                             })
                         }
                     >

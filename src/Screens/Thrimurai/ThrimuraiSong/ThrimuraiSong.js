@@ -86,6 +86,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
         getSOngData();
     }, [selectedLngCode]);
 
+
     const changeTranlation = (item) => {
         switch (item) {
             case 'Tamil':
@@ -117,6 +118,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     };
     useEffect(() => {
         if (isFocused) {
+            changeTranlation('Original');
             getSOngData();
         }
         return () => {

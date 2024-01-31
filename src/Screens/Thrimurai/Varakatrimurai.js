@@ -58,7 +58,7 @@ const Varakatrimurai = ({ navigation }) => {
     };
 
     return (
-        <View>
+        <View style={{ overflow: 'scroll' }}>
             <FlatList
                 nestedScrollEnabled
                 ref={flatListRef}

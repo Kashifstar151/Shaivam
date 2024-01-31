@@ -29,7 +29,7 @@ export async function attachDb() {
         })
             .fetch(
                 'GET',
-                'https://shaivamfiles.fra1.digitaloceanspaces.com/sqlitedump/thirumuraiSongs_6.zip'
+                'https://shaivamfiles.fra1.digitaloceanspaces.com/sqlitedump/thirumuraiSongs_7.zip'
             )
             .then((res) => {
                 // the temp file path
@@ -46,7 +46,7 @@ export async function attachDb() {
                                     async (tx) => {
                                         await tx.executeSql(
                                             'ATTACH DATABASE ? AS Updated_db',
-                                            [`${jsonFilePath}/thirumuraiSongs_6.db`],
+                                            [`${jsonFilePath}/thirumuraiSongs_7.db`],
                                             async (tx, results) => {
                                                 console.log(
                                                     '🚀 ~ file: Database.js:49 ~ database.transaction ~ results:',
@@ -198,53 +198,59 @@ function unzipDownloadFile(target, cb) {
 }
 
 export async function getSqlData(query, callbacks) {
-    // console.log("🚀 ~ file: Database.js:146 ~ getSqlData ~ query:", query)
-    const data = await AsyncStorage.getItem('@database')
-    const databasename = JSON.parse(data)
+    console.log("🚀 ~ file: Database.js:146 ~ getSqlData ~ query:", query)
+    const data = await AsyncStorage.getItem('@database');
+    const databasename = JSON.parse(data);
     // console.log("🚀 ~ file: Database.js:142 ~ getSqlData ~ data:", JSON.parse(data))
-    if (databasename?.name !== "songData.db") {
+    if (databasename?.name !== 'songData.db') {
         // alert(true)
-        await database.transaction(tx => {
-            tx.executeSql(query, [], (_, results) => {
-                // console.log("🚀 ~ file: Database.js:149 ~ tx.executeSql ~ results:", results)
-                let arr = []
-                if (results?.rows?.length > 0) {
-                    for (let i = 0; i < results?.rows?.length; i++) {
-                        const tableName = results.rows.item(i);
-                        // console.log(" offline Database data", tableName);
-                        arr.push(tableName);
-                        // console.log("🚀 ~ file: ThrimuraiSong.js:57 ~ tx.executeSql ~ arr:", JSON.stringify(arr, 0, 2))
+        await database.transaction(
+            (tx) => {
+                tx.executeSql(query, [], (_, results) => {
+                    // console.log("🚀 ~ file: Database.js:149 ~ tx.executeSql ~ results:", results)
+                    let arr = [];
+                    if (results?.rows?.length > 0) {
+                        for (let i = 0; i < results?.rows?.length; i++) {
+                            const tableName = results.rows.item(i);
+                            // console.log(" offline Database data", tableName);
+                            arr.push(tableName);
+                            // console.log("🚀 ~ file: ThrimuraiSong.js:57 ~ tx.executeSql ~ arr:", JSON.stringify(arr, 0, 2))
+                        }
+                        callbacks(arr);
+                    } else {
+                        console.log('No tables found.');
+                        callbacks({ error: 'error in database' });
                     }
-                    callbacks(arr)
-                } else {
-                    console.log('No tables found.');
-                    callbacks({ error: 'error in database' })
-                }
-            })
-        }, (error) => {
-            console.error('error occured in fetching data at 1', error);
-        })
+                });
+            },
+            (error) => {
+                console.error('error occured in fetching data at 1', error);
+            }
+        );
     } else {
-        await offlineDatabase.transaction(tx => {
-            tx.executeSql(query, [], (_, results) => {
-                // console.log("🚀 ~ file: Database.js:149 ~ tx.executeSql ~ results:", results)
-                let arr = []
-                if (results?.rows?.length > 0) {
-                    for (let i = 0; i < results?.rows?.length; i++) {
-                        const tableName = results.rows.item(i);
-                        // console.log(" offline Database data", tableName);
-                        arr.push(tableName)
-                        // console.log("🚀 ~ file: ThrimuraiSong.js:57 ~ tx.executeSql ~ arr:", JSON.stringify(arr, 0, 2))
+        await offlineDatabase.transaction(
+            (tx) => {
+                tx.executeSql(query, [], (_, results) => {
+                    // console.log("🚀 ~ file: Database.js:149 ~ tx.executeSql ~ results:", results)
+                    let arr = [];
+                    if (results?.rows?.length > 0) {
+                        for (let i = 0; i < results?.rows?.length; i++) {
+                            const tableName = results.rows.item(i);
+                            // console.log(" offline Database data", tableName);
+                            arr.push(tableName);
+                            // console.log("🚀 ~ file: ThrimuraiSong.js:57 ~ tx.executeSql ~ arr:", JSON.stringify(arr, 0, 2))
+                        }
+                        callbacks(arr);
+                    } else {
+                        console.log('No tables found.');
+                        callbacks({ error: 'error in database' });
                     }
-                    callbacks(arr)
-                } else {
-                    console.log('No tables found.');
-                    callbacks({ error: 'error in database' })
-                }
-            })
-        }, (error) => {
-            console.error('error occured in fetching data at 2', error);
-        })
+                });
+            },
+            (error) => {
+                console.error('error occured in fetching data at 2', error);
+            }
+        );
     }
 }
 
