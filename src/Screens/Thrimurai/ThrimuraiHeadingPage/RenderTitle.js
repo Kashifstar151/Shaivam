@@ -34,12 +34,10 @@ const RenderEachTitle = ({
                             paddingHorizontal: 25,
                             alignItems: 'center',
                             paddingBottom: 10,
-                            borderBottomColor: colors.grey3,
-                            borderBottomWidth: 1,
                         }}
                         onPress={() => {
-                            if (thalam) {
-                                navigation.navigate(RouteTexts.THRIMURAI_SONG, {
+                            if (thalam && ThalamHeaders === 1) {
+                                navigation.navigate(RouteTexts?.THRIMURAI_SONG, {
                                     data: item,
                                 });
                             }
@@ -60,7 +58,7 @@ const RenderEachTitle = ({
                                     : t(item?.pann)}
                             </Text>
                         </View>
-                        {!thalam ? (
+                        {thalam && ThalamHeaders === 0 ? (
                             selectedChapter !== null && selectedChapter == index ? (
                                 <TouchableOpacity onPress={() => setSelectedChapter(null)}>
                                     {
@@ -70,7 +68,7 @@ const RenderEachTitle = ({
                                             color={
                                                 theme.colorscheme === 'light'
                                                     ? '#000'
-                                                    : colors.grey1
+                                                    : colors?.grey1
                                             }
                                         />
                                     }
@@ -84,7 +82,7 @@ const RenderEachTitle = ({
                                             color={
                                                 theme.colorscheme === 'light'
                                                     ? '#000'
-                                                    : colors.grey1
+                                                    : colors?.grey1
                                             }
                                         />
                                     }
@@ -137,7 +135,7 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
     };
 
     return (
-        <View style={{ marginTop: 0 }}>1
+        <View style={{ marginTop: 0 }}>
             {showLoading ? (
                 <Modal transparent presentationStyle="overFullScreen">
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
