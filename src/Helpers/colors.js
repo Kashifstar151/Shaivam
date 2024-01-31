@@ -132,6 +132,9 @@ export default {
         gradientHomeCardGreen: ['#AFD9BB', '#60B278'],
         textColorHomeCardYellow: '#4C3600',
         // --->card end
+
+        // bootomTabNav
+        bottomTabItemColor: { selected: '#FFFFFF', unSelected: '#FFAAA4' },
     },
     dark: {
         // yellow
@@ -193,6 +196,9 @@ export default {
         gradientHomeCardGreen: greyForCard,
         textColorHomeCardYellow: '#fff',
         // --->card end
+
+        //bottomTabNav
+        bottomTabItemColor: { selected: '#FFFFFF', unSelected: '#555555' },
     },
 
     // red card
