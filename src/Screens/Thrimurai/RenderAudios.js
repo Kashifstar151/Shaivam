@@ -9,15 +9,8 @@ import { useIsFocused } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
 import { useTranslation } from 'react-i18next';
 
-const RenderAudios = ({
-    akarthi,
-    navigation,
-    songs,
-    data,
-    thalam,
-    ThalamHeaders,
-    varakatimurai,
-}) => {
+const RenderAudios = ({ akarthi, navigation, songs, data, thalam, ThalamHeaders, varakatimurai }) => {
+    console.log("🚀 ~ RenderAudios ~ songs:", songs)
     const isFocused = useIsFocused();
     const { theme } = useContext(ThemeContext);
     const [dataLength, setDataLength] = useState(0);
@@ -37,11 +30,10 @@ const RenderAudios = ({
     const getDtataFromSql = async () => {
         const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${songs?.fkTrimuria}' AND pann='${songs?.pann}' and locale='${i18n.language}' ORDER BY  titleNo `;
         // const query2 = `SELECT * from thirumurai_songs WHERE prevId = ${songs.prevId} and country= '${songs}'ORDER BY song_no ASC LIMIT 10 OFFSET 1`;
-        const templleQuery = `Select * from thirumurais WHERE ${
-            ThalamHeaders == 0 ? 'country' : 'thalam'
-        }='${songs}' ORDER BY  title ASC LIMIT 10 OFFSET ${pageSize}`;
-        const query3 = `SELECT * FROM thirumurais WHERE  authorNo='${songs?.authorNo}' and locale='${i18n.language}' ORDER BY orderAuthor  ASC LIMIT 10 OFFSET 0`;
+        const templleQuery = `Select * from thirumurais WHERE ${ThalamHeaders == 0 ? 'country' : 'thalam'}='${songs?.thalam}' ORDER BY  title ASC LIMIT 10 OFFSET ${pageSize}`
+        const query3 = `SELECT * FROM thirumurais WHERE  authorNo='${songs?.authorNo}' ORDER BY createdAt ASC  LIMIT 10 OFFSET 1`;
         getSqlData(thalam ? templleQuery : varakatimurai ? query3 : query, (callbacks) => {
+            console.log("🚀 ~ getSqlData ~ callbacks:", callbacks)
             setAudioData(callbacks);
             console.log('🚀 ~ file: RenderAudios.js:31 ~ getSqlData ~ callbacks:', callbacks);
         });

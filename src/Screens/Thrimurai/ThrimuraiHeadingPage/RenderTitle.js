@@ -137,7 +137,7 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
     };
 
     return (
-        <View style={{ marginTop: 0 }}>
+        <View style={{ marginTop: 0 }}>1
             {showLoading ? (
                 <Modal transparent presentationStyle="overFullScreen">
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

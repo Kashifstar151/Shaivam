@@ -198,7 +198,7 @@ function unzipDownloadFile(target, cb) {
 }
 
 export async function getSqlData(query, callbacks) {
-    // console.log("🚀 ~ file: Database.js:146 ~ getSqlData ~ query:", query)
+    console.log("🚀 ~ file: Database.js:146 ~ getSqlData ~ query:", query)
     const data = await AsyncStorage.getItem('@database');
     const databasename = JSON.parse(data);
     // console.log("🚀 ~ file: Database.js:142 ~ getSqlData ~ data:", JSON.parse(data))
