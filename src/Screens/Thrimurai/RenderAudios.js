@@ -7,13 +7,25 @@ import { getSqlData } from '../Database';
 import { ThemeContext } from '../../Context/ThemeContext';
 import { useIsFocused } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
+import { useTranslation } from 'react-i18next';
 
-const RenderAudios = ({  akarthi, navigation, songs, data, thalam, ThalamHeaders, varakatimurai }) => {
+const RenderAudios = ({
+    akarthi,
+    navigation,
+    songs,
+    data,
+    thalam,
+    ThalamHeaders,
+    varakatimurai,
+}) => {
     const isFocused = useIsFocused();
     const { theme } = useContext(ThemeContext);
     const [dataLength, setDataLength] = useState(0);
     const [audioData, setAudioData] = useState([]);
-    const [pageSize, setPageSize] = useState(0)
+    const [pageSize, setPageSize] = useState(0);
+
+    const { i18n } = useTranslation();
+
     useEffect(() => {
         if (akarthi) {
             getSongsData();
@@ -21,28 +33,32 @@ const RenderAudios = ({  akarthi, navigation, songs, data, thalam, ThalamHeaders
             getDtataFromSql();
         }
     }, [isFocused]);
+
     const getDtataFromSql = async () => {
         const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${songs?.fkTrimuria}' AND pann='${songs?.pann}' ORDER BY  titleNo `;
         // const query2 = `SELECT * from thirumurai_songs WHERE prevId = ${songs.prevId} and country= '${songs}'ORDER BY song_no ASC LIMIT 10 OFFSET 1`;
-        const templleQuery = `Select * from thirumurais WHERE ${ThalamHeaders == 0 ? 'country' : 'thalam'}='${songs}' ORDER BY  title ASC LIMIT 10 OFFSET ${pageSize}`
-        const query3 = `SELECT * FROM thirumurais WHERE  authorNo='${songs?.authorNo}' ORDER BY authorNo ASC  LIMIT 10 OFFSET 1`;
+        const templleQuery = `Select * from thirumurais WHERE ${
+            ThalamHeaders == 0 ? 'country' : 'thalam'
+        }='${songs}' ORDER BY  title ASC LIMIT 10 OFFSET ${pageSize}`;
+        const query3 = `SELECT * FROM thirumurais WHERE  authorNo='${songs?.authorNo}' and locale='${i18n.language}' ORDER BY orderAuthor  ASC LIMIT 10 OFFSET 0`;
         getSqlData(thalam ? templleQuery : varakatimurai ? query3 : query, (callbacks) => {
             setAudioData(callbacks);
+            console.log('🚀 ~ file: RenderAudios.js:31 ~ getSqlData ~ callbacks:', callbacks);
         });
     };
     const getSongsData = async () => {
         const query = `SELECT * FROM thirumurais ASC where title OR titleS NOT NULL ORDER BY fkTrimuria,titleNo LIMIT 20 OFFSET ${dataLength} `;
         getSqlData(query, (callbacks) => {
-            console.log("🚀 ~ getSqlData ~ callbacks:", callbacks)
+            console.log('🚀 ~ getSqlData ~ callbacks:', callbacks);
             // if (callbacks?.Length > 0) {
             //     set
             // }
             // let arr = audioData
             if (audioData?.length > 0) {
                 // arr.concat(callbacks)
-                setAudioData(audioData.concat(callbacks))
+                setAudioData(audioData.concat(callbacks));
             } else {
-                setAudioData(callbacks)
+                setAudioData(callbacks);
             }
             setDataLength(dataLength + 20);
         });
@@ -106,7 +122,6 @@ const RenderAudios = ({  akarthi, navigation, songs, data, thalam, ThalamHeaders
     return (
         <View>
             <FlatList
-
                 nestedScrollEnabled
                 renderItem={({ item, index }) => renderAudios(item, index)}
                 data={audioData}
