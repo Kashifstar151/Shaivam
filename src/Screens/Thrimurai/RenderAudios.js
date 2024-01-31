@@ -35,7 +35,7 @@ const RenderAudios = ({
     }, [isFocused]);
 
     const getDtataFromSql = async () => {
-        const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${songs?.fkTrimuria}' AND pann='${songs?.pann}' ORDER BY  titleNo `;
+        const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${songs?.fkTrimuria}' AND pann='${songs?.pann}' and locale='${i18n.language}' ORDER BY  titleNo `;
         // const query2 = `SELECT * from thirumurai_songs WHERE prevId = ${songs.prevId} and country= '${songs}'ORDER BY song_no ASC LIMIT 10 OFFSET 1`;
         const templleQuery = `Select * from thirumurais WHERE ${
             ThalamHeaders == 0 ? 'country' : 'thalam'
@@ -115,7 +115,8 @@ const RenderAudios = ({
                     color: theme.textColor,
                 }}
             >
-                {thalam ? item?.title : item?.titleS}
+                {item?.title}
+                {/* {thalam ? item?.title : item?.titleS} */}
             </Text>
         </Pressable>
     );
