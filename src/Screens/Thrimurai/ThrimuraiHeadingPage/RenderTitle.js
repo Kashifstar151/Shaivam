@@ -56,7 +56,7 @@ const RenderEachTitle = ({
                                 {thalam && ThalamHeaders === 0
                                     ? t(item?.thalam)
                                     : thalam && ThalamHeaders !== 0
-                                    ? t(item?.titleS)
+                                    ? t(item?.title)
                                     : t(item?.pann)}
                             </Text>
                         </View>

@@ -65,7 +65,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const { t, i18n } = useTranslation();
     const [selectedLngCode, setSelectedLngCode] = useState(i18n.language);
     const langMap = {
-        en: 'RoI',
+        'en-IN': 'RoI',
         English: 'en-IN',
         Hindi: 'hi-t',
         Tamil: 'en',
@@ -83,7 +83,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
         si: 'si-LK',
         te: 'te',
         ur: 'ur',
-        ta: 'en',
+        en: 'en',
     };
 
     useEffect(() => {
