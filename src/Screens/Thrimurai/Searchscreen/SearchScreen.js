@@ -43,20 +43,20 @@ const SearchScreen = ({ navigation, route }) => {
     const getDataFromSql = (e) => {
         if (searchText && searchText.length >= 2) {
             getSqlData(
-                `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${searchText}%' and fkTrimuria="${fktrimuria}"  LIMIT 10 ;`,
+                `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${searchText}%' ${
+                    fktrimuria ? `and fkTrimuria=${fktrimuria}` : ''
+                } GROUP BY titleS  LIMIT 10 ;`,
                 // `SELECT * FROM thirumurais WHERE search_title='%திருஞானசம்பந்தர்தேவாரம்-1.031-திருக்குரங்கணின்முட்டம்-விழுநீர்மழுவாள்படை%' LIMIT 10 OFFSET 0;`,
                 (callbacks) => {
-                    // console.log("🚀 ~ getDataFromSql ~ callbacks:", JSON.stringify(callbacks, 0, 2))
                     setSearchedResult(callbacks);
                 }
             );
             getSqlData(
                 `SELECT * FROM thirumurai_songs WHERE searchTitle LIKE '%${searchText}%' ${
                     fktrimuria ? `and thirumuraiId=${fktrimuria}` : ''
-                }  ORDER BY songNo ASC LIMIT 10 OFFSET 0;`,
+                } ORDER BY songNo ASC LIMIT 10 OFFSET 0;`,
                 (callbacks) => {
                     setRawSongs(callbacks);
-                    console.log('🚀 ~ getDataFromSql ~ callbacks:', callbacks);
                     // setSearchText(e)
                 }
             );
