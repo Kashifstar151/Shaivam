@@ -119,7 +119,7 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
     const getDtataFromSql = async () => {
         setShowLoading(true);
         let query;
-        if (data?.prevId <= 7) {
+        if (data?.prevId <= 7 || data?.prevId === 10) {
             query = `SELECT pann, prevId,fkTrimuria FROM thirumurais where fkTrimuria=${data.prevId} and pann NOTNULL GROUP BY pann ORDER BY titleNo ASC LIMIT ${pageSize} OFFSET 0`;
         } else {
             query = `SELECT * FROM thirumurais where fkTrimuria=${data.prevId}  ORDER BY titleNo ASC LIMIT ${pageSize} OFFSET 0`;

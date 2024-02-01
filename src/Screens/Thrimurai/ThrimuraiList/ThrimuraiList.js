@@ -302,7 +302,7 @@ const ThrimuraiList = ({ navigation }) => {
                                 list: thrimurais.slice(0, 7),
                                 query: 'SELECT name ,prevId FROM  category WHERE prevId=10',
                                 prevId: '=10',
-                                flagShowAudio: true,
+                                flagShowAudio: false,
                             })
                         }
                     >

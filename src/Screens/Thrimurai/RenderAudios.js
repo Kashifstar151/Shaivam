@@ -35,7 +35,7 @@ const RenderAudios = ({ akarthi, navigation, songs, data, thalam, ThalamHeaders,
         }='${songs?.thalam}' and locale='${
             i18n.language
         }'ORDER BY  title ASC LIMIT 10 OFFSET ${pageSize}`;
-        const query3 = `SELECT * FROM thirumurais WHERE  authorNo='${songs?.authorNo}' ORDER BY createdAt ASC  LIMIT 10 OFFSET 1`;
+        const query3 = `SELECT * FROM thirumurais WHERE  authorNo='${songs?.authorNo}' GROUP BY titleS ORDER by orderAuthor  LIMIT 10 OFFSET 0`;
         getSqlData(thalam ? templleQuery : varakatimurai ? query3 : query, (callbacks) => {
             console.log("🚀 ~ getSqlData ~ callbacks:", callbacks)
             setAudioData(callbacks);
