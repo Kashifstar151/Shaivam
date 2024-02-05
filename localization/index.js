@@ -6,12 +6,30 @@ import 'moment/min/locales';
 import moment from 'moment';
 import { ar, as, bn, en, gu, he, hi, ja, kn, ml, od, si, ta, te, ur, pa, hd } from './translations';
 
+const map = {
+    'en-IN': en,
+    'kn-IN': kn,
+    DV: hi,
+};
+
 export const AVAILABLE_LANGUAGES = {
+    // en: {
+    //     translation: en,
+    // },
+    // hi: {
+    //     translation: hi,
+    // },
+    // kn: {
+    //     translation: kn,
+    // },
     'en-IN': {
-        translation: en,
+        translation: map['en-IN'],
     },
-    hi: {
-        translation: hi,
+    'kn-IN': {
+        translation: map['kn-IN'],
+    },
+    DV: {
+        translation: map['DV'],
     },
     bn: {
         translation: bn,
@@ -30,9 +48,6 @@ export const AVAILABLE_LANGUAGES = {
     },
     ja: {
         translation: ja,
-    },
-    kn: {
-        translation: kn,
     },
     ml: {
         translation: ml,
@@ -60,33 +75,34 @@ export const AVAILABLE_LANGUAGES = {
         translation: hd,
     },
 };
-const STORE_LANGUAGE_KEY = 'settings.lang';
+// const STORE_LANGUAGE_KEY = 'settings.lang';
 
-const languageDetector = {
-    type: 'languageDetector',
-    async: true,
-    init: () => {},
+// const languageDetector = {
+//     type: 'languageDetector',
+//     async: true,
+//     init: () => {},
 
-    detect: function (callback) {
-        try {
-            //get stored language from Async storage
-            AsyncStorage.getItem(STORE_LANGUAGE_KEY).then((language) => {
-                if (language) {
-                    //if language was stored before, use this language in the app
-                    callback(language);
-                } else {
-                    //if language was not stored yet, use device's locale
-                    callback(RNLocalize.getLocales().map((locale) => locale.languageCode)[0]);
-                }
-            });
-        } catch (error) {
-            console.log('Error reading language', error);
-        }
-    },
-    cacheUserLanguage: (lng) => AsyncStorage.setItem(STORE_LANGUAGE_KEY, lng),
-};
+//     detect: function (callback) {
+//         try {
+//             //get stored language from Async storage
+//             AsyncStorage.getItem(STORE_LANGUAGE_KEY).then((language) => {
+//                 if (language) {
+//                     //if language was stored before, use this language in the app
+//                     callback(language);
+//                 } else {
+//                     //if language was not stored yet, use device's locale
+//                     callback(RNLocalize.getLocales().map((locale) => locale.languageCode)[0]);
+//                 }
+//             });
+//         } catch (error) {
+//             console.log('Error reading language', error);
+//         }
+//     },
+//     cacheUserLanguage: (lng) => AsyncStorage.setItem(STORE_LANGUAGE_KEY, lng),
+// };
 
-i18n.use(languageDetector)
+i18n
+    // .use(languageDetector)
     .use(initReactI18next)
     .init({
         compatibilityJSON: 'v3',
@@ -100,4 +116,11 @@ i18n.use(languageDetector)
         fallbackLng: 'en-IN',
     });
 
-i18n.on('languageChanged', (lng) => moment.locale(lng));
+// i18n.on('languageChanged', (lng) => {
+//     console.log(
+//         'the language changes msg from index js from localization ===>',
+//         // moment.locale(lng)
+//         lng
+//     );
+//     // return moment.locale(lng);
+// });
