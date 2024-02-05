@@ -8,28 +8,32 @@ import { ThemeContext } from '../../Context/ThemeContext';
 const ChooseLanguage = ({ selected, setSelected }) => {
     const { i18n } = useTranslation();
     const language = [
+        // { name: 'English', lngCode: 'en', isSelected: false },
+        // { name: 'Hindi', lngCode: 'hi', isSelected: false },
+        // { name: 'Kannada', lngCode: 'kn', isSelected: false },
         { name: 'English', lngCode: 'en-IN', isSelected: false },
-        { name: 'Hindi', lngCode: 'hi', isSelected: false },
+        { name: 'Hindi', lngCode: 'DV', isSelected: false },
+        { name: 'Kannada', lngCode: 'kn-IN', isSelected: false },
         { name: 'Malayalam', lngCode: 'ml', isSelected: false },
-        { name: 'Kannada', lngCode: 'kn', isSelected: false },
         { name: 'Tamil', lngCode: 'en', isSelected: false },
     ];
 
     const handleClick = (item) => {
-        console.log('The lnaguage is changed ===>', item.lngCode);
-        i18n.changeLanguage(item.lngCode);
+        i18n.changeLanguage(item.lngCode); // 12
         setSelected(item);
     };
 
     useEffect(() => {
-        console.log('the play is ==>', selected);
-    }, [selected]);
+        handleClick(language.find((i) => i.lngCode === i18n.language));
+    }, []);
 
     const { theme } = useContext(ThemeContext);
     return (
-        <View style={{ flex: 1, marginTop: 10, backgroundColor: theme.backgroundColor }}>
+        <View style={{ marginTop: 10, backgroundColor: theme.backgroundColor }}>
             <View style={{ paddingHorizontal: 10 }}>
-                <Text style={styles.headingText}>Select Your Language</Text>
+                <Text style={[styles.headingText, { color: theme.textColor }]}>
+                    Select Your Language {i18n.language} and selected is {selected?.name}
+                </Text>
                 <Text style={styles.descriptionText}>Changes will be made across the app</Text>
             </View>
             <FlatList
@@ -60,7 +64,12 @@ const ChooseLanguage = ({ selected, setSelected }) => {
     );
 };
 export const styles = StyleSheet.create({
-    headingText: { fontFamily: 'Lora-SemiBold', color: '#222222', fontSize: 16 },
+    headingText: {
+        fontFamily: 'Lora-SemiBold',
+        color: '#222222',
+        fontSize: 16,
+        paddingVertical: 10,
+    },
     descriptionText: { fontFamily: 'Mulish-Bold', fontSize: 12 },
     list: {
         paddingVertical: 20,
