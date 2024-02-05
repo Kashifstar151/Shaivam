@@ -33,24 +33,6 @@ import RightDirSVG from '../../components/SVGs/RightDirSVG';
 import HeadingAndView from './HeadingAndView';
 import PlaceCard from './PlaceCard';
 
-const LANGS = [
-    { lngCode: 'en', label: 'English' },
-    { lngCode: 'hi', label: 'हिन्दी' },
-    { lngCode: 'ar', label: 'Arabic' },
-    { lngCode: 'as', label: 'Assamese' },
-    { lngCode: 'gu', label: 'Gujarati' },
-    { lngCode: 'he', label: 'Hebrew' },
-    { lngCode: 'ja', label: 'Japanese' },
-    { lngCode: 'kn', label: 'Kannada' },
-    { lngCode: 'ml', label: 'Malayalam' },
-    { lngCode: 'od', label: 'Odia' },
-    { lngCode: 'pa', label: 'Punjabi' },
-    { lngCode: 'si', label: 'Sinhala' },
-    { lngCode: 'ta', label: 'Tamil' },
-    { lngCode: 'te', label: 'Telugu' },
-    { lngCode: 'ur', label: 'Urdu' },
-];
-
 const SongAndAudio = ({ item, index, theme }) => {
     return (
         <View
@@ -101,7 +83,6 @@ const SongAndAudio = ({ item, index, theme }) => {
 };
 
 const HomeScreen = ({ navigation }) => {
-    const { t } = useTranslation();
     const { theme } = useContext(ThemeContext);
     const [compHeight, setCompHeight] = useState();
     const [textInsidePlaylistCard, setTextInsidePlaylistCard] = useState(0);
