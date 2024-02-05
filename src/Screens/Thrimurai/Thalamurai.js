@@ -172,11 +172,19 @@ const Thalamurai = ({ navigation }) => {
                             <FlatList
                                 data={ThalamHeaders == 0 ? nadu : Thalam}
                                 renderItem={({ item, index }) => (
+                                    // <RenderThalam
+                                    //     item={item}
+                                    //     index={index}
+                                    //     navigation={navigation}
+                                    //     ThalamHeaders={ThalamHeaders}
+                                    // />
+
                                     <RenderThalam
                                         item={item}
                                         index={index}
                                         navigation={navigation}
                                         ThalamHeaders={ThalamHeaders}
+                                        type={ThalamHeaders == 0 ? 'thalam_nadu' : 'thalam_temple'}
                                     />
                                 )}
                             />

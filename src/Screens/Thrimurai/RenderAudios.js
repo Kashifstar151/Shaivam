@@ -43,7 +43,7 @@ const RenderAudios = ({ akarthi, navigation, songs, data, thalam, ThalamHeaders,
         });
     };
     const getSongsData = async () => {
-        const query = `SELECT * FROM thirumurais ASC where title OR titleS NOT NULL ORDER BY fkTrimuria,titleNo LIMIT 20 OFFSET ${dataLength} `;
+        const query = `SELECT * FROM thirumurais where title OR titleS NOT NULL ORDER BY fkTrimuria,titleNo LIMIT 20 OFFSET ${dataLength} `;
         getSqlData(query, (callbacks) => {
             console.log('🚀 ~ getSqlData ~ callbacks:', callbacks);
             // if (callbacks?.Length > 0) {

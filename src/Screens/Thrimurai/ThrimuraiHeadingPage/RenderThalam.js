@@ -6,10 +6,13 @@ import { ThemeContext } from '../../../Context/ThemeContext'
 import RenderAudios from '../RenderAudios'
 import RenderTitle from './RenderTitle'
 import { colors } from '../../../Helpers';
+import RenderTitle2 from './RenderTitle2';
 
-const RenderThalam = ({ item, index, navigation, ThalamHeaders }) => {
+const RenderThalam = ({ item, index, navigation, ThalamHeaders, type }) => {
+    // console.log('🚀 ~ file: RenderThalam.js:12 ~ RenderThalam ~ type:', type);
     const { theme } = useContext(ThemeContext);
     const [selectedTitle, setSelectedTitle] = useState(null);
+    const [pageSize, setPageSize] = useState(10);
     return (
         <View>
             <View style={[styles.chapterBox, { backgroundColor: theme.cardBgColor }]}>
@@ -38,11 +41,23 @@ const RenderThalam = ({ item, index, navigation, ThalamHeaders }) => {
             </View>
             {
                 selectedTitle == index && (
-                    <RenderTitle
+                    // <RenderTitle
+                    //     data={item}
+                    //     navigation={navigation}
+                    //     thalam={true}
+                    //     ThalamHeaders={ThalamHeaders}
+                    //     // type={"Thalam_Nadu"} // type --> panmurai, Thalam_Nadu, Thalam_Temple , varalatrimurai, akarthi ,
+                    //     // query={ }
+                    // />
+
+                    <RenderTitle2
                         data={item}
                         navigation={navigation}
                         thalam={true}
-                        ThalamHeaders={ThalamHeaders}
+                        type={type} // type --> panmurai, Thalam_Nadu, Thalam_Temple , varalatrimurai, akarthi ,
+                        query={`Select * from thirumurais where ${
+                            type === 'thalam_nadu' ? 'country' : 'thalam'
+                        }='${item}' GROUP BY thalam ORDER BY  titleNo ASC LIMIT ${pageSize} OFFSET 0`}
                     />
                 )
                 // <RenderAudios ThalamHeaders={ThalamHeaders} songs={item} navigation={navigation} thalam={true} />

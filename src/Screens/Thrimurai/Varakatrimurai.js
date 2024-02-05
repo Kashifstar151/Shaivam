@@ -6,12 +6,13 @@ import { ThemeContext } from '../../Context/ThemeContext';
 import { getSqlData } from '../Database';
 import { useTranslation } from 'react-i18next';
 import { FlatList } from 'react-native-gesture-handler';
+import RenderAudios2 from './RenderAudios2';
 
 const Varakatrimurai = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
     const [selectedTitle, setSelectedTitle] = useState(null);
     const [authordata, setAuthorData] = useState(null);
-    const flatListRef = useRef(null)
+    const flatListRef = useRef(null);
     const { t } = useTranslation();
 
     useEffect(() => {
@@ -51,7 +52,13 @@ const Varakatrimurai = ({ navigation }) => {
                     )}
                 </View>
                 {selectedTitle == index && (
-                    <RenderAudios songs={item} navigation={navigation} varakatimurai={true} />
+                    <RenderAudios2
+                        songs={item}
+                        type={'varalatrimurai'}
+                        query={`SELECT * FROM thirumurais WHERE  authorNo='${item?.authorNo}' GROUP BY titleS ORDER by orderAuthor  LIMIT 10 OFFSET 0`}
+                        navigation={navigation}
+                    />
+                    // <RenderAudios songs={item} navigation={navigation} varakatimurai={true} />
                 )}
             </View>
         );

@@ -36,6 +36,8 @@ import { ThemeContext } from '../../../Context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import RenderThalam from './RenderThalam';
 import Thalamurai from '../Thalamurai';
+import RenderTitle2 from './RenderTitle2';
+import RenderAudios2 from '../RenderAudios2';
 
 const RenderContents = ({
     item,
@@ -57,7 +59,7 @@ const RenderContents = ({
 
         let rangeStr;
         getSqlData(query, (clk) => {
-            console.log("🚀 ~ getSqlData ~ clk:", clk)
+            console.log('🚀 ~ getSqlData ~ clk:', clk);
             const rangeArr = clk[0].result.split('-');
             if (rangeArr[1].length === 3) {
                 rangeStr = `${item.prevId}.00${rangeArr[0]} - ${item.prevId}.${rangeArr[1]}`;
@@ -69,6 +71,7 @@ const RenderContents = ({
             setRange((prev) => ({ ...prev, [item.prevId]: rangeStr }));
         });
     }, []);
+    const [pageSize, setPageSize] = useState(10);
 
     // console.log('the click ==>', item);
     return (
@@ -102,7 +105,25 @@ const RenderContents = ({
                 )}
             </View>
             {selectedTitle == index && (
-                <RenderTitle data={item} navigation={navigation} flagShowAudio={flagShowAudio} />
+                // <RenderTitle
+                //     data={item}
+                //     navigation={navigation}
+                //     flagShowAudio={flagShowAudio}
+                //     // query={ }
+                //     // type={ }
+                // />
+
+                <RenderTitle2
+                    data={item}
+                    navigation={navigation}
+                    flagShowAudio={flagShowAudio}
+                    query={`SELECT * FROM thirumurais where fkTrimuria=${item?.prevId} ${
+                        item?.prevId <= 7 || item?.prevId === 10
+                            ? 'and pann NOTNULL GROUP BY pann'
+                            : ''
+                    }  ORDER BY titleNo ASC LIMIT ${pageSize} OFFSET 0`}
+                    type={'panmurai'}
+                />
             )}
         </>
     );
@@ -112,7 +133,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const [range, setRange] = useState({});
     const isFocuced = useIsFocused;
     const { page, list, query, prevId, flagShowAudio, name } = route.params;
-    console.log("🚀 ~ ThrimuraiHeadingPage ~ prevId:", prevId)
+    console.log('🚀 ~ ThrimuraiHeadingPage ~ prevId:', prevId);
     const headerData = [
         {
             name: 'Panmurai',
@@ -144,15 +165,17 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     useEffect(() => {
         retrieveData(query);
     }, []);
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const retrieveData = async () => {
-        setShowLoading(true)
+        setShowLoading(true);
         const query = `SELECT name ,prevId FROM  category WHERE prevId${prevId}`;
         getSqlData(query, (callbacks) => {
-            setShowLoading(false)
+            setShowLoading(false);
             setThrimurais(callbacks);
         });
     };
+    const [dataLength, setDataLength] = useState(0);
+
     return (
         <View style={[styles.main, { backgroundColor: theme.backgroundColor }]}>
             <Background>
@@ -211,7 +234,11 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                 <View style={{ backgroundColor: theme.backgroundColor }}>
                     {selectedHeader.name == 'Akarthi' ? (
                         <View style={{ marginTop: 10 }}>
-                            <RenderAudios akarthi={true} navigation={navigation} />
+                            <RenderAudios2
+                                type={'akarthi'}
+                                query={`SELECT * FROM thirumurais  where  titleNo NOT NULL and locale='${i18n.language}' ORDER BY fkTrimuria,titleNo LIMIT 20`}
+                                navigation={navigation}
+                            />
                         </View>
                     ) : selectedHeader.name == 'Varalatrumurai' ? (
                         <Varakatrimurai navigation={navigation} />
