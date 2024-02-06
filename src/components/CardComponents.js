@@ -52,9 +52,9 @@ const RenderItem = ({ item, navigation, theme }) => {
                 {item.subComp.map((i, _) => (
                     <Pressable
                         onPress={
-                            i?.title == 'Thirumurais'
-                                ? () => navigation.navigate('Thrimurai')
-                                : () => alert(true)
+                            i?.navName == 'Thirumurais' || i?.navName == 'Stotras'
+                                ? () => navigation.navigate(i?.navName)
+                                : () => alert(`the ${i?.navName}`)
                         }
                         style={[
                             styles.subComp,
@@ -96,12 +96,25 @@ const CardComponents = ({ navigation }) => {
             textColor: theme.textColorHomeCardYellow,
 
             subComp: [
-                { icon: <BookIcon fill={theme.textColorHomeCardYellow} />, title: 'Thirumurais' },
-                { icon: <OmLetterSvg fill={theme.textColorHomeCardYellow} />, title: 'Stotras' },
-                { icon: <StrotasSVG fill={theme.textColorHomeCardYellow} />, title: 'Vedas' },
+                {
+                    icon: <BookIcon fill={theme.textColorHomeCardYellow} />,
+                    title: 'Thirumurais',
+                    navName: 'Thirumurais',
+                },
+                {
+                    icon: <OmLetterSvg fill={theme.textColorHomeCardYellow} />,
+                    title: 'Stotras',
+                    navName: 'Stotras',
+                },
+                {
+                    icon: <StrotasSVG fill={theme.textColorHomeCardYellow} />,
+                    title: 'Vedas',
+                    navName: 'Vedas',
+                },
                 {
                     icon: <ShaivaSVG fill={theme.textColorHomeCardYellow} />,
                     title: 'Shaiva Siddanta',
+                    navName: 'Shaiva Siddanta',
                 },
             ],
         },
@@ -112,10 +125,26 @@ const CardComponents = ({ navigation }) => {
             gradient: theme.gradientHomeCardGreen,
             textColor: theme.textColor,
             subComp: [
-                { icon: <BookIcon fill={theme.textColor} />, title: 'Shaivam TV' },
-                { icon: <OmLetterSvg fill={theme.textColor} />, title: 'Temples' },
-                { icon: <StrotasSVG fill={theme.textColor} />, title: 'Radio' },
-                { icon: <ShaivaSVG fill={theme.textColor} />, title: 'Calender' },
+                {
+                    icon: <BookIcon fill={theme.textColor} />,
+                    title: 'Shaivam TV',
+                    navName: 'Shaivam TV',
+                },
+                {
+                    icon: <OmLetterSvg fill={theme.textColor} />,
+                    title: 'Temples',
+                    navName: 'Temples',
+                },
+                {
+                    icon: <StrotasSVG fill={theme.textColor} />,
+                    title: 'Radio',
+                    navName: 'Radio',
+                },
+                {
+                    icon: <ShaivaSVG fill={theme.textColor} />,
+                    title: 'Calender',
+                    navName: 'Calender',
+                },
             ],
         },
         {
@@ -126,10 +155,26 @@ const CardComponents = ({ navigation }) => {
             textColor: theme.textColorHomeCardYellow,
 
             subComp: [
-                { icon: <BookIcon fill={theme.textColorHomeCardYellow} />, title: 'Kaala Puja' },
-                { icon: <OmLetterSvg fill={theme.textColorHomeCardYellow} />, title: 'Quiz' },
-                { icon: <StrotasSVG fill={theme.textColorHomeCardYellow} />, title: 'Favourites' },
-                { icon: <ShaivaSVG fill={theme.textColorHomeCardYellow} />, title: 'Website' },
+                {
+                    icon: <BookIcon fill={theme.textColorHomeCardYellow} />,
+                    title: 'Kaala Puja',
+                    navName: 'Kaala Puja',
+                },
+                {
+                    icon: <OmLetterSvg fill={theme.textColorHomeCardYellow} />,
+                    title: 'Quiz',
+                    navName: 'Quiz',
+                },
+                {
+                    icon: <StrotasSVG fill={theme.textColorHomeCardYellow} />,
+                    title: 'Favourites',
+                    navName: 'Favourites',
+                },
+                {
+                    icon: <ShaivaSVG fill={theme.textColorHomeCardYellow} />,
+                    title: 'Website',
+                    navName: 'Website',
+                },
             ],
         },
     ];
