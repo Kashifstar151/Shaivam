@@ -20,7 +20,13 @@ export default BottomTab = () => {
     return (
         <Tab.Navigator
             screenOptions={{
-                tabBarStyle: [styles.tabContainer, { backgroundColor: theme.backgroundColor }],
+                tabBarStyle: [
+                    styles.tabContainer,
+                    {
+                        backgroundColor:
+                            theme.colorscheme === 'dark' ? theme.backgroundColor : '#C2514A',
+                    },
+                ],
             }}
         >
             <Tab.Screen
@@ -347,7 +353,7 @@ export const styles = StyleSheet.create({
         borderTopEndRadius: 10,
         borderTopStartRadius: 10,
         position: 'absolute',
-        bottom: 3,
+        bottom: 0,
     },
     IconStyles: {
         paddingTop: 10,
