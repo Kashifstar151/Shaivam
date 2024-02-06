@@ -1,10 +1,12 @@
 import React, { useContext } from 'react';
-import { Alert, Dimensions, StyleSheet, TextInput, View } from 'react-native';
+import { Dimensions, StyleSheet, TextInput, View } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import { colors } from '../Helpers';
 import { ThemeContext } from '../Context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 const SearchInput = ({ placeholder, setState, state, color, setOnFocus, styleOverwrite }) => {
     const { theme } = useContext(ThemeContext);
+    const { t } = useTranslation();
     return (
         <View
             style={
@@ -31,7 +33,7 @@ const SearchInput = ({ placeholder, setState, state, color, setOnFocus, styleOve
             <TextInput
                 onBlur={() => setOnFocus(false)}
                 onFocus={() => setOnFocus()}
-                placeholder={placeholder}
+                placeholder={t(placeholder)}
                 onChangeText={(e) => setState(e)}
                 placeholderTextColor={theme.searchBox.textColor}
                 value={state}
