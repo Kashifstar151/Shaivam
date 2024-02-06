@@ -32,6 +32,7 @@ import OmChat from './OmChat';
 import RightDirSVG from '../../components/SVGs/RightDirSVG';
 import HeadingAndView from './HeadingAndView';
 import PlaceCard from './PlaceCard';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 const SongAndAudio = ({ item, index, theme }) => {
     return (
@@ -54,7 +55,7 @@ const SongAndAudio = ({ item, index, theme }) => {
                 <View style={{ paddingHorizontal: 10 }}>
                     <Text
                         style={{
-                            fontSize: 14,
+                            fontSize: RFValue(14, 800),
                             fontWeight: '600',
                             fontFamily: 'Mulish-Regular',
                             color: theme.textColor,
@@ -64,7 +65,7 @@ const SongAndAudio = ({ item, index, theme }) => {
                     </Text>
                     <Text
                         style={{
-                            fontSize: 12,
+                            fontSize: RFValue(12, 800),
                             fontWeight: '400',
                             fontFamily: 'Mulish-Regular',
                             color: theme.textColor,
@@ -216,7 +217,13 @@ const HomeScreen = ({ navigation }) => {
             </View>
 
             <View style={{ padding: 15 }}>
-                <Text style={{ fontSize: 18, fontWeight: '700', color: theme.textColor }}>
+                <Text
+                    style={{
+                        fontSize: RFValue(18, 800),
+                        fontWeight: '700',
+                        color: theme.textColor,
+                    }}
+                >
                     Songs & Audios
                 </Text>
 
@@ -248,7 +255,7 @@ const HomeScreen = ({ navigation }) => {
                             { translateX: dimentionsOfText1.width / 2 },
                         ],
 
-                        fontSize: 18,
+                        fontSize: RFValue(18, 800),
                         fontWeight: 'bold',
                         letterSpacing: 5,
                         color: theme.textColor,
@@ -288,12 +295,18 @@ const HomeScreen = ({ navigation }) => {
                             }}
                         >
                             <View>
-                                <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#fff' }}>
+                                <Text
+                                    style={{
+                                        fontSize: RFValue(18, 800),
+                                        fontWeight: 'bold',
+                                        color: '#fff',
+                                    }}
+                                >
                                     Shaivam Playlists
                                 </Text>
                                 <Text
                                     style={{
-                                        fontSize: 12,
+                                        fontSize: RFValue(12, 800),
                                         fontWeight: 200,
                                         paddingTop: 5,
                                         color: '#fff',
@@ -305,7 +318,7 @@ const HomeScreen = ({ navigation }) => {
 
                             <Text
                                 style={{
-                                    fontSize: 16,
+                                    fontSize: RFValue(16, 800),
                                     color: '#fff',
                                 }}
                             >

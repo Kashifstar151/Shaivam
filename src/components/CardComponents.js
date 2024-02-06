@@ -14,6 +14,8 @@ import { t } from 'i18next';
 import Header from './Header';
 import SearchInput from './SearchInput';
 
+
+
 const RenderItem = ({ item, navigation, theme }) => {
     return (
         <LinearGradient
@@ -33,7 +35,8 @@ const RenderItem = ({ item, navigation, theme }) => {
                 <View style={{ justifyContent: 'center' }}>
                     <Text
                         style={{
-                            fontSize: RFValue(14, 540),
+                            // fontSize: responsiveFontSize(12),
+                            fontSize: RFValue(16, 800),
                             fontWeight: '600',
                             paddingBottom: 5,
                             color: item.textColor,
@@ -41,7 +44,7 @@ const RenderItem = ({ item, navigation, theme }) => {
                     >
                         {item?.text}
                     </Text>
-                    <Text style={{ fontSize: RFValue(10, 540), color: item.textColor }}>
+                    <Text style={{ fontSize: RFValue(12, 800), color: item.textColor }}>
                         {item?.description}
                     </Text>
                 </View>
@@ -248,7 +251,7 @@ const styles = StyleSheet.create({
     subCompText: {
         alignContent: 'center',
         flex: 1,
-        fontSize: RFValue(10, 540),
+        fontSize: RFValue(12, 800),
     },
 });
 
