@@ -46,7 +46,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     });
     const isFocused = useIsFocused;
     const { data } = route.params || {};
-    console.log("🚀 ~ ThrimuraiSong ~ data:", data)
+    console.log('🚀 ~ ThrimuraiSong ~ data:', data);
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
@@ -145,7 +145,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const getSOngData = () => {
         const query = `SELECT * from thirumurai_songs where prevId=${data?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
         getSqlData(query, (callbacks) => {
-            console.log("🚀 ~ getSqlData ~ callbacks:", JSON.stringify(callbacks, 0, 2))
+            console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
             setSongDetails(callbacks);
             const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`;
             getSqlData(query2, (callbacks) => {
@@ -375,14 +375,14 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
                                 <TouchableOpacity style={styles.InsiderSettingButton}>
                                     <SettingIcon />
-                                    <Text
+                                    {/* <Text
                                         style={[
                                             styles.settingText,
                                             { color: theme.settingText.color },
                                         ]}
                                     >
                                         Settings
-                                    </Text>
+                                    </Text> */}
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     style={styles.clearIcon}
