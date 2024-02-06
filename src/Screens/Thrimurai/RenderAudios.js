@@ -9,8 +9,16 @@ import { useIsFocused } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
 import { useTranslation } from 'react-i18next';
 
-const RenderAudios = ({ akarthi, navigation, songs, data, thalam, ThalamHeaders, varakatimurai }) => {
-    console.log("🚀 ~ RenderAudios ~ songs:", songs)
+const RenderAudios = ({
+    akarthi,
+    navigation,
+    songs,
+    data,
+    thalam,
+    ThalamHeaders,
+    varakatimurai,
+}) => {
+    console.log('🚀 ~ RenderAudios ~ songs:', songs);
     const isFocused = useIsFocused();
     const { theme } = useContext(ThemeContext);
     const [dataLength, setDataLength] = useState(0);
@@ -28,24 +36,29 @@ const RenderAudios = ({ akarthi, navigation, songs, data, thalam, ThalamHeaders,
     }, [isFocused]);
 
     const getDtataFromSql = async () => {
-        const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${songs?.fkTrimuria}' AND pann='${songs?.pann}' and locale='${i18n.language}' ORDER BY  titleNo `;
+        const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${
+            songs?.fkTrimuria
+        }' AND pann='${songs?.pann}'  and  locale='${
+            i18n.language === 'en-IN' ? 'RoI' : i18n.language
+        }'   ORDER BY  titleNo `;
+
         // const query2 = `SELECT * from thirumurai_songs WHERE prevId = ${songs.prevId} and country= '${songs}'ORDER BY song_no ASC LIMIT 10 OFFSET 1`;
+
         const templleQuery = `Select * from thirumurais WHERE ${
             ThalamHeaders == 0 ? 'country' : 'thalam'
-        }='${songs?.thalam}' and locale='${
-            i18n.language
-        }'ORDER BY  title ASC LIMIT 10 OFFSET ${pageSize}`;
+        }='${songs?.thalam}'  and  locale='${
+            i18n.language === 'en-IN' ? 'RoI' : i18n.language
+        }' ORDER BY  title ASC LIMIT 10 OFFSET ${pageSize}`;
+
         const query3 = `SELECT * FROM thirumurais WHERE  authorNo='${songs?.authorNo}' GROUP BY titleS ORDER by orderAuthor  LIMIT 10 OFFSET 0`;
+
         getSqlData(thalam ? templleQuery : varakatimurai ? query3 : query, (callbacks) => {
-            console.log("🚀 ~ getSqlData ~ callbacks:", callbacks)
             setAudioData(callbacks);
-            console.log('🚀 ~ file: RenderAudios.js:31 ~ getSqlData ~ callbacks:', callbacks);
         });
     };
     const getSongsData = async () => {
         const query = `SELECT * FROM thirumurais ASC where title OR titleS NOT NULL ORDER BY fkTrimuria,titleNo LIMIT 20 OFFSET ${dataLength} `;
         getSqlData(query, (callbacks) => {
-            console.log('🚀 ~ getSqlData ~ callbacks:', callbacks);
             // if (callbacks?.Length > 0) {
             //     set
             // }
