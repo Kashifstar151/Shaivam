@@ -17,10 +17,11 @@ import { getSqlData } from '../../Database';
 import { ThemeContext } from '../../../Context/ThemeContext';
 import HighlightedText from './HighlightedText';
 import { RouteTexts } from '../../../navigation/RouteText';
+import { useTranslation } from 'react-i18next';
 
 const SearchScreen = ({ navigation, route }) => {
     const { thrimurais } = route?.params;
-    const [searchText, setSearchText] = useState();
+    const [searchText, setSearchText] = useState('');
     const [searchResult, setSearchedResult] = useState([]);
     const [onFocus, setOnFocus] = useState(false);
     const [rawSongs, setRawSongs] = useState(null);
@@ -35,12 +36,18 @@ const SearchScreen = ({ navigation, route }) => {
             setFkTrimuria(null);
         }
     };
+    const [isSearched, setIsSearched] = useState(false);
 
     useEffect(() => {
         getDataFromSql();
+
+        return () => {
+            setIsSearched(false);
+        };
     }, [fktrimuria]);
 
     const getDataFromSql = (e) => {
+        setIsSearched(false);
         if (searchText && searchText.length >= 2) {
             getSqlData(
                 `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${searchText}%' ${
@@ -49,6 +56,7 @@ const SearchScreen = ({ navigation, route }) => {
                 // `SELECT * FROM thirumurais WHERE search_title='%திருஞானசம்பந்தர்தேவாரம்-1.031-திருக்குரங்கணின்முட்டம்-விழுநீர்மழுவாள்படை%' LIMIT 10 OFFSET 0;`,
                 (callbacks) => {
                     setSearchedResult(callbacks);
+                    // setIsSearched(true);
                 }
             );
             getSqlData(
@@ -57,9 +65,11 @@ const SearchScreen = ({ navigation, route }) => {
                 } ORDER BY songNo ASC LIMIT 10 OFFSET 0;`,
                 (callbacks) => {
                     setRawSongs(callbacks);
-                    // setSearchText(e)
+                    // setIsSearched(true);
                 }
             );
+
+            setIsSearched(true);
         }
     };
     const highlight = (item, index, key) => {
@@ -100,12 +110,15 @@ const SearchScreen = ({ navigation, route }) => {
             </Pressable>
         );
     };
+
+    const { t } = useTranslation();
+
     return (
         <View style={[styles.main, { backgroundColor: theme.backgroundColor }]}>
             <Background>
                 <HeaderWithTextInput
                     onSubmitEditing={getDataFromSql}
-                    placeholder={'Search for any( முதல்-திருமுறை )'}
+                    placeholder={`${t('Search for any')} ( முதல்-திருமுறை )`}
                     navigation={navigation}
                     setState={(e) => setSearchText(e)}
                     state={searchText}
@@ -159,21 +172,33 @@ const SearchScreen = ({ navigation, route }) => {
                     />
                 </View>
             </Background>
-            {searchResult?.length > 0 || rawSongs?.length > 0 ? (
-                <ScrollView style={{ marginTop: 10, paddingHorizontal: 10 }}>
-                    <Text style={styles.searchresult}>Search Result({searchResult?.length})</Text>
-                    <FlatList
-                        key={(item) => item?.id}
-                        contentContainerStyle={{ marginTop: 10 }}
-                        data={searchResult}
-                        renderItem={({ item, index }) => renderResult(item, index, 'title')}
-                    />
-                    <FlatList
-                        contentContainerStyle={{ marginTop: 10 }}
-                        data={rawSongs}
-                        renderItem={({ item, index }) => renderResult(item, index, 'rawSong')}
-                    />
-                </ScrollView>
+            {isSearched ? (
+                // searchResult?.length > 0 || rawSongs?.length > 0 ?
+                isSearched && !(searchResult?.error && rawSongs?.error) ? (
+                    <ScrollView style={{ marginTop: 10, paddingHorizontal: 10 }}>
+                        <Text style={styles.searchresult}>
+                            Search Result({searchResult?.length})
+                        </Text>
+                        <FlatList
+                            key={(item) => item?.id}
+                            contentContainerStyle={{ marginTop: 10 }}
+                            data={searchResult}
+                            renderItem={({ item, index }) => renderResult(item, index, 'title')}
+                        />
+                        <FlatList
+                            contentContainerStyle={{ marginTop: 10 }}
+                            data={rawSongs}
+                            renderItem={({ item, index }) => renderResult(item, index, 'rawSong')}
+                        />
+                    </ScrollView>
+                ) : (
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <CenterIcon />
+                        <Text style={{ color: '#777777', fontFamily: 'Mulish-Regular' }}>
+                            No Result found
+                        </Text>
+                    </View>
+                )
             ) : (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <CenterIcon />
