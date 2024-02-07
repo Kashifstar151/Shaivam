@@ -610,7 +610,7 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     headerContainer: {
-        width: Dimensions.get('window').width,
+        width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
     },
