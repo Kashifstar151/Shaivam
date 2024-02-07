@@ -201,7 +201,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
         <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
             <Background>
                 <BackButton
-                    secondMiddleText={data?.titleS}
+                    secondMiddleText={data?.title}
                     color={true}
                     // middleText={data}
                     navigation={navigation}
