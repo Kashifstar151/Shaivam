@@ -56,7 +56,30 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const [showSetting, setShowSetting] = useState(false);
     const language = ['Original', 'Tamil', 'English', 'Hindi'];
     const [selectedLang, setSelectedLang] = useState('Original');
-    const [fontSizeCount, setFontSizeCount] = useState(12);
+    const [fontSizeCount, setFontSizeCount] = useState(null);
+
+    const initializeTheFontSize = async () => {
+        const value = await AsyncStorage.getItem('@lyricsFontSize');
+        if (!value) {
+            await AsyncStorage.setItem('@lyricsFontSize', '12');
+            setFontSizeCount(12);
+        } else {
+            setFontSizeCount(parseInt(value));
+        }
+    };
+
+    const setFontSizeForLyrics = async (fontSizeCount) => {
+        await AsyncStorage.setItem('@lyricsFontSize', String(fontSizeCount));
+    };
+
+    useEffect(() => {
+        if (fontSizeCount) {
+            setFontSizeForLyrics(fontSizeCount);
+        } else {
+            initializeTheFontSize();
+        }
+    }, [fontSizeCount]);
+
     const [darkMode, setDarkMode] = useState(colorScheme === 'dark' ? true : false);
     const [tamilSplit, setTamilSplit] = useState(false);
     const [songDetails, setSongDetails] = useState(null);
@@ -95,6 +118,21 @@ const ThrimuraiSong = ({ route, navigation }) => {
         setTheme(darkMode ? dark : light);
         AsyncStorage.setItem('theme', colorScheme);
     }, [darkMode]);
+
+    // useEffect(() => {
+    //     const value = AsyncStorage.getItem('songFontSize');
+    //     if (value) {
+    //         setFontSizeCount(value);
+    //     } else {
+    //         setFontSizeCount(12);
+    //     }
+    // }, []);
+
+    // useEffect(() => {
+    //     if (fontSizeCount) {
+    //         AsyncStorage.setItem('songFontSize', fontSizeCount);
+    //     }
+    // }, [fontSizeCount]);
 
     const changeTranlation = (item) => {
         switch (item) {
@@ -194,9 +232,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
         callbacks(!value);
     };
 
-    useEffect(() => {
-        console.log('the state ==>', tamilSplit, darkMode);
-    }, [tamilSplit, darkMode]);
     return (
         <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
             <Background>
