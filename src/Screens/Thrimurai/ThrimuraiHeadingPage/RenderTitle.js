@@ -1,7 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+    ActivityIndicator,
+    FlatList,
+    Modal,
+    Pressable,
+    StyleSheet,
+    Text,
+    View,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
-import SQLite from 'react-native-sqlite-storage';
 import { colors } from '../../../Helpers';
 import RenderAudios from '../RenderAudios';
 import { getSqlData } from '../../Database';
@@ -19,10 +26,8 @@ const RenderEachTitle = ({
     flagShowAudio,
     ThalamHeaders,
 }) => {
-    // console.log('🚀 ~ file: RenderTitle.js:21 ~ flagShowAudio:', flagShowAudio);
     const { theme } = useContext(ThemeContext);
     const { t } = useTranslation();
-    // console.log('the col===>', JSON.stringify(item));
     return (
         <>
             {!flagShowAudio ? (
@@ -42,10 +47,8 @@ const RenderEachTitle = ({
                                 });
                             } else {
                                 if (selectedChapter === index) {
-                                    console.log('the item is set to null');
                                     setSelectedChapter(null);
                                 } else {
-                                    console.log('the item is set value', index);
                                     setSelectedChapter(index);
                                 }
                             }
@@ -136,7 +139,6 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
         } else {
             query = `SELECT * FROM thirumurais where fkTrimuria=${data.prevId}  ORDER BY titleNo ASC LIMIT ${pageSize} OFFSET 0`;
         }
-        // const query = `SELECT pann, prevId,fkTrimuria FROM thirumurais where fkTrimuria=${data.prevId} and pann NOTNULL GROUP BY pann ORDER BY titleNo ASC`;
         const query2 = `Select * from thirumurais where ${
             ThalamHeaders === 0 ? 'country' : 'thalam'
         }='${data}' GROUP BY thalam ORDER BY  titleNo ASC LIMIT ${pageSize} OFFSET 0`;
