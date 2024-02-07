@@ -390,7 +390,9 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                     ]}
                                 >
                                     {!tamilSplit
-                                        ? res?.rawSong || 'Coming Soon '
+                                        ? selectedLang !== 'Tamil'
+                                            ? res?.rawSong
+                                            : res?.tamilExplanation || 'Coming Soon Tamil explain '
                                         : res?.tamilSplit || 'Coming Soon '}
                                 </Text>
                                 <Text
