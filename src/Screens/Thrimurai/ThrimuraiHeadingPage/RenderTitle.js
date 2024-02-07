@@ -40,6 +40,14 @@ const RenderEachTitle = ({
                                 navigation.navigate(RouteTexts?.THRIMURAI_SONG, {
                                     data: item,
                                 });
+                            } else {
+                                if (selectedChapter === index) {
+                                    console.log('the item is set to null');
+                                    setSelectedChapter(null);
+                                } else {
+                                    console.log('the item is set value', index);
+                                    setSelectedChapter(index);
+                                }
                             }
                         }}
                     >
@@ -60,7 +68,9 @@ const RenderEachTitle = ({
                         </View>
                         {!thalam || (thalam && ThalamHeaders === 0) ? (
                             selectedChapter !== null && selectedChapter == index ? (
-                                <TouchableOpacity onPress={() => setSelectedChapter(null)}>
+                                <View
+                                // onPress={() => setSelectedChapter(null)}
+                                >
                                     {
                                         <Icon
                                             name="keyboard-arrow-down"
@@ -72,9 +82,11 @@ const RenderEachTitle = ({
                                             }
                                         />
                                     }
-                                </TouchableOpacity>
+                                </View>
                             ) : (
-                                <TouchableOpacity onPress={() => setSelectedChapter(index)}>
+                                <View
+                                // onPress={() => setSelectedChapter(index)}
+                                >
                                     {
                                         <Icon
                                             name="keyboard-arrow-right"
@@ -86,7 +98,7 @@ const RenderEachTitle = ({
                                             }
                                         />
                                     }
-                                </TouchableOpacity>
+                                </View>
                             )
                         ) : null}
                     </Pressable>
