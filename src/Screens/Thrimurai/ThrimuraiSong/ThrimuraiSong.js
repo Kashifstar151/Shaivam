@@ -256,7 +256,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>Aruliyavar</Text>
                                 <Text style={styles.valueDropDown}>
-                                    {metaData?.author || 'Comming Soon '}
+                                    {t(metaData?.author) || 'Text currently not available'}
                                 </Text>
                             </View>
                         </View>
@@ -278,7 +278,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>Nadu</Text>
                                 <Text style={styles.valueDropDown}>
-                                    {metaData?.country || 'Coming Soon '}
+                                    {t(metaData?.country) || 'Text currently not available '}
                                 </Text>
                             </View>
                         </View>
@@ -299,7 +299,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             </View>
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>Pann</Text>
-                                <Text style={styles.valueDropDown}>{metaData?.pann}</Text>
+                                <Text style={styles.valueDropDown}>{t(metaData?.pann)}</Text>
                             </View>
                         </View>
 
@@ -319,7 +319,13 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             </View>
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>Thalam</Text>
-                                <Text style={styles.valueDropDown}>{metaData?.thalam}</Text>
+                                <Text style={styles.valueDropDown}>
+                                    {t(metaData?.thalam)}
+
+                                    {/* {metaData?.thalam === 'சீர்காழி - 06 - பூந்தராய்'
+                                        ? 'true'
+                                        : 'false'} */}
+                                </Text>
                             </View>
                         </View>
                     </>
