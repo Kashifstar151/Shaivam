@@ -12,26 +12,24 @@ import TrackPlayer, {
     usePlaybackState,
     Event,
     State,
+    useTrackPlayerEvents,
+    useActiveTrack,
     useProgress,
 } from 'react-native-track-player';
 import { getSqlData } from '../Database';
 import { useIsFocused } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
 
-const RenderAudios = ({ item, index, clb, selectedOdhuvar, setSelectedOdhuvar }) => {
-    console.log('🚀 ~ file: AudioPlayer.js:70 ~ RenderAudios ~ clb:', clb);
-
-    const setItemForPlayer = (item) => {
-        console.log('🚀 ~ file: AudioPlayer.js:73 ~ setItemForPlayer ~ item:', item);
-        setSelectedOdhuvar(item);
+const RenderAudios = ({ item, index, clb, activeTrack }) => {
+    const setItemForPlayer = () => {
         clb(index);
     };
     return (
         <>
-            {selectedOdhuvar?.id == item?.id ? (
+            {activeTrack?.id == item?.id ? (
                 <TouchableOpacity
                     onPress={() => {
-                        setItemForPlayer(item);
+                        setItemForPlayer();
                     }}
                     style={{
                         paddingHorizontal: 7,
@@ -48,7 +46,7 @@ const RenderAudios = ({ item, index, clb, selectedOdhuvar, setSelectedOdhuvar })
                 </TouchableOpacity>
             ) : (
                 <TouchableOpacity
-                    onPress={() => setItemForPlayer(item)}
+                    onPress={() => setItemForPlayer()}
                     style={{
                         paddingHorizontal: 7,
                         backgroundColor: '#292929',
@@ -66,36 +64,29 @@ const RenderAudios = ({ item, index, clb, selectedOdhuvar, setSelectedOdhuvar })
 };
 
 const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => {
-    // const { params } = route
-    console.log(
-        '🚀 ~ file: AudioPlayer.js:19 ~ AudioPlayer ~ songsData:',
-        JSON.stringify(songsData, 0, 2)
-    );
     const isFocuced = useIsFocused;
     const { position, duration } = useProgress();
-    // console.log("🚀 ~ file: AudioPlayer.js:110 ~ handlePlay ~ position:", position, duration)
-    const [selectedOdhuvar, setSelectedOdhuvar] = useState(null);
     const [paused, setPaused] = useState(false);
     const [ThumbImage, setThumbImage] = useState(null);
     const [Odhuvar, setOdhuvar] = useState(songsData);
     const playBackState = usePlaybackState();
     useEffect(() => {
         Icon.getImageSource('circle', 18, '#C1554E').then((source) => {
-            // console.log("🚀 ~ file: AudioPlayer.js:26 ~ useEffect ~ source:", source)
             return setThumbImage({ thumbIcon: source });
         });
     }, []);
+
+    const activeTrack = useActiveTrack();
+
     useEffect(() => {
-        console.log('playBackState', playBackState);
         getSOngData();
     }, [songsData, isFocuced]);
+
     const getSOngData = () => {
         const query = `SELECT * from thirumurai_songs where prevId=${prevId} and title NOTNULL`;
         getSqlData(query, (callbacks) => {
-            // setSongDetails(callbacks)
             const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`;
             getSqlData(query2, async (callbacks) => {
-                // setSongs(callbacks)
                 setOdhuvar(callbacks);
                 setUpPlayer(callbacks);
             });
@@ -103,19 +94,16 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
     };
     const handlePause = async () => {
         setPaused(false);
-        // console.log("playBackState", playBackState)
         await TrackPlayer.pause();
         await TrackPlayer.getActiveTrack();
     };
     const handlePlay = async () => {
         setPaused(true);
-        // console.log("playBackState", playBackState)
         await TrackPlayer.play();
         await TrackPlayer.getActiveTrack();
     };
 
     const handleNext = async () => {
-        // console.log("Trackplayer", TrackPlayer.getCurrentTrack())
         await TrackPlayer.skipToNext();
         await TrackPlayer.play();
         setPaused(true);
@@ -127,18 +115,15 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
     };
 
     const playById = async (id) => {
-        console.log('The player ==>', id);
         await TrackPlayer.skip(id);
         await TrackPlayer.play();
         setPaused(true);
     };
+
     const setUpPlayer = async (song) => {
-        console.log('🚀 ~ file: AudioPlayer.js:124 ~ setUpPlayer ~ song:', song);
         try {
-            // console.log(true)
             if (!TrackPlayer._initialized) {
                 await TrackPlayer.setupPlayer();
-                // additional setup logic if needed
             }
             await TrackPlayer.updateOptions({
                 android: {
@@ -155,14 +140,8 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                 compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
                 progressUpdateEventInterval: 2,
             });
-
             await TrackPlayer.add(song);
-            // const queue = await TrackPlayer.getQueue();
-            // console.log("Current queue:", queue);
-            // await TrackPlayer.setRepeatMode()
         } catch (error) {
-            // console.log("🚀 ~ file: AudioPlayer.js:102 ~ setUpPlayer ~ error:", error)
-            // TrackPlayer.reset()
             await TrackPlayer.updateOptions({
                 android: {
                     appKilledPlaybackBehavior:
@@ -199,8 +178,7 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                             item={item}
                             index={index}
                             clb={playById}
-                            selectedOdhuvar={selectedOdhuvar}
-                            setSelectedOdhuvar={setSelectedOdhuvar}
+                            activeTrack={activeTrack}
                         />
                     )}
                 />
