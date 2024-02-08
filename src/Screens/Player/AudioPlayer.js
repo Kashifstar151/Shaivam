@@ -5,6 +5,8 @@ import ShuffleIcon from '../../assets/Images/music (1).svg';
 import Icon from 'react-native-vector-icons/dist/AntDesign';
 import FavouriteIcon from '../../assets/Images/Vector (2).svg';
 import ThumbImage from '../../assets/Images/Ellipse 5.svg';
+// import RNFetchBlob from 'rn-fetch-blob';
+import * as RNFS from 'react-native-fs'
 import TrackPlayer, {
     AppKilledPlaybackBehavior,
     Capability,
@@ -17,15 +19,18 @@ import TrackPlayer, {
 import { getSqlData } from '../Database';
 import { useIsFocused } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
+import { AddSongToDatabase, createUserTable, listfavAudios } from '../../Databases/AudioPlayerDatabase';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const RenderAudios = ({ item, index, clb, selectedOdhuvar, setSelectedOdhuvar }) => {
-    console.log('🚀 ~ file: AudioPlayer.js:70 ~ RenderAudios ~ clb:', clb);
+    // console.log('🚀 ~ file: AudioPlayer.js:70 ~ RenderAudios ~ clb:', clb);
 
     const setItemForPlayer = (item) => {
-        console.log('🚀 ~ file: AudioPlayer.js:73 ~ setItemForPlayer ~ item:', item);
+        // console.log('🚀 ~ file: AudioPlayer.js:73 ~ setItemForPlayer ~ item:', item);
         setSelectedOdhuvar(item);
         clb(index);
     };
+
     return (
         <>
             {selectedOdhuvar?.id == item?.id ? (
@@ -67,10 +72,18 @@ const RenderAudios = ({ item, index, clb, selectedOdhuvar, setSelectedOdhuvar })
 
 const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => {
     // const { params } = route
-    console.log(
-        '🚀 ~ file: AudioPlayer.js:19 ~ AudioPlayer ~ songsData:',
-        JSON.stringify(songsData, 0, 2)
-    );
+    const downloadAudios = () => {
+        createUserTable()
+        TrackPlayer.getActiveTrack().then((res) => {
+            console.log("🚀 ~ TrackPlayer.getActiveTrack ~ res:", res)
+            AddSongToDatabase('sf', [res?.id, res?.url, res?.title, res?.artist, res?.categoryName, res?.thalamOdhuvarTamilname, res?.thirumariasiriyar], callbacks => {
+                console.log('callbacks', JSON.stringify(callbacks, 0, 2))
+            })
+        }).catch((err) => {
+            console.log("🚀 ~ TrackPlayer.getActiveTrack ~ err:", err)
+        }
+        )
+    }
     const isFocuced = useIsFocused;
     const { position, duration } = useProgress();
     // console.log("🚀 ~ file: AudioPlayer.js:110 ~ handlePlay ~ position:", position, duration)
@@ -125,9 +138,35 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
         await TrackPlayer.play();
         setPaused(true);
     };
+    const downloadAudio = () => {
+        // let dirs = RNFetchBlob.fs.dirs;
+        TrackPlayer.getActiveTrack().then((item) => {
+            console.log("🚀 ~ TrackPlayer.getActiveTrack ~ res:", item)
+            RNFetchBlob.config({
+                path: `${RNFS.ExternalDirectoryPath}/downloaded`
+            })
+                .fetch('GET', item?.url)
+                .then((res) => {
+                    console.log('The file is saved to:', res.path());
+                    // Now you can play this file offline
+                })
+                .catch((error) => console.error(error));
+            // AddSongToDatabase('sf', [res?.id, res?.url, res?.title, res?.artist, res?.categoryName, res?.thalamOdhuvarTamilname, res?.thirumariasiriyar], callbacks => {
+            //     console.log('callbacks', JSON.stringify(callbacks, 0, 2))
+            // })
+        }).catch((err) => {
+            console.log("🚀 ~ TrackPlayer.getActiveTrack ~ err:", err)
+        }
+        )
+        // TrackPlayer.getActiveTrack().then((item) => {
+        //     console.log("🚀 ~ TrackPlayer.getActiveTrack ~ item:", item)
 
+        // }).catch((err) => {
+        //     console.log("err", err)
+        // })
+    };
     const playById = async (id) => {
-        console.log('The player ==>', id);
+        // console.log('The player ==>', id);
         await TrackPlayer.skip(id);
         await TrackPlayer.play();
         setPaused(true);
@@ -182,7 +221,6 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
             await TrackPlayer.add(song);
         }
     };
-
     return (
         <View style={{ backgroundColor: '#222222', height: 200 }}>
             <View style={styles.container}>
@@ -297,9 +335,11 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                     marginTop: 15,
                     paddingHorizontal: 20,
                     alignItems: 'center',
+                    // backgroundColor: 'white'
                 }}
             >
                 <TouchableOpacity
+                    style={{ width: '28%', }}
                     onPress={() => {
                         return;
                     }}
@@ -307,56 +347,61 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                     <ShuffleIcon />
                 </TouchableOpacity>
 
-                <TouchableOpacity
+                {/* <TouchableOpacity
                     style={{ width: 30, height: 30, paddingHorizontal: 20 }}
                     onPress={() => {
                         return;
                     }}
-                ></TouchableOpacity>
+                ></TouchableOpacity> */}
                 {/* <View style={{ alignItems: 'center', paddingHorizontal: 20 }}>
                 </View> */}
-                <TouchableOpacity onPress={() => handlePrevious()}>
-                    <Icon name="stepbackward" size={24} color="white" />
-                </TouchableOpacity>
-                {paused ? (
-                    <TouchableOpacity
-                        style={{ marginHorizontal: 10 }}
-                        onPress={() => handlePause(playBackState)}
-                    >
-                        <View
-                            style={{
-                                height: 40,
-                                width: 40,
-                                borderRadius: 20,
-                                backgroundColor: '#FAF8FF',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                            }}
+                <View style={{ flexDirection: 'row', alignItems: 'center', width: '50%' }}>
+                    <TouchableOpacity onPress={() => handlePrevious()}>
+                        <Icon name="stepbackward" size={24} color="white" />
+                    </TouchableOpacity>
+                    {paused ? (
+                        <TouchableOpacity
+                            style={{ marginHorizontal: 10 }}
+                            onPress={() => handlePause(playBackState)}
                         >
-                            <Icon name="pause" size={32} color="black" />
-                        </View>
+                            <View
+                                style={{
+                                    height: 40,
+                                    width: 40,
+                                    borderRadius: 20,
+                                    backgroundColor: '#FAF8FF',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginHorizontal: 30
+                                }}
+                            >
+                                <Icon name="pause" size={32} color="black" />
+                            </View>
+                        </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity
+                            style={{ marginHorizontal: 30 }}
+                            onPress={() => handlePlay(playBackState)}
+                        >
+                            <Icon name="play" size={40} color="white" />
+                        </TouchableOpacity>
+                    )}
+                    <TouchableOpacity onPress={() => handleNext()}>
+                        <Icon name="stepforward" size={24} color="white" />
                     </TouchableOpacity>
-                ) : (
-                    <TouchableOpacity
-                        style={{ marginHorizontal: 10 }}
-                        onPress={() => handlePlay(playBackState)}
-                    >
-                        <Icon name="play" size={40} color="white" />
-                    </TouchableOpacity>
-                )}
-                <TouchableOpacity onPress={() => handleNext()}>
-                    <Icon name="stepforward" size={24} color="white" />
-                </TouchableOpacity>
+                </View>
                 {/* <View
                     style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
                 >
                 </View> */}
-                <TouchableOpacity style={{ marginHorizontal: 10 }}>
-                    <Icon name="download" size={24} color="white" />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <FavouriteIcon />
-                </TouchableOpacity>
+                <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                    <TouchableOpacity style={{ marginHorizontal: 20 }} onPress={() => downloadAudio()}>
+                        <Icon name="download" size={24} color="white" />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => downloadAudios()}>
+                        <FavouriteIcon />
+                    </TouchableOpacity>
+                </View>
                 {/* <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 </View> */}
             </View>
