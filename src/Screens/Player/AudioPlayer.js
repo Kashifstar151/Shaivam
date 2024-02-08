@@ -21,10 +21,12 @@ import TrackPlayer, {
 import { getSqlData } from '../Database';
 import { useIsFocused } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
-import { AddSongToDatabase, createUserTable, listfavAudios } from '../../Databases/AudioPlayerDatabase';
+import { AddDownloadedAudios, AddSongToDatabase, createDownloadTable, createUserTable, listfavAudios } from '../../Databases/AudioPlayerDatabase';
 import RNFetchBlob from 'rn-fetch-blob';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 
-const RenderAudios = ({ item, index, clb, selectedOdhuvar, setSelectedOdhuvar }) => {
+const RenderAudios = ({ item, index, clb, selectedOdhuvar, setSelectedOdhuvar, activeTrack }) => {
     // console.log('🚀 ~ file: AudioPlayer.js:70 ~ RenderAudios ~ clb:', clb);
 
     const setItemForPlayer = (item) => {
@@ -75,7 +77,7 @@ const RenderAudios = ({ item, index, clb, selectedOdhuvar, setSelectedOdhuvar })
 const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => {
     // const { params } = route
     const downloadAudios = () => {
-        createUserTable()
+
         TrackPlayer.getActiveTrack().then((res) => {
             console.log("🚀 ~ TrackPlayer.getActiveTrack ~ res:", res)
             AddSongToDatabase('sf', [res?.id, res?.url, res?.title, res?.artist, res?.categoryName, res?.thalamOdhuvarTamilname, res?.thirumariasiriyar], callbacks => {
@@ -91,13 +93,24 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
     const [paused, setPaused] = useState(false);
     const [ThumbImage, setThumbImage] = useState(null);
     const [Odhuvar, setOdhuvar] = useState(songsData);
+    const [repeatMode, setRepeatMode] = useState()
     const playBackState = usePlaybackState();
     useEffect(() => {
         Icon.getImageSource('circle', 18, '#C1554E').then((source) => {
             return setThumbImage({ thumbIcon: source });
         });
-    }, []);
+        createUserTable()
 
+    }, []);
+    const getMode = (mode) => {
+        if (mode == 0) {
+            TrackPlayer.setRepeatMode(RepeatMode.Off)
+            setRepeatMode(0)
+        } else {
+            TrackPlayer.setRepeatMode(RepeatMode.Queue)
+            setRepeatMode(2)
+        }
+    }
     const activeTrack = useActiveTrack();
 
     useEffect(() => {
@@ -137,22 +150,45 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
     };
     const downloadAudio = () => {
         // let dirs = RNFetchBlob.fs.dirs;
-        TrackPlayer.getActiveTrack().then((item) => {
+        TrackPlayer.getActiveTrack().then(async (item) => {
             console.log("🚀 ~ TrackPlayer.getActiveTrack ~ res:", item)
+            const path = `${RNFS.ExternalDirectoryPath}/${item?.thalamOdhuvarTamilname}`;
+            // const options = {
+            //     fromUrl: item?.url,
+            //     toFile: path,
+            // };
             RNFetchBlob.config({
-                path: `${RNFS.ExternalDirectoryPath}/downloaded`
+                path: path
             })
-                .fetch('GET', item?.url)
-                .then((res) => {
-                    console.log('The file is saved to:', res.path());
-                    // Now you can play this file offline
+                .fetch(
+                    'GET',
+                    `${item?.url}`
+                ).then(async (res) => {
+                    console.log("the audio file save to this path", res.path())
+                    const jsonValue = JSON.stringify({
+                        id: item?.id,
+                        title: item?.title,
+                        artist: item?.artist,
+                        url: res.path(),
+                        categoryName: item?.categoryName,
+                        thalamOdhuvarTamilname: item?.thalamOdhuvarTamilname,
+                        thirumariasiriyar: item?.thirumariasiriyar
+                    });
+                    await AsyncStorage.setItem(`downloaded:${item?.thalamOdhuvarTamilname}`, jsonValue);
+                    console.log('Metadata saved');
+                    //     }
+                    //   };
+                }).catch((err) => {
+                    console.log('error occured in downloading audio', err)
                 })
-                .catch((error) => console.error(error));
-            // AddSongToDatabase('sf', [res?.id, res?.url, res?.title, res?.artist, res?.categoryName, res?.thalamOdhuvarTamilname, res?.thirumariasiriyar], callbacks => {
-            //     console.log('callbacks', JSON.stringify(callbacks, 0, 2))
-            // })
-        }).catch((err) => {
-            console.log("🚀 ~ TrackPlayer.getActiveTrack ~ err:", err)
+            // console.log("🚀 ~ TrackPlayer.getActiveTrack ~ options:", options)
+            // try {
+            //     await RNFS.downloadFile(options).promise;
+            //     console.log('Audio downloaded to', path);
+            //     // You can now play this file offline using the path
+            // } catch (error) {
+            //     console.error('Download error:', error);
+            // }
         }
         )
         // TrackPlayer.getActiveTrack().then((item) => {
@@ -235,6 +271,7 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                 <Slider
                     value={position}
                     thumbImage={ThumbImage}
+
                     onValueChange={(value) => TrackPlayer.seekTo(value)}
                     style={{ width: Dimensions.get('window').width - 30, alignSelf: 'center' }}
                     minimumValue={0}
@@ -242,6 +279,7 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                     minimumTrackTintColor="#C1554E"
                     maximumTrackTintColor="#EFEFEF"
                     thumbTintColor="#C1554E"
+
                 />
                 <View
                     style={{
@@ -326,14 +364,21 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                     // backgroundColor: 'white'
                 }}
             >
-                <TouchableOpacity
-                    style={{ width: '28%', }}
-                    onPress={() => {
-                        return;
-                    }}
-                >
-                    <ShuffleIcon />
-                </TouchableOpacity>
+                {
+                    repeatMode == 2 ?
+                        <TouchableOpacity
+                            style={{ width: '28%', }}
+                            onPress={() => getMode(0)}
+                        >
+                            <MaterialIcons name='shuffle' size={24} />
+                        </TouchableOpacity> :
+                        <TouchableOpacity
+                            style={{ width: '28%', }}
+                            onPress={() => getMode(2)}
+                        >
+                            <ShuffleIcon />
+                        </TouchableOpacity>
+                }
 
                 {/* <TouchableOpacity
                     style={{ width: 30, height: 30, paddingHorizontal: 20 }}
@@ -349,7 +394,7 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                     </TouchableOpacity>
                     {paused ? (
                         <TouchableOpacity
-                            style={{ marginHorizontal: 10 }}
+                            // style={{ marginHorizontal: 10 }}
                             onPress={() => handlePause(playBackState)}
                         >
                             <View
@@ -368,7 +413,15 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                         </TouchableOpacity>
                     ) : (
                         <TouchableOpacity
-                            style={{ marginHorizontal: 30 }}
+                            style={{
+                                height: 40,
+                                width: 40,
+                                borderRadius: 20,
+                                // backgroundColor: '#FAF8FF',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginHorizontal: 30
+                            }}
                             onPress={() => handlePlay(playBackState)}
                         >
                             <Icon name="play" size={40} color="white" />
