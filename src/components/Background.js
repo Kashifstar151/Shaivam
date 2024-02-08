@@ -11,6 +11,7 @@ const Background = (props) => {
                 marginTop: Platform.OS == 'ios' ? StatusBar.currentHeight : 0,
                 borderBottomColor: theme.colorscheme !== 'dark' ? '#8F3630' : '',
                 borderBottomWidth: theme.colorscheme !== 'dark' ? 1 : 0,
+                width: '100%',
             }}
         >
             <ImageBackground
@@ -22,7 +23,7 @@ const Background = (props) => {
                 style={{
                     paddingVertical: 0,
                     borderRadius: 10,
-                    width: Dimensions.get('window').width,
+                    width: '100%',
                 }}
             >
                 {/* <View style={{ backgroundColor: '#AA4A44', position: 'absolute', height: 220, width: '100%' }}> */}

@@ -5,6 +5,7 @@ import EllispseSVGLeft from './SVGs/EllispseSVGLeft';
 import EllipseSVGRight from './SVGs/EllipseSVGRight';
 import MusiclistSVG from './SVGs/MusiclistSVG';
 import PlayBtnSVG from './SVGs/PlayBtnSVG';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 const HomePlaylistCard = ({
     colors,
@@ -48,13 +49,22 @@ const HomePlaylistCard = ({
 
             <View style={{ flexDirection: 'row', columnGap: 5, alignItems: 'center' }}>
                 <MusiclistSVG fill={theme.colorScheme === 'light' ? '#4C3600' : '#fff'} />
-                <Text style={{ color: theme.textColor, fontSize: 12 }}>{heading}</Text>
+                <Text style={{ color: theme.textColor, fontSize: RFValue(12, 800) }}>
+                    {heading}
+                </Text>
             </View>
 
-            <Text style={{ color: theme.textColor, fontSize: 16, paddingTop: 8, paddingBottom: 4 }}>
+            <Text
+                style={{
+                    color: theme.textColor,
+                    fontSize: RFValue(14, 800),
+                    paddingTop: 8,
+                    paddingBottom: 4,
+                }}
+            >
                 {info}
             </Text>
-            <Text style={{ color: theme.textColor, fontSize: 12 }}>{subInfo}</Text>
+            <Text style={{ color: theme.textColor, fontSize: RFValue(12, 800) }}>{subInfo}</Text>
 
             <View
                 style={{
@@ -64,7 +74,15 @@ const HomePlaylistCard = ({
                     alignItems: 'center',
                 }}
             >
-                <Text style={{ color: theme.textColor, fontWeight: '600' }}>{songCount} songs</Text>
+                <Text
+                    style={{
+                        color: theme.textColor,
+                        fontWeight: '600',
+                        fontSize: RFValue(12, 800),
+                    }}
+                >
+                    {songCount} songs
+                </Text>
                 <Pressable>
                     <PlayBtnSVG fill={'#4C3600'} />
                 </Pressable>

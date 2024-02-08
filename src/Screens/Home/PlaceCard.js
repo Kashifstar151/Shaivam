@@ -2,6 +2,7 @@ import React from 'react';
 import { Image, Pressable, Text, View } from 'react-native';
 import ShareSVG from '../../components/SVGs/ShareSVG';
 import LocationSVG from '../../components/SVGs/LocationSVG';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 const PlaceCard = ({ img, templeName, address, theme }) => {
     return (
@@ -35,7 +36,7 @@ const PlaceCard = ({ img, templeName, address, theme }) => {
                         style={{
                             fontWeight: '600',
                             color: theme.colorscheme === 'light' ? '#4C3600' : '#fff',
-                            fontSize: 14,
+                            fontSize: RFValue(14, 800),
                         }}
                     >
                         {templeName}
@@ -43,7 +44,7 @@ const PlaceCard = ({ img, templeName, address, theme }) => {
                     <Text
                         style={{
                             color: theme.colorscheme === 'light' ? '#4C3600' : '#fff',
-                            fontSize: 12,
+                            fontSize: RFValue(12, 800),
                         }}
                     >
                         {address}

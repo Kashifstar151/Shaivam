@@ -1,7 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+    ActivityIndicator,
+    FlatList,
+    Modal,
+    Pressable,
+    StyleSheet,
+    Text,
+    View,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
-import SQLite from 'react-native-sqlite-storage';
 import { colors } from '../../../Helpers';
 import RenderAudios from '../RenderAudios';
 import { getSqlData } from '../../Database';
@@ -19,10 +26,8 @@ const RenderEachTitle = ({
     flagShowAudio,
     ThalamHeaders,
 }) => {
-    // console.log('🚀 ~ file: RenderTitle.js:21 ~ flagShowAudio:', flagShowAudio);
     const { theme } = useContext(ThemeContext);
     const { t } = useTranslation();
-    // console.log('the col===>', JSON.stringify(item));
     return (
         <>
             {!flagShowAudio ? (
@@ -40,6 +45,12 @@ const RenderEachTitle = ({
                                 navigation.navigate(RouteTexts?.THRIMURAI_SONG, {
                                     data: item,
                                 });
+                            } else {
+                                if (selectedChapter === index) {
+                                    setSelectedChapter(null);
+                                } else {
+                                    setSelectedChapter(index);
+                                }
                             }
                         }}
                     >
@@ -60,7 +71,9 @@ const RenderEachTitle = ({
                         </View>
                         {!thalam || (thalam && ThalamHeaders === 0) ? (
                             selectedChapter !== null && selectedChapter == index ? (
-                                <TouchableOpacity onPress={() => setSelectedChapter(null)}>
+                                <View
+                                // onPress={() => setSelectedChapter(null)}
+                                >
                                     {
                                         <Icon
                                             name="keyboard-arrow-down"
@@ -72,9 +85,11 @@ const RenderEachTitle = ({
                                             }
                                         />
                                     }
-                                </TouchableOpacity>
+                                </View>
                             ) : (
-                                <TouchableOpacity onPress={() => setSelectedChapter(index)}>
+                                <View
+                                // onPress={() => setSelectedChapter(index)}
+                                >
                                     {
                                         <Icon
                                             name="keyboard-arrow-right"
@@ -86,7 +101,7 @@ const RenderEachTitle = ({
                                             }
                                         />
                                     }
-                                </TouchableOpacity>
+                                </View>
                             )
                         ) : null}
                     </Pressable>
@@ -119,12 +134,11 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
     const getDtataFromSql = async () => {
         setShowLoading(true);
         let query;
-        if (data?.prevId <= 7) {
+        if (data?.prevId <= 7 || data?.prevId === 10) {
             query = `SELECT pann, prevId,fkTrimuria FROM thirumurais where fkTrimuria=${data.prevId} and pann NOTNULL GROUP BY pann ORDER BY titleNo ASC LIMIT ${pageSize} OFFSET 0`;
         } else {
             query = `SELECT * FROM thirumurais where fkTrimuria=${data.prevId}  ORDER BY titleNo ASC LIMIT ${pageSize} OFFSET 0`;
         }
-        // const query = `SELECT pann, prevId,fkTrimuria FROM thirumurais where fkTrimuria=${data.prevId} and pann NOTNULL GROUP BY pann ORDER BY titleNo ASC`;
         const query2 = `Select * from thirumurais where ${
             ThalamHeaders === 0 ? 'country' : 'thalam'
         }='${data}' GROUP BY thalam ORDER BY  titleNo ASC LIMIT ${pageSize} OFFSET 0`;

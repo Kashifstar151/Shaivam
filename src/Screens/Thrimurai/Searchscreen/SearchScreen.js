@@ -17,16 +17,18 @@ import { getSqlData } from '../../Database';
 import { ThemeContext } from '../../../Context/ThemeContext';
 import HighlightedText from './HighlightedText';
 import { RouteTexts } from '../../../navigation/RouteText';
+import { useTranslation } from 'react-i18next';
 
 const SearchScreen = ({ navigation, route }) => {
     const { thrimurais } = route?.params;
-    const [searchText, setSearchText] = useState();
+    const updatedThrimurai = [{ id: 0, name: 'All' }, ...thrimurais];
+    const [searchText, setSearchText] = useState('');
     const [searchResult, setSearchedResult] = useState([]);
     const [onFocus, setOnFocus] = useState(false);
     const [rawSongs, setRawSongs] = useState(null);
     const { theme } = useContext(ThemeContext);
 
-    const [fktrimuria, setFkTrimuria] = useState(null);
+    const [fktrimuria, setFkTrimuria] = useState(new Set([0]));
 
     const setIndexOfFkTrimurai = (idx) => {
         if (idx !== fktrimuria) {
@@ -35,16 +37,24 @@ const SearchScreen = ({ navigation, route }) => {
             setFkTrimuria(null);
         }
     };
+    const [isSearched, setIsSearched] = useState(false);
 
     useEffect(() => {
         getDataFromSql();
+
+        return () => {
+            setIsSearched(false);
+        };
     }, [fktrimuria]);
 
     const getDataFromSql = (e) => {
+        setIsSearched(false);
+
+        // ${([...mySet].join(","))}
         if (searchText && searchText.length >= 2) {
             getSqlData(
                 `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${searchText}%' ${
-                    fktrimuria ? `and fkTrimuria=${fktrimuria}` : ''
+                    !fktrimuria.has(0) ? `and fkTrimuria IN (${[...fktrimuria].join(',')})` : ''
                 } GROUP BY titleS  LIMIT 10 ;`,
                 // `SELECT * FROM thirumurais WHERE search_title='%திருஞானசம்பந்தர்தேவாரம்-1.031-திருக்குரங்கணின்முட்டம்-விழுநீர்மழுவாள்படை%' LIMIT 10 OFFSET 0;`,
                 (callbacks) => {
@@ -53,13 +63,14 @@ const SearchScreen = ({ navigation, route }) => {
             );
             getSqlData(
                 `SELECT * FROM thirumurai_songs WHERE searchTitle LIKE '%${searchText}%' ${
-                    fktrimuria ? `and thirumuraiId=${fktrimuria}` : ''
+                    !fktrimuria.has(0) ? `and thirumuraiId IN (${[...fktrimuria].join(',')})` : ''
                 } ORDER BY songNo ASC LIMIT 10 OFFSET 0;`,
                 (callbacks) => {
                     setRawSongs(callbacks);
-                    // setSearchText(e)
                 }
             );
+
+            setIsSearched(true);
         }
     };
     const highlight = (item, index, key) => {
@@ -100,12 +111,35 @@ const SearchScreen = ({ navigation, route }) => {
             </Pressable>
         );
     };
+
+    const { t } = useTranslation();
+    const setFkTrimuriaFunc = (item) => {
+        setFkTrimuria((prev) => {
+            let updateData = new Set(prev);
+            if (item !== 0) {
+                if (updateData.has(0)) {
+                    updateData.delete(0);
+                } else if (updateData.has(item)) {
+                    updateData.delete(item);
+                    if (updateData.size === 0) {
+                        updateData.add(0);
+                    }
+                }
+                updateData.add(item);
+            } else {
+                updateData.clear();
+                updateData.add(0);
+            }
+            return updateData;
+        });
+    };
+
     return (
         <View style={[styles.main, { backgroundColor: theme.backgroundColor }]}>
             <Background>
                 <HeaderWithTextInput
                     onSubmitEditing={getDataFromSql}
-                    placeholder={'Search for any( முதல்-திருமுறை )'}
+                    placeholder={`${t('Search for any')} ( முதல்-திருமுறை )`}
                     navigation={navigation}
                     setState={(e) => setSearchText(e)}
                     state={searchText}
@@ -120,18 +154,19 @@ const SearchScreen = ({ navigation, route }) => {
                         marginBottom: 10,
                     }}
                 >
-                    <Text style={{ color: 'white' }}>Search In -</Text>
+                    <Text style={{ color: 'white' }}>Search In - </Text>
                     <FlatList
                         showsHorizontalScrollIndicator={false}
                         horizontal
-                        data={thrimurais}
+                        data={updatedThrimurai}
                         renderItem={({ item, index }) => (
                             <TouchableOpacity
                                 style={{
                                     marginLeft: 5,
                                     // backgroundColor: theme.searchBox.bgColor,
                                     backgroundColor:
-                                        fktrimuria !== item?.id
+                                        // fktrimuria !== item?.id
+                                        !fktrimuria.has(item?.id)
                                             ? theme.searchContext.unSelected.bgColor
                                             : theme.searchContext.selected.bgColor,
 
@@ -142,38 +177,49 @@ const SearchScreen = ({ navigation, route }) => {
                                     paddingHorizontal: 12,
                                 }}
                                 onPress={() => {
-                                    setIndexOfFkTrimurai(item?.id);
+                                    setFkTrimuriaFunc(item?.id);
                                 }}
                             >
                                 <Text
                                     style={{
-                                        color:
-                                            fktrimuria !== item?.id
-                                                ? theme.searchContext.unSelected.textColor
-                                                : theme.searchContext.selected.textColor,
+                                        color: !fktrimuria.has(item?.id)
+                                            ? theme.searchContext.unSelected.textColor
+                                            : theme.searchContext.selected.textColor,
                                         fontFamily: 'Mulish-Regular',
                                     }}
-                                >{`Thrimurai ${item?.id}`}</Text>
+                                >{`${item?.id === 0 ? 'All' : `Thrimurai ${item?.id}`} `}</Text>
                             </TouchableOpacity>
                         )}
                     />
                 </View>
             </Background>
-            {searchResult?.length > 0 || rawSongs?.length > 0 ? (
-                <ScrollView style={{ marginTop: 10, paddingHorizontal: 10 }}>
-                    <Text style={styles.searchresult}>Search Result({searchResult?.length})</Text>
-                    <FlatList
-                        key={(item) => item?.id}
-                        contentContainerStyle={{ marginTop: 10 }}
-                        data={searchResult}
-                        renderItem={({ item, index }) => renderResult(item, index, 'title')}
-                    />
-                    <FlatList
-                        contentContainerStyle={{ marginTop: 10 }}
-                        data={rawSongs}
-                        renderItem={({ item, index }) => renderResult(item, index, 'rawSong')}
-                    />
-                </ScrollView>
+            {isSearched ? (
+                // searchResult?.length > 0 || rawSongs?.length > 0 ?
+                isSearched && !(searchResult?.error && rawSongs?.error) ? (
+                    <ScrollView style={{ marginTop: 10, paddingHorizontal: 10 }}>
+                        <Text style={styles.searchresult}>
+                            Search Result({searchResult?.length})
+                        </Text>
+                        <FlatList
+                            key={(item) => item?.id}
+                            contentContainerStyle={{ marginTop: 10 }}
+                            data={searchResult}
+                            renderItem={({ item, index }) => renderResult(item, index, 'title')}
+                        />
+                        <FlatList
+                            contentContainerStyle={{ marginTop: 10 }}
+                            data={rawSongs}
+                            renderItem={({ item, index }) => renderResult(item, index, 'rawSong')}
+                        />
+                    </ScrollView>
+                ) : (
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <CenterIcon />
+                        <Text style={{ color: '#777777', fontFamily: 'Mulish-Regular' }}>
+                            No Result found
+                        </Text>
+                    </View>
+                )
             ) : (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <CenterIcon />

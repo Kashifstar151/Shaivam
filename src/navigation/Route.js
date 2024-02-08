@@ -15,50 +15,54 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import LottieView from 'lottie-react-native';
 import SearchScreen from '../Screens/Thrimurai/Searchscreen/SearchScreen'
 import BottomTabs from './BottomTab/BottomTabs'
+import Strotras from '../Screens/Strotras/Strotras';
 
 const Route = () => {
-    const Stack = createNativeStackNavigator()
+    const Stack = createNativeStackNavigator();
     const database = SQLite.openDatabase({ name: 'songData.db', createFromLocation: 1 });
-    const [showDownloading, setShowDownloading] = useState(false)
-    const [isConnected, setIsConnected] = useState(false)
+    const [showDownloading, setShowDownloading] = useState(false);
+    const [isConnected, setIsConnected] = useState(false);
     // const database = SQLite.openDatabase({ name: databaseName, });
     useEffect(() => {
         // checkConnection(true)
-        AsyncStorage.setItem('@database', JSON.stringify({ name: 'songData.db', createFromLocation: 1 }))
+        AsyncStorage.setItem(
+            '@database',
+            JSON.stringify({ name: 'songData.db', createFromLocation: 1 })
+        );
         LogBox.ignoreAllLogs();
         AppState.addEventListener('change', (nextAppState) => {
             if (nextAppState === 'background' || nextAppState === 'inactive') {
                 database.close();
             }
         });
-        requestFilePermissions()
+        requestFilePermissions();
         // offlineDataBAse()
-        const unsubscribe = addEventListener(state => {
+        const unsubscribe = addEventListener((state) => {
             // console.log("Connection type", state.type);
             // console.log("Is connected?", state.isConnected);
             if (state.isConnected) {
-                setIsConnected(true)
-                checkConnection(true)
+                setIsConnected(true);
+                checkConnection(true);
             } else {
-                checkConnection(false)
+                checkConnection(false);
             }
         });
         unsubscribe();
         // checkFileExist()
         // attachDb()
         // connectDataBaseToFolder()
-    }, [])
+    }, []);
 
     const checkConnection = (connected) => {
         if (connected) {
-            Alert.alert('New Update Available', "Click ok to sync latest data", [
+            Alert.alert('New Update Available', 'Click ok to sync latest data', [
                 {
                     text: 'Cancel',
-                    onPress: () => onCancel()
+                    onPress: () => onCancel(),
                 },
                 {
                     text: 'Ok',
-                    onPress: () => checkFileExist()
+                    onPress: () => checkFileExist(),
                 },
             ]);
         } else {
@@ -66,12 +70,15 @@ const Route = () => {
         }
     };
     const onCancel = () => {
-        AsyncStorage.setItem('@database', JSON.stringify({ name: 'songData.db', createFromLocation: 1 }))
+        AsyncStorage.setItem(
+            '@database',
+            JSON.stringify({ name: 'songData.db', createFromLocation: 1 })
+        );
         // setShowDownloading(true)
         // setTimeout(() => {
         //     setShowDownloading(false)
         // }, 2000)
-    }
+    };
     async function requestFilePermissions() {
         try {
             const granted = await PermissionsAndroid.request(
@@ -127,7 +134,7 @@ const Route = () => {
             .catch((error) => {
                 console.log('🚀 ~ file: route.js:99 ~ RNFS.exists ~ error:', error);
             });
-    }
+    };
 
     return (
         <>
@@ -149,18 +156,19 @@ const Route = () => {
                     >
                         <Stack.Screen name={RouteTexts.BOTTOM_TABS} component={BottomTabs} />
                         <Stack.Screen name="Home" component={HomeScreen} />
-                        <Stack.Screen name="Thrimurai" component={ThrimuraiList} />
+                        <Stack.Screen name="Thirumurais" component={ThrimuraiList} />
                         <Stack.Screen name={RouteTexts.SEARCH_SCREEN} component={SearchScreen} />
                         <Stack.Screen
                             name={RouteTexts.THIRIMURAI_HEADING}
                             component={ThrimuraiHeadingPage}
                         />
                         <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={ThrimuraiSong} />
+                        <Stack.Screen name={'Stotras'} component={Strotras} />
                     </Stack.Navigator>
                 </NavigationContainer>
             )}
         </>
     );
-}
+};
 
 export default Route

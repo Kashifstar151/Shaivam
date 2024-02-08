@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import OpenBookSVG from './SVGs/OpenBookSVG';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 const EventCard = ({ date, timing, title, theme }) => {
     return (
@@ -13,8 +14,16 @@ const EventCard = ({ date, timing, title, theme }) => {
             ]}
         >
             <View>
-                <Text style={{ color: theme.textColor }}>{date.day}</Text>
-                <Text style={{ color: theme.textColor, fontSize: 20, fontWeight: '600' }}>
+                <Text style={{ color: theme.textColor, fontSize: RFValue(12, 800) }}>
+                    {date.day}
+                </Text>
+                <Text
+                    style={{
+                        color: theme.textColor,
+                        fontSize: RFValue(20, 800),
+                        fontWeight: '600',
+                    }}
+                >
                     {date.dateNo}
                 </Text>
             </View>
@@ -25,6 +34,7 @@ const EventCard = ({ date, timing, title, theme }) => {
                     style={{
                         fontWeight: '600',
                         color: theme.colorscheme === 'light' ? '#4C3600' : '#fff',
+                        fontSize: RFValue(14, 800),
                     }}
                 >
                     {title}
@@ -33,6 +43,7 @@ const EventCard = ({ date, timing, title, theme }) => {
                     style={{
                         fontWeight: '600',
                         color: theme.colorscheme === 'light' ? '#4C3600' : '#fff',
+                        fontSize: RFValue(12, 800),
                     }}
                 >
                     {timing}

@@ -11,6 +11,7 @@ import {
     View,
     Animated as AnimatedRN,
     useColorScheme,
+    Alert,
 } from 'react-native';
 import BackButton from '../../../components/BackButton';
 import ShareIcon from '../../../assets/Images/share-1.svg';
@@ -46,7 +47,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     });
     const isFocused = useIsFocused;
     const { data } = route.params || {};
-    console.log("🚀 ~ ThrimuraiSong ~ data:", data)
+    console.log('🚀 ~ ThrimuraiSong ~ data:', data);
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
@@ -56,7 +57,30 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const [showSetting, setShowSetting] = useState(false);
     const language = ['Original', 'Tamil', 'English', 'Hindi'];
     const [selectedLang, setSelectedLang] = useState('Original');
-    const [fontSizeCount, setFontSizeCount] = useState(12);
+    const [fontSizeCount, setFontSizeCount] = useState(null);
+
+    const initializeTheFontSize = async () => {
+        const value = await AsyncStorage.getItem('@lyricsFontSize');
+        if (!value) {
+            await AsyncStorage.setItem('@lyricsFontSize', '12');
+            setFontSizeCount(12);
+        } else {
+            setFontSizeCount(parseInt(value));
+        }
+    };
+
+    const setFontSizeForLyrics = async (fontSizeCount) => {
+        await AsyncStorage.setItem('@lyricsFontSize', String(fontSizeCount));
+    };
+
+    useEffect(() => {
+        if (fontSizeCount) {
+            setFontSizeForLyrics(fontSizeCount);
+        } else {
+            initializeTheFontSize();
+        }
+    }, [fontSizeCount]);
+
     const [darkMode, setDarkMode] = useState(colorScheme === 'dark' ? true : false);
     const [tamilSplit, setTamilSplit] = useState(false);
     const [songDetails, setSongDetails] = useState(null);
@@ -72,11 +96,12 @@ const ThrimuraiSong = ({ route, navigation }) => {
         ar: 'ar',
         as: 'as',
         bn: 'bn',
-        hi: 'DV',
+        // hi: 'DV',
+        DV: 'DV',
         gu: 'gu',
         he: 'he',
         ja: 'JP-KA',
-        kn: 'kn-IN',
+        'kn-IN': 'kn-IN',
         ml: 'ml',
         or: 'or',
         pa: 'pa',
@@ -94,6 +119,21 @@ const ThrimuraiSong = ({ route, navigation }) => {
         setTheme(darkMode ? dark : light);
         AsyncStorage.setItem('theme', colorScheme);
     }, [darkMode]);
+
+    // useEffect(() => {
+    //     const value = AsyncStorage.getItem('songFontSize');
+    //     if (value) {
+    //         setFontSizeCount(value);
+    //     } else {
+    //         setFontSizeCount(12);
+    //     }
+    // }, []);
+
+    // useEffect(() => {
+    //     if (fontSizeCount) {
+    //         AsyncStorage.setItem('songFontSize', fontSizeCount);
+    //     }
+    // }, [fontSizeCount]);
 
     const changeTranlation = (item) => {
         switch (item) {
@@ -144,7 +184,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const getSOngData = () => {
         const query = `SELECT * from thirumurai_songs where prevId=${data?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
         getSqlData(query, (callbacks) => {
-            console.log("🚀 ~ getSqlData ~ callbacks:", JSON.stringify(callbacks, 0, 2))
+            console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
             setSongDetails(callbacks);
             const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`;
             getSqlData(query2, (callbacks) => {
@@ -193,14 +233,11 @@ const ThrimuraiSong = ({ route, navigation }) => {
         callbacks(!value);
     };
 
-    useEffect(() => {
-        console.log('the state ==>', tamilSplit, darkMode);
-    }, [tamilSplit, darkMode]);
     return (
         <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
             <Background>
                 <BackButton
-                    secondMiddleText={data?.titleS}
+                    secondMiddleText={data?.title}
                     color={true}
                     // middleText={data}
                     navigation={navigation}
@@ -255,7 +292,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>Aruliyavar</Text>
                                 <Text style={styles.valueDropDown}>
-                                    {metaData?.author || 'Comming Soon '}
+                                    {t(metaData?.author) || 'Text currently not available'}
                                 </Text>
                             </View>
                         </View>
@@ -277,7 +314,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>Nadu</Text>
                                 <Text style={styles.valueDropDown}>
-                                    {metaData?.country || 'Coming Soon '}
+                                    {t(metaData?.country) || 'Text currently not available '}
                                 </Text>
                             </View>
                         </View>
@@ -298,7 +335,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             </View>
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>Pann</Text>
-                                <Text style={styles.valueDropDown}>{metaData?.pann}</Text>
+                                <Text style={styles.valueDropDown}>{t(metaData?.pann)}</Text>
                             </View>
                         </View>
 
@@ -318,7 +355,13 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             </View>
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>Thalam</Text>
-                                <Text style={styles.valueDropDown}>{metaData?.thalam}</Text>
+                                <Text style={styles.valueDropDown}>
+                                    {t(metaData?.thalam)}
+
+                                    {/* {metaData?.thalam === 'சீர்காழி - 06 - பூந்தராய்'
+                                        ? 'true'
+                                        : 'false'} */}
+                                </Text>
                             </View>
                         </View>
                     </>
@@ -347,9 +390,12 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                         { fontSize: fontSizeCount, color: theme.lyricsText.color },
                                     ]}
                                 >
-                                    {!tamilSplit
-                                        ? res?.rawSong || 'Coming Soon '
-                                        : res?.tamilSplit || 'Coming Soon '}
+                                    {!(tamilSplit && i18n.language === 'en')
+                                        ? selectedLang !== 'Tamil'
+                                            ? res?.rawSong
+                                            : res?.tamilExplanation ||
+                                              'Text currently not available'
+                                        : res?.tamilSplit || 'Text currently not available'}
                                 </Text>
                                 <Text
                                     style={[
@@ -374,14 +420,14 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
                                 <TouchableOpacity style={styles.InsiderSettingButton}>
                                     <SettingIcon />
-                                    <Text
+                                    {/* <Text
                                         style={[
                                             styles.settingText,
                                             { color: theme.settingText.color },
                                         ]}
                                     >
                                         Settings
-                                    </Text>
+                                    </Text> */}
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     style={styles.clearIcon}
@@ -472,9 +518,15 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                         trackColor={{ false: '#767577', true: '#81b0ff' }}
                                         thumbColor={tamilSplit ? '#f5dd4b' : '#f4f3f4'}
                                         ios_backgroundColor="#3e3e3e"
-                                        onValueChange={() =>
-                                            toggleSwitch(tamilSplit, setTamilSplit)
-                                        }
+                                        onValueChange={() => {
+                                            if (i18n.language === 'en') {
+                                                return toggleSwitch(tamilSplit, setTamilSplit);
+                                            } else {
+                                                return Alert.alert(
+                                                    'Please first select Tamil language2'
+                                                );
+                                            }
+                                        }}
                                         value={tamilSplit}
                                     />
                                 </View>
@@ -568,7 +620,7 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     headerContainer: {
-        width: Dimensions.get('window').width,
+        width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
     },

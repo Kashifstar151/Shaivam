@@ -169,7 +169,9 @@ const ThrimuraiList = ({ navigation }) => {
                                     query2: `ORDER BY Thirumurai_title  ASC LIMIT 10 OFFSET 0;`,
                                 })
                             }
-                            placeholder={'Search for anything (Eg - தோடுடைய செவியன்)'}
+                            placeholder={`${t('Search for anything')} (Eg - ${t(
+                                'தோடுடைய செவியன்'
+                            )})`}
                             onChangeText={(e) => setSearchText(e)}
                             placeholderTextColor={theme.searchBox.textColor}
                             value={searchText}
@@ -302,7 +304,7 @@ const ThrimuraiList = ({ navigation }) => {
                                 list: thrimurais.slice(0, 7),
                                 query: 'SELECT name ,prevId FROM  category WHERE prevId=10',
                                 prevId: '=10',
-                                flagShowAudio: true,
+                                flagShowAudio: false,
                             })
                         }
                     >
