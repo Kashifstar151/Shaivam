@@ -11,6 +11,7 @@ import {
     View,
     Animated as AnimatedRN,
     useColorScheme,
+    Alert,
 } from 'react-native';
 import BackButton from '../../../components/BackButton';
 import ShareIcon from '../../../assets/Images/share-1.svg';
@@ -389,11 +390,12 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                         { fontSize: fontSizeCount, color: theme.lyricsText.color },
                                     ]}
                                 >
-                                    {!tamilSplit
+                                    {!(tamilSplit && i18n.language === 'en')
                                         ? selectedLang !== 'Tamil'
                                             ? res?.rawSong
-                                            : res?.tamilExplanation || 'Coming Soon Tamil explain '
-                                        : res?.tamilSplit || 'Coming Soon '}
+                                            : res?.tamilExplanation ||
+                                              'Text currently not available'
+                                        : res?.tamilSplit || 'Text currently not available'}
                                 </Text>
                                 <Text
                                     style={[
@@ -516,9 +518,15 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                         trackColor={{ false: '#767577', true: '#81b0ff' }}
                                         thumbColor={tamilSplit ? '#f5dd4b' : '#f4f3f4'}
                                         ios_backgroundColor="#3e3e3e"
-                                        onValueChange={() =>
-                                            toggleSwitch(tamilSplit, setTamilSplit)
-                                        }
+                                        onValueChange={() => {
+                                            if (i18n.language === 'en') {
+                                                return toggleSwitch(tamilSplit, setTamilSplit);
+                                            } else {
+                                                return Alert.alert(
+                                                    'Please first select Tamil language2'
+                                                );
+                                            }
+                                        }}
                                         value={tamilSplit}
                                     />
                                 </View>
