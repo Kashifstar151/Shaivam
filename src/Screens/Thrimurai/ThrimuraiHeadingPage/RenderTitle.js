@@ -28,6 +28,20 @@ const RenderEachTitle = ({
 }) => {
     const { theme } = useContext(ThemeContext);
     const { t } = useTranslation();
+    const renderTitle = (title) => {
+        let tmp = title.split('-');
+        tmp.forEach((element, i) => {
+            tmp[i] = element.trim();
+        });
+        // console.log(
+        //     'the temple name ======>',
+        //     tmp.join(' - '),
+        //     'and ==========>',
+        //     tmp,
+        //     t(tmp.join(' - '))
+        // );
+        return tmp.join(' - ');
+    };
     return (
         <>
             {!flagShowAudio ? (
@@ -63,7 +77,7 @@ const RenderEachTitle = ({
                                 }
                             >
                                 {thalam && ThalamHeaders === 0
-                                    ? t(item?.thalam)
+                                    ? t(renderTitle(item?.thalam))
                                     : thalam && ThalamHeaders !== 0
                                     ? t(item?.title)
                                     : t(item?.pann)}
