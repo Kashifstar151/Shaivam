@@ -86,7 +86,11 @@ const RenderAudios = ({
             i18n.language === 'en-IN' ? 'RoI' : i18n.language
         }' ORDER BY  title ASC LIMIT 10 OFFSET ${pageSize}`;
 
-        const query3 = `SELECT * FROM thirumurais WHERE  authorNo='${songs?.authorNo}'  and locale='${i18n.language}' GROUP BY titleS ORDER by orderAuthor  `;
+        const query3 = `SELECT * FROM thirumurais WHERE  authorNo='${
+            songs?.authorNo
+        }'  and locale='${
+            i18n.language === 'en-IN' ? 'RoI' : i18n.language
+        }' GROUP BY titleS ORDER by orderAuthor  `;
 
         getSqlData(thalam ? templleQuery : varakatimurai ? query3 : query, (callbacks) => {
             setAudioData(callbacks);
