@@ -27,9 +27,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 const RenderAudios = ({ item, index, clb, activeTrack }) => {
     // console.log('🚀 ~ file: AudioPlayer.js:70 ~ RenderAudios ~ clb:', clb);
 
-    const setItemForPlayer = (item) => {
-        // console.log('🚀 ~ file: AudioPlayer.js:73 ~ setItemForPlayer ~ item:', item);
-        setSelectedOdhuvar(item);
+    const setItemForPlayer = () => {
         clb(index);
     };
 
@@ -75,17 +73,30 @@ const RenderAudios = ({ item, index, clb, activeTrack }) => {
 const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => {
     // const { params } = route
     const downloadAudios = () => {
-        createUserTable()
-        TrackPlayer.getActiveTrack().then((res) => {
-            console.log("🚀 ~ TrackPlayer.getActiveTrack ~ res:", res)
-            AddSongToDatabase('sf', [res?.id, res?.url, res?.title, res?.artist, res?.categoryName, res?.thalamOdhuvarTamilname, res?.thirumariasiriyar], callbacks => {
-                console.log('callbacks', JSON.stringify(callbacks, 0, 2))
+        createUserTable();
+        TrackPlayer.getActiveTrack()
+            .then((res) => {
+                console.log('🚀 ~ TrackPlayer.getActiveTrack ~ res:', res);
+                AddSongToDatabase(
+                    'sf',
+                    [
+                        res?.id,
+                        res?.url,
+                        res?.title,
+                        res?.artist,
+                        res?.categoryName,
+                        res?.thalamOdhuvarTamilname,
+                        res?.thirumariasiriyar,
+                    ],
+                    (callbacks) => {
+                        console.log('callbacks', JSON.stringify(callbacks, 0, 2));
+                    }
+                );
             })
-        }).catch((err) => {
-            console.log("🚀 ~ TrackPlayer.getActiveTrack ~ err:", err)
-        }
-        )
-    }
+            .catch((err) => {
+                console.log('🚀 ~ TrackPlayer.getActiveTrack ~ err:', err);
+            });
+    };
     const isFocuced = useIsFocused;
     const { position, duration } = useProgress();
     const [paused, setPaused] = useState(false);
@@ -137,24 +148,25 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
     };
     const downloadAudio = () => {
         // let dirs = RNFetchBlob.fs.dirs;
-        TrackPlayer.getActiveTrack().then((item) => {
-            console.log("🚀 ~ TrackPlayer.getActiveTrack ~ res:", item)
-            RNFetchBlob.config({
-                path: `${RNFS.ExternalDirectoryPath}/downloaded`
-            })
-                .fetch('GET', item?.url)
-                .then((res) => {
-                    console.log('The file is saved to:', res.path());
-                    // Now you can play this file offline
+        TrackPlayer.getActiveTrack()
+            .then((item) => {
+                console.log('🚀 ~ TrackPlayer.getActiveTrack ~ res:', item);
+                RNFetchBlob.config({
+                    path: `${RNFS.ExternalDirectoryPath}/downloaded`,
                 })
-                .catch((error) => console.error(error));
-            // AddSongToDatabase('sf', [res?.id, res?.url, res?.title, res?.artist, res?.categoryName, res?.thalamOdhuvarTamilname, res?.thirumariasiriyar], callbacks => {
-            //     console.log('callbacks', JSON.stringify(callbacks, 0, 2))
-            // })
-        }).catch((err) => {
-            console.log("🚀 ~ TrackPlayer.getActiveTrack ~ err:", err)
-        }
-        )
+                    .fetch('GET', item?.url)
+                    .then((res) => {
+                        console.log('The file is saved to:', res.path());
+                        // Now you can play this file offline
+                    })
+                    .catch((error) => console.error(error));
+                // AddSongToDatabase('sf', [res?.id, res?.url, res?.title, res?.artist, res?.categoryName, res?.thalamOdhuvarTamilname, res?.thirumariasiriyar], callbacks => {
+                //     console.log('callbacks', JSON.stringify(callbacks, 0, 2))
+                // })
+            })
+            .catch((err) => {
+                console.log('🚀 ~ TrackPlayer.getActiveTrack ~ err:', err);
+            });
         // TrackPlayer.getActiveTrack().then((item) => {
         //     console.log("🚀 ~ TrackPlayer.getActiveTrack ~ item:", item)
 
@@ -258,63 +270,6 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                     </Text>
                 </View>
             </View>
-            {/* <View
-                style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginTop: 15,
-                    paddingHorizontal: 20,
-                    alignItems: 'center',
-                }}
-            >
-                <View style={{ alignItems: 'center', paddingHorizontal: 20 }}>
-                    <ShuffleIcon />
-                </View>
-                <View
-                    style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
-                >
-                    <TouchableOpacity onPress={() => handlePrevious()}>
-                        <Icon name="stepbackward" size={24} color="white" />
-                    </TouchableOpacity>
-                    {paused ? (
-                        <TouchableOpacity
-                            style={{ marginHorizontal: 10 }}
-                            onPress={() => handlePause(playBackState)}
-                        >
-                            <View
-                                style={{
-                                    height: 40,
-                                    width: 40,
-                                    borderRadius: 20,
-                                    backgroundColor: '#FAF8FF',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <Icon name="pause" size={32} color="black" />
-                            </View>
-                        </TouchableOpacity>
-                    ) : (
-                        <TouchableOpacity
-                            style={{ marginHorizontal: 10 }}
-                            onPress={() => handlePlay(playBackState)}
-                        >
-                            <Icon name="play" size={40} color="white" />
-                        </TouchableOpacity>
-                    )}
-                    <TouchableOpacity onPress={() => handleNext()}>
-                        <Icon name="stepforward" size={24} color="white" />
-                    </TouchableOpacity>
-                </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <TouchableOpacity style={{ marginHorizontal: 10 }}>
-                        <Icon name="download" size={24} color="white" />
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <FavouriteIcon />
-                    </TouchableOpacity>
-                </View>
-            </View> */}
 
             <View
                 style={{
@@ -323,11 +278,9 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                     marginTop: 15,
                     paddingHorizontal: 20,
                     alignItems: 'center',
-                    // backgroundColor: 'white'
                 }}
             >
                 <TouchableOpacity
-                    style={{ width: '28%', }}
                     onPress={() => {
                         return;
                     }}
@@ -335,63 +288,49 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                     <ShuffleIcon />
                 </TouchableOpacity>
 
-                {/* <TouchableOpacity
-                    style={{ width: 30, height: 30, paddingHorizontal: 20 }}
+                <TouchableOpacity
+                    style={{ width: 25, height: 25 }}
                     onPress={() => {
                         return;
                     }}
-                ></TouchableOpacity> */}
-                {/* <View style={{ alignItems: 'center', paddingHorizontal: 20 }}>
-                </View> */}
-                <View style={{ flexDirection: 'row', alignItems: 'center', width: '50%' }}>
-                    <TouchableOpacity onPress={() => handlePrevious()}>
-                        <Icon name="stepbackward" size={24} color="white" />
-                    </TouchableOpacity>
-                    {paused ? (
-                        <TouchableOpacity
-                            style={{ marginHorizontal: 10 }}
-                            onPress={() => handlePause(playBackState)}
+                ></TouchableOpacity>
+
+                <TouchableOpacity onPress={() => handlePrevious()}>
+                    <Icon name="stepbackward" size={24} color="white" />
+                </TouchableOpacity>
+
+                {paused ? (
+                    <TouchableOpacity onPress={() => handlePause(playBackState)}>
+                        <View
+                            style={{
+                                height: 40,
+                                width: 40,
+                                borderRadius: 20,
+                                backgroundColor: '#FAF8FF',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
                         >
-                            <View
-                                style={{
-                                    height: 40,
-                                    width: 40,
-                                    borderRadius: 20,
-                                    backgroundColor: '#FAF8FF',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    marginHorizontal: 30
-                                }}
-                            >
-                                <Icon name="pause" size={32} color="black" />
-                            </View>
-                        </TouchableOpacity>
-                    ) : (
-                        <TouchableOpacity
-                            style={{ marginHorizontal: 30 }}
-                            onPress={() => handlePlay(playBackState)}
-                        >
-                            <Icon name="play" size={40} color="white" />
-                        </TouchableOpacity>
-                    )}
-                    <TouchableOpacity onPress={() => handleNext()}>
-                        <Icon name="stepforward" size={24} color="white" />
+                            <Icon name="pause" size={32} color="black" />
+                        </View>
                     </TouchableOpacity>
-                </View>
-                {/* <View
-                    style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
-                >
-                </View> */}
-                <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                    <TouchableOpacity style={{ marginHorizontal: 20 }} onPress={() => downloadAudio()}>
-                        <Icon name="download" size={24} color="white" />
+                ) : (
+                    <TouchableOpacity onPress={() => handlePlay(playBackState)}>
+                        <Icon name="play" size={40} color="white" />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => downloadAudios()}>
-                        <FavouriteIcon />
-                    </TouchableOpacity>
-                </View>
-                {/* <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                </View> */}
+                )}
+
+                <TouchableOpacity onPress={() => handleNext()}>
+                    <Icon name="stepforward" size={24} color="white" />
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => downloadAudio()}>
+                    <Icon name="download" size={24} color="white" />
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => downloadAudios()}>
+                    <FavouriteIcon />
+                </TouchableOpacity>
             </View>
         </View>
     );
