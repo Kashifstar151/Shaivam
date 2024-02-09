@@ -135,13 +135,13 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
         setShowLoading(true);
         let query;
         if (data?.prevId <= 7 || data?.prevId === 10) {
-            query = `SELECT pann, prevId,fkTrimuria FROM thirumurais where fkTrimuria=${data.prevId} and pann NOTNULL GROUP BY pann ORDER BY titleNo ASC LIMIT ${pageSize} OFFSET 0`;
+            query = `SELECT pann, prevId,fkTrimuria FROM thirumurais where fkTrimuria=${data.prevId} and pann NOTNULL GROUP BY pann ORDER BY titleNo ASC `;
         } else {
-            query = `SELECT * FROM thirumurais where fkTrimuria=${data.prevId}  ORDER BY titleNo ASC LIMIT ${pageSize} OFFSET 0`;
+            query = `SELECT * FROM thirumurais where fkTrimuria=${data.prevId}  ORDER BY titleNo ASC `;
         }
         const query2 = `Select * from thirumurais where ${
             ThalamHeaders === 0 ? 'country' : 'thalam'
-        }='${data}' GROUP BY thalam ORDER BY  titleNo ASC LIMIT ${pageSize} OFFSET 0`;
+        }='${data}' GROUP BY thalam ORDER BY  titleNo ASC `;
         getSqlData(thalam ? query2 : query, (callbacks) => {
             setShowLoading(false);
             setTitleData(callbacks);
