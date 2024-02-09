@@ -1,9 +1,11 @@
 import React, { useContext } from 'react';
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ThemeContext } from '../../../Context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 // import { theme } from '../../../Helpers';
 const ThrimuraiHeader = ({ selectedHeader, setSelectedheader, item }) => {
     const { theme } = useContext(ThemeContext);
+    const { t } = useTranslation();
     return (
         <View>
             {selectedHeader.name == item.name ? (
@@ -21,7 +23,7 @@ const ThrimuraiHeader = ({ selectedHeader, setSelectedheader, item }) => {
                             { fontWeight: '700', color: theme.iconHeadingColor.activeTextColor },
                         ]}
                     >
-                        {item.name}
+                        {t(item.name)}
                     </Text>
                 </TouchableOpacity>
             ) : (
@@ -35,7 +37,7 @@ const ThrimuraiHeader = ({ selectedHeader, setSelectedheader, item }) => {
                             },
                         ]}
                     >
-                        {item.name}
+                        {t(item.name)}
                     </Text>
                 </TouchableOpacity>
             )}

@@ -112,26 +112,25 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const [range, setRange] = useState({});
     const isFocuced = useIsFocused;
     const { page, list, query, prevId, flagShowAudio, name } = route.params;
-    const { t } = useTranslation();
     console.log('🚀 ~ ThrimuraiHeadingPage ~ prevId:', prevId);
     const headerData = [
         {
-            name: t('Panmurai'),
+            name: 'Panmurai',
             Icon: <PanmuraiLogo fill={theme.iconHeadingColor.inactive} />,
             activeIcon: <PanmuraiLogo fill={theme.iconHeadingColor.active} />,
         },
         {
-            name: t('Thalamurai'),
+            name: 'Thalamurai',
             Icon: <ThalamuraiLogo fill={theme.iconHeadingColor.inactive} />,
             activeIcon: <ThalamuraiLogo fill={theme.iconHeadingColor.active} />,
         },
         {
-            name: t('Varalatrumurai'),
+            name: 'Varalatrumurai',
             Icon: <ValarutramuraiLogo fill={theme.iconHeadingColor.inactive} />,
             activeIcon: <ValarutramuraiLogo fill={theme.iconHeadingColor.active} />,
         },
         {
-            name: t('Agarathi'),
+            name: 'Agarathi',
             Icon: <AkarthiLogo fill={theme.iconHeadingColor.inactive} />,
             activeIcon: <AkarthiLogo fill={theme.iconHeadingColor.active} />,
         },
@@ -145,6 +144,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     useEffect(() => {
         retrieveData(query);
     }, []);
+    const { t } = useTranslation();
     const retrieveData = async () => {
         setShowLoading(true)
         const query = `SELECT name ,prevId FROM  category WHERE prevId${prevId}`;
