@@ -73,35 +73,37 @@ const RenderContents = ({
     // console.log('the click ==>', item);
     return (
         <>
-            <View style={[styles.chapterBox, { backgroundColor: theme.cardBgColor }]}>
-                <View style={{ justifyContent: 'center' }}>
-                    <Text style={[styles.chapterNameTexts, { color: theme.textColor }]}>
-                        {t(item.name)}
-                    </Text>
-                    <Text style={styles.chapterTexts}>
-                        {range[item.prevId]}
-                        {/* {item.prevId} */}
-                    </Text>
+            {!flagShowAudio && (
+                <View style={[styles.chapterBox, { backgroundColor: theme.cardBgColor }]}>
+                    <View style={{ justifyContent: 'center' }}>
+                        <Text style={[styles.chapterNameTexts, { color: theme.textColor }]}>
+                            {t(item.name)}
+                        </Text>
+                        <Text style={styles.chapterTexts}>
+                            {range[item.prevId]}
+                            {/* {item.prevId} */}
+                        </Text>
+                    </View>
+                    {selectedTitle !== null && selectedTitle == index ? (
+                        <TouchableOpacity onPress={() => setSelectedTitle(null)}>
+                            <Icon
+                                name="horizontal-rule"
+                                size={24}
+                                color={theme.colorscheme === 'light' ? '#000' : colors.grey1}
+                            />
+                        </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity onPress={() => setSelectedTitle(index)}>
+                            <Icon
+                                name="add"
+                                size={24}
+                                color={theme.colorscheme === 'light' ? '#000' : colors.grey1}
+                            />
+                        </TouchableOpacity>
+                    )}
                 </View>
-                {selectedTitle !== null && selectedTitle == index ? (
-                    <TouchableOpacity onPress={() => setSelectedTitle(null)}>
-                        <Icon
-                            name="horizontal-rule"
-                            size={24}
-                            color={theme.colorscheme === 'light' ? '#000' : colors.grey1}
-                        />
-                    </TouchableOpacity>
-                ) : (
-                    <TouchableOpacity onPress={() => setSelectedTitle(index)}>
-                        <Icon
-                            name="add"
-                            size={24}
-                            color={theme.colorscheme === 'light' ? '#000' : colors.grey1}
-                        />
-                    </TouchableOpacity>
-                )}
-            </View>
-            {selectedTitle == index && (
+            )}
+            {(selectedTitle == index || flagShowAudio) && (
                 <RenderTitle data={item} navigation={navigation} flagShowAudio={flagShowAudio} />
             )}
         </>
