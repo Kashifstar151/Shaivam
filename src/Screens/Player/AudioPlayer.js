@@ -24,7 +24,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import { AddSongToDatabase, createUserTable, listfavAudios } from '../../Databases/AudioPlayerDatabase';
 import RNFetchBlob from 'rn-fetch-blob';
 
-const RenderAudios = ({ item, index, clb, selectedOdhuvar, setSelectedOdhuvar }) => {
+const RenderAudios = ({ item, index, clb, activeTrack }) => {
     // console.log('🚀 ~ file: AudioPlayer.js:70 ~ RenderAudios ~ clb:', clb);
 
     const setItemForPlayer = (item) => {
