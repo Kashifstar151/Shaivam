@@ -491,7 +491,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                             return toggleSwitch(tamilSplit, setTamilSplit);
                                         } else {
                                             return Alert.alert(
-                                                'Please first select Tamil language2'
+                                                'Please first select Tamil language'
                                             );
                                         }
                                     }}

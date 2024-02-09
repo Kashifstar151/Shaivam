@@ -8,6 +8,43 @@ import { ThemeContext } from '../../Context/ThemeContext';
 import { useIsFocused } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
 import { useTranslation } from 'react-i18next';
+const RenderAudiosItem = ({ navigationHandler, item, theme }) => (
+    <Pressable
+        style={{
+            alignItems: 'center',
+            marginVertical: 5,
+            width: '100%',
+            paddingHorizontal: 20,
+            flexDirection: 'row',
+        }}
+        onPress={() => navigationHandler(item)}
+    >
+        <View
+            style={{
+                backgroundColor: '#F2F0F8',
+                height: 40,
+                width: 40,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 6,
+            }}
+        >
+            <MusicIcon1 />
+        </View>
+        <Text
+            style={{
+                marginHorizontal: 10,
+                fontSize: 12,
+                fontFamily: 'AnekTamil-Regular',
+                fontWeight: '500',
+                color: theme.textColor,
+            }}
+        >
+            {item?.title}
+            {/* {thalam ? item?.title : item?.titleS} */}
+        </Text>
+    </Pressable>
+);
 
 const RenderAudios = ({
     akarthi,
@@ -19,7 +56,6 @@ const RenderAudios = ({
     varakatimurai,
 }) => {
     console.log('🚀 ~ RenderAudios ~ songs:', songs);
-    const isFocused = useIsFocused();
     const { theme } = useContext(ThemeContext);
     const [dataLength, setDataLength] = useState(0);
     const [audioData, setAudioData] = useState([]);
@@ -33,7 +69,7 @@ const RenderAudios = ({
         } else {
             getDtataFromSql();
         }
-    }, [isFocused]);
+    }, []);
 
     const getDtataFromSql = async () => {
         const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${
@@ -94,50 +130,26 @@ const RenderAudios = ({
             data: item,
         });
     };
-    const renderAudios = (item, index) => (
-        <Pressable
-            style={{
-                alignItems: 'center',
-                marginVertical: 5,
-                width: '100%',
-                paddingHorizontal: 20,
-                flexDirection: 'row',
-            }}
-            onPress={() => navigationHandler(item)}
-        >
-            <View
-                style={{
-                    backgroundColor: '#F2F0F8',
-                    height: 40,
-                    width: 40,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderRadius: 6,
-                }}
-            >
-                <MusicIcon1 />
-            </View>
-            <Text
-                style={{
-                    marginHorizontal: 10,
-                    fontSize: 12,
-                    fontFamily: 'AnekTamil-Regular',
-                    fontWeight: '500',
-                    color: theme.textColor,
-                }}
-            >
-                {item?.title}
-                {/* {thalam ? item?.title : item?.titleS} */}
-            </Text>
-        </Pressable>
-    );
+
     return (
         <View>
             <FlatList
                 nestedScrollEnabled
-                renderItem={({ item, index }) => renderAudios(item, index)}
+                renderItem={({ item, index }) => {
+                    return (
+                        <RenderAudiosItem
+                            navigationHandler={navigationHandler}
+                            item={item}
+                            theme={theme}
+                        />
+                    );
+                }}
                 data={audioData}
-                onEndReached={akarthi ? () => getSongsData() : null}
+                onEndReached={() => {
+                    if (akarthi) {
+                        getSongsData();
+                    }
+                }}
             />
         </View>
     );
