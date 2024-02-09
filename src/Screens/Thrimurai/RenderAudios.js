@@ -50,14 +50,16 @@ const RenderAudios = ({
             i18n.language === 'en-IN' ? 'RoI' : i18n.language
         }' ORDER BY  title ASC LIMIT 10 OFFSET ${pageSize}`;
 
-        const query3 = `SELECT * FROM thirumurais WHERE  authorNo='${songs?.authorNo}' GROUP BY titleS ORDER by orderAuthor  LIMIT 10 OFFSET 0`;
+        const query3 = `SELECT * FROM thirumurais WHERE  authorNo='${songs?.authorNo}'  and locale='${i18n.language}' GROUP BY titleS ORDER by orderAuthor  `;
 
         getSqlData(thalam ? templleQuery : varakatimurai ? query3 : query, (callbacks) => {
             setAudioData(callbacks);
         });
     };
     const getSongsData = async () => {
-        const query = `SELECT * FROM thirumurais ASC where title OR titleS NOT NULL ORDER BY fkTrimuria,titleNo LIMIT 20 OFFSET ${dataLength} `;
+        const query = `SELECT * FROM thirumurais ASC where  locale='${
+            i18n.language === 'en-IN' ? 'RoI' : i18n.language
+        }' ORDER BY fkTrimuria,titleNo LIMIT 20 OFFSET ${dataLength} `;
         getSqlData(query, (callbacks) => {
             // if (callbacks?.Length > 0) {
             //     set

@@ -209,7 +209,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                 </View>
             ) : (
                 <View style={{ backgroundColor: theme.backgroundColor }}>
-                    {selectedHeader.name == 'Akarthi' ? (
+                    {selectedHeader.name == 'Agarathi' ? (
                         <View style={{ marginTop: 10 }}>
                             <RenderAudios akarthi={true} navigation={navigation} />
                         </View>
