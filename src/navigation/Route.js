@@ -102,7 +102,7 @@ const Route = () => {
         }
     }
     const checkFileExist = async () => {
-        RNFS.exists(`${RNFS.ExternalDirectoryPath}/Thrimurai/thirumuraiSongs_9.db`)
+        RNFS.exists(`${RNFS.ExternalDirectoryPath}/Thrimurai/thirumuraiSongs_10.db`)
             .then(async (res) => {
                 if (res == true) {
                     // InitializeDatabase()
