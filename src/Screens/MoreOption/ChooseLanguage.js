@@ -8,14 +8,25 @@ import { ThemeContext } from '../../Context/ThemeContext';
 const ChooseLanguage = ({ selected, setSelected }) => {
     const { i18n } = useTranslation();
     const language = [
-        // { name: 'English', lngCode: 'en', isSelected: false },
-        // { name: 'Hindi', lngCode: 'hi', isSelected: false },
-        // { name: 'Kannada', lngCode: 'kn', isSelected: false },
-        { name: 'English', lngCode: 'en-IN', isSelected: false },
-        { name: 'Hindi', lngCode: 'DV', isSelected: false },
-        { name: 'Kannada', lngCode: 'kn-IN', isSelected: false },
-        { name: 'Malayalam', lngCode: 'ml', isSelected: false },
-        { name: 'Tamil', lngCode: 'en', isSelected: false },
+        // { name: 'English', lngCode: 'en' },
+        // { name: 'Hindi', lngCode: 'hi' },
+        // { name: 'Kannada', lngCode: 'kn' },
+        { name: 'English', lngCode: 'en-IN' },
+        { name: 'Hindi', lngCode: 'DV' },
+        { name: 'Kannada', lngCode: 'kn-IN' },
+        { name: 'Malayalam', lngCode: 'ml' },
+        { name: 'Tamil', lngCode: 'en' },
+        { name: 'Bengali', lngCode: 'bn' },
+        { name: 'Assamese', lngCode: 'as' },
+        { name: 'Arabic', lngCode: 'ar' },
+        { name: 'Gujrati', lngCode: 'gu' },
+        { name: 'Hebrew', lngCode: 'he' },
+        { name: 'Japanese', lngCode: 'ja' },
+        { name: 'Oriya', lngCode: 'od' },
+        { name: 'Punjabi', lngCode: 'pa' },
+        { name: 'Sindhi', lngCode: 'si' },
+        { name: 'Telgu', lngCode: 'te' },
+        { name: 'Urdu', lngCode: 'ur' },
     ];
 
     const handleClick = (item) => {

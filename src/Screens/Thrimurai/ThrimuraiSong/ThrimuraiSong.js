@@ -372,6 +372,169 @@ const ThrimuraiSong = ({ route, navigation }) => {
                     <DownArrow />
                 </TouchableOpacity>
             </View>
+            <View
+                style={{
+                    width: '100%',
+                    position: 'absolute',
+                    right: -3,
+                    top: '20%',
+                    zIndex: 10,
+                }}
+            >
+                {showSetting ? (
+                    <Animated.View
+                        style={[styles.animatedView, animatedStyles, { ...theme.setting }]}
+                    >
+                        <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+                            <TouchableOpacity style={styles.InsiderSettingButton}>
+                                <SettingIcon />
+                                {/* <Text
+                                        style={[
+                                            styles.settingText,
+                                            { color: theme.settingText.color },
+                                        ]}
+                                    >
+                                        Settings
+                                    </Text> */}
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.clearIcon}
+                                onPress={() => closeAnimatedView()}
+                            >
+                                <Icon
+                                    name="clear"
+                                    size={24}
+                                    color={theme.colorscheme === 'light' ? '#000' : '#fff'}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.TranslationContainer}>
+                            <Text style={styles.translationText}>Tranlation</Text>
+                            <View style={{ marginHorizontal: 0 }}>
+                                <FlatList
+                                    horizontal
+                                    data={language}
+                                    renderItem={({ item, index }) => (
+                                        <>
+                                            {selectedLang == item ? (
+                                                <TouchableOpacity
+                                                    style={[
+                                                        styles.languageBox,
+                                                        { backgroundColor: '#C1554E' },
+                                                    ]}
+                                                    onPress={() => changeTranlation(item)}
+                                                >
+                                                    <Text
+                                                        style={[
+                                                            styles.languageOptionText,
+                                                            {
+                                                                color: 'white',
+                                                                fontWeight: '700',
+                                                            },
+                                                        ]}
+                                                    >
+                                                        {t(item)}
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            ) : (
+                                                <TouchableOpacity
+                                                    style={styles.languageBox}
+                                                    onPress={() => changeTranlation(item)}
+                                                >
+                                                    <Text style={styles.languageOptionText}>
+                                                        {t(item)}
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            )}
+                                        </>
+                                    )}
+                                />
+                            </View>
+                            <View style={styles.TextSize}>
+                                <Text style={styles.TextSizeText}>Text Size</Text>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <TouchableOpacity
+                                        style={styles.addMinusIcon}
+                                        onPress={() => setFontSizeCount(fontSizeCount - 1)}
+                                    >
+                                        <AntDesign name="minus" color="white" />
+                                    </TouchableOpacity>
+                                    <Text style={styles.fontSizeText}>{fontSizeCount}</Text>
+                                    <TouchableOpacity
+                                        style={styles.addMinusIcon}
+                                        onPress={() => setFontSizeCount(fontSizeCount + 1)}
+                                    >
+                                        <Icon name="add" color="white" />
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                            <View style={styles.otherOption}>
+                                <View>
+                                    <Text style={styles.otherOptionText}>Tamil Split</Text>
+                                    <Text
+                                        style={{
+                                            fontFamily: 'Mulish-Regular',
+                                            color: '#777777',
+                                            fontSize: 10,
+                                            fontWeight: '700',
+                                        }}
+                                    >
+                                        Turn on to view thirumurais as songs
+                                    </Text>
+                                </View>
+                                <Switch
+                                    trackColor={{ false: '#767577', true: '#81b0ff' }}
+                                    thumbColor={tamilSplit ? '#f5dd4b' : '#f4f3f4'}
+                                    ios_backgroundColor="#3e3e3e"
+                                    onValueChange={() => {
+                                        if (i18n.language === 'en') {
+                                            return toggleSwitch(tamilSplit, setTamilSplit);
+                                        } else {
+                                            return Alert.alert(
+                                                'Please first select Tamil language2'
+                                            );
+                                        }
+                                    }}
+                                    value={tamilSplit}
+                                />
+                            </View>
+                            <View style={styles.otherOption}>
+                                <View>
+                                    <Text style={styles.otherOptionText}>Dark Mode</Text>
+                                    <Text
+                                        style={{
+                                            fontFamily: 'Mulish-Regular',
+                                            color: '#777777',
+                                            fontSize: 10,
+                                            fontWeight: '700',
+                                        }}
+                                    >
+                                        Turn on to view thirumurais as songs
+                                    </Text>
+                                </View>
+                                <Switch
+                                    trackColor={{ false: '#767577', true: '#81b0ff' }}
+                                    thumbColor={darkMode ? '#f5dd4b' : '#f4f3f4'}
+                                    ios_backgroundColor="#3e3e3e"
+                                    onValueChange={() => toggleSwitch(darkMode, setDarkMode)}
+                                    value={darkMode}
+                                />
+                            </View>
+                        </View>
+                    </Animated.View>
+                ) : (
+                    <TouchableOpacity
+                        style={[
+                            styles.settingButton,
+                            { backgroundColor: theme.settingBtn.backgroundColor },
+                        ]}
+                        onPress={handlePress}
+                    >
+                        <SettingIcon />
+                        <Text style={styles.settingText}>Settings</Text>
+                    </TouchableOpacity>
+                )}
+            </View>
             <ScrollView style={styles.lyricsContainer} nestedScrollEnabled>
                 <View style={{ paddingBottom: 300, paddingHorizontal: 20 }}>
                     {songDetails?.length > 0 &&
@@ -411,161 +574,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                 </Text>
                             </View>
                         ))}
-                </View>
-                <View style={{ position: 'absolute', right: 0, zIndex: 10 }}>
-                    {showSetting ? (
-                        <Animated.View
-                            style={[styles.animatedView, animatedStyles, { ...theme.setting }]}
-                        >
-                            <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
-                                <TouchableOpacity style={styles.InsiderSettingButton}>
-                                    <SettingIcon />
-                                    {/* <Text
-                                        style={[
-                                            styles.settingText,
-                                            { color: theme.settingText.color },
-                                        ]}
-                                    >
-                                        Settings
-                                    </Text> */}
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={styles.clearIcon}
-                                    onPress={() => closeAnimatedView()}
-                                >
-                                    <Icon
-                                        name="clear"
-                                        size={24}
-                                        color={theme.colorscheme === 'light' ? '#000' : '#fff'}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.TranslationContainer}>
-                                <Text style={styles.translationText}>Tranlation</Text>
-                                <View style={{ marginHorizontal: 0 }}>
-                                    <FlatList
-                                        horizontal
-                                        data={language}
-                                        renderItem={({ item, index }) => (
-                                            <>
-                                                {selectedLang == item ? (
-                                                    <TouchableOpacity
-                                                        style={[
-                                                            styles.languageBox,
-                                                            { backgroundColor: '#C1554E' },
-                                                        ]}
-                                                        onPress={() => changeTranlation(item)}
-                                                    >
-                                                        <Text
-                                                            style={[
-                                                                styles.languageOptionText,
-                                                                {
-                                                                    color: 'white',
-                                                                    fontWeight: '700',
-                                                                },
-                                                            ]}
-                                                        >
-                                                            {t(item)}
-                                                        </Text>
-                                                    </TouchableOpacity>
-                                                ) : (
-                                                    <TouchableOpacity
-                                                        style={styles.languageBox}
-                                                        onPress={() => changeTranlation(item)}
-                                                    >
-                                                        <Text style={styles.languageOptionText}>
-                                                            {t(item)}
-                                                        </Text>
-                                                    </TouchableOpacity>
-                                                )}
-                                            </>
-                                        )}
-                                    />
-                                </View>
-                                <View style={styles.TextSize}>
-                                    <Text style={styles.TextSizeText}>Text Size</Text>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <TouchableOpacity
-                                            style={styles.addMinusIcon}
-                                            onPress={() => setFontSizeCount(fontSizeCount - 1)}
-                                        >
-                                            <AntDesign name="minus" color="white" />
-                                        </TouchableOpacity>
-                                        <Text style={styles.fontSizeText}>{fontSizeCount}</Text>
-                                        <TouchableOpacity
-                                            style={styles.addMinusIcon}
-                                            onPress={() => setFontSizeCount(fontSizeCount + 1)}
-                                        >
-                                            <Icon name="add" color="white" />
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                                <View style={styles.otherOption}>
-                                    <View>
-                                        <Text style={styles.otherOptionText}>Tamil Split</Text>
-                                        <Text
-                                            style={{
-                                                fontFamily: 'Mulish-Regular',
-                                                color: '#777777',
-                                                fontSize: 10,
-                                                fontWeight: '700',
-                                            }}
-                                        >
-                                            Turn on to view thirumurais as songs
-                                        </Text>
-                                    </View>
-                                    <Switch
-                                        trackColor={{ false: '#767577', true: '#81b0ff' }}
-                                        thumbColor={tamilSplit ? '#f5dd4b' : '#f4f3f4'}
-                                        ios_backgroundColor="#3e3e3e"
-                                        onValueChange={() => {
-                                            if (i18n.language === 'en') {
-                                                return toggleSwitch(tamilSplit, setTamilSplit);
-                                            } else {
-                                                return Alert.alert(
-                                                    'Please first select Tamil language2'
-                                                );
-                                            }
-                                        }}
-                                        value={tamilSplit}
-                                    />
-                                </View>
-                                <View style={styles.otherOption}>
-                                    <View>
-                                        <Text style={styles.otherOptionText}>Dark Mode</Text>
-                                        <Text
-                                            style={{
-                                                fontFamily: 'Mulish-Regular',
-                                                color: '#777777',
-                                                fontSize: 10,
-                                                fontWeight: '700',
-                                            }}
-                                        >
-                                            Turn on to view thirumurais as songs
-                                        </Text>
-                                    </View>
-                                    <Switch
-                                        trackColor={{ false: '#767577', true: '#81b0ff' }}
-                                        thumbColor={darkMode ? '#f5dd4b' : '#f4f3f4'}
-                                        ios_backgroundColor="#3e3e3e"
-                                        onValueChange={() => toggleSwitch(darkMode, setDarkMode)}
-                                        value={darkMode}
-                                    />
-                                </View>
-                            </View>
-                        </Animated.View>
-                    ) : (
-                        <TouchableOpacity
-                            style={[
-                                styles.settingButton,
-                                { backgroundColor: theme.settingBtn.backgroundColor },
-                            ]}
-                            onPress={handlePress}
-                        >
-                            <SettingIcon />
-                            <Text style={styles.settingText}>Settings</Text>
-                        </TouchableOpacity>
-                    )}
                 </View>
             </ScrollView>
             <BottomSheet

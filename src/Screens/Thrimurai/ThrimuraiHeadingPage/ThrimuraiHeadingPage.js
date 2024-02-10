@@ -112,7 +112,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const [range, setRange] = useState({});
     const isFocuced = useIsFocused;
     const { page, list, query, prevId, flagShowAudio, name } = route.params;
-    console.log("🚀 ~ ThrimuraiHeadingPage ~ prevId:", prevId)
+    console.log('🚀 ~ ThrimuraiHeadingPage ~ prevId:', prevId);
     const headerData = [
         {
             name: 'Panmurai',
@@ -130,7 +130,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
             activeIcon: <ValarutramuraiLogo fill={theme.iconHeadingColor.active} />,
         },
         {
-            name: 'Akarthi',
+            name: 'Agarathi',
             Icon: <AkarthiLogo fill={theme.iconHeadingColor.inactive} />,
             activeIcon: <AkarthiLogo fill={theme.iconHeadingColor.active} />,
         },

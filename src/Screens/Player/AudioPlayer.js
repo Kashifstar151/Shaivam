@@ -26,7 +26,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 
-const RenderAudios = ({ item, index, clb, selectedOdhuvar, setSelectedOdhuvar, activeTrack }) => {
+const RenderAudios = ({ item, index, clb, activeTrack }) => {
     // console.log('🚀 ~ file: AudioPlayer.js:70 ~ RenderAudios ~ clb:', clb);
 
     const setItemForPlayer = (item) => {
