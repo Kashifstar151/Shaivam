@@ -10,6 +10,8 @@ import { ThemeContext } from '../../Context/ThemeContext'
 import { listfavAudios } from '../../Databases/AudioPlayerDatabase'
 import MusicContainer from '../../../assets/Images/Frame 83.svg';
 import { RFValue } from 'react-native-responsive-fontsize'
+import Header from '../../components/Header'
+import HeadingText from '../../components/HeadingText'
 
 const Fav = () => {
     const { theme } = useContext(ThemeContext);
@@ -83,9 +85,14 @@ const Fav = () => {
         <ScrollView>
             <Background>
                 <View style={{ marginVertical: 15 }}>
-                    <BackButton middleText={'Favourites'} color={true} />
+                    {/* <BackButton middleText={'Favourites'} color={true} buttonDisable={true}/> */}
+                    {/* <Header /> */}
+                    <View style={{ paddingHorizontal: 20 }}>
+
+                        <HeadingText text={'Favourites'} nandiLogo={true} />
+                    </View>
+                    <SearchInput placeholder={'Search for your favourties (Eg - தோடுடைய)'} />
                 </View>
-                <SearchInput placeholder={'Search for your favourties (Eg - தோடுடைய)'} />
                 <FlatList contentContainerStyle={{ marginVertical: 10, }} horizontal data={header} renderItem={({ item, index }) => (
                     <TouchableOpacity onPress={() => setSelectedHeader(item.name)} style={selecetedHeader == item?.name ? [styles.headerContainer, { backgroundColor: theme.searchContext.selected.bgColor }] : [styles.headerContainer, { backgroundColor: theme.searchContext.unSelected.bgColor }]}>
                         {item?.icon}

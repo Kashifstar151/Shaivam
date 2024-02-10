@@ -13,6 +13,7 @@ const BackButton = ({
     navigation,
     secondMiddleText,
     rightIcon,
+    buttonDisable
 }) => {
     return (
         <View
@@ -23,12 +24,16 @@ const BackButton = ({
         >
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
                 <View style={{ flexDirection: 'row', marginTop: 10, paddingHorizontal: 5 }}>
-                    <TouchableOpacity
-                        style={{ alignSelf: 'center' }}
-                        onPress={() => navigation.goBack()}
-                    >
-                        {!color ? <WhiteBackButton /> : <BackIcon />}
-                    </TouchableOpacity>
+                    {
+                        buttonDisable ? null :
+                            <TouchableOpacity
+                                style={{ alignSelf: 'center' }}
+                                onPress={() => navigation.goBack()}
+                            >
+                                {!color ? <WhiteBackButton /> : <BackIcon />}
+                            </TouchableOpacity>
+                    }
+
                     <View>
                         {middleText && (
                             <View style={{ paddingHorizontal: 10 }}>
@@ -58,7 +63,6 @@ const BackButton = ({
                             <Icon name="sharealt" size={24} color="white" />
                         </TouchableOpacity>
                     )}
-
                     <NandiLogo />
                 </View>
             </View>
@@ -70,8 +74,7 @@ const BackButton = ({
                         fontSize: 24,
                         fontWeight: '700',
                         color: 'white',
-                    }}
-                >
+                    }}>
                     {firstText}
                 </Text>
             )}

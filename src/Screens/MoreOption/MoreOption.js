@@ -57,7 +57,6 @@ const MoreOption = () => {
     };
     return (
         <View style={[styles.main, { backgroundColor: theme.backgroundColor, flex: 1 }]}>
-            <Text>{theme.bgColor}</Text>
             <Background>
                 <ConstantHeader />
             </Background>

@@ -29,7 +29,7 @@ export async function attachDb() {
         })
             .fetch(
                 'GET',
-                'https://shaivamfiles.fra1.digitaloceanspaces.com/sqlitedump/thirumuraiSongs_9.zip'
+                'https://shaivamfiles.fra1.digitaloceanspaces.com/sqlitedump/thirumuraiSongs_10.zip'
             )
             .then((res) => {
                 // the temp file path
@@ -46,7 +46,7 @@ export async function attachDb() {
                                     async (tx) => {
                                         await tx.executeSql(
                                             'ATTACH DATABASE ? AS Updated_db',
-                                            [`${jsonFilePath}/thirumuraiSongs_9.db`],
+                                            [`${jsonFilePath}/thirumuraiSongs_10.db`],
                                             async (tx, results) => {
                                                 console.log(
                                                     '🚀 ~ file: Database.js:49 ~ database.transaction ~ results:',

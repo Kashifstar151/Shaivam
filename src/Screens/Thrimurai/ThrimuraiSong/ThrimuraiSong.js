@@ -491,7 +491,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                             return toggleSwitch(tamilSplit, setTamilSplit);
                                         } else {
                                             return Alert.alert(
-                                                'Please first select Tamil language2'
+                                                'Please first select Tamil language'
                                             );
                                         }
                                     }}
@@ -557,7 +557,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                         ? selectedLang !== 'Tamil'
                                             ? res?.rawSong
                                             : res?.tamilExplanation ||
-                                              'Text currently not available'
+                                            'Text currently not available'
                                         : res?.tamilSplit || 'Text currently not available'}
                                 </Text>
                                 <Text
@@ -576,7 +576,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                         ))}
                 </View>
             </ScrollView>
-            <BottomSheet
+            {/* <BottomSheet
                 handleIndicatorStyle={{ backgroundColor: '#FFF7E6' }}
                 handleStyle={{
                     backgroundColor: '#222222',
@@ -586,13 +586,19 @@ const ThrimuraiSong = ({ route, navigation }) => {
                 ref={bottomSheetRef}
                 snapPoints={snapPoints}
                 index={1}
-            >
+            > */}
+            <View style={{
+                paddingTop: 20, backgroundColor: '#222222',
+                borderTopEndRadius: 15,
+                borderTopLeftRadius: 15,
+            }}>
                 <AudioPlayer
                     prevId={data?.prevId}
                     songsData={songs}
                     title={songDetails?.[0]?.title}
                 />
-            </BottomSheet>
+            </View>
+            {/* </BottomSheet> */}
         </View>
     );
 };

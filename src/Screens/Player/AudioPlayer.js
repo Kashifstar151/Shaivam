@@ -79,9 +79,9 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
     const downloadAudios = () => {
 
         TrackPlayer.getActiveTrack().then((res) => {
-            console.log("🚀 ~ TrackPlayer.getActiveTrack ~ res:", res)
+            // console.log("🚀 ~ TrackPlayer.getActiveTrack ~ res:", res)
             AddSongToDatabase('sf', [res?.id, res?.url, res?.title, res?.artist, res?.categoryName, res?.thalamOdhuvarTamilname, res?.thirumariasiriyar], callbacks => {
-                console.log('callbacks', JSON.stringify(callbacks, 0, 2))
+                // console.log('callbacks', JSON.stringify(callbacks, 0, 2))
             })
         }).catch((err) => {
             console.log("🚀 ~ TrackPlayer.getActiveTrack ~ err:", err)
@@ -271,8 +271,8 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                 <Slider
                     value={position}
                     thumbImage={ThumbImage}
-
                     onValueChange={(value) => TrackPlayer.seekTo(value)}
+                    onSlidingComplete={(value) => TrackPlayer.seekTo(value)}
                     style={{ width: Dimensions.get('window').width - 30, alignSelf: 'center' }}
                     minimumValue={0}
                     maximumValue={duration}

@@ -21,7 +21,7 @@ import { useTranslation } from 'react-i18next';
 
 const SearchScreen = ({ navigation, route }) => {
     const { thrimurais } = route?.params;
-    const updatedThrimurai = [{ id: 0, name: 'All' }, ...thrimurais];
+    const updatedThrimurai = thrimurais ? [{ id: 0, name: 'All' }, ...thrimurais] : null;
     const [searchText, setSearchText] = useState('');
     const [searchResult, setSearchedResult] = useState([]);
     const [onFocus, setOnFocus] = useState(false);
