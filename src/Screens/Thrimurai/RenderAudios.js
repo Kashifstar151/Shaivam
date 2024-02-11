@@ -73,8 +73,10 @@ const RenderAudios = ({
     }, []);
 
     const getDtataFromSql = async () => {
-        const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${songs?.fkTrimuria}' ${
-            songs?.fkTrimuria <= 7 || songs?.fkTrimuria === 10 ? `AND pann='${songs?.pann}'` : ''
+        let id = songs?.fkTrimuria ? songs?.fkTrimuria : songs?.prevId;
+
+        const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${id}' ${
+            id <= 7 || id === 10 ? `AND pann='${songs?.pann}'` : ''
         } and  locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language}'   ORDER BY  titleNo `;
 
         const templleQuery = `Select * from thirumurais WHERE ${
@@ -89,7 +91,8 @@ const RenderAudios = ({
             i18n.language === 'en-IN' ? 'RoI' : i18n.language
         }' GROUP BY titleS ORDER by orderAuthor  `;
 
-        getSqlData(thalam ? templleQuery : varakatimurai ? query3 : query, (callbacks) => {
+        const makeQuery = thalam ? templleQuery : varakatimurai ? query3 : query;
+        getSqlData(makeQuery, (callbacks) => {
             setAudioData(callbacks);
         });
     };
@@ -105,7 +108,6 @@ const RenderAudios = ({
             // let arr = audioData
             if (audioData?.length > 0) {
                 // arr.concat(callbacks)
-                console.log('the concat =========================================>');
                 setAudioData(audioData.concat(callbacks));
             } else {
                 setAudioData(callbacks);
