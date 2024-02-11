@@ -128,7 +128,6 @@ const RenderEachTitle = ({
                 </>
             ) : (
                 <RenderAudios songs={item} navigation={navigation} />
-                // <Text>The 8 the col </Text>
             )}
         </>
     );

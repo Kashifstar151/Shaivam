@@ -57,7 +57,7 @@ const RenderContents = ({
 
         let rangeStr;
         getSqlData(query, (clk) => {
-            console.log("🚀 ~ getSqlData ~ clk:", clk)
+            console.log('🚀 ~ getSqlData ~ clk:', clk);
             const rangeArr = clk[0].result.split('-');
             if (rangeArr[1].length === 3) {
                 rangeStr = `${item.prevId}.00${rangeArr[0]} - ${item.prevId}.${rangeArr[1]}`;
@@ -103,9 +103,11 @@ const RenderContents = ({
                     )}
                 </View>
             )}
-            {(selectedTitle == index || flagShowAudio) && (
+            {selectedTitle == index && (
                 <RenderTitle data={item} navigation={navigation} flagShowAudio={flagShowAudio} />
             )}
+
+            {flagShowAudio && <RenderAudios songs={item} navigation={navigation} />}
         </>
     );
 };
@@ -114,7 +116,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const [range, setRange] = useState({});
     const isFocuced = useIsFocused;
     const { page, list, query, prevId, flagShowAudio, name } = route.params;
-    console.log('🚀 ~ ThrimuraiHeadingPage ~ prevId:', prevId);
+    // //console.log('🚀 ~ ThrimuraiHeadingPage ~ prevId:', prevId);
     const headerData = [
         {
             name: 'Panmurai',
