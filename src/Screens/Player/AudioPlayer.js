@@ -104,10 +104,10 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
     }, []);
     const getMode = (mode) => {
         if (mode == 0) {
-            TrackPlayer.setRepeatMode(RepeatMode.Off)
+            TrackPlayer.setRepeatMode(RepeatMode.Queue);
             setRepeatMode(0)
         } else {
-            TrackPlayer.setRepeatMode(RepeatMode.Queue)
+            TrackPlayer.setRepeatMode(RepeatMode.Track);
             setRepeatMode(2)
         }
     }
