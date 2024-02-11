@@ -279,7 +279,6 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                     minimumTrackTintColor="#C1554E"
                     maximumTrackTintColor="#EFEFEF"
                     thumbTintColor="#C1554E"
-
                 />
                 <View
                     style={{
@@ -296,63 +295,6 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                     </Text>
                 </View>
             </View>
-            {/* <View
-                style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginTop: 15,
-                    paddingHorizontal: 20,
-                    alignItems: 'center',
-                }}
-            >
-                <View style={{ alignItems: 'center', paddingHorizontal: 20 }}>
-                    <ShuffleIcon />
-                </View>
-                <View
-                    style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
-                >
-                    <TouchableOpacity onPress={() => handlePrevious()}>
-                        <Icon name="stepbackward" size={24} color="white" />
-                    </TouchableOpacity>
-                    {paused ? (
-                        <TouchableOpacity
-                            style={{ marginHorizontal: 10 }}
-                            onPress={() => handlePause(playBackState)}
-                        >
-                            <View
-                                style={{
-                                    height: 40,
-                                    width: 40,
-                                    borderRadius: 20,
-                                    backgroundColor: '#FAF8FF',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <Icon name="pause" size={32} color="black" />
-                            </View>
-                        </TouchableOpacity>
-                    ) : (
-                        <TouchableOpacity
-                            style={{ marginHorizontal: 10 }}
-                            onPress={() => handlePlay(playBackState)}
-                        >
-                            <Icon name="play" size={40} color="white" />
-                        </TouchableOpacity>
-                    )}
-                    <TouchableOpacity onPress={() => handleNext()}>
-                        <Icon name="stepforward" size={24} color="white" />
-                    </TouchableOpacity>
-                </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <TouchableOpacity style={{ marginHorizontal: 10 }}>
-                        <Icon name="download" size={24} color="white" />
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <FavouriteIcon />
-                    </TouchableOpacity>
-                </View>
-            </View> */}
 
             <View
                 style={{
@@ -361,90 +303,73 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                     marginTop: 15,
                     paddingHorizontal: 20,
                     alignItems: 'center',
-                    // backgroundColor: 'white'
                 }}
             >
-                {
-                    repeatMode == 2 ?
-                        <TouchableOpacity
-                            style={{ width: '28%', }}
-                            onPress={() => getMode(0)}
-                        >
-                            <MaterialIcons name='shuffle' size={24} />
-                        </TouchableOpacity> :
-                        <TouchableOpacity
-                            style={{ width: '28%', }}
-                            onPress={() => getMode(2)}
-                        >
-                            <ShuffleIcon />
-                        </TouchableOpacity>
-                }
+                {repeatMode == 2 ? (
+                    <TouchableOpacity onPress={() => getMode(0)}>
+                        <MaterialIcons name="shuffle" size={24} />
+                    </TouchableOpacity>
+                ) : (
+                    <TouchableOpacity onPress={() => getMode(2)}>
+                        <ShuffleIcon />
+                    </TouchableOpacity>
+                )}
 
-                {/* <TouchableOpacity
-                    style={{ width: 30, height: 30, paddingHorizontal: 20 }}
+                <TouchableOpacity
+                    style={{ width: 30, height: 30, paddingHorizontal: 30 }}
                     onPress={() => {
                         return;
                     }}
-                ></TouchableOpacity> */}
-                {/* <View style={{ alignItems: 'center', paddingHorizontal: 20 }}>
-                </View> */}
-                <View style={{ flexDirection: 'row', alignItems: 'center', width: '50%' }}>
-                    <TouchableOpacity onPress={() => handlePrevious()}>
-                        <Icon name="stepbackward" size={24} color="white" />
-                    </TouchableOpacity>
-                    {paused ? (
-                        <TouchableOpacity
-                            // style={{ marginHorizontal: 10 }}
-                            onPress={() => handlePause(playBackState)}
-                        >
-                            <View
-                                style={{
-                                    height: 40,
-                                    width: 40,
-                                    borderRadius: 20,
-                                    backgroundColor: '#FAF8FF',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    marginHorizontal: 30
-                                }}
-                            >
-                                <Icon name="pause" size={32} color="black" />
-                            </View>
-                        </TouchableOpacity>
-                    ) : (
-                        <TouchableOpacity
+                ></TouchableOpacity>
+
+                <TouchableOpacity onPress={() => handlePrevious()}>
+                    <Icon name="stepbackward" size={24} color="white" />
+                </TouchableOpacity>
+                {paused ? (
+                    <TouchableOpacity
+                        // style={{ marginHorizontal: 10 }}
+                        onPress={() => handlePause(playBackState)}
+                    >
+                        <View
                             style={{
                                 height: 40,
                                 width: 40,
                                 borderRadius: 20,
-                                // backgroundColor: '#FAF8FF',
+                                backgroundColor: '#FAF8FF',
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                marginHorizontal: 30
+                                marginHorizontal: 20,
                             }}
-                            onPress={() => handlePlay(playBackState)}
                         >
-                            <Icon name="play" size={40} color="white" />
-                        </TouchableOpacity>
-                    )}
-                    <TouchableOpacity onPress={() => handleNext()}>
-                        <Icon name="stepforward" size={24} color="white" />
+                            <Icon name="pause" size={32} color="black" />
+                        </View>
                     </TouchableOpacity>
-                </View>
-                {/* <View
-                    style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
-                >
-                </View> */}
-                <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                    <TouchableOpacity style={{ marginHorizontal: 20 }} onPress={() => downloadAudio()}>
-                        <Icon name="download" size={24} color="white" />
+                ) : (
+                    <TouchableOpacity
+                        style={{
+                            height: 40,
+                            width: 40,
+                            borderRadius: 20,
+                            // backgroundColor: '#FAF8FF',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginHorizontal: 20,
+                        }}
+                        onPress={() => handlePlay(playBackState)}
+                    >
+                        <Icon name="play" size={40} color="white" />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => downloadAudios()}>
-                        <FavouriteIcon />
-                    </TouchableOpacity>
-                </View>
-                {/* <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                </View> */}
+                )}
+                <TouchableOpacity onPress={() => handleNext()}>
+                    <Icon name="stepforward" size={24} color="white" />
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{ marginHorizontal: 20 }} onPress={() => downloadAudio()}>
+                    <Icon name="download" size={24} color="white" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => downloadAudios()}>
+                    <FavouriteIcon />
+                </TouchableOpacity>
             </View>
         </View>
     );
