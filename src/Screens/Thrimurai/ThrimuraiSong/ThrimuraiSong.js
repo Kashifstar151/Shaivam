@@ -385,7 +385,12 @@ const ThrimuraiSong = ({ route, navigation }) => {
                     <Animated.View
                         style={[styles.animatedView, animatedStyles, { ...theme.setting }]}
                     >
-                        <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+                        <View
+                            style={{
+                                justifyContent: 'space-between',
+                                flexDirection: 'row',
+                            }}
+                        >
                             <TouchableOpacity style={styles.InsiderSettingButton}>
                                 <SettingIcon />
                                 {/* <Text
@@ -409,7 +414,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             </TouchableOpacity>
                         </View>
                         <View style={styles.TranslationContainer}>
-                            <Text style={styles.translationText}>Tranlation</Text>
+                            <Text style={styles.translationText}>Translation</Text>
                             <View style={{ marginHorizontal: 0 }}>
                                 <FlatList
                                     horizontal
@@ -468,34 +473,35 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                     </TouchableOpacity>
                                 </View>
                             </View>
-                            <View style={styles.otherOption}>
-                                <View>
-                                    {i18n.language === 'en' && (
+                            {i18n.language === 'en' && (
+                                <View style={styles.otherOption}>
+                                    <View>
                                         <Text style={styles.otherOptionText}>Tamil Split</Text>
-                                    )}
-                                    <Text
-                                        style={{
-                                            fontFamily: 'Mulish-Regular',
-                                            color: '#777777',
-                                            fontSize: 10,
-                                            fontWeight: '700',
+
+                                        <Text
+                                            style={{
+                                                fontFamily: 'Mulish-Regular',
+                                                color: '#777777',
+                                                fontSize: 10,
+                                                fontWeight: '700',
+                                            }}
+                                        >
+                                            Turn on to view thirumurais as songs
+                                        </Text>
+                                    </View>
+                                    <Switch
+                                        trackColor={{ false: '#767577', true: '#81b0ff' }}
+                                        thumbColor={tamilSplit ? '#f5dd4b' : '#f4f3f4'}
+                                        ios_backgroundColor="#3e3e3e"
+                                        onValueChange={() => {
+                                            if (i18n.language === 'en') {
+                                                return toggleSwitch(tamilSplit, setTamilSplit);
+                                            }
                                         }}
-                                    >
-                                        Turn on to view thirumurais as songs
-                                    </Text>
+                                        value={tamilSplit}
+                                    />
                                 </View>
-                                <Switch
-                                    trackColor={{ false: '#767577', true: '#81b0ff' }}
-                                    thumbColor={tamilSplit ? '#f5dd4b' : '#f4f3f4'}
-                                    ios_backgroundColor="#3e3e3e"
-                                    onValueChange={() => {
-                                        if (i18n.language === 'en') {
-                                            return toggleSwitch(tamilSplit, setTamilSplit);
-                                        }
-                                    }}
-                                    value={tamilSplit}
-                                />
-                            </View>
+                            )}
                             <View style={styles.otherOption}>
                                 <View>
                                     <Text style={styles.otherOptionText}>Dark Mode</Text>
@@ -670,8 +676,18 @@ export const styles = StyleSheet.create({
     },
     partitionContainer: { width: 2, backgroundColor: '#CFCFCF', margin: 2, marginHorizontal: 10 },
     transcriptText: { fontSize: 16, fontFamily: 'Lora-Bold' },
-    translationText: { fontSize: 12, fontWeight: '700', fontFamily: 'Lora-Bold', color: '#222222' },
-    TranslationContainer: { paddingHorizontal: 20, marginVertical: 10 },
+    translationText: {
+        fontSize: 16,
+        fontWeight: '700',
+        fontFamily: 'Lora-Bold',
+        color: 'black',
+        marginBottom: 5,
+    },
+    TranslationContainer: {
+        paddingHorizontal: 20,
+        paddingBottom: 10,
+        flex: 1,
+    },
     languageBox: {
         alignItems: 'center',
         justifyContent: 'center',
@@ -710,8 +726,8 @@ export const styles = StyleSheet.create({
     animatedView: {
         zIndex: 10,
         alignSelf: 'flex-end',
-        height: 250,
         borderWidth: 1,
+        flex: 1,
         borderRadius: 5,
     },
     InsiderSettingButton: { flexDirection: 'row', alignItems: 'center', padding: 5 },
