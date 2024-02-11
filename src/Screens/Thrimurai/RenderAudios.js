@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import MusicIcon1 from '../../assets/Images/music 1.svg';
 import { RouteTexts } from '../../navigation/RouteText';
 import SQLite from 'react-native-sqlite-storage';
@@ -9,16 +9,7 @@ import { useIsFocused } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
 import { useTranslation } from 'react-i18next';
 const RenderAudiosItem = ({ navigationHandler, item, theme }) => (
-    <Pressable
-        style={{
-            alignItems: 'center',
-            marginVertical: 5,
-            width: '100%',
-            paddingHorizontal: 20,
-            flexDirection: 'row',
-        }}
-        onPress={() => navigationHandler(item)}
-    >
+    <Pressable style={styles.audioTitleWrapper} onPress={() => navigationHandler(item)}>
         <View
             style={{
                 backgroundColor: '#F2F0F8',
@@ -45,6 +36,16 @@ const RenderAudiosItem = ({ navigationHandler, item, theme }) => (
         </Text>
     </Pressable>
 );
+
+const styles = StyleSheet.create({
+    audioTitleWrapper: {
+        alignItems: 'center',
+        marginVertical: 5,
+        width: '100%',
+        paddingHorizontal: 20,
+        flexDirection: 'row',
+    },
+});
 
 const RenderAudios = ({
     akarthi,
@@ -137,24 +138,37 @@ const RenderAudios = ({
 
     return (
         <View>
-            <FlatList
-                nestedScrollEnabled
-                renderItem={({ item, index }) => {
-                    return (
-                        <RenderAudiosItem
-                            navigationHandler={navigationHandler}
-                            item={item}
-                            theme={theme}
-                        />
-                    );
-                }}
-                data={audioData}
-                onEndReached={() => {
-                    if (akarthi) {
-                        getSongsData();
-                    }
-                }}
-            />
+            {audioData.length > 0 ? (
+                <FlatList
+                    nestedScrollEnabled
+                    renderItem={({ item, index }) => {
+                        return (
+                            <RenderAudiosItem
+                                navigationHandler={navigationHandler}
+                                item={item}
+                                theme={theme}
+                            />
+                        );
+                    }}
+                    data={audioData}
+                    onEndReached={() => {
+                        if (akarthi) {
+                            getSongsData();
+                        }
+                    }}
+                />
+            ) : (
+                <View
+                    style={[
+                        styles.audioTitleWrapper,
+                        { backgroundColor: '#1C1C13', paddingVertical: 10 },
+                    ]}
+                >
+                    <Text style={{ width: '100%', textAlign: 'center' }}>
+                        Text currently not available
+                    </Text>
+                </View>
+            )}
         </View>
     );
 };
