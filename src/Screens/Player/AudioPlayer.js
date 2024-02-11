@@ -273,7 +273,7 @@ const AudioPlayer = ({ navigation, songsData, prevId, route, title, songs }) => 
                     thumbImage={ThumbImage}
                     onValueChange={(value) => TrackPlayer.seekTo(value)}
                     onSlidingComplete={(value) => TrackPlayer.seekTo(value)}
-                    style={{ width: Dimensions.get('window').width - 30, alignSelf: 'center' }}
+                    style={{ width: '98%', alignSelf: 'center' }}
                     minimumValue={0}
                     maximumValue={duration}
                     minimumTrackTintColor="#C1554E"
