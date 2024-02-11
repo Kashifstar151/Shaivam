@@ -470,7 +470,9 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             </View>
                             <View style={styles.otherOption}>
                                 <View>
-                                    <Text style={styles.otherOptionText}>Tamil Split</Text>
+                                    {i18n.language === 'en' && (
+                                        <Text style={styles.otherOptionText}>Tamil Split</Text>
+                                    )}
                                     <Text
                                         style={{
                                             fontFamily: 'Mulish-Regular',
@@ -489,10 +491,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                     onValueChange={() => {
                                         if (i18n.language === 'en') {
                                             return toggleSwitch(tamilSplit, setTamilSplit);
-                                        } else {
-                                            return Alert.alert(
-                                                'Please first select Tamil language'
-                                            );
                                         }
                                     }}
                                     value={tamilSplit}
@@ -557,7 +555,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                         ? selectedLang !== 'Tamil'
                                             ? res?.rawSong
                                             : res?.tamilExplanation ||
-                                            'Text currently not available'
+                                              'Text currently not available'
                                         : res?.tamilSplit || 'Text currently not available'}
                                 </Text>
                                 <Text
@@ -587,11 +585,14 @@ const ThrimuraiSong = ({ route, navigation }) => {
                 snapPoints={snapPoints}
                 index={1}
             > */}
-            <View style={{
-                paddingTop: 20, backgroundColor: '#222222',
-                borderTopEndRadius: 15,
-                borderTopLeftRadius: 15,
-            }}>
+            <View
+                style={{
+                    paddingTop: 20,
+                    backgroundColor: '#222222',
+                    borderTopEndRadius: 15,
+                    borderTopLeftRadius: 15,
+                }}
+            >
                 <AudioPlayer
                     prevId={data?.prevId}
                     songsData={songs}

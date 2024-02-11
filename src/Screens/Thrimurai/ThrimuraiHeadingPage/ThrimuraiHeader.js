@@ -1,18 +1,29 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ThemeContext } from '../../../Context/ThemeContext';
 import { useTranslation } from 'react-i18next';
-// import { theme } from '../../../Helpers';
 const ThrimuraiHeader = ({ selectedHeader, setSelectedheader, item }) => {
     const { theme } = useContext(ThemeContext);
     const { t } = useTranslation();
+    const [itemWidth, setItemWidth] = useState(Dimensions.get('window').width / 4);
+
+    useEffect(() => {
+        const updateItemWidth = () => {
+            setItemWidth(Dimensions.get('window').width / 4);
+        };
+        const subscription = Dimensions.addEventListener('change', updateItemWidth);
+        return () => {
+            subscription?.remove();
+        };
+    }, []);
+
     return (
         <View>
             {selectedHeader.name == item.name ? (
                 <TouchableOpacity
                     style={[
                         styles.selectedHeaderBox,
-                        { backgroundColor: theme.iconHeadingColor.bgColor },
+                        { backgroundColor: theme.iconHeadingColor.bgColor, width: itemWidth },
                     ]}
                     onPress={() => setSelectedheader(item)}
                 >
@@ -27,7 +38,10 @@ const ThrimuraiHeader = ({ selectedHeader, setSelectedheader, item }) => {
                     </Text>
                 </TouchableOpacity>
             ) : (
-                <TouchableOpacity style={styles.headerBox} onPress={() => setSelectedheader(item)}>
+                <TouchableOpacity
+                    style={[styles.headerBox, { width: itemWidth }]}
+                    onPress={() => setSelectedheader(item)}
+                >
                     {item?.Icon}
                     <Text
                         style={[
@@ -47,7 +61,6 @@ const ThrimuraiHeader = ({ selectedHeader, setSelectedheader, item }) => {
 export const styles = StyleSheet.create({
     headerBox: {
         height: 70,
-        width: Dimensions.get('window').width / 4,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -57,10 +70,7 @@ export const styles = StyleSheet.create({
         fontWeight: '500',
     },
     selectedHeaderBox: {
-        // padding: 15,
         height: 70,
-        width: Dimensions.get('window').width / 4,
-
         justifyContent: 'center',
         alignItems: 'center',
         shadowColor: '#72322E',

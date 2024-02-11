@@ -529,7 +529,6 @@ export const styles = StyleSheet.create({
         borderRadius: 10,
         paddingHorizontal: 10,
 
-        width: Dimensions.get('window').width - 30,
         height: 50,
         marginBottom: 10,
         flexDirection: 'row',

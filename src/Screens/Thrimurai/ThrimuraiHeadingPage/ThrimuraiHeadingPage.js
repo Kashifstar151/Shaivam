@@ -148,36 +148,38 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     }, []);
     const { t } = useTranslation();
     const retrieveData = async () => {
-        setShowLoading(true)
+        setShowLoading(true);
         const query = `SELECT name ,prevId FROM  category WHERE prevId${prevId}`;
         getSqlData(query, (callbacks) => {
-            setShowLoading(false)
+            setShowLoading(false);
             setThrimurais(callbacks);
         });
     };
     return (
         <View style={[styles.main, { backgroundColor: theme.backgroundColor }]}>
             <Background>
-                <View>
-                    <BackButton navigation={navigation} color={true} middleText={name} />
-                    <SearchInput
-                        setState={setSearchedText}
-                        state={searchedText}
-                        setOnFocus={() =>
-                            navigation.navigate(RouteTexts.SEARCH_SCREEN, {
-                                query1: `SELECT * FROM thirumurais WHERE search_thirumurai_title LIKE`,
-                                query2: `AND fkTrimuria <=7 LIMIT 10 OFFSET 0`,
-                                allThirumirai: false,
-                            })
-                        }
-                        // placeholder={'Search for anything (Eg - தோடுடைய செவியன்) '}
-                        placeholder={t('Search for any Thirumurai here')}
-                        styleOverwrite={{ paddingTop: 10 }}
-                    />
-                </View>
+                <BackButton navigation={navigation} color={true} middleText={name} />
+                <SearchInput
+                    setState={setSearchedText}
+                    state={searchedText}
+                    setOnFocus={() =>
+                        navigation.navigate(RouteTexts.SEARCH_SCREEN, {
+                            query1: `SELECT * FROM thirumurais WHERE search_thirumurai_title LIKE`,
+                            query2: `AND fkTrimuria <=7 LIMIT 10 OFFSET 0`,
+                            allThirumirai: false,
+                        })
+                    }
+                    // placeholder={'Search for anything (Eg - தோடுடைய செவியன்) '}
+                    placeholder={t('Search for any Thirumurai here')}
+                    styleOverwrite={{ paddingTop: 10 }}
+                />
                 {prevId == '<=7' && (
                     <FlatList
-                        contentContainerStyle={{ marginTop: 10 }}
+                        contentContainerStyle={{
+                            marginTop: 10,
+                            width: '100%',
+                            flexGrow: 1,
+                        }}
                         data={headerData}
                         renderItem={({ item, index }) => (
                             <ThrimuraiHeader
@@ -251,6 +253,7 @@ export const styles = StyleSheet.create({
         shadowOpacity: 0.6,
         height: 1,
         width: '100%',
+        flex: 1,
         backgroundColor: '#F3F3F3',
     },
     headerBox: {
@@ -289,7 +292,6 @@ export const styles = StyleSheet.create({
         justifyContent: 'space-between',
 
         height: 60,
-        width: Dimensions.get('window').width,
         marginBottom: 4,
         flexDirection: 'row',
         paddingHorizontal: 20,
