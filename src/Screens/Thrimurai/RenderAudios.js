@@ -56,7 +56,7 @@ const RenderAudios = ({
     ThalamHeaders,
     varakatimurai,
 }) => {
-    console.log('🚀 ~ RenderAudios ~ songs:', songs);
+    // console.log('🚀 ~ RenderAudios ~ songs:', songs);
     const { theme } = useContext(ThemeContext);
     const [dataLength, setDataLength] = useState(0);
     const [audioData, setAudioData] = useState([]);
@@ -73,13 +73,9 @@ const RenderAudios = ({
     }, []);
 
     const getDtataFromSql = async () => {
-        const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${
-            songs?.fkTrimuria
-        }' AND pann='${songs?.pann}'  and  locale='${
-            i18n.language === 'en-IN' ? 'RoI' : i18n.language
-        }'   ORDER BY  titleNo `;
-
-        // const query2 = `SELECT * from thirumurai_songs WHERE prevId = ${songs.prevId} and country= '${songs}'ORDER BY song_no ASC LIMIT 10 OFFSET 1`;
+        const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${songs?.fkTrimuria}' ${
+            songs?.fkTrimuria <= 7 || songs?.fkTrimuria === 10 ? `AND pann='${songs?.pann}'` : ''
+        } and  locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language}'   ORDER BY  titleNo `;
 
         const templleQuery = `Select * from thirumurais WHERE ${
             ThalamHeaders == 0 ? 'country' : 'thalam'
@@ -101,6 +97,7 @@ const RenderAudios = ({
         const query = `SELECT * FROM thirumurais ASC where  locale='${
             i18n.language === 'en-IN' ? 'RoI' : i18n.language
         }' ORDER BY fkTrimuria,titleNo LIMIT 20 OFFSET ${dataLength} `;
+
         getSqlData(query, (callbacks) => {
             // if (callbacks?.Length > 0) {
             //     set
@@ -108,6 +105,7 @@ const RenderAudios = ({
             // let arr = audioData
             if (audioData?.length > 0) {
                 // arr.concat(callbacks)
+                console.log('the concat =========================================>');
                 setAudioData(audioData.concat(callbacks));
             } else {
                 setAudioData(callbacks);
@@ -130,7 +128,6 @@ const RenderAudios = ({
     //     });
     // }
     const navigationHandler = (item) => {
-        // console.log("🚀 ~ navigationHandler ~ item:", item)
         navigation.navigate(RouteTexts.THRIMURAI_SONG, {
             data: item,
         });
@@ -161,10 +158,10 @@ const RenderAudios = ({
                 <View
                     style={[
                         styles.audioTitleWrapper,
-                        { backgroundColor: '#1C1C13', paddingVertical: 10 },
+                        { backgroundColor: theme.backgroundColor, paddingVertical: 10 },
                     ]}
                 >
-                    <Text style={{ width: '100%', textAlign: 'center' }}>
+                    <Text style={{ width: '100%', textAlign: 'center', color: theme.textColor }}>
                         Text currently not available
                     </Text>
                 </View>
