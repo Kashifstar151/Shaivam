@@ -80,6 +80,17 @@ const ThrimuraiSong = ({ route, navigation }) => {
             initializeTheFontSize();
         }
     }, [fontSizeCount]);
+    const [orientation, setOrientation] = useState('PORTRAIT')
+    useEffect(() => {
+        Dimensions.addEventListener('change', ({ window: { width, height } }) => {
+            if (width < height) {
+                setOrientation("PORTRAIT")
+            } else {
+                setOrientation("LANDSCAPE")
+
+            }
+        })
+    }, [])
 
     const [darkMode, setDarkMode] = useState(colorScheme === 'dark' ? true : false);
     const [tamilSplit, setTamilSplit] = useState(false);
@@ -114,6 +125,16 @@ const ThrimuraiSong = ({ route, navigation }) => {
     useEffect(() => {
         getSOngData();
     }, [selectedLngCode]);
+    // useEffect(() => {
+    //     Dimensions.addEventListener('change', ({ window: { width, height } }) => {
+    //         if (width < height) {
+    //             setOrientation("PORTRAIT")
+    //         } else {
+    //             setOrientation("LANDSCAPE")
+
+    //         }
+    //     })
+    // }, [])
 
     useEffect(() => {
         setTheme(darkMode ? dark : light);
@@ -183,8 +204,11 @@ const ThrimuraiSong = ({ route, navigation }) => {
 
     const getSOngData = () => {
         const query = `SELECT * from thirumurai_songs where prevId=${data?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
+        // const query1 = `SELECT * FROM thirumurais WHERE fkTrimuria <= 7 AND locale = 'en' AND titleNo IS NOT NULL ORDER BY fkTrimuria, titleNo;`;
+
+
         getSqlData(query, (callbacks) => {
-            console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
+            // console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
             setSongDetails(callbacks);
             const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`;
             getSqlData(query2, (callbacks) => {
@@ -251,19 +275,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
                     { backgroundColor: theme.colorscheme === 'dark' ? '#333333' : '#F1DBDA' },
                 ]}
             >
-                {/* <AnimatedRN.View
-                    style={[
-                        styles.detailsSection,
-                        {
-                            display: showDetail ? 'flex' : 'none',
-                            opacity: visibilityVal,
-                            // transform: [{ translateY: 10 }],
-                        },
-                    ]}
-                >
-                    <Text>hdfsjfhhjkd</Text>
-                </AnimatedRN.View> */}
-
                 <View
                     style={[
                         styles.detailsSection,
@@ -561,7 +572,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                         ? selectedLang !== 'Tamil'
                                             ? res?.rawSong
                                             : res?.tamilExplanation ||
-                                              'Text currently not available'
+                                            'Text currently not available'
                                         : res?.tamilSplit || 'Text currently not available'}
                                 </Text>
                                 <Text
@@ -594,15 +605,22 @@ const ThrimuraiSong = ({ route, navigation }) => {
             <View
                 style={{
                     paddingTop: 20,
+                    position: 'absolute',
+                    right: 0,
+                    bottom: 0,
                     backgroundColor: '#222222',
                     borderTopEndRadius: 15,
                     borderTopLeftRadius: 15,
+                    alignSelf: 'flex-end',
+                    width: orientation == 'LANDSCAPE' ? Dimensions.get('window').width / 2 : Dimensions.get('window').width,
+
                 }}
             >
                 <AudioPlayer
                     prevId={data?.prevId}
                     songsData={songs}
                     title={songDetails?.[0]?.title}
+                    orientation={orientation}
                 />
             </View>
             {/* </BottomSheet> */}

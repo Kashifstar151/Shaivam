@@ -79,17 +79,14 @@ const RenderAudios = ({
             id <= 7 || id === 10 ? `AND pann='${songs?.pann}'` : ''
         } and  locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language}'   ORDER BY  titleNo `;
 
-        const templleQuery = `Select * from thirumurais WHERE ${
-            ThalamHeaders == 0 ? 'country' : 'thalam'
-        }='${songs?.thalam}'  and  locale='${
-            i18n.language === 'en-IN' ? 'RoI' : i18n.language
-        }' ORDER BY  title ASC LIMIT 10 OFFSET ${pageSize}`;
 
-        const query3 = `SELECT * FROM thirumurais WHERE  authorNo='${
-            songs?.authorNo
-        }'  and locale='${
-            i18n.language === 'en-IN' ? 'RoI' : i18n.language
-        }' GROUP BY titleS ORDER by orderAuthor  `;
+        const templleQuery = `Select * from thirumurais WHERE ${ThalamHeaders == 0 ? 'country' : 'thalam'
+            }='${songs?.thalam}'  and  locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language
+            }' ORDER BY  title ASC LIMIT 10 OFFSET ${pageSize}`;
+
+        const query3 = `SELECT * FROM thirumurais WHERE  authorNo='${songs?.authorNo
+            }'  and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language
+            }' GROUP BY titleS ORDER by orderAuthor  `;
 
         const makeQuery = thalam ? templleQuery : varakatimurai ? query3 : query;
         getSqlData(makeQuery, (callbacks) => {
@@ -97,38 +94,26 @@ const RenderAudios = ({
         });
     };
     const getSongsData = async () => {
-        const query = `SELECT * FROM thirumurais ASC where  locale='${
+        const query = `SELECT * FROM thirumurais  where  locale='${
             i18n.language === 'en-IN' ? 'RoI' : i18n.language
-        }' ORDER BY fkTrimuria,titleNo LIMIT 20 OFFSET ${dataLength} `;
+        }' and fkTrimuria < 8 ORDER BY fkTrimuria,titleNo LIMIT 20 OFFSET ${dataLength} `;
 
         getSqlData(query, (callbacks) => {
             // if (callbacks?.Length > 0) {
             //     set
             // }
             // let arr = audioData
-            if (audioData?.length > 0) {
-                // arr.concat(callbacks)
-                setAudioData(audioData.concat(callbacks));
-            } else {
-                setAudioData(callbacks);
-            }
-            setDataLength(dataLength + 20);
+            if (callbacks.length > 0) {
+                if (audioData?.length > 0) {
+                    setAudioData(audioData.concat(callbacks));
+                } else {
+                    setAudioData(callbacks);
+                }
+                setDataLength(dataLength + 20);
+           }
         });
     };
-    // const loadMoreData = () => {
-    //     console.log('pageSize', pageSize + 10)
-    //     const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${songs?.fkTrimuria}' AND pann='${songs?.pann}' ORDER BY  titleNo ASC  LIMIT 10 OFFSET ${pageSize + 10}`;
-    //     // const query2 = `SELECT * from thirumurai_songs WHERE prevId = ${songs.prevId} and country= '${songs}'ORDER BY song_no ASC LIMIT 10 OFFSET 1`;
-    //     const templleQuery = `Select * from thirumurais WHERE ${ThalamHeaders == 0 ? 'country' : 'thalam'}='${songs}' ORDER BY  title ASC LIMIT 10 OFFSET ${pageSize + 10}`
-    //     getSqlData(thalam ? templleQuery : query, (callbacks) => {
-    //         let arr = audioData
-    //         if (callbacks?.length > 0) {
-    //             arr.concat(callbacks)
-    //         }
-    //         // setAudioData(callbacks);
-    //         setAudioData(arr)
-    //     });
-    // }
+ 
     const navigationHandler = (item) => {
         navigation.navigate(RouteTexts.THRIMURAI_SONG, {
             data: item,
