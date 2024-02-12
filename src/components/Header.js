@@ -1,30 +1,107 @@
+import React, { useContext, useEffect, useState } from 'react';
+import { Image, Pressable, StatusBar, StyleSheet, Text, View, useColorScheme } from 'react-native';
+import Icon from 'react-native-vector-icons/dist/MaterialIcons';
+import { colors } from '../Helpers';
+import NotificationIcon from '../assets/Images/NotificationIcon.svg';
+import HalfMoonSVG from './SVGs/HalfMoonSVG';
+import { ThemeContext } from '../Context/ThemeContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { dark, light } from '../Helpers/GlobalStyles';
 
-import React from 'react'
-import { Image, Pressable, StatusBar, StyleSheet, Text, View } from 'react-native'
-import Icon from "react-native-vector-icons/dist/MaterialIcons"
-import { colors } from "../Helpers"
 const Header = () => {
+    const colorScheme = useColorScheme();
+    const [isDark, setIsDark] = useState(colorScheme === 'dark' ? true : false);
+    const { theme, setTheme } = useContext(ThemeContext);
+    const onSwitchTheme = () => {
+        setIsDark(!isDark);
+    };
+
+    useEffect(() => {
+        setTheme(isDark ? dark : light);
+        AsyncStorage.setItem('theme', colorScheme);
+    }, [isDark]);
     return (
         <View style={styles.headerContainer}>
             <View style={{ flexDirection: 'row' }}>
-                <Image source={{ uri: 'https://shaivam.org/assests/icons/logo.png' }} style={{ height: 50, width: 50 }} />
+                <Image
+                    source={{ uri: 'https://shaivam.org/assests/icons/logo.png' }}
+                    style={{ height: 50, width: 50 }}
+                />
                 <View style={{ justifyContent: 'center', paddingHorizontal: 10 }}>
-                    <Text style={{ fontSize: 11, color: colors.grey2 }}>
-                        Welcome to
-                    </Text>
+                    <Text style={{ fontSize: 11, color: colors.grey2 }}>Welcome to</Text>
                     <Text style={{ fontSize: 14, fontWeight: '600', color: colors.grey2 }}>
                         Shaivam.org
                     </Text>
                 </View>
             </View>
-            <Pressable style={styles.notificationContainer}>
-                <Icon name="notifications" size={24} color='white' />
-            </Pressable>
+            <View style={styles.sideBtnContainer}>
+                <Pressable onPress={onSwitchTheme}>
+                    {/* <DarkModeDisableIcon /> */}
+                    <View
+                        style={[
+                            styles.themeSwitch,
+                            {
+                                backgroundColor:
+                                    theme.colorscheme === 'dark' ? '#3A3A3A' : '#99403A',
+                            },
+                        ]}
+                    >
+                        {/* {isDark ? (
+                            <View style={{ flexDirection: 'row-reverse', gap: 2 }}>
+                                <HalfMoonSVG
+                                    fill={theme.colorscheme === 'dark' ? '#fff' : '#99403A'}
+                                />
+                                <Text>ON</Text>
+                            </View>
+                        ) : (
+                            <View style={{ flexDirection: 'row', gap: 2 }}>
+                                <HalfMoonSVG fill={'#f00'} />
+                                <Text>OFF</Text>
+                            </View>
+                        )} */}
+
+                        <View style={{ flexDirection: isDark ? 'row-reverse' : 'row', gap: 2 }}>
+                            <HalfMoonSVG fill={theme.colorscheme === 'dark' ? '#fff' : '#E66158'} />
+                            <Text>{isDark ? 'ON' : 'OFF'}</Text>
+                        </View>
+                    </View>
+                    {/* <Icon name="notifications" size={24} color='white' /> */}
+                </Pressable>
+                <Pressable style={styles.notificationContainer}>
+                    <NotificationIcon />
+                    {/* <Icon name="notifications" size={24} color='white' /> */}
+                </Pressable>
+            </View>
         </View>
-    )
-}
+    );
+};
 export const styles = StyleSheet.create({
-    headerContainer: { paddingTop: StatusBar.currentHeight + 50, justifyContent: 'space-between', flexDirection: 'row' },
-    notificationContainer: { height: 40, width: 40, borderRadius: 20, backgroundColor: '#7b1113', justifyContent: 'center', alignItems: 'center' }
-})
-export default Header
+    headerContainer: {
+        paddingHorizontal: 10,
+        paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 40 : 20,
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+    },
+
+    themeSwitch: {
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        borderRadius: 1000,
+    },
+
+    sideBtnContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'flex-end',
+    },
+    notificationContainer: {
+        marginLeft: 10,
+        height: 40,
+        width: 40,
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+});
+export default Header;
