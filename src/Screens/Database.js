@@ -231,7 +231,7 @@ export async function getSqlData(query, callbacks) {
         await offlineDatabase.transaction(
             (tx) => {
                 tx.executeSql(query, [], (_, results) => {
-                    // console.log("🚀 ~ file: Database.js:149 ~ tx.executeSql ~ results:", results)
+                    console.log("🚀 ~ file: Database.js:149 ~ tx.executeSql ~ results:", results)
                     let arr = [];
                     if (results?.rows?.length > 0) {
                         for (let i = 0; i < results?.rows?.length; i++) {

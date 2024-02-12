@@ -64,7 +64,7 @@ const ThrimuraiList = ({ navigation }) => {
         name: 'SongsData.db',
         createFromLocation: 1,
     });
-    useEffect(() => {}, []);
+    useEffect(() => { }, []);
 
     useEffect(() => {
         retrieveData();
@@ -73,9 +73,9 @@ const ThrimuraiList = ({ navigation }) => {
         getSqlData('SELECT * FROM category', (callbacks) => {
             setThrimurais(callbacks);
         });
-        getSqlData('SELECT * FROM strotras', (callbacks) => {
-            // setThrimurais(callbacks)
-        });
+        // getSqlData('SELECT * FROM strotras', (callbacks) => {
+        //     // setThrimurais(callbacks)
+        // });
         // }, (error) => {
         //     console.error("error occured in fetching data at route", error);
         // })

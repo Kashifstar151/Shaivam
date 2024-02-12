@@ -73,30 +73,25 @@ const RenderAudios = ({
     }, []);
 
     const getDtataFromSql = async () => {
-        const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${songs?.fkTrimuria}' ${
-            songs?.fkTrimuria <= 7 || songs?.fkTrimuria === 10 ? `AND pann='${songs?.pann}'` : ''
-        } and  locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language}'   ORDER BY  titleNo `;
+        const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${songs?.fkTrimuria}' ${songs?.fkTrimuria <= 7 || songs?.fkTrimuria === 10 ? `AND pann='${songs?.pann}'` : ''
+            } and  locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language}' ORDER BY  titleNo `;
 
-        const templleQuery = `Select * from thirumurais WHERE ${
-            ThalamHeaders == 0 ? 'country' : 'thalam'
-        }='${songs?.thalam}'  and  locale='${
-            i18n.language === 'en-IN' ? 'RoI' : i18n.language
-        }' ORDER BY  title ASC LIMIT 10 OFFSET ${pageSize}`;
 
-        const query3 = `SELECT * FROM thirumurais WHERE  authorNo='${
-            songs?.authorNo
-        }'  and locale='${
-            i18n.language === 'en-IN' ? 'RoI' : i18n.language
-        }' GROUP BY titleS ORDER by orderAuthor  `;
+        const templleQuery = `Select * from thirumurais WHERE ${ThalamHeaders == 0 ? 'country' : 'thalam'
+            }='${songs?.thalam}'  and  locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language
+            }' ORDER BY  title ASC LIMIT 10 OFFSET ${pageSize}`;
+
+        const query3 = `SELECT * FROM thirumurais WHERE  authorNo='${songs?.authorNo
+            }'  and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language
+            }' GROUP BY titleS ORDER by orderAuthor  `;
 
         getSqlData(thalam ? templleQuery : varakatimurai ? query3 : query, (callbacks) => {
             setAudioData(callbacks);
         });
     };
     const getSongsData = async () => {
-        const query = `SELECT * FROM thirumurais ASC where  locale='${
-            i18n.language === 'en-IN' ? 'RoI' : i18n.language
-        }' ORDER BY fkTrimuria,titleNo LIMIT 20 OFFSET ${dataLength} `;
+        const query = `SELECT * FROM thirumurais ASC where  locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language
+            }' ORDER BY fkTrimuria,titleNo LIMIT 20 OFFSET ${dataLength} `;
 
         getSqlData(query, (callbacks) => {
             // if (callbacks?.Length > 0) {
