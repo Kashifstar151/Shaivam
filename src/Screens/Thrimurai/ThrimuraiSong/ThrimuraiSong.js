@@ -605,6 +605,9 @@ const ThrimuraiSong = ({ route, navigation }) => {
             <View
                 style={{
                     paddingTop: 20,
+                    position: 'absolute',
+                    right: 0,
+                    bottom: 0,
                     backgroundColor: '#222222',
                     borderTopEndRadius: 15,
                     borderTopLeftRadius: 15,

@@ -264,7 +264,7 @@ const AudioPlayer = ({ orientation, navigation, songsData, prevId, route, title,
         }
     };
     return (
-        <View style={orientation == 'LANDSCAPE' ? { backgroundColor: '#222222', height: 70, alignItems: 'center', } : { backgroundColor: '#222222', height: 200 }}>
+        <View style={orientation == 'LANDSCAPE' ? { width: Dimensions.get('window').width / 2, backgroundColor: '#222222', height: 70, alignItems: 'center', } : { backgroundColor: '#222222', height: 200 }}>
             {
                 orientation == 'PORTRAIT' &&
                 <View style={styles.container}>
@@ -426,7 +426,6 @@ const AudioPlayer = ({ orientation, navigation, songsData, prevId, route, title,
                                             height: 40,
                                             width: 40,
                                             borderRadius: 20,
-                                            // backgroundColor: '#FAF8FF',
                                             justifyContent: 'center',
                                             alignItems: 'center',
                                             marginHorizontal: 30
@@ -450,8 +449,6 @@ const AudioPlayer = ({ orientation, navigation, songsData, prevId, route, title,
                             </View>
                         </View></>
             }
-
-
         </View>
     );
 };
