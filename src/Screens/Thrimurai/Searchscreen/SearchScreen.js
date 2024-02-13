@@ -73,11 +73,31 @@ const SearchScreen = ({ navigation, route }) => {
             setIsSearched(true);
         }
     };
+    // const highlight = (item, index, key) => {
+    //     // console.log("🚀 ~ highlight ~ item:", JSON.stringify(item))
+    //     const textContent = key === 'title' ? item?.title : item?.rawSong;
+    //     const cleanedText = textContent.replace(/\s+/g, ' ').trim();
+    //     const parts = cleanedText.split(' ');
+    //     return (
+    //         <View
+    //             style={{
+    //                 flexDirection: 'row',
+    //                 maxWidth: Dimensions.get('window').width - 30,
+    //                 flexWrap: 'wrap',
+    //             }}
+    //         >
+    //             {key == 'title'
+    //                 ? parts?.map((res, i) => <HighlightedText text={res} highlight={searchText} />)
+    //                 : parts?.map((res, i) => (
+    //                       <HighlightedText text={res} highlight={searchText} lyrics={true} />
+    //                   ))}
+    //         </View>
+    //     );
+    // };
+
     const highlight = (item, index, key) => {
-        // console.log("🚀 ~ highlight ~ item:", JSON.stringify(item))
         const textContent = key === 'title' ? item?.title : item?.rawSong;
-        const cleanedText = textContent.replace(/\s+/g, ' ').trim();
-        const parts = cleanedText.split(' ');
+        const parts = textContent.split('\r\n');
         return (
             <View
                 style={{
@@ -87,10 +107,28 @@ const SearchScreen = ({ navigation, route }) => {
                 }}
             >
                 {key == 'title'
-                    ? parts?.map((res, i) => <HighlightedText text={res} highlight={searchText} />)
-                    : parts?.map((res, i) => (
-                          <HighlightedText text={res} highlight={searchText} lyrics={true} />
-                      ))}
+                    ? parts?.map((statement, i) => {
+                          return (
+                              <Text>
+                                  {statement.split(' ').map((words, idx) => (
+                                      <HighlightedText text={words} highlight={searchText} />
+                                  ))}
+                              </Text>
+                          );
+                      })
+                    : parts?.map((statement, i) => {
+                          return (
+                              <Text>
+                                  {statement.split(' ').map((words, idx) => (
+                                      <HighlightedText
+                                          text={words}
+                                          highlight={searchText}
+                                          lyrics={true}
+                                      />
+                                  ))}
+                              </Text>
+                          );
+                      })}
             </View>
         );
     };
