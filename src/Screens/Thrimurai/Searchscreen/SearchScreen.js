@@ -30,13 +30,6 @@ const SearchScreen = ({ navigation, route }) => {
 
     const [fktrimuria, setFkTrimuria] = useState(new Set([0]));
 
-    const setIndexOfFkTrimurai = (idx) => {
-        if (idx !== fktrimuria) {
-            setFkTrimuria(idx);
-        } else {
-            setFkTrimuria(null);
-        }
-    };
     const [isSearched, setIsSearched] = useState(false);
 
     useEffect(() => {
@@ -50,7 +43,6 @@ const SearchScreen = ({ navigation, route }) => {
     const getDataFromSql = (e) => {
         setIsSearched(false);
 
-        // ${([...mySet].join(","))}
         if (searchText && searchText.length >= 2) {
             getSqlData(
                 `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${searchText}%' ${
@@ -154,16 +146,19 @@ const SearchScreen = ({ navigation, route }) => {
     const setFkTrimuriaFunc = (item) => {
         setFkTrimuria((prev) => {
             let updateData = new Set(prev);
+
             if (item !== 0) {
                 if (updateData.has(0)) {
                     updateData.delete(0);
-                } else if (updateData.has(item)) {
+                }
+                if (updateData.has(item)) {
                     updateData.delete(item);
                     if (updateData.size === 0) {
                         updateData.add(0);
                     }
+                } else {
+                    updateData.add(item);
                 }
-                updateData.add(item);
             } else {
                 updateData.clear();
                 updateData.add(0);
@@ -201,12 +196,9 @@ const SearchScreen = ({ navigation, route }) => {
                             <TouchableOpacity
                                 style={{
                                     marginLeft: 5,
-                                    // backgroundColor: theme.searchBox.bgColor,
-                                    backgroundColor:
-                                        // fktrimuria !== item?.id
-                                        !fktrimuria.has(item?.id)
-                                            ? theme.searchContext.unSelected.bgColor
-                                            : theme.searchContext.selected.bgColor,
+                                    backgroundColor: !fktrimuria.has(item?.id)
+                                        ? theme.searchContext.unSelected.bgColor
+                                        : theme.searchContext.selected.bgColor,
 
                                     height: 30,
                                     borderRadius: 20,
