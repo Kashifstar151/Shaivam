@@ -128,13 +128,13 @@ const AudioPlayer = ({ orientation, navigation, songsData, prevId, route, title,
         createUserTable();
     }, []);
     const getMode = (mode) => {
-         if (mode == 0) {
-             TrackPlayer.setRepeatMode(RepeatMode.Queue);
-             setRepeatMode(0);
-         } else {
-             TrackPlayer.setRepeatMode(RepeatMode.Track);
-             setRepeatMode(2);
-         }
+        if (mode == 0) {
+            TrackPlayer.setRepeatMode(RepeatMode.Queue);
+            setRepeatMode(0);
+        } else {
+            TrackPlayer.setRepeatMode(RepeatMode.Track);
+            setRepeatMode(2);
+        }
     };
     const activeTrack = useActiveTrack();
     useEffect(() => {
@@ -144,10 +144,8 @@ const AudioPlayer = ({ orientation, navigation, songsData, prevId, route, title,
     const getSOngData = () => {
         const query = `SELECT * from thirumurai_songs where prevId=${prevId} and title NOTNULL`;
         getSqlData(query, (callbacks) => {
-            console.log('🚀 ~ getSqlData ~ callbacks:', callbacks);
             const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`;
             getSqlData(query2, async (callbacks) => {
-                console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
                 setOdhuvar(callbacks);
                 setUpPlayer(callbacks);
                 setSelectedOdhuvar(callbacks[0]);
@@ -335,7 +333,7 @@ const AudioPlayer = ({ orientation, navigation, songsData, prevId, route, title,
                             <Text
                                 style={[styles.AudioText, { fontWeight: '700', color: '#FFFFFF' }]}
                             >
-                                {selectedOdhuvar?.thalamOdhuvarTamilname}
+                                {activeTrack?.thalamOdhuvarTamilname}
                             </Text>
                             <Text
                                 style={[
@@ -343,7 +341,7 @@ const AudioPlayer = ({ orientation, navigation, songsData, prevId, route, title,
                                     { fontWeight: '400', color: '#FFFFFF', fontSize: 12 },
                                 ]}
                             >
-                                {selectedOdhuvar?.title}
+                                {activeTrack?.title}
                             </Text>
                         </View>
                         {/* </TouchableOpacity> */}
