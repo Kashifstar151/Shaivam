@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Alert, Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Dimensions, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Slider from '@react-native-community/slider';
 import ShuffleIcon from '../../assets/Images/music (1).svg';
 import Icon from 'react-native-vector-icons/dist/AntDesign';
@@ -120,6 +120,8 @@ const AudioPlayer = ({ orientation, navigation, songsData, prevId, route, title,
     const [ThumbImage, setThumbImage] = useState(null);
     const [Odhuvar, setOdhuvar] = useState(songsData);
     const [repeatMode, setRepeatMode] = useState();
+    const [downloadingLoader, setDownloadingLoader] = useState(false)
+    const [downloadedSong, setDownloadedSong] = useState(false)
     const playBackState = usePlaybackState();
     useEffect(() => {
         Icon.getImageSource('circle', 18, '#C1554E').then((source) => {
@@ -175,6 +177,7 @@ const AudioPlayer = ({ orientation, navigation, songsData, prevId, route, title,
     };
     const downloadAudio = () => {
         // let dirs = RNFetchBlob.fs.dirs;
+        setDownloadingLoader(true)
         TrackPlayer.getActiveTrack().then(async (item) => {
             const path = `${RNFS.ExternalDirectoryPath}/${item?.thalamOdhuvarTamilname}`;
             // const options = {
@@ -200,28 +203,15 @@ const AudioPlayer = ({ orientation, navigation, songsData, prevId, route, title,
                         `downloaded:${item?.thalamOdhuvarTamilname}`,
                         jsonValue
                     );
+                    setDownloadingLoader(false)
+                    setDownloadedSong(true)
                     console.log('Metadata saved');
-                    //     }
-                    //   };
                 })
                 .catch((err) => {
                     console.log('error occured in downloading audio', err);
+                    setDownloadingLoader(false)
                 });
-            // console.log("🚀 ~ TrackPlayer.getActiveTrack ~ options:", options)
-            // try {
-            //     await RNFS.downloadFile(options).promise;
-            //     console.log('Audio downloaded to', path);
-            //     // You can now play this file offline using the path
-            // } catch (error) {
-            //     console.error('Download error:', error);
-            // }
         });
-        // TrackPlayer.getActiveTrack().then((item) => {
-        //     console.log("🚀 ~ TrackPlayer.getActiveTrack ~ item:", item)
-
-        // }).catch((err) => {
-        //     console.log("err", err)
-        // })
     };
     const playById = async (id) => {
         // console.log('The player ==>', id);
@@ -276,11 +266,11 @@ const AudioPlayer = ({ orientation, navigation, songsData, prevId, route, title,
             style={
                 orientation == 'LANDSCAPE'
                     ? {
-                          width: Dimensions.get('window').width / 2,
-                          backgroundColor: '#222222',
-                          height: 70,
-                          alignItems: 'center',
-                      }
+                        width: Dimensions.get('window').width / 2,
+                        backgroundColor: '#222222',
+                        height: 70,
+                        alignItems: 'center',
+                    }
                     : { backgroundColor: '#222222', height: 200 }
             }
         >
@@ -484,7 +474,7 @@ const AudioPlayer = ({ orientation, navigation, songsData, prevId, route, title,
                                 style={{ marginHorizontal: 20 }}
                                 onPress={() => downloadAudio()}
                             >
-                                <Icon name="download" size={24} color="white" />
+                                {downloadedSong ? <Icon name='check' size={24} color="white" /> : <Icon name="download" size={24} color="white" />}
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => downloadAudios()}>
                                 <FavouriteIcon />
@@ -493,6 +483,14 @@ const AudioPlayer = ({ orientation, navigation, songsData, prevId, route, title,
                     </View>
                 </>
             )}
+            {
+                downloadingLoader &&
+                <Modal presentationStyle='fullScreen' transparent>
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <ActivityIndicator size={'large'} />
+                    </View>
+                </Modal>
+            }
         </View>
     );
 };
