@@ -75,7 +75,7 @@ const RenderAudios = ({ item, index, clb, activeTrack, setSelectedOdhuvar }) => 
     );
 };
 
-const AudioPlayer = ({ orientation, navigation, songsData, prevId, route, title, songs }) => {
+const AudioPlayer = ({ orientation, navigation, songsData, prevId, route, title, songs, downloaded, data }) => {
     const [height, setHeight] = useState(Dimensions.get('window').height);
     const [selectedOdhuvar, setSelectedOdhuvar] = useState();
     // const [orientation, setOrientation] = useState('PORTRAIT')
@@ -128,6 +128,10 @@ const AudioPlayer = ({ orientation, navigation, songsData, prevId, route, title,
             return setThumbImage({ thumbIcon: source });
         });
         createUserTable();
+        if (downloaded) {
+            setUpPlayer(data)
+            setOdhuvar(data)
+        }
     }, []);
     const getMode = (mode) => {
         if (mode == 0) {
@@ -194,10 +198,11 @@ const AudioPlayer = ({ orientation, navigation, songsData, prevId, route, title,
                         id: item?.id,
                         title: item?.title,
                         artist: item?.artist,
-                        url: res.path(),
+                        url: 'file://' + res.path(),
                         categoryName: item?.categoryName,
                         thalamOdhuvarTamilname: item?.thalamOdhuvarTamilname,
                         thirumariasiriyar: item?.thirumariasiriyar,
+                        prevId: prevId
                     });
                     await AsyncStorage.setItem(
                         `downloaded:${item?.thalamOdhuvarTamilname}`,

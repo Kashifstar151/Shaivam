@@ -46,8 +46,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
         createFromLocation: 1,
     });
     const isFocused = useIsFocused;
-    const { data } = route.params || {};
-    // console.log('🚀 ~ ThrimuraiSong ~ data:', data);
+    const { data, downloaded } = route.params || {};
+    console.log('🚀 ~ ThrimuraiSong ~ data:', JSON.stringify(data), downloaded);
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
@@ -137,7 +137,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
 
     useEffect(() => {
         setTheme(darkMode ? dark : light);
-        AsyncStorage.setItem('theme', colorScheme);
+        // AsyncStorage.setItem('theme', colorScheme);
     }, [darkMode]);
 
     // useEffect(() => {
@@ -200,11 +200,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
         thalam: '',
         pann: '',
     });
-
     const getSOngData = () => {
         const query = `SELECT * from thirumurai_songs where prevId=${data?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
-        // const query1 = `SELECT * FROM thirumurais WHERE fkTrimuria <= 7 AND locale = 'en' AND titleNo IS NOT NULL ORDER BY fkTrimuria, titleNo;`;
-
         getSqlData(query, (callbacks) => {
             setSongDetails(callbacks);
             const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`;
@@ -569,7 +566,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                         ? selectedLang !== 'Tamil'
                                             ? res?.rawSong
                                             : res?.tamilExplanation ||
-                                              'Text currently not available'
+                                            'Text currently not available'
                                         : res?.tamilSplit || 'Text currently not available'}
                                 </Text>
                                 <Text
@@ -620,6 +617,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
                     songsData={songs}
                     title={songDetails?.[0]?.title}
                     orientation={orientation}
+                    downloaded={downloaded}
+                    data={data}
                 />
             </View>
             {/* </BottomSheet> */}
