@@ -100,27 +100,27 @@ const SearchScreen = ({ navigation, route }) => {
             >
                 {key == 'title'
                     ? parts?.map((statement, i) => {
-                          return (
-                              <Text>
-                                  {statement.split(' ').map((words, idx) => (
-                                      <HighlightedText text={words} highlight={searchText} />
-                                  ))}
-                              </Text>
-                          );
-                      })
+                        return (
+                            <Text>
+                                {statement.split(' ').map((words, idx) => (
+                                    <HighlightedText text={words} highlight={searchText} />
+                                ))}
+                            </Text>
+                        );
+                    })
                     : parts?.map((statement, i) => {
-                          return (
-                              <Text>
-                                  {statement.split(' ').map((words, idx) => (
-                                      <HighlightedText
-                                          text={words}
-                                          highlight={searchText}
-                                          lyrics={true}
-                                      />
-                                  ))}
-                              </Text>
-                          );
-                      })}
+                        return (
+                            <Text>
+                                {statement.split(' ').map((words, idx) => (
+                                    <HighlightedText
+                                        text={words}
+                                        highlight={searchText}
+                                        lyrics={true}
+                                    />
+                                ))}
+                            </Text>
+                        );
+                    })}
             </View>
         );
     };
@@ -132,6 +132,8 @@ const SearchScreen = ({ navigation, route }) => {
                 onPress={() =>
                     navigation.navigate(RouteTexts.THRIMURAI_SONG, {
                         data: item,
+                        searchedword: searchText,
+                        searchScreen: true
                     })
                 }
             >

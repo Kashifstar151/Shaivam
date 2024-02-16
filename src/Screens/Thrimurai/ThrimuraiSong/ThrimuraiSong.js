@@ -41,6 +41,7 @@ import { MusicContext } from '../../../components/Playbacks/TrackPlayerContext';
 import NaduSVG from '../../../components/SVGs/NaduSVG';
 import PannSVG from '../../../components/SVGs/PannSVG';
 import ThalamSVG from '../../../components/SVGs/ThalamSVG';
+import HighlightedText from '../Searchscreen/HighlightedText';
 
 const ThrimuraiSong = ({ route, navigation }) => {
     const colorScheme = useColorScheme();
@@ -50,8 +51,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
         createFromLocation: 1,
     });
     const isFocused = useIsFocused;
-    const { data, downloaded } = route.params || {};
-    console.log('🚀 ~ ThrimuraiSong ~ data:', JSON.stringify(data), downloaded);
+    const { data, downloaded, searchedword, searchScreen } = route.params || {};
+    // console.log('🚀 ~ ThrimuraiSong ~ data:', JSON.stringify(data), downloaded);
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
@@ -229,6 +230,19 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const toggleSwitch = (value, callbacks) => {
         callbacks(!value);
     };
+    const renderResult = (item) => {
+        const parts = item?.rawSong.split('\r\n');
+        // const data = parts?.split(' ')
+        return (
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                {parts?.map((word) => (
+                    word?.split(' ')?.map((res) => (
+                        <HighlightedText highlight={searchedword} text={res} lyrics={true} />
+                    ))
+                ))}
+            </View>
+        )
+    }
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
@@ -540,19 +554,23 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                     flexDirection: 'row',
                                 }}
                             >
-                                <Text
-                                    style={[
-                                        styles.lyricsText,
-                                        { fontSize: fontSizeCount, color: theme.lyricsText.color },
-                                    ]}
-                                >
-                                    {!(tamilSplit && i18n.language === 'en')
-                                        ? selectedLang !== 'Tamil'
-                                            ? res?.rawSong
-                                            : res?.tamilExplanation ||
-                                              'Text currently not available'
-                                        : res?.tamilSplit || 'Text currently not available'}
-                                </Text>
+                                {
+                                    searchScreen ?
+                                        renderResult(res) :
+                                        <Text
+                                            style={[
+                                                styles.lyricsText,
+                                                { fontSize: fontSizeCount, color: theme.lyricsText.color },
+                                            ]}
+                                        >
+                                            {!(tamilSplit && i18n.language === 'en')
+                                                ? selectedLang !== 'Tamil'
+                                                    ? res?.rawSong
+                                                    : res?.tamilExplanation ||
+                                                    'Text currently not available'
+                                                : res?.tamilSplit || 'Text currently not available'}
+                                        </Text>
+                                }
                                 <Text
                                     style={[
                                         styles.lyricsText,
