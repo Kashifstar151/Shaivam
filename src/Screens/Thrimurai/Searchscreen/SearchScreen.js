@@ -45,8 +45,7 @@ const SearchScreen = ({ navigation, route }) => {
 
         if (searchText && searchText.length >= 2) {
             getSqlData(
-                `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${searchText}%' ${
-                    !fktrimuria.has(0) ? `and fkTrimuria IN (${[...fktrimuria].join(',')})` : ''
+                `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${searchText}%' ${!fktrimuria.has(0) ? `and fkTrimuria IN (${[...fktrimuria].join(',')})` : ''
                 } GROUP BY titleS  LIMIT 10 ;`,
                 // `SELECT * FROM thirumurais WHERE search_title='%திருஞானசம்பந்தர்தேவாரம்-1.031-திருக்குரங்கணின்முட்டம்-விழுநீர்மழுவாள்படை%' LIMIT 10 OFFSET 0;`,
                 (callbacks) => {
@@ -54,8 +53,7 @@ const SearchScreen = ({ navigation, route }) => {
                 }
             );
             getSqlData(
-                `SELECT * FROM thirumurai_songs WHERE searchTitle LIKE '%${searchText}%' ${
-                    !fktrimuria.has(0) ? `and thirumuraiId IN (${[...fktrimuria].join(',')})` : ''
+                `SELECT * FROM thirumurai_songs WHERE searchTitle LIKE '%${searchText}%' ${!fktrimuria.has(0) ? `and thirumuraiId IN (${[...fktrimuria].join(',')})` : ''
                 } ORDER BY songNo ASC LIMIT 10 OFFSET 0;`,
                 (callbacks) => {
                     setRawSongs(callbacks);
@@ -100,27 +98,27 @@ const SearchScreen = ({ navigation, route }) => {
             >
                 {key == 'title'
                     ? parts?.map((statement, i) => {
-                          return (
-                              <Text>
-                                  {statement.split(' ').map((words, idx) => (
-                                      <HighlightedText text={words} highlight={searchText} />
-                                  ))}
-                              </Text>
-                          );
-                      })
+                        return (
+                            <Text>
+                                {statement.split(' ').map((words, idx) => (
+                                    <HighlightedText text={words} highlight={searchText} />
+                                ))}
+                            </Text>
+                        );
+                    })
                     : parts?.map((statement, i) => {
-                          return (
-                              <Text>
-                                  {statement.split(' ').map((words, idx) => (
-                                      <HighlightedText
-                                          text={words}
-                                          highlight={searchText}
-                                          lyrics={true}
-                                      />
-                                  ))}
-                              </Text>
-                          );
-                      })}
+                        return (
+                            <Text>
+                                {statement.split(' ').map((words, idx) => (
+                                    <HighlightedText
+                                        text={words}
+                                        highlight={searchText}
+                                        lyrics={true}
+                                    />
+                                ))}
+                            </Text>
+                        );
+                    })}
             </View>
         );
     };
@@ -132,6 +130,8 @@ const SearchScreen = ({ navigation, route }) => {
                 onPress={() =>
                     navigation.navigate(RouteTexts.THRIMURAI_SONG, {
                         data: item,
+                        searchedword: searchText,
+                        searchScreen: true
                     })
                 }
             >

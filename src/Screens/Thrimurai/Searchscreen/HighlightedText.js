@@ -4,6 +4,7 @@ import { ThemeContext } from "../../../Context/ThemeContext";
 
 const HighlightedText = ({ text, highlight, lyrics }) => {
     console.log("🚀 ~ HighlightedText ~ text:", text)
+    console.log("🚀 ~ HighlightedText ~ text:", text)
     const { theme } = useContext(ThemeContext);
     if (!text) return null;
 
