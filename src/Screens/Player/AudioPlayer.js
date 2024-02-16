@@ -5,9 +5,9 @@ import ShuffleIcon from '../../assets/Images/music (1).svg';
 import Icon from 'react-native-vector-icons/dist/AntDesign';
 import FavouriteIcon from '../../assets/Images/Vector (2).svg';
 import ThumbImage from '../../assets/Images/Ellipse 5.svg';
-import MusicIcon from "../../assets/Images/MusicPlayer.svg"
+import MusicIcon from '../../assets/Images/MusicPlayer.svg';
 // import RNFetchBlob from 'rn-fetch-blob';
-import * as RNFS from 'react-native-fs'
+import * as RNFS from 'react-native-fs';
 import TrackPlayer, {
     AppKilledPlaybackBehavior,
     Capability,
@@ -22,11 +22,18 @@ import TrackPlayer, {
 import { getSqlData } from '../Database';
 import { useIsFocused } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
-import { AddDownloadedAudios, AddSongToDatabase, createDownloadTable, createUserTable, listfavAudios } from '../../Databases/AudioPlayerDatabase';
+import {
+    AddDownloadedAudios,
+    AddSongToDatabase,
+    createDownloadTable,
+    createUserTable,
+    listfavAudios,
+} from '../../Databases/AudioPlayerDatabase';
 import RNFetchBlob from 'rn-fetch-blob';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import { colors } from '../../Helpers';
+import { MusicContext } from '../../components/Playbacks/TrackPlayerContext';
 
 const RenderAudios = ({ item, index, clb, activeTrack, setSelectedOdhuvar }) => {
     // console.log('🚀 ~ file: AudioPlayer.js:70 ~ RenderAudios ~ clb:', clb);
@@ -106,7 +113,7 @@ const AudioPlayer = ({ orientation, navigation, songsData, prevId, route, title,
                         res?.thirumariasiriyar,
                     ],
                     (callbacks) => {
-                        // console.log('callbacks', JSON.stringify(callbacks, 0, 2))
+                        console.log('callbacks', JSON.stringify(callbacks, 0, 2));
                     }
                 );
             })
@@ -118,7 +125,6 @@ const AudioPlayer = ({ orientation, navigation, songsData, prevId, route, title,
     const { position, duration } = useProgress();
     const [paused, setPaused] = useState(false);
     const [ThumbImage, setThumbImage] = useState(null);
-    const [Odhuvar, setOdhuvar] = useState(songsData);
     const [repeatMode, setRepeatMode] = useState();
     const [downloadingLoader, setDownloadingLoader] = useState(false)
     const [downloadedSong, setDownloadedSong] = useState(false)
@@ -144,20 +150,10 @@ const AudioPlayer = ({ orientation, navigation, songsData, prevId, route, title,
     };
     const activeTrack = useActiveTrack();
     useEffect(() => {
-        getSOngData();
-    }, [songsData, isFocuced]);
-
-    const getSOngData = () => {
-        const query = `SELECT * from thirumurai_songs where prevId=${prevId} and title NOTNULL`;
-        getSqlData(query, (callbacks) => {
-            const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`;
-            getSqlData(query2, async (callbacks) => {
-                setOdhuvar(callbacks);
-                setUpPlayer(callbacks);
-                setSelectedOdhuvar(callbacks[0]);
-            });
-        });
-    };
+        if (songsData?.length) {
+            setUpPlayer(songsData);
+        }
+    }, [songsData]);
     const handlePause = async () => {
         setPaused(false);
         await TrackPlayer.pause();
@@ -225,47 +221,50 @@ const AudioPlayer = ({ orientation, navigation, songsData, prevId, route, title,
         setPaused(true);
     };
 
-    const setUpPlayer = async (song) => {
-        try {
-            if (!TrackPlayer._initialized) {
-                await TrackPlayer.setupPlayer();
-            }
-            await TrackPlayer.updateOptions({
-                android: {
-                    appKilledPlaybackBehavior:
-                        AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
-                },
-                capabilities: [
-                    Capability.Play,
-                    Capability.Pause,
-                    Capability.SkipToNext,
-                    Capability.SkipToPrevious,
-                    Capability.SeekTo,
-                ],
-                compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
-                progressUpdateEventInterval: 2,
-            });
-            await TrackPlayer.add(song);
-        } catch (error) {
-            await TrackPlayer.updateOptions({
-                android: {
-                    appKilledPlaybackBehavior:
-                        AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
-                },
-                capabilities: [
-                    Capability.Play,
-                    Capability.Pause,
-                    Capability.SkipToNext,
-                    Capability.SkipToPrevious,
-                    Capability.SeekTo,
-                ],
-                compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
-                progressUpdateEventInterval: 2,
-            });
+    const setUpPlayer = useCallback(
+        async (song) => {
+            try {
+                if (!TrackPlayer._initialized) {
+                    await TrackPlayer.setupPlayer();
+                }
+                await TrackPlayer.updateOptions({
+                    android: {
+                        appKilledPlaybackBehavior:
+                            AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
+                    },
+                    capabilities: [
+                        Capability.Play,
+                        Capability.Pause,
+                        Capability.SkipToNext,
+                        Capability.SkipToPrevious,
+                        Capability.SeekTo,
+                    ],
+                    compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
+                    progressUpdateEventInterval: 2,
+                });
+                await TrackPlayer.add(song);
+            } catch (error) {
+                await TrackPlayer.updateOptions({
+                    android: {
+                        appKilledPlaybackBehavior:
+                            AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
+                    },
+                    capabilities: [
+                        Capability.Play,
+                        Capability.Pause,
+                        Capability.SkipToNext,
+                        Capability.SkipToPrevious,
+                        Capability.SeekTo,
+                    ],
+                    compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
+                    progressUpdateEventInterval: 2,
+                });
 
-            await TrackPlayer.add(song);
-        }
-    };
+                await TrackPlayer.add(song);
+            }
+        },
+        [songsData]
+    );
     return (
         <View
             style={
@@ -288,7 +287,7 @@ const AudioPlayer = ({ orientation, navigation, songsData, prevId, route, title,
                     <FlatList
                         contentContainerStyle={{ backgroundColor: '#222222' }}
                         horizontal
-                        data={Odhuvar}
+                        data={songsData}
                         renderItem={({ item, index }) => (
                             <RenderAudios
                                 item={item}
