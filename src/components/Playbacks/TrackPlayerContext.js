@@ -1,6 +1,6 @@
 import { createContext, useEffect, useReducer, useState } from 'react';
 const initialValue = {
-    metadata: {
+    metaData: {
         author: '',
         country: '',
         thalam: '',
@@ -15,7 +15,7 @@ const initialValue = {
 const songReducer = (state, action) => {
     switch (action.type) {
         case 'META_DATA':
-            return { ...state, metadata: action.payload };
+            return { ...state, metaData: action.payload };
         case 'SET_SONG':
             return { ...state, song: action.payload };
         case 'SONG_DETAILS':
