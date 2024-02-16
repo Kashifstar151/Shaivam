@@ -37,6 +37,7 @@ import AruliyavarSVG from '../../../components/SVGs/AruliyavarSVG';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { dark, light } from '../../../Helpers/GlobalStyles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MusicContext } from '../../../components/Playbacks/TrackPlayerContext';
 
 const ThrimuraiSong = ({ route, navigation }) => {
     const colorScheme = useColorScheme();
@@ -47,7 +48,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
     });
     const isFocused = useIsFocused;
     const { data } = route.params || {};
-    // console.log('🚀 ~ ThrimuraiSong ~ data:', data);
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
@@ -91,10 +91,9 @@ const ThrimuraiSong = ({ route, navigation }) => {
         });
     }, []);
 
+    const { musicState, dispatchMusic } = useContext(MusicContext);
     const [darkMode, setDarkMode] = useState(colorScheme === 'dark' ? true : false);
     const [tamilSplit, setTamilSplit] = useState(false);
-    const [songDetails, setSongDetails] = useState(null);
-    const [songs, setSongs] = useState([]);
     const { theme, setTheme } = useContext(ThemeContext);
     const { t, i18n } = useTranslation();
     const [selectedLngCode, setSelectedLngCode] = useState(i18n.language);
@@ -124,36 +123,11 @@ const ThrimuraiSong = ({ route, navigation }) => {
     useEffect(() => {
         getSOngData();
     }, [selectedLngCode]);
-    // useEffect(() => {
-    //     Dimensions.addEventListener('change', ({ window: { width, height } }) => {
-    //         if (width < height) {
-    //             setOrientation("PORTRAIT")
-    //         } else {
-    //             setOrientation("LANDSCAPE")
-
-    //         }
-    //     })
-    // }, [])
 
     useEffect(() => {
         setTheme(darkMode ? dark : light);
         AsyncStorage.setItem('theme', colorScheme);
     }, [darkMode]);
-
-    // useEffect(() => {
-    //     const value = AsyncStorage.getItem('songFontSize');
-    //     if (value) {
-    //         setFontSizeCount(value);
-    //     } else {
-    //         setFontSizeCount(12);
-    //     }
-    // }, []);
-
-    // useEffect(() => {
-    //     if (fontSizeCount) {
-    //         AsyncStorage.setItem('songFontSize', fontSizeCount);
-    //     }
-    // }, [fontSizeCount]);
 
     const changeTranlation = (item) => {
         switch (item) {
@@ -194,27 +168,23 @@ const ThrimuraiSong = ({ route, navigation }) => {
             TrackPlayer.reset();
         };
     }, [isFocused]);
-    const [metaData, setMetaData] = useState({
-        author: '',
-        country: '',
-        thalam: '',
-        pann: '',
-    });
 
     const getSOngData = () => {
-        const query = `SELECT * from thirumurai_songs where prevId=${data?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
-        // const query1 = `SELECT * FROM thirumurais WHERE fkTrimuria <= 7 AND locale = 'en' AND titleNo IS NOT NULL ORDER BY fkTrimuria, titleNo;`;
+        const detailQuery = `SELECT rawSong, tamilExplanation, tamilSplit , songNo , title from thirumurai_songs where prevId=${data?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
+        const titleQuery = `SELECT title from thirumurai_songs where prevId=${data?.prevId} and title  NOTNULL and title!='' GROUP BY title`;
 
-        getSqlData(query, (callbacks) => {
-            setSongDetails(callbacks);
-            const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`;
-            getSqlData(query2, (callbacks) => {
-                setSongs(callbacks);
+        getSqlData(titleQuery, (data) => {
+            dispatchMusic({ type: 'SET_TITLE', payload: data[0].title });
+            getSqlData(detailQuery, (callbacks) => {
+                dispatchMusic({ type: 'SONG_DETAILS', payload: callbacks });
+                const query2 = `SELECT * FROM odhuvars WHERE title='${data[0].title}'`;
+                getSqlData(query2, (callbacks) => {
+                    dispatchMusic({ type: 'SET_SONG', payload: callbacks });
+                });
             });
         });
     };
     const [showDetail, setShowDetail] = useState(false);
-    // const visibilityVal = useRef(new AnimatedRN.Value(0)).current;
     const makeTheViewVisible = () => {
         setShowDetail(!showDetail);
         // console.log('the log for the opacity of the view', visibilityVal);
@@ -238,12 +208,14 @@ const ThrimuraiSong = ({ route, navigation }) => {
     };
     useEffect(() => {
         if (data?.prevId) {
+            dispatchMusic({ type: 'PREV_ID', payload: data?.prevId });
             getSqlData(
                 `SELECT author,thalam,country,pann from thirumurais WHERE prevId=${data?.prevId}`,
                 (cb) => {
-                    setMetaData((prev) => {
-                        const { author, country, thalam, pann } = cb[0];
-                        return { author, country, thalam, pann };
+                    const { author, country, thalam, pann } = cb[0];
+                    dispatchMusic({
+                        type: 'META_DATA',
+                        payload: { author, country, thalam, pann },
                     });
                 }
             );
@@ -300,7 +272,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>Aruliyavar</Text>
                                 <Text style={styles.valueDropDown}>
-                                    {t(metaData?.author) || 'Text currently not available'}
+                                    {t(musicState?.metaData?.author) ||
+                                        'Text currently not available'}
                                 </Text>
                             </View>
                         </View>
@@ -322,7 +295,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>Nadu</Text>
                                 <Text style={styles.valueDropDown}>
-                                    {t(metaData?.country) || 'Text currently not available '}
+                                    {t(musicState?.metaData?.country) ||
+                                        'Text currently not available '}
                                 </Text>
                             </View>
                         </View>
@@ -343,7 +317,9 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             </View>
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>Pann</Text>
-                                <Text style={styles.valueDropDown}>{t(metaData?.pann)}</Text>
+                                <Text style={styles.valueDropDown}>
+                                    {t(musicState?.metaData?.pann)}
+                                </Text>
                             </View>
                         </View>
 
@@ -364,7 +340,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>Thalam</Text>
                                 <Text style={styles.valueDropDown}>
-                                    {t(metaData?.thalam)}
+                                    {t(musicState?.metaData?.thalam)}
 
                                     {/* {metaData?.thalam === 'சீர்காழி - 06 - பூந்தராய்'
                                         ? 'true'
@@ -549,8 +525,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
             </View>
             <ScrollView style={styles.lyricsContainer} nestedScrollEnabled>
                 <View style={{ paddingBottom: 300, paddingHorizontal: 20 }}>
-                    {songDetails?.length > 0 &&
-                        songDetails?.map((res, index) => (
+                    {musicState?.songDetails?.length > 0 &&
+                        musicState?.songDetails?.map((res, index) => (
                             <View
                                 style={{
                                     borderBottomColor: colors.grey3,
@@ -617,8 +593,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
             >
                 <AudioPlayer
                     prevId={data?.prevId}
-                    songsData={songs}
-                    title={songDetails?.[0]?.title}
+                    songsData={musicState?.song}
+                    title={musicState?.title}
                     orientation={orientation}
                 />
             </View>
