@@ -38,6 +38,9 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import { dark, light } from '../../../Helpers/GlobalStyles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MusicContext } from '../../../components/Playbacks/TrackPlayerContext';
+import NaduSVG from '../../../components/SVGs/NaduSVG';
+import PannSVG from '../../../components/SVGs/PannSVG';
+import ThalamSVG from '../../../components/SVGs/ThalamSVG';
 
 const ThrimuraiSong = ({ route, navigation }) => {
     const colorScheme = useColorScheme();
@@ -271,7 +274,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                 />
                             </View>
                             <View style={styles.textSectionDD}>
-                                <Text style={styles.titleDropDown}>Aruliyavar</Text>
+                                <Text style={styles.titleDropDown}>{`${t('Aruliyavar')}`}</Text>
                                 <Text style={styles.valueDropDown}>
                                     {t(musicState?.metaData?.author) ||
                                         'Text currently not available'}
@@ -289,12 +292,12 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                     },
                                 ]}
                             >
-                                <AruliyavarSVG
+                                <NaduSVG
                                     fill={theme.colorscheme === 'dark' ? '#787878' : '#3A1917'}
                                 />
                             </View>
                             <View style={styles.textSectionDD}>
-                                <Text style={styles.titleDropDown}>Nadu</Text>
+                                <Text style={styles.titleDropDown}>{`${t('Nadu')}`}</Text>
                                 <Text style={styles.valueDropDown}>
                                     {t(musicState?.metaData?.country) ||
                                         'Text currently not available '}
@@ -312,12 +315,12 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                     },
                                 ]}
                             >
-                                <AruliyavarSVG
+                                <PannSVG
                                     fill={theme.colorscheme === 'dark' ? '#787878' : '#3A1917'}
                                 />
                             </View>
                             <View style={styles.textSectionDD}>
-                                <Text style={styles.titleDropDown}>Pann</Text>
+                                <Text style={styles.titleDropDown}>{`${t('Pann')}`}</Text>
                                 <Text style={styles.valueDropDown}>
                                     {t(musicState?.metaData?.pann)}
                                 </Text>
@@ -334,12 +337,12 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                     },
                                 ]}
                             >
-                                <AruliyavarSVG
+                                <ThalamSVG
                                     fill={theme.colorscheme === 'dark' ? '#787878' : '#3A1917'}
                                 />
                             </View>
                             <View style={styles.textSectionDD}>
-                                <Text style={styles.titleDropDown}>Thalam</Text>
+                                <Text style={styles.titleDropDown}>{`${t('Thalam')}`}</Text>
                                 <Text style={styles.valueDropDown}>
                                     {t(musicState?.metaData?.thalam)}
 
@@ -357,6 +360,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                     <DownArrow />
                 </TouchableOpacity>
             </View>
+
             <View
                 style={{
                     width: '100%',
@@ -546,7 +550,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                         ? selectedLang !== 'Tamil'
                                             ? res?.rawSong
                                             : res?.tamilExplanation ||
-                                            'Text currently not available'
+                                              'Text currently not available'
                                         : res?.tamilSplit || 'Text currently not available'}
                                 </Text>
                                 <Text
