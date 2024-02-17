@@ -18,6 +18,7 @@ import { ThemeContext } from '../../../Context/ThemeContext';
 import HighlightedText from './HighlightedText';
 import { RouteTexts } from '../../../navigation/RouteText';
 import { useTranslation } from 'react-i18next';
+import HighlightText from '@sanar/react-native-highlight-text';
 
 const SearchScreen = ({ navigation, route }) => {
     const { thrimurais } = route?.params;
@@ -96,7 +97,23 @@ const SearchScreen = ({ navigation, route }) => {
                     flexWrap: 'wrap',
                 }}
             >
-                {key == 'title'
+                <HighlightText
+                    style={{
+                        fontFamily: 'AnekTamil-Bold',
+                        fontSize: 14,
+                        color: theme.textColor,
+                        fontWeight: key === 'title' ? '700' : '400',
+                    }}
+                    highlightStyle={{
+                        fontFamily: 'AnekTamil-Bold',
+                        fontSize: 14,
+                        color: theme.textColor,
+                        backgroundColor: theme.colorscheme === 'dark' ? '#A47300' : '#F8E3B2',
+                    }}
+                    searchWords={[`${searchText}`]}
+                    textToHighlight={textContent}
+                />
+                {/* {key == 'title'
                     ? parts?.map((statement, i) => {
                         return (
                             <Text>
@@ -105,7 +122,7 @@ const SearchScreen = ({ navigation, route }) => {
                                 ))}
                             </Text>
                         );
-                    })
+                    }) :
                     : parts?.map((statement, i) => {
                         return (
                             <Text>
@@ -117,8 +134,9 @@ const SearchScreen = ({ navigation, route }) => {
                                     />
                                 ))}
                             </Text>
-                        );
+                    );
                     })}
+                } */}
             </View>
         );
     };
