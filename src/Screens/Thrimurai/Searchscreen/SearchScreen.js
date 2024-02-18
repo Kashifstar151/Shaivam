@@ -18,6 +18,7 @@ import { ThemeContext } from '../../../Context/ThemeContext';
 import HighlightedText from './HighlightedText';
 import { RouteTexts } from '../../../navigation/RouteText';
 import { useTranslation } from 'react-i18next';
+import HighlightText from '@sanar/react-native-highlight-text';
 
 const SearchScreen = ({ navigation, route }) => {
     const { thrimurais } = route?.params;
@@ -45,8 +46,7 @@ const SearchScreen = ({ navigation, route }) => {
 
         if (searchText && searchText.length >= 2) {
             getSqlData(
-                `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${searchText}%' ${
-                    !fktrimuria.has(0) ? `and fkTrimuria IN (${[...fktrimuria].join(',')})` : ''
+                `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${searchText}%' ${!fktrimuria.has(0) ? `and fkTrimuria IN (${[...fktrimuria].join(',')})` : ''
                 } GROUP BY titleS  ;`,
                 // `SELECT * FROM thirumurais WHERE search_title='%திருஞானசம்பந்தர்தேவாரம்-1.031-திருக்குரங்கணின்முட்டம்-விழுநீர்மழுவாள்படை%' LIMIT 10 OFFSET 0;`,
                 (callbacks) => {
@@ -54,8 +54,7 @@ const SearchScreen = ({ navigation, route }) => {
                 }
             );
             getSqlData(
-                `SELECT * FROM thirumurai_songs WHERE searchTitle LIKE '%${searchText}%' ${
-                    !fktrimuria.has(0) ? `and thirumuraiId IN (${[...fktrimuria].join(',')})` : ''
+                `SELECT * FROM thirumurai_songs WHERE searchTitle LIKE '%${searchText}%' ${!fktrimuria.has(0) ? `and thirumuraiId IN (${[...fktrimuria].join(',')})` : ''
                 } ORDER BY songNo ASC `,
                 (callbacks) => {
                     setRawSongs(callbacks);
@@ -98,7 +97,23 @@ const SearchScreen = ({ navigation, route }) => {
                     flexWrap: 'wrap',
                 }}
             >
-                {key == 'title'
+                <HighlightText
+                    style={{
+                        fontFamily: 'AnekTamil-Bold',
+                        fontSize: 14,
+                        color: theme.textColor,
+                        fontWeight: key === 'title' ? '700' : '400',
+                    }}
+                    highlightStyle={{
+                        fontFamily: 'AnekTamil-Bold',
+                        fontSize: 14,
+                        color: theme.textColor,
+                        backgroundColor: theme.colorscheme === 'dark' ? '#A47300' : '#F8E3B2',
+                    }}
+                    searchWords={[`${searchText}`]}
+                    textToHighlight={textContent}
+                />
+                {/* {key == 'title'
                     ? parts?.map((statement, i) => {
                         return (
                             <Text>
@@ -107,7 +122,7 @@ const SearchScreen = ({ navigation, route }) => {
                                 ))}
                             </Text>
                         );
-                    })
+                    }) :
                     : parts?.map((statement, i) => {
                         return (
                             <Text>
@@ -119,8 +134,9 @@ const SearchScreen = ({ navigation, route }) => {
                                     />
                                 ))}
                             </Text>
-                        );
+                    );
                     })}
+                } */}
             </View>
         );
     };
@@ -230,26 +246,22 @@ const SearchScreen = ({ navigation, route }) => {
                                     }}
                                 >
                                     {`${item?.id === 0 ? 'All' : ''} `}
-                                    {`${
-                                        item?.id > 0 && item?.id < 8
-                                            ? `${t(`Thrimurai ${item?.id}`)}`
-                                            : ''
-                                    }`}
-                                    {`${
-                                        item?.id >= 8 && item?.id !== 10 && item?.id !== 11
-                                            ? `${t(nameMap[`Thrimurai ${item?.id}`])}`
-                                            : ''
-                                    }`}
-                                    {`${
-                                        item?.id === 10
-                                            ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[0]}`
-                                            : ''
-                                    }`}
-                                    {`${
-                                        item?.id === 11
-                                            ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[1]}`
-                                            : ''
-                                    }`}
+                                    {`${item?.id > 0 && item?.id < 8
+                                        ? `${t(`Thrimurai ${item?.id}`)}`
+                                        : ''
+                                        }`}
+                                    {`${item?.id >= 8 && item?.id !== 10 && item?.id !== 11
+                                        ? `${t(nameMap[`Thrimurai ${item?.id}`])}`
+                                        : ''
+                                        }`}
+                                    {`${item?.id === 10
+                                        ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[0]}`
+                                        : ''
+                                        }`}
+                                    {`${item?.id === 11
+                                        ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[1]}`
+                                        : ''
+                                        }`}
                                 </Text>
                             </TouchableOpacity>
                         )}

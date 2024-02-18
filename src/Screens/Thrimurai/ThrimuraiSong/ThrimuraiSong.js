@@ -42,6 +42,7 @@ import NaduSVG from '../../../components/SVGs/NaduSVG';
 import PannSVG from '../../../components/SVGs/PannSVG';
 import ThalamSVG from '../../../components/SVGs/ThalamSVG';
 import HighlightedText from '../Searchscreen/HighlightedText';
+import HighlightText from '@sanar/react-native-highlight-text';
 
 const ThrimuraiSong = ({ route, navigation }) => {
     const colorScheme = useColorScheme();
@@ -235,11 +236,22 @@ const ThrimuraiSong = ({ route, navigation }) => {
         // const data = parts?.split(' ')
         return (
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                {parts?.map((word) => (
+                <HighlightText
+                    style={{
+                        fontFamily: 'AnekTamil-Bold',
+                        fontSize: 14,
+                        color: theme.textColor,
+                        fontWeight: '400',
+                    }}
+                    highlightStyle={{ backgroundColor: theme.colorscheme === 'dark' ? '#A47300' : '#F8E3B2', }}
+                    searchWords={[`${searchedword}`]}
+                    textToHighlight={item?.rawSong}
+                />
+                {/* {parts?.map((word) => (
                     word?.split(' ')?.map((res) => (
                         <HighlightedText highlight={searchedword} text={res} lyrics={true} />
                     ))
-                ))}
+                ))} */}
             </View>
         )
     }

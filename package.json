@@ -20,6 +20,7 @@
         "@react-navigation/bottom-tabs": "^6.5.11",
         "@react-navigation/native": "^6.1.9",
         "@react-navigation/native-stack": "^6.9.17",
+        "@sanar/react-native-highlight-text": "^1.0.2",
         "base-64": "^1.0.0",
         "i18next": "^23.7.16",
         "lottie-react-native": "^6.5.0",
