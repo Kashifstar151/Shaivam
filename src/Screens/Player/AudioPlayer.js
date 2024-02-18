@@ -102,6 +102,8 @@ const AudioPlayer = ({
     downloaded,
     data,
 }) => {
+    console.log('the render of page =>');
+
     const [height, setHeight] = useState(Dimensions.get('window').height);
     const [selectedOdhuvar, setSelectedOdhuvar] = useState();
     // const [orientation, setOrientation] = useState('PORTRAIT')
@@ -154,11 +156,11 @@ const AudioPlayer = ({
             return setThumbImage({ thumbIcon: source });
         });
         createUserTable();
-        if (downloaded) {
-            setUpPlayer(data);
-            // setOdhuvar(data);
-            dispatchMusic({ type: 'SET_SONG', payload: data });
-        }
+        // if (downloaded) {
+        //     setUpPlayer(data);
+        //     // setOdhuvar(data);
+        //     dispatchMusic({ type: 'SET_SONG', payload: data });
+        // }
     }, []);
     const getMode = (mode) => {
         if (mode == 0) {
@@ -170,11 +172,7 @@ const AudioPlayer = ({
         }
     };
     const activeTrack = useActiveTrack();
-    useEffect(() => {
-        if (songsData?.length) {
-            setUpPlayer(songsData);
-        }
-    }, [songsData]);
+
     const handlePause = async () => {
         setPaused(false);
         await TrackPlayer.pause();
@@ -242,50 +240,74 @@ const AudioPlayer = ({
         setPaused(true);
     };
 
-    const setUpPlayer = useCallback(
-        async (song) => {
-            try {
-                if (!TrackPlayer._initialized) {
-                    await TrackPlayer.setupPlayer();
-                }
-                await TrackPlayer.updateOptions({
-                    android: {
-                        appKilledPlaybackBehavior:
-                            AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
-                    },
-                    capabilities: [
-                        Capability.Play,
-                        Capability.Pause,
-                        Capability.SkipToNext,
-                        Capability.SkipToPrevious,
-                        Capability.SeekTo,
-                    ],
-                    compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
-                    progressUpdateEventInterval: 2,
-                });
-                await TrackPlayer.add(song);
-            } catch (error) {
-                await TrackPlayer.updateOptions({
-                    android: {
-                        appKilledPlaybackBehavior:
-                            AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
-                    },
-                    capabilities: [
-                        Capability.Play,
-                        Capability.Pause,
-                        Capability.SkipToNext,
-                        Capability.SkipToPrevious,
-                        Capability.SeekTo,
-                    ],
-                    compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
-                    progressUpdateEventInterval: 2,
-                });
+    // const setUpPlayer = useCallback(
+    //     async (song) => {
+    //         try {
+    //             if (!TrackPlayer._initialized) {
+    //                 await TrackPlayer.setupPlayer();
+    //             }
+    //             await TrackPlayer.updateOptions({
+    //                 android: {
+    //                     appKilledPlaybackBehavior:
+    //                         AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
+    //                 },
+    //                 capabilities: [
+    //                     Capability.Play,
+    //                     Capability.Pause,
+    //                     Capability.SkipToNext,
+    //                     Capability.SkipToPrevious,
+    //                     Capability.SeekTo,
+    //                 ],
+    //                 compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
+    //                 progressUpdateEventInterval: 2,
+    //             });
+    //             await TrackPlayer.add(song);
+    //         } catch (error) {
+    //             await TrackPlayer.updateOptions({
+    //                 android: {
+    //                     appKilledPlaybackBehavior:
+    //                         AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
+    //                 },
+    //                 capabilities: [
+    //                     Capability.Play,
+    //                     Capability.Pause,
+    //                     Capability.SkipToNext,
+    //                     Capability.SkipToPrevious,
+    //                     Capability.SeekTo,
+    //                 ],
+    //                 compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
+    //                 progressUpdateEventInterval: 2,
+    //             });
 
-                await TrackPlayer.add(song);
-            }
-        },
-        [songsData]
-    );
+    //             await TrackPlayer.add(song);
+    //         }
+    //     },
+    //     [songsData]
+    // );
+
+    // useTrackPlayerEvents([Event.PlaybackQueueEnded], async (event) => {
+    //     // if (event.type === Event.PlaybackQueueEnded) {
+    //     //     // const track = await TrackPlayer.getTrack(event.nextTrack);
+    //     //     // const { title } = track || {};
+    //     //     // setTrackTitle(title);
+    //     //     // TrackPlayer.stop();
+    //     //     // TrackPlayer.reset();
+
+    //     //     loadTheNextPadikum();
+    //     // }
+    //     const queue = await;
+    //     console.log(
+    //         '🚀 ~ file: AudioPlayer.js:135 ~ useTrackPlayerEvents ~ queue:',
+    //         queue.length,
+    //         musicState.song.length
+    //     );
+
+    //     console.log('the event log ==>', Event.PlaybackQueueEnded);
+    //     //  if (event.type === Event.PlaybackQueueEnded) {
+    //     //      loadTheNextPadikum();
+    //     //  }
+    // });
+
     return (
         <View
             style={
