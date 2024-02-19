@@ -18,6 +18,7 @@ import { ThemeContext } from '../../../Context/ThemeContext';
 import HighlightedText from './HighlightedText';
 import { RouteTexts } from '../../../navigation/RouteText';
 import { useTranslation } from 'react-i18next';
+import HighlightText from '@sanar/react-native-highlight-text';
 
 const SearchScreen = ({ navigation, route }) => {
     const { thrimurais } = route?.params;
@@ -30,13 +31,6 @@ const SearchScreen = ({ navigation, route }) => {
 
     const [fktrimuria, setFkTrimuria] = useState(new Set([0]));
 
-    const setIndexOfFkTrimurai = (idx) => {
-        if (idx !== fktrimuria) {
-            setFkTrimuria(idx);
-        } else {
-            setFkTrimuria(null);
-        }
-    };
     const [isSearched, setIsSearched] = useState(false);
 
     useEffect(() => {
@@ -50,21 +44,18 @@ const SearchScreen = ({ navigation, route }) => {
     const getDataFromSql = (e) => {
         setIsSearched(false);
 
-        // ${([...mySet].join(","))}
         if (searchText && searchText.length >= 2) {
             getSqlData(
-                `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${searchText}%' ${
-                    !fktrimuria.has(0) ? `and fkTrimuria IN (${[...fktrimuria].join(',')})` : ''
-                } GROUP BY titleS  LIMIT 10 ;`,
+                `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${searchText}%' ${!fktrimuria.has(0) ? `and fkTrimuria IN (${[...fktrimuria].join(',')})` : ''
+                } GROUP BY titleS  ;`,
                 // `SELECT * FROM thirumurais WHERE search_title='%திருஞானசம்பந்தர்தேவாரம்-1.031-திருக்குரங்கணின்முட்டம்-விழுநீர்மழுவாள்படை%' LIMIT 10 OFFSET 0;`,
                 (callbacks) => {
                     setSearchedResult(callbacks);
                 }
             );
             getSqlData(
-                `SELECT * FROM thirumurai_songs WHERE searchTitle LIKE '%${searchText}%' ${
-                    !fktrimuria.has(0) ? `and thirumuraiId IN (${[...fktrimuria].join(',')})` : ''
-                } ORDER BY songNo ASC LIMIT 10 OFFSET 0;`,
+                `SELECT * FROM thirumurai_songs WHERE searchTitle LIKE '%${searchText}%' ${!fktrimuria.has(0) ? `and thirumuraiId IN (${[...fktrimuria].join(',')})` : ''
+                } ORDER BY songNo ASC `,
                 (callbacks) => {
                     setRawSongs(callbacks);
                 }
@@ -73,11 +64,31 @@ const SearchScreen = ({ navigation, route }) => {
             setIsSearched(true);
         }
     };
+    // const highlight = (item, index, key) => {
+    //     // console.log("🚀 ~ highlight ~ item:", JSON.stringify(item))
+    //     const textContent = key === 'title' ? item?.title : item?.rawSong;
+    //     const cleanedText = textContent.replace(/\s+/g, ' ').trim();
+    //     const parts = cleanedText.split(' ');
+    //     return (
+    //         <View
+    //             style={{
+    //                 flexDirection: 'row',
+    //                 maxWidth: Dimensions.get('window').width - 30,
+    //                 flexWrap: 'wrap',
+    //             }}
+    //         >
+    //             {key == 'title'
+    //                 ? parts?.map((res, i) => <HighlightedText text={res} highlight={searchText} />)
+    //                 : parts?.map((res, i) => (
+    //                       <HighlightedText text={res} highlight={searchText} lyrics={true} />
+    //                   ))}
+    //         </View>
+    //     );
+    // };
+
     const highlight = (item, index, key) => {
-        // console.log("🚀 ~ highlight ~ item:", JSON.stringify(item))
         const textContent = key === 'title' ? item?.title : item?.rawSong;
-        const cleanedText = textContent.replace(/\s+/g, ' ').trim();
-        const parts = cleanedText.split(' ');
+        const parts = textContent.split('\r\n');
         return (
             <View
                 style={{
@@ -86,11 +97,46 @@ const SearchScreen = ({ navigation, route }) => {
                     flexWrap: 'wrap',
                 }}
             >
-                {key == 'title'
-                    ? parts?.map((res, i) => <HighlightedText text={res} highlight={searchText} />)
-                    : parts?.map((res, i) => (
-                          <HighlightedText text={res} highlight={searchText} lyrics={true} />
-                      ))}
+                <HighlightText
+                    style={{
+                        fontFamily: 'AnekTamil-Bold',
+                        fontSize: 14,
+                        color: theme.textColor,
+                        fontWeight: key === 'title' ? '700' : '400',
+                    }}
+                    highlightStyle={{
+                        fontFamily: 'AnekTamil-Bold',
+                        fontSize: 14,
+                        color: theme.textColor,
+                        backgroundColor: theme.colorscheme === 'dark' ? '#A47300' : '#F8E3B2',
+                    }}
+                    searchWords={[`${searchText}`]}
+                    textToHighlight={textContent}
+                />
+                {/* {key == 'title'
+                    ? parts?.map((statement, i) => {
+                        return (
+                            <Text>
+                                {statement.split(' ').map((words, idx) => (
+                                    <HighlightedText text={words} highlight={searchText} />
+                                ))}
+                            </Text>
+                        );
+                    }) :
+                    : parts?.map((statement, i) => {
+                        return (
+                            <Text>
+                                {statement.split(' ').map((words, idx) => (
+                                    <HighlightedText
+                                        text={words}
+                                        highlight={searchText}
+                                        lyrics={true}
+                                    />
+                                ))}
+                            </Text>
+                    );
+                    })}
+                } */}
             </View>
         );
     };
@@ -102,6 +148,8 @@ const SearchScreen = ({ navigation, route }) => {
                 onPress={() =>
                     navigation.navigate(RouteTexts.THRIMURAI_SONG, {
                         data: item,
+                        searchedword: searchText,
+                        searchScreen: true
                     })
                 }
             >
@@ -116,22 +164,34 @@ const SearchScreen = ({ navigation, route }) => {
     const setFkTrimuriaFunc = (item) => {
         setFkTrimuria((prev) => {
             let updateData = new Set(prev);
+
             if (item !== 0) {
                 if (updateData.has(0)) {
                     updateData.delete(0);
-                } else if (updateData.has(item)) {
+                }
+                if (updateData.has(item)) {
                     updateData.delete(item);
                     if (updateData.size === 0) {
                         updateData.add(0);
                     }
+                } else {
+                    updateData.add(item);
                 }
-                updateData.add(item);
             } else {
                 updateData.clear();
                 updateData.add(0);
             }
             return updateData;
         });
+    };
+    const nameMap = {
+        'Thrimurai 8': '(2nd bar pink)',
+        'Thrimurai 9': '(3rd bar Green)',
+        'Thrimurai 10': '(4th bar yellow)',
+        'Thrimurai 11': '(4th bar yellow)',
+        'Thrimurai 12': '(5th bar pink)',
+        'Thrimurai 13': '(6th bar Green)',
+        'Thrimurai 14': '(7th bar yellow)',
     };
 
     return (
@@ -163,12 +223,9 @@ const SearchScreen = ({ navigation, route }) => {
                             <TouchableOpacity
                                 style={{
                                     marginLeft: 5,
-                                    // backgroundColor: theme.searchBox.bgColor,
-                                    backgroundColor:
-                                        // fktrimuria !== item?.id
-                                        !fktrimuria.has(item?.id)
-                                            ? theme.searchContext.unSelected.bgColor
-                                            : theme.searchContext.selected.bgColor,
+                                    backgroundColor: !fktrimuria.has(item?.id)
+                                        ? theme.searchContext.unSelected.bgColor
+                                        : theme.searchContext.selected.bgColor,
 
                                     height: 30,
                                     borderRadius: 20,
@@ -187,7 +244,25 @@ const SearchScreen = ({ navigation, route }) => {
                                             : theme.searchContext.selected.textColor,
                                         fontFamily: 'Mulish-Regular',
                                     }}
-                                >{`${item?.id === 0 ? 'All' : `Thrimurai ${item?.id}`} `}</Text>
+                                >
+                                    {`${item?.id === 0 ? 'All' : ''} `}
+                                    {`${item?.id > 0 && item?.id < 8
+                                        ? `${t(`Thrimurai ${item?.id}`)}`
+                                        : ''
+                                        }`}
+                                    {`${item?.id >= 8 && item?.id !== 10 && item?.id !== 11
+                                        ? `${t(nameMap[`Thrimurai ${item?.id}`])}`
+                                        : ''
+                                        }`}
+                                    {`${item?.id === 10
+                                        ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[0]}`
+                                        : ''
+                                        }`}
+                                    {`${item?.id === 11
+                                        ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[1]}`
+                                        : ''
+                                        }`}
+                                </Text>
                             </TouchableOpacity>
                         )}
                     />
@@ -196,10 +271,7 @@ const SearchScreen = ({ navigation, route }) => {
             {isSearched ? (
                 // searchResult?.length > 0 || rawSongs?.length > 0 ?
                 isSearched && !(searchResult?.error && rawSongs?.error) ? (
-                    <ScrollView style={{ marginTop: 10, paddingHorizontal: 10 }}>
-                        <Text style={styles.searchresult}>
-                            Search Result({searchResult?.length})
-                        </Text>
+                    <ScrollView style={{ paddingHorizontal: 10 }}>
                         <FlatList
                             key={(item) => item?.id}
                             contentContainerStyle={{ marginTop: 10 }}

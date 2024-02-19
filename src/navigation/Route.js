@@ -16,6 +16,8 @@ import LottieView from 'lottie-react-native';
 import SearchScreen from '../Screens/Thrimurai/Searchscreen/SearchScreen'
 import BottomTabs from './BottomTab/BottomTabs'
 import Strotras from '../Screens/Strotras/Strotras';
+import { MusicContextProvider } from '../components/Playbacks/TrackPlayerContext';
+// import { ThemeContextProvider } from '../Context/ThemeContext';
 
 const Route = () => {
     const Stack = createNativeStackNavigator();
@@ -162,7 +164,7 @@ const Route = () => {
                             name={RouteTexts.THIRIMURAI_HEADING}
                             component={ThrimuraiHeadingPage}
                         />
-                        <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={ThrimuraiSong} />
+                        <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={MusicComponent} />
                         <Stack.Screen name={'Stotras'} component={Strotras} />
                     </Stack.Navigator>
                 </NavigationContainer>
@@ -170,5 +172,11 @@ const Route = () => {
         </>
     );
 };
+
+const MusicComponent = (props) => (
+    <MusicContextProvider>
+        <ThrimuraiSong {...props} />
+    </MusicContextProvider>
+);
 
 export default Route
