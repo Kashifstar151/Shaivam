@@ -31,6 +31,7 @@ import EllispseSVGLeft from '../../../components/SVGs/EllispseSVGLeft';
 import { ThemeContext } from '../../../Context/ThemeContext';
 import BookIcon from '../../../components/SVGs/BookIcon';
 import { useTranslation } from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import '../../../../localization';
 
 const ThrimuraiList = ({ navigation }) => {
@@ -59,12 +60,25 @@ const ThrimuraiList = ({ navigation }) => {
     const [searchText, setSearchText] = useState(null);
     const [thrimurais, setThrimurais] = useState([]);
     const [onFocus, setOnFocus] = useState(false);
+    const [recentPlayed, setRecentPlayed] = useState([])
     // const database = SQLite.openDatabase({ name: '/storage/emulated/0/Android/data/com.shaivam/files/Thrimurai/thirumuraiData.db', createFromLocation: 1 });
     const database = SQLite.openDatabase({
         name: 'SongsData.db',
         createFromLocation: 1,
     });
-    useEffect(() => { }, []);
+    useEffect(() => {
+        getRecentPlaylist()
+    }, [])
+    const getRecentPlaylist = async () => {
+        const songs = await AsyncStorage.getItem('recentTrack')
+        console.log("🚀 ~ getRecentPlaylist ~ data:", JSON.stringify(songs, 0, 2))
+        if (songs?.length > 0) {
+            setRecentPlayed(JSON.parse(songs))
+            // console.log('data', songs?.length)
+        } else {
+            setRecentPlayed([])
+        }
+    }
 
     useEffect(() => {
         retrieveData();
@@ -121,6 +135,8 @@ const ThrimuraiList = ({ navigation }) => {
     // const stopNotification = async () => {
     //     await BackgroundService.stop();
     // }
+
+
 
     const data = [
         {
@@ -464,9 +480,11 @@ const ThrimuraiList = ({ navigation }) => {
                         <Text style={styles.playlistHeading}>Recently Playlist</Text>
                         <FlatList
                             key={(item) => item?.id}
-                            data={data}
+                            data={recentPlayed}
                             renderItem={({ item, index }) => (
-                                <View
+                                <Pressable onPress={() => navigation.navigate(RouteTexts.THRIMURAI_SONG, {
+                                    data: item
+                                })}
                                     style={{
                                         flexDirection: 'row',
                                         margin: 10,
@@ -491,7 +509,7 @@ const ThrimuraiList = ({ navigation }) => {
                                                     color: theme.textColor,
                                                 }}
                                             >
-                                                {item.songName}
+                                                {item?.thalamOdhuvarTamilname}
                                             </Text>
                                             <Text
                                                 style={{
@@ -501,14 +519,14 @@ const ThrimuraiList = ({ navigation }) => {
                                                     color: theme.textColor,
                                                 }}
                                             >
-                                                {item.description}
+                                                {item.title}
                                             </Text>
                                         </View>
                                     </View>
                                     <TouchableOpacity>
                                         <Icon name="more-vert" size={22} />
                                     </TouchableOpacity>
-                                </View>
+                                </Pressable>
                             )}
                         />
                     </View>

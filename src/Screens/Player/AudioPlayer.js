@@ -117,11 +117,31 @@ const AudioPlayer = ({
     //         }
     //     })
     // }, [])
+    useTrackPlayerEvents([Event.PlaybackTrackChanged], async (event) => {
+        if (event.state == State.nextTrack) {
+            let index = await TrackPlayer.getActiveTrack();
+            //   setCurrentTrack(index);
+            console.log('index', index)
+            const newObj = { ...index, prevId: prevId }
+            updateRecentlyPlayed(newObj)
+        }
+    });
+    const updateRecentlyPlayed = async (newTrack) => {
+        const maxRecentTracks = 4;
+        const recentTracksJSON = await AsyncStorage.getItem('recentTrack');
+        const recentTracks = recentTracksJSON ? JSON.parse(recentTracksJSON) : [];
+        // Check if the track already exists and remove it
+        const filteredTracks = recentTracks.filter(track => track.id !== newTrack.id);
+        // Add the new track to the start of the array
+        const updatedTracks = [newTrack, ...filteredTracks].slice(0, maxRecentTracks);
+        console.log("🚀 ~ updateRecentlyPlayed ~ updatedTracks:", updatedTracks)
+        // Store the updated list back to AsyncStorage
+        await AsyncStorage.setItem(`recentTrack`, JSON.stringify(updatedTracks));
+    };
     // const { params } = route
     const downloadAudios = () => {
         TrackPlayer.getActiveTrack()
             .then((res) => {
-                // console.log("🚀 ~ TrackPlayer.getActiveTrack ~ res:", res)
                 AddSongToDatabase(
                     'sf',
                     [
@@ -134,7 +154,7 @@ const AudioPlayer = ({
                         res?.thirumariasiriyar,
                     ],
                     (callbacks) => {
-                        console.log('callbacks', JSON.stringify(callbacks, 0, 2));
+                        // console.log('callbacks', JSON.stringify(callbacks, 0, 2));
                     }
                 );
             })
@@ -323,11 +343,11 @@ const AudioPlayer = ({
             style={
                 orientation == 'LANDSCAPE'
                     ? {
-                          width: Dimensions.get('window').width / 2,
-                          backgroundColor: '#222222',
-                          height: 70,
-                          alignItems: 'center',
-                      }
+                        width: Dimensions.get('window').width / 2,
+                        backgroundColor: '#222222',
+                        height: 70,
+                        alignItems: 'center',
+                    }
                     : { backgroundColor: '#222222', height: 200 }
             }
         >
