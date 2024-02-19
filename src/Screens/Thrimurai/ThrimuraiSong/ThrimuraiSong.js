@@ -297,12 +297,22 @@ const ThrimuraiSong = ({ route, navigation }) => {
         [musicState.song]
     );
 
+    const queryForNextPrevId = () => {
+        const query = `SELECT MIN(prevId) AS nextPrevId FROM thirumurai_songs WHERE prevId > ${musicState?.prevId}`;
+
+        getSqlData(query, (clb) => {
+            console.log('the prev id ==>', clb);
+            if (clb[0].nextPrevId) {
+                dispatchMusic({ type: 'RESET' });
+                dispatchMusic({ type: 'PREV_ID', payload: clb[0].nextPrevId });
+            }
+        });
+    };
+
     useTrackPlayerEvents([Event.PlaybackQueueEnded], async (event) => {
         if (event.type === Event.PlaybackQueueEnded) {
-            console.log('the end of the queue');
             await TrackPlayer.reset();
-            dispatchMusic({ type: 'RESET' });
-            dispatchMusic({ type: 'PREV_ID', payload: musicState.prevId + 1 });
+            queryForNextPrevId();
         }
     });
 
