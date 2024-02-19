@@ -4,6 +4,7 @@ import { ThemeContext } from "../../../Context/ThemeContext";
 
 const HighlightedText = ({ text, highlight, lyrics }) => {
     console.log("🚀 ~ HighlightedText ~ text:", text)
+    console.log("🚀 ~ HighlightedText ~ text:", text)
     const { theme } = useContext(ThemeContext);
     if (!text) return null;
 
@@ -20,7 +21,6 @@ const HighlightedText = ({ text, highlight, lyrics }) => {
                 fontSize: 14,
                 color: theme.textColor,
                 fontWeight: lyrics ? '400' : '700',
-                marginRight: 3,
             }}
         >
             {parts.map((part, i) =>
@@ -34,7 +34,7 @@ const HighlightedText = ({ text, highlight, lyrics }) => {
                         {part}
                     </Text>
                 ) : (
-                    part
+                    `${part} `
                 )
             )}
         </Text>

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
     Dimensions,
     Switch,
@@ -27,7 +27,7 @@ import SQLite from 'react-native-sqlite-storage';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { getSqlData } from '../../Database';
 import { useIsFocused } from '@react-navigation/native';
-import TrackPlayer from 'react-native-track-player';
+// import TrackPlayer from 'react-native-track-player';
 import { ThemeContext } from '../../../Context/ThemeContext';
 import { colors } from '../../../Helpers';
 import { useTranslation } from 'react-i18next';
@@ -37,8 +37,26 @@ import AruliyavarSVG from '../../../components/SVGs/AruliyavarSVG';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { dark, light } from '../../../Helpers/GlobalStyles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MusicContext } from '../../../components/Playbacks/TrackPlayerContext';
+import NaduSVG from '../../../components/SVGs/NaduSVG';
+import PannSVG from '../../../components/SVGs/PannSVG';
+import ThalamSVG from '../../../components/SVGs/ThalamSVG';
+import HighlightedText from '../Searchscreen/HighlightedText';
+import HighlightText from '@sanar/react-native-highlight-text';
+import TrackPlayer, {
+    AppKilledPlaybackBehavior,
+    Capability,
+    RepeatMode,
+    usePlaybackState,
+    Event,
+    State,
+    useTrackPlayerEvents,
+    useActiveTrack,
+    useProgress,
+} from 'react-native-track-player';
 
 const ThrimuraiSong = ({ route, navigation }) => {
+    console.log('the render of the song==>');
     const colorScheme = useColorScheme();
     let key = true;
     const database = SQLite.openDatabase({
@@ -46,8 +64,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
         createFromLocation: 1,
     });
     const isFocused = useIsFocused;
-    const { data } = route.params || {};
-    console.log('🚀 ~ ThrimuraiSong ~ data:', data);
+    const { data, downloaded, searchedword, searchScreen } = route.params || {};
+    // console.log('🚀 ~ ThrimuraiSong ~ data:', JSON.stringify(data), downloaded);
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
@@ -80,22 +98,29 @@ const ThrimuraiSong = ({ route, navigation }) => {
             initializeTheFontSize();
         }
     }, [fontSizeCount]);
-    const [orientation, setOrientation] = useState('PORTRAIT')
+    const [orientation, setOrientation] = useState('PORTRAIT');
     useEffect(() => {
         Dimensions.addEventListener('change', ({ window: { width, height } }) => {
             if (width < height) {
-                setOrientation("PORTRAIT")
+                setOrientation('PORTRAIT');
             } else {
-                setOrientation("LANDSCAPE")
-
+                setOrientation('LANDSCAPE');
             }
-        })
-    }, [])
+        });
 
+        if (isFocused) {
+            changeTranlation('Original');
+            // getSOngData();
+        }
+        return () => {
+            TrackPlayer.stop();
+            TrackPlayer.reset();
+        };
+    }, []);
+
+    const { musicState, dispatchMusic } = useContext(MusicContext);
     const [darkMode, setDarkMode] = useState(colorScheme === 'dark' ? true : false);
     const [tamilSplit, setTamilSplit] = useState(false);
-    const [songDetails, setSongDetails] = useState(null);
-    const [songs, setSongs] = useState([]);
     const { theme, setTheme } = useContext(ThemeContext);
     const { t, i18n } = useTranslation();
     const [selectedLngCode, setSelectedLngCode] = useState(i18n.language);
@@ -125,36 +150,11 @@ const ThrimuraiSong = ({ route, navigation }) => {
     useEffect(() => {
         getSOngData();
     }, [selectedLngCode]);
-    // useEffect(() => {
-    //     Dimensions.addEventListener('change', ({ window: { width, height } }) => {
-    //         if (width < height) {
-    //             setOrientation("PORTRAIT")
-    //         } else {
-    //             setOrientation("LANDSCAPE")
-
-    //         }
-    //     })
-    // }, [])
 
     useEffect(() => {
         setTheme(darkMode ? dark : light);
-        AsyncStorage.setItem('theme', colorScheme);
+        // AsyncStorage.setItem('theme', colorScheme);
     }, [darkMode]);
-
-    // useEffect(() => {
-    //     const value = AsyncStorage.getItem('songFontSize');
-    //     if (value) {
-    //         setFontSizeCount(value);
-    //     } else {
-    //         setFontSizeCount(12);
-    //     }
-    // }, []);
-
-    // useEffect(() => {
-    //     if (fontSizeCount) {
-    //         AsyncStorage.setItem('songFontSize', fontSizeCount);
-    //     }
-    // }, [fontSizeCount]);
 
     const changeTranlation = (item) => {
         switch (item) {
@@ -185,88 +185,162 @@ const ThrimuraiSong = ({ route, navigation }) => {
         setShowSetting(false);
         translateX.value = 50;
     };
-    useEffect(() => {
-        if (isFocused) {
-            changeTranlation('Original');
-            getSOngData();
-        }
-        return () => {
-            TrackPlayer.stop();
-            TrackPlayer.reset();
-        };
-    }, [isFocused]);
-    const [metaData, setMetaData] = useState({
-        author: '',
-        country: '',
-        thalam: '',
-        pann: '',
-    });
 
     const getSOngData = () => {
-        const query = `SELECT * from thirumurai_songs where prevId=${data?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
-        // const query1 = `SELECT * FROM thirumurais WHERE fkTrimuria <= 7 AND locale = 'en' AND titleNo IS NOT NULL ORDER BY fkTrimuria, titleNo;`;
+        const detailQuery = `SELECT rawSong, tamilExplanation, tamilSplit , songNo , title from thirumurai_songs where prevId=${musicState?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
+        const titleQuery = `SELECT title from thirumurai_songs where prevId=${musicState?.prevId} and title  NOTNULL and title!='' GROUP BY title`;
 
-
-        getSqlData(query, (callbacks) => {
-            // console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
-            setSongDetails(callbacks);
-            const query2 = `SELECT * FROM odhuvars WHERE title='${callbacks?.[0]?.title}'`;
-            getSqlData(query2, (callbacks) => {
-                setSongs(callbacks);
+        getSqlData(titleQuery, (data) => {
+            getSqlData(detailQuery, (details) => {
+                const query2 = `SELECT * FROM odhuvars WHERE title='${data[0].title}'`;
+                getSqlData(query2, (callbacks) => {
+                    dispatchMusic({ type: 'SET_TITLE', payload: data[0].title });
+                    dispatchMusic({ type: 'SONG_DETAILS', payload: details });
+                    dispatchMusic({ type: 'SET_SONG', payload: callbacks });
+                });
             });
         });
     };
     const [showDetail, setShowDetail] = useState(false);
-    // const visibilityVal = useRef(new AnimatedRN.Value(0)).current;
     const makeTheViewVisible = () => {
         setShowDetail(!showDetail);
-        // console.log('the log for the opacity of the view', visibilityVal);
-        // if (!showDetail) {
-        //     AnimatedRN.timing(visibilityVal, {
-        //         toValue: 1,
-        //         duration: 3000,
-        //         useNativeDriver: true,
-        //     }).start(() => {
-        //         setShowDetail(true);
-        //     });
-        // } else {
-        //     AnimatedRN.timing(visibilityVal, {
-        //         toValue: 0,
-        //         duration: 3000,
-        //         useNativeDriver: true,
-        //     }).start(() => {
-        //         setShowDetail(false);
-        //     });
-        // }
     };
     useEffect(() => {
-        if (data?.prevId) {
-            getSqlData(
-                `SELECT author,thalam,country,pann from thirumurais WHERE prevId=${data?.prevId}`,
-                (cb) => {
-                    setMetaData((prev) => {
-                        const { author, country, thalam, pann } = cb[0];
-                        return { author, country, thalam, pann };
-                    });
-                }
-            );
+        dispatchMusic({ type: 'PREV_ID', payload: data?.prevId });
+
+        if (downloaded) {
+            setUpPlayer(data);
         }
     }, [data]);
 
     const toggleSwitch = (value, callbacks) => {
         callbacks(!value);
     };
+    useEffect(() => {
+        if (musicState.song.length) {
+            setUpPlayer(musicState.song);
+        }
+    }, [musicState.song]);
+
+    // useEffect(() => {
+
+    // },[musicState])
+    const renderResult = (item) => {
+        const parts = item?.rawSong.split('\r\n');
+        // const data = parts?.split(' ')
+        return (
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                <HighlightText
+                    style={{
+                        fontFamily: 'AnekTamil-Bold',
+                        fontSize: 14,
+                        color: theme.textColor,
+                        fontWeight: '400',
+                    }}
+                    highlightStyle={{
+                        backgroundColor: theme.colorscheme === 'dark' ? '#A47300' : '#F8E3B2',
+                    }}
+                    searchWords={[`${searchedword}`]}
+                    textToHighlight={item?.rawSong}
+                />
+                {/* {parts?.map((word) => (
+                    word?.split(' ')?.map((res) => (
+                        <HighlightedText highlight={searchedword} text={res} lyrics={true} />
+                    ))
+                ))} */}
+            </View>
+        );
+    };
+
+    const setUpPlayer = useCallback(
+        async (song) => {
+            try {
+                if (!TrackPlayer._initialized) {
+                    await TrackPlayer.setupPlayer();
+                }
+                await TrackPlayer.updateOptions({
+                    android: {
+                        appKilledPlaybackBehavior:
+                            AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
+                    },
+                    capabilities: [
+                        Capability.Play,
+                        Capability.Pause,
+                        Capability.SkipToNext,
+                        Capability.SkipToPrevious,
+                        Capability.SeekTo,
+                    ],
+                    compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
+                    progressUpdateEventInterval: 2,
+                });
+                await TrackPlayer.add(song);
+            } catch (error) {
+                await TrackPlayer.updateOptions({
+                    android: {
+                        appKilledPlaybackBehavior:
+                            AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
+                    },
+                    capabilities: [
+                        Capability.Play,
+                        Capability.Pause,
+                        Capability.SkipToNext,
+                        Capability.SkipToPrevious,
+                        Capability.SeekTo,
+                    ],
+                    compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
+                    progressUpdateEventInterval: 2,
+                });
+
+                await TrackPlayer.add(song);
+            }
+        },
+        [musicState.song]
+    );
+
+    const queryForNextPrevId = () => {
+        const query = `SELECT MIN(prevId) AS nextPrevId FROM thirumurai_songs WHERE prevId > ${musicState?.prevId}`;
+
+        getSqlData(query, (clb) => {
+            console.log('the prev id ==>', clb);
+            if (clb[0].nextPrevId) {
+                dispatchMusic({ type: 'RESET' });
+                dispatchMusic({ type: 'PREV_ID', payload: clb[0].nextPrevId });
+            }
+        });
+    };
+
+    useTrackPlayerEvents([Event.PlaybackQueueEnded], async (event) => {
+        if (event.type === Event.PlaybackQueueEnded) {
+            await TrackPlayer.reset();
+            queryForNextPrevId();
+        }
+    });
+
+    useEffect(() => {
+        if (musicState.prevId) {
+            getSqlData(
+                `SELECT author,thalam,country,pann from thirumurais WHERE prevId=${musicState?.prevId}`,
+                (cb) => {
+                    const { author, country, thalam, pann } = cb[0];
+                    dispatchMusic({
+                        type: 'META_DATA',
+                        payload: { author, country, thalam, pann },
+                    });
+                }
+            );
+            getSOngData();
+        }
+    }, [musicState.prevId]);
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
             <Background>
                 <BackButton
-                    secondMiddleText={data?.title}
+                    secondMiddleText={musicState?.title}
                     color={true}
                     // middleText={data}
                     navigation={navigation}
                     rightIcon={<ShareIcon />}
-                    data={data}
                 />
             </Background>
             <View
@@ -301,9 +375,10 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                 />
                             </View>
                             <View style={styles.textSectionDD}>
-                                <Text style={styles.titleDropDown}>Aruliyavar</Text>
+                                <Text style={styles.titleDropDown}>{`${t('Aruliyavar')}`}</Text>
                                 <Text style={styles.valueDropDown}>
-                                    {t(metaData?.author) || 'Text currently not available'}
+                                    {t(musicState?.metaData?.author) ||
+                                        'Text currently not available'}
                                 </Text>
                             </View>
                         </View>
@@ -318,14 +393,15 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                     },
                                 ]}
                             >
-                                <AruliyavarSVG
+                                <NaduSVG
                                     fill={theme.colorscheme === 'dark' ? '#787878' : '#3A1917'}
                                 />
                             </View>
                             <View style={styles.textSectionDD}>
-                                <Text style={styles.titleDropDown}>Nadu</Text>
+                                <Text style={styles.titleDropDown}>{`${t('Nadu')}`}</Text>
                                 <Text style={styles.valueDropDown}>
-                                    {t(metaData?.country) || 'Text currently not available '}
+                                    {t(musicState?.metaData?.country) ||
+                                        'Text currently not available '}
                                 </Text>
                             </View>
                         </View>
@@ -340,13 +416,15 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                     },
                                 ]}
                             >
-                                <AruliyavarSVG
+                                <PannSVG
                                     fill={theme.colorscheme === 'dark' ? '#787878' : '#3A1917'}
                                 />
                             </View>
                             <View style={styles.textSectionDD}>
-                                <Text style={styles.titleDropDown}>Pann</Text>
-                                <Text style={styles.valueDropDown}>{t(metaData?.pann)}</Text>
+                                <Text style={styles.titleDropDown}>{`${t('Pann')}`}</Text>
+                                <Text style={styles.valueDropDown}>
+                                    {t(musicState?.metaData?.pann)}
+                                </Text>
                             </View>
                         </View>
 
@@ -360,14 +438,14 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                     },
                                 ]}
                             >
-                                <AruliyavarSVG
+                                <ThalamSVG
                                     fill={theme.colorscheme === 'dark' ? '#787878' : '#3A1917'}
                                 />
                             </View>
                             <View style={styles.textSectionDD}>
-                                <Text style={styles.titleDropDown}>Thalam</Text>
+                                <Text style={styles.titleDropDown}>{`${t('Thalam')}`}</Text>
                                 <Text style={styles.valueDropDown}>
-                                    {t(metaData?.thalam)}
+                                    {t(musicState?.metaData?.thalam)}
 
                                     {/* {metaData?.thalam === 'சீர்காழி - 06 - பூந்தராய்'
                                         ? 'true'
@@ -383,6 +461,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                     <DownArrow />
                 </TouchableOpacity>
             </View>
+
             <View
                 style={{
                     width: '100%',
@@ -552,8 +631,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
             </View>
             <ScrollView style={styles.lyricsContainer} nestedScrollEnabled>
                 <View style={{ paddingBottom: 300, paddingHorizontal: 20 }}>
-                    {songDetails?.length > 0 &&
-                        songDetails?.map((res, index) => (
+                    {musicState?.songDetails?.length > 0 &&
+                        musicState?.songDetails?.map((res, index) => (
                             <View
                                 style={{
                                     borderBottomColor: colors.grey3,
@@ -562,19 +641,26 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                     flexDirection: 'row',
                                 }}
                             >
-                                <Text
-                                    style={[
-                                        styles.lyricsText,
-                                        { fontSize: fontSizeCount, color: theme.lyricsText.color },
-                                    ]}
-                                >
-                                    {!(tamilSplit && i18n.language === 'en')
-                                        ? selectedLang !== 'Tamil'
-                                            ? res?.rawSong
-                                            : res?.tamilExplanation ||
-                                            'Text currently not available'
-                                        : res?.tamilSplit || 'Text currently not available'}
-                                </Text>
+                                {searchScreen ? (
+                                    renderResult(res)
+                                ) : (
+                                    <Text
+                                        style={[
+                                            styles.lyricsText,
+                                            {
+                                                fontSize: fontSizeCount,
+                                                color: theme.lyricsText.color,
+                                            },
+                                        ]}
+                                    >
+                                        {!(tamilSplit && i18n.language === 'en')
+                                            ? selectedLang !== 'Tamil'
+                                                ? res?.rawSong
+                                                : res?.tamilExplanation ||
+                                                  'Text currently not available'
+                                            : res?.tamilSplit || 'Text currently not available'}
+                                    </Text>
+                                )}
                                 <Text
                                     style={[
                                         styles.lyricsText,
@@ -612,15 +698,19 @@ const ThrimuraiSong = ({ route, navigation }) => {
                     borderTopEndRadius: 15,
                     borderTopLeftRadius: 15,
                     alignSelf: 'flex-end',
-                    width: orientation == 'LANDSCAPE' ? Dimensions.get('window').width / 2 : Dimensions.get('window').width,
-
+                    width:
+                        orientation == 'LANDSCAPE'
+                            ? Dimensions.get('window').width / 2
+                            : Dimensions.get('window').width,
                 }}
             >
                 <AudioPlayer
-                    prevId={data?.prevId}
-                    songsData={songs}
-                    title={songDetails?.[0]?.title}
+                    prevId={musicState?.prevId}
+                    songsData={musicState?.song}
+                    title={musicState?.title}
                     orientation={orientation}
+                    downloaded={downloaded}
+                    data={data}
                 />
             </View>
             {/* </BottomSheet> */}
