@@ -107,6 +107,15 @@ const ThrimuraiSong = ({ route, navigation }) => {
                 setOrientation('LANDSCAPE');
             }
         });
+
+        if (isFocused) {
+            changeTranlation('Original');
+            // getSOngData();
+        }
+        return () => {
+            TrackPlayer.stop();
+            TrackPlayer.reset();
+        };
     }, []);
 
     const { musicState, dispatchMusic } = useContext(MusicContext);
@@ -176,20 +185,10 @@ const ThrimuraiSong = ({ route, navigation }) => {
         setShowSetting(false);
         translateX.value = 50;
     };
-    useEffect(() => {
-        if (isFocused) {
-            changeTranlation('Original');
-            // getSOngData();
-        }
-        return () => {
-            TrackPlayer.stop();
-            TrackPlayer.reset();
-        };
-    }, [isFocused]);
 
     const getSOngData = () => {
-        const detailQuery = `SELECT rawSong, tamilExplanation, tamilSplit , songNo , title from thirumurai_songs where prevId=${data?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
-        const titleQuery = `SELECT title from thirumurai_songs where prevId=${data?.prevId} and title  NOTNULL and title!='' GROUP BY title`;
+        const detailQuery = `SELECT rawSong, tamilExplanation, tamilSplit , songNo , title from thirumurai_songs where prevId=${musicState?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
+        const titleQuery = `SELECT title from thirumurai_songs where prevId=${musicState?.prevId} and title  NOTNULL and title!='' GROUP BY title`;
 
         getSqlData(titleQuery, (data) => {
             getSqlData(detailQuery, (details) => {
@@ -207,18 +206,10 @@ const ThrimuraiSong = ({ route, navigation }) => {
         setShowDetail(!showDetail);
     };
     useEffect(() => {
-        if (data?.prevId) {
-            dispatchMusic({ type: 'PREV_ID', payload: data?.prevId });
-            getSqlData(
-                `SELECT author,thalam,country,pann from thirumurais WHERE prevId=${data?.prevId}`,
-                (cb) => {
-                    const { author, country, thalam, pann } = cb[0];
-                    dispatchMusic({
-                        type: 'META_DATA',
-                        payload: { author, country, thalam, pann },
-                    });
-                }
-            );
+        dispatchMusic({ type: 'PREV_ID', payload: data?.prevId });
+
+        if (downloaded) {
+            setUpPlayer(data);
         }
     }, [data]);
 
@@ -230,6 +221,10 @@ const ThrimuraiSong = ({ route, navigation }) => {
             setUpPlayer(musicState.song);
         }
     }, [musicState.song]);
+
+    // useEffect(() => {
+
+    // },[musicState])
     const renderResult = (item) => {
         const parts = item?.rawSong.split('\r\n');
         // const data = parts?.split(' ')
@@ -302,16 +297,40 @@ const ThrimuraiSong = ({ route, navigation }) => {
         [musicState.song]
     );
 
+    useTrackPlayerEvents([Event.PlaybackQueueEnded], async (event) => {
+        if (event.type === Event.PlaybackQueueEnded) {
+            console.log('the end of the queue');
+            await TrackPlayer.reset();
+            dispatchMusic({ type: 'RESET' });
+            dispatchMusic({ type: 'PREV_ID', payload: musicState.prevId + 1 });
+        }
+    });
+
+    useEffect(() => {
+        if (musicState.prevId) {
+            getSqlData(
+                `SELECT author,thalam,country,pann from thirumurais WHERE prevId=${musicState?.prevId}`,
+                (cb) => {
+                    const { author, country, thalam, pann } = cb[0];
+                    dispatchMusic({
+                        type: 'META_DATA',
+                        payload: { author, country, thalam, pann },
+                    });
+                }
+            );
+            getSOngData();
+        }
+    }, [musicState.prevId]);
+
     return (
         <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
             <Background>
                 <BackButton
-                    secondMiddleText={data?.title}
+                    secondMiddleText={musicState?.title}
                     color={true}
                     // middleText={data}
                     navigation={navigation}
                     rightIcon={<ShareIcon />}
-                    data={data}
                 />
             </Background>
             <View
@@ -676,7 +695,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                 }}
             >
                 <AudioPlayer
-                    prevId={data?.prevId}
+                    prevId={musicState?.prevId}
                     songsData={musicState?.song}
                     title={musicState?.title}
                     orientation={orientation}

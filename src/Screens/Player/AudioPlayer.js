@@ -105,7 +105,7 @@ const AudioPlayer = ({
     console.log('the render of page =>');
 
     const [height, setHeight] = useState(Dimensions.get('window').height);
-    const [selectedOdhuvar, setSelectedOdhuvar] = useState();
+    // const [selectedOdhuvar, setSelectedOdhuvar] = useState();
     // const [orientation, setOrientation] = useState('PORTRAIT')
     // useEffect(() => {
     //     Dimensions.addEventListener('change', ({ window: { width, height } }) => {
@@ -142,7 +142,6 @@ const AudioPlayer = ({
                 console.log('🚀 ~ TrackPlayer.getActiveTrack ~ err:', err);
             });
     };
-    const isFocuced = useIsFocused;
     const { position, duration } = useProgress();
     const [paused, setPaused] = useState(false);
     const [ThumbImage, setThumbImage] = useState(null);
@@ -150,7 +149,18 @@ const AudioPlayer = ({
     const [downloadingLoader, setDownloadingLoader] = useState(false);
     const [downloadedSong, setDownloadedSong] = useState(false);
     const playBackState = usePlaybackState();
-    const { musicState, dispatchMusic } = useContext(MusicContext);
+
+    useEffect(() => {
+        (async () => {
+            if (playBackState.state === 'ready') {
+                await TrackPlayer.play();
+            } else if (playBackState.state !== 'playing') {
+                setPaused(false);
+            } else {
+                setPaused(true);
+            }
+        })();
+    }, [playBackState]);
     useEffect(() => {
         Icon.getImageSource('circle', 18, '#C1554E').then((source) => {
             return setThumbImage({ thumbIcon: source });
@@ -187,12 +197,12 @@ const AudioPlayer = ({
     const handleNext = async () => {
         await TrackPlayer.skipToNext();
         await TrackPlayer.play();
-        setPaused(true);
+        // setPaused(true);
     };
     const handlePrevious = async () => {
         await TrackPlayer.skipToPrevious();
         await TrackPlayer.play();
-        setPaused(true);
+        // setPaused(true);
     };
     const downloadAudio = () => {
         // let dirs = RNFetchBlob.fs.dirs;
