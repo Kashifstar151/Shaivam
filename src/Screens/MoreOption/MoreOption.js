@@ -16,18 +16,59 @@ import Header from '../../components/Header';
 import { colors } from '../../Helpers';
 import ChooseLanguage from './ChooseLanguage';
 import { ThemeContext } from '../../Context/ThemeContext';
+import LanguageSVG from '../../components/SVGs/LanguageSVG';
+import FavOdhuvarSVG from '../../components/SVGs/FavOdhuvarSVG';
+import GoToWebSVG from '../../components/SVGs/GoToWebSVG';
+import WebSearchSVG from '../../components/SVGs/WebSearchSVG';
+import ContactSVG from '../../components/SVGs/ContactSVG';
+import ShareSVG from '../../components/SVGs/ShareSVG';
+import RateTheAppSVG from '../../components/SVGs/RateTheAppSVG';
+import AboutSVG from '../../components/SVGs/AboutSVG';
 
 const MoreOption = () => {
+    const { theme } = useContext(ThemeContext);
     const SheetRef = useRef(null);
     const option = [
-        { title: 'Language', Description: 'Your Selection' },
-        { title: 'Favourite Odhuvar', Description: 'Your Selection' },
-        { title: 'Go to website', Description: 'Your Selection' },
-        { title: 'Website search', Description: 'Your Selection' },
-        { title: 'Contact', Description: 'Your Selection' },
-        { title: 'Share the app', Description: 'Your Selection' },
-        { title: 'Rate the app', Description: 'Your Selection' },
-        { title: 'About', Description: 'Your Selection' },
+        {
+            title: 'Language',
+            Description: 'Your Selection',
+            icon: <LanguageSVG fill={'#333333'} />,
+        },
+        {
+            title: 'Favourite Odhuvar',
+            Description: 'Your Selection',
+            icon: <FavOdhuvarSVG fill={'#333333'} />,
+        },
+        {
+            title: 'Go to website',
+            Description: 'Your Selection',
+            icon: <GoToWebSVG fill={'#333333'} />,
+        },
+        {
+            title: 'Website search',
+            Description: 'Your Selection',
+            icon: <WebSearchSVG fill={'#333333'} />,
+        },
+        {
+            title: 'Contact',
+            Description: 'Your Selection',
+            icon: <ContactSVG fill={'#333333'} />,
+        },
+        {
+            title: 'Share the app',
+            Description: 'Your Selection',
+            icon: <ShareSVG fill={'#333333'} />,
+        },
+        {
+            title: 'Rate the app',
+            Description: 'Your Selection',
+            icon: <RateTheAppSVG fill={'#333333'} />,
+        },
+        {
+            title: 'About',
+            Description: 'Your Selection',
+            icon: <AboutSVG fill={'#333333'} />,
+        },
     ];
     const [selectedLanguage, setSelectedLanguage] = useState(null);
     const navigationHandler = (item) => {
@@ -35,13 +76,12 @@ const MoreOption = () => {
             SheetRef.current.open();
         }
     };
-    const { theme } = useContext(ThemeContext);
     const rednderItem = (item, index) => {
         // console.log("🚀 ~ file: MoreOption.js:19 ~ rednderItem ~ item:", item)
         return (
             <Pressable style={styles.list} onPress={() => navigationHandler(item)}>
-                <View style={{ flexDirection: 'row' }}>
-                    <View style={styles.imageContainer}></View>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={styles.imageContainer}>{item.icon}</View>
                     <View style={{ paddingHorizontal: 10 }}>
                         <Text style={[styles.titleText, { color: theme.textColor }]}>
                             {item.title}
@@ -62,7 +102,7 @@ const MoreOption = () => {
             </Background>
             <View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
                 <FlatList
-                    contentContainerStyle={{ marginTop: 20 }}
+                    contentContainerStyle={{ gap: 16 }}
                     renderItem={({ item, index }) => rednderItem(item, index)}
                     data={option}
                 />
@@ -72,6 +112,14 @@ const MoreOption = () => {
                     closeOnDragDown
                     ref={SheetRef}
                     height={Dimensions.get('window').height / 2}
+                    customStyles={{
+                        container: {
+                            backgroundColor:
+                                theme.colorscheme === 'dark' ? theme.backgroundColor : '',
+                            borderTopRightRadius: 20,
+                            borderTopLeftRadius: 20,
+                        },
+                    }}
                 >
                     <ChooseLanguage setSelected={setSelectedLanguage} selected={selectedLanguage} />
                 </RBSheet>
@@ -81,15 +129,26 @@ const MoreOption = () => {
 };
 export const styles = StyleSheet.create({
     main: { backgroundColor: 'green' },
-    container: {},
+    container: {
+        margin: 14,
+        // marginTop: 24,
+    },
     list: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         height: 45,
         width: '100%',
         marginBottom: 10,
+        alignItems: 'center',
     },
     titleText: { fontSize: 14, fontFamily: 'Mulish-Bold', color: 'black' },
-    imageContainer: { backgroundColor: '#F2F0F8', width: 50, height: 45 },
+    imageContainer: {
+        backgroundColor: '#F2F0F8',
+        width: 45,
+        height: 45,
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 });
 export default MoreOption;
