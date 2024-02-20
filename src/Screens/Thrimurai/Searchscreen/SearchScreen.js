@@ -88,7 +88,7 @@ const SearchScreen = ({ navigation, route }) => {
 
     const highlight = (item, index, key) => {
         const textContent = key === 'title' ? item?.title : item?.rawSong;
-        const parts = textContent.split('\r\n');
+        // const parts = textContent.split('\r\n');
         return (
             <View
                 style={{
@@ -142,6 +142,7 @@ const SearchScreen = ({ navigation, route }) => {
     };
 
     const renderResult = (item, index, key) => {
+        console.log("🚀 ~ renderResult ~ item:", JSON.stringify(item, 0, 2))
         return (
             <Pressable
                 style={{ marginVertical: 10 }}
@@ -153,7 +154,7 @@ const SearchScreen = ({ navigation, route }) => {
                     })
                 }
             >
-                {key == 'title' ? null : <Text>Lyrics</Text>}
+                {key == 'title' ? null : <Text>{item?.songNo}</Text>}
                 {highlight(item, index, key)}
                 {key !== 'title' ? null : <Text>सम्पूर्ण ऋग्वेद पारायणम् Complete ...</Text>}
             </Pressable>
@@ -282,6 +283,7 @@ const SearchScreen = ({ navigation, route }) => {
                             contentContainerStyle={{ marginTop: 10 }}
                             data={rawSongs}
                             renderItem={({ item, index }) => renderResult(item, index, 'rawSong')}
+
                         />
                     </ScrollView>
                 ) : (
