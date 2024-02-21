@@ -70,13 +70,12 @@ const ThrimuraiList = ({ navigation }) => {
         getRecentPlaylist()
     }, [])
     const getRecentPlaylist = async () => {
-        const songs = await AsyncStorage.getItem('recentTrack')
-        console.log("🚀 ~ getRecentPlaylist ~ data:", JSON.stringify(songs, 0, 2))
+        const songs = await AsyncStorage.getItem('recentTrack');
         if (songs?.length > 0) {
-            setRecentPlayed(JSON.parse(songs))
+            setRecentPlayed(JSON.parse(songs));
             // console.log('data', songs?.length)
         } else {
-            setRecentPlayed([])
+            setRecentPlayed([]);
         }
     }
 

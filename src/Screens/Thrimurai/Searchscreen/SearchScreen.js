@@ -21,6 +21,7 @@ import { useTranslation } from 'react-i18next';
 import HighlightText from '@sanar/react-native-highlight-text';
 
 const SearchScreen = ({ navigation, route }) => {
+    const { i18n } = useTranslation();
     const { thrimurais } = route?.params;
     const updatedThrimurai = thrimurais ? [{ id: 0, name: 'All' }, ...thrimurais] : null;
     const [searchText, setSearchText] = useState('');
@@ -30,7 +31,6 @@ const SearchScreen = ({ navigation, route }) => {
     const { theme } = useContext(ThemeContext);
 
     const [fktrimuria, setFkTrimuria] = useState(new Set([0]));
-
     const [isSearched, setIsSearched] = useState(false);
 
     useEffect(() => {
@@ -59,7 +59,9 @@ const SearchScreen = ({ navigation, route }) => {
             getSqlData(
                 `SELECT * FROM thirumurai_songs WHERE searchTitle LIKE '%${searchText}%' ${
                     !fktrimuria.has(0) ? `and thirumuraiId IN (${[...fktrimuria].join(',')})` : ''
-                } ORDER BY prevId,songNo ASC `,
+                } and locale='${
+                    i18n.language === 'en-IN' ? 'RoI' : i18n.language
+                }' ORDER BY thirumuraiId,prevId,songNo ASC `,
                 (callbacks) => {
                     setRawSongs(callbacks);
                 }
@@ -92,7 +94,7 @@ const SearchScreen = ({ navigation, route }) => {
 
     const highlight = (item, index, key) => {
         const textContent = key === 'title' ? item?.title : item?.rawSong;
-        const parts = textContent.split('\r\n');
+        // const parts = textContent.split('\r\n');
         return (
             <View
                 style={{
@@ -146,6 +148,7 @@ const SearchScreen = ({ navigation, route }) => {
     };
 
     const renderResult = (item, index, key) => {
+        console.log("🚀 ~ renderResult ~ item:", JSON.stringify(item, 0, 2))
         return (
             <Pressable
                 style={{ marginVertical: 10 }}
@@ -157,7 +160,7 @@ const SearchScreen = ({ navigation, route }) => {
                     })
                 }
             >
-                {key == 'title' ? null : <Text>Lyrics</Text>}
+                {key == 'title' ? null : <Text>{item?.songNo}</Text>}
                 {highlight(item, index, key)}
                 {key !== 'title' ? null : <Text>सम्पूर्ण ऋग्वेद पारायणम् Complete ...</Text>}
             </Pressable>
@@ -286,6 +289,7 @@ const SearchScreen = ({ navigation, route }) => {
                             contentContainerStyle={{ marginTop: 10 }}
                             data={rawSongs}
                             renderItem={({ item, index }) => renderResult(item, index, 'rawSong')}
+
                         />
                     </ScrollView>
                 ) : (

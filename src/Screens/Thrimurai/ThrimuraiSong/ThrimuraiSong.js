@@ -12,6 +12,7 @@ import {
     Animated as AnimatedRN,
     useColorScheme,
     Alert,
+    TouchableWithoutFeedback,
 } from 'react-native';
 import BackButton from '../../../components/BackButton';
 import ShareIcon from '../../../assets/Images/share-1.svg';
@@ -20,7 +21,7 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import DownArrow from '../../../assets/Images/Down Arrows (3) 1.svg';
 import BottomSheet from '@gorhom/bottom-sheet';
 import AudioPlayer from '../../Player/AudioPlayer';
-import RBSheet from 'react-native-raw-bottom-sheet';
+// import RBSheet from 'react-native-raw-bottom-sheet';
 import Background from '../../../components/Background';
 import SettingIcon from '../../../assets/Images/Settings (1) 1.svg';
 import SQLite from 'react-native-sqlite-storage';
@@ -122,6 +123,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const [darkMode, setDarkMode] = useState(colorScheme === 'dark' ? true : false);
     const [tamilSplit, setTamilSplit] = useState(false);
     const { theme, setTheme } = useContext(ThemeContext);
+    const [fullScreenMode, setFullScreenMode] = useState(false);
     const { t, i18n } = useTranslation();
     const [selectedLngCode, setSelectedLngCode] = useState(i18n.language);
     const langMap = {
@@ -341,6 +343,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                     // middleText={data}
                     navigation={navigation}
                     rightIcon={<ShareIcon />}
+                    data={data}
                 />
             </Background>
             <View
@@ -705,7 +708,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                 }}
             >
                 <AudioPlayer
-                    prevId={musicState?.prevId}
+                    prevId={data?.prevId}
                     songsData={musicState?.song}
                     title={musicState?.title}
                     orientation={orientation}
