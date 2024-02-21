@@ -398,11 +398,7 @@ const HomeScreen = ({ navigation }) => {
                     )}
                 />
             </>
-
-            {/* om chant section  */}
-
             <OmChat />
-
             {/* last section */}
             <View style={{ paddingBottom: 100 }}>
                 <View style={{ padding: 15 }}>

@@ -110,14 +110,14 @@ const CardComponents = ({ navigation }) => {
                     navName: 'Stotras',
                 },
                 {
+                    icon: <ShaivaSVG fill={theme.textColorHomeCardYellow} />,
+                    title: 'S Siddanta',
+                    navName: 'S Siddanta',
+                },
+                {
                     icon: <StrotasSVG fill={theme.textColorHomeCardYellow} />,
                     title: 'Vedas',
                     navName: 'Vedas',
-                },
-                {
-                    icon: <ShaivaSVG fill={theme.textColorHomeCardYellow} />,
-                    title: 'Shaiva Siddanta',
-                    navName: 'Shaiva Siddanta',
                 },
             ],
         },
@@ -203,6 +203,7 @@ const CardComponents = ({ navigation }) => {
                 </Text>
             </View>
             <FlatList
+                // numColumns={2}
                 style={{ overflow: 'visible' }}
                 horizontal
                 renderItem={({ item, index }) => (
@@ -233,7 +234,10 @@ const styles = StyleSheet.create({
     },
     subComp: {
         margin: 4,
-        width: (Dimensions.get('window').width * 0.85) / 2 - 24,
+        // width: (Dimensions.get('window').width * 0.85) / 2 - 24,
+        // height: 40,
+        width: 'auto',
+        height: 50,
         flexDirection: 'row',
         padding: 12,
         alignItems: 'center',
@@ -250,7 +254,7 @@ const styles = StyleSheet.create({
 
     subCompText: {
         alignContent: 'center',
-        flex: 1,
+        // flex: 1,
         fontSize: RFValue(12, 800),
     },
 });
