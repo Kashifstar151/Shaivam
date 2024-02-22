@@ -33,6 +33,7 @@ import RightDirSVG from '../../components/SVGs/RightDirSVG';
 import HeadingAndView from './HeadingAndView';
 import PlaceCard from './PlaceCard';
 import { RFValue } from 'react-native-responsive-fontsize';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SongAndAudio = ({ item, index, theme }) => {
     return (
@@ -146,6 +147,7 @@ const HomeScreen = ({ navigation }) => {
             navDetail: '',
         },
     ];
+
 
     const eventData = [
         {
@@ -370,7 +372,7 @@ const HomeScreen = ({ navigation }) => {
                         viewBtnColor={'#C1554E'}
                         title={'Upcoming Events'}
                         theme={{ textColor: theme.textColor }}
-                        onPress={() => {}}
+                        onPress={() => { }}
                     />
                 </View>
 
@@ -407,7 +409,7 @@ const HomeScreen = ({ navigation }) => {
                     <HeadingAndView
                         viewBtnColor={'#C1554E'}
                         title={'Nearby Temples'}
-                        onPress={() => {}}
+                        onPress={() => { }}
                         theme={{
                             textColor: theme.textColor,
                             colorscheme: theme.colorscheme,
