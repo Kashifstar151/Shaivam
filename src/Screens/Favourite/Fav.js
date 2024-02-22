@@ -12,8 +12,9 @@ import MusicContainer from '../../../assets/Images/Frame 83.svg';
 import { RFValue } from 'react-native-responsive-fontsize'
 import Header from '../../components/Header'
 import HeadingText from '../../components/HeadingText'
+import { RouteTexts } from '../../navigation/RouteText'
 
-const Fav = () => {
+const Fav = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
     const [selecetedHeader, setSelectedHeader] = useState('Favourites')
     const [favList, setFavList] = useState([])
@@ -45,7 +46,12 @@ const Fav = () => {
         }
     };
     const renderSong = (item, index) => (
-        <Pressable style={styles.listContainer}>
+        <Pressable style={styles.listContainer} onPress={() => {
+            navigation.navigate(RouteTexts.THRIMURAI_SONG, {
+                data: item,
+                downloaded: true
+            });
+        }}>
             <View style={styles.listInnerContainer}>
                 <MusicContainer />
                 <View style={{ paddingHorizontal: 10, width: '75%', }}>
