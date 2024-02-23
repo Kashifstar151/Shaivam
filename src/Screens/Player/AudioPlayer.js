@@ -228,6 +228,7 @@ const AudioPlayer = ({
         // let dirs = RNFetchBlob.fs.dirs;
         setDownloadingLoader(true);
         TrackPlayer.getActiveTrack().then(async (item) => {
+            console.log("🚀 ~ TrackPlayer.getActiveTrack ~ item:", item)
             const path = `${RNFS.ExternalDirectoryPath}/${item?.thalamOdhuvarTamilname}`;
             // const options = {
             //     fromUrl: item?.url,
@@ -574,7 +575,7 @@ const AudioPlayer = ({
                 </>
             )}
             {downloadingLoader && (
-                <Modal presentationStyle="fullScreen" transparent>
+                <Modal transparent>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <ActivityIndicator size={'large'} />
                     </View>
