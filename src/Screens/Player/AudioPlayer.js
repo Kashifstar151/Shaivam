@@ -105,6 +105,10 @@ const AudioPlayer = ({
     songs,
     downloaded,
     data,
+    repeatMode,
+    setRepeatMode,
+    queryForNextPrevId,
+    queryForPreviousPrevId,
 }) => {
     console.log('the render of page =>');
     const [oprateMostPlayed, setOprateMostPlayed] = useState(0)
@@ -140,7 +144,7 @@ const AudioPlayer = ({
         const recentTracksJSON = await AsyncStorage.getItem('recentTrack');
         const recentTracks = recentTracksJSON ? JSON.parse(recentTracksJSON) : [];
         // Check if the track already exists and remove it
-        const filteredTracks = recentTracks.filter(track => track.id !== newTrack.id);
+        const filteredTracks = recentTracks.filter((track) => track.id !== newTrack.id);
         // Add the new track to the start of the array
         const updatedTracks = [newTrack, ...filteredTracks].slice(0, maxRecentTracks);
         // console.log("🚀 ~ updateRecentlyPlayed ~ updatedTracks:", updatedTracks)
@@ -174,7 +178,6 @@ const AudioPlayer = ({
     const { position, duration } = useProgress();
     const [paused, setPaused] = useState(false);
     const [ThumbImage, setThumbImage] = useState(null);
-    const [repeatMode, setRepeatMode] = useState();
     const [downloadingLoader, setDownloadingLoader] = useState(false);
     const [downloadedSong, setDownloadedSong] = useState(false);
     const [mostPlayedSongs, setMostPlayedSong] = useState([])
@@ -208,10 +211,10 @@ const AudioPlayer = ({
     }, []);
     const getMode = (mode) => {
         if (mode == 0) {
-            TrackPlayer.setRepeatMode(RepeatMode.Queue);
+            TrackPlayer.setRepeatMode(RepeatMode.Off);
             setRepeatMode(0);
         } else {
-            TrackPlayer.setRepeatMode(RepeatMode.Track);
+            TrackPlayer.setRepeatMode(RepeatMode.Queue);
             setRepeatMode(2);
         }
     };
@@ -229,13 +232,27 @@ const AudioPlayer = ({
     };
 
     const handleNext = async () => {
-        await TrackPlayer.skipToNext();
-        await TrackPlayer.play();
+        // check whether its last long
+        let queue = await TrackPlayer.getQueue();
+        let checkWhetherLastSong =
+            (await TrackPlayer.getActiveTrack()).id === queue[queue.length - 1].id;
+        if (checkWhetherLastSong && repeatMode === 0) {
+            queryForNextPrevId();
+        } else {
+            await TrackPlayer.skipToNext();
+            await TrackPlayer.play();
+        }
         // setPaused(true);
     };
     const handlePrevious = async () => {
-        await TrackPlayer.skipToPrevious();
-        await TrackPlayer.play();
+        let queue = await TrackPlayer.getQueue();
+        let checkWhetherLastSong = (await TrackPlayer.getActiveTrack()).id === queue[0].id;
+        if (checkWhetherLastSong && repeatMode === 0) {
+            queryForPreviousPrevId();
+        } else {
+            await TrackPlayer.skipToPrevious();
+            await TrackPlayer.play();
+        }
         // setPaused(true);
     };
     const getMostPlayedSong = () => {
@@ -286,10 +303,7 @@ const AudioPlayer = ({
         TrackPlayer.getActiveTrack().then(async (item) => {
             // console.log("🚀 ~ TrackPlayer.getActiveTrack ~ item:", item)
             const path = `${RNFS.ExternalDirectoryPath}/${item?.thalamOdhuvarTamilname}`;
-            // const options = {
-            //     fromUrl: item?.url,
-            //     toFile: path,
-            // };
+
             RNFetchBlob.config({
                 path: path,
             })
@@ -335,74 +349,6 @@ const AudioPlayer = ({
         await TrackPlayer.play();
         setPaused(true);
     };
-
-    // const setUpPlayer = useCallback(
-    //     async (song) => {
-    //         try {
-    //             if (!TrackPlayer._initialized) {
-    //                 await TrackPlayer.setupPlayer();
-    //             }
-    //             await TrackPlayer.updateOptions({
-    //                 android: {
-    //                     appKilledPlaybackBehavior:
-    //                         AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
-    //                 },
-    //                 capabilities: [
-    //                     Capability.Play,
-    //                     Capability.Pause,
-    //                     Capability.SkipToNext,
-    //                     Capability.SkipToPrevious,
-    //                     Capability.SeekTo,
-    //                 ],
-    //                 compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
-    //                 progressUpdateEventInterval: 2,
-    //             });
-    //             await TrackPlayer.add(song);
-    //         } catch (error) {
-    //             await TrackPlayer.updateOptions({
-    //                 android: {
-    //                     appKilledPlaybackBehavior:
-    //                         AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
-    //                 },
-    //                 capabilities: [
-    //                     Capability.Play,
-    //                     Capability.Pause,
-    //                     Capability.SkipToNext,
-    //                     Capability.SkipToPrevious,
-    //                     Capability.SeekTo,
-    //                 ],
-    //                 compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
-    //                 progressUpdateEventInterval: 2,
-    //             });
-
-    //             await TrackPlayer.add(song);
-    //         }
-    //     },
-    //     [songsData]
-    // );
-
-    // useTrackPlayerEvents([Event.PlaybackQueueEnded], async (event) => {
-    //     // if (event.type === Event.PlaybackQueueEnded) {
-    //     //     // const track = await TrackPlayer.getTrack(event.nextTrack);
-    //     //     // const { title } = track || {};
-    //     //     // setTrackTitle(title);
-    //     //     // TrackPlayer.stop();
-    //     //     // TrackPlayer.reset();
-
-    //     //     loadTheNextPadikum();
-    //     // }
-    //     const queue = await;
-    //     console.log(
-    //         '🚀 ~ file: AudioPlayer.js:135 ~ useTrackPlayerEvents ~ queue:',
-    //         queue.length,
-    //         musicState.song.length
-    //     );
-
-    //     console.log('the event log ==>', Event.PlaybackQueueEnded);
-    //     //  if (event.type === Event.PlaybackQueueEnded) {
-    //     //      loadTheNextPadikum();
-    //     //  }
-    // });
 
     return (
         <View
@@ -654,14 +600,14 @@ export const styles = StyleSheet.create({
     container: { flexDirection: 'row', padding: 10 },
     headingText: {
         fontSize: 12,
-        fontWeight: '500',
+        // fontWeight: '500',
         color: '#CECECE',
         fontFamily: 'Mulish-Regular',
     },
     AudioText: {
         fontSize: 12,
         color: '#777777',
-        fontWeight: '600',
+        // fontWeight: '600',
         fontFamily: 'AnekTamil-Regular',
     },
 });

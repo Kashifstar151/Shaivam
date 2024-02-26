@@ -193,7 +193,7 @@ export const styles = StyleSheet.create({
     titleText: {
         fontFamily: 'AnekTamil-Regular',
         fontSize: 14,
-        fontWeight: '500',
+        // fontWeight: '500',
     },
 });
 export default RenderTitle;

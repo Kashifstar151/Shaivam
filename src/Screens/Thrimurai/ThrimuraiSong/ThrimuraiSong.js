@@ -118,6 +118,13 @@ const ThrimuraiSong = ({ route, navigation }) => {
             TrackPlayer.reset();
         };
     }, []);
+    const [repeatMode, setRepeatMode] = useState();
+    useEffect(() => {
+        (async () => {
+            const repeatState = await TrackPlayer.getRepeatMode();
+            setRepeatMode(repeatState);
+        })();
+    }, []); // to initialize the repeat state of the track player
 
     const { musicState, dispatchMusic } = useContext(MusicContext);
     const [darkMode, setDarkMode] = useState(colorScheme === 'dark' ? true : false);
@@ -237,7 +244,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                         fontFamily: 'AnekTamil-Bold',
                         fontSize: 14,
                         color: theme.textColor,
-                        fontWeight: '400',
+                        // fontWeight: '400',
                     }}
                     highlightStyle={{
                         backgroundColor: theme.colorscheme === 'dark' ? '#A47300' : '#F8E3B2',
@@ -299,9 +306,21 @@ const ThrimuraiSong = ({ route, navigation }) => {
         [musicState.song]
     );
 
-    const queryForNextPrevId = () => {
+    const queryForNextPrevId = async () => {
         const query = `SELECT MIN(prevId) AS nextPrevId FROM thirumurai_songs WHERE prevId > ${musicState?.prevId}`;
+        await TrackPlayer.reset();
+        getSqlData(query, (clb) => {
+            console.log('the prev id ==>', clb);
+            if (clb[0].nextPrevId) {
+                dispatchMusic({ type: 'RESET' });
+                dispatchMusic({ type: 'PREV_ID', payload: clb[0].nextPrevId });
+            }
+        });
+    };
 
+    const queryForPreviousPrevId = async () => {
+        const query = `SELECT max(prevId) AS nextPrevId FROM thirumurai_songs WHERE prevId < ${musicState?.prevId}`;
+        await TrackPlayer.reset();
         getSqlData(query, (clb) => {
             console.log('the prev id ==>', clb);
             if (clb[0].nextPrevId) {
@@ -312,8 +331,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     };
 
     useTrackPlayerEvents([Event.PlaybackQueueEnded], async (event) => {
-        if (event.type === Event.PlaybackQueueEnded) {
-            await TrackPlayer.reset();
+        if (event.type === Event.PlaybackQueueEnded && repeatMode === 0) {
             queryForNextPrevId();
         }
     });
@@ -576,7 +594,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                                 fontFamily: 'Mulish-Regular',
                                                 color: '#777777',
                                                 fontSize: 10,
-                                                fontWeight: '700',
+                                                // fontWeight: '700',
                                             }}
                                         >
                                             Turn on to view thirumurais as songs
@@ -603,7 +621,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                             fontFamily: 'Mulish-Regular',
                                             color: '#777777',
                                             fontSize: 10,
-                                            fontWeight: '700',
+                                            // fontWeight: '700',
                                         }}
                                     >
                                         Turn on to view thirumurais as songs
@@ -711,6 +729,10 @@ const ThrimuraiSong = ({ route, navigation }) => {
                     orientation={orientation}
                     downloaded={downloaded}
                     data={data}
+                    repeatMode={repeatMode}
+                    setRepeatMode={setRepeatMode}
+                    queryForNextPrevId={queryForNextPrevId}
+                    queryForPreviousPrevId={queryForPreviousPrevId}
                 />
             </View>
             {/* </BottomSheet> */}
@@ -756,7 +778,7 @@ export const styles = StyleSheet.create({
     headerText: {
         fontSize: 14,
         fontFamily: 'Mulish-Regular',
-        fontWeight: '700',
+        // fontWeight: '700',
         paddingHorizontal: 5,
         color: '#777777',
     },
@@ -808,13 +830,13 @@ export const styles = StyleSheet.create({
     },
     languageOptionText: {
         fontSize: 12,
-        fontWeight: '500',
+        // fontWeight: '500',
         fontFamily: 'Mulish-Regular',
         color: '#777777',
     },
     lyricsContainer: { flexGrow: 1, paddingHorizontal: 0, marginTop: 10 },
     lyricsText: {
-        fontWeight: '500',
+        // fontWeight: '500',
         fontFamily: 'AnekTamil-Regular',
         lineHeight: 30,
     },
@@ -846,7 +868,7 @@ export const styles = StyleSheet.create({
         marginHorizontal: 4,
         fontFamily: 'Mulish-Regular',
         color: '#777777',
-        fontWeight: '600',
+        // fontWeight: '600',
     },
     otherOption: { justifyContent: 'space-between', flexDirection: 'row', marginTop: 6 },
     otherOptionText: { fontFamily: 'Lora-Bold', color: 'black' },
