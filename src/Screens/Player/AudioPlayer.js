@@ -245,7 +245,7 @@ const AudioPlayer = ({
         // let dirs = RNFetchBlob.fs.dirs;
         setDownloadingLoader(true);
         TrackPlayer.getActiveTrack().then(async (item) => {
-            console.log("🚀 ~ TrackPlayer.getActiveTrack ~ item:", item)
+            console.log('🚀 ~ TrackPlayer.getActiveTrack ~ item:', item);
             const path = `${RNFS.ExternalDirectoryPath}/${item?.thalamOdhuvarTamilname}`;
 
             RNFetchBlob.config({
@@ -535,14 +535,14 @@ export const styles = StyleSheet.create({
     container: { flexDirection: 'row', padding: 10 },
     headingText: {
         fontSize: 12,
-        fontWeight: '500',
+        // fontWeight: '500',
         color: '#CECECE',
         fontFamily: 'Mulish-Regular',
     },
     AudioText: {
         fontSize: 12,
         color: '#777777',
-        fontWeight: '600',
+        // fontWeight: '600',
         fontFamily: 'AnekTamil-Regular',
     },
 });

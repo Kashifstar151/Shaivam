@@ -24,7 +24,7 @@ export default TempleTab = ({ navigation }) => {
     //     <TouchableOpacity onPress={()=>navigator}>
     //         <Text></Text>
     //     </TouchableOpacity>
-    //  )   
+    //  )
     // }
     return (
         <Tab.Navigator
@@ -52,9 +52,17 @@ export default TempleTab = ({ navigation }) => {
                     // },
                     tabBarIcon: ({ color, size, focused }) => (
                         <TouchableOpacity
-                            onPress={() => navigation.navigate(RouteTexts.BOTTOM_TABS, {
-                                screen: 'Home'
-                            })} style={{ paddingHorizontal: 6, borderRightWidth: 1, borderRightColor: 'black' }}>
+                            onPress={() =>
+                                navigation.navigate(RouteTexts.BOTTOM_TABS, {
+                                    screen: 'Home',
+                                })
+                            }
+                            style={{
+                                paddingHorizontal: 6,
+                                borderRightWidth: 1,
+                                borderRightColor: 'black',
+                            }}
+                        >
                             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                 {/* <ActiveTeample /> */}
                                 <TempleSVG fill={theme.bottomTabItemColor.unSelected} />
@@ -86,7 +94,7 @@ export default TempleTab = ({ navigation }) => {
                     //     fontFamily: 'Mulish-Regular'
                     // },
                     tabBarIcon: ({ color, size, focused }) => (
-                        <View >
+                        <View>
                             {focused ? (
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                     {/* <ActiveHome /> */}
@@ -148,7 +156,7 @@ export default TempleTab = ({ navigation }) => {
                     //     fontFamily: 'Mulish-Regular'
                     // },
                     tabBarIcon: ({ color, size, focused }) => (
-                        <View >
+                        <View>
                             {focused ? (
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                     {/* <ActiveTeample /> */}
@@ -210,7 +218,7 @@ export default TempleTab = ({ navigation }) => {
                     //     fontFamily: 'Mulish-Regular'
                     // },
                     tabBarIcon: ({ color, size, focused }) => (
-                        <View >
+                        <View>
                             {focused ? (
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                     <View style={{ marginBottom: 7 }}>
@@ -285,7 +293,7 @@ export const styles = StyleSheet.create({
     tabBarLable: {
         color: '#FFAAA5',
         fontSize: 10,
-        fontWeight: '600',
+        // fontWeight: '600',
         fontFamily: 'Mulish-Regular',
     },
 });

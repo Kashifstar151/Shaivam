@@ -57,7 +57,7 @@ const SongAndAudio = ({ item, index, theme }) => {
                     <Text
                         style={{
                             fontSize: RFValue(14, 800),
-                            fontWeight: '600',
+                            // fontWeight: '600',
                             fontFamily: 'Mulish-Regular',
                             color: theme.textColor,
                         }}
@@ -67,7 +67,7 @@ const SongAndAudio = ({ item, index, theme }) => {
                     <Text
                         style={{
                             fontSize: RFValue(12, 800),
-                            fontWeight: '400',
+                            // fontWeight: '400',
                             fontFamily: 'Mulish-Regular',
                             color: theme.textColor,
                         }}
@@ -147,7 +147,6 @@ const HomeScreen = ({ navigation }) => {
             navDetail: '',
         },
     ];
-
 
     const eventData = [
         {
@@ -372,7 +371,7 @@ const HomeScreen = ({ navigation }) => {
                         viewBtnColor={'#C1554E'}
                         title={'Upcoming Events'}
                         theme={{ textColor: theme.textColor }}
-                        onPress={() => { }}
+                        onPress={() => {}}
                     />
                 </View>
 
@@ -405,7 +404,7 @@ const HomeScreen = ({ navigation }) => {
                     <HeadingAndView
                         viewBtnColor={'#C1554E'}
                         title={'Nearby Temples'}
-                        onPress={() => { }}
+                        onPress={() => {}}
                         theme={{
                             textColor: theme.textColor,
                             colorscheme: theme.colorscheme,
