@@ -107,24 +107,34 @@ const AudioPlayer = ({
     data,
 }) => {
     console.log('the render of page =>');
+    const [oprateMostPlayed, setOprateMostPlayed] = useState(0)
     useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], async (event) => {
         if (event?.state == State?.nextTrack) {
             let index = await TrackPlayer.getActiveTrack();
             //   setCurrentTrack(index);
-            console.log('index', index)
+            // console.log('index', index)
             const newObj = { ...index, prevId: prevId }
             updateRecentlyPlayed(newObj)
         }
     });
-    useTrackPlayerEvents([Event.PlaybackProgressUpdated], async (event) => {
-        if (event.state == State.nextTrack) {
-            console.log('index', event)
-            let n = (event.duration / 3).toFixed(2)
-            if (position > n) {
-                mostPlayed()
-            }
-        }
-    });
+    // useTrackPlayerEvents([Event.PlaybackProgressUpdated], async (event) => {
+    //     if (event.state == State.nextTrack) {
+    //         // console.log('index', event)
+    //         let n = (event.duration / 3).toFixed(2)
+    //         if (position > n) {
+    //             mostPlayed()
+    //             setOprateMostPlayed(1)
+    //         } else {
+    //             setOprateMostPlayed(0)
+    //         }
+    //     }
+    // });
+    // useEffect(() => {
+    //     if (oprateMostPlayed == 1) {
+    //         console.log(true)
+    //         mostPlayed()
+    //     }
+    // }, [oprateMostPlayed])
     const updateRecentlyPlayed = async (newTrack) => {
         const maxRecentTracks = 4;
         const recentTracksJSON = await AsyncStorage.getItem('recentTrack');
@@ -133,7 +143,7 @@ const AudioPlayer = ({
         const filteredTracks = recentTracks.filter(track => track.id !== newTrack.id);
         // Add the new track to the start of the array
         const updatedTracks = [newTrack, ...filteredTracks].slice(0, maxRecentTracks);
-        console.log("🚀 ~ updateRecentlyPlayed ~ updatedTracks:", updatedTracks)
+        // console.log("🚀 ~ updateRecentlyPlayed ~ updatedTracks:", updatedTracks)
         // Store the updated list back to AsyncStorage
         await AsyncStorage.setItem(`recentTrack`, JSON.stringify(updatedTracks));
     };
@@ -174,6 +184,7 @@ const AudioPlayer = ({
         (async () => {
             if (playBackState.state === 'ready') {
                 await TrackPlayer.play();
+                mostPlayed()
             } else if (playBackState.state !== 'playing') {
                 setPaused(false);
             } else {
@@ -188,6 +199,7 @@ const AudioPlayer = ({
         createUserTable();
         MostPlayedSongList();
         getMostPlayedSong()
+        // mostPlayed()
         // if (downloaded) {
         //     setUpPlayer(data);
         //     // setOdhuvar(data);
@@ -230,32 +242,40 @@ const AudioPlayer = ({
         MostPlayedList('s', callbacks => {
             console.log("🚀 ~ getMostPlayedSong ~ callbacks:", JSON.stringify(callbacks, 0, 2))
             setMostPlayedSong(callbacks)
+            // mostPlayed(callbacks)
+
         })
     }
-    const mostPlayed = async () => {
+    const mostPlayed = async (callbacks) => {
         let count = 1
+        let exist = false
         await TrackPlayer.getActiveTrack().then((res) => {
-            mostPlayedSongs.map((item) => {
-                if (res?.id == item.id) {
-                    let sql = `UPDATE most_played SET count=${item?.count} WHERE id=${item?.id}`;
-                    UpdateMostPlayed(sql, callbacks => {
-                        console.log("🚀 ~ mostPlayedSongs.map ~ callbacks:", callbacks)
-                    })
-                } else {
-                    AddMostPlayed('s', [
-                        res?.id,
-                        res?.url,
-                        res?.title,
-                        res?.artist,
-                        res?.categoryName,
-                        res?.thalamOdhuvarTamilname,
-                        res?.thirumariasiriyar,
-                        count
-                    ], callbacks => {
-                        console.log("🚀 ~ awaitTrackPlayer.getActiveTrack ~ callbacks:", callbacks)
-                    })
-                }
-            })
+            console.log("🚀 ~ awaitTrackPlayer.getActiveTrack ~ res:", JSON.stringify(callbacks, 0, 2))
+            console.log("🚀 ~ awaitTrackPlayer.getActiveTrack ~ res:", JSON.stringify(res, 0, 2))
+
+
+            let num = mostPlayedSongs.filter(
+                value => { return value?.id == res?.id ? true : false });
+            console.log("🚀 ~ awaitTrackPlayer.getActiveTrack ~ exist:", num)
+            if (num?.length > 0) {
+                let sql = `UPDATE most_played SET count=? WHERE id=?`;
+                UpdateMostPlayed(sql, [num[0].count + 1, num[0].id], callbacks => {
+                    console.log("🚀 ~ mostPlayedSongs.map ~ callbacks:", callbacks)
+                })
+            } else {
+                AddMostPlayed('s', [
+                    res?.id,
+                    res?.url,
+                    res?.title,
+                    res?.artist,
+                    res?.categoryName,
+                    res?.thalamOdhuvarTamilname,
+                    res?.thirumariasiriyar,
+                    count
+                ], callbacks => {
+                    console.log("🚀 ~ awaitTrackPlayer.getActiveTrack ~ callbacks:", callbacks)
+                })
+            }
         }).catch((error) => {
             console.log('error occured in getting current track')
         })
