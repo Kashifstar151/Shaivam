@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import HomeScreen from '../../Screens/Home/HomeScreen';
 import Temples from '../../Screens/Temples/Temples';
 import { RouteTexts } from '../RouteText';
@@ -15,7 +15,7 @@ import CalendarSVG from '../../components/SVGs/CalendarSVG';
 import FavouriteSVG from '../../components/SVGs/FavouriteSVG';
 import MoreSVG from '../../components/SVGs/MoreSVG';
 const Tab = createBottomTabNavigator();
-export default BottomTab = () => {
+export default BottomTab = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
     return (
         <Tab.Navigator
@@ -104,49 +104,66 @@ export default BottomTab = () => {
                     //     fontFamily: 'Mulish-Regular'
                     // },
                     tabBarIcon: ({ color, size, focused }) => (
-                        <View style={styles.IconStyles}>
-                            {focused ? (
-                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                    {/* <ActiveTeample /> */}
-                                    <TempleSVG fill={theme.bottomTabItemColor.selected} />
-                                    <Text
-                                        style={[
-                                            styles.tabBarLable,
-                                            { color: theme.bottomTabItemColor.selected },
-                                        ]}
-                                    >
-                                        Temples
-                                    </Text>
-                                </View>
-                            ) : (
-                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                    {/* <ActiveTeample /> */}
-                                    <TempleSVG fill={theme.bottomTabItemColor.unSelected} />
-
-                                    <Text
-                                        style={[
-                                            styles.tabBarLable,
-                                            { color: theme.bottomTabItemColor.unSelected },
-                                        ]}
-                                    >
-                                        Temples
-                                    </Text>
-                                </View>
-                            )}
-                            <View style={{ marginTop: 6 }}>
-                                {focused ? (
-                                    <IndicatorIcon />
-                                ) : (
-                                    <View
-                                        style={{
-                                            height: 10,
-                                            width: '100%',
-                                            backgroundColor: 'black',
-                                        }}
-                                    ></View>
-                                )}
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate(RouteTexts.TEMPLE_Tabs)} style={{ marginBottom: 10 }}>
+                            {/* <Text>Back</Text>
+                             */}
+                            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                {/* <ActiveTeample /> */}
+                                <TempleSVG fill={theme.bottomTabItemColor.unSelected} />
+                                <Text
+                                    style={[
+                                        styles.tabBarLable,
+                                        { color: theme.bottomTabItemColor.unSelected },
+                                    ]}
+                                >
+                                    Temples
+                                </Text>
                             </View>
-                        </View>
+                        </TouchableOpacity>
+                        // <View style={styles.IconStyles}>
+                        //     {focused ? (
+                        //         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                        //             {/* <ActiveTeample /> */}
+                        //             <TempleSVG fill={theme.bottomTabItemColor.selected} />
+                        //             <Text
+                        //                 style={[
+                        //                     styles.tabBarLable,
+                        //                     { color: theme.bottomTabItemColor.selected },
+                        //                 ]}
+                        //             >
+                        //                 Temples
+                        //             </Text>
+                        //         </View>
+                        //     ) : (
+                        //         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                        //             {/* <ActiveTeample /> */}
+                        //             <TempleSVG fill={theme.bottomTabItemColor.unSelected} />
+
+                        //             <Text
+                        //                 style={[
+                        //                     styles.tabBarLable,
+                        //                     { color: theme.bottomTabItemColor.unSelected },
+                        //                 ]}
+                        //             >
+                        //                 Temples
+                        //             </Text>
+                        //         </View>
+                        //     )}
+                        //     <View style={{ marginTop: 6 }}>
+                        //         {focused ? (
+                        //             <IndicatorIcon />
+                        //         ) : (
+                        //             <View
+                        //                 style={{
+                        //                     height: 10,
+                        //                     width: '100%',
+                        //                     backgroundColor: 'black',
+                        //                 }}
+                        //             ></View>
+                        //         )}
+                        //     </View>
+                        // </View>
                     ),
                 }}
                 name={RouteTexts.TEMPLE}

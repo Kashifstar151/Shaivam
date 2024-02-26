@@ -56,3 +56,14 @@ export async function AddDownloadedAudios(query, body, callbacks) {
     });
     // }
 }
+export async function RemoveFavAudios(query, body, callbacks) {
+    let q = `DELETE FROM fav_odhuvar WHERE id=${body?.id}`;
+    // console.log("🚀 ~ RemoveFavAudios ~ body:", q)
+    audioPlayerDatabase.executeSql(q, body, (result) => {
+        // Alert.alert("Success", "User created successfully.");
+        console.log('audio created successfully.')
+        callbacks({ message: 'Success' })
+    }, (error) => {
+        console.log("Create user error", error);
+    });
+}

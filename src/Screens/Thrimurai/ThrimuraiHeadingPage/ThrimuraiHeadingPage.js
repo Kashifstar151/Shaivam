@@ -74,7 +74,7 @@ const RenderContents = ({
     return (
         <>
             {!flagShowAudio && (
-                <View style={[styles.chapterBox, { backgroundColor: theme.cardBgColor }]}>
+                <Pressable onPress={selectedTitle !== null && selectedTitle == index ? onPress = () => setSelectedTitle(null) : () => setSelectedTitle(index)} style={[styles.chapterBox, { backgroundColor: theme.cardBgColor }]}>
                     <View style={{ justifyContent: 'center' }}>
                         <Text style={[styles.chapterNameTexts, { color: theme.textColor }]}>
                             {t(item.name)}
@@ -101,7 +101,7 @@ const RenderContents = ({
                             />
                         </TouchableOpacity>
                     )}
-                </View>
+                </Pressable>
             )}
             {selectedTitle == index && (
                 <RenderTitle data={item} navigation={navigation} flagShowAudio={flagShowAudio} />
