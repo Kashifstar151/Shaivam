@@ -24,7 +24,7 @@ const HomePlaylistCard = ({
             angle={130}
             angleCenter={{ x: 0, y: 0 }}
             style={{
-                width: Dimensions.get('window').width - 150,
+                width: 250,
                 backgroundColor: 'red',
                 height: 160,
                 borderRadius: 15,
