@@ -57,7 +57,7 @@ const SongAndAudio = ({ item, index, theme }) => {
                     <Text
                         style={{
                             fontSize: RFValue(14, 800),
-                            fontWeight: '600',
+                            // fontWeight: '600',
                             fontFamily: 'Mulish-Regular',
                             color: theme.textColor,
                         }}
@@ -67,7 +67,7 @@ const SongAndAudio = ({ item, index, theme }) => {
                     <Text
                         style={{
                             fontSize: RFValue(12, 800),
-                            fontWeight: '400',
+                            // fontWeight: '400',
                             fontFamily: 'Mulish-Regular',
                             color: theme.textColor,
                         }}
@@ -148,7 +148,6 @@ const HomeScreen = ({ navigation }) => {
         },
     ];
 
-
     const eventData = [
         {
             date: { day: 'THU', dateNo: '06' },
@@ -190,6 +189,28 @@ const HomeScreen = ({ navigation }) => {
         },
     ];
 
+    const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
+    const [screenHeight, setScreenheight] = useState(Dimensions.get('window').height);
+    const [orientation, setOrientation] = useState('PORTRAIT');
+    useEffect(() => {
+        Dimensions.addEventListener('change', ({ window: { width, height } }) => {
+            if (width < height) {
+                setOrientation('PORTRAIT');
+            } else {
+                setOrientation('LANDSCAPE');
+            }
+        });
+        const updateItemWidth = () => {
+            setScreenWidth(Dimensions.get('window').width);
+            setScreenheight(Dimensions.get('window').height)
+
+        };
+        const subscription = Dimensions.addEventListener('change', updateItemWidth);
+        return () => {
+            subscription?.remove();
+        };
+    }, []);
+
     return (
         <ScrollView
             style={{
@@ -198,7 +219,7 @@ const HomeScreen = ({ navigation }) => {
                 backgroundColor: theme.backgroundColor,
             }}
         >
-            <View style={[styles.firstContainer]}>
+            <View style={{ height: orientation == 'PORTRAIT' ? Dimensions.get('window').height / 2.5 : Dimensions.get('window').height / 1.5, }}>
                 <ImageBackground
                     source={theme.colorscheme === 'light' ? bgImg : bgImgDark}
                     resizeMode="cover"
@@ -211,13 +232,14 @@ const HomeScreen = ({ navigation }) => {
             <View
                 style={{
                     paddingHorizontal: 15,
-                    marginTop: -Dimensions.get('window').height / 2.3,
+                    marginTop: orientation == 'PORTRAIT' ? -screenHeight / 2.3 : -Dimensions.get('window').height / 1.3,
+                    // position: 'absolute',
+                    // top: -10
                 }}
                 onLayout={handleLayout}
             >
                 <CardComponents navigation={navigation} />
             </View>
-
             <View style={{ padding: 15 }}>
                 <Text
                     style={{
@@ -237,7 +259,6 @@ const HomeScreen = ({ navigation }) => {
                     />
                 </View>
             </View>
-
             {/* playlist 2 */}
             <View
                 style={{
@@ -273,7 +294,7 @@ const HomeScreen = ({ navigation }) => {
                     style={{
                         position: 'relative',
                         left: dimentionsOfText1.height * 2,
-                        width: Dimensions.get('screen').width - dimentionsOfText1.height * 2,
+                        width: screenWidth - dimentionsOfText1.height * 2,
                     }}
                 >
                     <ImageBackground
@@ -363,10 +384,8 @@ const HomeScreen = ({ navigation }) => {
                     </View>
                 </View>
             </View>
-
             {/* upcoming events  */}
-
-            <>
+            <View>
                 <View style={{ paddingBottom: 15, paddingHorizontal: 15 }}>
                     <HeadingAndView
                         viewBtnColor={'#C1554E'}
@@ -397,8 +416,10 @@ const HomeScreen = ({ navigation }) => {
                         </ElevatedCard>
                     )}
                 />
-            </>
-            <OmChat />
+            </View>
+            <View>
+                <OmChat />
+            </View>
             {/* last section */}
             <View style={{ paddingBottom: 100 }}>
                 <View style={{ padding: 15 }}>

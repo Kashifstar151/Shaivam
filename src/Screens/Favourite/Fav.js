@@ -125,10 +125,7 @@ const Fav = ({ navigation }) => {
         <ScrollView>
             <Background>
                 <View style={{ marginVertical: 15 }}>
-                    {/* <BackButton middleText={'Favourites'} color={true} buttonDisable={true}/> */}
-                    {/* <Header /> */}
                     <View style={{ paddingHorizontal: 20 }}>
-
                         <HeadingText text={'Favourites'} nandiLogo={true} />
                     </View>
                     <SearchInput placeholder={'Search for your favourties (Eg - தோடுடைய)'} />
