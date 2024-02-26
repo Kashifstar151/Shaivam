@@ -105,7 +105,9 @@ export default BottomTab = ({ navigation }) => {
                     // },
                     tabBarIcon: ({ color, size, focused }) => (
                         <TouchableOpacity
-                            onPress={() => navigation.navigate(RouteTexts.TEMPLE_Tabs)} style={{ marginBottom: 10 }}>
+                            onPress={() => navigation.navigate(RouteTexts.TEMPLE_Tabs)}
+                            style={{ marginBottom: 10 }}
+                        >
                             {/* <Text>Back</Text>
                              */}
                             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -383,7 +385,7 @@ export const styles = StyleSheet.create({
     tabBarLable: {
         color: '#FFAAA5',
         fontSize: 10,
-        fontWeight: '600',
+        // fontWeight: '600',
         fontFamily: 'Mulish-Regular',
     },
 });

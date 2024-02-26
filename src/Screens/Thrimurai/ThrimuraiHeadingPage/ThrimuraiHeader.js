@@ -67,7 +67,7 @@ export const styles = StyleSheet.create({
     headerText: {
         fontSize: 12,
         fontFamily: 'Mulish-regular',
-        fontWeight: '500',
+        // fontWeight: '500',
     },
     selectedHeaderBox: {
         height: 70,

@@ -108,7 +108,7 @@ const SearchScreen = ({ navigation, route }) => {
                         fontFamily: 'AnekTamil-Bold',
                         fontSize: 14,
                         color: theme.textColor,
-                        fontWeight: key === 'title' ? '700' : '400',
+                        // fontWeight: key === 'title' ? '700' : '400',
                     }}
                     highlightStyle={{
                         fontFamily: 'AnekTamil-Bold',
@@ -148,7 +148,7 @@ const SearchScreen = ({ navigation, route }) => {
     };
 
     const renderResult = (item, index, key) => {
-        console.log("🚀 ~ renderResult ~ item:", JSON.stringify(item, 0, 2))
+        console.log('🚀 ~ renderResult ~ item:', JSON.stringify(item, 0, 2));
         return (
             <Pressable
                 style={{ marginVertical: 10 }}
@@ -156,7 +156,7 @@ const SearchScreen = ({ navigation, route }) => {
                     navigation.navigate(RouteTexts.THRIMURAI_SONG, {
                         data: item,
                         searchedword: searchText,
-                        searchScreen: true
+                        searchScreen: true,
                     })
                 }
             >
@@ -253,22 +253,26 @@ const SearchScreen = ({ navigation, route }) => {
                                     }}
                                 >
                                     {`${item?.id === 0 ? 'All' : ''} `}
-                                    {`${item?.id > 0 && item?.id < 8
-                                        ? `${t(`Thrimurai ${item?.id}`)}`
-                                        : ''
-                                        }`}
-                                    {`${item?.id >= 8 && item?.id !== 10 && item?.id !== 11
-                                        ? `${t(nameMap[`Thrimurai ${item?.id}`])}`
-                                        : ''
-                                        }`}
-                                    {`${item?.id === 10
-                                        ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[0]}`
-                                        : ''
-                                        }`}
-                                    {`${item?.id === 11
-                                        ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[1]}`
-                                        : ''
-                                        }`}
+                                    {`${
+                                        item?.id > 0 && item?.id < 8
+                                            ? `${t(`Thrimurai ${item?.id}`)}`
+                                            : ''
+                                    }`}
+                                    {`${
+                                        item?.id >= 8 && item?.id !== 10 && item?.id !== 11
+                                            ? `${t(nameMap[`Thrimurai ${item?.id}`])}`
+                                            : ''
+                                    }`}
+                                    {`${
+                                        item?.id === 10
+                                            ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[0]}`
+                                            : ''
+                                    }`}
+                                    {`${
+                                        item?.id === 11
+                                            ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[1]}`
+                                            : ''
+                                    }`}
                                 </Text>
                             </TouchableOpacity>
                         )}
@@ -289,7 +293,6 @@ const SearchScreen = ({ navigation, route }) => {
                             contentContainerStyle={{ marginTop: 10 }}
                             data={rawSongs}
                             renderItem={({ item, index }) => renderResult(item, index, 'rawSong')}
-
                         />
                     </ScrollView>
                 ) : (
@@ -317,7 +320,7 @@ export const styles = StyleSheet.create({
         fontFamily: 'AnekTamil-Bold',
         fontSize: 14,
 
-        fontWeight: '700',
+        // fontWeight: '700',
     },
     searchresult: { fontSize: 18, color: '#222222', fontFamily: 'Lora-Bold' },
 });
