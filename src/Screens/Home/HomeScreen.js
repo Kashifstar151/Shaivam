@@ -189,6 +189,18 @@ const HomeScreen = ({ navigation }) => {
         },
     ];
 
+    const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
+
+    useEffect(() => {
+        const updateItemWidth = () => {
+            setScreenWidth(Dimensions.get('window').width);
+        };
+        const subscription = Dimensions.addEventListener('change', updateItemWidth);
+        return () => {
+            subscription?.remove();
+        };
+    }, []);
+
     return (
         <ScrollView
             style={{
@@ -216,7 +228,6 @@ const HomeScreen = ({ navigation }) => {
             >
                 <CardComponents navigation={navigation} />
             </View>
-
             <View style={{ padding: 15 }}>
                 <Text
                     style={{
@@ -236,7 +247,6 @@ const HomeScreen = ({ navigation }) => {
                     />
                 </View>
             </View>
-
             {/* playlist 2 */}
             <View
                 style={{
@@ -272,7 +282,7 @@ const HomeScreen = ({ navigation }) => {
                     style={{
                         position: 'relative',
                         left: dimentionsOfText1.height * 2,
-                        width: Dimensions.get('screen').width - dimentionsOfText1.height * 2,
+                        width: screenWidth - dimentionsOfText1.height * 2,
                     }}
                 >
                     <ImageBackground
@@ -362,10 +372,8 @@ const HomeScreen = ({ navigation }) => {
                     </View>
                 </View>
             </View>
-
             {/* upcoming events  */}
-
-            <>
+            <View>
                 <View style={{ paddingBottom: 15, paddingHorizontal: 15 }}>
                     <HeadingAndView
                         viewBtnColor={'#C1554E'}
@@ -396,8 +404,10 @@ const HomeScreen = ({ navigation }) => {
                         </ElevatedCard>
                     )}
                 />
-            </>
-            <OmChat />
+            </View>
+            <View>
+                <OmChat />
+            </View>
             {/* last section */}
             <View style={{ paddingBottom: 100 }}>
                 <View style={{ padding: 15 }}>

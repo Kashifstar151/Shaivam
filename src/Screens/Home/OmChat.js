@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Dimensions, ImageBackground, StyleSheet, Text, View } from 'react-native';
 import bgImg from '../../../assets/Images/Background.png';
 import PlayBtnSVG from '../../components/SVGs/PlayBtnSVG';
@@ -8,6 +8,18 @@ const OmChat = () => {
         width: 0,
         height: 0,
     });
+
+    const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
+
+    useEffect(() => {
+        const updateItemWidth = () => {
+            setScreenWidth(Dimensions.get('window').width);
+        };
+        const subscription = Dimensions.addEventListener('change', updateItemWidth);
+        return () => {
+            subscription?.remove();
+        };
+    }, []);
     return (
         <View
             style={{
@@ -24,7 +36,7 @@ const OmChat = () => {
                     borderBottomRightRadius: 25,
                     overflow: 'hidden',
                     padding: 15,
-                    width: Dimensions.get('screen').width - dimension.height * 3,
+                    width: screenWidth - dimension.height * 3,
                 }}
             >
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
