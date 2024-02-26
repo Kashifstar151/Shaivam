@@ -1,13 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { useContext, useEffect, useState } from 'react'
-import { FlatList, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, FlatList, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/dist/MaterialIcons'
 import MaterialIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons'
 import BackButton from '../../components/BackButton'
 import Background from '../../components/Background'
 import SearchInput from '../../components/SearchInput'
 import { ThemeContext } from '../../Context/ThemeContext'
-import { listfavAudios } from '../../Databases/AudioPlayerDatabase'
+import { listfavAudios, RemoveFavAudios } from '../../Databases/AudioPlayerDatabase'
 import MusicContainer from '../../../assets/Images/Frame 83.svg';
 import { RFValue } from 'react-native-responsive-fontsize'
 import Header from '../../components/Header'
@@ -31,13 +31,14 @@ const Fav = ({ navigation }) => {
         { name: 'Special Playlist', icon: <Icon name='bookmark-outline' size={24} color={theme.searchContext.unSelected.textColor} /> },
         { name: 'Offline Downloads', icon: <Icon name='download' size={24} color={theme.searchContext.unSelected.textColor} /> },
     ]
+
     const fetchAndDisplayDownloads = async () => {
         try {
             const keys = await AsyncStorage.getAllKeys();
             const metadataKeys = keys.filter(key => key.startsWith('downloaded:'));
             const metadata = await AsyncStorage.multiGet(metadataKeys);
             const parsedMetadata = metadata.map(([key, value]) => JSON.parse(value));
-            console.log("🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:", parsedMetadata)
+            // console.log("🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:", parsedMetadata)
             setDownloadList(parsedMetadata)
             // Now `parsedMetadta` contains all of your audio files' metadata
             // You can use this data to render your downloads page
@@ -45,6 +46,35 @@ const Fav = ({ navigation }) => {
             console.error('Failed to fetch metadata', e);
         }
     };
+    const removeFromPlaylist = (item) => {
+        if (selecetedHeader == 'Offline Downloads') {
+            let arr = downloadList.filter((res) => res.id !== item.id)
+            console.log("🚀 ~ removeFromPlaylist ~ arr:", arr)
+            setDownloadList(arr)
+            AsyncStorage.setItem('recentTrack', JSON.stringify(arr))
+
+        } else if (selecetedHeader == 'Favourites') {
+            RemoveFavAudios('d', item, cb => {
+                if (cb?.message == 'Success') {
+                    let arr = favList.filter((res) => res?.id !== item.id)
+                    setFavList(arr)
+                }
+            })
+
+        }
+    }
+    const confirmRemove = (item) => {
+        Alert.alert('Confirmation', 'Are you sure to remove', [
+            {
+                text: 'Confirm',
+                onPress: () => removeFromPlaylist(item)
+            },
+            {
+                text: 'Cancel',
+                onPress: console.log(false)
+            }
+        ])
+    }
     const renderSong = (item, index) => (
         <Pressable style={styles.listContainer} onPress={() => {
             navigation.navigate(RouteTexts.THRIMURAI_SONG, {
@@ -81,7 +111,7 @@ const Fav = ({ navigation }) => {
                 <TouchableOpacity style={{ marginRight: 10 }}>
                     <Icon name="share" size={22} />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => confirmRemove(item)}>
                     <Icon name="delete" size={22} />
                 </TouchableOpacity>
             </View>

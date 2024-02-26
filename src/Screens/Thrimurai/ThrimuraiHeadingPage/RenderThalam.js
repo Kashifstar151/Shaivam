@@ -1,6 +1,6 @@
 import { t } from 'i18next'
 import React, { useContext, useState } from 'react'
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Dimensions, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/dist/MaterialIcons'
 import { ThemeContext } from '../../../Context/ThemeContext'
 import RenderAudios from '../RenderAudios'
@@ -12,7 +12,7 @@ const RenderThalam = ({ item, index, navigation, ThalamHeaders }) => {
     const [selectedTitle, setSelectedTitle] = useState(null);
     return (
         <View>
-            <View style={[styles.chapterBox, { backgroundColor: theme.cardBgColor }]}>
+            <Pressable onPress={selectedTitle !== null && selectedTitle == index ? () => setSelectedTitle(null) : () => setSelectedTitle(index)} style={[styles.chapterBox, { backgroundColor: theme.cardBgColor }]}>
                 <View style={{ justifyContent: 'center' }}>
                     <Text style={[styles.chapterNameTexts, { color: theme.textColor }]}>
                         {t(item)}
@@ -35,7 +35,7 @@ const RenderThalam = ({ item, index, navigation, ThalamHeaders }) => {
                         />
                     </TouchableOpacity>
                 )}
-            </View>
+            </Pressable>
             {
                 selectedTitle == index && (
                     <RenderTitle

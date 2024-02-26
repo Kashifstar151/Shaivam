@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import { ThemeContext } from '../../Context/ThemeContext';
 import { colors } from '../../Helpers';
@@ -22,7 +22,7 @@ const Thalamurai = ({ navigation }) => {
                 data={ThalamuraiHeaders}
                 renderItem={({ item, index }) => (
                     <>
-                        <View style={[styles.chapterBox, { backgroundColor: theme.cardBgColor }]}>
+                        <Pressable onPress={ThalamHeaders !== null && ThalamHeaders == index ? () => setThalamHeaders(null) : () => setThalamHeaders(index)} style={[styles.chapterBox, { backgroundColor: theme.cardBgColor }]}>
                             <View style={{ justifyContent: 'center' }}>
                                 <Text style={[styles.chapterNameTexts, { color: theme.textColor }]}>
                                     {t(item)}
@@ -49,7 +49,7 @@ const Thalamurai = ({ navigation }) => {
                                     />
                                 </TouchableOpacity>
                             )}
-                        </View>
+                        </Pressable>
                         {ThalamHeaders == index && (
                             <FlatList
                                 data={ThalamHeaders == 0 ? nadu : Thalam}

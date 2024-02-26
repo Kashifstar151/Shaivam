@@ -7,5 +7,6 @@ export const RouteTexts = {
     TEMPLE: 'Temple',
     CALENDER: 'Calender',
     FAVOURITE: 'Fav',
-    MORE_OPTION: 'MoreOption'
+    MORE_OPTION: 'MoreOption',
+    TEMPLE_Tabs: 'TempleTabs'
 }

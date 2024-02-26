@@ -17,6 +17,7 @@ import SearchScreen from '../Screens/Thrimurai/Searchscreen/SearchScreen'
 import BottomTabs from './BottomTab/BottomTabs'
 import Strotras from '../Screens/Strotras/Strotras';
 import { MusicContextProvider } from '../components/Playbacks/TrackPlayerContext';
+import TempleTabs from './BottomTab/TempleTabs'
 // import { ThemeContextProvider } from '../Context/ThemeContext';
 
 const Route = () => {
@@ -157,6 +158,7 @@ const Route = () => {
                         }}
                     >
                         <Stack.Screen name={RouteTexts.BOTTOM_TABS} component={BottomTabs} />
+                        <Stack.Screen name={RouteTexts.TEMPLE_Tabs} component={TempleTabs} />
                         <Stack.Screen name="Home" component={HomeScreen} />
                         <Stack.Screen name="Thirumurais" component={ThrimuraiList} />
                         <Stack.Screen name={RouteTexts.SEARCH_SCREEN} component={SearchScreen} />
