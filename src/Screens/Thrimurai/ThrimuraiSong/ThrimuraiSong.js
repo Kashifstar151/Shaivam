@@ -123,7 +123,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const [darkMode, setDarkMode] = useState(colorScheme === 'dark' ? true : false);
     const [tamilSplit, setTamilSplit] = useState(false);
     const { theme, setTheme } = useContext(ThemeContext);
-    const [fullScreenMode, setFullScreenMode] = useState(false);
+    const [fullScreenMode, setFullScreenMode] = useState(false)
     const { t, i18n } = useTranslation();
     const [selectedLngCode, setSelectedLngCode] = useState(i18n.language);
     const langMap = {
@@ -189,8 +189,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
     };
 
     const getSOngData = () => {
-        const detailQuery = `SELECT rawSong, tamilExplanation, tamilSplit , songNo , title from thirumurai_songs where prevId=${musicState?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
-        const titleQuery = `SELECT title from thirumurai_songs where prevId=${musicState?.prevId} and title  NOTNULL and title!='' GROUP BY title`;
+        const detailQuery = `SELECT rawSong, tamilExplanation, tamilSplit , songNo , title from thirumurai_songs where prevId=${data?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
+        const titleQuery = `SELECT title from thirumurai_songs where prevId=${data?.prevId} and title  NOTNULL and title!='' GROUP BY title`;
 
         getSqlData(titleQuery, (data) => {
             getSqlData(detailQuery, (details) => {
@@ -338,7 +338,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
         <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
             <Background>
                 <BackButton
-                    secondMiddleText={musicState?.title}
+                    secondMiddleText={data?.title}
                     color={true}
                     // middleText={data}
                     navigation={navigation}
@@ -644,26 +644,23 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                     flexDirection: 'row',
                                 }}
                             >
-                                {searchScreen ? (
-                                    renderResult(res)
-                                ) : (
-                                    <Text
-                                        style={[
-                                            styles.lyricsText,
-                                            {
-                                                fontSize: fontSizeCount,
-                                                color: theme.lyricsText.color,
-                                            },
-                                        ]}
-                                    >
-                                        {!(tamilSplit && i18n.language === 'en')
-                                            ? selectedLang !== 'Tamil'
-                                                ? res?.rawSong
-                                                : res?.tamilExplanation ||
-                                                  'Text currently not available'
-                                            : res?.tamilSplit || 'Text currently not available'}
-                                    </Text>
-                                )}
+                                {
+                                    searchScreen ?
+                                        renderResult(res) :
+                                        <Text
+                                            style={[
+                                                styles.lyricsText,
+                                                { fontSize: fontSizeCount, color: theme.lyricsText.color },
+                                            ]}
+                                        >
+                                            {!(tamilSplit && i18n.language === 'en')
+                                                ? selectedLang !== 'Tamil'
+                                                    ? res?.rawSong
+                                                    : res?.tamilExplanation ||
+                                                    'Text currently not available'
+                                                : res?.tamilSplit || 'Text currently not available'}
+                                        </Text>
+                                }
                                 <Text
                                     style={[
                                         styles.lyricsText,

@@ -13,9 +13,11 @@ import { RFValue } from 'react-native-responsive-fontsize'
 import Header from '../../components/Header'
 import HeadingText from '../../components/HeadingText'
 import { RouteTexts } from '../../navigation/RouteText'
+import { useIsFocused } from '@react-navigation/native'
 
 const Fav = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
+    const isFocuced = useIsFocused()
     const [selecetedHeader, setSelectedHeader] = useState('Favourites')
     const [favList, setFavList] = useState([])
     const [downloadList, setDownloadList] = useState([])
@@ -25,7 +27,7 @@ const Fav = ({ navigation }) => {
             console.log("🚀 ~ useEffect ~ callbacks:", callbacks)
             setFavList(callbacks)
         })
-    }, [])
+    }, [isFocuced])
     const header = [
         { name: 'Favourites', icon: <MaterialIcons name='heart-outline' size={24} color={theme.searchContext.unSelected.textColor} /> },
         { name: 'Special Playlist', icon: <Icon name='bookmark-outline' size={24} color={theme.searchContext.unSelected.textColor} /> },
@@ -34,12 +36,14 @@ const Fav = ({ navigation }) => {
 
     const fetchAndDisplayDownloads = async () => {
         try {
-            const keys = await AsyncStorage.getAllKeys();
-            const metadataKeys = keys.filter(key => key.startsWith('downloaded:'));
-            const metadata = await AsyncStorage.multiGet(metadataKeys);
-            const parsedMetadata = metadata.map(([key, value]) => JSON.parse(value));
+            // const keys = await AsyncStorage.getAllKeys();
+            const parsedMetadata = await AsyncStorage.getItem('downloaded');
+            console.log("🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:", parsedMetadata)
+            // const metadataKeys = keys.filter(key => key.startsWith('downloaded:'));
+            // const metadata = await AsyncStorage.multiGet(metadataKeys);
+            // const parsedMetadata = metadata.map(([key, value]) => JSON.parse(value));
             // console.log("🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:", parsedMetadata)
-            setDownloadList(parsedMetadata)
+            setDownloadList(JSON.parse(parsedMetadata))
             // Now `parsedMetadta` contains all of your audio files' metadata
             // You can use this data to render your downloads page
         } catch (e) {
@@ -49,9 +53,9 @@ const Fav = ({ navigation }) => {
     const removeFromPlaylist = (item) => {
         if (selecetedHeader == 'Offline Downloads') {
             let arr = downloadList.filter((res) => res.id !== item.id)
-            console.log("🚀 ~ removeFromPlaylist ~ arr:", arr)
+            // console.log("🚀 ~ removeFromPlaylist ~ arr:", arr)
             setDownloadList(arr)
-            AsyncStorage.setItem('recentTrack', JSON.stringify(arr))
+            AsyncStorage.setItem('downloaded', JSON.stringify(arr))
 
         } else if (selecetedHeader == 'Favourites') {
             RemoveFavAudios('d', item, cb => {

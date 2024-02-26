@@ -33,10 +33,14 @@ import { useIsFocused } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
 import {
     AddDownloadedAudios,
+    AddMostPlayed,
     AddSongToDatabase,
     createDownloadTable,
     createUserTable,
     listfavAudios,
+    MostPlayedList,
+    MostPlayedSongList,
+    UpdateMostPlayed,
 } from '../../Databases/AudioPlayerDatabase';
 import RNFetchBlob from 'rn-fetch-blob';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -103,27 +107,22 @@ const AudioPlayer = ({
     data,
 }) => {
     console.log('the render of page =>');
-
-    const [height, setHeight] = useState(Dimensions.get('window').height);
-    // const [selectedOdhuvar, setSelectedOdhuvar] = useState();
-    // const [orientation, setOrientation] = useState('PORTRAIT')
-    // useEffect(() => {
-    //     Dimensions.addEventListener('change', ({ window: { width, height } }) => {
-    //         if (width < height) {
-    //             setOrientation("PORTRAIT")
-    //         } else {
-    //             setOrientation("LANDSCAPE")
-
-    //         }
-    //     })
-    // }, [])
-    useTrackPlayerEvents([Event.PlaybackTrackChanged], async (event) => {
-        if (event.state == State.nextTrack) {
+    useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], async (event) => {
+        if (event?.state == State?.nextTrack) {
             let index = await TrackPlayer.getActiveTrack();
             //   setCurrentTrack(index);
             console.log('index', index)
             const newObj = { ...index, prevId: prevId }
             updateRecentlyPlayed(newObj)
+        }
+    });
+    useTrackPlayerEvents([Event.PlaybackProgressUpdated], async (event) => {
+        if (event.state == State.nextTrack) {
+            console.log('index', event)
+            let n = (event.duration / 3).toFixed(2)
+            if (position > n) {
+                mostPlayed()
+            }
         }
     });
     const updateRecentlyPlayed = async (newTrack) => {
@@ -159,7 +158,7 @@ const AudioPlayer = ({
                 );
             })
             .catch((err) => {
-                console.log('🚀 ~ TrackPlayer.getActiveTrack ~ err:', err);
+                // console.log('🚀 ~ TrackPlayer.getActiveTrack ~ err:', err);
             });
     };
     const { position, duration } = useProgress();
@@ -168,6 +167,7 @@ const AudioPlayer = ({
     const [repeatMode, setRepeatMode] = useState();
     const [downloadingLoader, setDownloadingLoader] = useState(false);
     const [downloadedSong, setDownloadedSong] = useState(false);
+    const [mostPlayedSongs, setMostPlayedSong] = useState([])
     const playBackState = usePlaybackState();
 
     useEffect(() => {
@@ -186,6 +186,8 @@ const AudioPlayer = ({
             return setThumbImage({ thumbIcon: source });
         });
         createUserTable();
+        MostPlayedSongList();
+        getMostPlayedSong()
         // if (downloaded) {
         //     setUpPlayer(data);
         //     // setOdhuvar(data);
@@ -224,11 +226,45 @@ const AudioPlayer = ({
         await TrackPlayer.play();
         // setPaused(true);
     };
+    const getMostPlayedSong = () => {
+        MostPlayedList('s', callbacks => {
+            console.log("🚀 ~ getMostPlayedSong ~ callbacks:", JSON.stringify(callbacks, 0, 2))
+            setMostPlayedSong(callbacks)
+        })
+    }
+    const mostPlayed = async () => {
+        let count = 1
+        await TrackPlayer.getActiveTrack().then((res) => {
+            mostPlayedSongs.map((item) => {
+                if (res?.id == item.id) {
+                    let sql = `UPDATE most_played SET count=${item?.count} WHERE id=${item?.id}`;
+                    UpdateMostPlayed(sql, callbacks => {
+                        console.log("🚀 ~ mostPlayedSongs.map ~ callbacks:", callbacks)
+                    })
+                } else {
+                    AddMostPlayed('s', [
+                        res?.id,
+                        res?.url,
+                        res?.title,
+                        res?.artist,
+                        res?.categoryName,
+                        res?.thalamOdhuvarTamilname,
+                        res?.thirumariasiriyar,
+                        count
+                    ], callbacks => {
+                        console.log("🚀 ~ awaitTrackPlayer.getActiveTrack ~ callbacks:", callbacks)
+                    })
+                }
+            })
+        }).catch((error) => {
+            console.log('error occured in getting current track')
+        })
+    }
     const downloadAudio = () => {
         // let dirs = RNFetchBlob.fs.dirs;
         setDownloadingLoader(true);
         TrackPlayer.getActiveTrack().then(async (item) => {
-            console.log("🚀 ~ TrackPlayer.getActiveTrack ~ item:", item)
+            // console.log("🚀 ~ TrackPlayer.getActiveTrack ~ item:", item)
             const path = `${RNFS.ExternalDirectoryPath}/${item?.thalamOdhuvarTamilname}`;
             // const options = {
             //     fromUrl: item?.url,
@@ -240,7 +276,7 @@ const AudioPlayer = ({
                 .fetch('GET', `${item?.url}`)
                 .then(async (res) => {
                     console.log('the audio file save to this path', res.path());
-                    const jsonValue = JSON.stringify({
+                    const jsonValue = {
                         id: item?.id,
                         title: item?.title,
                         artist: item?.artist,
@@ -249,11 +285,20 @@ const AudioPlayer = ({
                         thalamOdhuvarTamilname: item?.thalamOdhuvarTamilname,
                         thirumariasiriyar: item?.thirumariasiriyar,
                         prevId: prevId,
-                    });
-                    await AsyncStorage.setItem(
-                        `downloaded:${item?.thalamOdhuvarTamilname}`,
-                        jsonValue
-                    );
+                    };
+                    const recentTracksJSON = await AsyncStorage.getItem('downloaded');
+                    const recentTracks = recentTracksJSON ? JSON.parse(recentTracksJSON) : [];
+                    // Check if the track already exists and remove it
+                    const filteredTracks = recentTracks.filter(track => track.id !== jsonValue.id);
+                    // Add the new track to the start of the array
+                    const updatedTracks = [jsonValue, ...filteredTracks];
+                    // console.log("🚀 ~ updateRecentlyPlayed ~ updatedTracks:", updatedTracks)
+                    // Store the updated list back to AsyncStorage
+                    await AsyncStorage.setItem(`downloaded`, JSON.stringify(updatedTracks));
+                    // await AsyncStorage.setItem(
+                    //     `downloaded:${item?.thalamOdhuvarTamilname}`,
+                    //     jsonValue
+                    // );
                     setDownloadingLoader(false);
                     setDownloadedSong(true);
                     console.log('Metadata saved');
@@ -458,7 +503,7 @@ const AudioPlayer = ({
                     </View>
                 </View>
             ) : (
-                <>
+                <View>
                     <View style={{ justifyContent: 'center', marginTop: 10 }}>
                         <Slider
                             value={position}
@@ -572,7 +617,7 @@ const AudioPlayer = ({
                             <FavouriteIcon />
                         </TouchableOpacity>
                     </View>
-                </>
+                </View>
             )}
             {downloadingLoader && (
                 <Modal transparent>
