@@ -5,7 +5,7 @@ export async function AddSongToDatabase(query, body, callbacks) {
     // console.log("🚀 ~ AddSongToDatabase ~ body:", body) 
     let sql = "INSERT INTO fav_odhuvar (id,url,title,artist,thalamOdhuvarTamilname,categoryName,thirumariasiriyar) VALUES (?, ?, ?, ?, ?, ?, ?)"; //storing user data in an array
     audioPlayerDatabase.executeSql(sql, body, (result) => {
-        Alert.alert("Success", "User created successfully.");
+        Alert.alert("Success", "Added to Favourite");
         console.log('audio created successfully.')
         callbacks({ message: 'Success' })
     }, (error) => {
