@@ -1,8 +1,12 @@
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { useState } from 'react';
 
 const Strotas = () => {
-    return <Text style={{ color: 'black' }}>Strotas</Text>;
+    return (
+        <View>
+
+        </View>
+    );
 };
 
 export default Strotas;

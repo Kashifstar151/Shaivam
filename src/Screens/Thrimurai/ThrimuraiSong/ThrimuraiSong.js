@@ -99,6 +99,19 @@ const ThrimuraiSong = ({ route, navigation }) => {
             initializeTheFontSize();
         }
     }, [fontSizeCount]);
+    const [visibleStatusBar, setVisibleStatusBar] = useState(true)
+    const [fullscreen, setfullscreen] = useState(false)
+    const statusBarHeight = useRef(new AnimatedRN.Value(50)).current; // Assume 20 is the normal height of your custom status bar
+
+    const toggleStatusBar = () => {
+        setVisibleStatusBar(!visibleStatusBar);
+
+        AnimatedRN.timing(statusBarHeight, {
+            toValue: visibleStatusBar ? 0 : 50, // Animate to 0 to hide, 20 to show
+            duration: 200, // Milliseconds it takes to animate
+            useNativeDriver: false, // Height is not supported by native driver, set this to false
+        }).start();
+    };
     const [orientation, setOrientation] = useState('PORTRAIT');
     useEffect(() => {
         Dimensions.addEventListener('change', ({ window: { width, height } }) => {
@@ -354,32 +367,22 @@ const ThrimuraiSong = ({ route, navigation }) => {
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
-            <Background>
-                <BackButton
-                    secondMiddleText={data?.title}
-                    color={true}
-                    // middleText={data}
-                    navigation={navigation}
-                    rightIcon={<ShareIcon />}
-                    data={data}
-                />
-            </Background>
+            <AnimatedRN.View style={{ height: statusBarHeight }}>
+                <Background>
+                    <BackButton
+                        secondMiddleText={data?.title}
+                        color={true}
+                        // middleText={data}
+                        navigation={navigation}
+                        rightIcon={<ShareIcon />}
+                        data={data}
+                    />
+                </Background>
+            </AnimatedRN.View>
             <View
                 style={[
-                    styles.headerContainer,
-                    { backgroundColor: theme.colorscheme === 'dark' ? '#333333' : '#F1DBDA' },
-                ]}
-            >
-                <View
-                    style={[
-                        styles.detailsSection,
-                        {
-                            display: showDetail ? 'flex' : 'none',
-                            // opacity: visibilityVal,
-                            // transform: [{ translateY: 10 }],
-                        },
-                    ]}
-                >
+                    styles.headerContainer, { backgroundColor: theme.colorscheme === 'dark' ? '#333333' : '#F1DBDA' }]}>
+                <View style={[styles.detailsSection, { display: showDetail ? 'flex' : 'none', },]}>
                     <>
                         <View style={styles.container}>
                             <View
@@ -502,7 +505,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                 flexDirection: 'row',
                             }}
                         >
-                            <TouchableOpacity style={styles.InsiderSettingButton}>
+                            <TouchableOpacity onPress={toggleStatusBar} style={styles.InsiderSettingButton}>
                                 <SettingIcon />
                                 {/* <Text
                                         style={[
@@ -706,7 +709,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                 snapPoints={snapPoints}
                 index={1}
             > */}
-            <View
+            <Animated.View
                 style={{
                     paddingTop: 20,
                     position: 'absolute',
@@ -722,7 +725,9 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             : Dimensions.get('window').width,
                 }}
             >
+
                 <AudioPlayer
+                    visibleStatusBar={visibleStatusBar}
                     prevId={data?.prevId}
                     songsData={musicState?.song}
                     title={musicState?.title}
@@ -734,7 +739,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                     queryForNextPrevId={queryForNextPrevId}
                     queryForPreviousPrevId={queryForPreviousPrevId}
                 />
-            </View>
+            </Animated.View>
             {/* </BottomSheet> */}
         </View>
     );
