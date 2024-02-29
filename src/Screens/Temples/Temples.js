@@ -5,31 +5,11 @@ import { RouteTexts } from '../../navigation/RouteText';
 
 export const Temples = () => {
     // const MorePlaceholderScreen = () => {
-    const navigation = useNavigation();
-    useEffect(() => {
-        navigate()
-    }, [navigation])
-    const navigate =
-        React.useCallback(() => {
-            const unsubscribe = navigation.navigate(RouteTexts.TEMPLE_Tabs); // Navigate to SecondaryTabs
-            return () => unsubscribe;
-        }, [navigation])
+    return (
+        <View>
 
-
-    // useEffect(
-    //     React.useCallback(() => {
-    //         const unsubscribe = navigation.navigate(RouteTexts.TEMPLE_Tabs); // Navigate to SecondaryTabs
-    //         return () => unsubscribe;
-    //     }, [navigation])
-    // );
-
-    return null; // This screen doesn't need to render anything
-    //   };
-    // return (
-    //     <View>
-
-    //     </View>
-    // )
+        </View>
+    )
 }
 
 export default Temples

@@ -16,6 +16,16 @@ import FavouriteSVG from '../../components/SVGs/FavouriteSVG';
 import MoreSVG from '../../components/SVGs/MoreSVG';
 import BottomTabs from './BottomTabs';
 import ExitTemple from '../../Screens/Temples/ExitTemple';
+import ActiveHome from '../../assets/Images/InactiveHome.svg'
+import ActiveTrip from '../../assets/Images/ActiveTrip.svg'
+import InActiveTrip from '../../assets/Images/InactiveTrip.svg'
+import ActiveLocation from '../../assets/Images/ActiveLocation.svg'
+import InActiveLocation from '../../assets/Images/UnActiveLocation.svg'
+import ActiveAddTrip from '../../assets/Images/InActiveAddTemple.svg'
+// import ActiveAddTrip from '../../assets/Images/InActiveAddTemple.svg'
+import InActiveAddTrip from '../../assets/Images/Vector (4).svg'
+import MyTrip from '../../Screens/Temples/MyTrip/MyTrip';
+
 const Tab = createBottomTabNavigator();
 export default TempleTab = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
@@ -65,7 +75,7 @@ export default TempleTab = ({ navigation }) => {
                         >
                             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                 {/* <ActiveTeample /> */}
-                                <TempleSVG fill={theme.bottomTabItemColor.unSelected} />
+                                <ActiveHome />
                                 <Text
                                     style={[
                                         styles.tabBarLable,
@@ -75,9 +85,25 @@ export default TempleTab = ({ navigation }) => {
                                     Go to Home
                                 </Text>
                             </View>
+                            <View style={{ marginTop: 6 }}>
+                                {focused ? (
+                                    <IndicatorIcon />
+                                ) : (
+                                    <View
+                                        style={{
+                                            height: 10,
+                                            width: '100%',
+                                            // backgroundColor: 'black',
+                                        }}
+                                    ></View>
+                                )}
+                            </View>
+                            {/* </View> */}
                         </TouchableOpacity>
+
                     ),
                 }}
+
                 name="Exit Temple"
                 component={Temples}
             />
@@ -99,7 +125,7 @@ export default TempleTab = ({ navigation }) => {
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                     {/* <ActiveHome /> */}
 
-                                    <HomeSVG fill={theme.bottomTabItemColor.selected} />
+                                    <ActiveLocation />
                                     <Text
                                         style={[
                                             styles.tabBarLable,
@@ -112,7 +138,7 @@ export default TempleTab = ({ navigation }) => {
                             ) : (
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                     {/* <InactiveHome /> */}
-                                    <HomeSVG fill={theme.bottomTabItemColor.unSelected} />
+                                    <InActiveLocation />
 
                                     <Text
                                         style={[
@@ -124,7 +150,7 @@ export default TempleTab = ({ navigation }) => {
                                     </Text>
                                 </View>
                             )}
-                            {/* <View style={{ marginTop: 6 }}>
+                            <View style={{ marginTop: 6 }}>
                                 {focused ? (
                                     <IndicatorIcon />
                                 ) : (
@@ -132,11 +158,11 @@ export default TempleTab = ({ navigation }) => {
                                         style={{
                                             height: 10,
                                             width: '100%',
-                                            backgroundColor: 'black',
+                                            // backgroundColor: 'black',
                                         }}
                                     ></View>
                                 )}
-                            </View> */}
+                            </View>
                         </View>
                     ),
                 }}
@@ -160,7 +186,7 @@ export default TempleTab = ({ navigation }) => {
                             {focused ? (
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                     {/* <ActiveTeample /> */}
-                                    <TempleSVG fill={theme.bottomTabItemColor.selected} />
+                                    <ActiveTrip />
                                     <Text
                                         style={[
                                             styles.tabBarLable,
@@ -173,7 +199,7 @@ export default TempleTab = ({ navigation }) => {
                             ) : (
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                     {/* <ActiveTeample /> */}
-                                    <TempleSVG fill={theme.bottomTabItemColor.unSelected} />
+                                    <InActiveTrip />
 
                                     <Text
                                         style={[
@@ -185,7 +211,7 @@ export default TempleTab = ({ navigation }) => {
                                     </Text>
                                 </View>
                             )}
-                            {/* <View style={{ marginTop: 6 }}>
+                            <View style={{ marginTop: 6 }}>
                                 {focused ? (
                                     <IndicatorIcon />
                                 ) : (
@@ -193,16 +219,16 @@ export default TempleTab = ({ navigation }) => {
                                         style={{
                                             height: 10,
                                             width: '100%',
-                                            backgroundColor: 'black',
+                                            // backgroundColor: 'black',
                                         }}
                                     ></View>
                                 )}
-                            </View> */}
+                            </View>
                         </View>
                     ),
                 }}
-                name={RouteTexts.TEMPLE}
-                component={BottomTabs}
+                name={RouteTexts.MY_TRIP}
+                component={MyTrip}
             />
             <Tab.Screen
                 options={{
@@ -221,10 +247,10 @@ export default TempleTab = ({ navigation }) => {
                         <View>
                             {focused ? (
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                    <View style={{ marginBottom: 7 }}>
-                                        {/* <ActiveMore /> */}
-                                        <MoreSVG fill={theme.bottomTabItemColor.selected} />
-                                    </View>
+                                    {/* <View style={{ marginBottom: 7 }}> */}
+                                    {/* <ActiveMore /> */}
+                                    <InActiveAddTrip />
+                                    {/* </View> */}
 
                                     <Text
                                         style={[
@@ -239,7 +265,7 @@ export default TempleTab = ({ navigation }) => {
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                     <View style={{ marginBottom: 7 }}>
                                         {/* <InActiveMore /> */}
-                                        <MoreSVG fill={theme.bottomTabItemColor.unSelected} />
+                                        <ActiveAddTrip />
                                     </View>
                                     <Text
                                         style={[
@@ -251,19 +277,19 @@ export default TempleTab = ({ navigation }) => {
                                     </Text>
                                 </View>
                             )}
-                            {/* <View style={{ marginTop: 10 }}>
+                            <View style={{ marginTop: 6 }}>
                                 {focused ? (
                                     <IndicatorIcon />
                                 ) : (
                                     <View
                                         style={{
-                                            height: 6,
+                                            height: 10,
                                             width: '100%',
-                                            backgroundColor: 'black',
+                                            // backgroundColor: 'black',
                                         }}
                                     ></View>
                                 )}
-                            </View> */}
+                            </View>
                         </View>
                     ),
                 }}

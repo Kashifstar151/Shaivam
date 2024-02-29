@@ -18,6 +18,7 @@ import SearchInput from './SearchInput';
 
 const RenderItem = ({ blockRef, item, navigation, theme }) => {
     const [blockWidth, setBlockWidth] = useState(0)
+
     const onLayout = (event, index) => {
         const { x, y, width, height } = event.nativeEvent.layout;
         console.log("🚀 ~ RenderItem ~ index:", index)
@@ -104,6 +105,8 @@ const RenderItem = ({ blockRef, item, navigation, theme }) => {
 const CardComponents = ({ navigation }) => {
     const blockRef = useRef(null)
     const [blockWidth, setBlockWidth] = useState(0)
+    const [searchText, setSearchText] = useState(null)
+    const [onFocus, setOnFocus] = useState(false)
     const { theme } = useContext(ThemeContext);
     const data = [
         {
@@ -202,6 +205,9 @@ const CardComponents = ({ navigation }) => {
             <View style={{ marginTop: 24 }}>
                 <Header />
                 <SearchInput
+                    setSearchText={setSearchText}
+                    state={searchText}
+                    setOnFocus={setOnFocus}
                     extraPad={false}
                     styleOverwrite={{ marginHorizontalUnset: true, paddingTop: 24 }}
                 />
@@ -218,7 +224,6 @@ const CardComponents = ({ navigation }) => {
                 </Text>
             </View>
             <FlatList
-                // numColumns={2}
                 style={{ overflow: 'visible' }}
                 horizontal
                 renderItem={({ item, index }) => (

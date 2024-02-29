@@ -101,10 +101,11 @@ const AudioPlayer = ({
     setRepeatMode,
     queryForNextPrevId,
     queryForPreviousPrevId,
-    visibleStatusBar
+    visibleStatusBar,
+    setDownloadingLoader
 }) => {
     console.log('the render of page =>');
-    const [oprateMostPlayed, setOprateMostPlayed] = useState(0)
+    // const [oprateMostPlayed, setOprateMostPlayed] = useState(0)
     useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], async (event) => {
         if (event?.state == State?.nextTrack) {
             let index = await TrackPlayer.getActiveTrack();
@@ -114,24 +115,6 @@ const AudioPlayer = ({
             updateRecentlyPlayed(newObj)
         }
     });
-    // useTrackPlayerEvents([Event.PlaybackProgressUpdated], async (event) => {
-    //     if (event.state == State.nextTrack) {
-    //         // console.log('index', event)
-    //         let n = (event.duration / 3).toFixed(2)
-    //         if (position > n) {
-    //             mostPlayed()
-    //             setOprateMostPlayed(1)
-    //         } else {
-    //             setOprateMostPlayed(0)
-    //         }
-    //     }
-    // });
-    // useEffect(() => {
-    //     if (oprateMostPlayed == 1) {
-    //         console.log(true)
-    //         mostPlayed()
-    //     }
-    // }, [oprateMostPlayed])
     const updateRecentlyPlayed = async (newTrack) => {
         const maxRecentTracks = 4;
         const recentTracksJSON = await AsyncStorage.getItem('recentTrack');
@@ -168,7 +151,7 @@ const AudioPlayer = ({
     const { position, duration } = useProgress();
     const [paused, setPaused] = useState(false);
     const [ThumbImage, setThumbImage] = useState(null);
-    const [downloadingLoader, setDownloadingLoader] = useState(false);
+    // const [downloadingLoader, setDownloadingLoader] = useState(false);
     const [downloadedSong, setDownloadedSong] = useState(false);
     const [mostPlayedSongs, setMostPlayedSong] = useState([])
     const playBackState = usePlaybackState();
@@ -259,8 +242,6 @@ const AudioPlayer = ({
         await TrackPlayer.getActiveTrack().then((res) => {
             // console.log("🚀 ~ awaitTrackPlayer.getActiveTrack ~ res:", JSON.stringify(callbacks, 0, 2))
             // console.log("🚀 ~ awaitTrackPlayer.getActiveTrack ~ res:", JSON.stringify(res, 0, 2))
-
-
             let num = mostPlayedSongs.filter(
                 value => { return value?.id == res?.id ? true : false });
             console.log("🚀 ~ awaitTrackPlayer.getActiveTrack ~ exist:", num)
@@ -341,7 +322,8 @@ const AudioPlayer = ({
     };
 
     return (
-        <TouchableWithoutFeedback onPress={() => alert(true)}>
+        <>
+
             <View
                 style={
                     orientation == 'LANDSCAPE' || !visibleStatusBar
@@ -354,9 +336,9 @@ const AudioPlayer = ({
                         : { backgroundColor: '#222222', height: 200 }
                 }
             >
-                <TouchableOpacity style={{ height: 6, width: 30, borderRadius: 5, backgroundColor: 'grey', position: 'absolute', top: -15, right: Dimensions.get('window').width / 2 }}>
+                {/* <TouchableOpacity style={{ height: 6, width: 30, borderRadius: 5, backgroundColor: 'grey', position: 'absolute', top: -15, right: Dimensions.get('window').width / 2 }}>
 
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 {orientation == 'LANDSCAPE' || !visibleStatusBar ? null : (
                     <View style={styles.container}>
                         <View>
@@ -569,7 +551,9 @@ const AudioPlayer = ({
                                 onPress={() => downloadAudio()}
                             >
                                 {downloadedSong ? (
-                                    <Icon name="check" size={24} color="white" />
+                                    <View style={{ height: 30, width: 30, borderRadius: 15, backgroundColor: '#389F56' }}>
+                                        <Icon name="check" size={24} color="white" />
+                                    </View>
                                 ) : (
                                     <Icon name="download" size={24} color="white" />
                                 )}
@@ -581,17 +565,9 @@ const AudioPlayer = ({
                     </View>
                 )
                 }
-                {
-                    downloadingLoader && (
-                        <Modal transparent>
-                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                <ActivityIndicator size={'large'} />
-                            </View>
-                        </Modal>
-                    )
-                }
+
             </View >
-        </TouchableWithoutFeedback>
+        </>
     );
 };
 export const styles = StyleSheet.create({
