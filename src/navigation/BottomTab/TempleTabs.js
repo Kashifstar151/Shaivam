@@ -25,6 +25,7 @@ import ActiveAddTrip from '../../assets/Images/InActiveAddTemple.svg'
 // import ActiveAddTrip from '../../assets/Images/InActiveAddTemple.svg'
 import InActiveAddTrip from '../../assets/Images/Vector (4).svg'
 import MyTrip from '../../Screens/Temples/MyTrip/MyTrip';
+import Addtemple from '../../Screens/Temples/AddTemple/Addtemple';
 
 const Tab = createBottomTabNavigator();
 export default TempleTab = ({ navigation }) => {
@@ -54,6 +55,8 @@ export default TempleTab = ({ navigation }) => {
                     tabBarLabel: '',
                     tabBarActiveTintColor: 'white',
                     tabBarVisible: false,
+                    tabBarShowLabel: false,
+
                     // tabBarLabelStyle: {
                     //     color: '#FFAAA5',
                     //     fontSize: 10,
@@ -68,24 +71,50 @@ export default TempleTab = ({ navigation }) => {
                                 })
                             }
                             style={{
-                                paddingHorizontal: 6,
-                                borderRightWidth: 1,
-                                borderRightColor: 'black',
+                                paddingHorizontal: 10,
+                                // shadowOffset: { width: -2, height: 0 },
+                                // borderRightWidth: 2,
+                                height: '100%',
+                                // shadowColor: 'black',
+                                alignItems: 'center',
+                                // shadowOpacity: 0.4,
+                                // shadowRadius: 3,
+                                justifyContent: 'center',
+                                flexDirection: 'row',
+                                // width: 170
+                                // elevation: 1.5,
+                                // borderRightColor: 'white'
+                                // elevation: 2
                             }}
                         >
-                            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                {/* <ActiveTeample /> */}
-                                <ActiveHome />
-                                <Text
-                                    style={[
-                                        styles.tabBarLable,
-                                        { color: theme.bottomTabItemColor.unSelected },
-                                    ]}
-                                >
-                                    Go to Home
-                                </Text>
-                            </View>
-                            <View style={{ marginTop: 6 }}>
+
+                            {
+                                focused ?
+                                    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                        {/* <ActiveTeample /> */}
+                                        <ActiveHome />
+                                        <Text
+                                            style={[
+                                                styles.tabBarLable,
+                                                { color: theme.bottomTabItemColor.unSelected },
+                                            ]}
+                                        >
+                                            Go to Home
+                                        </Text>
+                                    </View> : <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                        {/* <ActiveTeample /> */}
+                                        <ActiveHome />
+                                        <Text
+                                            style={[
+                                                styles.tabBarLable,
+                                                { color: theme.bottomTabItemColor.unSelected },
+                                            ]}
+                                        >
+                                            Go to Home
+                                        </Text>
+                                    </View>
+                            }
+                            {/* <View style={{ marginTop: 6 }}>
                                 {focused ? (
                                     <IndicatorIcon />
                                 ) : (
@@ -97,8 +126,11 @@ export default TempleTab = ({ navigation }) => {
                                         }}
                                     ></View>
                                 )}
-                            </View>
+                            </View> */}
                             {/* </View> */}
+                            <View style={{ marginHorizontal: 10, height: '100%', width: 1, elevation: 2.5, backgroundColor: '#C1554E' }}>
+
+                            </View>
                         </TouchableOpacity>
 
                     ),
@@ -112,7 +144,7 @@ export default TempleTab = ({ navigation }) => {
                     headerShown: false,
                     tabBarLabel: '',
                     tabBarActiveTintColor: 'white',
-                    tabBarVisible: false,
+                    tabBarShowLabel: false,
                     // tabBarLabelStyle: {
                     //     color: '#FFAAA5',
                     //     fontSize: 10,
@@ -120,11 +152,10 @@ export default TempleTab = ({ navigation }) => {
                     //     fontFamily: 'Mulish-Regular'
                     // },
                     tabBarIcon: ({ color, size, focused }) => (
-                        <View>
+                        <View style={styles.IconStyles}>
                             {focused ? (
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                    {/* <ActiveHome /> */}
-
+                                    {/* <ActiveTeample /> */}
                                     <ActiveLocation />
                                     <Text
                                         style={[
@@ -137,7 +168,7 @@ export default TempleTab = ({ navigation }) => {
                                 </View>
                             ) : (
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                    {/* <InactiveHome /> */}
+                                    {/* <ActiveTeample /> */}
                                     <InActiveLocation />
 
                                     <Text
@@ -166,7 +197,7 @@ export default TempleTab = ({ navigation }) => {
                         </View>
                     ),
                 }}
-                name="Templess"
+                name="Temples"
                 component={Temples}
             />
             <Tab.Screen
@@ -182,7 +213,7 @@ export default TempleTab = ({ navigation }) => {
                     //     fontFamily: 'Mulish-Regular'
                     // },
                     tabBarIcon: ({ color, size, focused }) => (
-                        <View>
+                        <View style={styles.IconStyles}>
                             {focused ? (
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                     {/* <ActiveTeample /> */}
@@ -233,9 +264,9 @@ export default TempleTab = ({ navigation }) => {
             <Tab.Screen
                 options={{
                     headerShown: false,
-                    tabBarLabel: '',
+                    // tabBarLabel: '',
                     tabBarShowLabel: false,
-                    tabBarActiveTintColor: 'white',
+                    // tabBarActiveTintColor: 'white',
                     // tabBarLabelStyle: {
                     //     // color: '#EDCB76',
                     //     color: '#FFAAA5',
@@ -244,7 +275,7 @@ export default TempleTab = ({ navigation }) => {
                     //     fontFamily: 'Mulish-Regular'
                     // },
                     tabBarIcon: ({ color, size, focused }) => (
-                        <View>
+                        <View style={styles.IconStyles}>
                             {focused ? (
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                     {/* <View style={{ marginBottom: 7 }}> */}
@@ -263,10 +294,10 @@ export default TempleTab = ({ navigation }) => {
                                 </View>
                             ) : (
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                    <View style={{ marginBottom: 7 }}>
-                                        {/* <InActiveMore /> */}
-                                        <ActiveAddTrip />
-                                    </View>
+                                    {/* <View style={{ marginBottom: 7 }}> */}
+                                    {/* <InActiveMore /> */}
+                                    <ActiveAddTrip />
+                                    {/* </View> */}
                                     <Text
                                         style={[
                                             styles.tabBarLable,
@@ -285,7 +316,7 @@ export default TempleTab = ({ navigation }) => {
                                         style={{
                                             height: 10,
                                             width: '100%',
-                                            // backgroundColor: 'black',
+                                            // backgroundColor: 'white',
                                         }}
                                     ></View>
                                 )}
@@ -293,20 +324,22 @@ export default TempleTab = ({ navigation }) => {
                         </View>
                     ),
                 }}
-                name={RouteTexts.MORE_OPTION}
-                component={MoreOption}
+                name={RouteTexts.ADD_TEMPLE}
+                component={Addtemple}
             />
         </Tab.Navigator>
     );
 };
 export const styles = StyleSheet.create({
     tabContainer: {
-        paddingTop: 5,
+        // paddingTop: 5,
+        // overflow: 'hidden',
         height: 65,
+        alignItems: 'center',
         borderTopEndRadius: 10,
         borderTopStartRadius: 10,
-        position: 'absolute',
-        bottom: 0,
+        // position: 'absolute',
+        // bottom: 0,
     },
     IconStyles: {
         paddingTop: 10,
