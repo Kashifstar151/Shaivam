@@ -10,5 +10,6 @@ export const RouteTexts = {
     MORE_OPTION: 'MoreOption',
     TEMPLE_Tabs: 'TempleTabs',
     HOME: 'Home',
-    MY_TRIP: "MyTrip"
+    MY_TRIP: "MyTrip",
+    ADD_TEMPLE: 'AddTemple'
 }

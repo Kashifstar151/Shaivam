@@ -6,7 +6,7 @@ import { RouteTexts } from '../../navigation/RouteText';
 export const Temples = () => {
     // const MorePlaceholderScreen = () => {
     return (
-        <View>
+        <View style={{ flex: 1 }}>
 
         </View>
     )
