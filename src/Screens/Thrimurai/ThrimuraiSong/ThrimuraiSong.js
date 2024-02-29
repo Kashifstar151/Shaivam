@@ -12,19 +12,16 @@ import {
     Animated as AnimatedRN,
     useColorScheme,
     Alert,
-    TouchableWithoutFeedback,
+    ActivityIndicator,
 } from 'react-native';
 import BackButton from '../../../components/BackButton';
 import ShareIcon from '../../../assets/Images/share-1.svg';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import DownArrow from '../../../assets/Images/Down Arrows (3) 1.svg';
-import BottomSheet from '@gorhom/bottom-sheet';
 import AudioPlayer from '../../Player/AudioPlayer';
-// import RBSheet from 'react-native-raw-bottom-sheet';
 import Background from '../../../components/Background';
 import SettingIcon from '../../../assets/Images/Settings (1) 1.svg';
-import SQLite from 'react-native-sqlite-storage';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { getSqlData } from '../../Database';
 import { useIsFocused } from '@react-navigation/native';
@@ -33,7 +30,6 @@ import { ThemeContext } from '../../../Context/ThemeContext';
 import { colors } from '../../../Helpers';
 import { useTranslation } from 'react-i18next';
 import '../../../../localization';
-import { changeLanguage } from 'i18next';
 import AruliyavarSVG from '../../../components/SVGs/AruliyavarSVG';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { dark, light } from '../../../Helpers/GlobalStyles';
@@ -42,7 +38,7 @@ import { MusicContext } from '../../../components/Playbacks/TrackPlayerContext';
 import NaduSVG from '../../../components/SVGs/NaduSVG';
 import PannSVG from '../../../components/SVGs/PannSVG';
 import ThalamSVG from '../../../components/SVGs/ThalamSVG';
-import HighlightedText from '../Searchscreen/HighlightedText';
+import DownloadIcon from "../../../assets/Images/download.svg"
 import HighlightText from '@sanar/react-native-highlight-text';
 import TrackPlayer, {
     AppKilledPlaybackBehavior,
@@ -59,11 +55,11 @@ import TrackPlayer, {
 const ThrimuraiSong = ({ route, navigation }) => {
     console.log('the render of the song==>');
     const colorScheme = useColorScheme();
-    let key = true;
-    const database = SQLite.openDatabase({
-        name: key ? 'SongsData.db' : 'main.db',
-        createFromLocation: 1,
-    });
+    // let key = true;
+    // const database = SQLite.openDatabase({
+    //     name: key ? 'SongsData.db' : 'main.db',
+    //     createFromLocation: 1,
+    // });
     const isFocused = useIsFocused;
     const { data, downloaded, searchedword, searchScreen } = route.params || {};
     // console.log('🚀 ~ ThrimuraiSong ~ data:', JSON.stringify(data), downloaded);
@@ -72,6 +68,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
         transform: [{ translateX: withSpring(translateX.value * 1) }],
     }));
     const bottomSheetRef = useRef(null);
+    const [downloadingLoader, setDownloadingLoader] = useState(false);
     const snapPoints = useMemo(() => ['25%', '25%'], []);
     const [showSetting, setShowSetting] = useState(false);
     const language = ['Original', 'Tamil', 'English', 'Hindi'];
@@ -100,7 +97,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
         }
     }, [fontSizeCount]);
     const [visibleStatusBar, setVisibleStatusBar] = useState(true)
-    const [fullscreen, setfullscreen] = useState(false)
     const statusBarHeight = useRef(new AnimatedRN.Value(50)).current; // Assume 20 is the normal height of your custom status bar
 
     const toggleStatusBar = () => {
@@ -143,7 +139,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const [darkMode, setDarkMode] = useState(colorScheme === 'dark' ? true : false);
     const [tamilSplit, setTamilSplit] = useState(false);
     const { theme, setTheme } = useContext(ThemeContext);
-    const [fullScreenMode, setFullScreenMode] = useState(false)
     const { t, i18n } = useTranslation();
     const [selectedLngCode, setSelectedLngCode] = useState(i18n.language);
     const langMap = {
@@ -715,7 +710,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                     position: 'absolute',
                     right: 0,
                     bottom: 0,
-                    backgroundColor: '#222222',
+                    // backgroundColor: '#222222',
                     borderTopEndRadius: 15,
                     borderTopLeftRadius: 15,
                     alignSelf: 'flex-end',
@@ -726,7 +721,24 @@ const ThrimuraiSong = ({ route, navigation }) => {
                 }}
             >
 
+                {
+                    downloadingLoader && (
+                        // <Modal transparent>
+                        <View style={{
+                            marginBottom: 10,
+                            alignSelf: 'center',
+                            borderRadius: 10,
+                            backgroundColor: '#EFF9ED',
+                            height: 60, width: Dimensions.get('window').width - 20, borderWidth: 1, borderColor: '#9CCFAB', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20
+                        }}>
+                            <DownloadIcon />
+                            <Text style={{ marginHorizontal: 10, color: 'black', fontWeight: '600' }}>Downloading Thirumurai</Text>
+                        </View>
+                        // </Modal>
+                    )
+                }
                 <AudioPlayer
+                    setDownloadingLoader={setDownloadingLoader}
                     visibleStatusBar={visibleStatusBar}
                     prevId={data?.prevId}
                     songsData={musicState?.song}
@@ -747,7 +759,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
 export const styles = StyleSheet.create({
     titleDropDown: { fontSize: RFValue(10, 580), color: '#777777' },
     valueDropDown: {
-        fontSize: RFValue(12, 580),
+        fontSize: RFValue(10, Dimensions.get('window').height),
         color: '#777777',
     },
     iconContainer: {
