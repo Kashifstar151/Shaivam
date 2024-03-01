@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import RenderAudios from './RenderAudios';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import { ThemeContext } from '../../Context/ThemeContext';
@@ -26,7 +26,7 @@ const Varakatrimurai = ({ navigation }) => {
     const renderContents = (item, index) => {
         return (
             <View>
-                <View style={[styles.chapterBox, { backgroundColor: theme.backgroundColor }]}>
+                <Pressable onPress={selectedTitle !== null && selectedTitle === index ? () => setSelectedTitle(null) : () => setSelectedTitle(index)} style={[styles.chapterBox, { backgroundColor: theme.backgroundColor }]}>
                     <View style={{ justifyContent: 'center' }}>
                         <Text style={[styles.chapterNameTexts, { color: theme.textColor }]}>
                             {t(item?.author)}
@@ -49,7 +49,7 @@ const Varakatrimurai = ({ navigation }) => {
                             />
                         </TouchableOpacity>
                     )}
-                </View>
+                </Pressable>
                 {selectedTitle == index && (
                     <RenderAudios songs={item} navigation={navigation} varakatimurai={true} />
                 )}

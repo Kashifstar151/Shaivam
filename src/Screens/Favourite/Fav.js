@@ -1,50 +1,87 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import React, { useContext, useEffect, useState } from 'react'
-import { FlatList, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useContext, useEffect, useRef, useState } from 'react'
+import { Alert, FlatList, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/dist/MaterialIcons'
 import MaterialIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons'
 import BackButton from '../../components/BackButton'
 import Background from '../../components/Background'
 import SearchInput from '../../components/SearchInput'
 import { ThemeContext } from '../../Context/ThemeContext'
-import { listfavAudios } from '../../Databases/AudioPlayerDatabase'
+import { listfavAudios, RemoveFavAudios } from '../../Databases/AudioPlayerDatabase'
 import MusicContainer from '../../../assets/Images/Frame 83.svg';
 import { RFValue } from 'react-native-responsive-fontsize'
-import Header from '../../components/Header'
+// import Header from '../../components/Header'
 import HeadingText from '../../components/HeadingText'
 import { RouteTexts } from '../../navigation/RouteText'
-
+import { useIsFocused } from '@react-navigation/native'
+import EditPencil from "../../assets/Images/EditPencil.svg"
+import RBSheet from 'react-native-raw-bottom-sheet'
 const Fav = ({ navigation }) => {
+    const BottomSheetRef = useRef(null)
     const { theme } = useContext(ThemeContext);
+    const isFocuced = useIsFocused()
     const [selecetedHeader, setSelectedHeader] = useState('Favourites')
     const [favList, setFavList] = useState([])
     const [downloadList, setDownloadList] = useState([])
     useEffect(() => {
         fetchAndDisplayDownloads()
         listfavAudios(callbacks => {
-            console.log("🚀 ~ useEffect ~ callbacks:", callbacks)
+            // console.log("🚀 ~ useEffect ~ callbacks:", callbacks)
             setFavList(callbacks)
         })
-    }, [])
+        BottomSheetRef.current.open()
+    }, [isFocuced])
     const header = [
         { name: 'Favourites', icon: <MaterialIcons name='heart-outline' size={24} color={theme.searchContext.unSelected.textColor} /> },
         { name: 'Special Playlist', icon: <Icon name='bookmark-outline' size={24} color={theme.searchContext.unSelected.textColor} /> },
         { name: 'Offline Downloads', icon: <Icon name='download' size={24} color={theme.searchContext.unSelected.textColor} /> },
     ]
+
     const fetchAndDisplayDownloads = async () => {
         try {
-            const keys = await AsyncStorage.getAllKeys();
-            const metadataKeys = keys.filter(key => key.startsWith('downloaded:'));
-            const metadata = await AsyncStorage.multiGet(metadataKeys);
-            const parsedMetadata = metadata.map(([key, value]) => JSON.parse(value));
+            // const keys = await AsyncStorage.getAllKeys();
+            const parsedMetadata = await AsyncStorage.getItem('downloaded');
             console.log("🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:", parsedMetadata)
-            setDownloadList(parsedMetadata)
+            // const metadataKeys = keys.filter(key => key.startsWith('downloaded:'));
+            // const metadata = await AsyncStorage.multiGet(metadataKeys);
+            // const parsedMetadata = metadata.map(([key, value]) => JSON.parse(value));
+            // console.log("🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:", parsedMetadata)
+            setDownloadList(JSON.parse(parsedMetadata))
             // Now `parsedMetadta` contains all of your audio files' metadata
             // You can use this data to render your downloads page
         } catch (e) {
             console.error('Failed to fetch metadata', e);
         }
     };
+    const removeFromPlaylist = (item) => {
+        if (selecetedHeader == 'Offline Downloads') {
+            let arr = downloadList.filter((res) => res.id !== item.id)
+            // console.log("🚀 ~ removeFromPlaylist ~ arr:", arr)
+            setDownloadList(arr)
+            AsyncStorage.setItem('downloaded', JSON.stringify(arr))
+
+        } else if (selecetedHeader == 'Favourites') {
+            RemoveFavAudios('d', item, cb => {
+                if (cb?.message == 'Success') {
+                    let arr = favList.filter((res) => res?.id !== item.id)
+                    setFavList(arr)
+                }
+            })
+
+        }
+    }
+    const confirmRemove = (item) => {
+        Alert.alert('Confirmation', 'Are you sure to remove', [
+            {
+                text: 'Confirm',
+                onPress: () => removeFromPlaylist(item)
+            },
+            {
+                text: 'Cancel',
+                onPress: console.log(false)
+            }
+        ])
+    }
     const renderSong = (item, index) => (
         <Pressable style={styles.listContainer} onPress={() => {
             navigation.navigate(RouteTexts.THRIMURAI_SONG, {
@@ -81,7 +118,7 @@ const Fav = ({ navigation }) => {
                 <TouchableOpacity style={{ marginRight: 10 }}>
                     <Icon name="share" size={22} />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => confirmRemove(item)}>
                     <Icon name="delete" size={22} />
                 </TouchableOpacity>
             </View>
@@ -90,23 +127,29 @@ const Fav = ({ navigation }) => {
     return (
         <ScrollView>
             <Background>
-                <View style={{ marginVertical: 15 }}>
-                    {/* <BackButton middleText={'Favourites'} color={true} buttonDisable={true}/> */}
-                    {/* <Header /> */}
-                    <View style={{ paddingHorizontal: 20 }}>
-
+                <View style={{ marginVertical: 0 }}>
+                    <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
                         <HeadingText text={'Favourites'} nandiLogo={true} />
                     </View>
                     <SearchInput placeholder={'Search for your favourties (Eg - தோடுடைய)'} />
                 </View>
-                <FlatList contentContainerStyle={{ marginVertical: 10, }} horizontal data={header} renderItem={({ item, index }) => (
+                <FlatList contentContainerStyle={{ marginBottom: 10, }} horizontal data={header} renderItem={({ item, index }) => (
                     <TouchableOpacity onPress={() => setSelectedHeader(item.name)} style={selecetedHeader == item?.name ? [styles.headerContainer, { backgroundColor: theme.searchContext.selected.bgColor }] : [styles.headerContainer, { backgroundColor: theme.searchContext.unSelected.bgColor }]}>
                         {item?.icon}
                         <Text style={selecetedHeader == item?.name ? [styles.headingText, { color: theme.searchContext.selected.textColor }] : [styles.headingText, { color: theme.searchContext.unSelected.textColor }]}>{item?.name}</Text>
                     </TouchableOpacity>
                 )} />
             </Background>
-            <FlatList data={selecetedHeader == 'Favourites' ? favList : downloadList} renderItem={({ item, index }) => renderSong(item, index)} />
+            <View style={{ flex: 1, }}>
+                <TouchableOpacity style={styles.RearrangsTask}>
+                    <EditPencil />
+                    <Text style={{ marginHorizontal: 10, fontFamily: 'Mulish-Bold', color: '#C1554E', fontWeight: '700', fontSize: 12 }}>Re arrange task</Text>
+                </TouchableOpacity>
+                <FlatList data={selecetedHeader == 'Favourites' ? favList : downloadList} renderItem={({ item, index }) => renderSong(item, index)} />
+            </View>
+            <RBSheet ref={BottomSheetRef} height={400}>
+
+            </RBSheet>
         </ScrollView>
     )
 }
@@ -123,6 +166,20 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 0,
         flexDirection: 'row',
         alignItems: 'center',
+    },
+    RearrangsTask: {
+        flexDirection: 'row',
+        marginTop: 10,
+        borderWidth: 1.5,
+        borderColor: '#C1554E',
+        height: 30,
+        borderRadius: 15,
+        width: 150,
+        marginHorizontal: 20,
+        // width: 80,
+        alignItems: 'center',
+        paddingHorizontal: 10,
+        justifyContent: 'center'
     }
 
 })

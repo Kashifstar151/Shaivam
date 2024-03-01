@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useLayoutEffect, useRef, useState } from 'react';
 import { Dimensions, FlatList, Text, View, Pressable, StyleSheet } from 'react-native';
 import OmIcon from './SVGs/OmIcon';
 import LinearGradient from 'react-native-linear-gradient';
@@ -16,7 +16,18 @@ import SearchInput from './SearchInput';
 
 
 
-const RenderItem = ({ item, navigation, theme }) => {
+const RenderItem = ({ blockRef, item, navigation, theme }) => {
+    const [blockWidth, setBlockWidth] = useState(0)
+
+    const onLayout = (event, index) => {
+        const { x, y, width, height } = event.nativeEvent.layout;
+        console.log("🚀 ~ RenderItem ~ index:", index)
+        if (index == 0) {
+            console.log("🚀 ~ onLayout ~ width:", width)
+            setBlockWidth(width)
+        }
+    }
+    // console.log("🚀 ~ RenderItem ~ blockRef:", blockRef)
     return (
         <LinearGradient
             colors={item.gradient}
@@ -54,6 +65,8 @@ const RenderItem = ({ item, navigation, theme }) => {
             <View style={styles.viewBoxForSubComp}>
                 {item.subComp.map((i, _) => (
                     <Pressable
+                        ref={blockRef}
+                        onLayout={(event) => onLayout(event, _)}
                         onPress={
                             i?.navName == 'Thirumurais' || i?.navName == 'Stotras'
                                 ? () => navigation.navigate(i?.navName)
@@ -64,6 +77,7 @@ const RenderItem = ({ item, navigation, theme }) => {
                             {
                                 backgroundColor: theme === 'light' ? 'white' : '#494949',
                                 opacity: theme === 'light' ? 0.7 : 1,
+                                width: blockWidth > 100 ? blockWidth : (Dimensions.get('window').width * 0.85) / 2 - 24,
                             },
                         ]}
                     >
@@ -89,6 +103,10 @@ const RenderItem = ({ item, navigation, theme }) => {
 };
 
 const CardComponents = ({ navigation }) => {
+    const blockRef = useRef(null)
+    const [blockWidth, setBlockWidth] = useState(0)
+    const [searchText, setSearchText] = useState(null)
+    const [onFocus, setOnFocus] = useState(false)
     const { theme } = useContext(ThemeContext);
     const data = [
         {
@@ -116,8 +134,8 @@ const CardComponents = ({ navigation }) => {
                 },
                 {
                     icon: <ShaivaSVG fill={theme.textColorHomeCardYellow} />,
-                    title: 'Shaiva Siddanta',
-                    navName: 'Shaiva Siddanta',
+                    title: 'S Siddanta',
+                    navName: 'S Siddanta',
                 },
             ],
         },
@@ -187,6 +205,9 @@ const CardComponents = ({ navigation }) => {
             <View style={{ marginTop: 24 }}>
                 <Header />
                 <SearchInput
+                    setSearchText={setSearchText}
+                    state={searchText}
+                    setOnFocus={setOnFocus}
                     extraPad={false}
                     styleOverwrite={{ marginHorizontalUnset: true, paddingTop: 24 }}
                 />
@@ -206,7 +227,7 @@ const CardComponents = ({ navigation }) => {
                 style={{ overflow: 'visible' }}
                 horizontal
                 renderItem={({ item, index }) => (
-                    <RenderItem item={item} navigation={navigation} theme={theme.colorscheme} />
+                    <RenderItem setBlockWidth={setBlockWidth} blockRef={blockRef} item={item} navigation={navigation} theme={theme.colorscheme} />
                 )}
                 data={data}
             />
@@ -233,7 +254,10 @@ const styles = StyleSheet.create({
     },
     subComp: {
         margin: 4,
-        width: (Dimensions.get('window').width * 0.85) / 2 - 24,
+        // width: (Dimensions.get('window').width * 0.85) / 2 - 24,
+        // height: 40,
+        width: 'auto',
+        height: 50,
         flexDirection: 'row',
         padding: 12,
         alignItems: 'center',
@@ -250,8 +274,8 @@ const styles = StyleSheet.create({
 
     subCompText: {
         alignContent: 'center',
-        flex: 1,
-        fontSize: RFValue(12, 800),
+        // flex: 1,
+        fontSize: RFValue(6, Dimensions.get('window').width),
     },
 });
 

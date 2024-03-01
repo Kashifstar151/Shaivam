@@ -74,7 +74,14 @@ const RenderContents = ({
     return (
         <>
             {!flagShowAudio && (
-                <View style={[styles.chapterBox, { backgroundColor: theme.cardBgColor }]}>
+                <Pressable
+                    onPress={
+                        selectedTitle !== null && selectedTitle == index
+                            ? (onPress = () => setSelectedTitle(null))
+                            : () => setSelectedTitle(index)
+                    }
+                    style={[styles.chapterBox, { backgroundColor: theme.cardBgColor }]}
+                >
                     <View style={{ justifyContent: 'center' }}>
                         <Text style={[styles.chapterNameTexts, { color: theme.textColor }]}>
                             {t(item.name)}
@@ -101,7 +108,7 @@ const RenderContents = ({
                             />
                         </TouchableOpacity>
                     )}
-                </View>
+                </Pressable>
             )}
             {selectedTitle == index && (
                 <RenderTitle data={item} navigation={navigation} flagShowAudio={flagShowAudio} />
@@ -272,7 +279,7 @@ export const styles = StyleSheet.create({
         color: '#777777',
         fontSize: 12,
         fontFamily: 'Mulish-regular',
-        fontWeight: '500',
+        // fontWeight: '500',
         marginHorizontal: 5,
     },
     selectedHeaderBox: {
@@ -300,6 +307,10 @@ export const styles = StyleSheet.create({
     },
     chapterNameTexts: { fontSize: 14, fontWeight: '600' },
     chapterTexts: { fontSize: 12, fontWeight: '500', color: '#777777', marginTop: 5 },
-    titleText: { fontFamily: 'AnekTamil-Regular', fontSize: 14, fontWeight: '500' },
+    titleText: {
+        fontFamily: 'AnekTamil-Regular',
+        fontSize: 14,
+        // fontWeight: '500'
+    },
 });
 export default ThrimuraiHeadingPage;
