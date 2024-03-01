@@ -7,8 +7,11 @@ import HomeScreen from './src/Screens/Home/HomeScreen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import SQLite from 'react-native-sqlite-storage';
 import { ThemeContextProvider } from './src/Context/ThemeContext';
+import { enableLatestRenderer } from 'react-native-maps';
 
 const App = () => {
+
+    enableLatestRenderer();
     return (
         <ThemeContextProvider>
             <SafeAreaView style={{ flex: 1 }}>

@@ -132,7 +132,8 @@ export default {
         gradientHomeCardGreen: ['#AFD9BB', '#60B278'],
         textColorHomeCardYellow: '#4C3600',
         // --->card end
-
+        //headerComp
+        headerComp: { selected: '#C1544E', unSelected: '#FFAAA4' },
         // bootomTabNav
         bottomTabItemColor: { selected: '#FFFFFF', unSelected: '#FFAAA4' },
     },
