@@ -79,8 +79,8 @@ const RenderEachTitle = ({
                                 {thalam && ThalamHeaders === 0
                                     ? t(renderTitle(item?.thalam))
                                     : thalam && ThalamHeaders !== 0
-                                    ? t(item?.title)
-                                    : t(item?.pann)}
+                                        ? t(item?.title)
+                                        : t(item?.pann)}
                             </Text>
                         </View>
                         {!thalam || (thalam && ThalamHeaders === 0) ? (
@@ -152,10 +152,10 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
         } else {
             query = `SELECT * FROM thirumurais where fkTrimuria=${data.prevId}  ORDER BY titleNo ASC `;
         }
-        const query2 = `Select * from thirumurais where ${
-            ThalamHeaders === 0 ? 'country' : 'thalam'
-        }='${data}' GROUP BY thalam ORDER BY  titleNo ASC `;
+        const query2 = `Select * from thirumurais where ${ThalamHeaders === 0 ? 'country' : 'thalam'
+            }='${data}' GROUP BY thalam ORDER BY  titleNo ASC `;
         getSqlData(thalam ? query2 : query, (callbacks) => {
+            console.log("🚀 ~ getSqlData ~ callbacks:", JSON.stringify(callbacks, 0, 2))
             setShowLoading(false);
             setTitleData(callbacks);
         });
@@ -193,7 +193,7 @@ export const styles = StyleSheet.create({
     titleText: {
         fontFamily: 'AnekTamil-Regular',
         fontSize: 14,
-        fontWeight: '500',
+        // fontWeight: '500',
     },
 });
 export default RenderTitle;

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import { Text, View } from 'react-native';
 
@@ -31,7 +31,7 @@ const GradientContainer = ({ Icon, LeftImage, RightImage, colors, name, textColo
                     <Text
                         style={{
                             fontFamily: 'mulish-regular',
-                            fontWeight: '600',
+                            // fontWeight: '600',
                             fontSize: 14,
                             color: textColor,
                         }}
@@ -55,4 +55,4 @@ const GradientContainer = ({ Icon, LeftImage, RightImage, colors, name, textColo
     );
 };
 
-export default GradientContainer
+export default GradientContainer;

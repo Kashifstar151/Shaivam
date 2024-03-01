@@ -60,15 +60,15 @@ const ThrimuraiList = ({ navigation }) => {
     const [searchText, setSearchText] = useState(null);
     const [thrimurais, setThrimurais] = useState([]);
     const [onFocus, setOnFocus] = useState(false);
-    const [recentPlayed, setRecentPlayed] = useState([])
+    const [recentPlayed, setRecentPlayed] = useState([]);
     // const database = SQLite.openDatabase({ name: '/storage/emulated/0/Android/data/com.shaivam/files/Thrimurai/thirumuraiData.db', createFromLocation: 1 });
     const database = SQLite.openDatabase({
         name: 'SongsData.db',
         createFromLocation: 1,
     });
     useEffect(() => {
-        getRecentPlaylist()
-    }, [])
+        getRecentPlaylist();
+    }, []);
     const getRecentPlaylist = async () => {
         const songs = await AsyncStorage.getItem('recentTrack');
         if (songs?.length > 0) {
@@ -77,7 +77,7 @@ const ThrimuraiList = ({ navigation }) => {
         } else {
             setRecentPlayed([]);
         }
-    }
+    };
 
     useEffect(() => {
         retrieveData();
@@ -134,8 +134,6 @@ const ThrimuraiList = ({ navigation }) => {
     // const stopNotification = async () => {
     //     await BackgroundService.stop();
     // }
-
-
 
     const data = [
         {
@@ -481,9 +479,12 @@ const ThrimuraiList = ({ navigation }) => {
                             key={(item) => item?.id}
                             data={recentPlayed}
                             renderItem={({ item, index }) => (
-                                <Pressable onPress={() => navigation.navigate(RouteTexts.THRIMURAI_SONG, {
-                                    data: item
-                                })}
+                                <Pressable
+                                    onPress={() =>
+                                        navigation.navigate(RouteTexts.THRIMURAI_SONG, {
+                                            data: item,
+                                        })
+                                    }
                                     style={{
                                         flexDirection: 'row',
                                         margin: 10,
@@ -503,7 +504,7 @@ const ThrimuraiList = ({ navigation }) => {
                                             <Text
                                                 style={{
                                                     fontSize: 14,
-                                                    fontWeight: '600',
+                                                    // fontWeight: '600',
                                                     fontFamily: 'Mulish-Regular',
                                                     color: theme.textColor,
                                                 }}
@@ -513,7 +514,7 @@ const ThrimuraiList = ({ navigation }) => {
                                             <Text
                                                 style={{
                                                     fontSize: 12,
-                                                    fontWeight: '400',
+                                                    // fontWeight: '400',
                                                     fontFamily: 'Mulish-Regular',
                                                     color: theme.textColor,
                                                 }}

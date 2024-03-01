@@ -36,7 +36,6 @@ const Header = () => {
             </View>
             <View style={styles.sideBtnContainer}>
                 <Pressable onPress={onSwitchTheme}>
-                    {/* <DarkModeDisableIcon /> */}
                     <View
                         style={[
                             styles.themeSwitch,
@@ -60,7 +59,7 @@ const Header = () => {
                             </View>
                         )} */}
 
-                        <View style={{ flexDirection: isDark ? 'row-reverse' : 'row', gap: 2 }}>
+                        <View style={{ alignItems: 'center', flexDirection: isDark ? 'row-reverse' : 'row', gap: 2 }}>
                             <HalfMoonSVG fill={theme.colorscheme === 'dark' ? '#fff' : '#E66158'} />
                             <Text>{isDark ? 'ON' : 'OFF'}</Text>
                         </View>
