@@ -723,7 +723,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
 
                 {
                     downloadingLoader && (
-                        // <Modal transparent>
                         <View style={{
                             marginBottom: 10,
                             alignSelf: 'center',
@@ -734,7 +733,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             <DownloadIcon />
                             <Text style={{ marginHorizontal: 10, color: 'black', fontWeight: '600' }}>Downloading Thirumurai</Text>
                         </View>
-                        // </Modal>
                     )
                 }
                 <AudioPlayer

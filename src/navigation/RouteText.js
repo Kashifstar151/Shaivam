@@ -11,5 +11,6 @@ export const RouteTexts = {
     TEMPLE_Tabs: 'TempleTabs',
     HOME: 'Home',
     MY_TRIP: "MyTrip",
-    ADD_TEMPLE: 'AddTemple'
+    ADD_TEMPLE: 'AddTemple',
+    SONGS_LIST: 'SongsList'
 }
