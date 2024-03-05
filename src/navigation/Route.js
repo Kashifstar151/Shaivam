@@ -23,6 +23,7 @@ import {
     CardStyleInterpolators,
     createStackNavigator,
 } from '@react-navigation/stack';
+import CreateTrip from '../Screens/Temples/MyTrip/CreateTrip'
 // import { ThemeContextProvider } from '../Context/ThemeContext';
 
 const Route = () => {
@@ -168,6 +169,19 @@ const Route = () => {
                         <Stack.Screen name="Thirumurais" component={ThrimuraiList} />
                         <Stack.Screen name={RouteTexts.SEARCH_SCREEN} component={SearchScreen} />
                         <Stack.Screen name={RouteTexts.SONGS_LIST} component={SongLists}
+                            options={{
+                                headerShown: false,
+                                cardStyleInterpolator:
+                                    CardStyleInterpolators.forBottomSheetAndroid,
+                                //  CardStyleInterpolators.forHorizontalIOS,
+                                // transitionSpec: {
+                                //   open: config,
+                                //   close: config,
+                                // },
+                                // gestureDirection: 'horizontal-inverted',
+                                gestureEnabled: true,
+                            }} />
+                        <Stack.Screen name={RouteTexts.CREATE_TRIP} component={CreateTrip}
                             options={{
                                 headerShown: false,
                                 cardStyleInterpolator:
