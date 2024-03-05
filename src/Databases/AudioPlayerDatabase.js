@@ -3,7 +3,7 @@ import { Alert } from 'react-native';
 const audioPlayerDatabase = SQLite.openDatabase({ name: 'audio.db' })
 export async function AddSongToDatabase(query, body, callbacks) {
     // console.log("🚀 ~ AddSongToDatabase ~ body:", body) 
-    let sql = "INSERT INTO fav_odhuvar (id,url,title,artist,thalamOdhuvarTamilname,categoryName,thirumariasiriyar) VALUES (?, ?, ?, ?, ?, ?, ?)"; //storing user data in an array
+    let sql = "INSERT INTO fav_odhuvar (id,url,title,artist,thalamOdhuvarTamilname,categoryName,thirumariasiriyar,serialNo) VALUES (?, ?, ?, ?, ?, ?, ?,?)"; //storing user data in an array
     audioPlayerDatabase.executeSql(sql, body, (result) => {
         Alert.alert("Success", "Added to Favourite");
         console.log('audio created successfully.')
@@ -13,15 +13,28 @@ export async function AddSongToDatabase(query, body, callbacks) {
     });
     // }
 }
+export const updatefavPlaylist = (query, body, callbacks) => {
+    console.log("🚀 ~ updatefavPlaylist ~ body:", body)
+    audioPlayerDatabase.executeSql(query, body, (result) => {
+        console.log("🚀 ~ audioPlayerDatabase.executeSql ~ result:", result)
+        // Alert.alert("Success", "User created successfully.");
+        console.log('audio created successfully.')
+
+        callbacks({ message: 'Success Updated' })
+    }, (error) => {
+        callbacks({ message: 'Update most played error' })
+        console.log("Update most played error ", error);
+    });
+}
 export const createUserTable = () => {
-    audioPlayerDatabase.executeSql("CREATE TABLE IF NOT EXISTS fav_odhuvar (id INTEGER PRIMARY KEY AUTOINCREMENT, url VARCHAR, title VARCHAR , artist VARCHAR , thalamOdhuvarTamilname VARCHAR, categoryName VARCHAR, thirumariasiriyar VARCHAR )", [], (result) => {
+    audioPlayerDatabase.executeSql("CREATE TABLE IF NOT EXISTS fav_odhuvar (id INTEGER, url VARCHAR, title VARCHAR , artist VARCHAR , thalamOdhuvarTamilname VARCHAR, categoryName VARCHAR, thirumariasiriyar VARCHAR ,serialNo INTEGER PRIMARY KEY AUTOINCREMENT  )", [], (result) => {
         console.log("Table created successfully");
     }, (error) => {
         console.log("Create table error", error)
     })
 }
 export async function listfavAudios(callbacks) {
-    let sql = "SELECT * FROM fav_odhuvar";
+    let sql = "SELECT * FROM fav_odhuvar ORDER BY serialNo";
     audioPlayerDatabase.transaction((tx) => {
         tx.executeSql(sql, [], (tx, resultSet) => {
             var length = resultSet.rows.length;
