@@ -535,7 +535,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.shaivam.com;
 				PRODUCT_NAME = Shaivam;
 				SWIFT_OBJC_BRIDGING_HEADER = "Shaivam-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -563,7 +563,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.shaivam.com;
 				PRODUCT_NAME = Shaivam;
 				SWIFT_OBJC_BRIDGING_HEADER = "Shaivam-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
