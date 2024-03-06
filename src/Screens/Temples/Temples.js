@@ -1,117 +1,276 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import React, { useCallback, useRef, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import {
+    View,
+    Text,
+    StyleSheet,
+    Dimensions,
+    TouchableOpacity,
+    PermissionsAndroid,
+} from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import NearByTemples from './NearByTemples';
 import { RouteTexts } from '../../navigation/RouteText';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Image } from 'react-native';
+import {
+    clearGetCurrentLocationWatcher,
+    getCurrentLocationWatcher,
+    getTheLocationName,
+    locationPermission,
+    onRegionChangeCompleteCallback,
+} from '../../Helpers/GeolocationFunc';
+import SearchContainerWithIcon from './SearchContainerWithIcon';
 
 /*
 
- <Marker
-            coordinate={{
-              latitude: this.state.latitude,
-              longitude: this.state.longitude,
-            }}
-            description={"This is a marker in React Natve"}
-            >
-      
-            <Image source={require('./man_marker.png')} style={{height: 35, width:35 }} />
-      
-          </Marker>
-
-*/
-/*
-
-data type for tha marker ==>
-{
-    templeType:""
-}
+1).====> data type for tha marker ==>
+            {
+                flag:"",
+                coordinates:{
+                    latitude:"",
+                    longitude:"",
+                }
+            }
 
 */
 
 const assetMapWithTempleType = {
-    pink: {
+    1: {
+        name: 'Thirumurai Temple',
         size: {},
-        path: './ThirumuraiTemple.png',
+        path: require('./TempleAssets/ThirumuraiTemple.png'),
+        metaData: {
+            color: '#E62828',
+            letterAssociated: null,
+        },
+    },
+    2: {
+        name: 'Temples',
+        size: {},
+        metaData: {
+            color: '#6EDB00',
+            letterAssociated: null,
+        },
+        path: require('./TempleAssets/Temples.png'),
+    },
+    3: {
+        name: 'Popular Temple',
+        size: {},
+        metaData: {
+            color: '#007DE6',
+            letterAssociated: null,
+        },
+        path: require('./TempleAssets/PopularTemples.png'),
     },
 
-    userLocation: {
+    4: {
+        name: 'Parashurama Temple',
         size: {},
-        path: '',
+        metaData: {
+            color: '#D700C1',
+            letterAssociated: 'C',
+        },
+        path: require('./TempleAssets/ParashuramaTemple.png'),
+    },
+    5: {
+        name: 'Mukti Sthalam Temple',
+        size: {},
+        metaData: {
+            color: '#D700C1',
+            letterAssociated: 'B',
+        },
+        path: require('./TempleAssets/MuktiSthalamTemple.png'),
+    },
+    6: {
+        name: 'Unknown Temple',
+        size: {},
+        metaData: {
+            color: '#A5A5A5',
+            letterAssociated: null,
+        },
+        path: require('./TempleAssets/UnknownTemple.png'),
     },
 
-    userLocation: {
+    7: {
+        name: 'Vaippu Sthalam Temple',
         size: {},
-        path: '',
+        metaData: {
+            color: '#D700C1',
+            letterAssociated: 'A',
+        },
+        path: require('./TempleAssets/VaippuSthalamTemple.png'),
     },
-    userLocation: {
+    8: {
+        name: 'User Location',
         size: {},
-        path: '',
-    },
-    userLocation: {
-        size: {},
-        path: '',
-    },
-    userLocation: {
-        size: {},
-        path: '',
+        metaData: {
+            color: '#f00',
+            letterAssociated: null,
+        },
+        path: require('./TempleAssets/UsersLocation.png'),
     },
 };
 
-export const CustomMarker = ({ templeType, coordinate }) => {
+export const CustomMarker = ({ flag, coordinate }) => {
     return (
-        <Marker
-            coordinate={{
-                latitude: 28.500271,
-                longitude: 77.387901,
-            }}
-            description={'This is a marker in React Natve'}
-        >
-            <Image source={require('./ThirumuraiTemple.png')} resizeMode="contain" />
+        <Marker coordinate={coordinate} description={'This is a marker in React Natve'}>
+            <Image source={assetMapWithTempleType[flag].path} resizeMode="contain" />
         </Marker>
     );
 };
+
 export const Temples = () => {
     const bottomSheetRef = useRef(null);
-    const userLocation = {
+
+    const [regionCoordinate, setRegionCoordinate] = useState({
         latitude: 28.500271,
         longitude: 77.387901,
-    };
-    const regionCoordinate = {
-        latitude: 28.500271,
-        longitude: 77.387901,
-    };
+        latitudeDelta: 0.015,
+        longitudeDelta: 0.0121,
+        locationName: '',
+    });
+
+    const [snapIndex, setSnapIndex] = useState(0);
 
     // callbacks
     const handleSheetChanges = useCallback((index) => {
         console.log('handleSheetChanges', index);
+        setSnapIndex(index);
     }, []);
 
-    // const MorePlaceholderScreen = () => {
+    const [nearByTempleList, setNearByTempleList] = useState([
+        {
+            name: 'Ambey ma temple',
+            flag: '',
+            metadata: () => {
+                return assetMapWithTempleType[flag];
+            },
+        },
+    ]);
+
+    const [padState, setPadState] = useState(1);
+
+    useEffect(() => {
+        getCurrentLocationWatcher((val) => {
+            console.log('the value is set for map ');
+            setRegionCoordinate((prev) => ({ ...prev, ...val }));
+        });
+        return () => clearGetCurrentLocationWatcher();
+    }, []);
+
+    useEffect(() => {
+        (async () => {
+            await locationPermission();
+        })();
+
+        setTimeout(() => {
+            setPadState(0);
+        }, 100);
+    }, [padState]);
+
+    const [userLocName, setUserLocName] = useState('');
+
+    useEffect(() => {
+        console.log('the format=jsonv2& and coord==>', regionCoordinate);
+        if (regionCoordinate?.latitude && regionCoordinate?.longitude) {
+            (async () => {
+                const locationDetail = await getTheLocationName({ ...regionCoordinate });
+
+                console.log('the location of the user ==>', locationDetail?.display_name);
+                setUserLocName((prev) => {
+                    return (
+                        locationDetail?.address?.village ||
+                        locationDetail?.name ||
+                        locationDetail?.display_name
+                    );
+                });
+            })();
+        }
+    }, [regionCoordinate]);
+
+    const onMapReadyCallback = async () => {
+        const state = await locationPermission();
+
+        if (state.status) {
+            getCurrentLocationWatcher((val) => {
+                console.log('the value is set for map ');
+                setRegionCoordinate((prev) => ({ ...prev, ...val }));
+            });
+        }
+    };
+
+    const [viewAreaCoors, setViewAreaCoors] = useState({
+        ...regionCoordinate,
+    });
+
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, position: 'relative' }}>
             <MapView
-                provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+                onMapReady={onMapReadyCallback}
+                provider={PROVIDER_GOOGLE}
                 style={styles.map}
-                showsUserLocation
-                region={{
-                    ...regionCoordinate,
-                    latitudeDelta: 0.015,
-                    longitudeDelta: 0.0121,
-                }}
+                onRegionChangeComplete={(args) =>
+                    onRegionChangeCompleteCallback(args, setViewAreaCoors)
+                }
+                // onRegionChange={onRegionChangeCallback}
+                // mapPadding={{ top: 0, right: 0, bottom: 700, left: 0 }}
+                region={regionCoordinate}
             >
-                <CustomMarker></CustomMarker>
+                <CustomMarker
+                    flag={8}
+                    coordinate={{
+                        latitude: 28.5002,
+                        longitude: 77.381,
+                    }}
+                />
+                <CustomMarker flag={7} coordinate={regionCoordinate} />
             </MapView>
 
+            <View style={styles.topBarWrapper}>
+                <SearchContainerWithIcon />
+
+                {/* <SearchContainerWithIcon /> */}
+
+                <View style={styles.colorContWrapper}>
+                    {Object.entries(assetMapWithTempleType).map(([key, value], indx) => (
+                        <View style={styles.contWrapper}>
+                            <View
+                                style={[
+                                    styles.textContWrapper,
+                                    {
+                                        backgroundColor: value.metaData.color,
+                                    },
+                                ]}
+                            >
+                                {value.metaData.letterAssociated && (
+                                    <Text style={styles.textStyleForCont}>
+                                        {value.metaData.letterAssociated}
+                                    </Text>
+                                )}
+                            </View>
+                        </View>
+                    ))}
+                </View>
+            </View>
+
+            {/* floating side btn */}
+            <View style={{ position: 'absolute', backgroundColor: 'red', right: 0, bottom: 150 }}>
+                {/* bring user's location into view */}
+                <View></View>
+            </View>
             <BottomSheet
                 ref={bottomSheetRef}
                 onChange={handleSheetChanges}
                 // containerHeight={400}
-                snapPoints={['15%', '95%']}
+                snapPoints={['7%', '95%']}
             >
-                <NearByTemples close={() => bottomSheetRef.current.snapToIndex(0)} />
+                <NearByTemples
+                    locationName={userLocName}
+                    data={nearByTempleList}
+                    snapIndex={snapIndex}
+                    close={() => bottomSheetRef.current.snapToIndex(0)}
+                />
             </BottomSheet>
         </View>
     );
@@ -119,18 +278,47 @@ export const Temples = () => {
 
 const styles = StyleSheet.create({
     map: {
+        justifyContent: 'center',
+        position: 'absolute',
+
         height: Dimensions.get('window').height,
         width: Dimensions.get('window').width,
     },
-    container: {
+
+    colorContWrapper: {
         flex: 1,
-        padding: 24,
-        backgroundColor: 'grey',
+        flexDirection: 'row',
+        gap: 8,
+        paddingTop: 10,
+        justifyContent: 'space-evenly',
     },
-    contentContainer: {
-        flex: 1,
-        // alignItems: 'center',
-        backgroundColor: 'green',
+
+    topBarWrapper: {
+        position: 'absolute',
+        width: '100%',
+        paddingHorizontal: 20,
+        paddingVertical: 20,
+    },
+    contWrapper: {
+        paddingHorizontal: 10,
+        paddingVertical: 8,
+        borderRadius: 20,
+        backgroundColor: 'white',
+        elevation: 5,
+    },
+    textContWrapper: {
+        height: 14,
+        width: 14,
+        borderRadius: 2,
+        justifyContent: 'center',
+    },
+
+    textStyleForCont: {
+        alignSelf: 'center',
+        paddingVertical: 'auto',
+        fontWeight: 'bold',
+        color: 'white',
+        lineHeight: 16,
     },
 });
 
