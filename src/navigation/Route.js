@@ -63,7 +63,7 @@ const Route = () => {
     }, []);
 
     const checkConnection = (connected) => {
-        if (connected) {
+        if (connected && !__DEV__) {
             Alert.alert('New Update Available', 'Click ok to sync latest data', [
                 {
                     text: 'Cancel',

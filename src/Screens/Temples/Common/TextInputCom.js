@@ -1,13 +1,15 @@
 import React from "react";
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
-const TextInputCom = ({ headinText, insiderText }) => {
+const TextInputCom = ({ headinText, insiderText, width, navigation }) => {
     console.log("🚀 ~ TextInputCom ~ headinText:", headinText)
     return (
         <View style={{ marginVertical: 10 }}>
             <Text>{headinText}</Text>
-            <TouchableOpacity style={styles.inputComp}>
-                <Text>{insiderText}</Text>
+
+            <TouchableOpacity style={{ width: width ? width : Dimensions.get('window').width - 70 }}>
+                <TextInput onFocus={navigation} style={width ? [styles.inputComp, { width: width }] : styles.inputComp} placeholder={insiderText} />
+                {/* <Text>{insiderText}</Text> */}
             </TouchableOpacity>
         </View>
     );
