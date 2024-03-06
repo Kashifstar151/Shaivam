@@ -4,6 +4,7 @@ import { TouchableOpacity, View, Text, StyleSheet, FlatList, Dimensions } from '
 import Slider from '@react-native-community/slider';
 import SearchInput from '../../components/SearchInput';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
+import { ScrollView } from 'react-native-gesture-handler';
 
 /*
 
@@ -53,7 +54,7 @@ import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 
 */
 
-const NearByTemples = ({ close }) => {
+const NearByTemples = ({ close, data, locationName }) => {
     const { snapToIndex, snapToPosition } = useBottomSheet();
     const [position, setPosition] = useState(0);
 
@@ -66,6 +67,17 @@ const NearByTemples = ({ close }) => {
                 <SearchInput></SearchInput>
             </View>
 
+            <View>
+                <Text > Nearby Temples in {locationName}</Text>
+            </View>
+
+            <ScrollView scrollIndicatorInsets={true}>
+                {data.map((item, _) => (
+                    <Text key={_}>
+                        {JSON.stringify(item)}
+                    </Text>
+                ))}
+            </ScrollView>
         </View>
     );
 };
