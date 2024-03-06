@@ -18,6 +18,12 @@ import BottomTabs from './BottomTab/BottomTabs'
 import Strotras from '../Screens/Strotras/Strotras';
 import { MusicContextProvider } from '../components/Playbacks/TrackPlayerContext';
 import TempleTabs from './BottomTab/TempleTabs'
+import SongLists from '../Screens/Favourite/SongLists'
+import {
+    CardStyleInterpolators,
+    createStackNavigator,
+} from '@react-navigation/stack';
+import CreateTrip from '../Screens/Temples/MyTrip/CreateTrip'
 // import { ThemeContextProvider } from '../Context/ThemeContext';
 
 const Route = () => {
@@ -162,6 +168,32 @@ const Route = () => {
                         <Stack.Screen name="Home" component={HomeScreen} />
                         <Stack.Screen name="Thirumurais" component={ThrimuraiList} />
                         <Stack.Screen name={RouteTexts.SEARCH_SCREEN} component={SearchScreen} />
+                        <Stack.Screen name={RouteTexts.SONGS_LIST} component={SongLists}
+                            options={{
+                                headerShown: false,
+                                cardStyleInterpolator:
+                                    CardStyleInterpolators.forBottomSheetAndroid,
+                                //  CardStyleInterpolators.forHorizontalIOS,
+                                // transitionSpec: {
+                                //   open: config,
+                                //   close: config,
+                                // },
+                                // gestureDirection: 'horizontal-inverted',
+                                gestureEnabled: true,
+                            }} />
+                        <Stack.Screen name={RouteTexts.CREATE_TRIP} component={CreateTrip}
+                            options={{
+                                headerShown: false,
+                                cardStyleInterpolator:
+                                    CardStyleInterpolators.forBottomSheetAndroid,
+                                //  CardStyleInterpolators.forHorizontalIOS,
+                                // transitionSpec: {
+                                //   open: config,
+                                //   close: config,
+                                // },
+                                // gestureDirection: 'horizontal-inverted',
+                                gestureEnabled: true,
+                            }} />
                         <Stack.Screen
                             name={RouteTexts.THIRIMURAI_HEADING}
                             component={ThrimuraiHeadingPage}

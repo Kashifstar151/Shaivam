@@ -16,6 +16,7 @@
 		1E257C72685548B5A50D14E4 /* Lora-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 680F2FB630B647969998583A /* Lora-BoldItalic.ttf */; };
 		5AFD246F010E4D37AF73EFB2 /* Lora-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A7A09BF48BC3460CA6ABFC1B /* Lora-MediumItalic.ttf */; };
 		7D094CB92B06A8E400B20CA3 /* AudioDummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D094CB82B06A8E400B20CA3 /* AudioDummy.swift */; };
+		7DBA96882B959C1800DD7484 /* www in Resources */ = {isa = PBXBuildFile; fileRef = 7DBA96872B959C1800DD7484 /* www */; };
 		7DD68B7C2AFB7FA200E64A9F /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 7DD68B7B2AFB7FA200E64A9F /* Fonts */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A1FABE296A95491BA1924EB4 /* Lora-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8EB41509706140D08011F3D4 /* Lora-Regular.ttf */; };
@@ -58,6 +59,7 @@
 		680F2FB630B647969998583A /* Lora-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lora-BoldItalic.ttf"; path = "../assets/fonts/Lora-BoldItalic.ttf"; sourceTree = "<group>"; };
 		7D094CB72B06A8E300B20CA3 /* Shaivam-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Shaivam-Bridging-Header.h"; sourceTree = "<group>"; };
 		7D094CB82B06A8E400B20CA3 /* AudioDummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDummy.swift; sourceTree = "<group>"; };
+		7DBA96872B959C1800DD7484 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; name = www; path = Shaivam/www; sourceTree = "<group>"; };
 		7DD68B7B2AFB7FA200E64A9F /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fonts; path = "../node_modules/react-native-vector-icons/Fonts"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Shaivam/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8EB41509706140D08011F3D4 /* Lora-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lora-Regular.ttf"; path = "../assets/fonts/Lora-Regular.ttf"; sourceTree = "<group>"; };
@@ -107,6 +109,7 @@
 		13B07FAE1A68108700A75B9A /* Shaivam */ = {
 			isa = PBXGroup;
 			children = (
+				7DBA96872B959C1800DD7484 /* www */,
 				7DD68B7B2AFB7FA200E64A9F /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -281,6 +284,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7DBA96882B959C1800DD7484 /* www in Resources */,
 				7DD68B7C2AFB7FA200E64A9F /* Fonts in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
@@ -426,7 +430,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -532,7 +535,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.shaivam.com;
 				PRODUCT_NAME = Shaivam;
 				SWIFT_OBJC_BRIDGING_HEADER = "Shaivam-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -560,7 +563,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.shaivam.com;
 				PRODUCT_NAME = Shaivam;
 				SWIFT_OBJC_BRIDGING_HEADER = "Shaivam-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -640,10 +643,12 @@
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
-					" ",
+					"-Wl",
+					"-ld_classic",
 				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				USE_HERMES = true;
 			};
 			name = Debug;
 		};
@@ -714,10 +719,12 @@
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
-					" ",
+					"-Wl",
+					"-ld_classic",
 				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				USE_HERMES = true;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
