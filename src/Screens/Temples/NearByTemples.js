@@ -1,32 +1,55 @@
 import React, { useState } from 'react';
 import { BottomSheetView, useBottomSheet } from '@gorhom/bottom-sheet';
-import { TouchableOpacity, View, Text, StyleSheet, FlatList, Dimensions } from 'react-native';
+import {
+    TouchableOpacity,
+    View,
+    Text,
+    StyleSheet,
+    FlatList,
+    Dimensions,
+    TouchableWithoutFeedback,
+} from 'react-native';
 import Slider from '@react-native-community/slider';
 import SearchInput from '../../components/SearchInput';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import { ScrollView } from 'react-native-gesture-handler';
-const NearByTemples = ({ close, data, locationName }) => {
+const NearByTemples = ({ close, data, locationName, snapIndex }) => {
     const { snapToIndex, snapToPosition } = useBottomSheet();
-    const [position, setPosition] = useState(0);
 
     return (
-        <View style={{ flex: 1, width: Dimensions.get('window').width - 30 }}>
-            <View style={{ flexDirection: 'row' }}>
+        <View
+            style={{
+                flex: 1,
+                width: Dimensions.get('window').width,
+                height: '100%',
+            }}
+        >
+            {/* <View style={{ flexDirection: 'row' }}>
                 <TouchableOpacity onPress={close}>
                     <Icon name={'more-vert'} size={24} />
                 </TouchableOpacity>
-                <SearchInput></SearchInput>
-            </View>
+            </View> */}
 
-            <View>
-                <Text> Nearby Temples in {locationName}</Text>
-            </View>
-
-            <ScrollView scrollIndicatorInsets={true}>
-                {data.map((item, _) => (
-                    <Text key={_}>{JSON.stringify(item)}</Text>
-                ))}
-            </ScrollView>
+            <TouchableWithoutFeedback
+                onPress={() => {
+                    if (!snapIndex) {
+                        snapToIndex(1);
+                    }
+                }}
+            >
+                <View style={{ width: '100%', fontFamily: 'Lora-Bold' }}>
+                    <Text
+                        style={{
+                            color: '#222222',
+                            fontSize: 18,
+                            fontFamily: 'Lora-Bold',
+                            paddingHorizontal: 15,
+                        }}
+                    >
+                        {locationName ? `Nearby Temples in ${locationName}` : null}
+                    </Text>
+                </View>
+            </TouchableWithoutFeedback>
         </View>
     );
 };
