@@ -12,21 +12,21 @@ const SearchInput = ({ placeholder, setState, state, color, setOnFocus, styleOve
             style={
                 color
                     ? [
-                        styles.inputcontainer,
-                        {
-                            backgroundColor: '#F3F3F3',
-                            marginHorizontal: styleOverwrite?.marginHorizontalUnset ? 0 : 15,
-                            marginTop: styleOverwrite.paddingTop,
-                        },
-                    ]
+                          styles.inputcontainer,
+                          {
+                              backgroundColor: '#F3F3F3',
+                              marginHorizontal: styleOverwrite?.marginHorizontalUnset ? 0 : 15,
+                              marginTop: styleOverwrite.paddingTop,
+                          },
+                      ]
                     : [
-                        styles.inputcontainer,
-                        {
-                            backgroundColor: theme.searchBox.bgColor,
-                            marginHorizontal: styleOverwrite?.marginHorizontalUnset ? 0 : 15,
-                            marginTop: styleOverwrite?.paddingTop,
-                        },
-                    ]
+                          styles.inputcontainer,
+                          {
+                              backgroundColor: theme.searchBox.bgColor,
+                              marginHorizontal: styleOverwrite?.marginHorizontalUnset ? 0 : 15,
+                              marginTop: styleOverwrite?.paddingTop,
+                          },
+                      ]
             }
         >
             <Icon name="search" size={28} color={color ? '#777777' : colors.grey1} />
