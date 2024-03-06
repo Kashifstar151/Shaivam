@@ -14,7 +14,6 @@ import Slider from '@react-native-community/slider';
 import ShuffleIcon from '../../assets/Images/music (1).svg';
 import Icon from 'react-native-vector-icons/dist/AntDesign';
 import FavouriteIcon from '../../assets/Images/Vector (2).svg';
-import ThumbImage from '../../assets/Images/Ellipse 5.svg';
 import MusicIcon from '../../assets/Images/MusicPlayer.svg';
 // import RNFetchBlob from 'rn-fetch-blob';
 import * as RNFS from 'react-native-fs';
@@ -127,6 +126,7 @@ const AudioPlayer = ({
         // Store the updated list back to AsyncStorage
         await AsyncStorage.setItem(`recentTrack`, JSON.stringify(updatedTracks));
     };
+    const [fav, setFav] = useState(false)
     const downloadAudios = () => {
         TrackPlayer.getActiveTrack()
             .then((res) => {
@@ -142,6 +142,9 @@ const AudioPlayer = ({
                         res?.thirumariasiriyar,
                     ],
                     (callbacks) => {
+                        if (callbacks?.message == 'Success') {
+                            setFav(true)
+                        }
                     }
                 );
             })
@@ -551,7 +554,7 @@ const AudioPlayer = ({
                                 onPress={() => downloadAudio()}
                             >
                                 {downloadedSong ? (
-                                    <View style={{ height: 30, width: 30, borderRadius: 15, backgroundColor: '#389F56' }}>
+                                    <View style={{ height: 30, width: 30, borderRadius: 15, backgroundColor: '#389F56', justifyContent: 'center', alignItems: 'center' }}>
                                         <Icon name="check" size={24} color="white" />
                                     </View>
                                 ) : (
@@ -559,13 +562,15 @@ const AudioPlayer = ({
                                 )}
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => downloadAudios()}>
-                                <FavouriteIcon />
+                                {
+                                    fav ? <Icon name='heart' size={22} color='red' /> :
+                                        <FavouriteIcon />
+                                }
                             </TouchableOpacity>
                         </View>
                     </View>
                 )
                 }
-
             </View >
         </>
     );
