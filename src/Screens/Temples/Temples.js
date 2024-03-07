@@ -141,10 +141,103 @@ export const Temples = () => {
 
     const [nearByTempleList, setNearByTempleList] = useState([
         {
-            name: 'Ambey ma temple',
-            flag: '',
-            metadata: () => {
-                return assetMapWithTempleType[flag];
+            name: 'Vaippu Sthalam Temple',
+            flag: 8,
+            metadata: function () {
+                console.log('the flag no is -->', this.flag);
+
+                return assetMapWithTempleType[this.flag]?.metaData;
+            },
+        },
+
+        {
+            name: 'Thirumurai Temple',
+            flag: 1,
+            metadata: function () {
+                console.log('the flag no is -->', this.flag);
+
+                return assetMapWithTempleType[this.flag]?.metaData;
+            },
+        },
+        {
+            name: 'Temples',
+            flag: 2,
+            metadata: function () {
+                console.log('the flag no is -->', this.flag);
+
+                return assetMapWithTempleType[this.flag]?.metaData;
+            },
+        },
+        {
+            name: 'Popular Temple',
+            flag: 3,
+            metadata: function () {
+                console.log('the flag no is -->', this.flag);
+
+                return assetMapWithTempleType[this.flag]?.metaData;
+            },
+        },
+        {
+            name: 'Parashurama Temple',
+            flag: 4,
+            metadata: function () {
+                console.log('the flag no is -->', this.flag);
+
+                return assetMapWithTempleType[this.flag]?.metaData;
+            },
+        },
+        {
+            name: 'Mukti Sthalam Temple',
+            flag: 5,
+            metadata: function () {
+                console.log('the flag no is -->', this.flag);
+
+                return assetMapWithTempleType[this.flag]?.metaData;
+            },
+        },
+        {
+            name: 'Unknown Temple',
+            flag: 6,
+            metadata: function () {
+                console.log('the flag no is -->', this.flag);
+
+                return assetMapWithTempleType[this.flag]?.metaData;
+            },
+        },
+        {
+            name: 'Unknown Temple',
+            flag: 6,
+            metadata: function () {
+                console.log('the flag no is -->', this.flag);
+
+                return assetMapWithTempleType[this.flag]?.metaData;
+            },
+        },
+        {
+            name: 'Unknown Temple',
+            flag: 6,
+            metadata: function () {
+                console.log('the flag no is -->', this.flag);
+
+                return assetMapWithTempleType[this.flag]?.metaData;
+            },
+        },
+        {
+            name: 'Unknown Temple',
+            flag: 6,
+            metadata: function () {
+                console.log('the flag no is -->', this.flag);
+
+                return assetMapWithTempleType[this.flag]?.metaData;
+            },
+        },
+        {
+            name: 'Unknown Temple',
+            flag: 6,
+            metadata: function () {
+                console.log('the flag no is -->', this.flag);
+
+                return assetMapWithTempleType[this.flag]?.metaData;
             },
         },
     ]);
@@ -280,7 +373,7 @@ const styles = StyleSheet.create({
     map: {
         justifyContent: 'center',
         position: 'absolute',
-
+        flex: 1,
         height: Dimensions.get('window').height,
         width: Dimensions.get('window').width,
     },
