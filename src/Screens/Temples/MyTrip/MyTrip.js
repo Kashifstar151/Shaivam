@@ -8,7 +8,7 @@ import { ThemeContext } from "../../../Context/ThemeContext";
 import TripSvg from "../../../components/SVGs/TripSvg";
 import EmptyTrip from "./EmptyTrip";
 
-const MyTrip = () => {
+const MyTrip = ({ navigation }) => {
     const [selectedHeader, setSelectedHeader] = useState('My trips');
     const { theme } = useContext(ThemeContext);
     var header = [
@@ -24,7 +24,7 @@ const MyTrip = () => {
                     <HeadingComponent item={item} index={index} setHeader={setSelectedHeader} selectedHeader={selectedHeader} />
                 )} />
             </Background>
-            <EmptyTrip />
+            <EmptyTrip navigation={navigation} />
         </View>
     );
 };

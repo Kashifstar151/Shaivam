@@ -10,7 +10,7 @@ import {
     TouchableWithoutFeedback,
     View,
 } from 'react-native';
-import Slider from '@react-native-community/slider';
+import Slider from '@kashifum8299/react-native-slider';
 import ShuffleIcon from '../../assets/Images/music (1).svg';
 import Icon from 'react-native-vector-icons/dist/AntDesign';
 import FavouriteIcon from '../../assets/Images/Vector (2).svg';
@@ -465,6 +465,7 @@ const AudioPlayer = ({
                                 minimumTrackTintColor="#C1554E"
                                 maximumTrackTintColor="#EFEFEF"
                                 thumbTintColor="#C1554E"
+
                             />
                             <View
                                 style={{

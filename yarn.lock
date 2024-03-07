@@ -1565,6 +1565,13 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@kashifum8299/react-native-slider@^0.11.0":
+  version "0.11.0"
+  resolved "https://registry.npmjs.org/@kashifum8299/react-native-slider/-/react-native-slider-0.11.0.tgz#6153a85443288634afa935e64455d84f3659c464"
+  integrity sha512-uWkWo8wFcyaTbxIJA5PXJvMtNBrMkQeEDWUlhScUMFLC8fHJ7rpWQK7me7cXqu4lEheNjO5FfWpf007NHt41Hw==
+  dependencies:
+    prop-types "^15.5.6"
+
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"
   resolved "https://registry.npmjs.org/@nicolo-ribaudo/eslint-scope-5-internals/-/eslint-scope-5-internals-5.1.1-v1.tgz"

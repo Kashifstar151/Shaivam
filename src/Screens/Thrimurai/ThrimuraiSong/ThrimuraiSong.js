@@ -51,6 +51,7 @@ import TrackPlayer, {
     useActiveTrack,
     useProgress,
 } from 'react-native-track-player';
+import BottomSheet from '@gorhom/bottom-sheet';
 
 const ThrimuraiSong = ({ route, navigation }) => {
     console.log('the render of the song==>');
@@ -693,18 +694,31 @@ const ThrimuraiSong = ({ route, navigation }) => {
                         ))}
                 </View>
             </ScrollView>
-            {/* <BottomSheet
+            <BottomSheet
                 handleIndicatorStyle={{ backgroundColor: '#FFF7E6' }}
                 handleStyle={{
                     backgroundColor: '#222222',
+                    // borderTopEndRadius: 15,
+                    // borderTopLeftRadius: 15,
+                    paddingTop: 20,
+                    position: 'absolute',
+                    right: 0,
+                    bottom: 0,
+                    // backgroundColor: '#222222',
                     borderTopEndRadius: 15,
                     borderTopLeftRadius: 15,
+                    alignSelf: 'flex-end',
+                    width:
+                        orientation == 'LANDSCAPE'
+                            ? Dimensions.get('window').width / 2
+                            : Dimensions.get('window').width,
                 }}
                 ref={bottomSheetRef}
                 snapPoints={snapPoints}
                 index={1}
-            > */}
-            <Animated.View
+
+            >
+                {/* <Animated.View
                 style={{
                     paddingTop: 20,
                     position: 'absolute',
@@ -719,7 +733,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             ? Dimensions.get('window').width / 2
                             : Dimensions.get('window').width,
                 }}
-            >
+            > */}
 
                 {
                     downloadingLoader && (
@@ -749,9 +763,9 @@ const ThrimuraiSong = ({ route, navigation }) => {
                     queryForNextPrevId={queryForNextPrevId}
                     queryForPreviousPrevId={queryForPreviousPrevId}
                 />
-            </Animated.View>
-            {/* </BottomSheet> */}
-        </View>
+                {/* </Animated.View> */}
+            </BottomSheet>
+        </View >
     );
 };
 export const styles = StyleSheet.create({
