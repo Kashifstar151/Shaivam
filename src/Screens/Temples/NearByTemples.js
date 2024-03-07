@@ -1,19 +1,13 @@
 import React, { useState } from 'react';
 import { BottomSheetView, useBottomSheet } from '@gorhom/bottom-sheet';
-import {
-    TouchableOpacity,
-    View,
-    Text,
-    StyleSheet,
-    FlatList,
-    Dimensions,
-    TouchableWithoutFeedback,
-} from 'react-native';
+import { View, Text, StyleSheet, Dimensions, TouchableWithoutFeedback } from 'react-native';
 import Slider from '@react-native-community/slider';
 import SearchInput from '../../components/SearchInput';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import { ScrollView } from 'react-native-gesture-handler';
+import CardForNearByTemple from './CardForNearByTemple';
 const NearByTemples = ({ close, data, locationName, snapIndex }) => {
+    // console.log('🚀 ~ NearByTemples ~ data:', data);
     const { snapToIndex, snapToPosition } = useBottomSheet();
 
     return (
@@ -24,11 +18,13 @@ const NearByTemples = ({ close, data, locationName, snapIndex }) => {
                 height: '100%',
             }}
         >
-            {/* <View style={{ flexDirection: 'row' }}>
-                <TouchableOpacity onPress={close}>
-                    <Icon name={'more-vert'} size={24} />
-                </TouchableOpacity>
-            </View> */}
+            <View>
+                {snapIndex ? (
+                    <View>
+                        <Text style={{ color: 'red' }}>dhsjhdjs</Text>
+                    </View>
+                ) : null}
+            </View>
 
             <TouchableWithoutFeedback
                 onPress={() => {
@@ -36,8 +32,16 @@ const NearByTemples = ({ close, data, locationName, snapIndex }) => {
                         snapToIndex(1);
                     }
                 }}
+                style={{ marginBottom: 10 }}
             >
-                <View style={{ width: '100%', fontFamily: 'Lora-Bold' }}>
+                <View
+                    style={{
+                        width: '100%',
+                        fontFamily: 'Lora-Bold',
+                        paddingBottom: 10,
+                        backgroundColor: 'white',
+                    }}
+                >
                     <Text
                         style={{
                             color: '#222222',
@@ -50,6 +54,14 @@ const NearByTemples = ({ close, data, locationName, snapIndex }) => {
                     </Text>
                 </View>
             </TouchableWithoutFeedback>
+
+            <ScrollView style={{ zIndex: -20 }}>
+                {data.map((item, indx) => (
+                    <View key={indx}>
+                        <CardForNearByTemple item={item} />
+                    </View>
+                ))}
+            </ScrollView>
         </View>
     );
 };
