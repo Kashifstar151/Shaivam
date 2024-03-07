@@ -6,7 +6,7 @@ const CardForNearByTemple = ({ item }) => {
     const [favState, setFavState] = useState(false);
     return (
         <View style={styles.topWrapperForCard}>
-            <View style={styles.flexRow}>
+            <View style={[styles.flexRow, { paddingHorizontal: 5 }]}>
                 <View style={[styles.flexRow, { gap: 8 }]}>
                     <View
                         style={[
@@ -28,8 +28,6 @@ const CardForNearByTemple = ({ item }) => {
                             setFavState(!favState);
                         }}
                     >
-                        {/* <Text style={styles.btn}>FAV</Text>
-                         */}
                         <FavSVG fill={'#000'} />
                     </Pressable>
                 </View>
@@ -50,7 +48,7 @@ const styles = StyleSheet.create({
         },
         borderRadius: 8,
         height: 70,
-        padding: 10,
+        padding: 15,
     },
 
     flexRow: { flex: 1, flexDirection: 'row' },
@@ -58,7 +56,7 @@ const styles = StyleSheet.create({
         width: 4,
         borderRadius: 5,
     },
-    textContainer: { marginLeft: 10, flex: 1, justifyContent: 'center' },
+    textContainer: { marginLeft: 5, flex: 1, justifyContent: 'center' },
     textBold: {
         color: 'black',
         fontFamily: 'Mulish-Bold',
