@@ -213,10 +213,10 @@ export const Temples = () => {
                 onRegionChangeComplete={(args) =>
                     onRegionChangeCompleteCallback(args, setViewAreaCoors)
                 }
-                // onRegionChange={onRegionChangeCallback}
-                // mapPadding={{ top: 0, right: 0, bottom: 700, left: 0 }}
+
                 region={regionCoordinate}
             >
+
                 <CustomMarker
                     flag={8}
                     coordinate={{
@@ -278,8 +278,9 @@ export const Temples = () => {
 
 const styles = StyleSheet.create({
     map: {
+        flex: 1,
         justifyContent: 'center',
-        position: 'absolute',
+        // position: 'absolute',
 
         height: Dimensions.get('window').height,
         width: Dimensions.get('window').width,
