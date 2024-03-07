@@ -10,8 +10,9 @@ import { ThemeContextProvider } from './src/Context/ThemeContext';
 import { enableLatestRenderer } from 'react-native-maps';
 
 const App = () => {
-
-    enableLatestRenderer();
+    useEffect(() => {
+        enableLatestRenderer();
+    }, []);
     return (
         <ThemeContextProvider>
             <SafeAreaView style={{ flex: 1 }}>

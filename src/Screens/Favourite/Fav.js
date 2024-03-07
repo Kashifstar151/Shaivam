@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { Alert, FlatList, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, FlatList, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/dist/MaterialIcons'
 import MaterialIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons'
 import Background from '../../components/Background'
@@ -13,7 +13,10 @@ import HeadingText from '../../components/HeadingText'
 import { RouteTexts } from '../../navigation/RouteText'
 import { useIsFocused } from '@react-navigation/native'
 import EditPencil from "../../assets/Images/EditPencil.svg"
-import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
+import AlertScreen from '../../components/AlertScreen'
+import AntDesign from 'react-native-vector-icons/dist/AntDesign'
+// import Button from '../Temples/Common/Button'
+// import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 const Fav = ({ navigation }) => {
     // const BottomSheetRef = useRef(null)
     const { theme } = useContext(ThemeContext);
@@ -21,6 +24,8 @@ const Fav = ({ navigation }) => {
     const [selecetedHeader, setSelectedHeader] = useState('Favourites')
     const [favList, setFavList] = useState([])
     const [downloadList, setDownloadList] = useState([])
+    const [showModal, setShowModal] = useState(false)
+    const [selectedItem, setSelected] = useState(null)
     useEffect(() => {
         fetchAndDisplayDownloads()
         listfavAudios(callbacks => {
@@ -61,27 +66,31 @@ const Fav = ({ navigation }) => {
             // console.log("🚀 ~ removeFromPlaylist ~ arr:", arr)
             setDownloadList(arr)
             AsyncStorage.setItem('downloaded', JSON.stringify(arr))
+            setShowModal(false)
         } else if (selecetedHeader == 'Favourites') {
             RemoveFavAudios('d', item, cb => {
                 if (cb?.message == 'Success') {
                     let arr = favList.filter((res) => res?.id !== item.id)
                     setFavList(arr)
                 }
+                setShowModal(false)
             })
 
         }
     }
     const confirmRemove = (item) => {
-        Alert.alert('Confirmation', 'Are you sure to remove', [
-            {
-                text: 'Confirm',
-                onPress: () => removeFromPlaylist(item)
-            },
-            {
-                text: 'Cancel',
-                onPress: console.log(false)
-            }
-        ])
+        setSelected(item)
+        setShowModal(true)
+        // Alert.alert('Confirmation', 'Are you sure to remove', [
+        //     {
+        //         text: 'Confirm',
+        //         onPress: () => removeFromPlaylist(item)
+        //     },
+        //     {
+        //         text: 'Cancel',
+        //         onPress: console.log(false)
+        //     }
+        // ])
     }
     const renderSong = (item, index) => (
         <Pressable style={styles.listContainer} onPress={() => {
@@ -119,8 +128,9 @@ const Fav = ({ navigation }) => {
                 <TouchableOpacity style={{ marginRight: 10 }}>
                     <Icon name="share" size={22} />
                 </TouchableOpacity>
+
                 <TouchableOpacity onPress={() => confirmRemove(item)}>
-                    <Icon name="delete" size={22} />
+                    {selecetedHeader == 'Favourites' ? <AntDesign name="heart" size={20} color={'#C1554E'} /> : <Icon name="delete" size={22} />}
                 </TouchableOpacity>
             </View>
         </Pressable>
@@ -128,6 +138,7 @@ const Fav = ({ navigation }) => {
     return (
         <ScrollView>
             {/* <View> */}
+
             <Background>
                 <View style={{ marginVertical: 20 }}>
                     <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
@@ -143,14 +154,23 @@ const Fav = ({ navigation }) => {
                 )} />
             </Background>
             <View style={{ flex: 1, }}>
-                <TouchableOpacity style={styles.RearrangsTask} onPress={() => navigation.navigate(RouteTexts.SONGS_LIST, {
-                    data: favList
-                })} >
+                <TouchableOpacity style={styles.RearrangsTask}
+                    onPress={() => navigation.navigate(RouteTexts.SONGS_LIST, {
+                        data: favList
+                    })} >
                     <EditPencil />
                     <Text style={{ marginHorizontal: 10, fontFamily: 'Mulish-Bold', color: '#C1554E', fontWeight: '700', fontSize: 12 }}>Re arrange task</Text>
                 </TouchableOpacity>
                 <FlatList data={selecetedHeader == 'Favourites' ? favList : downloadList} renderItem={({ item, index }) => renderSong(item, index)} />
             </View>
+            {
+                showModal &&
+                <Modal transparent>
+
+                    <AlertScreen descriptionText={selectedItem} removeFromPlaylist={removeFromPlaylist} setShowModal={setShowModal} />
+
+                </Modal>
+            }
 
         </ScrollView>
     )

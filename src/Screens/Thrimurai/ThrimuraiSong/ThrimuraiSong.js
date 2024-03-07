@@ -694,7 +694,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                         ))}
                 </View>
             </ScrollView>
-            <BottomSheet
+            {/* <BottomSheet
                 handleIndicatorStyle={{ backgroundColor: '#FFF7E6' }}
                 handleStyle={{
                     backgroundColor: '#222222',
@@ -713,12 +713,13 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             ? Dimensions.get('window').width / 2
                             : Dimensions.get('window').width,
                 }}
+
                 ref={bottomSheetRef}
                 snapPoints={snapPoints}
                 index={1}
 
-            >
-                {/* <Animated.View
+            > */}
+            <Animated.View
                 style={{
                     paddingTop: 20,
                     position: 'absolute',
@@ -733,7 +734,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             ? Dimensions.get('window').width / 2
                             : Dimensions.get('window').width,
                 }}
-            > */}
+            >
 
                 {
                     downloadingLoader && (
@@ -763,8 +764,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
                     queryForNextPrevId={queryForNextPrevId}
                     queryForPreviousPrevId={queryForPreviousPrevId}
                 />
-                {/* </Animated.View> */}
-            </BottomSheet>
+            </Animated.View>
+            {/* </BottomSheet> */}
         </View >
     );
 };

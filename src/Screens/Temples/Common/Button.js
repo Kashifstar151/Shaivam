@@ -1,11 +1,13 @@
 import React from "react";
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-const Button = ({ buttonText }) => {
+const Button = ({ buttonText, active, navigation }) => {
     return (
         <View style={styles.mainContainer}>
-            <TouchableOpacity activeOpacity={0.4} style={styles.button}>
-                <Text style={{ fontSize: 14, fontFamily: 'Mulish-Bold', color: '#FFFFFF' }}>{buttonText}</Text>
+            <TouchableOpacity onPress={navigation} activeOpacity={0.4} style={active ? [styles.button, { backgroundColor: '#FCB300' }] : styles.button}>
+                <Text style={active ? { fontSize: 14, fontFamily: 'Mulish-Bold', color: '#222222' } :
+                    { fontSize: 14, fontFamily: 'Mulish-Bold', color: '#FFFFFF' }}>
+                    {buttonText}</Text>
             </TouchableOpacity>
         </View>
     );
