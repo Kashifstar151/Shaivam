@@ -7,6 +7,7 @@ import {
     Dimensions,
     TouchableOpacity,
     PermissionsAndroid,
+    Pressable,
 } from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import NearByTemples from './NearByTemples';
@@ -21,6 +22,7 @@ import {
     onRegionChangeCompleteCallback,
 } from '../../Helpers/GeolocationFunc';
 import SearchContainerWithIcon from './SearchContainerWithIcon';
+import TrackBackToLocSVG from '../../components/SVGs/TrackBackToLocSVG';
 
 /*
 
@@ -297,6 +299,13 @@ export const Temples = () => {
         ...regionCoordinate,
     });
 
+    const [userLocation, setUserLocation] = useState({
+        latitude: 28.500271,
+        longitude: 77.387901,
+        latitudeDelta: 0.015,
+        longitudeDelta: 0.0121,
+    });
+
     return (
         <View style={{ flex: 1, position: 'relative' }}>
             <MapView
@@ -308,7 +317,7 @@ export const Temples = () => {
                 }
                 // onRegionChange={onRegionChangeCallback}
                 // mapPadding={{ top: 0, right: 0, bottom: 700, left: 0 }}
-                region={regionCoordinate}
+                region={userLocation}
             >
                 <CustomMarker
                     flag={8}
@@ -348,10 +357,28 @@ export const Temples = () => {
             </View>
 
             {/* floating side btn */}
-            <View style={{ position: 'absolute', backgroundColor: 'red', right: 0, bottom: 150 }}>
+            <Pressable
+                style={{
+                    position: 'absolute',
+                    backgroundColor: 'white',
+                    right: 20,
+                    bottom: 150,
+                    borderRadius: 100,
+                    padding: 10,
+                    elevation: 2,
+                    shadowOffset: {
+                        width: 10,
+                        height: 8,
+                    },
+                }}
+                onPress={() => {
+                    console.log('the uuiuui');
+                    setUserLocation((prev) => ({ ...prev, latitude: 28.5002, longitude: 77.381 }));
+                }}
+            >
                 {/* bring user's location into view */}
-                <View></View>
-            </View>
+                <TrackBackToLocSVG fill={'#777'} />
+            </Pressable>
             <BottomSheet
                 ref={bottomSheetRef}
                 onChange={handleSheetChanges}
