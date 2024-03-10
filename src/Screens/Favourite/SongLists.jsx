@@ -77,7 +77,7 @@ const SongLists = ({navigation,route} ) => {
                      <Icon name='x' color='black' size={24}/>
                     </TouchableOpacity>
                     </View>
-               <NestableScrollContainer style={{backgroundColor:'#fff',paddingTop:10}}>
+                 <NestableScrollContainer style={{backgroundColor:'#fff',paddingTop:10}}>
                        <NestableDraggableFlatList
                        onPlaceholderIndexChange={(index)=>setIndex(index)}
                        style={{paddingHorizontal:10,paddingBottom:300}}
