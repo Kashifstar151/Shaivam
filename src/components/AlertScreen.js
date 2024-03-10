@@ -4,7 +4,7 @@ import { BlurView } from "@react-native-community/blur";
 import ErrorIcon from "../Screens/Temples/TempleAssets/Vector (5).svg"
 
 const AlertScreen = ({ descriptionText, removeFromPlaylist, setShowModal }) => {
-    console.log("🚀 ~ AlertScreen ~ descriptionText:", removeFromPlaylist)
+    // console.log("🚀 ~ AlertScreen ~ descriptionText:", removeFromPlaylist)
     return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
             <BlurView style={styles.blurView} blurType='dark' blurAmount={2} />

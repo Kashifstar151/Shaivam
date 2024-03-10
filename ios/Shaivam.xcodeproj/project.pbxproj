@@ -13,17 +13,17 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		1E257C72685548B5A50D14E4 /* Lora-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 680F2FB630B647969998583A /* Lora-BoldItalic.ttf */; };
-		4D5364F800D4CD5C192768BD /* libPods-Shaivam.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BF8025ECB33ACDA004340EA3 /* libPods-Shaivam.a */; };
+		4E2B562106D3F5A86A1A1422 /* libPods-Shaivam.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C61B1056BAB499FF49F614B /* libPods-Shaivam.a */; };
 		5AFD246F010E4D37AF73EFB2 /* Lora-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A7A09BF48BC3460CA6ABFC1B /* Lora-MediumItalic.ttf */; };
 		7DBA96882B959C1800DD7484 /* www in Resources */ = {isa = PBXBuildFile; fileRef = 7DBA96872B959C1800DD7484 /* www */; };
 		7DD68B7C2AFB7FA200E64A9F /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 7DD68B7B2AFB7FA200E64A9F /* Fonts */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		964DA178F8F252CEF93311D1 /* libPods-Shaivam-ShaivamTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F72570D4FE0C4A6490CF57BA /* libPods-Shaivam-ShaivamTests.a */; };
 		A1FABE296A95491BA1924EB4 /* Lora-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8EB41509706140D08011F3D4 /* Lora-Regular.ttf */; };
 		AF545E4DDFE54C2CAE04A01E /* Lora-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1F6714A24FD74432B0DFE1FA /* Lora-Italic.ttf */; };
 		C8F1B8C4323C4463ACF87BC7 /* Lora-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DDD6A9499234952AA3E2440 /* Lora-Bold.ttf */; };
 		CEF008D6910942679B83DE49 /* Lora-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 33FEA1A0F1CA430CA42C2A36 /* Lora-SemiBold.ttf */; };
 		D56C495F483C4796A439755A /* Lora-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5095280BBE564C9282CF22EA /* Lora-Medium.ttf */; };
+		FD731996D19F9EACB25A1315 /* libPods-Shaivam-ShaivamTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C1EDED9CD481244DE1166F5 /* libPods-Shaivam-ShaivamTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +40,7 @@
 		00E356EE1AD99517003FC87E /* ShaivamTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShaivamTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* ShaivamTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShaivamTests.m; sourceTree = "<group>"; };
+		0C1EDED9CD481244DE1166F5 /* libPods-Shaivam-ShaivamTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Shaivam-ShaivamTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		102E8244DD8D424099505B08 /* Lora-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lora-SemiBoldItalic.ttf"; path = "../assets/fonts/Lora-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Shaivam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shaivam.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Shaivam/AppDelegate.h; sourceTree = "<group>"; };
@@ -48,23 +49,22 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Shaivam/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Shaivam/main.m; sourceTree = "<group>"; };
 		1F6714A24FD74432B0DFE1FA /* Lora-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lora-Italic.ttf"; path = "../assets/fonts/Lora-Italic.ttf"; sourceTree = "<group>"; };
-		3256E39FC08865F96E138076 /* Pods-Shaivam.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shaivam.release.xcconfig"; path = "Target Support Files/Pods-Shaivam/Pods-Shaivam.release.xcconfig"; sourceTree = "<group>"; };
 		33FEA1A0F1CA430CA42C2A36 /* Lora-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lora-SemiBold.ttf"; path = "../assets/fonts/Lora-SemiBold.ttf"; sourceTree = "<group>"; };
 		5095280BBE564C9282CF22EA /* Lora-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lora-Medium.ttf"; path = "../assets/fonts/Lora-Medium.ttf"; sourceTree = "<group>"; };
-		53A055F7877F247618895510 /* Pods-Shaivam-ShaivamTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shaivam-ShaivamTests.release.xcconfig"; path = "Target Support Files/Pods-Shaivam-ShaivamTests/Pods-Shaivam-ShaivamTests.release.xcconfig"; sourceTree = "<group>"; };
 		5DDD6A9499234952AA3E2440 /* Lora-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lora-Bold.ttf"; path = "../assets/fonts/Lora-Bold.ttf"; sourceTree = "<group>"; };
 		680F2FB630B647969998583A /* Lora-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lora-BoldItalic.ttf"; path = "../assets/fonts/Lora-BoldItalic.ttf"; sourceTree = "<group>"; };
+		7C61B1056BAB499FF49F614B /* libPods-Shaivam.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Shaivam.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D094CB72B06A8E300B20CA3 /* Shaivam-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Shaivam-Bridging-Header.h"; sourceTree = "<group>"; };
 		7DBA96872B959C1800DD7484 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; name = www; path = Shaivam/www; sourceTree = "<group>"; };
 		7DD68B7B2AFB7FA200E64A9F /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fonts; path = "../node_modules/react-native-vector-icons/Fonts"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Shaivam/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8EB41509706140D08011F3D4 /* Lora-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lora-Regular.ttf"; path = "../assets/fonts/Lora-Regular.ttf"; sourceTree = "<group>"; };
+		95931CB8B7D63C6D66D4DA2C /* Pods-Shaivam.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shaivam.debug.xcconfig"; path = "Target Support Files/Pods-Shaivam/Pods-Shaivam.debug.xcconfig"; sourceTree = "<group>"; };
+		966454BD26C6CCA1B0DEE459 /* Pods-Shaivam.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shaivam.release.xcconfig"; path = "Target Support Files/Pods-Shaivam/Pods-Shaivam.release.xcconfig"; sourceTree = "<group>"; };
 		A7A09BF48BC3460CA6ABFC1B /* Lora-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lora-MediumItalic.ttf"; path = "../assets/fonts/Lora-MediumItalic.ttf"; sourceTree = "<group>"; };
-		AA8A031067733B66307F43D6 /* Pods-Shaivam.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shaivam.debug.xcconfig"; path = "Target Support Files/Pods-Shaivam/Pods-Shaivam.debug.xcconfig"; sourceTree = "<group>"; };
-		BF8025ECB33ACDA004340EA3 /* libPods-Shaivam.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Shaivam.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E7BEDD1D8D4CAC7E19942625 /* Pods-Shaivam-ShaivamTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shaivam-ShaivamTests.debug.xcconfig"; path = "Target Support Files/Pods-Shaivam-ShaivamTests/Pods-Shaivam-ShaivamTests.debug.xcconfig"; sourceTree = "<group>"; };
+		BF9611633B3589E77FE53CA2 /* Pods-Shaivam-ShaivamTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shaivam-ShaivamTests.debug.xcconfig"; path = "Target Support Files/Pods-Shaivam-ShaivamTests/Pods-Shaivam-ShaivamTests.debug.xcconfig"; sourceTree = "<group>"; };
+		C5D5B24B28E71321AD4C06BD /* Pods-Shaivam-ShaivamTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shaivam-ShaivamTests.release.xcconfig"; path = "Target Support Files/Pods-Shaivam-ShaivamTests/Pods-Shaivam-ShaivamTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F72570D4FE0C4A6490CF57BA /* libPods-Shaivam-ShaivamTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Shaivam-ShaivamTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,7 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				964DA178F8F252CEF93311D1 /* libPods-Shaivam-ShaivamTests.a in Frameworks */,
+				FD731996D19F9EACB25A1315 /* libPods-Shaivam-ShaivamTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,7 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D5364F800D4CD5C192768BD /* libPods-Shaivam.a in Frameworks */,
+				4E2B562106D3F5A86A1A1422 /* libPods-Shaivam.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,8 +123,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				BF8025ECB33ACDA004340EA3 /* libPods-Shaivam.a */,
-				F72570D4FE0C4A6490CF57BA /* libPods-Shaivam-ShaivamTests.a */,
+				7C61B1056BAB499FF49F614B /* libPods-Shaivam.a */,
+				0C1EDED9CD481244DE1166F5 /* libPods-Shaivam-ShaivamTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -180,10 +180,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				AA8A031067733B66307F43D6 /* Pods-Shaivam.debug.xcconfig */,
-				3256E39FC08865F96E138076 /* Pods-Shaivam.release.xcconfig */,
-				E7BEDD1D8D4CAC7E19942625 /* Pods-Shaivam-ShaivamTests.debug.xcconfig */,
-				53A055F7877F247618895510 /* Pods-Shaivam-ShaivamTests.release.xcconfig */,
+				95931CB8B7D63C6D66D4DA2C /* Pods-Shaivam.debug.xcconfig */,
+				966454BD26C6CCA1B0DEE459 /* Pods-Shaivam.release.xcconfig */,
+				BF9611633B3589E77FE53CA2 /* Pods-Shaivam-ShaivamTests.debug.xcconfig */,
+				C5D5B24B28E71321AD4C06BD /* Pods-Shaivam-ShaivamTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -195,12 +195,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "ShaivamTests" */;
 			buildPhases = (
-				88F3D245A3C91E86CF760ADB /* [CP] Check Pods Manifest.lock */,
+				2AC1CDC690FF6D4FD79AE88C /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				0E9B24613D88E9BEE8E3838D /* [CP] Embed Pods Frameworks */,
-				0533885392BC211644FB5988 /* [CP] Copy Pods Resources */,
+				0C0A8D82F86EE32218A18393 /* [CP] Embed Pods Frameworks */,
+				8E1F6758FEAF99A2CFA5F286 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -216,13 +216,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Shaivam" */;
 			buildPhases = (
-				1786E3EAC4F787ABC3C85D95 /* [CP] Check Pods Manifest.lock */,
+				A15C7EFA777654AA027EE90B /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				A306AD6466D8EDE48DE9D9B4 /* [CP] Embed Pods Frameworks */,
-				6470DFC74D5C3D7D759A95A2 /* [CP] Copy Pods Resources */,
+				E607F7F51F60641013842623 /* [CP] Embed Pods Frameworks */,
+				11D0A6E2BD36A37B6DD0820E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -315,24 +315,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		0533885392BC211644FB5988 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shaivam-ShaivamTests/Pods-Shaivam-ShaivamTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shaivam-ShaivamTests/Pods-Shaivam-ShaivamTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shaivam-ShaivamTests/Pods-Shaivam-ShaivamTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		0E9B24613D88E9BEE8E3838D /* [CP] Embed Pods Frameworks */ = {
+		0C0A8D82F86EE32218A18393 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -349,29 +332,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shaivam-ShaivamTests/Pods-Shaivam-ShaivamTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		1786E3EAC4F787ABC3C85D95 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Shaivam-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		6470DFC74D5C3D7D759A95A2 /* [CP] Copy Pods Resources */ = {
+		11D0A6E2BD36A37B6DD0820E /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -388,7 +349,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shaivam/Pods-Shaivam-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		88F3D245A3C91E86CF760ADB /* [CP] Check Pods Manifest.lock */ = {
+		2AC1CDC690FF6D4FD79AE88C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -410,7 +371,46 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		A306AD6466D8EDE48DE9D9B4 /* [CP] Embed Pods Frameworks */ = {
+		8E1F6758FEAF99A2CFA5F286 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shaivam-ShaivamTests/Pods-Shaivam-ShaivamTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shaivam-ShaivamTests/Pods-Shaivam-ShaivamTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shaivam-ShaivamTests/Pods-Shaivam-ShaivamTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A15C7EFA777654AA027EE90B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Shaivam-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E607F7F51F60641013842623 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -460,7 +460,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E7BEDD1D8D4CAC7E19942625 /* Pods-Shaivam-ShaivamTests.debug.xcconfig */;
+			baseConfigurationReference = BF9611633B3589E77FE53CA2 /* Pods-Shaivam-ShaivamTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -487,7 +487,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 53A055F7877F247618895510 /* Pods-Shaivam-ShaivamTests.release.xcconfig */;
+			baseConfigurationReference = C5D5B24B28E71321AD4C06BD /* Pods-Shaivam-ShaivamTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -511,7 +511,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AA8A031067733B66307F43D6 /* Pods-Shaivam.debug.xcconfig */;
+			baseConfigurationReference = 95931CB8B7D63C6D66D4DA2C /* Pods-Shaivam.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -540,7 +540,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3256E39FC08865F96E138076 /* Pods-Shaivam.release.xcconfig */;
+			baseConfigurationReference = 966454BD26C6CCA1B0DEE459 /* Pods-Shaivam.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -616,6 +616,17 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers/react/nativemodule/core",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon-Samples/ReactCommon_Samples.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon-Samples/ReactCommon_Samples.framework/Headers/platform/ios",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-Fabric/React_Fabric.framework/Headers/react/renderer/components/view/platform/cxx",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-NativeModulesApple/React_NativeModulesApple.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers/react/renderer/graphics/platform/ios",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
@@ -694,6 +705,17 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers/react/nativemodule/core",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon-Samples/ReactCommon_Samples.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon-Samples/ReactCommon_Samples.framework/Headers/platform/ios",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-Fabric/React_Fabric.framework/Headers/react/renderer/components/view/platform/cxx",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-NativeModulesApple/React_NativeModulesApple.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers/react/renderer/graphics/platform/ios",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,

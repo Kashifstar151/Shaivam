@@ -32,7 +32,6 @@ const songReducer = (state, action) => {
 export const MusicContext = createContext({});
 export const MusicContextProvider = ({ children }) => {
     const [musicState, dispatchMusic] = useReducer(songReducer, initialValue);
-
     return (
         <MusicContext.Provider
             value={{
