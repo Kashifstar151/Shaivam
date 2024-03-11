@@ -43,7 +43,12 @@ const ExploreTempleStack = () => {
             <ExploreStack.Screen
                 name={'nearBy'}
                 component={NearByPage}
-                options={{ headerShown: false, animationTypeForReplace: 'pop' }}
+                options={{
+                    headerShown: false,
+                    presentation: 'modal',
+                    animationEnabled: true,
+                    animationTypeForReplace: 'push',
+                }}
             />
         </ExploreStack.Navigator>
     );
@@ -162,7 +167,16 @@ export default TempleTab = ({ navigation }) => {
                     ),
                 }}
                 name="Exit Temple"
-                component={Temples}
+                component={() => null}
+                listeners={() => ({
+                    focus: (e) => {
+                        navigation.navigate(RouteTexts.BOTTOM_TABS);
+                    },
+                    tabPress: (e) => {
+                        e.preventDefault(); // Prevents navigation
+                        // Your code here for when you press the tab
+                    },
+                })}
             />
             <Tab.Screen
                 options={{
