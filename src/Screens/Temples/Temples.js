@@ -8,6 +8,7 @@ import {
     TouchableOpacity,
     PermissionsAndroid,
     Pressable,
+    Alert,
 } from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import NearByTemples from './NearByTemples';
@@ -23,106 +24,24 @@ import {
 } from '../../Helpers/GeolocationFunc';
 import SearchContainerWithIcon from './SearchContainerWithIcon';
 import TrackBackToLocSVG from '../../components/SVGs/TrackBackToLocSVG';
-
-/*
-
-1).====> data type for tha marker ==>
-            {
-                flag:"",
-                coordinates:{
-                    latitude:"",
-                    longitude:"",
-                }
-            }
-
-*/
-
-const assetMapWithTempleType = {
-    1: {
-        name: 'Thirumurai Temple',
-        size: {},
-        path: require('./TempleAssets/ThirumuraiTemple.png'),
-        metaData: {
-            color: '#E62828',
-            letterAssociated: null,
-        },
-    },
-    2: {
-        name: 'Temples',
-        size: {},
-        metaData: {
-            color: '#6EDB00',
-            letterAssociated: null,
-        },
-        path: require('./TempleAssets/Temples.png'),
-    },
-    3: {
-        name: 'Popular Temple',
-        size: {},
-        metaData: {
-            color: '#007DE6',
-            letterAssociated: null,
-        },
-        path: require('./TempleAssets/PopularTemples.png'),
-    },
-
-    4: {
-        name: 'Parashurama Temple',
-        size: {},
-        metaData: {
-            color: '#D700C1',
-            letterAssociated: 'C',
-        },
-        path: require('./TempleAssets/ParashuramaTemple.png'),
-    },
-    5: {
-        name: 'Mukti Sthalam Temple',
-        size: {},
-        metaData: {
-            color: '#D700C1',
-            letterAssociated: 'B',
-        },
-        path: require('./TempleAssets/MuktiSthalamTemple.png'),
-    },
-    6: {
-        name: 'Unknown Temple',
-        size: {},
-        metaData: {
-            color: '#A5A5A5',
-            letterAssociated: null,
-        },
-        path: require('./TempleAssets/UnknownTemple.png'),
-    },
-
-    7: {
-        name: 'Vaippu Sthalam Temple',
-        size: {},
-        metaData: {
-            color: '#D700C1',
-            letterAssociated: 'A',
-        },
-        path: require('./TempleAssets/VaippuSthalamTemple.png'),
-    },
-    8: {
-        name: 'User Location',
-        size: {},
-        metaData: {
-            color: '#f00',
-            letterAssociated: null,
-        },
-        path: require('./TempleAssets/UsersLocation.png'),
-    },
-};
+import AnimatedRightSideView from '../../components/AnimatedRightSideView';
+import assetMapWithTempleType from './AssetMapWithTempleType.js';
+import InnerContextOfAnimatedSideBox from './InnerContextOfAnimatedSideBox.js';
+import MapIconSVG from '../../components/SVGs/MapIconSVG.js';
 
 export const CustomMarker = ({ flag, coordinate }) => {
     return (
-        <Marker coordinate={coordinate} description={'This is a marker in React Natve'}>
+        <Marker
+            tracksViewChanges={false}
+            coordinate={coordinate}
+            description={'This is a marker in React Natve'}
+        >
             <Image source={assetMapWithTempleType[flag].path} resizeMode="contain" />
         </Marker>
     );
 };
 
-export const Temples = () => {
+export const Temples = ({ navigation }) => {
     const bottomSheetRef = useRef(null);
 
     const [regionCoordinate, setRegionCoordinate] = useState({
@@ -131,6 +50,17 @@ export const Temples = () => {
         latitudeDelta: 0.015,
         longitudeDelta: 0.0121,
         locationName: '',
+    });
+
+    const [viewAreaCoors, setViewAreaCoors] = useState({
+        ...regionCoordinate,
+    });
+
+    const [userLocation, setUserLocation] = useState({
+        latitude: 28.500271,
+        longitude: 77.387901,
+        latitudeDelta: 0.015,
+        longitudeDelta: 0.0121,
     });
 
     const [snapIndex, setSnapIndex] = useState(0);
@@ -146,8 +76,6 @@ export const Temples = () => {
             name: 'Vaippu Sthalam Temple',
             flag: 8,
             metadata: function () {
-                console.log('the flag no is -->', this.flag);
-
                 return assetMapWithTempleType[this.flag]?.metaData;
             },
         },
@@ -156,8 +84,6 @@ export const Temples = () => {
             name: 'Thirumurai Temple',
             flag: 1,
             metadata: function () {
-                console.log('the flag no is -->', this.flag);
-
                 return assetMapWithTempleType[this.flag]?.metaData;
             },
         },
@@ -165,8 +91,6 @@ export const Temples = () => {
             name: 'Temples',
             flag: 2,
             metadata: function () {
-                console.log('the flag no is -->', this.flag);
-
                 return assetMapWithTempleType[this.flag]?.metaData;
             },
         },
@@ -174,8 +98,6 @@ export const Temples = () => {
             name: 'Popular Temple',
             flag: 3,
             metadata: function () {
-                console.log('the flag no is -->', this.flag);
-
                 return assetMapWithTempleType[this.flag]?.metaData;
             },
         },
@@ -183,8 +105,6 @@ export const Temples = () => {
             name: 'Parashurama Temple',
             flag: 4,
             metadata: function () {
-                console.log('the flag no is -->', this.flag);
-
                 return assetMapWithTempleType[this.flag]?.metaData;
             },
         },
@@ -192,8 +112,6 @@ export const Temples = () => {
             name: 'Mukti Sthalam Temple',
             flag: 5,
             metadata: function () {
-                console.log('the flag no is -->', this.flag);
-
                 return assetMapWithTempleType[this.flag]?.metaData;
             },
         },
@@ -201,8 +119,6 @@ export const Temples = () => {
             name: 'Unknown Temple',
             flag: 6,
             metadata: function () {
-                console.log('the flag no is -->', this.flag);
-
                 return assetMapWithTempleType[this.flag]?.metaData;
             },
         },
@@ -210,8 +126,6 @@ export const Temples = () => {
             name: 'Unknown Temple',
             flag: 6,
             metadata: function () {
-                console.log('the flag no is -->', this.flag);
-
                 return assetMapWithTempleType[this.flag]?.metaData;
             },
         },
@@ -219,8 +133,6 @@ export const Temples = () => {
             name: 'Unknown Temple',
             flag: 6,
             metadata: function () {
-                console.log('the flag no is -->', this.flag);
-
                 return assetMapWithTempleType[this.flag]?.metaData;
             },
         },
@@ -228,8 +140,6 @@ export const Temples = () => {
             name: 'Unknown Temple',
             flag: 6,
             metadata: function () {
-                console.log('the flag no is -->', this.flag);
-
                 return assetMapWithTempleType[this.flag]?.metaData;
             },
         },
@@ -237,8 +147,6 @@ export const Temples = () => {
             name: 'Unknown Temple',
             flag: 6,
             metadata: function () {
-                console.log('the flag no is -->', this.flag);
-
                 return assetMapWithTempleType[this.flag]?.metaData;
             },
         },
@@ -267,12 +175,12 @@ export const Temples = () => {
     const [userLocName, setUserLocName] = useState('');
 
     useEffect(() => {
-        console.log('the format=jsonv2& and coord==>', regionCoordinate);
+        // console.log('the format=jsonv2& and coord==>', regionCoordinate);
         if (regionCoordinate?.latitude && regionCoordinate?.longitude) {
             (async () => {
                 const locationDetail = await getTheLocationName({ ...regionCoordinate });
 
-                console.log('the location of the user ==>', locationDetail?.display_name);
+                // console.log('the location of the user ==>', locationDetail?.display_name);
                 setUserLocName((prev) => {
                     return (
                         locationDetail?.address?.village ||
@@ -295,17 +203,6 @@ export const Temples = () => {
         }
     };
 
-    const [viewAreaCoors, setViewAreaCoors] = useState({
-        ...regionCoordinate,
-    });
-
-    const [userLocation, setUserLocation] = useState({
-        latitude: 28.500271,
-        longitude: 77.387901,
-        latitudeDelta: 0.015,
-        longitudeDelta: 0.0121,
-    });
-
     return (
         <View style={{ flex: 1, position: 'relative' }}>
             <MapView
@@ -319,40 +216,34 @@ export const Temples = () => {
                 // mapPadding={{ top: 0, right: 0, bottom: 700, left: 0 }}
                 region={userLocation}
             >
-                <CustomMarker
-                    flag={8}
-                    coordinate={{
-                        latitude: 28.5002,
-                        longitude: 77.381,
-                    }}
-                />
+                <CustomMarker flag={8} coordinate={userLocation} />
                 <CustomMarker flag={7} coordinate={regionCoordinate} />
             </MapView>
 
             <View style={styles.topBarWrapper}>
                 <SearchContainerWithIcon />
 
-                {/* <SearchContainerWithIcon /> */}
-
                 <View style={styles.colorContWrapper}>
-                    {Object.entries(assetMapWithTempleType).map(([key, value], indx) => (
-                        <View style={styles.contWrapper}>
-                            <View
-                                style={[
-                                    styles.textContWrapper,
-                                    {
-                                        backgroundColor: value.metaData.color,
-                                    },
-                                ]}
-                            >
-                                {value.metaData.letterAssociated && (
-                                    <Text style={styles.textStyleForCont}>
-                                        {value.metaData.letterAssociated}
-                                    </Text>
-                                )}
+                    {Object.entries(assetMapWithTempleType).map(([key, value], indx) =>
+                        key !== '8' ? (
+                            <View style={styles.contWrapper}>
+                                <View
+                                    style={[
+                                        styles.textContWrapper,
+                                        {
+                                            backgroundColor: value.metaData.color,
+                                        },
+                                    ]}
+                                >
+                                    {value.metaData.letterAssociated && (
+                                        <Text style={styles.textStyleForCont}>
+                                            {value.metaData.letterAssociated}
+                                        </Text>
+                                    )}
+                                </View>
                             </View>
-                        </View>
-                    ))}
+                        ) : null
+                    )}
                 </View>
             </View>
 
@@ -362,7 +253,7 @@ export const Temples = () => {
                     position: 'absolute',
                     backgroundColor: 'white',
                     right: 20,
-                    bottom: 150,
+                    bottom: Dimensions.get('window').height * 0.2,
                     borderRadius: 100,
                     padding: 10,
                     elevation: 2,
@@ -379,6 +270,10 @@ export const Temples = () => {
                 {/* bring user's location into view */}
                 <TrackBackToLocSVG fill={'#777'} />
             </Pressable>
+
+            <AnimatedRightSideView heading={'Map Legend'} RightIcon={<MapIconSVG />}>
+                <InnerContextOfAnimatedSideBox />
+            </AnimatedRightSideView>
             <BottomSheet
                 ref={bottomSheetRef}
                 onChange={handleSheetChanges}
@@ -436,9 +331,10 @@ const styles = StyleSheet.create({
     textStyleForCont: {
         alignSelf: 'center',
         paddingVertical: 'auto',
-        fontWeight: 'bold',
+        fontWeight: '800',
         color: 'white',
         lineHeight: 16,
+        fontSize: 10,
     },
 });
 
