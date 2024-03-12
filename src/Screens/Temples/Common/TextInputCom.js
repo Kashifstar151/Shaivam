@@ -2,7 +2,7 @@ import React from "react";
 import { Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 const TextInputCom = ({ headinText, insiderText, width, navigation }) => {
-    console.log("🚀 ~ TextInputCom ~ headinText:", headinText)
+    // console.log("🚀 ~ TextInputCom ~ headinText:", headinText)
     return (
         <View style={{ marginVertical: 10 }}>
             <Text>{headinText}</Text>

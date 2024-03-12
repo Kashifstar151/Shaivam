@@ -12,6 +12,7 @@ import  Icon  from "react-native-vector-icons/dist/Feather";
 import { NestableScrollContainer, NestableDraggableFlatList } from "react-native-draggable-flatlist"
 import Background from "../../components/Background";
 import DragIcon from "../../assets/Images/Frame 34902.svg"
+import Button from "../Temples/Common/Button";
 const SongLists = ({navigation,route} ) => {
     const {data} = route?.params
     const [index , setIndex]=useState(0)
@@ -41,9 +42,9 @@ const SongLists = ({navigation,route} ) => {
     }
     const renderItem = ({ item, index,drag,isActive }) => (
         <ScaleDecorator>
-            <TouchableOpacity   style={{marginBottom:5, alignItems:'center',  height:40 , flexDirection:'row',justifyContent:'space-between',}}>
+            <TouchableOpacity   style={{marginBottom:10, alignItems:'center',  height:48 , flexDirection:'row',justifyContent:'space-between',}}>
                 <View style={{flexDirection:'row',alignItems:'center'}}>
-                  <View style={{backgroundColor:'#F2F0F8',height:40,width:40}}>
+                  <View style={{backgroundColor:'#F2F0F8',height:48,width:48}}>
                   </View>
                     <Text style={{ fontSize: 14, color: 'black',marginHorizontal:5 }}>{item?.title}</Text>
                 </View>
@@ -58,32 +59,33 @@ const SongLists = ({navigation,route} ) => {
         console.log("index" ,i)
         let query = `UPDATE fav_odhuvar SET serialNo=? WHERE id=?`
         updatefavPlaylist(query, [i, item[i].id],callbacks => {
-            console.log("🚀 ~ updateList ~ callbacks:", callbacks)
+            // console.log("🚀 ~ updateList ~ callbacks:", callbacks)
         })
       }
-      setFavList(data)
+    //   setFavList(data)
     }
     return (
         // <ScrollView style={{backgroundColor:'#fff',marginTop:30, borderTopEndRadius: 15,borderTopLeftRadius: 15, }}>
         <Background>
-             <View style={{marginTop:30,paddingTop:10, backgroundColor:'#fff',borderTopEndRadius: 15,borderTopLeftRadius: 15, paddingHorizontal:10, flexDirection:'row',justifyContent:'space-between',}}>
-                 <View>
+             <View style={{marginTop:30,paddingTop:10, backgroundColor:'#fff',borderTopEndRadius: 15,borderTopLeftRadius: 15, paddingHorizontal:10,height:Dimensions.get('window').height-25}}>
+                 <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
+                    <View>
                  <Text style={{fontFamily:'Lora-Bold' , fontSize:16,}}>Re-arrange tasks</Text>
                  <Text style={{fontFamily:'Mulish-Regular' , fontSize:12,}}>Long press & hold tracks to move them up or down</Text>
                     </View>
                     <TouchableOpacity onPress={()=>navigation.goBack()}>
                      <Icon name='x' color='black' size={24}/>
                     </TouchableOpacity>
-                 </View>
-               <NestableScrollContainer style={{backgroundColor:'#fff',paddingTop:10}}>
-            <NestableDraggableFlatList
-            onPlaceholderIndexChange={(index)=>setIndex(index)}
-            style={{paddingHorizontal:20,paddingBottom:300}}
-            data={favList}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
-            onDragEnd={({ data }) => updateList(data)}
-            />
+                    </View>
+                 <NestableScrollContainer style={{backgroundColor:'#fff',paddingTop:10}}>
+                       <NestableDraggableFlatList
+                       onPlaceholderIndexChange={(index)=>setIndex(index)}
+                       style={{paddingHorizontal:10,paddingBottom:300}}
+                       data={favList}
+                       renderItem={renderItem}
+                       keyExtractor={(item) => item.id}
+                       onDragEnd={({ data }) => updateList(data)}
+                       />
             {/* <DraggableFlatList
                style={{paddingHorizontal:20}}
                 data={data}
@@ -92,6 +94,8 @@ const SongLists = ({navigation,route} ) => {
                 renderItem={renderItem}
             /> */}
         </NestableScrollContainer>
+                 </View>
+        <Button active buttonText={'Save'} navigation={()=>navigation.goBack()}/>
         </Background>
         // </ScrollView>
     );

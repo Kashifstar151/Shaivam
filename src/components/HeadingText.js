@@ -6,7 +6,7 @@ import NandiLogo from "../assets/Images/NandiLogo.svg"
 const HeadingText = ({ text, nandiLogo }) => {
     return (
         <View style={{ paddingHorizontal: 0, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Text style={{ color: colors.grey3, fontSize: 16, fontWeight: '600' }}>{text}</Text>
+            <Text style={{ color: '#FFFFFF', fontSize: 24, fontFamily: 'Lora-Bold' }}>{text}</Text>
             {
                 nandiLogo &&
                 <View>
