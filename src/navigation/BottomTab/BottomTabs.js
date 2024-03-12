@@ -105,7 +105,11 @@ export default BottomTab = ({ navigation }) => {
                     // },
                     tabBarIcon: ({ color, size, focused }) => (
                         <TouchableOpacity
-                            onPress={() => navigation.navigate(RouteTexts.TEMPLE_Tabs)}
+                            onPress={() =>
+                                navigation.navigate(RouteTexts.TEMPLE_Tabs, {
+                                    screen: 'Temples',
+                                })
+                            }
                             style={{ marginBottom: 10 }}
                         >
                             {/* <Text>Back</Text>
