@@ -36,23 +36,34 @@ export const locationPermission = async () => {
 
 // for region change callback
 export const onRegionChangeCompleteCallback = (args, clbk) => {
+    // console.log('🚀 ~ onRegionChangeCompleteCallback ~ args:', args);
     clbk(args);
 };
 
 // get current location
 export const getCurrentLocationWatcher = (setStateClbk) => {
-    Geolocation.watchPosition((success) => {
-        const { coords } = success;
-        setStateClbk({
-            latitude: coords.latitude,
-            longitude: coords.longitude,
-        });
-    }),
+    Geolocation.watchPosition(
+        (success) => {
+            const { coords } = success;
+            // console.log('🚀 ~ getCurrentLocationWatcher ~ coords:', coords);
+            setStateClbk({
+                latitude: coords.latitude,
+                longitude: coords.longitude,
+            });
+        },
         (error) => {
             // setStateClbk
             console.log('the error in fetching location=============> ', error);
         },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 };
+        {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            interval: 1000,
+            distanceFilter: 5,
+            showLocationDialog: true,
+            fastestInterval: 1000,
+        }
+    );
 };
 
 export const clearGetCurrentLocationWatcher = () => {
