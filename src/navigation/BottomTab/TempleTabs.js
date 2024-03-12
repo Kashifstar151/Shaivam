@@ -30,6 +30,8 @@ import Addtemple from '../../Screens/Temples/AddTemple/Addtemple';
 import { createStackNavigator } from '@react-navigation/stack';
 import NearByPage from '../../Screens/Temples/NearByPage';
 
+const NullComponent = () => <></>;
+
 const ExploreStack = createStackNavigator();
 
 const ExploreTempleStack = () => {
@@ -167,7 +169,7 @@ export default TempleTab = ({ navigation }) => {
                     ),
                 }}
                 name="Exit Temple"
-                component={() => null}
+                component={NullComponent}
                 listeners={() => ({
                     focus: (e) => {
                         navigation.navigate(RouteTexts.BOTTOM_TABS);
