@@ -16,17 +16,43 @@ import FavouriteSVG from '../../components/SVGs/FavouriteSVG';
 import MoreSVG from '../../components/SVGs/MoreSVG';
 import BottomTabs from './BottomTabs';
 import ExitTemple from '../../Screens/Temples/ExitTemple';
-import ActiveHome from '../../assets/Images/InactiveHome.svg'
-import ActiveTrip from '../../assets/Images/ActiveTrip.svg'
-import InActiveTrip from '../../assets/Images/InactiveTrip.svg'
-import ActiveLocation from '../../assets/Images/ActiveLocation.svg'
-import InActiveLocation from '../../assets/Images/UnActiveLocation.svg'
-import ActiveAddTrip from '../../assets/Images/InActiveAddTemple.svg'
+import ActiveHome from '../../assets/Images/InactiveHome.svg';
+import ActiveTrip from '../../assets/Images/ActiveTrip.svg';
+import InActiveTrip from '../../assets/Images/InactiveTrip.svg';
+import ActiveLocation from '../../assets/Images/ActiveLocation.svg';
+import InActiveLocation from '../../assets/Images/UnActiveLocation.svg';
+import ActiveAddTrip from '../../assets/Images/InActiveAddTemple.svg';
 // import ActiveAddTrip from '../../assets/Images/InActiveAddTemple.svg'
-import InActiveAddTrip from '../../assets/Images/Vector (4).svg'
+import InActiveAddTrip from '../../assets/Images/Vector (4).svg';
 import MyTrip from '../../Screens/Temples/MyTrip/MyTrip';
 import Addtemple from '../../Screens/Temples/AddTemple/Addtemple';
 
+import { createStackNavigator } from '@react-navigation/stack';
+import NearByPage from '../../Screens/Temples/NearByPage';
+
+const ExploreStack = createStackNavigator();
+
+const ExploreTempleStack = () => {
+    return (
+        <ExploreStack.Navigator>
+            <ExploreStack.Screen
+                name={'explore'}
+                component={Temples}
+                options={{ headerShown: false }}
+            />
+            <ExploreStack.Screen
+                name={'nearBy'}
+                component={NearByPage}
+                options={{
+                    headerShown: false,
+                    presentation: 'modal',
+                    animationEnabled: true,
+                    animationTypeForReplace: 'push',
+                }}
+            />
+        </ExploreStack.Navigator>
+    );
+};
 const Tab = createBottomTabNavigator();
 export default TempleTab = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
@@ -87,33 +113,33 @@ export default TempleTab = ({ navigation }) => {
                                 // elevation: 2
                             }}
                         >
-
-                            {
-                                focused ?
-                                    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                        {/* <ActiveTeample /> */}
-                                        <ActiveHome />
-                                        <Text
-                                            style={[
-                                                styles.tabBarLable,
-                                                { color: theme.bottomTabItemColor.unSelected },
-                                            ]}
-                                        >
-                                            Go to Home
-                                        </Text>
-                                    </View> : <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                        {/* <ActiveTeample /> */}
-                                        <ActiveHome />
-                                        <Text
-                                            style={[
-                                                styles.tabBarLable,
-                                                { color: theme.bottomTabItemColor.unSelected },
-                                            ]}
-                                        >
-                                            Go to Home
-                                        </Text>
-                                    </View>
-                            }
+                            {focused ? (
+                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                    {/* <ActiveTeample /> */}
+                                    <ActiveHome />
+                                    <Text
+                                        style={[
+                                            styles.tabBarLable,
+                                            { color: theme.bottomTabItemColor.unSelected },
+                                        ]}
+                                    >
+                                        Go to Home
+                                    </Text>
+                                </View>
+                            ) : (
+                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                    {/* <ActiveTeample /> */}
+                                    <ActiveHome />
+                                    <Text
+                                        style={[
+                                            styles.tabBarLable,
+                                            { color: theme.bottomTabItemColor.unSelected },
+                                        ]}
+                                    >
+                                        Go to Home
+                                    </Text>
+                                </View>
+                            )}
                             {/* <View style={{ marginTop: 6 }}>
                                 {focused ? (
                                     <IndicatorIcon />
@@ -128,16 +154,29 @@ export default TempleTab = ({ navigation }) => {
                                 )}
                             </View> */}
                             {/* </View> */}
-                            <View style={{ marginHorizontal: 10, height: '100%', width: 1, elevation: 2.5, backgroundColor: '#C1554E' }}>
-
-                            </View>
+                            <View
+                                style={{
+                                    marginHorizontal: 10,
+                                    height: '100%',
+                                    width: 1,
+                                    elevation: 2.5,
+                                    backgroundColor: '#C1554E',
+                                }}
+                            ></View>
                         </TouchableOpacity>
-
                     ),
                 }}
-
                 name="Exit Temple"
-                component={Temples}
+                component={() => null}
+                listeners={() => ({
+                    focus: (e) => {
+                        navigation.navigate(RouteTexts.BOTTOM_TABS);
+                    },
+                    tabPress: (e) => {
+                        e.preventDefault(); // Prevents navigation
+                        // Your code here for when you press the tab
+                    },
+                })}
             />
             <Tab.Screen
                 options={{
@@ -198,7 +237,7 @@ export default TempleTab = ({ navigation }) => {
                     ),
                 }}
                 name="Temples"
-                component={Temples}
+                component={ExploreTempleStack}
             />
             <Tab.Screen
                 options={{
