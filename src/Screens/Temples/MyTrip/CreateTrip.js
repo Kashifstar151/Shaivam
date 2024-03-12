@@ -8,6 +8,7 @@ import LocationIcon from "../../../assets/Images/Group 14100.svg"
 // import Slider from "@react-native-community/slider";
 import Slider from "@kashifum8299/react-native-slider";
 import Button from "../Common/Button";
+import { RouteTexts } from "../../../navigation/RouteText";
 // import { gStyles } from "../../../Helpers";
 
 const CreateTrip = ({ navigation }) => {
@@ -45,7 +46,7 @@ const CreateTrip = ({ navigation }) => {
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <LocationIcon />
                         <View style={{ paddingHorizontal: 20 }}>
-                            <TextInputCom headinText={'Starting Location*'} insiderText={'Current Location'} />
+                            <TextInputCom navigation={() => navigation.navigate(RouteTexts.TEMPLE_SELECTION)} headinText={'Starting Location*'} insiderText={'Current Location'} />
                             <TextInputCom headinText={'End Point'} insiderText={'Enter here'} />
                         </View>
                     </View>

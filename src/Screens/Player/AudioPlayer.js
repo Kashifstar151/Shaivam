@@ -44,6 +44,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import { colors } from '../../Helpers';
 import { MusicContext } from '../../components/Playbacks/TrackPlayerContext';
+import AlertScreen from '../../components/AlertScreen';
 
 const RenderAudios = ({ item, index, clb, activeTrack, setSelectedOdhuvar }) => {
     // console.log('🚀 ~ file: AudioPlayer.js:70 ~ RenderAudios ~ clb:', clb);
@@ -157,6 +158,7 @@ const AudioPlayer = ({
     // const [downloadingLoader, setDownloadingLoader] = useState(false);
     const [downloadedSong, setDownloadedSong] = useState(false);
     const [mostPlayedSongs, setMostPlayedSong] = useState([])
+    const [showModal, setShowModal] = useState(false)
     const playBackState = usePlaybackState();
 
     useEffect(() => {
@@ -178,6 +180,7 @@ const AudioPlayer = ({
         createUserTable();
         MostPlayedSongList();
         getMostPlayedSong()
+        fetchAndDisplayDownloads()
         // mostPlayed()
         // if (downloaded) {
         //     setUpPlayer(data);
@@ -239,6 +242,23 @@ const AudioPlayer = ({
 
         })
     }
+    const [downlaodList, setDownloadList] = useState([])
+    const fetchAndDisplayDownloads = async () => {
+        try {
+            // const keys = await AsyncStorage.getAllKeys();
+            const parsedMetadata = await AsyncStorage.getItem('downloaded');
+            // console.log("🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:", parsedMetadata)
+            // const metadataKeys = keys.filter(key => key.startsWith('downloaded:'));
+            // const metadata = await AsyncStorage.multiGet(metadataKeys);
+            // const parsedMetadata = metadata.map(([key, value]) => JSON.parse(value));
+            // console.log("🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:", parsedMetadata)
+            setDownloadList(JSON.parse(parsedMetadata))
+            // Now `parsedMetadta` contains all of your audio files' metadata
+            // You can use this data to render your downloads page
+        } catch (e) {
+            console.error('Failed to fetch metadata', e);
+        }
+    };
     const mostPlayed = async (callbacks) => {
         let count = 1
         let exist = false
@@ -269,6 +289,24 @@ const AudioPlayer = ({
             }
         }).catch((error) => {
             console.log('error occured in getting current track')
+        })
+    }
+    const removeFromOfflineDownload = async () => {
+        await TrackPlayer.getActiveTrack().then((item) => {
+            let arr = downlaodList.filter((res) => res.id !== selectedItem.id)
+            // console.log("🚀 ~ removeFromPlaylist ~ arr:", arr)
+            setDownloadList(arr)
+            AsyncStorage.setItem('downloaded', JSON.stringify(arr))
+            setDownloadedSong(false)
+            setShowModal(false)
+
+        })
+    }
+    const [selectedItem, setSelectedItem] = useState([])
+    const removeDownload = async () => {
+        await TrackPlayer.getActiveTrack().then((item) => {
+            setSelectedItem(item)
+            setShowModal(true)
         })
     }
     const downloadAudio = () => {
@@ -549,8 +587,18 @@ const AudioPlayer = ({
                             <TouchableOpacity onPress={() => handleNext()}>
                                 <Icon name="stepforward" size={24} color="white" />
                             </TouchableOpacity>
-
-                            <TouchableOpacity
+                            {
+                                downloadedSong ?
+                                    <TouchableOpacity onPress={() => removeDownload()} style={{ height: 30, width: 30, borderRadius: 15, backgroundColor: '#389F56', justifyContent: 'center', alignItems: 'center' }}>
+                                        <Icon name="check" size={24} color="white" />
+                                    </TouchableOpacity> : <TouchableOpacity
+                                        style={{ marginHorizontal: 20 }}
+                                        onPress={() => downloadAudio()}
+                                    >
+                                        <Icon name="download" size={24} color="white" />
+                                    </TouchableOpacity>
+                            }
+                            {/* <TouchableOpacity
                                 style={{ marginHorizontal: 20 }}
                                 onPress={() => downloadAudio()}
                             >
@@ -561,7 +609,7 @@ const AudioPlayer = ({
                                 ) : (
                                     <Icon name="download" size={24} color="white" />
                                 )}
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
                             <TouchableOpacity onPress={() => downloadAudios()}>
                                 {
                                     fav ? <Icon name='heart' size={22} color='red' /> :
@@ -573,6 +621,12 @@ const AudioPlayer = ({
                 )
                 }
             </View >
+            {
+                showModal &&
+                <Modal transparent>
+                    <AlertScreen descriptionText={selectedItem} removeFromPlaylist={removeFromOfflineDownload} setShowModal={setShowModal} />
+                </Modal>
+            }
         </>
     );
 };

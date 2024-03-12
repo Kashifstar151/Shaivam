@@ -1,15 +1,28 @@
 # Resolve react_native_pods.rb with node to allow for hoisting
-require Pod::Executable.execute_command('node', ['-p',
-  'require.resolve(
-    "react-native/scripts/react_native_pods.rb",
-    {paths: [process.argv[1]]},
-  )', __dir__]).strip
+# require Pod::Executable.execute_command('node', ['-p',
+#   'require.resolve(
+#     "react-native/scripts/react_native_pods.rb",
+#     {paths: [process.argv[1]]},
+#   )', __dir__]).strip
 
-platform :ios, min_ios_version_supported
-prepare_react_native_project!
+def node_require(script)
+  # Resolve script with node to allow for hoisting
+  require Pod::Executable.execute_command('node', ['-p',
+    "require.resolve(
+      '#{script}',
+      {paths: [process.argv[1]]},
+    )", __dir__]).strip
+end
+node_require('react-native/scripts/react_native_pods.rb')
+# node_require('react-native-permissions/scripts/setup.rb')
+platform :ios,'13.4'
+# prepare_react_native_project!
 use_modular_headers!
 
+
 # pod 'React', :path => '../node_modules/react-native'
+rn_maps_path = '../node_modules/react-native-maps'
+pod 'react-native-google-maps', :path => rn_maps_path
 pod 'react-native-sqlite-storage', :path => '../node_modules/react-native-sqlite-storage'
 
 # pod 'rn-fetch-blob',
@@ -24,7 +37,7 @@ pod 'react-native-sqlite-storage', :path => '../node_modules/react-native-sqlite
 #   dependencies: {
 #     ...(process.env.NO_FLIPPER ? { 'react-native-fl~ipper': { platforms: { ios: null } } } : {}),
 # ```
-flipper_config = ENV['NO_FLIPPER'] == "1" ? FlipperConfiguration.disabled : FlipperConfiguration.enabled
+# flipper_config = ENV['NO_FLIPPER'] == "1" ? FlipperConfiguration.disabled : FlipperConfiguration.enabled
 
 linkage = ENV['USE_FRAMEWORKS']
 if linkage != nil
@@ -42,7 +55,7 @@ target 'Shaivam' do
     #
     # Note that if you have use_frameworks! enabled, Flipper will not work and
     # you should disable the next line.
-    :flipper_configuration => flipper_config,
+    # :flipper_configuration => flipper_config,
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )

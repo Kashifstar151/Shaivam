@@ -312,6 +312,7 @@ export const Temples = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     map: {
+        flex: 1,
         justifyContent: 'center',
         position: 'absolute',
         flex: 1,
