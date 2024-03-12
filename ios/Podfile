@@ -15,12 +15,14 @@ def node_require(script)
 end
 node_require('react-native/scripts/react_native_pods.rb')
 # node_require('react-native-permissions/scripts/setup.rb')
-platform :ios, min_ios_version_supported
+platform :ios,'13.4'
 # prepare_react_native_project!
 use_modular_headers!
 
 
 # pod 'React', :path => '../node_modules/react-native'
+rn_maps_path = '../node_modules/react-native-maps'
+pod 'react-native-google-maps', :path => rn_maps_path
 pod 'react-native-sqlite-storage', :path => '../node_modules/react-native-sqlite-storage'
 
 # pod 'rn-fetch-blob',
