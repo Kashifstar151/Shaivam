@@ -52,16 +52,14 @@ export const Temples = ({ navigation }) => {
         locationName: '',
     });
 
-    const [viewAreaCoors, setViewAreaCoors] = useState({
-        ...regionCoordinate,
-    });
-
     const [userLocation, setUserLocation] = useState({
         latitude: 28.500271,
         longitude: 77.387901,
         latitudeDelta: 0.015,
         longitudeDelta: 0.0121,
     });
+
+    // const [userLocation, setUserLocation] = useState();
 
     const [snapIndex, setSnapIndex] = useState(0);
 
@@ -154,18 +152,37 @@ export const Temples = ({ navigation }) => {
 
     const [padState, setPadState] = useState(1);
 
-    useEffect(() => {
-        getCurrentLocationWatcher((val) => {
-            console.log('the value is set for map ');
-            setRegionCoordinate((prev) => ({ ...prev, ...val }));
-        });
-        return () => clearGetCurrentLocationWatcher();
-    }, []);
+    const onMapReadyCallback = async () => {
+        const state = await locationPermission();
+
+        if (state.status) {
+            // Alert.alert(`the status is ----> ${state.status}`);
+            getCurrentLocationWatcher((val) => {
+                // console.log('the value is set for map ', val);
+                setUserLocation((prev) => ({ ...prev, ...val }));
+            });
+        }
+    };
 
     useEffect(() => {
         (async () => {
-            await locationPermission();
+            await onMapReadyCallback();
         })();
+
+        // getCurrentLocationWatcher((val) => {
+        //     console.log('the value is set for map ');
+        //     setUserLocation((prev) => ({ ...prev, ...val }));
+        // });
+        return () => {
+            // Alert.alert('clearing the watcher ');
+            clearGetCurrentLocationWatcher();
+        };
+    }, []);
+
+    useEffect(() => {
+        // (async () => {
+        //     await locationPermission();
+        // })();
 
         setTimeout(() => {
             setPadState(0);
@@ -175,12 +192,9 @@ export const Temples = ({ navigation }) => {
     const [userLocName, setUserLocName] = useState('');
 
     useEffect(() => {
-        // console.log('the format=jsonv2& and coord==>', regionCoordinate);
-        if (regionCoordinate?.latitude && regionCoordinate?.longitude) {
+        if (userLocation?.latitude && userLocation?.longitude) {
             (async () => {
                 const locationDetail = await getTheLocationName({ ...regionCoordinate });
-
-                // console.log('the location of the user ==>', locationDetail?.display_name);
                 setUserLocName((prev) => {
                     return (
                         locationDetail?.address?.village ||
@@ -190,35 +204,30 @@ export const Temples = ({ navigation }) => {
                 });
             })();
         }
-    }, [regionCoordinate]);
-
-    const onMapReadyCallback = async () => {
-        const state = await locationPermission();
-
-        if (state.status) {
-            getCurrentLocationWatcher((val) => {
-                console.log('the value is set for map ');
-                setRegionCoordinate((prev) => ({ ...prev, ...val }));
-            });
-        }
-    };
+    }, [userLocation]);
 
     return (
         <View style={{ flex: 1, position: 'relative' }}>
-            <MapView
-                onMapReady={onMapReadyCallback}
-                provider={PROVIDER_GOOGLE}
-                style={styles.map}
-                onRegionChangeComplete={(args) =>
-                    onRegionChangeCompleteCallback(args, setViewAreaCoors)
-                }
-                // onRegionChange={onRegionChangeCallback}
-                // mapPadding={{ top: 0, right: 0, bottom: 700, left: 0 }}
-                region={userLocation}
-            >
-                <CustomMarker flag={8} coordinate={userLocation} />
-                <CustomMarker flag={7} coordinate={regionCoordinate} />
-            </MapView>
+            {userLocation?.latitude ? (
+                <MapView
+                    // onMapReady={onMapReadyCallback}
+                    provider={PROVIDER_GOOGLE}
+                    initialRegion={null}
+                    style={styles.map}
+                    onRegionChangeComplete={(args, gesture) => {
+                        if (gesture.isGesture) {
+                            onRegionChangeCompleteCallback(args, (input) => {
+                                setRegionCoordinate(input);
+                            });
+                        }
+                    }}
+                    // mapPadding={{ top: 0, right: 0, bottom: 700, left: 0 }}
+                    region={regionCoordinate}
+                >
+                    <CustomMarker flag={8} coordinate={userLocation} />
+                    <CustomMarker flag={7} coordinate={regionCoordinate} />
+                </MapView>
+            ) : null}
 
             <View style={styles.topBarWrapper}>
                 <SearchContainerWithIcon />
@@ -265,11 +274,21 @@ export const Temples = ({ navigation }) => {
                 onPress={() => {
                     console.log('the uuiuui');
                     setUserLocation((prev) => ({ ...prev, latitude: 28.5002, longitude: 77.381 }));
+                    setRegionCoordinate((prev) => ({
+                        ...prev,
+                        latitude: 28.5002,
+                        longitude: 77.381,
+                    }));
                 }}
             >
                 {/* bring user's location into view */}
                 <TrackBackToLocSVG fill={'#777'} />
             </Pressable>
+
+            {/* for test purpose  */}
+            {/* <View style={{ position: 'absolute', backgroundColor: 'red', top: 10 }}>
+                <Text>{JSON.stringify(userLocation)}</Text>
+            </View> */}
 
             <AnimatedRightSideView heading={'Map Legend'} RightIcon={<MapIconSVG />}>
                 <InnerContextOfAnimatedSideBox />
