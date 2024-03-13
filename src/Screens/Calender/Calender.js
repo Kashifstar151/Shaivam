@@ -80,6 +80,11 @@ const Calender = () => {
                     fullScreen ?
                         <View style={{ backgroundColor: '#ffffff', borderRadius: 10, elevation: 2 }}>
                             <Calendar
+                                theme={{
+                                    dayTextColor: '#222222',
+                                    textDayFontFamily: 'Mulish-Bold',
+                                    // monthTextColor:'red'
+                                }}
                                 onDayPress={(day) => setSelected(day?.dateString)}
                                 // marking={{ customContainerStyle: { backgroundColor: '#FCB300', height: 20, width: 30 }, customStyles: { container: { height: 30, width: 40 } } }}
                                 markingType='custom'
