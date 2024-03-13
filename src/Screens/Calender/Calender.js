@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { FlatList, StyleSheet, TouchableOpacity, View, UIManager, Platform, LayoutAnimation, StatusBar } from 'react-native'
+import React, { useMemo, useState } from 'react'
+import { FlatList, StyleSheet, TouchableOpacity, View, UIManager, Platform, LayoutAnimation, StatusBar, Dimensions } from 'react-native'
 import Icon from 'react-native-vector-icons/dist/Entypo'
 import Background from '../../components/Background'
 import HeadingText from '../../components/HeadingText'
@@ -27,6 +27,25 @@ const Calender = () => {
         setIsExpanded(!isExpanded);
     };
     const [selectedHeader, setSelectedheader] = useState()
+    const [fullScreen, setFullScreen] = useState(false)
+    const [selected, setSelected] = useState('2024-03-13')
+    const marked = useMemo(() => ({
+        [selected]: {
+            marked: true,
+            dotColor: 'black',
+            customStyles: {
+                container: {
+                    backgroundColor: '#FCB300',
+                    height: 40,
+                    borderRadius: 5,
+                },
+                text: {
+                    color: 'black',
+                    fontFamily: 'Mulish-Bold'
+                },
+            },
+        }
+    }), [selected]);
     // LocaleConfig.locales['fr']
     return (
         <View style={{ flex: 1 }}>
@@ -57,7 +76,22 @@ const Calender = () => {
                 </View>
             </Background>
             <View style={{ alignSelf: 'center', alignItems: 'center', justifyContent: 'center', position: 'absolute', top: '27%', }}>
-                <CustomCalender />
+                {
+                    fullScreen ?
+                        <View style={{ backgroundColor: '#ffffff', borderRadius: 10, elevation: 2 }}>
+                            <Calendar
+                                onDayPress={(day) => setSelected(day?.dateString)}
+                                // marking={{ customContainerStyle: { backgroundColor: '#FCB300', height: 20, width: 30 }, customStyles: { container: { height: 30, width: 40 } } }}
+                                markingType='custom'
+                                markedDates={marked}
+                                style={{ width: Dimensions.get('window').width - 30, borderRadius: 10, elevation: 2 }} />
+                            <TouchableOpacity style={{ alignSelf: 'center' }} onPress={() => setFullScreen(false)}>
+                                <Icon name='chevron-up' size={23} />
+                            </TouchableOpacity>
+                        </View> :
+                        <CustomCalender setFullScreen={setFullScreen} />
+                }
+
             </View>
         </View>
     )

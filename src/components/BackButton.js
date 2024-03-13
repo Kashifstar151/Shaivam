@@ -15,14 +15,15 @@ const BackButton = ({
     rightIcon,
     buttonDisable
 }) => {
+    console.log(Platform, 'Platform.OS')
     return (
         <View
             style={{
-                paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 40 : 0,
+                paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 20 : 0,
                 paddingHorizontal: 15,
             }}
         >
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 30 : 10 }}>
                 <View style={{ flexDirection: 'row', marginTop: 10, paddingHorizontal: 5 }}>
                     {
                         buttonDisable ? null :

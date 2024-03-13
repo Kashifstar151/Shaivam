@@ -5,11 +5,10 @@ import { Calendar, LocaleConfig, WeekCalendar, ExpandableCalendar, Agenda, Calen
 import { View, Dimensions, TouchableOpacity, Text } from "react-native";
 import Icon from "react-native-vector-icons/dist/MaterialCommunityIcons";
 import Swiper from 'react-native-swiper'
-// import { Dimensions } from "react-native";
 
 // import {ExpandableCalendar, AgendaList, CalendarProvider, WeekCalendar} from 'react-native-calendars';
 
-const CustomCalender = () => {
+const CustomCalender = ({ setFullScreen }) => {
   const [week, setWeek] = useState(0)
   const [value, setValue] = useState(new Date())
   const [index, setIndex] = useState(1)
@@ -77,6 +76,10 @@ const CustomCalender = () => {
           ))
         }
       </Swiper>
+      {/* <WeekCalendar /> */}
+      <TouchableOpacity style={{ alignSelf: 'center' }} onPress={() => setFullScreen(true)}>
+        <Icon name='chevron-down' size={23} />
+      </TouchableOpacity>
     </View >
   );
 };
