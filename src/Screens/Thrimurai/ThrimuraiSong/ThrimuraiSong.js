@@ -13,6 +13,8 @@ import {
     useColorScheme,
     Alert,
     ActivityIndicator,
+    Platform,
+    StatusBar,
 } from 'react-native';
 import BackButton from '../../../components/BackButton';
 import ShareIcon from '../../../assets/Images/share-1.svg';
@@ -363,7 +365,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
-            <AnimatedRN.View style={{ height: statusBarHeight }}>
+            <AnimatedRN.View style={{ height: statusBarHeight, paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 20 : 0 }}>
                 <Background>
                     <BackButton
                         secondMiddleText={data?.title}
