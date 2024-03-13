@@ -19,7 +19,9 @@ export default BottomTab = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
     return (
         <Tab.Navigator
+
             screenOptions={{
+                // headerStatusBarHeight:{},
                 tabBarStyle: [
                     styles.tabContainer,
                     {
@@ -372,7 +374,7 @@ export default BottomTab = ({ navigation }) => {
 export const styles = StyleSheet.create({
     tabContainer: {
         paddingTop: 5,
-        height: 65,
+        // height: 65,
         borderTopEndRadius: 10,
         borderTopStartRadius: 10,
         position: 'absolute',
@@ -383,8 +385,8 @@ export const styles = StyleSheet.create({
         alignSelf: 'center',
         justifyContent: 'center',
         alignItems: 'center',
-        position: 'absolute',
-        bottom: 0,
+        // position: 'absolute',
+        // bottom: 0,
     },
     tabBarLable: {
         color: '#FFAAA5',

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { FlatList, StyleSheet, TouchableOpacity, View, UIManager, Platform, LayoutAnimation, StatusBar } from 'react-native'
 import Icon from 'react-native-vector-icons/dist/Entypo'
 import Background from '../../components/Background'
 import HeadingText from '../../components/HeadingText'
@@ -9,14 +9,25 @@ import InActiveCalender from "../../assets/Images/UnactiveCalender.svg"
 import ActiveStar from "../../assets/Images/ActiveStar.svg"
 import InActiveStar from "../../assets/Images/UnactiveStart.svg"
 import ActiveCalender from "../../assets/Images/CalenderAct.svg"
-
+import { Calendar, LocaleConfig, WeekCalendar, ExpandableCalendar } from 'react-native-calendars';
+import CustomCalender from './CustomCalender'
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 const Calender = () => {
     const data = [
         { name: 'Festivals', selected: <ActiveStar />, unSelected: <InActiveStar /> },
         { name: 'Events', selected: <ActiveCalender />, unSelected: <InActiveCalender /> },
     ]
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    const toggleCalendar = () => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        setIsExpanded(!isExpanded);
+    };
     const [selectedHeader, setSelectedheader] = useState()
+    // LocaleConfig.locales['fr']
     return (
         <View style={{ flex: 1 }}>
             <Background >
@@ -36,13 +47,23 @@ const Calender = () => {
                     <FlatList contentContainerStyle={{ paddingHorizontal: 15, marginVertical: 10 }} horizontal data={data} renderItem={({ item, index }) => (
                         <HeadingComponent selectedHeader={selectedHeader} setHeader={setSelectedheader} item={item} index={index} />
                     )} />
+
+                    {/* <TouchableOpacity onPress={toggleCalendar}>
+                        <Icon name='plus' size={20} color='#222222' />
+                    </TouchableOpacity> */}
+                </View>
+                <View style={{ height: 100 }}>
+
                 </View>
             </Background>
+            <View style={{ alignSelf: 'center', alignItems: 'center', justifyContent: 'center', position: 'absolute', top: '27%', }}>
+                <CustomCalender />
+            </View>
         </View>
     )
 }
 export const styles = StyleSheet.create({
-    HeadeingContainer: { paddingHorizontal: 15, justifyContent: 'center', marginVertical: 15 },
+    HeadeingContainer: { paddingHorizontal: 15, justifyContent: 'center', marginVertical: 15, paddingTop: Platform.OS = 'ios' ? StatusBar.currentHeight + 20 : 0 },
     SearchInputContainer: { flexDirection: 'row', },
     AddBtnContainer: { backgroundColor: '#FCB300', height: 50, width: 50, borderRadius: 10, justifyContent: 'center', alignItems: 'center' }
 })
