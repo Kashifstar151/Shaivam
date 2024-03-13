@@ -21,7 +21,7 @@ const Background = (props) => {
                         : require('../../assets/Images/BackgroundCommon.png')
                 }
                 style={{
-                    paddingVertical: Platform.OS == 'ios' ? StatusBar.currentHeight + 20 : 0,
+                    paddingVertical: 10,
                     borderRadius: 10,
                     width: '100%',
                 }}
