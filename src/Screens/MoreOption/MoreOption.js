@@ -4,6 +4,7 @@ import {
     FlatList,
     Platform,
     Pressable,
+    ScrollView,
     StatusBar,
     StyleSheet,
     Text,
@@ -98,9 +99,12 @@ const MoreOption = () => {
         );
     };
     return (
-        <View style={[styles.main, { backgroundColor: theme.backgroundColor, flex: 1 }]}>
+        <View style={[styles.main, { backgroundColor: theme.backgroundColor }]}>
             <Background>
-                <ConstantHeader />
+                <View style={{ marginTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 20 : 0 }}>
+
+                    <ConstantHeader />
+                </View>
             </Background>
             <View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
                 <FlatList
@@ -130,9 +134,12 @@ const MoreOption = () => {
     );
 };
 export const styles = StyleSheet.create({
-    main: {},
+    main: { flex: 1 },
     container: {
-        margin: 14,
+        // margin: 14,
+        paddingHorizontal: 10,
+        paddingTop: 20
+
         // marginTop: 24,
     },
     list: {
