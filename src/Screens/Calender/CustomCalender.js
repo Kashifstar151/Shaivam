@@ -76,7 +76,6 @@ const CustomCalender = ({ setFullScreen }) => {
           ))
         }
       </Swiper>
-      {/* <WeekCalendar /> */}
       <TouchableOpacity style={{ alignSelf: 'center' }} onPress={() => setFullScreen(true)}>
         <Icon name='chevron-down' size={23} />
       </TouchableOpacity>
