@@ -35,6 +35,7 @@ export const CustomMarker = ({ flag, coordinate }) => {
             tracksViewChanges={false}
             coordinate={coordinate}
             description={'This is a marker in React Natve'}
+            // image={assetMapWithTempleType[flag].path}
         >
             <Image source={assetMapWithTempleType[flag].path} resizeMode="contain" />
         </Marker>
@@ -186,8 +187,8 @@ export const Temples = ({ navigation }) => {
 
         setTimeout(() => {
             setPadState(0);
-        }, 100);
-    }, [padState]);
+        }, 500);
+    }, []);
 
     const [userLocName, setUserLocName] = useState('');
 
@@ -207,106 +208,113 @@ export const Temples = ({ navigation }) => {
     }, [userLocation]);
 
     return (
-        <View style={{ flex: 1, position: 'relative' }}>
-            {userLocation?.latitude ? (
-                <MapView
-                    // onMapReady={onMapReadyCallback}
-                    provider={PROVIDER_GOOGLE}
-                    initialRegion={null}
-                    style={styles.map}
-                    onRegionChangeComplete={(args, gesture) => {
-                        if (gesture.isGesture) {
-                            onRegionChangeCompleteCallback(args, (input) => {
-                                setRegionCoordinate(input);
-                            });
-                        }
-                    }}
-                    // mapPadding={{ top: 0, right: 0, bottom: 700, left: 0 }}
-                    region={regionCoordinate}
-                >
-                    <CustomMarker flag={8} coordinate={userLocation} />
-                    <CustomMarker flag={7} coordinate={regionCoordinate} />
-                </MapView>
-            ) : null}
+        <>
+            {/* {!padState ? ( */}
+            <View style={{ flex: 1, position: 'relative' }}>
+                {userLocation?.latitude ? (
+                    <MapView
+                        // onMapReady={onMapReadyCallback}
+                        provider={PROVIDER_GOOGLE}
+                        initialRegion={null}
+                        style={styles.map}
+                        onRegionChangeComplete={(args, gesture) => {
+                            if (gesture.isGesture) {
+                                onRegionChangeCompleteCallback(args, (input) => {
+                                    setRegionCoordinate(input);
+                                });
+                            }
+                        }}
+                        region={regionCoordinate}
+                    >
+                        <CustomMarker flag={8} coordinate={userLocation} />
+                        <CustomMarker flag={7} coordinate={regionCoordinate} />
+                    </MapView>
+                ) : null}
 
-            <View style={styles.topBarWrapper}>
-                <SearchContainerWithIcon />
+                <View style={styles.topBarWrapper}>
+                    <SearchContainerWithIcon />
 
-                <View style={styles.colorContWrapper}>
-                    {Object.entries(assetMapWithTempleType).map(([key, value], indx) =>
-                        key !== '8' ? (
-                            <View style={styles.contWrapper}>
-                                <View
-                                    style={[
-                                        styles.textContWrapper,
-                                        {
-                                            backgroundColor: value.metaData.color,
-                                        },
-                                    ]}
-                                >
-                                    {value.metaData.letterAssociated && (
-                                        <Text style={styles.textStyleForCont}>
-                                            {value.metaData.letterAssociated}
-                                        </Text>
-                                    )}
+                    <View style={styles.colorContWrapper}>
+                        {Object.entries(assetMapWithTempleType).map(([key, value], indx) =>
+                            key !== '8' ? (
+                                <View style={styles.contWrapper}>
+                                    <View
+                                        style={[
+                                            styles.textContWrapper,
+                                            {
+                                                backgroundColor: value.metaData.color,
+                                            },
+                                        ]}
+                                    >
+                                        {value.metaData.letterAssociated && (
+                                            <Text style={styles.textStyleForCont}>
+                                                {value.metaData.letterAssociated}
+                                            </Text>
+                                        )}
+                                    </View>
                                 </View>
-                            </View>
-                        ) : null
-                    )}
+                            ) : null
+                        )}
+                    </View>
                 </View>
-            </View>
 
-            {/* floating side btn */}
-            <Pressable
-                style={{
-                    position: 'absolute',
-                    backgroundColor: 'white',
-                    right: 20,
-                    bottom: Dimensions.get('window').height * 0.2,
-                    borderRadius: 100,
-                    padding: 10,
-                    elevation: 2,
-                    shadowOffset: {
-                        width: 10,
-                        height: 8,
-                    },
-                }}
-                onPress={() => {
-                    console.log('the uuiuui');
-                    setUserLocation((prev) => ({ ...prev, latitude: 28.5002, longitude: 77.381 }));
-                    setRegionCoordinate((prev) => ({
-                        ...prev,
-                        latitude: 28.5002,
-                        longitude: 77.381,
-                    }));
-                }}
-            >
-                {/* bring user's location into view */}
-                <TrackBackToLocSVG fill={'#777'} />
-            </Pressable>
+                {/* floating side btn */}
+                <Pressable
+                    style={{
+                        position: 'absolute',
+                        backgroundColor: 'white',
+                        right: 20,
+                        bottom: Dimensions.get('window').height * 0.2,
+                        borderRadius: 100,
+                        padding: 10,
+                        elevation: 2,
+                        shadowOffset: {
+                            width: 10,
+                            height: 8,
+                        },
+                    }}
+                    onPress={() => {
+                        console.log('the uuiuui');
+                        setUserLocation((prev) => ({
+                            ...prev,
+                            latitude: 28.5002,
+                            longitude: 77.381,
+                        }));
+                        setRegionCoordinate((prev) => ({
+                            ...prev,
+                            latitude: 28.5002,
+                            longitude: 77.381,
+                        }));
+                    }}
+                >
+                    {/* bring user's location into view */}
+                    <TrackBackToLocSVG fill={'#777'} />
+                </Pressable>
 
-            {/* for test purpose  */}
-            {/* <View style={{ position: 'absolute', backgroundColor: 'red', top: 10 }}>
+                {/* for test purpose  */}
+                {/* <View style={{ position: 'absolute', backgroundColor: 'red', top: 10 }}>
                 <Text>{JSON.stringify(userLocation)}</Text>
             </View> */}
 
-            <AnimatedRightSideView heading={'Map Legend'} RightIcon={<MapIconSVG />}>
-                <InnerContextOfAnimatedSideBox />
-            </AnimatedRightSideView>
-            <BottomSheet
-                ref={bottomSheetRef}
-                onChange={handleSheetChanges}
-                // containerHeight={400}
-                snapPoints={['7%', '95%']}
-            >
-                <NearByTemples
-                    locationName={userLocName}
-                    data={nearByTempleList}
-                    snapIndex={snapIndex}
-                    close={() => bottomSheetRef.current.snapToIndex(0)}
-                />
-            </BottomSheet>
-        </View>
+                <AnimatedRightSideView heading={'Map Legend'} RightIcon={<MapIconSVG />}>
+                    <InnerContextOfAnimatedSideBox />
+                </AnimatedRightSideView>
+                <BottomSheet
+                    ref={bottomSheetRef}
+                    onChange={handleSheetChanges}
+                    // containerHeight={400}
+                    snapPoints={['7%', '95%']}
+                >
+                    <NearByTemples
+                        locationName={userLocName}
+                        data={nearByTempleList}
+                        snapIndex={snapIndex}
+                        close={() => bottomSheetRef.current.snapToIndex(0)}
+                    />
+                </BottomSheet>
+            </View>
+            {/* ) : null} */}
+        </>
     );
 };
 
