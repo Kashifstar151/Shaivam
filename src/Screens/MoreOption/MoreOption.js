@@ -2,7 +2,9 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
     Dimensions,
     FlatList,
+    Platform,
     Pressable,
+    StatusBar,
     StyleSheet,
     Text,
     TouchableOpacity,
@@ -128,7 +130,7 @@ const MoreOption = () => {
     );
 };
 export const styles = StyleSheet.create({
-    main: { backgroundColor: 'green' },
+    main: {},
     container: {
         margin: 14,
         // marginTop: 24,

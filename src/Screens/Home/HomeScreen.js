@@ -11,6 +11,7 @@ import {
     ImageBackground,
     ScrollView,
     FlatList,
+    Platform,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import MusicContainer from '../../../assets/Images/Frame 83.svg';
@@ -234,6 +235,7 @@ const HomeScreen = ({ navigation }) => {
                 flex: 1,
                 overflow: 'visible',
                 backgroundColor: theme.backgroundColor,
+                paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight : 0
             }}
         >
             <View style={{ height: orientation == 'PORTRAIT' ? Dimensions.get('window').height / 2.5 : Dimensions.get('window').height / 1.5, }}>

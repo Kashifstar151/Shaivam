@@ -8,7 +8,7 @@ const Background = (props) => {
     return (
         <View
             style={{
-                marginTop: Platform.OS == 'ios' ? StatusBar.currentHeight : 0,
+                paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight : 0,
                 borderBottomColor: theme.colorscheme !== 'dark' ? '#8F3630' : '',
                 borderBottomWidth: theme.colorscheme !== 'dark' ? 1 : 0,
                 width: '100%',
