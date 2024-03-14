@@ -1,32 +1,21 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import HomeScreen from '../../Screens/Home/HomeScreen';
 import Temples from '../../Screens/Temples/Temples';
 import { RouteTexts } from '../RouteText';
-import Calender from '../../Screens/Calender/Calender';
-import Fav from '../../Screens/Favourite/Fav';
-import MoreOption from '../../Screens/MoreOption/MoreOption';
+
 import IndicatorIcon from '../../assets/Images/Indicator.svg';
 import { useContext } from 'react';
 import { ThemeContext } from '../../Context/ThemeContext';
-import HomeSVG from '../../components/SVGs/HomeSVG';
-import TempleSVG from '../../components/SVGs/TempleSVG';
-import CalendarSVG from '../../components/SVGs/CalendarSVG';
-import FavouriteSVG from '../../components/SVGs/FavouriteSVG';
-import MoreSVG from '../../components/SVGs/MoreSVG';
-import BottomTabs from './BottomTabs';
-import ExitTemple from '../../Screens/Temples/ExitTemple';
+
 import ActiveHome from '../../assets/Images/InactiveHome.svg';
 import ActiveTrip from '../../assets/Images/ActiveTrip.svg';
 import InActiveTrip from '../../assets/Images/InactiveTrip.svg';
 import ActiveLocation from '../../assets/Images/ActiveLocation.svg';
 import InActiveLocation from '../../assets/Images/UnActiveLocation.svg';
 import ActiveAddTrip from '../../assets/Images/InActiveAddTemple.svg';
-// import ActiveAddTrip from '../../assets/Images/InActiveAddTemple.svg'
 import InActiveAddTrip from '../../assets/Images/Vector (4).svg';
 import MyTrip from '../../Screens/Temples/MyTrip/MyTrip';
 import Addtemple from '../../Screens/Temples/AddTemple/Addtemple';
-
 import { createStackNavigator } from '@react-navigation/stack';
 import NearByPage from '../../Screens/Temples/NearByPage';
 
@@ -58,13 +47,6 @@ const ExploreTempleStack = () => {
 const Tab = createBottomTabNavigator();
 export default TempleTab = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
-    // const exitTabs = ()=>{
-    //  return(
-    //     <TouchableOpacity onPress={()=>navigator}>
-    //         <Text></Text>
-    //     </TouchableOpacity>
-    //  )
-    // }
     return (
         <Tab.Navigator
             screenOptions={{
