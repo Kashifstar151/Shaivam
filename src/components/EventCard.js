@@ -11,6 +11,7 @@ const EventCard = ({ date, timing, title, theme }) => {
                 {
                     backgroundColor: theme.colorscheme === 'light' ? '#fff' : '#333333',
                 },
+                styles.shadowProps
             ]}
         >
             <View>
@@ -60,7 +61,15 @@ const styles = StyleSheet.create({
         columnGap: 16,
         alignItems: 'center',
         borderRadius: 10,
+        elevation: 10
     },
+    shadowProps: {
+        shadowColor: '#171717',
+        shadowOffset: { width: -2, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+    },
+
 });
 
 export default EventCard;
