@@ -1,9 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { View, Text, TextInput } from 'react-native';
 import SearchSVG from '../../components/SVGs/SearchSVG';
+import { useNavigation } from '@react-navigation/core';
 
-const SearchTemple = () => {
+const SearchTemple = ({ route, value, isNavigable }) => {
+    const [searchText, setSearchText] = useState('');
+    const navigation = useNavigation();
+
+    const navigator = (name, data) => {
+        navigation.navigate(name, data);
+    };
+
+    useEffect(() => {
+        if (value) {
+            setSearchText(value);
+        }
+    }, [value]);
+
     return (
         <View
             style={[
@@ -13,12 +27,24 @@ const SearchTemple = () => {
                 },
             ]}
         >
-            <SearchSVG fill={'#777777'} />
+            {route !== 'filteredTemples' ? <SearchSVG fill={'#777777'} /> : <Text>back btn</Text>}
 
             <TextInput
                 placeholder="Search for any temple"
                 placeholderTextColor={'#777777'}
                 style={{ color: '#777777' }}
+                value={searchText}
+                onChangeText={(val) => {
+                    setSearchText(val);
+                }}
+                onSubmitEditing={() => {
+                    if (isNavigable) {
+                        navigator('filteredTemples', {
+                            searchText,
+                            data: null,
+                        });
+                    }
+                }}
             />
         </View>
     );
