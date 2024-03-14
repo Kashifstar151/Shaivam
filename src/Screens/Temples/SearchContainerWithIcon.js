@@ -2,13 +2,15 @@ import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import SearchTemple from './SearchTemple';
 
-const SearchContainerWithIcon = () => {
+const SearchContainerWithIcon = ({ children }) => {
     return (
         <View style={styles.mainContainer}>
-            <SearchTemple />
+            {children}
             <View style={{ paddingVertical: 4 }}>
                 <Image
-                    source={{ uri: 'https://shaivam.org/assests/icons/logo.png' }}
+                    source={{
+                        uri: 'https://shaivam.org/assests/icons/logo.png',
+                    }}
                     style={styles.imageDimension}
                 />
             </View>
