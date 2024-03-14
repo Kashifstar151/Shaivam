@@ -269,39 +269,40 @@ const HomeScreen = ({ navigation }) => {
                 >
                     Songs & Audios
                 </Text>
-                <FlatList contentContainerStyle={{ marginVertical: 10, paddingHorizontal: 10 }} horizontal data={playlisType} renderItem={({ item }) => (
-                    <Pressable
-                        style={{
-                            marginRight: 8,
-                            // elevation: {
-                            elevation: 5,
-                            backgroundColor: selectedPlaylistType == item
-                                ? theme.searchContext.unSelected.bgColor
-                                : '#EDEDED',
-
-                            // height: 30,
-                            borderRadius: 20,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            paddingHorizontal: 15,
-                            paddingVertical: 5,
-                        }}
-                        onPress={() => {
-                            setSelectedPlaylistType(item);
-                        }}
-                    >
-                        <Text
+                <FlatList
+                    contentContainerStyle={{ marginVertical: 10, paddingHorizontal: 10 }} horizontal data={playlisType} renderItem={({ item }) => (
+                        <Pressable
                             style={{
+                                marginRight: 8,
+                                // elevation: {
+                                elevation: 5,
+                                backgroundColor: selectedPlaylistType == item
+                                    ? theme.searchContext.unSelected.bgColor
+                                    : '#EDEDED',
 
-                                color: selectedPlaylistType == item
-                                    ? 'white'
-                                    : '#777777',
-                                fontFamily: 'Mulish-Bold',
-                                fontWeight: '700'
+                                // height: 30,
+                                borderRadius: 20,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                paddingHorizontal: 15,
+                                paddingVertical: 5,
                             }}
-                        >{item}</Text>
-                    </Pressable>
-                )} />
+                            onPress={() => {
+                                setSelectedPlaylistType(item);
+                            }}
+                        >
+                            <Text
+                                style={{
+
+                                    color: selectedPlaylistType == item
+                                        ? 'white'
+                                        : '#777777',
+                                    fontFamily: 'Mulish-Bold',
+                                    fontWeight: '700'
+                                }}
+                            >{item}</Text>
+                        </Pressable>
+                    )} />
 
                 <View style={styles.boxCommon}>
                     <FlatList

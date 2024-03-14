@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import { FlatList, StyleSheet, TouchableOpacity, View, UIManager, Platform, LayoutAnimation, StatusBar, Dimensions, Text, ScrollView } from 'react-native'
 import Icon from 'react-native-vector-icons/dist/Entypo'
 import Background from '../../components/Background'
@@ -11,6 +11,10 @@ import InActiveStar from "../../assets/Images/UnactiveStart.svg"
 import ActiveCalender from "../../assets/Images/CalenderAct.svg"
 import { Calendar, LocaleConfig, WeekCalendar, ExpandableCalendar } from 'react-native-calendars';
 import CustomCalender from './CustomCalender'
+import { colors } from '../../Helpers'
+import ElevatedCard from '../../components/ElevatedCard'
+import EventCard from '../../components/EventCard'
+import { ThemeContext } from '../../Context/ThemeContext'
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
 }
@@ -21,11 +25,39 @@ const Calender = () => {
         { name: 'Events', selected: <ActiveCalender />, unSelected: <InActiveCalender /> },
     ]
     const [isExpanded, setIsExpanded] = useState(false);
+    const { theme } = useContext(ThemeContext);
+    const eventData = [
+        {
+            date: { day: 'THU', dateNo: '06' },
+            title: 'முதல்-திருமுறை - Pradhosham',
+            timing: '8:00pm - 11:00pm',
+        },
+        {
+            date: { day: 'THU', dateNo: '06' },
+            title: 'முதல்-திருமுறை - Pradhosham',
+            timing: '8:00pm - 11:00pm',
+        },
+        {
+            date: { day: 'THU', dateNo: '06' },
+            title: 'முதல்-திருமுறை - Pradhosham',
+            timing: '8:00pm - 11:00pm',
+        },
+        {
+            date: { day: 'THU', dateNo: '06' },
+            title: 'முதல்-திருமுறை - Pradhosham',
+            timing: '8:00pm - 11:00pm',
+        },
+        {
+            date: { day: 'THU', dateNo: '06' },
+            title: 'முதல்-திருமுறை - Pradhosham',
+            timing: '8:00pm - 11:00pm',
+        },
 
-    const toggleCalendar = () => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-        setIsExpanded(!isExpanded);
-    };
+    ];
+    // const toggleCalendar = () => {
+    //     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    //     setIsExpanded(!isExpanded);
+    // };
     const [selectedHeader, setSelectedheader] = useState()
     const [fullScreen, setFullScreen] = useState(false)
     const [selected, setSelected] = useState('2024-03-13')
@@ -47,17 +79,17 @@ const Calender = () => {
         }
     }), [selected]);
     const RenderItem = () => (
-        <View style={styles.shadowProps}>
+        <View style={[styles.shadowProps, styles.itemContainer]}>
             <View style={styles.itemDateContainer}>
-
-                <Text style={styles.itemText}>sjkdhfcjk</Text>
+                <Text style={styles.itemText}>THU</Text>
+                <Text style={styles.itemDateText}>06</Text>
             </View>
         </View>
     )
     // LocaleConfig.locales['fr']
     return (
-        <ScrollView style={{ backgroundColor: '#fff' }}>
-            <View style={{ flex: 1, }}>
+        <ScrollView style={{ backgroundColor: '#fff', }}>
+            <View style={{}}>
                 <Background >
                     <View>
                         <View style={styles.HeadeingContainer}>
@@ -80,7 +112,7 @@ const Calender = () => {
 
                     </View>
                 </Background>
-                <View style={{ position: 'absolute', top: '70%', flex: 1, width: Dimensions.get('screen').width }}>
+                <View style={{ marginTop: -100, width: Dimensions.get('screen').width, }}>
                     <View style={{ alignItems: 'center', justifyContent: 'center', elevation: 10, alignSelf: 'center', }}>
                         {
                             fullScreen ?
@@ -110,12 +142,26 @@ const Calender = () => {
                                 <CustomCalender setFullScreen={setFullScreen} />
                         }
                     </View>
-                    <View style={{ paddingHorizontal: 20, marginVertical: 15 }}>
-                        <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold' }}>Today, Oct 06, 2023</Text>
+                    <View >
+
+                        <View style={{ paddingHorizontal: 20, marginVertical: 15 }}>
+                            <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold' }}>Today, Oct 06, 2023</Text>
+                        </View>
+                        <FlatList data={eventData} renderItem={({ item, index }) => (
+                            <ElevatedCard theme={{ colorscheme: theme.colorscheme }}>
+                                <EventCard
+                                    date={item.date}
+                                    timing={item.timing}
+                                    title={item.title}
+                                    theme={{
+                                        textColor: theme.textColor,
+                                        colorscheme: theme.colorscheme,
+                                    }}
+                                />
+                            </ElevatedCard>
+                        )} />
                     </View>
-                    {
-                        RenderItem()
-                    }
+
                 </View>
             </View>
         </ScrollView>
@@ -139,7 +185,9 @@ export const styles = StyleSheet.create({
     calenderTheme: {
         width: Dimensions.get('window').width - 30, borderRadius: 10, elevation: 20,
     },
+    itemContainer: { height: 75, backgroundColor: '#fff', marginHorizontal: 10, borderRadius: 10, alignItems: 'center', flexDirection: 'row' },
     itemText: { fontSize: 12, fontFamily: 'Mulish-Regular', color: '#777777' },
-    itemDateContainer: { paddingHorizontal: 15, borderRightWidth: 1, borderRightColor: 'grey' }
+    itemDateContainer: { paddingHorizontal: 15, borderRightWidth: 1, borderRightColor: colors.grey3, width: '25%', justifyContent: 'center', alignItems: 'center' },
+    itemDateText: { fontSize: 20, fontFamily: 'Mulish-Bold', color: '#222222' }
 })
 export default Calender
