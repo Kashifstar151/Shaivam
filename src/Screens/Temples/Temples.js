@@ -28,21 +28,12 @@ import AnimatedRightSideView from '../../components/AnimatedRightSideView';
 import assetMapWithTempleType from './AssetMapWithTempleType.js';
 import InnerContextOfAnimatedSideBox from './InnerContextOfAnimatedSideBox.js';
 import MapIconSVG from '../../components/SVGs/MapIconSVG.js';
+import { markerPressClbk } from './CallBacksForClick.js';
+import SearchTemple from './SearchTemple.js';
+import { CustomMarker } from './CustomMarker.js';
 
-export const CustomMarker = ({ flag, coordinate }) => {
-    return (
-        <Marker
-            tracksViewChanges={false}
-            coordinate={coordinate}
-            description={'This is a marker in React Natve'}
-            // image={assetMapWithTempleType[flag].path}
-        >
-            <Image source={assetMapWithTempleType[flag].path} resizeMode="contain" />
-        </Marker>
-    );
-};
-
-export const Temples = ({ navigation }) => {
+export const Temples = ({ navigation, route }) => {
+    console.log('🚀 ~ Temples ~ navigation:', route.name);
     const bottomSheetRef = useRef(null);
 
     const [regionCoordinate, setRegionCoordinate] = useState({
@@ -180,15 +171,15 @@ export const Temples = ({ navigation }) => {
         };
     }, []);
 
-    useEffect(() => {
-        // (async () => {
-        //     await locationPermission();
-        // })();
+    // useEffect(() => {
+    //     // (async () => {
+    //     //     await locationPermission();
+    //     // })();
 
-        setTimeout(() => {
-            setPadState(0);
-        }, 500);
-    }, []);
+    //     setTimeout(() => {
+    //         setPadState(0);
+    //     }, 500);
+    // }, []);
 
     const [userLocName, setUserLocName] = useState('');
 
@@ -209,11 +200,15 @@ export const Temples = ({ navigation }) => {
 
     return (
         <>
-            {/* {!padState ? ( */}
             <View style={{ flex: 1, position: 'relative' }}>
                 {userLocation?.latitude ? (
                     <MapView
-                        // onMapReady={onMapReadyCallback}
+                        onMapReady={() =>
+                            setTimeout(() => {
+                                console.log('setting the pad');
+                                setPadState(!padState);
+                            }, 5000)
+                        }
                         provider={PROVIDER_GOOGLE}
                         initialRegion={null}
                         style={styles.map}
@@ -226,18 +221,39 @@ export const Temples = ({ navigation }) => {
                         }}
                         region={regionCoordinate}
                     >
-                        <CustomMarker flag={8} coordinate={userLocation} />
-                        <CustomMarker flag={7} coordinate={regionCoordinate} />
+                        <CustomMarker
+                            setPadState={setPadState}
+                            flag={8}
+                            coordinate={userLocation}
+                        />
+                        <CustomMarker
+                            setPadState={setPadState}
+                            callback={() => {
+                                // setting the type of the marker you pressed
+                                // callback function for naving to page which has the temple details
+                                markerPressClbk(navigation, 7);
+                            }}
+                            flag={7}
+                            coordinate={regionCoordinate}
+                        />
                     </MapView>
                 ) : null}
 
                 <View style={styles.topBarWrapper}>
-                    <SearchContainerWithIcon />
+                    <SearchContainerWithIcon>
+                        <SearchTemple route={route.name} value={null} isNavigable={true} />
+                    </SearchContainerWithIcon>
 
                     <View style={styles.colorContWrapper}>
                         {Object.entries(assetMapWithTempleType).map(([key, value], indx) =>
                             key !== '8' ? (
-                                <View style={styles.contWrapper}>
+                                <Pressable
+                                    style={styles.contWrapper}
+                                    onPress={() => {
+                                        // adding callback on the category btn press and navigating to the filter page
+                                    }}
+                                    key={indx}
+                                >
                                     <View
                                         style={[
                                             styles.textContWrapper,
@@ -252,7 +268,7 @@ export const Temples = ({ navigation }) => {
                                             </Text>
                                         )}
                                     </View>
-                                </View>
+                                </Pressable>
                             ) : null
                         )}
                     </View>
@@ -313,7 +329,6 @@ export const Temples = ({ navigation }) => {
                     />
                 </BottomSheet>
             </View>
-            {/* ) : null} */}
         </>
     );
 };
