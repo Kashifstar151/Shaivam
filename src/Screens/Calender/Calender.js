@@ -76,7 +76,7 @@ const Calender = () => {
         },
     ];
     const [selectedHeader, setSelectedheader] = useState();
-    const [fullScreen, setFullScreen] = useState(true);
+    const [fullScreen, setFullScreen] = useState(false);
     const [selected, setSelected] = useState('2024-03-13');
     const marked = useMemo(
         () => ({
@@ -107,7 +107,7 @@ const Calender = () => {
         </View>
     );
     return (
-        <View nestedScrollEnabled style={{ backgroundColor: '#fff', flex: 1 }}>
+        <ScrollView nestedScrollEnabled style={{ backgroundColor: '#fff', flex: 1 }}>
             {/* <View style={{ backgroundColor: 'red' }}> */}
             <Background>
                 <View>
@@ -122,8 +122,7 @@ const Calender = () => {
                             <Icon name="plus" size={28} color="#222222" />
                         </TouchableOpacity>
                     </View>
-
-                    {/* <FlatList
+                    <FlatList
                         contentContainerStyle={{ paddingHorizontal: 15, marginVertical: 10 }}
                         horizontal
                         data={data}
@@ -135,7 +134,7 @@ const Calender = () => {
                                 index={index}
                             />
                         )}
-                    /> */}
+                    />
                 </View>
                 <View style={{ height: 100 }}></View>
             </Background>
@@ -158,7 +157,7 @@ const Calender = () => {
                         <View style={[styles.calenderContainer, styles.shadowProps]}>
                             <Calendar
                                 theme={{
-                                    arrowStyle: { backgroundColor: '#EDEDED', borderRadius: 20 },
+                                    // arrowStyle: { backgroundColor: '#EDEDED', borderRadius: 15,  },
                                     arrowColor: '#777777',
                                     // calendarBackground: '#222',
                                     dayTextColor: '#222222',
@@ -187,8 +186,8 @@ const Calender = () => {
                     )}
                 </View>
 
-                <View style={{ paddingHorizontal: 20, marginVertical: 15, backgroundColor: 'red' }}>
-                    <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold' }}>
+                <View style={{ paddingHorizontal: 20, marginVertical: 15, }}>
+                    <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold', color: '#222222' }}>
                         Today, Oct 06, 2023
                     </Text>
                 </View>
@@ -210,7 +209,7 @@ const Calender = () => {
                 />
             </View>
             {/* </View> */}
-        </View>
+        </ScrollView>
     );
 };
 export const styles = StyleSheet.create({
@@ -224,5 +223,23 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    calenderContainer: {
+        backgroundColor: '#ffffff',
+        borderRadius: 10,
+        //  elevation: 2, 
+    },
+    shadowProps: {
+        shadowColor: '#171717',
+        shadowOffset: { width: -2, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+    },
+    calenderTheme: {
+        width: Dimensions.get('window').width - 30, borderRadius: 10, elevation: 20,
+    },
+    itemContainer: { height: 75, backgroundColor: '#fff', marginHorizontal: 10, borderRadius: 10, alignItems: 'center', flexDirection: 'row' },
+    itemText: { fontSize: 12, fontFamily: 'Mulish-Regular', color: '#777777' },
+    itemDateContainer: { paddingHorizontal: 15, borderRightWidth: 1, borderRightColor: colors.grey3, width: '25%', justifyContent: 'center', alignItems: 'center' },
+    itemDateText: { fontSize: 20, fontFamily: 'Mulish-Bold', color: '#222222' }
 });
 export default Calender;
