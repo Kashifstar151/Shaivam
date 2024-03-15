@@ -13,26 +13,31 @@ const BackButton = ({
     navigation,
     secondMiddleText,
     rightIcon,
-    buttonDisable
+    buttonDisable,
 }) => {
     return (
         <View
             style={{
-                paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 40 : 0,
+                paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 20 : 0,
                 paddingHorizontal: 15,
             }}
         >
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
+            <View
+                style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 30 : 10,
+                }}
+            >
                 <View style={{ flexDirection: 'row', marginTop: 10, paddingHorizontal: 5 }}>
-                    {
-                        buttonDisable ? null :
-                            <TouchableOpacity
-                                style={{ alignSelf: 'center' }}
-                                onPress={() => navigation.goBack()}
-                            >
-                                {!color ? <WhiteBackButton /> : <BackIcon />}
-                            </TouchableOpacity>
-                    }
+                    {buttonDisable ? null : (
+                        <TouchableOpacity
+                            style={{ alignSelf: 'center' }}
+                            onPress={() => navigation.goBack()}
+                        >
+                            {!color ? <WhiteBackButton /> : <BackIcon />}
+                        </TouchableOpacity>
+                    )}
 
                     <View>
                         {middleText && (
@@ -74,7 +79,8 @@ const BackButton = ({
                         fontSize: 24,
                         fontWeight: '700',
                         color: 'white',
-                    }}>
+                    }}
+                >
                     {firstText}
                 </Text>
             )}

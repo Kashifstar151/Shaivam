@@ -11,6 +11,7 @@ const EventCard = ({ date, timing, title, theme }) => {
                 {
                     backgroundColor: theme.colorscheme === 'light' ? '#fff' : '#333333',
                 },
+                styles.shadowProps,
             ]}
         >
             <View>

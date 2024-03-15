@@ -11,6 +11,7 @@ import {
     ImageBackground,
     ScrollView,
     FlatList,
+    Platform,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import MusicContainer from '../../../assets/Images/Frame 83.svg';
@@ -172,22 +173,22 @@ const HomeScreen = ({ navigation }) => {
             timing: '8:00pm - 11:00pm',
         },
     ];
-    const [selectedPlaylistType, setSelectedPlaylistType] = useState('Recently Played')
-    const [playlistSong, setPlaylistSong] = useState([])
-    const playlisType = ['Recently Played', 'Most Played']
+    const [selectedPlaylistType, setSelectedPlaylistType] = useState('Recently Played');
+    const [playlistSong, setPlaylistSong] = useState([]);
+    const playlisType = ['Recently Played', 'Most Played'];
     useEffect(() => {
-        getPlaylistSong()
-    }, [selectedPlaylistType])
+        getPlaylistSong();
+    }, [selectedPlaylistType]);
     const getPlaylistSong = async () => {
         if (selectedPlaylistType == 'Recently Played') {
-            const data = await AsyncStorage.getItem('recentTrack')
-            setPlaylistSong(JSON.parse(data))
+            const data = await AsyncStorage.getItem('recentTrack');
+            setPlaylistSong(JSON.parse(data));
         } else {
-            MostPlayedList('d', callbacks => {
-                setPlaylistSong(callbacks.slice(0, 4))
-            })
+            MostPlayedList('d', (callbacks) => {
+                setPlaylistSong(callbacks.slice(0, 4));
+            });
         }
-    }
+    };
     const nearByTempleData = [
         {
             img: 'https://s3-alpha-sig.figma.com/img/6700/69a2/03a54c10e1ad2d1887bbcff155403f1b?Expires=1705881600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=PkT20h7qdc~YIQF~kGaGxb5qLWbWMoNT8MiSQGsZSIoaUduQhJ0yvVXL1udbmoV8cZLi-SlUnHH5AbOpoTnnQhYifWVAynjIZ~Jd8nYrdr3eXY9cwTGaqI2SL3iaff5ffwML2Vgyjqyeg8GQFc~TVs26g8s1R41X-sFWgbyp-J7YaAK6SlvFs3m6lwGKnIe8BFr1qsjom6qDOp8o~y6JgYInVyUpYtemjMMXGUrQgD0BJOrCKaKfG2t-jsW-VTrlrKHrKRe7arx-wVkde531J~IjCjednhvbsCV3e7ZL3Y4u9D7p1MEvkJe5WSxS7sarKFjY2S-qrgRPAvhmAxHfNA__',
@@ -219,8 +220,7 @@ const HomeScreen = ({ navigation }) => {
         });
         const updateItemWidth = () => {
             setScreenWidth(Dimensions.get('window').width);
-            setScreenheight(Dimensions.get('window').height)
-
+            setScreenheight(Dimensions.get('window').height);
         };
         const subscription = Dimensions.addEventListener('change', updateItemWidth);
         return () => {
@@ -234,9 +234,17 @@ const HomeScreen = ({ navigation }) => {
                 flex: 1,
                 overflow: 'visible',
                 backgroundColor: theme.backgroundColor,
+                paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight : 0,
             }}
         >
-            <View style={{ height: orientation == 'PORTRAIT' ? Dimensions.get('window').height / 2.5 : Dimensions.get('window').height / 1.5, }}>
+            <View
+                style={{
+                    height:
+                        orientation == 'PORTRAIT'
+                            ? Dimensions.get('window').height / 2.5
+                            : Dimensions.get('window').height / 1.5,
+                }}
+            >
                 <ImageBackground
                     source={theme.colorscheme === 'light' ? bgImg : bgImgDark}
                     resizeMode="cover"
@@ -249,7 +257,10 @@ const HomeScreen = ({ navigation }) => {
             <View
                 style={{
                     paddingHorizontal: 15,
-                    marginTop: orientation == 'PORTRAIT' ? -screenHeight / 2.3 : -Dimensions.get('window').height / 1.3,
+                    marginTop:
+                        orientation == 'PORTRAIT'
+                            ? -screenHeight / 2.3
+                            : -Dimensions.get('window').height / 1.3,
                     // position: 'absolute',
                     // top: -10
                 }}
@@ -267,39 +278,44 @@ const HomeScreen = ({ navigation }) => {
                 >
                     Songs & Audios
                 </Text>
-                <FlatList contentContainerStyle={{ marginVertical: 10, paddingHorizontal: 10 }} horizontal data={playlisType} renderItem={({ item }) => (
-                    <Pressable
-                        style={{
-                            marginRight: 8,
-                            // elevation: {
-                            elevation: 5,
-                            backgroundColor: selectedPlaylistType == item
-                                ? theme.searchContext.unSelected.bgColor
-                                : '#EDEDED',
-
-                            // height: 30,
-                            borderRadius: 20,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            paddingHorizontal: 15,
-                            paddingVertical: 5,
-                        }}
-                        onPress={() => {
-                            setSelectedPlaylistType(item);
-                        }}
-                    >
-                        <Text
+                <FlatList
+                    contentContainerStyle={{ marginVertical: 10, paddingHorizontal: 10 }}
+                    horizontal
+                    data={playlisType}
+                    renderItem={({ item }) => (
+                        <Pressable
                             style={{
+                                marginRight: 8,
+                                // elevation: {
+                                elevation: 5,
+                                backgroundColor:
+                                    selectedPlaylistType == item
+                                        ? theme.searchContext.unSelected.bgColor
+                                        : '#EDEDED',
 
-                                color: selectedPlaylistType == item
-                                    ? 'white'
-                                    : '#777777',
-                                fontFamily: 'Mulish-Bold',
-                                fontWeight: '700'
+                                // height: 30,
+                                borderRadius: 20,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                paddingHorizontal: 15,
+                                paddingVertical: 5,
                             }}
-                        >{item}</Text>
-                    </Pressable>
-                )} />
+                            onPress={() => {
+                                setSelectedPlaylistType(item);
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    color: selectedPlaylistType == item ? 'white' : '#777777',
+                                    fontFamily: 'Mulish-Bold',
+                                    fontWeight: '700',
+                                }}
+                            >
+                                {item}
+                            </Text>
+                        </Pressable>
+                    )}
+                />
 
                 <View style={styles.boxCommon}>
                     <FlatList
@@ -439,7 +455,7 @@ const HomeScreen = ({ navigation }) => {
                         viewBtnColor={'#C1554E'}
                         title={'Upcoming Events'}
                         theme={{ textColor: theme.textColor }}
-                        onPress={() => { }}
+                        onPress={() => {}}
                     />
                 </View>
 
@@ -474,7 +490,7 @@ const HomeScreen = ({ navigation }) => {
                     <HeadingAndView
                         viewBtnColor={'#C1554E'}
                         title={'Nearby Temples'}
-                        onPress={() => { }}
+                        onPress={() => {}}
                         theme={{
                             textColor: theme.textColor,
                             colorscheme: theme.colorscheme,
