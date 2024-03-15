@@ -64,6 +64,16 @@ const Calender = () => {
             title: 'முதல்-திருமுறை - Pradhosham',
             timing: '8:00pm - 11:00pm',
         },
+        {
+            date: { day: 'THU', dateNo: '06' },
+            title: 'முதல்-திருமுறை - Pradhosham',
+            timing: '8:00pm - 11:00pm',
+        },
+        {
+            date: { day: 'THU', dateNo: '06' },
+            title: 'முதல்-திருமுறை - Pradhosham',
+            timing: '8:00pm - 11:00pm',
+        },
     ];
     const [selectedHeader, setSelectedheader] = useState();
     const [fullScreen, setFullScreen] = useState(false);
@@ -97,7 +107,7 @@ const Calender = () => {
         </View>
     );
     return (
-        <ScrollView style={{ backgroundColor: '#fff', flex: 1 }}>
+        <View nestedScrollEnabled style={{ backgroundColor: '#fff', flex: 1 }}>
             {/* <View style={{ backgroundColor: 'red' }}> */}
             <Background>
                 <View>
@@ -129,7 +139,13 @@ const Calender = () => {
                 </View>
                 <View style={{ height: 100 }}></View>
             </Background>
-            <View style={{ marginTop: -100, width: Dimensions.get('screen').width }}>
+            <View
+                style={{
+                    marginTop: -100,
+                    width: Dimensions.get('screen').width,
+                    flex: 1,
+                }}
+            >
                 <View
                     style={{
                         alignItems: 'center',
@@ -170,32 +186,31 @@ const Calender = () => {
                         </View>
                     )}
                 </View>
-                <View>
-                    <View style={{ paddingHorizontal: 20, marginVertical: 15 }}>
-                        <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold' }}>
-                            Today, Oct 06, 2023
-                        </Text>
-                    </View>
-                    <FlatList
-                        data={eventData}
-                        renderItem={({ item, index }) => (
-                            <ElevatedCard theme={{ colorscheme: theme.colorscheme }}>
-                                <EventCard
-                                    date={item.date}
-                                    timing={item.timing}
-                                    title={item.title}
-                                    theme={{
-                                        textColor: theme.textColor,
-                                        colorscheme: theme.colorscheme,
-                                    }}
-                                />
-                            </ElevatedCard>
-                        )}
-                    />
+
+                <View style={{ paddingHorizontal: 20, marginVertical: 15, backgroundColor: 'red' }}>
+                    <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold' }}>
+                        Today, Oct 06, 2023
+                    </Text>
                 </View>
+                <FlatList
+                    data={eventData}
+                    renderItem={({ item, index }) => (
+                        <ElevatedCard theme={{ colorscheme: theme.colorscheme }}>
+                            <EventCard
+                                date={item.date}
+                                timing={item.timing}
+                                title={item.title}
+                                theme={{
+                                    textColor: theme.textColor,
+                                    colorscheme: theme.colorscheme,
+                                }}
+                            />
+                        </ElevatedCard>
+                    )}
+                />
             </View>
             {/* </View> */}
-        </ScrollView>
+        </View>
     );
 };
 export const styles = StyleSheet.create({
