@@ -76,7 +76,7 @@ const Calender = () => {
         },
     ];
     const [selectedHeader, setSelectedheader] = useState();
-    const [fullScreen, setFullScreen] = useState(false);
+    const [fullScreen, setFullScreen] = useState(true);
     const [selected, setSelected] = useState('2024-03-13');
     const marked = useMemo(
         () => ({
@@ -123,7 +123,7 @@ const Calender = () => {
                         </TouchableOpacity>
                     </View>
 
-                    <FlatList
+                    {/* <FlatList
                         contentContainerStyle={{ paddingHorizontal: 15, marginVertical: 10 }}
                         horizontal
                         data={data}
@@ -135,7 +135,7 @@ const Calender = () => {
                                 index={index}
                             />
                         )}
-                    />
+                    /> */}
                 </View>
                 <View style={{ height: 100 }}></View>
             </Background>
