@@ -45,7 +45,7 @@ const FilteredTemplesPage = ({ navigation, route }) => {
                 <SearchContainerWithIcon>
                     <SearchTemple
                         route={route.name}
-                        value={route.params?.data?.name ? route.params?.data?.name : null}
+                        value={route.params?.data?.name ?? route.params?.searchText}
                         isNavigable={false}
                     />
                 </SearchContainerWithIcon>
