@@ -8,7 +8,7 @@ const InnerContextOfAnimatedSideBox = () => {
             {Object.entries(templeMetaData).map(([key, value], indx) => {
                 if (key !== '8') {
                     return (
-                        <View style={{ gap: 2, paddingBottom: 10 }}>
+                        <View style={{ gap: 2, paddingBottom: 10 }} key={indx}>
                             <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
                                 <View
                                     style={[

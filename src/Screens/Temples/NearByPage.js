@@ -2,6 +2,7 @@ import { StackActions, useRoute } from '@react-navigation/native';
 import React, { useContext } from 'react';
 import {
     Dimensions,
+    Image,
     ImageBackground,
     Pressable,
     ScrollView,
@@ -15,6 +16,7 @@ import bgImgDark from '../../../assets/Images/BackgroundCommon.png';
 import { ThemeContext } from '../../Context/ThemeContext';
 import SearchContainerWithIcon from './SearchContainerWithIcon';
 import DownArrowSVG from '../../components/SVGs/DownArrowSVG';
+import SearchTemple from './SearchTemple';
 
 const NearByPage = ({ navigation }) => {
     const route = useRoute();
@@ -49,31 +51,11 @@ const NearByPage = ({ navigation }) => {
                             <DownArrowSVG fill="#777" />
                         </Pressable>
                         <View style={{ flex: 1 }}>
-                            <SearchContainerWithIcon />
+                            <SearchContainerWithIcon>
+                                <SearchTemple />
+                            </SearchContainerWithIcon>
                         </View>
                     </View>
-                    {/* <SearchContainerWithIcon /> */}
-
-                    {/* <View style={styles.colorContWrapper}>
-                        {Object.entries(assetMapWithTempleType).map(([key, value], indx) => (
-                            <View style={styles.contWrapper}>
-                                <View
-                                    style={[
-                                        styles.textContWrapper,
-                                        {
-                                            backgroundColor: value.metaData.color,
-                                        },
-                                    ]}
-                                >
-                                    {value.metaData.letterAssociated && (
-                                        <Text style={styles.textStyleForCont}>
-                                            {value.metaData.letterAssociated}
-                                        </Text>
-                                    )}
-                                </View>
-                            </View>
-                        ))}
-                    </View> */}
                 </View>
                 <View
                     style={{

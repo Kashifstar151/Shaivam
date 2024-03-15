@@ -28,20 +28,12 @@ import AnimatedRightSideView from '../../components/AnimatedRightSideView';
 import assetMapWithTempleType from './AssetMapWithTempleType.js';
 import InnerContextOfAnimatedSideBox from './InnerContextOfAnimatedSideBox.js';
 import MapIconSVG from '../../components/SVGs/MapIconSVG.js';
+import { markerPressClbk } from './CallBacksForClick.js';
+import SearchTemple from './SearchTemple.js';
+import { CustomMarker } from './CustomMarker.js';
 
-export const CustomMarker = ({ flag, coordinate }) => {
-    return (
-        <Marker
-            tracksViewChanges={false}
-            coordinate={coordinate}
-            description={'This is a marker in React Natve'}
-        >
-            <Image source={assetMapWithTempleType[flag].path} resizeMode="contain" />
-        </Marker>
-    );
-};
-
-export const Temples = ({ navigation }) => {
+export const Temples = ({ navigation, route }) => {
+    console.log('🚀 ~ Temples ~ navigation:', route.name);
     const bottomSheetRef = useRef(null);
 
     const [regionCoordinate, setRegionCoordinate] = useState({
@@ -52,16 +44,14 @@ export const Temples = ({ navigation }) => {
         locationName: '',
     });
 
-    const [viewAreaCoors, setViewAreaCoors] = useState({
-        ...regionCoordinate,
-    });
-
     const [userLocation, setUserLocation] = useState({
         latitude: 28.500271,
         longitude: 77.387901,
         latitudeDelta: 0.015,
         longitudeDelta: 0.0121,
     });
+
+    // const [userLocation, setUserLocation] = useState();
 
     const [snapIndex, setSnapIndex] = useState(0);
 
@@ -154,33 +144,49 @@ export const Temples = ({ navigation }) => {
 
     const [padState, setPadState] = useState(1);
 
-    useEffect(() => {
-        getCurrentLocationWatcher((val) => {
-            console.log('the value is set for map ');
-            setRegionCoordinate((prev) => ({ ...prev, ...val }));
-        });
-        return () => clearGetCurrentLocationWatcher();
-    }, []);
+    const onMapReadyCallback = async () => {
+        const state = await locationPermission();
+
+        if (state.status) {
+            // Alert.alert(`the status is ----> ${state.status}`);
+            getCurrentLocationWatcher((val) => {
+                // console.log('the value is set for map ', val);
+                setUserLocation((prev) => ({ ...prev, ...val }));
+            });
+        }
+    };
 
     useEffect(() => {
         (async () => {
-            await locationPermission();
+            await onMapReadyCallback();
         })();
 
-        setTimeout(() => {
-            setPadState(0);
-        }, 100);
-    }, [padState]);
+        // getCurrentLocationWatcher((val) => {
+        //     console.log('the value is set for map ');
+        //     setUserLocation((prev) => ({ ...prev, ...val }));
+        // });
+        return () => {
+            // Alert.alert('clearing the watcher ');
+            clearGetCurrentLocationWatcher();
+        };
+    }, []);
+
+    // useEffect(() => {
+    //     // (async () => {
+    //     //     await locationPermission();
+    //     // })();
+
+    //     setTimeout(() => {
+    //         setPadState(0);
+    //     }, 500);
+    // }, []);
 
     const [userLocName, setUserLocName] = useState('');
 
     useEffect(() => {
-        // console.log('the format=jsonv2& and coord==>', regionCoordinate);
-        if (regionCoordinate?.latitude && regionCoordinate?.longitude) {
+        if (userLocation?.latitude && userLocation?.longitude) {
             (async () => {
                 const locationDetail = await getTheLocationName({ ...regionCoordinate });
-
-                // console.log('the location of the user ==>', locationDetail?.display_name);
                 setUserLocName((prev) => {
                     return (
                         locationDetail?.address?.village ||
@@ -190,104 +196,140 @@ export const Temples = ({ navigation }) => {
                 });
             })();
         }
-    }, [regionCoordinate]);
-
-    const onMapReadyCallback = async () => {
-        const state = await locationPermission();
-
-        if (state.status) {
-            getCurrentLocationWatcher((val) => {
-                console.log('the value is set for map ');
-                setRegionCoordinate((prev) => ({ ...prev, ...val }));
-            });
-        }
-    };
+    }, [userLocation]);
 
     return (
-        <View style={{ flex: 1, position: 'relative' }}>
-            <MapView
-                onMapReady={onMapReadyCallback}
-                provider={PROVIDER_GOOGLE}
-                style={styles.map}
-                onRegionChangeComplete={(args) =>
-                    onRegionChangeCompleteCallback(args, setViewAreaCoors)
-                }
-                // onRegionChange={onRegionChangeCallback}
-                // mapPadding={{ top: 0, right: 0, bottom: 700, left: 0 }}
-                region={userLocation}
-            >
-                <CustomMarker flag={8} coordinate={userLocation} />
-                <CustomMarker flag={7} coordinate={regionCoordinate} />
-            </MapView>
+        <>
+            <View style={{ flex: 1, position: 'relative' }}>
+                {userLocation?.latitude ? (
+                    <MapView
+                        onMapReady={() =>
+                            setTimeout(() => {
+                                console.log('setting the pad');
+                                setPadState(!padState);
+                            }, 5000)
+                        }
+                        provider={PROVIDER_GOOGLE}
+                        initialRegion={null}
+                        style={styles.map}
+                        onRegionChangeComplete={(args, gesture) => {
+                            if (gesture.isGesture) {
+                                onRegionChangeCompleteCallback(args, (input) => {
+                                    setRegionCoordinate(input);
+                                });
+                            }
+                        }}
+                        region={regionCoordinate}
+                    >
+                        <CustomMarker
+                            setPadState={setPadState}
+                            flag={8}
+                            coordinate={userLocation}
+                        />
+                        <CustomMarker
+                            setPadState={setPadState}
+                            callback={() => {
+                                // setting the type of the marker you pressed
+                                // callback function for naving to page which has the temple details
+                                markerPressClbk(navigation, 7);
+                            }}
+                            flag={7}
+                            coordinate={regionCoordinate}
+                        />
+                    </MapView>
+                ) : null}
 
-            <View style={styles.topBarWrapper}>
-                <SearchContainerWithIcon />
+                <View style={styles.topBarWrapper}>
+                    <SearchContainerWithIcon>
+                        <SearchTemple route={route.name} value={null} isNavigable={true} />
+                    </SearchContainerWithIcon>
 
-                <View style={styles.colorContWrapper}>
-                    {Object.entries(assetMapWithTempleType).map(([key, value], indx) =>
-                        key !== '8' ? (
-                            <View style={styles.contWrapper}>
-                                <View
-                                    style={[
-                                        styles.textContWrapper,
-                                        {
-                                            backgroundColor: value.metaData.color,
-                                        },
-                                    ]}
+                    <View style={styles.colorContWrapper}>
+                        {Object.entries(assetMapWithTempleType).map(([key, value], indx) =>
+                            key !== '8' ? (
+                                <Pressable
+                                    style={styles.contWrapper}
+                                    onPress={() => {
+                                        // adding callback on the category btn press and navigating to the filter page
+                                    }}
+                                    key={indx}
                                 >
-                                    {value.metaData.letterAssociated && (
-                                        <Text style={styles.textStyleForCont}>
-                                            {value.metaData.letterAssociated}
-                                        </Text>
-                                    )}
-                                </View>
-                            </View>
-                        ) : null
-                    )}
+                                    <View
+                                        style={[
+                                            styles.textContWrapper,
+                                            {
+                                                backgroundColor: value.metaData.color,
+                                            },
+                                        ]}
+                                    >
+                                        {value.metaData.letterAssociated && (
+                                            <Text style={styles.textStyleForCont}>
+                                                {value.metaData.letterAssociated}
+                                            </Text>
+                                        )}
+                                    </View>
+                                </Pressable>
+                            ) : null
+                        )}
+                    </View>
                 </View>
+
+                {/* floating side btn */}
+                <Pressable
+                    style={{
+                        position: 'absolute',
+                        backgroundColor: 'white',
+                        right: 20,
+                        bottom: Dimensions.get('window').height * 0.2,
+                        borderRadius: 100,
+                        padding: 10,
+                        elevation: 2,
+                        shadowOffset: {
+                            width: 10,
+                            height: 8,
+                        },
+                    }}
+                    onPress={() => {
+                        console.log('the uuiuui');
+                        setUserLocation((prev) => ({
+                            ...prev,
+                            latitude: 28.5002,
+                            longitude: 77.381,
+                        }));
+                        setRegionCoordinate((prev) => ({
+                            ...prev,
+                            latitude: 28.5002,
+                            longitude: 77.381,
+                        }));
+                    }}
+                >
+                    {/* bring user's location into view */}
+                    <TrackBackToLocSVG fill={'#777'} />
+                </Pressable>
+
+                {/* for test purpose  */}
+                {/* <View style={{ position: 'absolute', backgroundColor: 'red', top: 10 }}>
+                <Text>{JSON.stringify(userLocation)}</Text>
+            </View> */}
+
+                <AnimatedRightSideView heading={'Map Legend'} RightIcon={<MapIconSVG />}>
+                    <InnerContextOfAnimatedSideBox />
+                </AnimatedRightSideView>
+                <BottomSheet
+                    ref={bottomSheetRef}
+                    onChange={handleSheetChanges}
+                    // containerHeight={400}
+                    snapPoints={['7%', '95%']}
+                >
+                    <NearByTemples
+                        locationName={userLocName}
+                        data={nearByTempleList}
+                        snapIndex={snapIndex}
+                        close={() => bottomSheetRef.current.snapToIndex(0)}
+                    />
+                </BottomSheet>
             </View>
-
-            {/* floating side btn */}
-            <Pressable
-                style={{
-                    position: 'absolute',
-                    backgroundColor: 'white',
-                    right: 20,
-                    bottom: Dimensions.get('window').height * 0.2,
-                    borderRadius: 100,
-                    padding: 10,
-                    elevation: 2,
-                    shadowOffset: {
-                        width: 10,
-                        height: 8,
-                    },
-                }}
-                onPress={() => {
-                    console.log('the uuiuui');
-                    setUserLocation((prev) => ({ ...prev, latitude: 28.5002, longitude: 77.381 }));
-                }}
-            >
-                {/* bring user's location into view */}
-                <TrackBackToLocSVG fill={'#777'} />
-            </Pressable>
-
-            <AnimatedRightSideView heading={'Map Legend'} RightIcon={<MapIconSVG />}>
-                <InnerContextOfAnimatedSideBox />
-            </AnimatedRightSideView>
-            <BottomSheet
-                ref={bottomSheetRef}
-                onChange={handleSheetChanges}
-                // containerHeight={400}
-                snapPoints={['7%', '95%']}
-            >
-                <NearByTemples
-                    locationName={userLocName}
-                    data={nearByTempleList}
-                    snapIndex={snapIndex}
-                    close={() => bottomSheetRef.current.snapToIndex(0)}
-                />
-            </BottomSheet>
-        </View>
+        </>
     );
 };
 

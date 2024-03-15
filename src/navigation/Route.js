@@ -1,30 +1,33 @@
-import { NavigationContainer } from '@react-navigation/native'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import React, { useEffect, useState } from 'react'
-import { Alert, AppState, LogBox, PermissionsAndroid, View, } from 'react-native'
-import { attachDb } from '../Screens/Database'
-import HomeScreen from '../Screens/Home/HomeScreen'
-import ThrimuraiHeadingPage from '../Screens/Thrimurai/ThrimuraiHeadingPage/ThrimuraiHeadingPage'
-import ThrimuraiList from '../Screens/Thrimurai/ThrimuraiList/ThrimuraiList'
-import ThrimuraiSong from '../Screens/Thrimurai/ThrimuraiSong/ThrimuraiSong'
-import { RouteTexts } from './RouteText'
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, { useEffect, useState } from 'react';
+import { Alert, AppState, LogBox, PermissionsAndroid, Platform, View } from 'react-native';
+import { attachDb } from '../Screens/Database';
+import HomeScreen from '../Screens/Home/HomeScreen';
+import ThrimuraiHeadingPage from '../Screens/Thrimurai/ThrimuraiHeadingPage/ThrimuraiHeadingPage';
+import ThrimuraiList from '../Screens/Thrimurai/ThrimuraiList/ThrimuraiList';
+import ThrimuraiSong from '../Screens/Thrimurai/ThrimuraiSong/ThrimuraiSong';
+import { RouteTexts } from './RouteText';
 import SQLite from 'react-native-sqlite-storage';
-import * as RNFS from 'react-native-fs'
+import * as RNFS from 'react-native-fs';
 import { addEventListener, useNetInfo } from '@react-native-community/netinfo';
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import LottieView from 'lottie-react-native';
-import SearchScreen from '../Screens/Thrimurai/Searchscreen/SearchScreen'
-import BottomTabs from './BottomTab/BottomTabs'
+import SearchScreen from '../Screens/Thrimurai/Searchscreen/SearchScreen';
+import BottomTabs from './BottomTab/BottomTabs';
 import Strotras from '../Screens/Strotras/Strotras';
 import { MusicContextProvider } from '../components/Playbacks/TrackPlayerContext';
-import TempleTabs from './BottomTab/TempleTabs'
-import SongLists from '../Screens/Favourite/SongLists'
+import TempleTabs from './BottomTab/TempleTabs';
+import SongLists from '../Screens/Favourite/SongLists';
 import {
     CardStyleInterpolators,
+    TransitionSpecs,
     createStackNavigator,
 } from '@react-navigation/stack';
-import CreateTrip from '../Screens/Temples/MyTrip/CreateTrip'
-import TempleSelection from '../Screens/Temples/TempleSelection'
+import CreateTrip from '../Screens/Temples/MyTrip/CreateTrip';
+import TempleSelection from '../Screens/Temples/TempleSelection';
+import TempleDetails from '../Screens/Temples/TempleDetails';
+import FilteredTemplesPage from '../Screens/Temples/FilteredTemplesPage';
 // import { ThemeContextProvider } from '../Context/ThemeContext';
 
 const Route = () => {
@@ -169,12 +172,16 @@ const Route = () => {
                         <Stack.Screen name="Home" component={HomeScreen} />
                         <Stack.Screen name="Thirumurais" component={ThrimuraiList} />
                         <Stack.Screen name={RouteTexts.SEARCH_SCREEN} component={SearchScreen} />
-                        <Stack.Screen name={RouteTexts.TEMPLE_SELECTION} component={TempleSelection} />
-                        <Stack.Screen name={RouteTexts.SONGS_LIST} component={SongLists}
+                        <Stack.Screen
+                            name={RouteTexts.TEMPLE_SELECTION}
+                            component={TempleSelection}
+                        />
+                        <Stack.Screen
+                            name={RouteTexts.SONGS_LIST}
+                            component={SongLists}
                             options={{
                                 headerShown: false,
-                                cardStyleInterpolator:
-                                    CardStyleInterpolators.forBottomSheetAndroid,
+                                cardStyleInterpolator: CardStyleInterpolators.forBottomSheetAndroid,
                                 //  CardStyleInterpolators.forHorizontalIOS,
                                 // transitionSpec: {
                                 //   open: config,
@@ -182,12 +189,14 @@ const Route = () => {
                                 // },
                                 // gestureDirection: 'horizontal-inverted',
                                 gestureEnabled: true,
-                            }} />
-                        <Stack.Screen name={RouteTexts.CREATE_TRIP} component={CreateTrip}
+                            }}
+                        />
+                        <Stack.Screen
+                            name={RouteTexts.CREATE_TRIP}
+                            component={CreateTrip}
                             options={{
                                 headerShown: false,
-                                cardStyleInterpolator:
-                                    CardStyleInterpolators.forBottomSheetAndroid,
+                                cardStyleInterpolator: CardStyleInterpolators.forBottomSheetAndroid,
                                 //  CardStyleInterpolators.forHorizontalIOS,
                                 // transitionSpec: {
                                 //   open: config,
@@ -195,13 +204,32 @@ const Route = () => {
                                 // },
                                 // gestureDirection: 'horizontal-inverted',
                                 gestureEnabled: true,
-                            }} />
+                            }}
+                        />
                         <Stack.Screen
                             name={RouteTexts.THIRIMURAI_HEADING}
                             component={ThrimuraiHeadingPage}
                         />
                         <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={MusicComponent} />
                         <Stack.Screen name={'Stotras'} component={Strotras} />
+
+                        <Stack.Screen
+                            name={'templeDetails'}
+                            component={TempleDetails}
+                            options={{
+                                headerShown: false,
+                                cardStyleInterpolator: CardStyleInterpolators.forBottomSheetAndroid,
+                                //  CardStyleInterpolators.forHorizontalIOS,
+                                // transitionSpec: {
+                                //   open: config,
+                                //   close: config,
+                                // },
+                                // gestureDirection: 'horizontal-inverted',
+                                gestureEnabled: true,
+                            }}
+                        />
+
+                        <Stack.Screen name={'filteredTemples'} component={FilteredTemplesPage} />
                     </Stack.Navigator>
                 </NavigationContainer>
             )}
@@ -215,4 +243,4 @@ const MusicComponent = (props) => (
     </MusicContextProvider>
 );
 
-export default Route
+export default Route;

@@ -1,3 +1,11 @@
+import ThrimuraiTemple from '../../../assets/Images/Temple/ThrimuraiTemple.svg';
+import MuktiSthalamTemple from '../../../assets/Images/Temple/MuktiSthalamTemple.svg';
+import ParashuramaTemple from '../../../assets/Images/Temple/ParashuramaTemple.svg';
+import PopularTemples from '../../../assets/Images/Temple/PopularTemples.svg';
+import Temples from '../../../assets/Images/Temple/Temples.svg';
+import UnknownTemple from '../../../assets/Images/Temple/UnknownTemple.svg';
+import UsersLocation from '../../../assets/Images/Temple/UsersLocation.svg';
+import VaippuSthalamTemple from '../../../assets/Images/Temple/VaippuSthalamTemple.svg';
 const assetMapWithTempleType = {
     1: {
         fullName: 'Jyotirlingas/Thirumurai Temples',
@@ -5,6 +13,7 @@ const assetMapWithTempleType = {
         content:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magnam.',
         path: require('./TempleAssets/ThirumuraiTemple.png'),
+        svg: ThrimuraiTemple,
         metaData: {
             color: '#E62828',
             letterAssociated: null,
@@ -19,6 +28,7 @@ const assetMapWithTempleType = {
             letterAssociated: null,
         },
         path: require('./TempleAssets/Temples.png'),
+        svg: <Temples />,
     },
     3: {
         fullName: 'Popular Temples',
@@ -29,6 +39,7 @@ const assetMapWithTempleType = {
             letterAssociated: null,
         },
         path: require('./TempleAssets/PopularTemples.png'),
+        svg: <PopularTemples />,
     },
 
     4: {
@@ -41,6 +52,7 @@ const assetMapWithTempleType = {
             letterAssociated: 'C',
         },
         path: require('./TempleAssets/ParashuramaTemple.png'),
+        svg: <ParashuramaTemple />,
     },
     5: {
         fullName: 'Nayanmar birth/mukti sthalam',
@@ -52,6 +64,7 @@ const assetMapWithTempleType = {
             letterAssociated: 'B',
         },
         path: require('./TempleAssets/MuktiSthalamTemple.png'),
+        svg: <MuktiSthalamTemple />,
     },
     6: {
         fullName: 'Unclear Temples',
@@ -63,6 +76,7 @@ const assetMapWithTempleType = {
             letterAssociated: null,
         },
         path: require('./TempleAssets/UnknownTemple.png'),
+        svg: <UnknownTemple />,
     },
 
     7: {
@@ -74,6 +88,7 @@ const assetMapWithTempleType = {
             letterAssociated: 'A',
         },
         path: require('./TempleAssets/VaippuSthalamTemple.png'),
+        svg: <VaippuSthalamTemple />,
     },
     8: {
         fullName: 'User Location',
@@ -85,6 +100,7 @@ const assetMapWithTempleType = {
             letterAssociated: null,
         },
         path: require('./TempleAssets/UsersLocation.png'),
+        svg: <UsersLocation />,
     },
 };
 

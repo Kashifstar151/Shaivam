@@ -1,9 +1,27 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Pressable, StyleSheet } from 'react-native';
 import { View, Text, TextInput } from 'react-native';
 import SearchSVG from '../../components/SVGs/SearchSVG';
+import { useNavigation } from '@react-navigation/core';
+import BackBtnSvg from '../../components/SVGs/BackBtnSvg';
+import { StackActions } from '@react-navigation/native';
 
-const SearchTemple = () => {
+const SearchTemple = ({ route, value, isNavigable }) => {
+    const [searchText, setSearchText] = useState('');
+    const navigation = useNavigation();
+
+    const navigator = (name, data) => {
+        navigation.navigate(name, data);
+    };
+
+    const popAction = StackActions.pop();
+
+    useEffect(() => {
+        if (value) {
+            setSearchText(value);
+        }
+    }, [value]);
+
     return (
         <View
             style={[
@@ -13,12 +31,34 @@ const SearchTemple = () => {
                 },
             ]}
         >
-            <SearchSVG fill={'#777777'} />
+            {route !== 'filteredTemples' ? (
+                <SearchSVG fill={'#777777'} />
+            ) : (
+                <Pressable
+                    onPress={() => {
+                        navigation.dispatch(popAction);
+                    }}
+                >
+                    <BackBtnSvg />
+                </Pressable>
+            )}
 
             <TextInput
                 placeholder="Search for any temple"
                 placeholderTextColor={'#777777'}
                 style={{ color: '#777777' }}
+                value={searchText}
+                onChangeText={(val) => {
+                    setSearchText(val);
+                }}
+                onSubmitEditing={() => {
+                    if (isNavigable) {
+                        navigator('filteredTemples', {
+                            searchText,
+                            data: null,
+                        });
+                    }
+                }}
             />
         </View>
     );
