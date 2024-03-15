@@ -12,14 +12,34 @@ const Header = () => {
     const colorScheme = useColorScheme();
     const [isDark, setIsDark] = useState(colorScheme === 'dark' ? true : false);
     const { theme, setTheme } = useContext(ThemeContext);
-    const onSwitchTheme = () => {
+    const onSwitchTheme = async () => {
+        await AsyncStorage.setItem('theme', JSON.stringify(isDark ? 'light' : 'dark'));
+        // alert(isDark)
         setIsDark(!isDark);
-    };
 
+    };
     useEffect(() => {
+        getTheme()
+    }, [])
+    const getTheme = async () => {
+        let key = await AsyncStorage.getItem('theme');
+        console.log("🚀 ~ getTheme ~ key:", key)
+        let k = JSON.parse(key)
+        if (k == 'light') {
+            setIsDark(false)
+            setTheme(light);
+        } else {
+            setIsDark(true)
+            setTheme(dark);
+        }
+    }
+    useEffect(() => {
+        // changeTheme()
         setTheme(isDark ? dark : light);
-        AsyncStorage.setItem('theme', colorScheme);
     }, [isDark]);
+    // const changeTheme = async () => {
+    //     await AsyncStorage.setItem('theme', JSON.stringify(isDark ? 'dark' : 'light'));
+    // }
     return (
         <View style={styles.headerContainer}>
             <View style={{ flexDirection: 'row' }}>
