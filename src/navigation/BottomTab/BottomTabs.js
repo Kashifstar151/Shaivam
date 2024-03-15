@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import HomeScreen from '../../Screens/Home/HomeScreen';
 import Temples from '../../Screens/Temples/Temples';
 import { RouteTexts } from '../RouteText';
@@ -26,6 +26,11 @@ export default BottomTab = ({ navigation }) => {
                         backgroundColor:
                             theme.colorscheme === 'dark' ? theme.backgroundColor : '#C2514A',
                     },
+                    Platform.OS !== 'ios'
+                        ? {
+                              height: 65,
+                          }
+                        : {},
                 ],
             }}
         >
@@ -372,7 +377,6 @@ export default BottomTab = ({ navigation }) => {
 export const styles = StyleSheet.create({
     tabContainer: {
         paddingTop: 5,
-        height: 65,
         borderTopEndRadius: 10,
         borderTopStartRadius: 10,
         position: 'absolute',
@@ -383,8 +387,8 @@ export const styles = StyleSheet.create({
         alignSelf: 'center',
         justifyContent: 'center',
         alignItems: 'center',
-        position: 'absolute',
-        bottom: 0,
+        // position: 'absolute',
+        // bottom: 0,
     },
     tabBarLable: {
         color: '#FFAAA5',
