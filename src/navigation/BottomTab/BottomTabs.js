@@ -20,6 +20,7 @@ export default BottomTab = ({ navigation }) => {
     return (
         <Tab.Navigator
             screenOptions={{
+                // headerStatusBarHeight:{},
                 tabBarStyle: [
                     styles.tabContainer,
                     {

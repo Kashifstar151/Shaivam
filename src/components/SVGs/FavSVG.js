@@ -1,12 +1,12 @@
 import * as React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
-function FavSVG({ fill, ...props }) {
+function FavSVG({ fill, width = 16, height = 22, viewBox = '0 0 16 22', ...props }) {
     return (
         <Svg
-            width={16}
-            height={22}
-            viewBox="0 0 16 22"
+            width={width}
+            height={height}
+            viewBox={viewBox}
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             {...props}

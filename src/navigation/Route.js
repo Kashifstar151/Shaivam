@@ -236,6 +236,8 @@ const Route = () => {
                             }}
                         />
 
+
+                        {/* <Stack.Screen name={'templeDetails'} component={TempleDetails} /> */}
                         <Stack.Screen name={'filteredTemples'} component={FilteredTemplesPage} />
                     </Stack.Navigator>
                 </NavigationContainer>

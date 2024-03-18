@@ -1,12 +1,12 @@
 import * as React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
-function SearchSVG({ fill, ...props }) {
+function SearchSVG({ fill, width = 17, height = 17, viewBox = '0 0 17 17', ...props }) {
     return (
         <Svg
-            width={17}
-            height={17}
-            viewBox="0 0 17 17"
+            width={width}
+            height={height}
+            viewBox={viewBox}
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             {...props}
