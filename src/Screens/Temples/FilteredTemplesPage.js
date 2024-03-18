@@ -7,6 +7,8 @@ import SearchTemple from './SearchTemple';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { ImageBackground } from 'react-native';
 import { ThemeContext } from '../../Context/ThemeContext';
+import FileUplaoder from './FileUplaoder';
+import SpottingErrorPage from './SuccuessPages/SpottingErrorPage';
 
 const FilteredTemplesPage = ({ navigation, route }) => {
     console.log('🚀 ~ TempleDetails ~ route:', route.params?.data?.name);
@@ -19,6 +21,7 @@ const FilteredTemplesPage = ({ navigation, route }) => {
     });
     const bottomSheetRef = useRef(null);
     const [snapIndex, setSnapIndex] = useState(0);
+    const [modalVisible, setModalVisible] = useState(true)
 
     const handleSheetChanges = useCallback((index) => {
         console.log('handleSheetChanges', index);
@@ -85,6 +88,13 @@ const FilteredTemplesPage = ({ navigation, route }) => {
                 )}
             >
                 <Text style={{ color: 'black' }}>dhshdjksk</Text>
+                {
+                    modalVisible &&
+                    <Modal transparent>
+                        {/* <FileUplaoder setModalVisible={setModalVisible} /> */}
+                        <SpottingErrorPage setModalVisible={setModalVisible} navigation={navigation} />
+                    </Modal>
+                }
             </BottomSheet>
         </View>
     );
