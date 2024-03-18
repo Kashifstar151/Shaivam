@@ -88,13 +88,13 @@ const FilteredTemplesPage = ({ navigation, route }) => {
                 )}
             >
                 <Text style={{ color: 'black' }}>dhshdjksk</Text>
-                {
+                {/* {
                     modalVisible &&
-                    <Modal transparent>
-                        {/* <FileUplaoder setModalVisible={setModalVisible} /> */}
-                        <SpottingErrorPage setModalVisible={setModalVisible} navigation={navigation} />
+                    <Modal transparent> */}
+                {/* <FileUplaoder setModalVisible={setModalVisible} /> */}
+                {/* <SpottingErrorPage setModalVisible={setModalVisible} navigation={nav}/>
                     </Modal>
-                }
+                } */}
             </BottomSheet>
         </View>
     );
