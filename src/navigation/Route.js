@@ -213,22 +213,7 @@ const Route = () => {
                         <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={MusicComponent} />
                         <Stack.Screen name={'Stotras'} component={Strotras} />
 
-                        <Stack.Screen
-                            name={'templeDetails'}
-                            component={TempleDetails}
-                            options={{
-                                headerShown: false,
-                                cardStyleInterpolator: CardStyleInterpolators.forBottomSheetAndroid,
-                                //  CardStyleInterpolators.forHorizontalIOS,
-                                // transitionSpec: {
-                                //   open: config,
-                                //   close: config,
-                                // },
-                                // gestureDirection: 'horizontal-inverted',
-                                gestureEnabled: true,
-                            }}
-                        />
-
+                        <Stack.Screen name={'templeDetails'} component={TempleDetails} />
                         <Stack.Screen name={'filteredTemples'} component={FilteredTemplesPage} />
                     </Stack.Navigator>
                 </NavigationContainer>
