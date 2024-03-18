@@ -16,6 +16,7 @@ const BackButton = ({
     buttonDisable,
     nandiLogo
 }) => {
+    console.log(Platform, 'Platform.OS');
     return (
         <View
             style={{

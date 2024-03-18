@@ -1,20 +1,9 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import {
-    View,
-    Text,
-    StyleSheet,
-    Dimensions,
-    TouchableOpacity,
-    PermissionsAndroid,
-    Pressable,
-    Alert,
-} from 'react-native';
-import BottomSheet from '@gorhom/bottom-sheet';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { View, Text, StyleSheet, Dimensions, Pressable, ImageBackground } from 'react-native';
+import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import NearByTemples from './NearByTemples';
-import { RouteTexts } from '../../navigation/RouteText';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { Image } from 'react-native';
 import {
     clearGetCurrentLocationWatcher,
     getCurrentLocationWatcher,
@@ -28,12 +17,12 @@ import AnimatedRightSideView from '../../components/AnimatedRightSideView';
 import assetMapWithTempleType from './AssetMapWithTempleType.js';
 import InnerContextOfAnimatedSideBox from './InnerContextOfAnimatedSideBox.js';
 import MapIconSVG from '../../components/SVGs/MapIconSVG.js';
-import { markerPressClbk } from './CallBacksForClick.js';
+import { categoryBtnClbk, markerPressClbk } from './CallBacksForClick.js';
 import SearchTemple from './SearchTemple.js';
 import { CustomMarker } from './CustomMarker.js';
+import { ThemeContext } from '../../Context/ThemeContext.js';
 
 export const Temples = ({ navigation, route }) => {
-    console.log('🚀 ~ Temples ~ navigation:', route.name);
     const bottomSheetRef = useRef(null);
 
     const [regionCoordinate, setRegionCoordinate] = useState({
@@ -50,8 +39,6 @@ export const Temples = ({ navigation, route }) => {
         latitudeDelta: 0.015,
         longitudeDelta: 0.0121,
     });
-
-    // const [userLocation, setUserLocation] = useState();
 
     const [snapIndex, setSnapIndex] = useState(0);
 
@@ -148,9 +135,7 @@ export const Temples = ({ navigation, route }) => {
         const state = await locationPermission();
 
         if (state.status) {
-            // Alert.alert(`the status is ----> ${state.status}`);
             getCurrentLocationWatcher((val) => {
-                // console.log('the value is set for map ', val);
                 setUserLocation((prev) => ({ ...prev, ...val }));
             });
         }
@@ -161,12 +146,7 @@ export const Temples = ({ navigation, route }) => {
             await onMapReadyCallback();
         })();
 
-        // getCurrentLocationWatcher((val) => {
-        //     console.log('the value is set for map ');
-        //     setUserLocation((prev) => ({ ...prev, ...val }));
-        // });
         return () => {
-            // Alert.alert('clearing the watcher ');
             clearGetCurrentLocationWatcher();
         };
     }, []);
@@ -197,6 +177,7 @@ export const Temples = ({ navigation, route }) => {
             })();
         }
     }, [userLocation]);
+    const { theme } = useContext(ThemeContext);
 
     return (
         <>
@@ -225,6 +206,7 @@ export const Temples = ({ navigation, route }) => {
                             setPadState={setPadState}
                             flag={8}
                             coordinate={userLocation}
+                            keyName={'USER_LOCATION_MARKER'}
                         />
                         <CustomMarker
                             setPadState={setPadState}
@@ -235,6 +217,7 @@ export const Temples = ({ navigation, route }) => {
                             }}
                             flag={7}
                             coordinate={regionCoordinate}
+                            keyName={'COORDINATE'}
                         />
                     </MapView>
                 ) : null}
@@ -251,6 +234,7 @@ export const Temples = ({ navigation, route }) => {
                                     style={styles.contWrapper}
                                     onPress={() => {
                                         // adding callback on the category btn press and navigating to the filter page
+                                        categoryBtnClbk(navigation, key);
                                     }}
                                     key={indx}
                                 >
@@ -318,13 +302,37 @@ export const Temples = ({ navigation, route }) => {
                 <BottomSheet
                     ref={bottomSheetRef}
                     onChange={handleSheetChanges}
-                    // containerHeight={400}
                     snapPoints={['7%', '95%']}
+                    backdropComponent={(props) => (
+                        <BottomSheetBackdrop
+                            opacity={1}
+                            appearsOnIndex={1}
+                            disappearsOnIndex={0}
+                            pressBehavior={'collapse'}
+                            {...props}
+                        >
+                            {/* <View style={{ backgroundColor: 'red', flex: 1 }}></View> */}
+                            <ImageBackground
+                                source={
+                                    theme.colorscheme === 'light'
+                                        ? require('../../../assets/Images/Background.png')
+                                        : require('../../../assets/Images/BackgroundCommon.png')
+                                }
+                                style={{
+                                    paddingVertical: 0,
+                                    borderRadius: 10,
+                                    width: '100%',
+                                    height: '40%',
+                                }}
+                            ></ImageBackground>
+                        </BottomSheetBackdrop>
+                    )}
                 >
                     <NearByTemples
                         locationName={userLocName}
                         data={nearByTempleList}
                         snapIndex={snapIndex}
+                        navigation={navigation}
                         close={() => bottomSheetRef.current.snapToIndex(0)}
                     />
                 </BottomSheet>

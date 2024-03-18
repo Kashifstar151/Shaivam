@@ -21,6 +21,7 @@ const SpottingErrorPage = ({ setModalVisible, navigation }) => {
         setShowSubmit(true)
         // navigation.navigate(RouteTexts.ERROR_SELECTION_PAGE)
     }
+
     const RenderItem = (item, index) => (
         <TouchableOpacity onPress={() => selectionHandler(item)} style={{ justifyContent: 'space-between', height: 40, alignItems: 'center', flexDirection: 'row' }}>
             <Text style={{ fontFamily: 'Mulish-Regular', color: theme.textColor }}>{item?.name}</Text>

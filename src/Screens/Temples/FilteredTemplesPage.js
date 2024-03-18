@@ -1,14 +1,17 @@
 // filter page on the temple category
 import React, { useCallback, useContext, useRef, useState } from 'react';
-import { Dimensions, StyleSheet, Text, View, Modal, TouchableHighlight } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import SearchContainerWithIcon from './SearchContainerWithIcon';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import SearchTemple from './SearchTemple';
-import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
 import { ImageBackground } from 'react-native';
 import { ThemeContext } from '../../Context/ThemeContext';
 import FileUplaoder from './FileUplaoder';
 import SpottingErrorPage from './SuccuessPages/SpottingErrorPage';
+import TempleCard from './TempleCard';
+import { templesDetailsArray } from './AssetMapWithTempleType';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const FilteredTemplesPage = ({ navigation, route }) => {
     console.log('🚀 ~ TempleDetails ~ route:', route.params?.data?.name);
@@ -31,7 +34,7 @@ const FilteredTemplesPage = ({ navigation, route }) => {
     const { theme } = useContext(ThemeContext);
 
     return (
-        <View style={{ backgroundColor: 'red', flex: 1 }}>
+        <View style={{ flex: 1 }}>
             <MapView
                 provider={PROVIDER_GOOGLE}
                 initialRegion={null}
@@ -48,7 +51,7 @@ const FilteredTemplesPage = ({ navigation, route }) => {
                 <SearchContainerWithIcon>
                     <SearchTemple
                         route={route.name}
-                        value={route.params?.data?.name ? route.params?.data?.name : null}
+                        value={route.params?.data?.name ?? route.params?.searchText}
                         isNavigable={false}
                     />
                 </SearchContainerWithIcon>
@@ -56,17 +59,16 @@ const FilteredTemplesPage = ({ navigation, route }) => {
             <BottomSheet
                 ref={bottomSheetRef}
                 onChange={handleSheetChanges}
-                // containerHeight={400}
                 snapPoints={['10%', '50%', '95%']}
+                index={1}
                 backdropComponent={(props) => (
                     <BottomSheetBackdrop
                         opacity={1}
                         appearsOnIndex={2}
                         disappearsOnIndex={1}
-                        // onPress={() => navigation.popToTop()}
+                        pressBehavior={'collapse'}
                         {...props}
                     >
-                        {/* <View style={{ backgroundColor: 'red', flex: 1 }}></View> */}
                         <ImageBackground
                             source={
                                 theme.colorscheme === 'light'
@@ -79,15 +81,11 @@ const FilteredTemplesPage = ({ navigation, route }) => {
                                 width: '100%',
                                 height: '40%',
                             }}
-                        >
-                            {/* <View style={{ backgroundColor: '#AA4A44', position: 'absolute', height: 220, width: '100%' }}> */}
-                            {props.children}
-                            {/* </View> */}
-                        </ImageBackground>
+                        ></ImageBackground>
                     </BottomSheetBackdrop>
                 )}
             >
-                <Text style={{ color: 'black' }}>dhshdjksk</Text>
+                {/* <Text style={{ color: 'black' }}>dhshdjksk</Text> */}
                 {/* {
                     modalVisible &&
                     <Modal transparent> */}
@@ -95,6 +93,27 @@ const FilteredTemplesPage = ({ navigation, route }) => {
                 {/* <SpottingErrorPage setModalVisible={setModalVisible} navigation={nav}/>
                     </Modal>
                 } */}
+                {snapIndex === 2 ? (
+                    <View
+                        style={{
+                            width: '100%',
+                            padding: 20,
+                        }}
+                    >
+                        <SearchContainerWithIcon>
+                            <SearchTemple
+                                route={route.name}
+                                value={route.params?.data?.name ?? route.params?.searchText}
+                                isNavigable={false}
+                            />
+                        </SearchContainerWithIcon>
+                    </View>
+                ) : null}
+                <ScrollView nestedScrollEnabled>
+                    {templesDetailsArray.map((item, index) => (
+                        <TempleCard dataSet={item} showButton={true} showMargin={true} />
+                    ))}
+                </ScrollView>
             </BottomSheet>
         </View>
     );

@@ -149,7 +149,6 @@ const Fav = ({ navigation }) => {
     return (
         <ScrollView>
             {/* <View> */}
-
             <Background>
                 <View style={{ marginVertical: 10 }}>
                     <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
