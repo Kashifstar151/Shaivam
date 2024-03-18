@@ -14,6 +14,7 @@ const BackButton = ({
     secondMiddleText,
     rightIcon,
     buttonDisable,
+    nandiLogo
 }) => {
     return (
         <View
@@ -68,7 +69,10 @@ const BackButton = ({
                             <Icon name="sharealt" size={24} color="white" />
                         </TouchableOpacity>
                     )}
-                    <NandiLogo />
+                    {
+                        nandiLogo == false ? null : <NandiLogo />
+                    }
+
                 </View>
             </View>
             {firstText && (

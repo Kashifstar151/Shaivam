@@ -28,6 +28,9 @@ import CreateTrip from '../Screens/Temples/MyTrip/CreateTrip';
 import TempleSelection from '../Screens/Temples/TempleSelection';
 import TempleDetails from '../Screens/Temples/TempleDetails';
 import FilteredTemplesPage from '../Screens/Temples/FilteredTemplesPage';
+import ImageSubmitPage from '../Screens/Temples/SuccuessPages/SpottingErrorPage';
+import SpottingErrorPage from '../Screens/Temples/SuccuessPages/SpottingErrorPage';
+import SelectErrorPage from '../Screens/Temples/SuccuessPages/SelectErrorPage';
 // import { ThemeContextProvider } from '../Context/ThemeContext';
 
 const Route = () => {
@@ -177,6 +180,10 @@ const Route = () => {
                             component={TempleSelection}
                         />
                         <Stack.Screen
+                            name={RouteTexts.SPOTTING_ERROR_PAGE}
+                            component={SpottingErrorPage}
+                        />
+                        <Stack.Screen
                             name={RouteTexts.SONGS_LIST}
                             component={SongLists}
                             options={{
@@ -212,7 +219,7 @@ const Route = () => {
                         />
                         <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={MusicComponent} />
                         <Stack.Screen name={'Stotras'} component={Strotras} />
-
+                        <Stack.Screen name={RouteTexts.ERROR_SELECTION_PAGE} component={SelectErrorPage} />
                         <Stack.Screen
                             name={'templeDetails'}
                             component={TempleDetails}
