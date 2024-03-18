@@ -17,7 +17,7 @@ import AnimatedRightSideView from '../../components/AnimatedRightSideView';
 import assetMapWithTempleType from './AssetMapWithTempleType.js';
 import InnerContextOfAnimatedSideBox from './InnerContextOfAnimatedSideBox.js';
 import MapIconSVG from '../../components/SVGs/MapIconSVG.js';
-import { markerPressClbk } from './CallBacksForClick.js';
+import { categoryBtnClbk, markerPressClbk } from './CallBacksForClick.js';
 import SearchTemple from './SearchTemple.js';
 import { CustomMarker } from './CustomMarker.js';
 import { ThemeContext } from '../../Context/ThemeContext.js';
@@ -206,6 +206,7 @@ export const Temples = ({ navigation, route }) => {
                             setPadState={setPadState}
                             flag={8}
                             coordinate={userLocation}
+                            keyName={'USER_LOCATION_MARKER'}
                         />
                         <CustomMarker
                             setPadState={setPadState}
@@ -216,6 +217,7 @@ export const Temples = ({ navigation, route }) => {
                             }}
                             flag={7}
                             coordinate={regionCoordinate}
+                            keyName={'COORDINATE'}
                         />
                     </MapView>
                 ) : null}
@@ -232,6 +234,7 @@ export const Temples = ({ navigation, route }) => {
                                     style={styles.contWrapper}
                                     onPress={() => {
                                         // adding callback on the category btn press and navigating to the filter page
+                                        categoryBtnClbk(navigation, key);
                                     }}
                                     key={indx}
                                 >
@@ -305,7 +308,7 @@ export const Temples = ({ navigation, route }) => {
                             opacity={1}
                             appearsOnIndex={1}
                             disappearsOnIndex={0}
-                            // onPress={() => navigation.popToTop()}
+                            pressBehavior={'collapse'}
                             {...props}
                         >
                             {/* <View style={{ backgroundColor: 'red', flex: 1 }}></View> */}
@@ -321,11 +324,7 @@ export const Temples = ({ navigation, route }) => {
                                     width: '100%',
                                     height: '40%',
                                 }}
-                            >
-                                {/* <View style={{ backgroundColor: '#AA4A44', position: 'absolute', height: 220, width: '100%' }}> */}
-                                {props.children}
-                                {/* </View> */}
-                            </ImageBackground>
+                            ></ImageBackground>
                         </BottomSheetBackdrop>
                     )}
                 >
