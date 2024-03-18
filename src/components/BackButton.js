@@ -15,6 +15,7 @@ const BackButton = ({
     rightIcon,
     buttonDisable,
 }) => {
+    console.log(Platform, 'Platform.OS');
     return (
         <View
             style={{
