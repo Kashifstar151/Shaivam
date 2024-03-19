@@ -1,14 +1,19 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-import { CustomMarker, DraggableMarker, MarkerCallOut } from './CustomMarker';
-import { onRegionChangeCompleteCallback } from '../../Helpers/GeolocationFunc';
+import { CustomMarker, DraggableMarker } from './CustomMarker';
+import {
+    clearGetCurrentLocationWatcher,
+    getCurrentLocationWatcher,
+    getTheLocationName,
+    locationPermission,
+    onRegionChangeCompleteCallback,
+} from '../../Helpers/GeolocationFunc';
 import { CustomButton, CustomLongBtn } from '../../components/Buttons';
 import TrackBackToLocSVG from '../../components/SVGs/TrackBackToLocSVG';
 import LocationLogo from '../../components/SVGs/LocationLogo';
 
 const PinTheLocation = ({ navigation }) => {
-    console.log('🚀 ~ PinTheLocation ~ navigation:', navigation);
     const [regionCoordinate, setRegionCoordinate] = useState({
         latitude: 28.500271,
         longitude: 77.387901,
@@ -31,11 +36,59 @@ const PinTheLocation = ({ navigation }) => {
         latitudeDelta: 0.015,
         longitudeDelta: 0.0121,
     });
+    const [userLocName, setUserLocName] = useState({
+        name: '',
+        displayName: '',
+    });
 
+    const fetchTheName = useCallback(
+        async (coors) => {
+            console.log('the location fetch enters  ');
+            if (coors?.latitude && coors?.longitude) {
+                console.log('the location is fetching  ');
+                const locationDetail = await getTheLocationName({ ...dragCoor.current });
+                console.log('the location  fetching  is done', locationDetail);
+
+                setUserLocName((prev) => {
+                    return {
+                        ...prev,
+                        name: locationDetail?.address?.village || locationDetail?.name,
+                        displayName: locationDetail?.display_name,
+                    };
+                });
+            }
+        },
+        [dragCoor.current]
+    );
     const [btnState, setBtnState] = useState(false);
-    console.log('🚀 ~ PinTheLocation ~ dragCoor:', dragCoor.current);
+
+    const onMapReadyCallback = async () => {
+        const state = await locationPermission();
+        console.log('🚀 ~ onMapReadyCallback ~ state:', state);
+
+        if (state.status) {
+            console.log("the fetch of the user's location");
+            getCurrentLocationWatcher((val) => {
+                console.log('🚀 ~ getCurrentLocationWatcher ~ val:', val);
+                fetchTheName(val);
+                setUserLocation((prev) => ({ ...prev, ...val }));
+            });
+        }
+    };
+
+    useEffect(() => {
+        (async () => {
+            console.log('the initial call');
+            await onMapReadyCallback();
+        })();
+
+        return () => {
+            clearGetCurrentLocationWatcher();
+        };
+    }, []);
+
     return (
-        <View style={{ backgroundColor: 'red', flex: 1, ...StyleSheet.absoluteFillObject }}>
+        <View style={styles.mainContainer}>
             <MapView
                 onMapReady={() =>
                     setTimeout(() => {
@@ -44,7 +97,7 @@ const PinTheLocation = ({ navigation }) => {
                     }, 5000)
                 }
                 provider={PROVIDER_GOOGLE}
-                initialRegion={null}
+                initialRegion={regionCoordinate}
                 style={styles.map}
                 onRegionChangeComplete={(args, gesture) => {
                     if (gesture.isGesture) {
@@ -65,6 +118,7 @@ const PinTheLocation = ({ navigation }) => {
                 <DraggableMarker
                     callback={(e) => {
                         dragCoor.current = e;
+                        fetchTheName(e);
                     }}
                     flag={7}
                     coordinate={dragCoor.current}
@@ -72,20 +126,15 @@ const PinTheLocation = ({ navigation }) => {
                 />
             </MapView>
 
-            <View
-                style={{
-                    width: '100%',
-                    minHeight: Dimensions.get('screen').height * 0.25,
-                    position: 'absolute',
-                    bottom: 0,
-                }}
-            >
+            <View style={styles.overlayHeight}>
                 <View>
                     <CustomButton
                         svg={<TrackBackToLocSVG width={16} height={16} fill={'#fff'} />}
                         onPress={() => {
                             // write the function that we have used in the temple module to get the current location and set the name of the location in the near by place name
-                            console.log('the press to locate your position');
+                            dragCoor.current = { ...userLocation };
+                            fetchTheName(dragCoor.current);
+                            setRegionCoordinate((prev) => ({ ...prev, ...userLocation }));
                         }}
                         style={{
                             margin: 10,
@@ -100,14 +149,7 @@ const PinTheLocation = ({ navigation }) => {
                     />
                 </View>
 
-                <View
-                    style={{
-                        backgroundColor: '#FFFFFF',
-                        padding: 15,
-                        flex: 1,
-                        gap: 10,
-                    }}
-                >
+                <View style={styles.lowerContainer}>
                     <Text
                         style={{
                             fontFamily: 'Lora-Bold',
@@ -118,36 +160,21 @@ const PinTheLocation = ({ navigation }) => {
                     >
                         Place the marker on the temple location
                     </Text>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            paddingVertical: 10,
-                            gap: 10,
-                        }}
-                    >
-                        <LocationLogo fill={'#C1554E'} />
-                        <Text
-                            style={{
-                                fontFamily: 'Mulish-Bold',
-                                fontSize: 18,
-                                color: 'black',
-                                lineHeight: 22,
-                            }}
-                        >
-                            Dinesh Nagar
-                        </Text>
-                    </View>
+                    {userLocName?.name && (
+                        <View style={styles.boldLocationNameConatiner}>
+                            <LocationLogo fill={'#C1554E'} />
+                            <Text style={styles.boldTextLocation}>
+                                {userLocName.name ?? 'Dinesh Nagar'}
+                            </Text>
+                        </View>
+                    )}
 
-                    <Text
-                        style={{
-                            color: '#777777',
-                            fontFamily: 'Mulish-Regular',
-                            paddingBottom: 10,
-                        }}
-                    >
-                        1234 421 - B Block, Dinesh nagar, Koramangala, Bangalore, Karnataka, India
-                    </Text>
+                    {userLocName?.displayName && (
+                        <Text style={styles.largeFormName}>
+                            {userLocName?.displayName ??
+                                '1234 421 - B Block, Dinesh nagar, Koramangala, Bangalore, Karnataka, India'}
+                        </Text>
+                    )}
 
                     <CustomLongBtn
                         onPress={() => {
@@ -168,46 +195,41 @@ const PinTheLocation = ({ navigation }) => {
     );
 };
 const styles = StyleSheet.create({
+    mainContainer: { backgroundColor: 'red', flex: 1, ...StyleSheet.absoluteFillObject },
     map: {
         ...StyleSheet.absoluteFillObject,
     },
-
-    colorContWrapper: {
-        flex: 1,
+    boldLocationNameConatiner: {
         flexDirection: 'row',
-        gap: 8,
-        paddingTop: 10,
-        justifyContent: 'space-evenly',
-    },
-
-    topBarWrapper: {
-        // paddingTop: 15,
-        position: 'absolute',
-        width: '100%',
-        paddingHorizontal: 20,
+        alignItems: 'center',
         paddingVertical: 20,
+        gap: 10,
     },
-    contWrapper: {
-        paddingHorizontal: 10,
-        paddingVertical: 8,
-        borderRadius: 20,
-        backgroundColor: 'white',
-        elevation: 5,
+    largeFormName: {
+        color: '#777777',
+        fontFamily: 'Mulish-Regular',
+        paddingBottom: 10,
     },
-    textContWrapper: {
-        height: 14,
-        width: 14,
-        borderRadius: 2,
-        justifyContent: 'center',
+    boldTextLocation: {
+        fontFamily: 'Mulish-Bold',
+        fontSize: 18,
+        color: 'black',
+        lineHeight: 22,
     },
 
-    textStyleForCont: {
-        alignSelf: 'center',
-        paddingVertical: 'auto',
-        fontWeight: '800',
-        color: 'white',
-        lineHeight: 16,
-        fontSize: 10,
+    lowerContainer: {
+        backgroundColor: '#FFFFFF',
+        padding: 15,
+        flex: 1,
+        justifyContent: 'space-between',
+        position: 'relative',
+    },
+
+    overlayHeight: {
+        width: '100%',
+        minHeight: Dimensions.get('screen').height * 0.25,
+        position: 'absolute',
+        bottom: 0,
     },
 });
 export default PinTheLocation;
