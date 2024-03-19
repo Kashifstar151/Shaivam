@@ -135,12 +135,43 @@ const SelectErrorPage = ({ setShowSubmit, selectedError, navigation, setModalVis
 
                         {selectedError?.id === 2 && (
                             <View style={styles.inputContainer}>
-                                <View>
+                                <View
+                                    style={{
+                                        borderRadius: 15,
+                                        borderWidth: 1,
+                                        borderColor: '#F3F3F3',
+                                        paddingHorizontal: 20,
+                                        paddingVertical: 15,
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        gap: 10,
+                                        marginBottom: 20,
+                                    }}
+                                >
                                     <LocationLogo fill={'#777777'} />
-                                    <Text style={styles.descriptionText}>
-                                        Why do you say the temple doesn’t exist?
-                                    </Text>
+                                    <View>
+                                        <Text
+                                            style={{
+                                                color: '#777777',
+                                                fontFamily: 'Mulish-Regular',
+                                                fontSize: 12,
+                                            }}
+                                        >
+                                            Existing temple location
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                color: '#777777',
+                                                fontFamily: 'Mulish-Bold',
+                                                fontSize: 14,
+                                            }}
+                                        >
+                                            Saraswathipuram
+                                        </Text>
+                                    </View>
                                 </View>
+
+                                <Text style={styles.descriptionText}>Correct temple location*</Text>
                                 <View>
                                     <LocationLogo
                                         style={{
@@ -149,25 +180,31 @@ const SelectErrorPage = ({ setShowSubmit, selectedError, navigation, setModalVis
                                             zIndex: 100,
                                             transform: [
                                                 {
-                                                    translateY: 25,
+                                                    translateY: -10,
+                                                },
+                                                {
+                                                    translateX: 20,
                                                 },
                                             ],
                                         }}
-                                        fill={'#777777'}
+                                        fill={'#C1554E'}
                                     />
 
                                     <TextInput
-                                        onChangeText={(e) => setDescription(e)}
+                                        value={desciption}
                                         placeholderTextColor={colors.grey5}
                                         placeholder="Select location"
                                         style={{
                                             color: 'black',
                                             backgroundColor: '#F3F3F3',
                                             borderRadius: 10,
-                                            padding: 15,
+                                            paddingLeft: 45,
+                                            paddingRight: 10,
+                                            paddingVertical: 15,
                                             height: 50,
                                             textAlign: 'left',
                                             verticalAlign: 'top',
+                                            fontFamily: 'Mulish-Regular',
                                         }}
                                     />
                                 </View>
