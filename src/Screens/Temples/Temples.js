@@ -312,7 +312,7 @@ export const Temples = ({ navigation, route }) => {
                 <BottomSheet
                     ref={bottomSheetRef}
                     onChange={handleSheetChanges}
-                    snapPoints={['7%', '95%']}
+                    snapPoints={['15%', '95%']}
                     backdropComponent={(props) => (
                         <BottomSheetBackdrop
                             opacity={1}
