@@ -31,8 +31,14 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+  <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+  <string>Want to access your location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Want to accept your location</string>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>Want to access your Gallary</string>
+  <key>NSAppleMusicUsageDescription</key>
+  <string>going to play audio </string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

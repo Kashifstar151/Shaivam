@@ -1,6 +1,6 @@
 // filter page on the temple category
 import React, { useCallback, useContext, useRef, useState } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, Platform, StyleSheet, View } from 'react-native';
 import SearchContainerWithIcon from './SearchContainerWithIcon';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import SearchTemple from './SearchTemple';
@@ -34,7 +34,7 @@ const FilteredTemplesPage = ({ navigation, route }) => {
     const { theme } = useContext(ThemeContext);
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, marginTop: Platform.OS == 'ios' ? 15 : 0 }}>
             <MapView
                 provider={PROVIDER_GOOGLE}
                 initialRegion={null}
@@ -46,6 +46,7 @@ const FilteredTemplesPage = ({ navigation, route }) => {
                     position: 'absolute',
                     width: '100%',
                     padding: 20,
+
                 }}
             >
                 <SearchContainerWithIcon>

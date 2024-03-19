@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         gap: 12,
         alignItems: 'center',
+        // height: 45
     },
     imageDimension: { height: 40, width: 40 },
 });
