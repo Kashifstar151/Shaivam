@@ -14,5 +14,7 @@ export const RouteTexts = {
     ADD_TEMPLE: 'AddTemple',
     SONGS_LIST: 'SongsList',
     CREATE_TRIP: 'CreateTrip',
-    TEMPLE_SELECTION: "TempleSelection"
+    TEMPLE_SELECTION: "TempleSelection",
+    SPOTTING_ERROR_PAGE: "SpottingErrorPage",
+    ERROR_SELECTION_PAGE: 'SelectErrorPage'
 }

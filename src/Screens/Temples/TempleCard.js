@@ -1,19 +1,39 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
-import { Image, Linking, Pressable, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { Image, Linking, Modal, Pressable, Text, View } from 'react-native';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import DirectionSVG from '../../components/SVGs/DirectionSVG';
 import { CustomButton } from '../../components/Buttons';
 import CameraSVG from '../../components/SVGs/CameraSVG';
 import ErrorSpotSVG from '../../components/SVGs/ErrorSpotSVG';
+import FileUplaoder from './FileUplaoder';
+import SpottingErrorPage from './SuccuessPages/SpottingErrorPage';
 
 const TempleCard = ({ dataSet, children, showMargin, showButton }) => {
     const nav = useNavigation();
+    const [modalVisible, setModalVisible] = useState(false)
+    const [selectedHeader, setSelectedHeader] = useState('direction')
     const navigator = (name, data) => {
         nav.navigate('');
     };
+    const selectionHandler = (item) => {
+        setSelectedHeader(item)
+        setModalVisible(true)
+    }
     return (
         <View style={{ paddingHorizontal: 20 }}>
+            {
+                modalVisible &&
+                <Modal transparent>
+                    {
+                        selectedHeader == 'Submit Images' ?
+                            <FileUplaoder setModalVisible={setModalVisible} /> :
+                            selectedHeader == 'Spot an error? Send Corrections' ?
+                                <SpottingErrorPage setModalVisible={setModalVisible} navigation={nav} /> : null
+                    }
+                </Modal>
+            }
+
             <Text style={{ color: 'black', fontFamily: 'Lora-Bold', fontSize: 18 }}>
                 {dataSet?.templeName}
             </Text>
@@ -54,18 +74,19 @@ const TempleCard = ({ dataSet, children, showMargin, showButton }) => {
 
                     <CustomButton
                         svg={<CameraSVG fill={'#777777'} />}
-                        onPress={() => {}}
+                        onPress={() => selectionHandler('Submit Images')}
                         style={{
                             margin: 10,
                         }}
                         text={'Submit Images'}
+
                         backgroundColor={'#EDEDED'}
                         textColor={'#777777'}
                     />
 
                     <CustomButton
                         svg={<ErrorSpotSVG fill={'#777777'} />}
-                        onPress={() => {}}
+                        onPress={() => selectionHandler('Spot an error? Send Corrections')}
                         style={{
                             margin: 10,
                         }}

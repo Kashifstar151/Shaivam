@@ -1,12 +1,14 @@
 // filter page on the temple category
 import React, { useCallback, useContext, useRef, useState } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, Platform, StyleSheet, View } from 'react-native';
 import SearchContainerWithIcon from './SearchContainerWithIcon';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import SearchTemple from './SearchTemple';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
 import { ImageBackground } from 'react-native';
 import { ThemeContext } from '../../Context/ThemeContext';
+import FileUplaoder from './FileUplaoder';
+import SpottingErrorPage from './SuccuessPages/SpottingErrorPage';
 import TempleCard from './TempleCard';
 import { templesDetailsArray } from './AssetMapWithTempleType';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -22,6 +24,8 @@ const FilteredTemplesPage = ({ navigation, route }) => {
     });
     const bottomSheetRef = useRef(null);
     const [snapIndex, setSnapIndex] = useState(0);
+    const [modalVisible, setModalVisible] = useState(true)
+
     const handleSheetChanges = useCallback((index) => {
         console.log('handleSheetChanges', index);
         setSnapIndex(index);
@@ -30,7 +34,7 @@ const FilteredTemplesPage = ({ navigation, route }) => {
     const { theme } = useContext(ThemeContext);
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, marginTop: Platform.OS == 'ios' ? 15 : 0 }}>
             <MapView
                 provider={PROVIDER_GOOGLE}
                 initialRegion={null}
@@ -42,6 +46,7 @@ const FilteredTemplesPage = ({ navigation, route }) => {
                     position: 'absolute',
                     width: '100%',
                     padding: 20,
+
                 }}
             >
                 <SearchContainerWithIcon>
@@ -81,6 +86,14 @@ const FilteredTemplesPage = ({ navigation, route }) => {
                     </BottomSheetBackdrop>
                 )}
             >
+                {/* <Text style={{ color: 'black' }}>dhshdjksk</Text> */}
+                {/* {
+                    modalVisible &&
+                    <Modal transparent> */}
+                {/* <FileUplaoder setModalVisible={setModalVisible} /> */}
+                {/* <SpottingErrorPage setModalVisible={setModalVisible} navigation={nav}/>
+                    </Modal>
+                } */}
                 {snapIndex === 2 ? (
                     <View
                         style={{
