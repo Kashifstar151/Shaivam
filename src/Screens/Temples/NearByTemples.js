@@ -84,7 +84,14 @@
 
 import React, { useState } from 'react';
 import { BottomSheetView, useBottomSheet } from '@gorhom/bottom-sheet';
-import { View, Text, StyleSheet, Dimensions, TouchableWithoutFeedback } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    Dimensions,
+    TouchableWithoutFeedback,
+    Pressable,
+} from 'react-native';
 import Slider from '@react-native-community/slider';
 import SearchInput from '../../components/SearchInput';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
@@ -92,7 +99,10 @@ import { ScrollView } from 'react-native-gesture-handler';
 import CardForNearByTemple from './CardForNearByTemple';
 import { useNavigation } from '@react-navigation/native';
 import { RouteTexts } from '../../navigation/RouteText';
-const NearByTemples = ({ close, data, locationName, snapIndex }) => {
+import DownArrowSVG from '../../components/SVGs/DownArrowSVG';
+import SearchContainerWithIcon from './SearchContainerWithIcon';
+import SearchTemple from './SearchTemple';
+const NearByTemples = ({ close, data, locationName, snapIndex, navigation }) => {
     // console.log('🚀 ~ NearByTemples ~ data:', data);
     const { snapToIndex, snapToPosition } = useBottomSheet();
     const nav = useNavigation();
@@ -105,13 +115,27 @@ const NearByTemples = ({ close, data, locationName, snapIndex }) => {
                 height: '100%',
             }}
         >
-            <View>
-                {snapIndex ? (
-                    <View>
-                        <Text style={{ color: 'red' }}>dhsjhdjs</Text>
+            {snapIndex ? (
+                <View style={styles.topBarWrapper}>
+                    <View style={{ flexDirection: 'row', gap: 16, justifyContent: 'center' }}>
+                        <Pressable
+                            style={{ justifyContent: 'center' }}
+                            onPress={() => {
+                                // navigation.dispatch(popAction);
+
+                                snapToIndex(0);
+                            }}
+                        >
+                            <DownArrowSVG fill="#777" />
+                        </Pressable>
+                        <View style={{ flex: 1 }}>
+                            <SearchContainerWithIcon>
+                                <SearchTemple isNavigable={false} />
+                            </SearchContainerWithIcon>
+                        </View>
                     </View>
-                ) : null}
-            </View>
+                </View>
+            ) : null}
 
             <TouchableWithoutFeedback
                 onPress={() => {
@@ -123,10 +147,10 @@ const NearByTemples = ({ close, data, locationName, snapIndex }) => {
                     //     screen: 'nearBy',
                     //     data: data,
                     // });
-                    nav.navigate('nearBy', {
-                        data: data,
-                        locationName: locationName,
-                    });
+                    // nav.navigate('nearBy', {
+                    //     data: data,
+                    //     locationName: locationName,
+                    // });
                 }}
                 style={{ marginBottom: 10 }}
             >
@@ -171,6 +195,55 @@ const styles = StyleSheet.create({
     contentContainer: {
         flex: 1,
         backgroundColor: 'green',
+    },
+    map: {
+        justifyContent: 'center',
+        position: 'absolute',
+        flex: 1,
+        height: Dimensions.get('window').height,
+        width: Dimensions.get('window').width,
+    },
+
+    wholeContainerWrapper: {
+        borderTopRightRadius: 15,
+        borderTopLeftRadius: 15,
+        overflow: 'hidden',
+        marginTop: -12,
+    },
+
+    colorContWrapper: {
+        flex: 1,
+        flexDirection: 'row',
+        gap: 8,
+        paddingTop: 10,
+        justifyContent: 'space-evenly',
+    },
+
+    topBarWrapper: {
+        width: '100%',
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+    },
+    contWrapper: {
+        paddingHorizontal: 10,
+        paddingVertical: 8,
+        borderRadius: 20,
+        backgroundColor: 'white',
+        elevation: 5,
+    },
+    textContWrapper: {
+        height: 14,
+        width: 14,
+        borderRadius: 2,
+        justifyContent: 'center',
+    },
+
+    textStyleForCont: {
+        alignSelf: 'center',
+        paddingVertical: 'auto',
+        fontWeight: 'bold',
+        color: 'white',
+        lineHeight: 16,
     },
 });
 

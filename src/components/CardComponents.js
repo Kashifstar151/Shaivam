@@ -14,19 +14,17 @@ import { t } from 'i18next';
 import Header from './Header';
 import SearchInput from './SearchInput';
 
-
-
 const RenderItem = ({ blockRef, item, navigation, theme }) => {
-    const [blockWidth, setBlockWidth] = useState(0)
+    const [blockWidth, setBlockWidth] = useState(0);
 
     const onLayout = (event, index) => {
         const { x, y, width, height } = event.nativeEvent.layout;
-        console.log("🚀 ~ RenderItem ~ index:", index)
+        console.log('🚀 ~ RenderItem ~ index:', index);
         if (index == 0) {
-            console.log("🚀 ~ onLayout ~ width:", width)
-            setBlockWidth(width)
+            console.log('🚀 ~ onLayout ~ width:', width);
+            setBlockWidth(width);
         }
-    }
+    };
     // console.log("🚀 ~ RenderItem ~ blockRef:", blockRef)
     return (
         <LinearGradient
@@ -77,7 +75,10 @@ const RenderItem = ({ blockRef, item, navigation, theme }) => {
                             {
                                 backgroundColor: theme === 'light' ? 'white' : '#494949',
                                 opacity: theme === 'light' ? 0.7 : 1,
-                                width: blockWidth > 100 ? blockWidth : (Dimensions.get('window').width * 0.85) / 2 - 24,
+                                width:
+                                    blockWidth > 100
+                                        ? blockWidth
+                                        : (Dimensions.get('window').width * 0.85) / 2 - 24,
                             },
                         ]}
                     >
@@ -103,10 +104,10 @@ const RenderItem = ({ blockRef, item, navigation, theme }) => {
 };
 
 const CardComponents = ({ navigation }) => {
-    const blockRef = useRef(null)
-    const [blockWidth, setBlockWidth] = useState(0)
-    const [searchText, setSearchText] = useState(null)
-    const [onFocus, setOnFocus] = useState(false)
+    const blockRef = useRef(null);
+    const [blockWidth, setBlockWidth] = useState(0);
+    const [searchText, setSearchText] = useState(null);
+    const [onFocus, setOnFocus] = useState(false);
     const { theme } = useContext(ThemeContext);
     const data = [
         {
@@ -227,7 +228,13 @@ const CardComponents = ({ navigation }) => {
                 style={{ overflow: 'visible' }}
                 horizontal
                 renderItem={({ item, index }) => (
-                    <RenderItem setBlockWidth={setBlockWidth} blockRef={blockRef} item={item} navigation={navigation} theme={theme.colorscheme} />
+                    <RenderItem
+                        setBlockWidth={setBlockWidth}
+                        blockRef={blockRef}
+                        item={item}
+                        navigation={navigation}
+                        theme={theme.colorscheme}
+                    />
                 )}
                 data={data}
             />
@@ -238,7 +245,7 @@ const CardComponents = ({ navigation }) => {
 const styles = StyleSheet.create({
     linearGradientBox: {
         width: Dimensions.get('window').width * 0.85,
-        backgroundColor: 'red',
+        // backgroundColor: 'red',
         minHeight: 200,
         borderRadius: 15,
         marginRight: 15,

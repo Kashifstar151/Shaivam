@@ -21,29 +21,29 @@ import NearByPage from '../../Screens/Temples/NearByPage';
 
 const NullComponent = () => <></>;
 
-const ExploreStack = createStackNavigator();
+// const ExploreStack = createStackNavigator();
 
-const ExploreTempleStack = () => {
-    return (
-        <ExploreStack.Navigator>
-            <ExploreStack.Screen
-                name={'explore'}
-                component={Temples}
-                options={{ headerShown: false }}
-            />
-            <ExploreStack.Screen
-                name={'nearBy'}
-                component={NearByPage}
-                options={{
-                    headerShown: false,
-                    presentation: 'modal',
-                    animationEnabled: true,
-                    animationTypeForReplace: 'push',
-                }}
-            />
-        </ExploreStack.Navigator>
-    );
-};
+// const ExploreTempleStack = () => {
+//     return (
+//         <ExploreStack.Navigator>
+//             <ExploreStack.Screen
+//                 name={'explore'}
+//                 component={Temples}
+//                 options={{ headerShown: false }}
+//             />
+//             <ExploreStack.Screen
+//                 name={'nearBy'}
+//                 component={NearByPage}
+//                 options={{
+//                     headerShown: false,
+//                     presentation: 'modal',
+//                     animationEnabled: true,
+//                     animationTypeForReplace: 'push',
+//                 }}
+//             />
+//         </ExploreStack.Navigator>
+//     );
+// };
 const Tab = createBottomTabNavigator();
 export default TempleTab = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
@@ -221,7 +221,7 @@ export default TempleTab = ({ navigation }) => {
                     ),
                 }}
                 name="Temples"
-                component={ExploreTempleStack}
+                component={Temples}
             />
             <Tab.Screen
                 options={{

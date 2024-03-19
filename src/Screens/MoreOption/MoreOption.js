@@ -2,7 +2,10 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
     Dimensions,
     FlatList,
+    Platform,
     Pressable,
+    ScrollView,
+    StatusBar,
     StyleSheet,
     Text,
     TouchableOpacity,
@@ -96,9 +99,13 @@ const MoreOption = () => {
         );
     };
     return (
-        <View style={[styles.main, { backgroundColor: theme.backgroundColor, flex: 1 }]}>
+        <View style={[styles.main, { backgroundColor: theme.backgroundColor }]}>
             <Background>
-                <ConstantHeader />
+                <View
+                    style={{ marginTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 20 : 0 }}
+                >
+                    <ConstantHeader />
+                </View>
             </Background>
             <View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
                 <FlatList
@@ -128,10 +135,11 @@ const MoreOption = () => {
     );
 };
 export const styles = StyleSheet.create({
-    main: { backgroundColor: 'green' },
+    main: { flex: 1 },
     container: {
-        margin: 14,
-        // marginTop: 24,
+        paddingTop: 20,
+        paddingHorizontal: 10,
+        paddingTop: 20,
     },
     list: {
         flexDirection: 'row',

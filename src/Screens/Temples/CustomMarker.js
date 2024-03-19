@@ -2,7 +2,7 @@ import { Image } from 'react-native';
 import { Marker } from 'react-native-maps';
 import assetMapWithTempleType from './AssetMapWithTempleType';
 
-export const CustomMarker = ({ setPadState, callback, flag, coordinate }) => {
+export const CustomMarker = ({ setPadState, callback, flag, coordinate, keyName }) => {
     return (
         <Marker
             tracksViewChanges={false}
@@ -17,6 +17,7 @@ export const CustomMarker = ({ setPadState, callback, flag, coordinate }) => {
                 }}
                 source={assetMapWithTempleType[flag].path}
                 resizeMode="contain"
+                key={`${keyName}-${flag}`}
             />
         </Marker>
     );

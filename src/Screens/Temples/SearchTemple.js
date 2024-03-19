@@ -51,6 +51,7 @@ const SearchTemple = ({ route, value, isNavigable }) => {
                 onChangeText={(val) => {
                     setSearchText(val);
                 }}
+                editable={value ? false : true}
                 onSubmitEditing={() => {
                     if (isNavigable) {
                         navigator('filteredTemples', {

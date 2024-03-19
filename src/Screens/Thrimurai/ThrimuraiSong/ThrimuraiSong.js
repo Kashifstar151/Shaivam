@@ -13,6 +13,8 @@ import {
     useColorScheme,
     Alert,
     ActivityIndicator,
+    Platform,
+    StatusBar,
 } from 'react-native';
 import BackButton from '../../../components/BackButton';
 import ShareIcon from '../../../assets/Images/share-1.svg';
@@ -38,7 +40,7 @@ import { MusicContext } from '../../../components/Playbacks/TrackPlayerContext';
 import NaduSVG from '../../../components/SVGs/NaduSVG';
 import PannSVG from '../../../components/SVGs/PannSVG';
 import ThalamSVG from '../../../components/SVGs/ThalamSVG';
-import DownloadIcon from "../../../assets/Images/download.svg"
+import DownloadIcon from '../../../assets/Images/download.svg';
 import HighlightText from '@sanar/react-native-highlight-text';
 import TrackPlayer, {
     AppKilledPlaybackBehavior,
@@ -97,7 +99,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
             initializeTheFontSize();
         }
     }, [fontSizeCount]);
-    const [visibleStatusBar, setVisibleStatusBar] = useState(true)
+    const [visibleStatusBar, setVisibleStatusBar] = useState(true);
     const statusBarHeight = useRef(new AnimatedRN.Value(50)).current; // Assume 20 is the normal height of your custom status bar
 
     const toggleStatusBar = () => {
@@ -363,7 +365,12 @@ const ThrimuraiSong = ({ route, navigation }) => {
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
-            <AnimatedRN.View style={{ height: statusBarHeight }}>
+            <AnimatedRN.View
+                style={{
+                    height: statusBarHeight,
+                    paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 20 : 0,
+                }}
+            >
                 <Background>
                     <BackButton
                         secondMiddleText={data?.title}
@@ -377,8 +384,11 @@ const ThrimuraiSong = ({ route, navigation }) => {
             </AnimatedRN.View>
             <View
                 style={[
-                    styles.headerContainer, { backgroundColor: theme.colorscheme === 'dark' ? '#333333' : '#F1DBDA' }]}>
-                <View style={[styles.detailsSection, { display: showDetail ? 'flex' : 'none', },]}>
+                    styles.headerContainer,
+                    { backgroundColor: theme.colorscheme === 'dark' ? '#333333' : '#F1DBDA' },
+                ]}
+            >
+                <View style={[styles.detailsSection, { display: showDetail ? 'flex' : 'none' }]}>
                     <>
                         <View style={styles.container}>
                             <View
@@ -501,7 +511,10 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                 flexDirection: 'row',
                             }}
                         >
-                            <TouchableOpacity onPress={toggleStatusBar} style={styles.InsiderSettingButton}>
+                            <TouchableOpacity
+                                onPress={toggleStatusBar}
+                                style={styles.InsiderSettingButton}
+                            >
                                 <SettingIcon />
                                 {/* <Text
                                         style={[
@@ -661,23 +674,26 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                     flexDirection: 'row',
                                 }}
                             >
-                                {
-                                    searchScreen ?
-                                        renderResult(res) :
-                                        <Text
-                                            style={[
-                                                styles.lyricsText,
-                                                { fontSize: fontSizeCount, color: theme.lyricsText.color },
-                                            ]}
-                                        >
-                                            {!(tamilSplit && i18n.language === 'en')
-                                                ? selectedLang !== 'Tamil'
-                                                    ? res?.rawSong
-                                                    : res?.tamilExplanation ||
-                                                    'Text currently not available'
-                                                : res?.tamilSplit || 'Text currently not available'}
-                                        </Text>
-                                }
+                                {searchScreen ? (
+                                    renderResult(res)
+                                ) : (
+                                    <Text
+                                        style={[
+                                            styles.lyricsText,
+                                            {
+                                                fontSize: fontSizeCount,
+                                                color: theme.lyricsText.color,
+                                            },
+                                        ]}
+                                    >
+                                        {!(tamilSplit && i18n.language === 'en')
+                                            ? selectedLang !== 'Tamil'
+                                                ? res?.rawSong
+                                                : res?.tamilExplanation ||
+                                                  'Text currently not available'
+                                            : res?.tamilSplit || 'Text currently not available'}
+                                    </Text>
+                                )}
                                 <Text
                                     style={[
                                         styles.lyricsText,
@@ -735,21 +751,28 @@ const ThrimuraiSong = ({ route, navigation }) => {
                             : Dimensions.get('window').width,
                 }}
             >
-
-                {
-                    downloadingLoader && (
-                        <View style={{
+                {downloadingLoader && (
+                    <View
+                        style={{
                             marginBottom: 10,
                             alignSelf: 'center',
                             borderRadius: 10,
                             backgroundColor: '#EFF9ED',
-                            height: 60, width: Dimensions.get('window').width - 20, borderWidth: 1, borderColor: '#9CCFAB', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20
-                        }}>
-                            <DownloadIcon />
-                            <Text style={{ marginHorizontal: 10, color: 'black', fontWeight: '600' }}>Downloading Thirumurai</Text>
-                        </View>
-                    )
-                }
+                            height: 60,
+                            width: Dimensions.get('window').width - 20,
+                            borderWidth: 1,
+                            borderColor: '#9CCFAB',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            paddingHorizontal: 20,
+                        }}
+                    >
+                        <DownloadIcon />
+                        <Text style={{ marginHorizontal: 10, color: 'black', fontWeight: '600' }}>
+                            Downloading Thirumurai
+                        </Text>
+                    </View>
+                )}
                 <AudioPlayer
                     setDownloadingLoader={setDownloadingLoader}
                     visibleStatusBar={visibleStatusBar}
@@ -766,7 +789,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                 />
             </Animated.View>
             {/* </BottomSheet> */}
-        </View >
+        </View>
     );
 };
 export const styles = StyleSheet.create({
