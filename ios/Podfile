@@ -13,13 +13,21 @@
        {paths: [process.argv[1]]},
      )", __dir__]).strip
  end
-
  node_require('react-native/scripts/react_native_pods.rb')
  node_require('react-native-permissions/scripts/setup.rb')
 platform :ios,'13.4'
-# prepare_react_native_project!
+prepare_react_native_project!
 use_modular_headers!
+
+rn_maps_path = '../node_modules/react-native-maps'
+pod 'react-native-google-maps', :path => rn_maps_path
+pod 'react-native-sqlite-storage', :path => '../node_modules/react-native-sqlite-storage'
 setup_permissions([
+  'LocationAccuracy',
+  'LocationAlways',
+  'LocationWhenInUse',
+  'MediaLibrary',
+  'PhotoLibrary',
   # 'AppTrackingTransparency',
   # 'Bluetooth',
   # 'Calendars',
@@ -27,14 +35,11 @@ setup_permissions([
   # 'Camera',
   # 'Contacts',
   # 'FaceID',
-   'LocationAccuracy',
-   'LocationAlways',
-   'LocationWhenInUse',
-   'MediaLibrary',
+
   # 'Microphone',
   # 'Motion',
   # 'Notifications',
-   'PhotoLibrary',
+  
   # 'PhotoLibraryAddOnly',
   # 'Reminders',
   # 'Siri',
@@ -42,9 +47,7 @@ setup_permissions([
   # 'StoreKit',
 ])
 # pod 'React', :path => '../node_modules/react-native'
-rn_maps_path = '../node_modules/react-native-maps'
-pod 'react-native-google-maps', :path => rn_maps_path
-pod 'react-native-sqlite-storage', :path => '../node_modules/react-native-sqlite-storage'
+
 
 # pod 'rn-fetch-blob',
 #     :path => '../node_modules/rn-fetch-blob'

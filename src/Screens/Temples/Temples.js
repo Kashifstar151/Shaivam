@@ -1,6 +1,6 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, Pressable, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Pressable, ImageBackground, Platform } from 'react-native';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import NearByTemples from './NearByTemples';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
@@ -181,7 +181,7 @@ export const Temples = ({ navigation, route }) => {
 
     return (
         <>
-            <View style={{ flex: 1, position: 'relative' }}>
+            <View style={{ flex: 1, position: 'relative', marginTop: Platform.OS == 'ios' ? 15 : 0 }}>
                 {userLocation?.latitude ? (
                     <MapView
                         onMapReady={() =>
@@ -360,6 +360,7 @@ const styles = StyleSheet.create({
     },
 
     topBarWrapper: {
+        // paddingTop: 15,
         position: 'absolute',
         width: '100%',
         paddingHorizontal: 20,

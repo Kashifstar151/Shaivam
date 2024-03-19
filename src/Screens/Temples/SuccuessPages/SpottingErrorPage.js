@@ -36,7 +36,7 @@ const SpottingErrorPage = ({ setModalVisible, navigation }) => {
             </BlurView>
             {
                 showSubmitPage ?
-                    <SelectErrorPage setShowSubmit={setShowSubmit} selectedError={selectedMessage} navigation={navigation} /> :
+                    <SelectErrorPage setModalVisible={setModalVisible} setShowSubmit={setShowSubmit} selectedError={selectedMessage} navigation={navigation} /> :
                     <View style={[styles.mainContainer, { backgroundColor: theme == 'light' ? '#fff' : '#333333' }]}>
                         <View style={styles.topContainer}>
                             <Text style={{ fontFamily: 'Mulish-Regular', color: '#777777' }}>Bramhalingeshwara</Text>
