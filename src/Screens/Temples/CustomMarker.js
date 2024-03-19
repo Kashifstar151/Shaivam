@@ -44,9 +44,17 @@ export const DraggableMarker = ({ callback, flag, coordinate, keyName, children 
                 resizeMode="contain"
                 key={`${keyName}-${flag}`}
             />
-            <Callout style={{ backgroundColor: 'red' }}>
-                <Text style={{ width: 200, color: 'red', backgroundColor: 'black' }}>
-                    Suck my dickk
+            <Callout>
+                <Text
+                    style={{
+                        width: 200,
+                        color: 'white',
+                        paddingHorizontal: 10,
+                        paddingVertical: 5,
+                        backgroundColor: 'black',
+                    }}
+                >
+                    This is the your starting location
                 </Text>
             </Callout>
         </Marker>
