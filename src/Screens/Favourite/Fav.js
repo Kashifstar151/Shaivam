@@ -150,7 +150,7 @@ const Fav = ({ navigation }) => {
         <ScrollView>
             {/* <View> */}
             <Background>
-                <View style={{ marginVertical: 20 }}>
+                <View style={{ marginVertical: 10 }}>
                     <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
                         <HeadingText text={'Favourites'} nandiLogo={true} />
                     </View>

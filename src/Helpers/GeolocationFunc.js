@@ -1,36 +1,68 @@
 // for location permission
 import Geolocation from 'react-native-geolocation-service';
 import { PERMISSIONS, check, request, RESULTS } from 'react-native-permissions';
+import { Platform } from "react-native"
 
 export const locationPermission = async () => {
-    try {
-        const checkTheLocState = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-        if (checkTheLocState !== RESULTS.GRANTED) {
-            const granted = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-            if (granted) {
-                console.log('the access grandted ');
+    console.log('Platform.OS', Platform.OS)
+    if (Platform.OS == 'ios') {
+        console.log("PERMISSIONS.IOS.LOCATION_ALWAYS", PERMISSIONS.IOS.LOCATION_ALWAYS)
+        const granted = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+        console.log("🚀 ~ locationPermission ~ checkTheLocState:", granted)
+        check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE)
+            .then((result) => {
+                switch (result) {
+                    case RESULTS.UNAVAILABLE:
+                        console.log('This feature is not available (on this device / in this context)');
+                        break;
+                    case RESULTS.DENIED:
+                        console.log('The permission has not been requested / is denied but requestable', result);
+                        break;
+                    case RESULTS.LIMITED:
+                        console.log('The permission is limited: some actions are possible');
+                        break;
+                    case RESULTS.GRANTED:
+                        console.log('The permission is granted');
+                        break;
+                    case RESULTS.BLOCKED:
+                        console.log('The permission is denied and not requestable anymore');
+                        break;
+                }
+            })
+            .catch((error) => {
+                // …
+            });
+    } else {
+
+        try {
+            const checkTheLocState = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+            if (checkTheLocState !== RESULTS.GRANTED) {
+                const granted = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+                if (granted) {
+                    console.log('the access grandted ');
+                    return {
+                        status: true,
+                        msg: 'User granted the permission',
+                    };
+                } else {
+                    console.log('the access not grandted ');
+                    return {
+                        status: false,
+                        msg: 'User denied permission',
+                    };
+                }
+            } else {
                 return {
                     status: true,
-                    msg: 'User granted the permission',
-                };
-            } else {
-                console.log('the access not grandted ');
-                return {
-                    status: false,
-                    msg: 'User denied permission',
+                    msg: 'SUCCESS',
                 };
             }
-        } else {
+        } catch (err) {
             return {
-                status: true,
-                msg: 'SUCCESS',
+                status: false,
+                msg: err,
             };
         }
-    } catch (err) {
-        return {
-            status: false,
-            msg: err,
-        };
     }
 };
 
