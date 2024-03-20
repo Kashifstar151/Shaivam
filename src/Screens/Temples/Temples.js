@@ -150,15 +150,13 @@ export const Temples = ({ navigation, route }) => {
     const onMapReadyCallback = async () => {
         const state = await locationPermission();
         console.log('🚀 ~ onMapReadyCallback ~ state:', state);
-
+        setPermissionGranted(state.permissionType);
         if (state.status) {
             getCurrentLocationWatcher((val) => {
                 setUserLocation((prev) => ({ ...prev, ...val }));
-                setPermissionGranted(state.permissionType);
             });
         } else {
             setShowModal(true);
-            setPermissionGranted(state.permissionType);
         }
     };
 
@@ -188,6 +186,10 @@ export const Temples = ({ navigation, route }) => {
             })();
         }
     }, [userLocation]);
+
+    useEffect(() => {
+        console.log('the permissionGranted :::::::::::::::::::::::::::::::', permissionGranted);
+    }, [permissionGranted]);
 
     return (
         <>
@@ -250,7 +252,11 @@ export const Temples = ({ navigation, route }) => {
                                     style={styles.contWrapper}
                                     onPress={() => {
                                         // adding callback on the category btn press and navigating to the filter page
-                                        categoryBtnClbk(navigation, key);
+                                        if (permissionGranted === RESULTS.GRANTED) {
+                                            categoryBtnClbk(navigation, key);
+                                        } else {
+                                            setShowModal(!showModal);
+                                        }
                                     }}
                                     key={indx}
                                 >
@@ -290,17 +296,21 @@ export const Temples = ({ navigation, route }) => {
                         },
                     }}
                     onPress={() => {
-                        console.log('the uuiuui');
-                        setUserLocation((prev) => ({
-                            ...prev,
-                            latitude: 28.5002,
-                            longitude: 77.381,
-                        }));
-                        setRegionCoordinate((prev) => ({
-                            ...prev,
-                            latitude: 28.5002,
-                            longitude: 77.381,
-                        }));
+                        if (permissionGranted === RESULTS.GRANTED) {
+                            console.log('the uuiuui');
+                            setUserLocation((prev) => ({
+                                ...prev,
+                                latitude: 28.5002,
+                                longitude: 77.381,
+                            }));
+                            setRegionCoordinate((prev) => ({
+                                ...prev,
+                                latitude: 28.5002,
+                                longitude: 77.381,
+                            }));
+                        } else {
+                            setShowModal(!showModal);
+                        }
                     }}
                 >
                     {/* bring user's location into view */}

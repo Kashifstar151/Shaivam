@@ -8,7 +8,7 @@ export const locationPermission = async () => {
     if (Platform.OS == 'ios') {
         console.log('PERMISSIONS.IOS.LOCATION_ALWAYS', PERMISSIONS.IOS.LOCATION_ALWAYS);
         const granted = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-        console.log('🚀 ~ locationPermission ~ checkTheLocState:', granted);
+        // console.log('🚀 ~ locationPermission ~ checkTheLocState:', granted);
         check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE)
             .then((result) => {
                 switch (result) {
@@ -139,14 +139,14 @@ export const getTheLocationName = async (coords) => {
     /*
     nominatim--> https://nominatim.openstreetmap.org/reverse?lat=<value>&lon=<value>
     google ----> https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}
-
+ 
     NOTE ==>
     coords data type ==>
     {
         latitude:****,
         longitude:*****
     }
-
+ 
     */
 
     const data = await fetch(

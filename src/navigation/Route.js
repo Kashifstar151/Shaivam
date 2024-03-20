@@ -32,6 +32,7 @@ import ImageSubmitPage from '../Screens/Temples/SuccuessPages/SpottingErrorPage'
 import SpottingErrorPage from '../Screens/Temples/SuccuessPages/SpottingErrorPage';
 import SelectErrorPage from '../Screens/Temples/SuccuessPages/SelectErrorPage';
 // import PinTheLocation from '../Screens/Temples/PinTheLocationPage';
+import Onboarding from '../Screens/OnboardingScreen/Onboarding';
 // import { ThemeContextProvider } from '../Context/ThemeContext';
 
 const Route = () => {
@@ -71,7 +72,7 @@ const Route = () => {
     }, []);
 
     const checkConnection = (connected) => {
-        if (connected && !__DEV__) {
+        if (connected) {
             Alert.alert('New Update Available', 'Click ok to sync latest data', [
                 {
                     text: 'Cancel',
@@ -167,6 +168,7 @@ const Route = () => {
             ) : (
                 <NavigationContainer>
                     <Stack.Navigator
+                        initialRouteName={RouteTexts.ONBOARDING_SCREEN}
                         screenOptions={{
                             headerShown: false,
                         }}
@@ -176,6 +178,7 @@ const Route = () => {
                         <Stack.Screen name="Home" component={HomeScreen} />
                         <Stack.Screen name="Thirumurais" component={ThrimuraiList} />
                         <Stack.Screen name={RouteTexts.SEARCH_SCREEN} component={SearchScreen} />
+                        <Stack.Screen name={RouteTexts.ONBOARDING_SCREEN} component={Onboarding} />
                         <Stack.Screen
                             name={RouteTexts.TEMPLE_SELECTION}
                             component={TempleSelection}
