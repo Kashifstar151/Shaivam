@@ -12,15 +12,10 @@ import {
 } from 'react-native';
 import BackButton from '../../../components/BackButton';
 import SearchInput from '../../../components/SearchInput';
-import MusicIcon from '../../../assets/Images/PanmuraiLogo.svg';
-import Icon2 from '../../../assets/Images/ThalamuraiLogo.svg';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import { RouteTexts } from '../../../navigation/RouteText';
 import RenderAudios from '../RenderAudios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Varakatrimurai from '../Varakatrimurai';
-import * as RNFS from 'react-native-fs';
-import SQLite from 'react-native-sqlite-storage';
 import { decode } from 'react-native-base64';
 import { useIsFocused } from '@react-navigation/native';
 import RenderTitle from './RenderTitle';
@@ -34,7 +29,6 @@ import ValarutramuraiLogo from '../../../components/SVGs/ValarutramuraiLogo';
 import AkarthiLogo from '../../../components/SVGs/AkarthiLogo';
 import { ThemeContext } from '../../../Context/ThemeContext';
 import { useTranslation } from 'react-i18next';
-import RenderThalam from './RenderThalam';
 import Thalamurai from '../Thalamurai';
 
 const RenderContents = ({

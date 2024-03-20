@@ -14,6 +14,7 @@ import TempleSVG from '../../components/SVGs/TempleSVG';
 import CalendarSVG from '../../components/SVGs/CalendarSVG';
 import FavouriteSVG from '../../components/SVGs/FavouriteSVG';
 import MoreSVG from '../../components/SVGs/MoreSVG';
+import TempleTabsNavigate from '../../Screens/Temples/TempleTabsNavigate';
 const Tab = createBottomTabNavigator();
 export default BottomTab = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
@@ -29,8 +30,8 @@ export default BottomTab = ({ navigation }) => {
                     },
                     Platform.OS !== 'ios'
                         ? {
-                              height: 65,
-                          }
+                            height: 65,
+                        }
                         : {},
                 ],
             }}
@@ -178,8 +179,8 @@ export default BottomTab = ({ navigation }) => {
                         // </View>
                     ),
                 }}
-                name={RouteTexts.TEMPLE}
-                component={Temples}
+                name={RouteTexts.TEMPLE_TABS_NAVIGATE}
+                component={TempleTabsNavigate}
             />
             <Tab.Screen
                 options={{

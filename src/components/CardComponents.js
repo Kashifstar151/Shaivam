@@ -112,7 +112,7 @@ const CardComponents = ({ navigation }) => {
     const data = [
         {
             text: 'Sacred Texts',
-            description: 'Listed to all shiva related audios here',
+            description: 'Listen to all shiva related audios here',
             id: 1,
             gradient: theme.gradientHomeCardYellow,
             textColor: theme.textColorHomeCardYellow,

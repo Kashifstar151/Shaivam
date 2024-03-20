@@ -205,7 +205,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
         setShowSetting(false);
         translateX.value = 50;
     };
-
     const getSOngData = () => {
         const detailQuery = `SELECT rawSong, tamilExplanation, tamilSplit , songNo , title from thirumurai_songs where prevId=${data?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
         const titleQuery = `SELECT title from thirumurai_songs where prevId=${data?.prevId} and title  NOTNULL and title!='' GROUP BY title`;
@@ -375,6 +374,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                 }}
             >
                 <Background>
+
                     <BackButton
                         secondMiddleText={data?.title}
                         color={true}
@@ -856,7 +856,7 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         paddingHorizontal: 10,
         alignItems: 'center',
-        paddingVertical: 8,
+        paddingBottom: 8,
     },
     moreOptionContainer: {
         flexDirection: 'row',
