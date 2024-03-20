@@ -356,6 +356,12 @@ export const Temples = ({ navigation, route }) => {
                 ) : null}
 
                 <Modal visible={showModal} animationType="fade" transparent>
+                    <BlurView
+                        blurType="dark"
+                        blurAmount={1}
+                        blurRadius={10}
+                        style={styles.contentWrap}
+                    ></BlurView>
                     <View
                         style={{
                             justifyContent: 'center',
@@ -363,12 +369,6 @@ export const Temples = ({ navigation, route }) => {
                             flex: 1,
                         }}
                     >
-                        <BlurView
-                            blurType="dark"
-                            blurAmount={1}
-                            blurRadius={10}
-                            style={styles.contentWrap}
-                        ></BlurView>
                         <View
                             style={[
                                 {
