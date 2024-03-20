@@ -28,7 +28,7 @@ const BackButton = ({
                 style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
-                    marginTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 30 : 10,
+                    marginTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 30 : 0,
                 }}
             >
                 <View style={{ flexDirection: 'row', marginTop: 10, paddingHorizontal: 5 }}>
