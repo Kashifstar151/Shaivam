@@ -31,7 +31,7 @@ const SelectErrorPage = ({ setShowSubmit, selectedError, navigation, setModalVis
             setDisable(false);
         }
     }, [desciption, phoneNumber]);
-    const submitHandle = () => {};
+    const submitHandle = () => { };
     return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <BlurView
