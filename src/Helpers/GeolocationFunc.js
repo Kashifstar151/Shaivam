@@ -1,22 +1,27 @@
 // for location permission
 import Geolocation from 'react-native-geolocation-service';
 import { PERMISSIONS, check, request, RESULTS } from 'react-native-permissions';
-import { Platform } from "react-native"
+import { Platform } from 'react-native';
 
 export const locationPermission = async () => {
-    console.log('Platform.OS', Platform.OS)
+    console.log('Platform.OS', Platform.OS);
     if (Platform.OS == 'ios') {
-        console.log("PERMISSIONS.IOS.LOCATION_ALWAYS", PERMISSIONS.IOS.LOCATION_ALWAYS)
+        console.log('PERMISSIONS.IOS.LOCATION_ALWAYS', PERMISSIONS.IOS.LOCATION_ALWAYS);
         const granted = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-        console.log("🚀 ~ locationPermission ~ checkTheLocState:", granted)
+        console.log('🚀 ~ locationPermission ~ checkTheLocState:', granted);
         check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE)
             .then((result) => {
                 switch (result) {
                     case RESULTS.UNAVAILABLE:
-                        console.log('This feature is not available (on this device / in this context)');
+                        console.log(
+                            'This feature is not available (on this device / in this context)'
+                        );
                         break;
                     case RESULTS.DENIED:
-                        console.log('The permission has not been requested / is denied but requestable', result);
+                        console.log(
+                            'The permission has not been requested / is denied but requestable',
+                            result
+                        );
                         break;
                     case RESULTS.LIMITED:
                         console.log('The permission is limited: some actions are possible');
@@ -33,7 +38,6 @@ export const locationPermission = async () => {
                 // …
             });
     } else {
-
         try {
             const checkTheLocState = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
             if (checkTheLocState !== RESULTS.GRANTED) {
@@ -75,6 +79,31 @@ export const onRegionChangeCompleteCallback = (args, clbk) => {
 // get current location
 export const getCurrentLocationWatcher = (setStateClbk) => {
     Geolocation.watchPosition(
+        (success) => {
+            const { coords } = success;
+            // console.log('🚀 ~ getCurrentLocationWatcher ~ coords:', coords);
+            setStateClbk({
+                latitude: coords.latitude,
+                longitude: coords.longitude,
+            });
+        },
+        (error) => {
+            // setStateClbk
+            console.log('the error in fetching location=============> ', error);
+        },
+        {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            interval: 1000,
+            distanceFilter: 5,
+            showLocationDialog: true,
+            fastestInterval: 1000,
+        }
+    );
+};
+
+export const getCurrentLocation = (setStateClbk) => {
+    Geolocation.getCurrentPosition(
         (success) => {
             const { coords } = success;
             // console.log('🚀 ~ getCurrentLocationWatcher ~ coords:', coords);
