@@ -17,9 +17,6 @@ import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import MusicContainer from '../../../assets/Images/Frame 83.svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CardComponents from '../../components/CardComponents';
-import Header from '../../components/Header';
-import HeadingText from '../../components/HeadingText';
-import SearchInput from '../../components/SearchInput';
 import { colors } from '../../Helpers';
 import { useTranslation } from 'react-i18next';
 import '../../../localization';
@@ -30,12 +27,13 @@ import HomePlaylistCard from '../../components/HomePlaylistCard';
 import ElevatedCard from '../../components/ElevatedCard';
 import EventCard from '../../components/EventCard';
 import OmChat from './OmChat';
-import RightDirSVG from '../../components/SVGs/RightDirSVG';
+// import RightDirSVG from '../../components/SVGs/RightDirSVG';
 import HeadingAndView from './HeadingAndView';
 import PlaceCard from './PlaceCard';
 import { RFValue } from 'react-native-responsive-fontsize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { gStyles } from '../../Helpers/GlobalStyles';
+import AntDesign from 'react-native-vector-icons/dist/Feather';
+// import { gStyles } from '../../Helpers/GlobalStyles';
 import { MostPlayedList } from '../../Databases/AudioPlayerDatabase';
 
 const SongAndAudio = ({ item, index, theme }) => {
@@ -80,7 +78,7 @@ const SongAndAudio = ({ item, index, theme }) => {
                 </View>
             </View>
             <TouchableOpacity>
-                <Icon name="more-vert" size={22} />
+                <AntDesign name="heart" size={22} />
             </TouchableOpacity>
         </View>
     );
@@ -455,7 +453,7 @@ const HomeScreen = ({ navigation }) => {
                         viewBtnColor={'#C1554E'}
                         title={'Upcoming Events'}
                         theme={{ textColor: theme.textColor }}
-                        onPress={() => {}}
+                        onPress={() => { }}
                     />
                 </View>
 
@@ -490,7 +488,7 @@ const HomeScreen = ({ navigation }) => {
                     <HeadingAndView
                         viewBtnColor={'#C1554E'}
                         title={'Nearby Temples'}
-                        onPress={() => {}}
+                        onPress={() => { }}
                         theme={{
                             textColor: theme.textColor,
                             colorscheme: theme.colorscheme,

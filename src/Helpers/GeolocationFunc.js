@@ -4,11 +4,11 @@ import { PERMISSIONS, check, request, RESULTS } from 'react-native-permissions';
 import { Platform } from "react-native"
 
 export const locationPermission = async () => {
-    console.log('Platform.OS', Platform.OS)
+    // console.log('Platform.OS', Platform.OS)
     if (Platform.OS == 'ios') {
         console.log("PERMISSIONS.IOS.LOCATION_ALWAYS", PERMISSIONS.IOS.LOCATION_ALWAYS)
         const granted = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-        console.log("🚀 ~ locationPermission ~ checkTheLocState:", granted)
+        // console.log("🚀 ~ locationPermission ~ checkTheLocState:", granted)
         check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE)
             .then((result) => {
                 switch (result) {

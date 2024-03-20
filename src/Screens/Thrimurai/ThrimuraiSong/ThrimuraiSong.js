@@ -211,7 +211,9 @@ const ThrimuraiSong = ({ route, navigation }) => {
         const titleQuery = `SELECT title from thirumurai_songs where prevId=${data?.prevId} and title  NOTNULL and title!='' GROUP BY title`;
 
         getSqlData(titleQuery, (data) => {
+            console.log("🚀 ~ getSqlData ~ data:", data)
             getSqlData(detailQuery, (details) => {
+                console.log("c", details)
                 const query2 = `SELECT * FROM odhuvars WHERE title='${data[0].title}'`;
                 getSqlData(query2, (callbacks) => {
                     dispatchMusic({ type: 'SET_TITLE', payload: data[0].title });
@@ -352,6 +354,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
             getSqlData(
                 `SELECT author,thalam,country,pann from thirumurais WHERE prevId=${musicState?.prevId}`,
                 (cb) => {
+                    console.log("🚀 ~ useEffect ~ cb:", cb)
                     const { author, country, thalam, pann } = cb[0];
                     dispatchMusic({
                         type: 'META_DATA',
@@ -367,8 +370,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
         <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
             <AnimatedRN.View
                 style={{
-                    height: statusBarHeight,
-                    paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 20 : 0,
+                    height: Platform.OS == 'ios' ? 'auto' : statusBarHeight,
+                    paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight : 0,
                 }}
             >
                 <Background>
@@ -404,6 +407,20 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                     fill={theme.colorscheme === 'dark' ? '#787878' : '#3A1917'}
                                 />
                             </View>
+                            {
+                                musicState?.metaData?.author ?
+                                    <View style={styles.textSectionDD}>
+                                        <Text style={styles.titleDropDown}>{`${t('Aruliyavar')}`}</Text>
+                                        <Text style={styles.valueDropDown}>
+                                            {t(musicState?.metaData?.author)
+                                            }
+                                        </Text>
+                                    </View> :
+                                    <Text style={styles.valueDropDown}>
+                                        {
+                                            'Text currently not available'}
+                                    </Text>
+                            }
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>{`${t('Aruliyavar')}`}</Text>
                                 <Text style={styles.valueDropDown}>
@@ -690,7 +707,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                             ? selectedLang !== 'Tamil'
                                                 ? res?.rawSong
                                                 : res?.tamilExplanation ||
-                                                  'Text currently not available'
+                                                'Text currently not available'
                                             : res?.tamilSplit || 'Text currently not available'}
                                     </Text>
                                 )}
