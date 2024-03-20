@@ -30,7 +30,7 @@ const GradientContainer = ({ Icon, LeftImage, RightImage, colors, name, textColo
                 <View style={{ marginHorizontal: 20 }}>
                     <Text
                         style={{
-                            fontFamily: 'mulish-regular',
+                            fontFamily: 'AnekTamil-Bold',
                             // fontWeight: '600',
                             fontSize: 14,
                             color: textColor,
