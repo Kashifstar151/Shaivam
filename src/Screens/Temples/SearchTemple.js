@@ -42,7 +42,6 @@ const SearchTemple = ({ route, value, isNavigable }) => {
                     <BackBtnSvg />
                 </Pressable>
             )}
-
             <TextInput
                 placeholder="Search for any temple"
                 placeholderTextColor={'#777777'}
@@ -74,6 +73,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         elevation: 5,
         flex: 1,
+        height: 45
     },
 });
 
