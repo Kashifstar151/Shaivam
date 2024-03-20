@@ -42,23 +42,26 @@ export const locationPermission = async () => {
             const checkTheLocState = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
             if (checkTheLocState !== RESULTS.GRANTED) {
                 const granted = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-                if (granted) {
+                if (granted === RESULTS.GRANTED) {
                     console.log('the access grandted ');
                     return {
                         status: true,
                         msg: 'User granted the permission',
+                        permissionType: granted,
                     };
                 } else {
                     console.log('the access not grandted ');
                     return {
                         status: false,
                         msg: 'User denied permission',
+                        permissionType: granted,
                     };
                 }
             } else {
                 return {
                     status: true,
                     msg: 'SUCCESS',
+                    permissionType: RESULTS.GRANTED,
                 };
             }
         } catch (err) {
