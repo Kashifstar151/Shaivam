@@ -8,7 +8,7 @@ const Background = (props) => {
     return (
         <View
             style={{
-                paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight : 0,
+                marginTop: Platform.OS == 'ios' ? StatusBar.currentHeight : 0,
                 borderBottomColor: theme.colorscheme !== 'dark' ? '#8F3630' : '',
                 borderBottomWidth: theme.colorscheme !== 'dark' ? 1 : 0,
                 width: '100%',
@@ -21,7 +21,7 @@ const Background = (props) => {
                         : require('../../assets/Images/BackgroundCommon.png')
                 }
                 style={{
-                    paddingVertical: 10,
+                    paddingVertical: 0,
                     borderRadius: 10,
                     width: '100%',
                 }}

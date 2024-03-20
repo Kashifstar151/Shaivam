@@ -5,6 +5,7 @@ export const RouteTexts = {
     SEARCH_SCREEN: 'SearchScreen',
     BOTTOM_TABS: 'BottomTabs',
     TEMPLE: 'Temple',
+    TEMPLE_TABS_NAVIGATE: 'TempleTabsNavigate',
     CALENDER: 'Calender',
     FAVOURITE: 'Fav',
     MORE_OPTION: 'MoreOption',

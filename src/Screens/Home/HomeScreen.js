@@ -35,6 +35,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AntDesign from 'react-native-vector-icons/dist/Feather';
 // import { gStyles } from '../../Helpers/GlobalStyles';
 import { MostPlayedList } from '../../Databases/AudioPlayerDatabase';
+import { useIsFocused } from '@react-navigation/native';
 
 const SongAndAudio = ({ item, index, theme }) => {
     return (
@@ -94,6 +95,7 @@ const HomeScreen = ({ navigation }) => {
         width: 0,
         height: 0,
     });
+    const isFocused = useIsFocused()
     const handleLayout = useCallback(
         (event) => {
             const { height } = event.nativeEvent.layout;
@@ -176,7 +178,7 @@ const HomeScreen = ({ navigation }) => {
     const playlisType = ['Recently Played', 'Most Played'];
     useEffect(() => {
         getPlaylistSong();
-    }, [selectedPlaylistType]);
+    }, [selectedPlaylistType, isFocused]);
     const getPlaylistSong = async () => {
         if (selectedPlaylistType == 'Recently Played') {
             const data = await AsyncStorage.getItem('recentTrack');
