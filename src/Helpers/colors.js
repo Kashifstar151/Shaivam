@@ -55,25 +55,14 @@ export default {
     // screenTheme: colorScheme === 'dark' ? darkTheme : lightTheme,
     greyForCard: ['#333333', '#333333'],
     darkCardGrad: { startColor: '#404040', stopColor: '#404040' },
-
+    faintGrey: '#333333',
+    skinColor: '#F1DBDA',
     // yellow card
     yellowGradCard: ['#FEE8B3', '#FEE199'],
-    yellowGradBallRight: function () {
-        return colorScheme === 'light'
-            ? { startColor: '#FFD87A', stopColor: '#FFE9B4' }
-            : this.darkCardGrad;
-    },
-    yellowGradBallLeft: function () {
-        return colorScheme === 'light'
-            ? { startColor: '#FFF3D6', stopColor: '#FEDC8B' }
-            : this.darkCardGrad;
-    },
-    yellowGradcolors: function () {
-        return colorScheme === 'light' ? this.yellowGradCard : this.greyForCard;
-    },
 
     // new format
     light: {
+        ...lightTheme,
         // yellow
         yellowGradBallRight: { startColor: '#FFD87A', stopColor: '#FFE9B4' },
         yellowGradBallLeft: { startColor: '#FFF3D6', stopColor: '#FEDC8B' },
@@ -138,6 +127,7 @@ export default {
         bottomTabItemColor: { selected: '#FFFFFF', unSelected: '#FFAAA4' },
     },
     dark: {
+        ...darkTheme,
         // yellow
         yellowGradBallRight: darkCardGrad,
         yellowGradBallLeft: darkCardGrad,
@@ -204,33 +194,7 @@ export default {
 
     // red card
     redGradCard: ['#E5B8B5', '#FD9991'],
-    redGradcolors: function () {
-        return colorScheme === 'light' ? this.redGradCard : this.greyForCard;
-    },
-    redGradBallRight: function () {
-        return colorScheme === 'light'
-            ? { startColor: '#FD9991', stopColor: '#E5B8B5' }
-            : this.darkCardGrad;
-    },
-    redGradBallLeft: function () {
-        return colorScheme === 'light'
-            ? { startColor: '#FFF3D6', stopColor: '#E5B8B5' }
-            : this.darkCardGrad;
-    },
 
     // green card
     greenGradCard: ['#AFD9BB', '#60B278'],
-    greenGradcolors: function () {
-        return colorScheme === 'light' ? this.greenGradCard : this.greyForCard;
-    },
-    greenGradBallRight: function () {
-        return colorScheme === 'light'
-            ? { startColor: '#BAE6C6', stopColor: '#8EC99F' }
-            : this.darkCardGrad;
-    },
-    greenGradBallLeft: function () {
-        return colorScheme === 'light'
-            ? { startColor: '#BAE6C6', stopColor: '#8EC99F' }
-            : this.darkCardGrad;
-    },
 };
