@@ -4,6 +4,7 @@ import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { CustomMarker, DraggableMarker } from './CustomMarker';
 import {
     clearGetCurrentLocationWatcher,
+    getCurrentLocation,
     getCurrentLocationWatcher,
     getTheLocationName,
     locationPermission,
@@ -13,7 +14,7 @@ import { CustomButton, CustomLongBtn } from '../../components/Buttons';
 import TrackBackToLocSVG from '../../components/SVGs/TrackBackToLocSVG';
 import LocationLogo from '../../components/SVGs/LocationLogo';
 
-const PinTheLocation = ({ navigation }) => {
+const PinTheLocation = ({ setDescription, close }) => {
     const [regionCoordinate, setRegionCoordinate] = useState({
         latitude: 28.500271,
         longitude: 77.387901,
@@ -43,12 +44,11 @@ const PinTheLocation = ({ navigation }) => {
 
     const fetchTheName = useCallback(
         async (coors) => {
-            console.log('the location fetch enters  ');
+            // console.log('the location fetch enters  ');
             if (coors?.latitude && coors?.longitude) {
-                console.log('the location is fetching  ');
+                // console.log('the location is fetching  ');
                 const locationDetail = await getTheLocationName({ ...dragCoor.current });
-                console.log('the location  fetching  is done', locationDetail);
-
+                // console.log('the location  fetching  is done', locationDetail);
                 setUserLocName((prev) => {
                     return {
                         ...prev,
@@ -67,9 +67,12 @@ const PinTheLocation = ({ navigation }) => {
         console.log('🚀 ~ onMapReadyCallback ~ state:', state);
 
         if (state.status) {
-            console.log("the fetch of the user's location");
+            // console.log("the fetch of the user's location");
+            getCurrentLocation((val) => {
+                fetchTheName(val);
+                setUserLocation((prev) => ({ ...prev, ...val }));
+            });
             getCurrentLocationWatcher((val) => {
-                console.log('🚀 ~ getCurrentLocationWatcher ~ val:', val);
                 fetchTheName(val);
                 setUserLocation((prev) => ({ ...prev, ...val }));
             });
@@ -179,6 +182,10 @@ const PinTheLocation = ({ navigation }) => {
                     <CustomLongBtn
                         onPress={() => {
                             setBtnState(!btnState);
+                            setDescription((prev) => {
+                                return userLocName.displayName;
+                            });
+                            close();
                         }}
                         text={'Pin Location'}
                         textStyle={{
@@ -195,7 +202,7 @@ const PinTheLocation = ({ navigation }) => {
     );
 };
 const styles = StyleSheet.create({
-    mainContainer: { backgroundColor: 'red', flex: 1, ...StyleSheet.absoluteFillObject },
+    mainContainer: { flex: 1, ...StyleSheet.absoluteFillObject },
     map: {
         ...StyleSheet.absoluteFillObject,
     },
