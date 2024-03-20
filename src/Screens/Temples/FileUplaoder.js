@@ -77,7 +77,7 @@ const FileUplaoder = ({ setModalVisible }) => {
                                     <View style={{ height: 100 }}>
                                     </View>
                             }
-                            <ButtonComp navigation={() => setSubmitted(true)} text={'Submit'} color={images?.length > 0 ? true : false} />
+                            <ButtonComp text={'Submit'} color={images?.length > 0 ? true : false} />
                         </View>
                     </View>
             }
