@@ -59,6 +59,8 @@ const SelectErrorPage = ({ setShowSubmit, selectedError, navigation, setModalVis
                                     flex: 1,
                                     justifyContent: 'center',
                                     alignItems: 'center',
+                                    padding: 20,
+                                    gap: 20,
                                 },
                             ]}
                         >
@@ -75,7 +77,7 @@ const SelectErrorPage = ({ setShowSubmit, selectedError, navigation, setModalVis
                                     color: '#222222',
                                 }}
                             >
-                                Images submitted!
+                                {'Error submitted!'}
                             </Text>
                             <Text
                                 style={{
