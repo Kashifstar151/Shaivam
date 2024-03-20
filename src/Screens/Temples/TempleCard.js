@@ -11,26 +11,24 @@ import SpottingErrorPage from './SuccuessPages/SpottingErrorPage';
 
 const TempleCard = ({ dataSet, children, showMargin, showButton }) => {
     const nav = useNavigation();
-    const [modalVisible, setModalVisible] = useState(false)
-    const [selectedHeader, setSelectedHeader] = useState('direction')
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedHeader, setSelectedHeader] = useState('direction');
     const navigator = (name, data) => {
         nav.navigate('');
     };
     const selectionHandler = (item) => {
-        setSelectedHeader(item)
-        setModalVisible(true)
-    }
+        setSelectedHeader(item);
+        setModalVisible(true);
+    };
     return (
         <View style={{ paddingHorizontal: 20 }}>
             {
-                modalVisible &&
-                <Modal transparent>
-                    {
-                        selectedHeader == 'Submit Images' ?
-                            <FileUplaoder setModalVisible={setModalVisible} /> :
-                            selectedHeader == 'Spot an error? Send Corrections' ?
-                                <SpottingErrorPage setModalVisible={setModalVisible} navigation={nav} /> : null
-                    }
+                <Modal visible={modalVisible} transparent>
+                    {selectedHeader == 'Submit Images' ? (
+                        <FileUplaoder setModalVisible={setModalVisible} />
+                    ) : selectedHeader == 'Spot an error? Send Corrections' ? (
+                        <SpottingErrorPage setModalVisible={setModalVisible} navigation={nav} />
+                    ) : null}
                 </Modal>
             }
 
@@ -79,7 +77,6 @@ const TempleCard = ({ dataSet, children, showMargin, showButton }) => {
                             margin: 10,
                         }}
                         text={'Submit Images'}
-
                         backgroundColor={'#EDEDED'}
                         textColor={'#777777'}
                     />

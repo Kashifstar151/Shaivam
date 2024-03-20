@@ -65,7 +65,7 @@ const Onboarding = ({ navigation }) => {
                                     <Text style={styles.descriptionText}>The app will appear in the language you select now. However, You can always change your language in More options</Text>
                                 </View>
                                 <FlatList data={language} renderItem={({ item, index }) => (
-                                    <TouchableOpacity onPress={handleClick}
+                                    <TouchableOpacity onPress={() => handleClick(item)}
                                         style={styles.languageContainer}>
                                         <Text style={styles.languageText}>{item.name}</Text>
                                         <View style={selectedLang?.name == item?.name ? [styles.iconContainer, { backgroundColor: '#FCB300' }] : styles.iconContainer}>

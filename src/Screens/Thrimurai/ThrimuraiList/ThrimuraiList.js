@@ -32,6 +32,7 @@ import { ThemeContext } from '../../../Context/ThemeContext';
 import BookIcon from '../../../components/SVGs/BookIcon';
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useIsFocused } from '@react-navigation/native';
 // import '../../../../localization';
 
 const ThrimuraiList = ({ navigation }) => {
@@ -54,6 +55,7 @@ const ThrimuraiList = ({ navigation }) => {
     ];
 
     const { t, i18n } = useTranslation();
+    const isFocuced = useIsFocused()
     // const selectedLngCode = i18n.language;
     // const setLng = (lngCode) => i18n.changeLanguage(lngCode);
 
@@ -62,13 +64,13 @@ const ThrimuraiList = ({ navigation }) => {
     const [onFocus, setOnFocus] = useState(false);
     const [recentPlayed, setRecentPlayed] = useState([]);
     // const database = SQLite.openDatabase({ name: '/storage/emulated/0/Android/data/com.shaivam/files/Thrimurai/thirumuraiData.db', createFromLocation: 1 });
-    const database = SQLite.openDatabase({
-        name: 'SongsData.db',
-        createFromLocation: 1,
-    });
+    // const database = SQLite.openDatabase({
+    //     name: 'SongsData.db',
+    //     createFromLocation: 1,
+    // });
     useEffect(() => {
         getRecentPlaylist();
-    }, []);
+    }, [isFocuced]);
     const getRecentPlaylist = async () => {
         const songs = await AsyncStorage.getItem('recentTrack');
         if (songs?.length > 0) {
@@ -258,7 +260,7 @@ const ThrimuraiList = ({ navigation }) => {
                     >
                         {/* red */}
                         <GradientContainer
-                            textColor={theme.textColor}
+                            // textColor={theme.textColor}
                             Icon={<BookIcon fill={theme.textColor} />}
                             name={t('(2nd bar pink)')}
                             // name={thrimurais[8]?.name}
