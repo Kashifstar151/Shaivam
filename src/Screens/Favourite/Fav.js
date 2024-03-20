@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { Alert, FlatList, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Dimensions, FlatList, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/dist/MaterialIcons'
 import MaterialIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons'
 import Background from '../../components/Background'
@@ -16,6 +16,7 @@ import EditPencil from "../../assets/Images/EditPencil.svg"
 import AlertScreen from '../../components/AlertScreen'
 import AntDesign from 'react-native-vector-icons/dist/AntDesign'
 import EmptyIcon from "../../assets/Images/Vector (6).svg"
+import { AnimatedToast } from '../../components/Toast'
 // import Button from '../Temples/Common/Button'
 // import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 const Fav = ({ navigation }) => {
@@ -27,6 +28,7 @@ const Fav = ({ navigation }) => {
     const [downloadList, setDownloadList] = useState([])
     const [showModal, setShowModal] = useState(false)
     const [selectedItem, setSelected] = useState(null)
+    const [showToastMessage, setShowToast] = useState(false)
     useEffect(() => {
         fetchAndDisplayDownloads()
         listfavAudios(callbacks => {
@@ -54,7 +56,8 @@ const Fav = ({ navigation }) => {
             // const metadata = await AsyncStorage.multiGet(metadataKeys);
             // const parsedMetadata = metadata.map(([key, value]) => JSON.parse(value));
             // console.log("🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:", parsedMetadata)
-            setFavList(JSON.parse(parsedMetadata))
+            // setFavList(JSON.parse(parsedMetadata))
+            setDownloadList(JSON.parse(parsedMetadata))
             // Now `parsedMetadta` contains all of your audio files' metadata
             // You can use this data to render your downloads page
         } catch (e) {
@@ -71,13 +74,23 @@ const Fav = ({ navigation }) => {
             fetchAndDisplayDownloads()
         }
     }, [selecetedHeader])
+    useEffect(() => {
+        if (showToastMessage) {
+            setTimeout(() => {
+                setShowToast(false)
+            }, 2000)
+        }
+    }, [showToastMessage])
     const removeFromPlaylist = (item) => {
         if (selecetedHeader == 'Offline Downloads') {
-            let arr = downloadList.filter((res) => res.id !== item.id)
-            // console.log("🚀 ~ removeFromPlaylist ~ arr:", arr)
+            let arr = downloadList.filter((res) => {
+                return res.id !== item.id
+            })
+            console.log("🚀 ~ removeFromPlaylist ~ arr:", arr)
             setDownloadList(arr)
             AsyncStorage.setItem('downloaded', JSON.stringify(arr))
             setShowModal(false)
+            setShowToast(true)
         } else if (selecetedHeader == 'Favourites') {
             RemoveFavAudios('d', item, cb => {
                 if (cb?.message == 'Success') {
@@ -85,6 +98,7 @@ const Fav = ({ navigation }) => {
                     setFavList(arr)
                 }
                 setShowModal(false)
+                setShowToast(true)
             })
 
         }
@@ -173,7 +187,7 @@ const Fav = ({ navigation }) => {
                             <EditPencil />
                             <Text style={{ marginHorizontal: 10, fontFamily: 'Mulish-Bold', color: '#C1554E', fontWeight: '700', fontSize: 12 }}>Re arrange task</Text>
                         </TouchableOpacity>
-                        <FlatList data={favList} renderItem={({ item, index }) => renderSong(item, index)} />
+                        <FlatList data={selecetedHeader == 'Favourites' ? favList : downloadList} renderItem={({ item, index }) => renderSong(item, index)} />
                     </View> :
                     <View style={{ paddingHorizontal: 20, flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 100 }}>
                         <EmptyIcon />
@@ -184,11 +198,14 @@ const Fav = ({ navigation }) => {
             {
                 showModal &&
                 <Modal transparent>
-
                     <AlertScreen descriptionText={selectedItem} removeFromPlaylist={removeFromPlaylist} setShowModal={setShowModal} />
-
                 </Modal>
             }
+            <View style={{ position: 'absolute', top: Dimensions.get('window').height / 1.07, right: 10, left: 10 }}>
+                {
+                    showToastMessage && <AnimatedToast state={showToastMessage} type={"ERROR"} svg={true} text={selecetedHeader == 'Favourites' ? 'Removed from favourite' : 'Deleted from offline downloads'} />
+                }
+            </View>
         </ScrollView>
     )
 }

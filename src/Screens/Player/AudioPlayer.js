@@ -177,10 +177,11 @@ const AudioPlayer = ({
         Icon.getImageSource('circle', 18, '#C1554E').then((source) => {
             return setThumbImage({ thumbIcon: source });
         });
-        createUserTable();
-        MostPlayedSongList();
-        getMostPlayedSong()
-        fetchAndDisplayDownloads()
+        Promise.allSettled([createUserTable(), MostPlayedSongList(), getMostPlayedSong(), fetchAndDisplayDownloads()])
+        // createUserTable();
+        // MostPlayedSongList();
+        // getMostPlayedSong()
+        // fetchAndDisplayDownloads()
         // mostPlayed()
         // if (downloaded) {
         //     setUpPlayer(data);

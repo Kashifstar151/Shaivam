@@ -92,7 +92,7 @@ export const AnimatedToast = ({ state, text, svg, time = 2000, type }) => {
                         alignItems: 'center',
                         paddingHorizontal: 20,
                         position: 'absolute',
-                        bottom: 10,
+                        bottom: 30,
                     },
                     {
                         transform: [

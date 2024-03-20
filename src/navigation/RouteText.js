@@ -16,5 +16,6 @@ export const RouteTexts = {
     CREATE_TRIP: 'CreateTrip',
     TEMPLE_SELECTION: "TempleSelection",
     SPOTTING_ERROR_PAGE: "SpottingErrorPage",
-    ERROR_SELECTION_PAGE: 'SelectErrorPage'
+    ERROR_SELECTION_PAGE: 'SelectErrorPage',
+    ONBOARDING_SCREEN: 'Onboard'
 }

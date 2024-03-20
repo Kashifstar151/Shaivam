@@ -201,7 +201,7 @@ export async function getSqlData(query, callbacks) {
     console.log("🚀 ~ file: Database.js:146 ~ getSqlData ~ query:", query)
     const data = await AsyncStorage.getItem('@database');
     const databasename = JSON.parse(data);
-    // console.log("🚀 ~ file: Database.js:142 ~ getSqlData ~ data:", JSON.parse(data))
+    console.log("🚀 ~ file: Database.js:142 ~ getSqlData ~ data:", JSON.parse(data))
     if (databasename?.name !== 'songData.db') {
         // alert(true)
         await database.transaction(
