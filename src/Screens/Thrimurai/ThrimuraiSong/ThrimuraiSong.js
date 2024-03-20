@@ -136,10 +136,19 @@ const ThrimuraiSong = ({ route, navigation }) => {
             const repeatState = await TrackPlayer.getRepeatMode();
             setRepeatMode(repeatState);
         })();
+
+        (async () => {
+            const themeMode = await AsyncStorage.getItem('theme');
+            if (themeMode === 'dark') {
+                setDarkMode(true);
+            } else {
+                setDarkMode(false);
+            }
+        })();
     }, []); // to initialize the repeat state of the track player
 
     const { musicState, dispatchMusic } = useContext(MusicContext);
-    const [darkMode, setDarkMode] = useState(colorScheme === 'dark' ? true : false);
+    const [darkMode, setDarkMode] = useState();
     const [tamilSplit, setTamilSplit] = useState(false);
     const { theme, setTheme } = useContext(ThemeContext);
     const { t, i18n } = useTranslation();
@@ -167,13 +176,14 @@ const ThrimuraiSong = ({ route, navigation }) => {
         en: 'en',
     };
 
-    useEffect(() => {
-        getSOngData();
-    }, [selectedLngCode]);
+    // useEffect(() => {
+    //     getSOngData('from selectedLngCode');
+    // }, [selectedLngCode]);
 
     useEffect(() => {
-        setTheme(darkMode ? dark : light);
+        // setTheme(darkMode ? dark : light);
         // AsyncStorage.setItem('theme', colorScheme);
+        console.log('the mode ==========================>', darkMode);
     }, [darkMode]);
 
     const changeTranlation = (item) => {
@@ -206,14 +216,17 @@ const ThrimuraiSong = ({ route, navigation }) => {
         translateX.value = 50;
     };
 
-    const getSOngData = () => {
+    const getSOngData = (from) => {
         const detailQuery = `SELECT rawSong, tamilExplanation, tamilSplit , songNo , title from thirumurai_songs where prevId=${data?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
         const titleQuery = `SELECT title from thirumurai_songs where prevId=${data?.prevId} and title  NOTNULL and title!='' GROUP BY title`;
 
         getSqlData(titleQuery, (data) => {
-            console.log("🚀 ~ getSqlData ~ data:", data)
+            // console.log('🚀 ~ getSqlData ~ data:', data);
             getSqlData(detailQuery, (details) => {
-                console.log("c", details)
+                // console.log(
+                //     '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=======',
+                //     from
+                // );
                 const query2 = `SELECT * FROM odhuvars WHERE title='${data[0].title}'`;
                 getSqlData(query2, (callbacks) => {
                     dispatchMusic({ type: 'SET_TITLE', payload: data[0].title });
@@ -231,7 +244,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
         dispatchMusic({ type: 'PREV_ID', payload: data?.prevId });
 
         if (downloaded) {
-            setUpPlayer(data);
+            setUpPlayer(data, 'from download');
         }
     }, [data]);
 
@@ -240,13 +253,15 @@ const ThrimuraiSong = ({ route, navigation }) => {
     };
     useEffect(() => {
         if (musicState.song.length) {
-            setUpPlayer(musicState.song);
+            console.log('🚀 ~ useEffect ~ musicState.song:', musicState.song);
+            setUpPlayer(musicState.song, 'from music song data ');
         }
     }, [musicState.song]);
 
     // useEffect(() => {
 
     // },[musicState])
+
     const renderResult = (item) => {
         const parts = item?.rawSong.split('\r\n');
         // const data = parts?.split(' ')
@@ -275,7 +290,11 @@ const ThrimuraiSong = ({ route, navigation }) => {
     };
 
     const setUpPlayer = useCallback(
-        async (song) => {
+        async (song, from) => {
+            // console.log(
+            //     '***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************',
+            //     from
+            // );
             try {
                 if (!TrackPlayer._initialized) {
                     await TrackPlayer.setupPlayer();
@@ -323,7 +342,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
         const query = `SELECT MIN(prevId) AS nextPrevId FROM thirumurai_songs WHERE prevId > ${musicState?.prevId}`;
         await TrackPlayer.reset();
         getSqlData(query, (clb) => {
-            console.log('the prev id ==>', clb);
             if (clb[0].nextPrevId) {
                 dispatchMusic({ type: 'RESET' });
                 dispatchMusic({ type: 'PREV_ID', payload: clb[0].nextPrevId });
@@ -335,7 +353,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
         const query = `SELECT max(prevId) AS nextPrevId FROM thirumurai_songs WHERE prevId < ${musicState?.prevId}`;
         await TrackPlayer.reset();
         getSqlData(query, (clb) => {
-            console.log('the prev id ==>', clb);
+            // console.log('the prev id ==>', clb);
             if (clb[0].nextPrevId) {
                 dispatchMusic({ type: 'RESET' });
                 dispatchMusic({ type: 'PREV_ID', payload: clb[0].nextPrevId });
@@ -350,11 +368,11 @@ const ThrimuraiSong = ({ route, navigation }) => {
     });
 
     useEffect(() => {
-        if (musicState.prevId) {
+        if (musicState.prevId && selectedLang) {
             getSqlData(
                 `SELECT author,thalam,country,pann from thirumurais WHERE prevId=${musicState?.prevId}`,
                 (cb) => {
-                    console.log("🚀 ~ useEffect ~ cb:", cb)
+                    // console.log('🚀 ~ useEffect ~ cb:', cb);
                     const { author, country, thalam, pann } = cb[0];
                     dispatchMusic({
                         type: 'META_DATA',
@@ -362,9 +380,9 @@ const ThrimuraiSong = ({ route, navigation }) => {
                     });
                 }
             );
-            getSOngData();
+            getSOngData('from the prevId');
         }
-    }, [musicState.prevId]);
+    }, [musicState.prevId, selectedLang]);
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
@@ -407,20 +425,18 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                     fill={theme.colorscheme === 'dark' ? '#787878' : '#3A1917'}
                                 />
                             </View>
-                            {
-                                musicState?.metaData?.author ?
-                                    <View style={styles.textSectionDD}>
-                                        <Text style={styles.titleDropDown}>{`${t('Aruliyavar')}`}</Text>
-                                        <Text style={styles.valueDropDown}>
-                                            {t(musicState?.metaData?.author)
-                                            }
-                                        </Text>
-                                    </View> :
+                            {musicState?.metaData?.author ? (
+                                <View style={styles.textSectionDD}>
+                                    <Text style={styles.titleDropDown}>{`${t('Aruliyavar')}`}</Text>
                                     <Text style={styles.valueDropDown}>
-                                        {
-                                            'Text currently not available'}
+                                        {t(musicState?.metaData?.author)}
                                     </Text>
-                            }
+                                </View>
+                            ) : (
+                                <Text style={styles.valueDropDown}>
+                                    {'Text currently not available'}
+                                </Text>
+                            )}
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>{`${t('Aruliyavar')}`}</Text>
                                 <Text style={styles.valueDropDown}>
@@ -707,7 +723,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                             ? selectedLang !== 'Tamil'
                                                 ? res?.rawSong
                                                 : res?.tamilExplanation ||
-                                                'Text currently not available'
+                                                  'Text currently not available'
                                             : res?.tamilSplit || 'Text currently not available'}
                                     </Text>
                                 )}
