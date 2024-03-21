@@ -1,5 +1,6 @@
 import { BlurView } from '@react-native-community/blur';
-import React, { useState } from 'react';
+import LottieView from 'lottie-react-native';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     Dimensions,
     FlatList,
@@ -17,6 +18,13 @@ import ButtonComp from './Common/ButtonComp';
 const FileUplaoder = ({ setModalVisible }) => {
     const [images, setImages] = useState([]);
     const [submitted, setSubmitted] = useState(false);
+    const animationref = useRef(null)
+    useEffect(() => {
+        animationref.current?.play();
+
+        // Or set a specific startFrame and endFrame with:
+        animationref.current?.play(30, 120);
+    }, [submitted])
     const openGallary = () => {
         const options = {
             selectionLimit: 5,
@@ -34,7 +42,7 @@ const FileUplaoder = ({ setModalVisible }) => {
         setImages(arr);
     };
     const RenderImage = (item) => {
-        console.log('🚀 ~ RenderImage ~ item:', item);
+        // console.log('🚀 ~ RenderImage ~ item:', item);
         return (
             <View style={{ marginHorizontal: 10, alignItems: 'center' }}>
                 <TouchableOpacity
@@ -89,12 +97,16 @@ const FileUplaoder = ({ setModalVisible }) => {
                         },
                     ]}
                 >
+
                     <TouchableOpacity
                         onPress={() => setModalVisible(false)}
                         style={{ position: 'absolute', top: 10, right: 10 }}
                     >
                         <Icon name="x" color="#222222" size={22} />
                     </TouchableOpacity>
+                    <View style={{ backgroundColor: 'white' }}>
+                        <LottieView ref={animationref} style={{ height: 200, width: 200 }} source={require('../../assets/JSON/SuccessGIF.json')} />
+                    </View>
                     <Text style={{ fontSize: 20, fontFamily: 'Mulish-Bold', color: '#222222' }}>
                         Images submitted!
                     </Text>

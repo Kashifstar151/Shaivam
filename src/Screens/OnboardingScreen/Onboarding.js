@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Dimensions, FlatList, Image, ImageBackground, Platform, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Animated, Dimensions, FlatList, Image, ImageBackground, Platform, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Background from "../../components/Background";
 import NandiLogo from "../../assets/Images/NandiLogo.svg"
 import Icon from "react-native-vector-icons/dist/Feather";
@@ -15,7 +15,7 @@ const Onboarding = ({ navigation }) => {
     useEffect(() => {
         setTimeout(() => {
             setShowImage(false)
-        }, 2000)
+        }, 4000)
     }, [])
     const language = [
         // { name: 'English', lngCode: 'en' },
@@ -39,11 +39,22 @@ const Onboarding = ({ navigation }) => {
         { name: 'Telgu', lngCode: 'te' },
         { name: 'Urdu', lngCode: 'ur' },
     ];
+    const fadeAnim = useRef(new Animated.Value(0)).current;
     const handleClick = (item) => {
         i18n.changeLanguage(item.lngCode); // 12
         setSelectedLang(item);
     };
-
+    useEffect(() => {
+        fadeIn()
+    }, [])
+    const fadeIn = () => {
+        // Will change fadeAnim value to 1 in 5 seconds
+        Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 5000,
+            useNativeDriver: true,
+        }).start();
+    };
     useEffect(() => {
         handleClick(language.find((i) => i.lngCode === i18n.language));
     }, []);
@@ -55,7 +66,12 @@ const Onboarding = ({ navigation }) => {
             }}>
                 {
                     showImage ?
-                        <Image resizeMode='cover' source={require('../../assets/Images/Component.png')} style={{ alignSelf: 'center', height: 200, width: 200, }} />
+                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                            <Image resizeMode='cover' source={require('../../assets/Images/Component.png')} style={{ alignSelf: 'center', height: 200, width: 200, }} />
+                            <Animated.View style={{ marginTop: 20, opacity: fadeAnim }} >
+                                <Text style={{ fontFamily: 'Lora-Bold', fontSize: 20, color: '#ffffff' }}>Om Namah Shivaya</Text>
+                            </Animated.View>
+                        </View>
                         :
                         <ScrollView>
                             <View style={{ marginTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 50 : 20, paddingHorizontal: 20 }}>
