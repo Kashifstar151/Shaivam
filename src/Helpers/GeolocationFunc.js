@@ -51,6 +51,7 @@ export const locationPermission = async () => {
                     };
                 } else {
                     console.log('the access not grandted ');
+
                     return {
                         status: false,
                         msg: 'User denied permission',
