@@ -57,7 +57,6 @@ import BottomSheet from '@gorhom/bottom-sheet';
 
 const ThrimuraiSong = ({ route, navigation }) => {
     console.log('the render of the song==>');
-    const colorScheme = useColorScheme();
     // let key = true;
     // const database = SQLite.openDatabase({
     //     name: key ? 'SongsData.db' : 'main.db',
@@ -123,7 +122,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
 
         if (isFocused) {
             changeTranlation('Original');
-            // getSOngData();
         }
         return () => {
             TrackPlayer.stop();
@@ -136,10 +134,19 @@ const ThrimuraiSong = ({ route, navigation }) => {
             const repeatState = await TrackPlayer.getRepeatMode();
             setRepeatMode(repeatState);
         })();
+
+        (async () => {
+            const themeMode = await AsyncStorage.getItem('theme');
+            if (themeMode === 'dark') {
+                setDarkMode(true);
+            } else {
+                setDarkMode(false);
+            }
+        })();
     }, []); // to initialize the repeat state of the track player
 
     const { musicState, dispatchMusic } = useContext(MusicContext);
-    const [darkMode, setDarkMode] = useState(colorScheme === 'dark' ? true : false);
+    const [darkMode, setDarkMode] = useState();
     const [tamilSplit, setTamilSplit] = useState(false);
     const { theme, setTheme } = useContext(ThemeContext);
     const { t, i18n } = useTranslation();
@@ -167,13 +174,14 @@ const ThrimuraiSong = ({ route, navigation }) => {
         en: 'en',
     };
 
-    useEffect(() => {
-        getSOngData();
-    }, [selectedLngCode]);
+    const [colorSet, setColorSet] = useState();
 
     useEffect(() => {
-        setTheme(darkMode ? dark : light);
-        // AsyncStorage.setItem('theme', colorScheme);
+        if (darkMode) {
+            setColorSet((prev) => colors.dark);
+        } else {
+            setColorSet((prev) => colors.light);
+        }
     }, [darkMode]);
 
     const changeTranlation = (item) => {
@@ -210,9 +218,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
         const titleQuery = `SELECT title from thirumurai_songs where prevId=${data?.prevId} and title  NOTNULL and title!='' GROUP BY title`;
 
         getSqlData(titleQuery, (data) => {
-            console.log("🚀 ~ getSqlData ~ data:", data)
+            // console.log('🚀 ~ getSqlData ~ data:', data);
             getSqlData(detailQuery, (details) => {
-                console.log("c", details)
                 const query2 = `SELECT * FROM odhuvars WHERE title='${data[0].title}'`;
                 getSqlData(query2, (callbacks) => {
                     dispatchMusic({ type: 'SET_TITLE', payload: data[0].title });
@@ -239,6 +246,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     };
     useEffect(() => {
         if (musicState.song.length) {
+            // console.log('🚀 ~ useEffect ~ musicState.song:', musicState.song);
             setUpPlayer(musicState.song);
         }
     }, [musicState.song]);
@@ -246,6 +254,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     // useEffect(() => {
 
     // },[musicState])
+
     const renderResult = (item) => {
         const parts = item?.rawSong.split('\r\n');
         // const data = parts?.split(' ')
@@ -255,11 +264,11 @@ const ThrimuraiSong = ({ route, navigation }) => {
                     style={{
                         fontFamily: 'AnekTamil-Bold',
                         fontSize: 14,
-                        color: theme.textColor,
+                        color: colorSet.textColor,
                         // fontWeight: '400',
                     }}
                     highlightStyle={{
-                        backgroundColor: theme.colorscheme === 'dark' ? '#A47300' : '#F8E3B2',
+                        backgroundColor: darkMode ? '#A47300' : '#F8E3B2',
                     }}
                     searchWords={[`${searchedword}`]}
                     textToHighlight={item?.rawSong}
@@ -274,7 +283,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     };
 
     const setUpPlayer = useCallback(
-        async (song) => {
+        async (song, from) => {
             try {
                 if (!TrackPlayer._initialized) {
                     await TrackPlayer.setupPlayer();
@@ -322,7 +331,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
         const query = `SELECT MIN(prevId) AS nextPrevId FROM thirumurai_songs WHERE prevId > ${musicState?.prevId}`;
         await TrackPlayer.reset();
         getSqlData(query, (clb) => {
-            console.log('the prev id ==>', clb);
             if (clb[0].nextPrevId) {
                 dispatchMusic({ type: 'RESET' });
                 dispatchMusic({ type: 'PREV_ID', payload: clb[0].nextPrevId });
@@ -334,7 +342,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
         const query = `SELECT max(prevId) AS nextPrevId FROM thirumurai_songs WHERE prevId < ${musicState?.prevId}`;
         await TrackPlayer.reset();
         getSqlData(query, (clb) => {
-            console.log('the prev id ==>', clb);
+            // console.log('the prev id ==>', clb);
             if (clb[0].nextPrevId) {
                 dispatchMusic({ type: 'RESET' });
                 dispatchMusic({ type: 'PREV_ID', payload: clb[0].nextPrevId });
@@ -349,11 +357,10 @@ const ThrimuraiSong = ({ route, navigation }) => {
     });
 
     useEffect(() => {
-        if (musicState.prevId) {
+        if (musicState.prevId && selectedLang) {
             getSqlData(
                 `SELECT author,thalam,country,pann from thirumurais WHERE prevId=${musicState?.prevId}`,
                 (cb) => {
-                    console.log("🚀 ~ useEffect ~ cb:", cb)
                     const { author, country, thalam, pann } = cb[0];
                     dispatchMusic({
                         type: 'META_DATA',
@@ -363,10 +370,10 @@ const ThrimuraiSong = ({ route, navigation }) => {
             );
             getSOngData();
         }
-    }, [musicState.prevId]);
+    }, [musicState.prevId, selectedLang]);
 
     return (
-        <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
+        <View style={{ flex: 1, backgroundColor: colorSet?.backgroundColor }}>
             <AnimatedRN.View
                 style={{
                     height: Platform.OS == 'ios' ? 'auto' : statusBarHeight,
@@ -388,7 +395,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
             <View
                 style={[
                     styles.headerContainer,
-                    { backgroundColor: theme.colorscheme === 'dark' ? '#333333' : '#F1DBDA' },
+                    { backgroundColor: darkMode ? colors?.faintGrey : colors?.skinColor },
                 ]}
             >
                 <View style={[styles.detailsSection, { display: showDetail ? 'flex' : 'none' }]}>
@@ -398,29 +405,24 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                 style={[
                                     styles.iconContainer,
                                     {
-                                        backgroundColor:
-                                            theme.colorscheme === 'dark' ? '#2B2B2B' : '#E0AAA7',
+                                        backgroundColor: darkMode ? '#2B2B2B' : '#E0AAA7',
                                     },
                                 ]}
                             >
-                                <AruliyavarSVG
-                                    fill={theme.colorscheme === 'dark' ? '#787878' : '#3A1917'}
-                                />
+                                <AruliyavarSVG fill={darkMode ? '#787878' : '#3A1917'} />
                             </View>
-                            {
-                                musicState?.metaData?.author ?
-                                    <View style={styles.textSectionDD}>
-                                        <Text style={styles.titleDropDown}>{`${t('Aruliyavar')}`}</Text>
-                                        <Text style={styles.valueDropDown}>
-                                            {t(musicState?.metaData?.author)
-                                            }
-                                        </Text>
-                                    </View> :
+                            {musicState?.metaData?.author ? (
+                                <View style={styles.textSectionDD}>
+                                    <Text style={styles.titleDropDown}>{`${t('Aruliyavar')}`}</Text>
                                     <Text style={styles.valueDropDown}>
-                                        {
-                                            'Text currently not available'}
+                                        {t(musicState?.metaData?.author)}
                                     </Text>
-                            }
+                                </View>
+                            ) : (
+                                <Text style={styles.valueDropDown}>
+                                    {'Text currently not available'}
+                                </Text>
+                            )}
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>{`${t('Aruliyavar')}`}</Text>
                                 <Text style={styles.valueDropDown}>
@@ -435,14 +437,11 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                 style={[
                                     styles.iconContainer,
                                     {
-                                        backgroundColor:
-                                            theme.colorscheme === 'dark' ? '#2B2B2B' : '#E0AAA7',
+                                        backgroundColor: darkMode ? '#2B2B2B' : '#E0AAA7',
                                     },
                                 ]}
                             >
-                                <NaduSVG
-                                    fill={theme.colorscheme === 'dark' ? '#787878' : '#3A1917'}
-                                />
+                                <NaduSVG fill={darkMode ? '#787878' : '#3A1917'} />
                             </View>
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>{`${t('Nadu')}`}</Text>
@@ -458,14 +457,11 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                 style={[
                                     styles.iconContainer,
                                     {
-                                        backgroundColor:
-                                            theme.colorscheme === 'dark' ? '#2B2B2B' : '#E0AAA7',
+                                        backgroundColor: darkMode ? '#2B2B2B' : '#E0AAA7',
                                     },
                                 ]}
                             >
-                                <PannSVG
-                                    fill={theme.colorscheme === 'dark' ? '#787878' : '#3A1917'}
-                                />
+                                <PannSVG fill={darkMode ? '#787878' : '#3A1917'} />
                             </View>
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>{`${t('Pann')}`}</Text>
@@ -480,14 +476,11 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                 style={[
                                     styles.iconContainer,
                                     {
-                                        backgroundColor:
-                                            theme.colorscheme === 'dark' ? '#2B2B2B' : '#E0AAA7',
+                                        backgroundColor: darkMode ? '#2B2B2B' : '#E0AAA7',
                                     },
                                 ]}
                             >
-                                <ThalamSVG
-                                    fill={theme.colorscheme === 'dark' ? '#787878' : '#3A1917'}
-                                />
+                                <ThalamSVG fill={darkMode ? '#787878' : '#3A1917'} />
                             </View>
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>{`${t('Thalam')}`}</Text>
@@ -520,7 +513,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
             >
                 {showSetting ? (
                     <Animated.View
-                        style={[styles.animatedView, animatedStyles, { ...theme.setting }]}
+                        style={[styles.animatedView, animatedStyles, { ...colorSet?.setting }]}
                     >
                         <View
                             style={{
@@ -533,24 +526,12 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                 style={styles.InsiderSettingButton}
                             >
                                 <SettingIcon />
-                                {/* <Text
-                                        style={[
-                                            styles.settingText,
-                                            { color: theme.settingText.color },
-                                        ]}
-                                    >
-                                        Settings
-                                    </Text> */}
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={styles.clearIcon}
                                 onPress={() => closeAnimatedView()}
                             >
-                                <Icon
-                                    name="clear"
-                                    size={24}
-                                    color={theme.colorscheme === 'light' ? '#000' : '#fff'}
-                                />
+                                <Icon name="clear" size={24} color={!darkMode ? '#000' : '#fff'} />
                             </TouchableOpacity>
                         </View>
                         <View style={styles.TranslationContainer}>
@@ -670,12 +651,21 @@ const ThrimuraiSong = ({ route, navigation }) => {
                     <TouchableOpacity
                         style={[
                             styles.settingButton,
-                            { backgroundColor: theme.settingBtn.backgroundColor },
+                            { backgroundColor: colorSet?.settingBtn.backgroundColor },
                         ]}
                         onPress={handlePress}
                     >
                         <SettingIcon />
-                        <Text style={styles.settingText}>Settings</Text>
+                        <Text
+                            style={[
+                                styles.settingText,
+                                {
+                                    color: colorSet?.textColor,
+                                },
+                            ]}
+                        >
+                            Settings
+                        </Text>
                     </TouchableOpacity>
                 )}
             </View>
@@ -699,7 +689,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                             styles.lyricsText,
                                             {
                                                 fontSize: fontSizeCount,
-                                                color: theme.lyricsText.color,
+                                                color: colorSet?.lyricsText.color,
                                             },
                                         ]}
                                     >
@@ -707,7 +697,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                             ? selectedLang !== 'Tamil'
                                                 ? res?.rawSong
                                                 : res?.tamilExplanation ||
-                                                'Text currently not available'
+                                                  'Text currently not available'
                                             : res?.tamilSplit || 'Text currently not available'}
                                     </Text>
                                 )}
@@ -717,7 +707,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                         {
                                             fontSize: fontSizeCount,
                                             alignSelf: 'flex-end',
-                                            color: theme.lyricsText.color,
+                                            color: colorSet?.lyricsText.color,
                                         },
                                     ]}
                                 >

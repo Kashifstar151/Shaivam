@@ -20,7 +20,7 @@ const BackButton = ({
     return (
         <View
             style={{
-                paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 20 : 0,
+                paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 20 : 10,
                 paddingHorizontal: 15,
             }}
         >

@@ -1,6 +1,15 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, Pressable, ImageBackground, Platform } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    Dimensions,
+    Pressable,
+    ImageBackground,
+    Platform,
+    Modal,
+} from 'react-native';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import NearByTemples from './NearByTemples';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
@@ -21,6 +30,11 @@ import { categoryBtnClbk, markerPressClbk } from './CallBacksForClick.js';
 import SearchTemple from './SearchTemple.js';
 import { CustomMarker } from './CustomMarker.js';
 import { ThemeContext } from '../../Context/ThemeContext.js';
+import { RESULTS } from 'react-native-permissions';
+import { BlurView } from '@react-native-community/blur';
+import { CustomLongBtn } from '../../components/Buttons.js';
+import AlertmapSVG from '../../../assets/Images/AlertmapSVG.svg';
+import getDimension from '../../Helpers/getDimension.js';
 
 export const Temples = ({ navigation, route }) => {
     const bottomSheetRef = useRef(null);
@@ -128,16 +142,21 @@ export const Temples = ({ navigation, route }) => {
             },
         },
     ]);
-
+    const { theme } = useContext(ThemeContext);
+    const { screenHeight, screenWidth } = getDimension();
+    const [showModal, setShowModal] = useState(false);
     const [padState, setPadState] = useState(1);
-
+    const [permissionGranted, setPermissionGranted] = useState(null);
     const onMapReadyCallback = async () => {
         const state = await locationPermission();
-
+        console.log('🚀 ~ onMapReadyCallback ~ state:', state);
+        setPermissionGranted(state.permissionType);
         if (state.status) {
             getCurrentLocationWatcher((val) => {
                 setUserLocation((prev) => ({ ...prev, ...val }));
             });
+        } else {
+            setShowModal(true);
         }
     };
 
@@ -150,16 +169,6 @@ export const Temples = ({ navigation, route }) => {
             clearGetCurrentLocationWatcher();
         };
     }, []);
-
-    // useEffect(() => {
-    //     // (async () => {
-    //     //     await locationPermission();
-    //     // })();
-
-    //     setTimeout(() => {
-    //         setPadState(0);
-    //     }, 500);
-    // }, []);
 
     const [userLocName, setUserLocName] = useState('');
 
@@ -177,11 +186,16 @@ export const Temples = ({ navigation, route }) => {
             })();
         }
     }, [userLocation]);
-    const { theme } = useContext(ThemeContext);
+
+    useEffect(() => {
+        console.log('the permissionGranted :::::::::::::::::::::::::::::::', permissionGranted);
+    }, [permissionGranted]);
 
     return (
         <>
-            <View style={{ flex: 1, position: 'relative', marginTop: Platform.OS == 'ios' ? 15 : 0 }}>
+            <View
+                style={{ flex: 1, position: 'relative', marginTop: Platform.OS == 'ios' ? 15 : 0 }}
+            >
                 {userLocation?.latitude ? (
                     <MapView
                         onMapReady={() =>
@@ -202,23 +216,27 @@ export const Temples = ({ navigation, route }) => {
                         }}
                         region={regionCoordinate}
                     >
-                        <CustomMarker
-                            setPadState={setPadState}
-                            flag={8}
-                            coordinate={userLocation}
-                            keyName={'USER_LOCATION_MARKER'}
-                        />
-                        <CustomMarker
-                            setPadState={setPadState}
-                            callback={() => {
-                                // setting the type of the marker you pressed
-                                // callback function for naving to page which has the temple details
-                                markerPressClbk(navigation, 7);
-                            }}
-                            flag={7}
-                            coordinate={regionCoordinate}
-                            keyName={'COORDINATE'}
-                        />
+                        {permissionGranted === RESULTS.GRANTED && (
+                            <>
+                                <CustomMarker
+                                    setPadState={setPadState}
+                                    flag={8}
+                                    coordinate={userLocation}
+                                    keyName={'USER_LOCATION_MARKER'}
+                                />
+                                <CustomMarker
+                                    setPadState={setPadState}
+                                    callback={() => {
+                                        // setting the type of the marker you pressed
+                                        // callback function for naving to page which has the temple details
+                                        markerPressClbk(navigation, 7);
+                                    }}
+                                    flag={7}
+                                    coordinate={regionCoordinate}
+                                    keyName={'COORDINATE'}
+                                />
+                            </>
+                        )}
                     </MapView>
                 ) : null}
 
@@ -234,7 +252,11 @@ export const Temples = ({ navigation, route }) => {
                                     style={styles.contWrapper}
                                     onPress={() => {
                                         // adding callback on the category btn press and navigating to the filter page
-                                        categoryBtnClbk(navigation, key);
+                                        if (permissionGranted === RESULTS.GRANTED) {
+                                            categoryBtnClbk(navigation, key);
+                                        } else {
+                                            setShowModal(!showModal);
+                                        }
                                     }}
                                     key={indx}
                                 >
@@ -274,17 +296,21 @@ export const Temples = ({ navigation, route }) => {
                         },
                     }}
                     onPress={() => {
-                        console.log('the uuiuui');
-                        setUserLocation((prev) => ({
-                            ...prev,
-                            latitude: 28.5002,
-                            longitude: 77.381,
-                        }));
-                        setRegionCoordinate((prev) => ({
-                            ...prev,
-                            latitude: 28.5002,
-                            longitude: 77.381,
-                        }));
+                        if (permissionGranted === RESULTS.GRANTED) {
+                            console.log('the uuiuui');
+                            setUserLocation((prev) => ({
+                                ...prev,
+                                latitude: 28.5002,
+                                longitude: 77.381,
+                            }));
+                            setRegionCoordinate((prev) => ({
+                                ...prev,
+                                latitude: 28.5002,
+                                longitude: 77.381,
+                            }));
+                        } else {
+                            setShowModal(!showModal);
+                        }
                     }}
                 >
                     {/* bring user's location into view */}
@@ -299,43 +325,115 @@ export const Temples = ({ navigation, route }) => {
                 <AnimatedRightSideView heading={'Map Legend'} RightIcon={<MapIconSVG />}>
                     <InnerContextOfAnimatedSideBox />
                 </AnimatedRightSideView>
-                <BottomSheet
-                    ref={bottomSheetRef}
-                    onChange={handleSheetChanges}
-                    snapPoints={['7%', '95%']}
-                    backdropComponent={(props) => (
-                        <BottomSheetBackdrop
-                            opacity={1}
-                            appearsOnIndex={1}
-                            disappearsOnIndex={0}
-                            pressBehavior={'collapse'}
-                            {...props}
-                        >
-                            {/* <View style={{ backgroundColor: 'red', flex: 1 }}></View> */}
-                            <ImageBackground
-                                source={
-                                    theme.colorscheme === 'light'
-                                        ? require('../../../assets/Images/Background.png')
-                                        : require('../../../assets/Images/BackgroundCommon.png')
-                                }
-                                style={{
-                                    paddingVertical: 0,
+                {permissionGranted === 'granted' ? (
+                    <BottomSheet
+                        ref={bottomSheetRef}
+                        onChange={handleSheetChanges}
+                        snapPoints={['15%', '95%']}
+                        backdropComponent={(props) => (
+                            <BottomSheetBackdrop
+                                opacity={1}
+                                appearsOnIndex={1}
+                                disappearsOnIndex={0}
+                                pressBehavior={'collapse'}
+                                {...props}
+                            >
+                                {/* <View style={{ backgroundColor: 'red', flex: 1 }}></View> */}
+                                <ImageBackground
+                                    source={
+                                        theme.colorscheme === 'light'
+                                            ? require('../../../assets/Images/Background.png')
+                                            : require('../../../assets/Images/BackgroundCommon.png')
+                                    }
+                                    style={{
+                                        paddingVertical: 0,
+                                        borderRadius: 10,
+                                        width: '100%',
+                                        height: '40%',
+                                    }}
+                                ></ImageBackground>
+                            </BottomSheetBackdrop>
+                        )}
+                    >
+                        <NearByTemples
+                            locationName={userLocName}
+                            data={nearByTempleList}
+                            snapIndex={snapIndex}
+                            navigation={navigation}
+                            close={() => bottomSheetRef.current.snapToIndex(0)}
+                        />
+                    </BottomSheet>
+                ) : null}
+
+                <Modal visible={showModal} animationType="fade" transparent>
+                    <BlurView
+                        blurType="dark"
+                        blurAmount={1}
+                        blurRadius={10}
+                        style={styles.contentWrap}
+                    ></BlurView>
+                    <View
+                        style={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            flex: 1,
+                        }}
+                    >
+                        <View
+                            style={[
+                                {
+                                    backgroundColor: '#FFFFFF',
+                                    overflow: 'hidden',
                                     borderRadius: 10,
-                                    width: '100%',
-                                    height: '40%',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    padding: 20,
+                                    width: screenWidth * 0.85,
+                                    height: screenHeight * 0.3,
+                                },
+                            ]}
+                        >
+                            <AlertmapSVG />
+                            <Text
+                                style={{
+                                    color: 'black',
+                                    fontFamily: 'Mulish-Bold',
+                                    fontSize: 18,
                                 }}
-                            ></ImageBackground>
-                        </BottomSheetBackdrop>
-                    )}
-                >
-                    <NearByTemples
-                        locationName={userLocName}
-                        data={nearByTempleList}
-                        snapIndex={snapIndex}
-                        navigation={navigation}
-                        close={() => bottomSheetRef.current.snapToIndex(0)}
-                    />
-                </BottomSheet>
+                            >
+                                Uh oh, We can't locate you!
+                            </Text>
+                            <Text
+                                style={{
+                                    color: '#777777',
+                                    textAlign: 'center',
+                                    fontFamily: 'Mulish-Regular',
+                                    fontSize: 14,
+                                    lineHeight: 18,
+                                }}
+                            >
+                                Your location services need to be turned on for Shaivam Temples to
+                                work
+                            </Text>
+                            <CustomLongBtn
+                                onPress={() => {
+                                    setShowModal(!showModal);
+                                }}
+                                text={'Enable location access'}
+                                textStyle={{
+                                    color: '#4C3600',
+                                    fontFamily: 'Mulish-Bold',
+                                    paddingHorizontal: 15,
+                                }}
+                                containerStyle={{
+                                    backgroundColor: '#FCB300',
+                                    alignSelf: 'center',
+                                    marginBottom: 5,
+                                }}
+                            />
+                        </View>
+                    </View>
+                </Modal>
             </View>
         </>
     );
@@ -349,6 +447,23 @@ const styles = StyleSheet.create({
         flex: 1,
         height: Dimensions.get('window').height,
         width: Dimensions.get('window').width,
+    },
+    contentWrap: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+    },
+
+    svgWrapper: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        width: '100%',
+        height: '55%',
+        aspectRatio: 1,
     },
 
     colorContWrapper: {

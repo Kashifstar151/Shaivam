@@ -3,7 +3,6 @@ import { Pressable, Text, Touchable, TouchableOpacity, View } from 'react-native
 
 const CustomButton = ({ type, svg, style, onPress, text, backgroundColor, textColor }) => {
     const { paddingHorizontal, paddingVertical, borderRadius, ...restStyle } = style;
-    console.log('🚀 ~ CustomButton ~ style:', style);
     if (type === 'TouchableOpacity') {
         return (
             <TouchableOpacity
@@ -32,7 +31,7 @@ const CustomButton = ({ type, svg, style, onPress, text, backgroundColor, textCo
         <Pressable
             style={[
                 {
-                    borderRadius: 8,
+                    borderRadius: borderRadius ?? 8,
                     overflow: 'hidden',
                 },
                 restStyle,
@@ -84,4 +83,33 @@ const CommonPartOfBtn = ({
     </View>
 );
 
-export { CustomButton };
+const CustomLongBtn = ({ containerStyle, onPress, text, textStyle }) => {
+    return (
+        <TouchableOpacity
+            style={[
+                {
+                    backgroundColor: '#fff',
+                    borderRadius: 8,
+                    paddingHorizontal: 20,
+                    paddingVertical: 15,
+                },
+                containerStyle,
+            ]}
+            onPress={onPress}
+        >
+            <Text
+                style={[
+                    {
+                        color: '#000',
+                        textAlign: 'center',
+                    },
+                    textStyle,
+                ]}
+            >
+                {text ?? 'Click'}
+            </Text>
+        </TouchableOpacity>
+    );
+};
+
+export { CustomButton, CustomLongBtn };
