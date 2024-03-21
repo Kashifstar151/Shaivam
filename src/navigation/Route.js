@@ -31,6 +31,7 @@ import FilteredTemplesPage from '../Screens/Temples/FilteredTemplesPage';
 import ImageSubmitPage from '../Screens/Temples/SuccuessPages/SpottingErrorPage';
 import SpottingErrorPage from '../Screens/Temples/SuccuessPages/SpottingErrorPage';
 import SelectErrorPage from '../Screens/Temples/SuccuessPages/SelectErrorPage';
+// import PinTheLocation from '../Screens/Temples/PinTheLocationPage';
 import Onboarding from '../Screens/OnboardingScreen/Onboarding';
 // import { ThemeContextProvider } from '../Context/ThemeContext';
 
@@ -222,7 +223,10 @@ const Route = () => {
                         />
                         <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={MusicComponent} />
                         <Stack.Screen name={'Stotras'} component={Strotras} />
-                        <Stack.Screen name={RouteTexts.ERROR_SELECTION_PAGE} component={SelectErrorPage} />
+                        <Stack.Screen
+                            name={RouteTexts.ERROR_SELECTION_PAGE}
+                            component={SelectErrorPage}
+                        />
                         <Stack.Screen
                             name={'templeDetails'}
                             component={TempleDetails}
@@ -239,9 +243,9 @@ const Route = () => {
                             }}
                         />
 
-
-                        {/* <Stack.Screen name={'templeDetails'} component={TempleDetails} /> */}
                         <Stack.Screen name={'filteredTemples'} component={FilteredTemplesPage} />
+                        {/* <Stack.Screen name={'PinTheLocation'} component={PinTheLocation} /> */}
+                        {/* <Stack.Screen name={'templeDetails'} component={TempleDetails} /> */}
                     </Stack.Navigator>
                 </NavigationContainer>
             )}
