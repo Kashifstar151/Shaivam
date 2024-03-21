@@ -214,16 +214,32 @@ const ThrimuraiSong = ({ route, navigation }) => {
         translateX.value = 50;
     };
 
-    const getSOngData = () => {
-        const detailQuery = `SELECT rawSong, tamilExplanation, tamilSplit , songNo , title from thirumurai_songs where prevId=${data?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
-        const titleQuery = `SELECT title from thirumurai_songs where prevId=${data?.prevId} and title  NOTNULL and title!='' GROUP BY title`;
+    const getSOngData = (from) => {
+        const detailQuery = `SELECT rawSong, tamilExplanation, tamilSplit , songNo , title from thirumurai_songs where prevId=${musicState?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
+
+        const titleQuery = `SELECT
+        MAX(CASE WHEN locale = 'en' THEN titleS END) AS tamil,
+    MAX(CASE WHEN locale = '${langMap[selectedLngCode]}' THEN title END) AS localeBased
+FROM
+    thirumurais
+WHERE
+    prevId =${musicState?.prevId}
+    AND titleS IS NOT NULL
+    AND titleS != ''
+    AND (locale = '${langMap[selectedLngCode]}' OR locale = 'en')
+GROUP BY
+    title`;
 
         getSqlData(titleQuery, (data) => {
-            // console.log('🚀 ~ getSqlData ~ data:', data);
+            dispatchMusic({
+                type: 'SET_TITLE',
+                payload: data.filter((i) => i.localBased !== null)[0].localeBased,
+            });
             getSqlData(detailQuery, (details) => {
-                const query2 = `SELECT * FROM odhuvars WHERE title='${data[0].title}'`;
+                const query2 = `SELECT * FROM odhuvars WHERE title='${
+                    data.filter((i) => i.tamil !== null)[0]?.tamil
+                }'`;
                 getSqlData(query2, (callbacks) => {
-                    dispatchMusic({ type: 'SET_TITLE', payload: data[0].title });
                     dispatchMusic({ type: 'SONG_DETAILS', payload: details });
                     dispatchMusic({ type: 'SET_SONG', payload: callbacks });
                 });
@@ -251,10 +267,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
             setUpPlayer(musicState.song);
         }
     }, [musicState.song]);
-
-    // useEffect(() => {
-
-    // },[musicState])
 
     const renderResult = (item) => {
         const parts = item?.rawSong.split('\r\n');
@@ -331,6 +343,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const queryForNextPrevId = async () => {
         const query = `SELECT MIN(prevId) AS nextPrevId FROM thirumurai_songs WHERE prevId > ${musicState?.prevId}`;
         await TrackPlayer.reset();
+
         getSqlData(query, (clb) => {
             if (clb[0].nextPrevId) {
                 dispatchMusic({ type: 'RESET' });
@@ -342,6 +355,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const queryForPreviousPrevId = async () => {
         const query = `SELECT max(prevId) AS nextPrevId FROM thirumurai_songs WHERE prevId < ${musicState?.prevId}`;
         await TrackPlayer.reset();
+
         getSqlData(query, (clb) => {
             // console.log('the prev id ==>', clb);
             if (clb[0].nextPrevId) {
@@ -383,7 +397,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
             >
                 <Background>
                     <BackButton
-                        secondMiddleText={data?.title}
+                        secondMiddleText={musicState?.title}
                         color={true}
                         // middleText={data}
                         navigation={navigation}
