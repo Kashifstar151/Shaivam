@@ -34,7 +34,7 @@ import { useTranslation } from 'react-i18next';
 import '../../../../localization';
 import AruliyavarSVG from '../../../components/SVGs/AruliyavarSVG';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { dark, light } from '../../../Helpers/GlobalStyles';
+// import { dark, light } from '../../../Helpers/GlobalStyles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MusicContext } from '../../../components/Playbacks/TrackPlayerContext';
 import NaduSVG from '../../../components/SVGs/NaduSVG';
@@ -281,7 +281,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
             </View>
         );
     };
-
     const setUpPlayer = useCallback(
         async (song, from) => {
             try {
@@ -697,7 +696,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                                             ? selectedLang !== 'Tamil'
                                                 ? res?.rawSong
                                                 : res?.tamilExplanation ||
-                                                  'Text currently not available'
+                                                'Text currently not available'
                                             : res?.tamilSplit || 'Text currently not available'}
                                     </Text>
                                 )}
