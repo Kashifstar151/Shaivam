@@ -9,6 +9,7 @@ import {
     ImageBackground,
     Platform,
     Modal,
+    PermissionsAndroid,
 } from 'react-native';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import NearByTemples from './NearByTemples';
@@ -30,7 +31,7 @@ import { categoryBtnClbk, markerPressClbk } from './CallBacksForClick.js';
 import SearchTemple from './SearchTemple.js';
 import { CustomMarker } from './CustomMarker.js';
 import { ThemeContext } from '../../Context/ThemeContext.js';
-import { RESULTS } from 'react-native-permissions';
+import { openSettings, RESULTS } from 'react-native-permissions';
 import { BlurView } from '@react-native-community/blur';
 import { CustomLongBtn } from '../../components/Buttons.js';
 import AlertmapSVG from '../../../assets/Images/AlertmapSVG.svg';
@@ -417,6 +418,7 @@ export const Temples = ({ navigation, route }) => {
                             </Text>
                             <CustomLongBtn
                                 onPress={() => {
+                                    openSettings()
                                     setShowModal(!showModal);
                                 }}
                                 text={'Enable location access'}
