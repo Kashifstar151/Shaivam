@@ -151,11 +151,13 @@ const Fav = ({ navigation }) => {
             </View>
             <View style={{ flexDirection: 'row', }}>
                 <TouchableOpacity style={{ marginRight: 10 }}>
-                    <Icon name="share" size={22} />
+                    <Icon name="share" size={22} color={theme.textColor} />
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => confirmRemove(item)}>
-                    {selecetedHeader == 'Favourites' ? <AntDesign name="heart" size={20} color={'#C1554E'} /> : <Icon name="delete" size={22} />}
+                    {selecetedHeader == 'Favourites' ?
+                        <AntDesign name="heart" size={20} color={'#C1554E'} /> :
+                        <Icon name="delete" size={22} color={theme.textColor} />}
                 </TouchableOpacity>
             </View>
         </Pressable>

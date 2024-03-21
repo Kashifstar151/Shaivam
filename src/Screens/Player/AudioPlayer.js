@@ -105,11 +105,12 @@ const AudioPlayer = ({
     setDownloadingLoader
 }) => {
     console.log('the render of page =>');
+
     // const [oprateMostPlayed, setOprateMostPlayed] = useState(0)
     useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], async (event) => {
         if (event?.state == State?.nextTrack) {
             let index = await TrackPlayer.getActiveTrack();
-            //   setCurrentTrack(index);
+            setActiveTrack(index);
             // console.log('index', index)
             const newObj = { ...index, prevId: prevId }
             updateRecentlyPlayed(newObj)
@@ -159,25 +160,33 @@ const AudioPlayer = ({
     const [downloadedSong, setDownloadedSong] = useState(false);
     const [mostPlayedSongs, setMostPlayedSong] = useState([])
     const [showModal, setShowModal] = useState(false)
+    const [activeTract, setActiveTrack] = useState(null)
     const playBackState = usePlaybackState();
-
+    const activeTrack = useActiveTrack();
+    // console.log("🚀 ~ activeTrack:", activeTrack)
     useEffect(() => {
         (async () => {
             if (playBackState.state === 'ready') {
                 await TrackPlayer.play();
                 mostPlayed()
+
             } else if (playBackState.state !== 'playing') {
                 setPaused(false);
             } else {
                 setPaused(true);
             }
+            fetchAndDisplayDownloads()
         })();
     }, [playBackState]);
     useEffect(() => {
         Icon.getImageSource('circle', 18, '#C1554E').then((source) => {
             return setThumbImage({ thumbIcon: source });
         });
-        Promise.allSettled([createUserTable(), MostPlayedSongList(), getMostPlayedSong(), fetchAndDisplayDownloads()])
+
+        Promise.allSettled([createUserTable(), MostPlayedSongList(), getMostPlayedSong(),])
+        if (activeTrack) {
+
+        }
         // createUserTable();
         // MostPlayedSongList();
         // getMostPlayedSong()
@@ -198,7 +207,6 @@ const AudioPlayer = ({
             setRepeatMode(2);
         }
     };
-    const activeTrack = useActiveTrack();
 
     const handlePause = async () => {
         setPaused(false);
@@ -252,8 +260,15 @@ const AudioPlayer = ({
             // const metadataKeys = keys.filter(key => key.startsWith('downloaded:'));
             // const metadata = await AsyncStorage.multiGet(metadataKeys);
             // const parsedMetadata = metadata.map(([key, value]) => JSON.parse(value));
-            // console.log("🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:", parsedMetadata)
             setDownloadList(JSON.parse(parsedMetadata))
+            let data = JSON.parse(parsedMetadata)
+            console.log("🚀 ~ fetchAndDisplayDownloads ~ data:", activeTrack)
+            data?.map((item) => {
+                console.log("🚀 ~ data?.map ~ item:", item?.id, activeTrack?.id, item?.prevId, prevId)
+                if (item?.id == activeTrack?.id && item?.prevId == prevId) {
+                    setDownloadedSong(true)
+                }
+            })
             // Now `parsedMetadta` contains all of your audio files' metadata
             // You can use this data to render your downloads page
         } catch (e) {
@@ -357,7 +372,6 @@ const AudioPlayer = ({
         });
     };
     const playById = async (id) => {
-        // console.log('The player ==>', id);
         await TrackPlayer.skip(id);
         await TrackPlayer.play();
         setPaused(true);
@@ -590,9 +604,12 @@ const AudioPlayer = ({
                             </TouchableOpacity>
                             {
                                 downloadedSong ?
-                                    <TouchableOpacity onPress={() => removeDownload()} style={{ height: 30, width: 30, borderRadius: 15, backgroundColor: '#389F56', justifyContent: 'center', alignItems: 'center' }}>
-                                        <Icon name="check" size={24} color="white" />
-                                    </TouchableOpacity> : <TouchableOpacity
+                                    <TouchableOpacity onPress={() => removeDownload()}
+                                        style={{ marginHorizontal: 20, height: 26, width: 26, borderRadius: 13, backgroundColor: '#389F56', justifyContent: 'center', alignItems: 'center' }}
+                                    >
+                                        <Icon name="check" size={20} color="white" />
+                                    </TouchableOpacity> :
+                                    <TouchableOpacity
                                         style={{ marginHorizontal: 20 }}
                                         onPress={() => downloadAudio()}
                                     >
