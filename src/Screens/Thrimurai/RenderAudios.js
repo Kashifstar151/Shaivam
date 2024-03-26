@@ -29,6 +29,7 @@ const RenderAudiosItem = ({ navigationHandler, item, theme }) => (
                 fontFamily: 'AnekTamil-Regular',
                 // fontWeight: '500',
                 color: theme.textColor,
+                flex: 1,
             }}
         >
             {item?.title}
