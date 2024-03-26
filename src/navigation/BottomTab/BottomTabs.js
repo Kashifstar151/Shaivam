@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import HomeScreen from '../../Screens/Home/HomeScreen';
 import Temples from '../../Screens/Temples/Temples';
 import { RouteTexts } from '../RouteText';
@@ -15,13 +15,13 @@ import CalendarSVG from '../../components/SVGs/CalendarSVG';
 import FavouriteSVG from '../../components/SVGs/FavouriteSVG';
 import MoreSVG from '../../components/SVGs/MoreSVG';
 import TempleTabsNavigate from '../../Screens/Temples/TempleTabsNavigate';
+import { colors } from '../../Helpers';
 const Tab = createBottomTabNavigator();
 export default BottomTab = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
     return (
         <Tab.Navigator
             screenOptions={{
-                // headerStatusBarHeight:{},
                 tabBarStyle: [
                     styles.tabContainer,
                     {
@@ -42,56 +42,53 @@ export default BottomTab = ({ navigation }) => {
                     tabBarLabel: '',
                     tabBarActiveTintColor: 'white',
                     tabBarShowLabel: false,
-                    // tabBarLabelStyle: {
-                    //     color: '#FFAAA5',
-                    //     fontSize: 10,
-                    //     fontWeight: '600',
-                    //     fontFamily: 'Mulish-Regular'
-                    // },
                     tabBarIcon: ({ color, size, focused }) => (
                         <View style={styles.IconStyles}>
-                            {focused ? (
-                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                    {/* <ActiveHome /> */}
-
-                                    <HomeSVG fill={theme.bottomTabItemColor.selected} />
-                                    <Text
-                                        style={[
-                                            styles.tabBarLable,
-                                            { color: theme.bottomTabItemColor.selected },
-                                        ]}
-                                    >
-                                        Home
-                                    </Text>
-                                </View>
-                            ) : (
-                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                    {/* <InactiveHome /> */}
-                                    <HomeSVG fill={theme.bottomTabItemColor.unSelected} />
-
-                                    <Text
-                                        style={[
-                                            styles.tabBarLable,
-                                            { color: theme.bottomTabItemColor.unSelected },
-                                        ]}
-                                    >
-                                        Home
-                                    </Text>
-                                </View>
-                            )}
-                            <View style={{ marginTop: 6 }}>
+                            <View>
                                 {focused ? (
-                                    <IndicatorIcon />
+                                    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                        {/* <ActiveHome /> */}
+
+                                        <HomeSVG fill={theme.bottomTabItemColor.selected} />
+                                        <Text
+                                            style={[
+                                                styles.tabBarLable,
+                                                { color: theme.bottomTabItemColor.selected },
+                                            ]}
+                                        >
+                                            Home
+                                        </Text>
+                                    </View>
                                 ) : (
-                                    <View
-                                        style={{
-                                            height: 10,
-                                            width: '100%',
-                                            backgroundColor: 'black',
-                                        }}
-                                    ></View>
+                                    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                        {/* <InactiveHome /> */}
+                                        <HomeSVG fill={theme.bottomTabItemColor.unSelected} />
+
+                                        <Text
+                                            style={[
+                                                styles.tabBarLable,
+                                                { color: theme.bottomTabItemColor.unSelected },
+                                            ]}
+                                        >
+                                            Home
+                                        </Text>
+                                    </View>
                                 )}
+                                <View style={{ marginTop: 6 }}>
+                                    {focused ? (
+                                        <IndicatorIcon />
+                                    ) : (
+                                        <View
+                                            style={{
+                                                height: 10,
+                                                width: '100%',
+                                                // backgroundColor: 'black',
+                                            }}
+                                        ></View>
+                                    )}
+                                </View>
                             </View>
+                            <View style={focused ? styles.seperatonIcon : [styles.seperatonIcon, { backgroundColor: '#AD4A44' }]} />
                         </View>
                     ),
                 }}
@@ -104,20 +101,15 @@ export default BottomTab = ({ navigation }) => {
                     tabBarLabel: '',
                     tabBarActiveTintColor: 'white',
                     tabBarShowLabel: false,
-                    // tabBarLabelStyle: {
-                    //     color: '#FFAAA5',
-                    //     fontSize: 10,
-                    //     fontWeight: '600',
-                    //     fontFamily: 'Mulish-Regular'
-                    // },
                     tabBarIcon: ({ color, size, focused }) => (
                         <TouchableOpacity
+
                             onPress={() =>
                                 navigation.navigate(RouteTexts.TEMPLE_Tabs, {
                                     screen: 'Temples',
                                 })
                             }
-                            style={{ marginBottom: 10 }}
+                            style={{ marginHorizontal: 5, flexDirection: 'row', marginBottom: 5, width: Dimensions.get('screen').width / 5.2, }}
                         >
                             {/* <Text>Back</Text>
                              */}
@@ -133,50 +125,9 @@ export default BottomTab = ({ navigation }) => {
                                     Temples
                                 </Text>
                             </View>
-                        </TouchableOpacity>
-                        // <View style={styles.IconStyles}>
-                        //     {focused ? (
-                        //         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                        //             {/* <ActiveTeample /> */}
-                        //             <TempleSVG fill={theme.bottomTabItemColor.selected} />
-                        //             <Text
-                        //                 style={[
-                        //                     styles.tabBarLable,
-                        //                     { color: theme.bottomTabItemColor.selected },
-                        //                 ]}
-                        //             >
-                        //                 Temples
-                        //             </Text>
-                        //         </View>
-                        //     ) : (
-                        //         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                        //             {/* <ActiveTeample /> */}
-                        //             <TempleSVG fill={theme.bottomTabItemColor.unSelected} />
+                            <View style={focused ? styles.seperatonIcon : [styles.seperatonIcon, { backgroundColor: '#AD4A44' }]} />
 
-                        //             <Text
-                        //                 style={[
-                        //                     styles.tabBarLable,
-                        //                     { color: theme.bottomTabItemColor.unSelected },
-                        //                 ]}
-                        //             >
-                        //                 Temples
-                        //             </Text>
-                        //         </View>
-                        //     )}
-                        //     <View style={{ marginTop: 6 }}>
-                        //         {focused ? (
-                        //             <IndicatorIcon />
-                        //         ) : (
-                        //             <View
-                        //                 style={{
-                        //                     height: 10,
-                        //                     width: '100%',
-                        //                     backgroundColor: 'black',
-                        //                 }}
-                        //             ></View>
-                        //         )}
-                        //     </View>
-                        // </View>
+                        </TouchableOpacity>
                     ),
                 }}
                 name={RouteTexts.TEMPLE_TABS_NAVIGATE}
@@ -188,55 +139,50 @@ export default BottomTab = ({ navigation }) => {
                     tabBarLabel: '',
                     tabBarActiveTintColor: 'white',
                     tabBarShowLabel: false,
-                    // tabBarLabelStyle: {
-                    //     color: '#FFAAA5',
-                    //     fontFamily: 'Mulish-Regular',
-                    //     fontSize: 10,
-                    //     fontWeight: '600',
-                    // },
                     tabBarIcon: ({ color, size, focused }) => (
                         <View style={styles.IconStyles}>
-                            {focused ? (
-                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                    {/* <ActiveCalnder /> */}
-                                    <CalendarSVG fill={theme.bottomTabItemColor.selected} />
-                                    <Text
-                                        style={[
-                                            styles.tabBarLable,
-                                            { color: theme.bottomTabItemColor.selected },
-                                        ]}
-                                    >
-                                        More
-                                    </Text>
-                                </View>
-                            ) : (
-                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                    {/* <InActiveCalender /> */}
-                                    <CalendarSVG fill={theme.bottomTabItemColor.unSelected} />
-
-                                    <Text
-                                        style={[
-                                            styles.tabBarLable,
-                                            { color: theme.bottomTabItemColor.unSelected },
-                                        ]}
-                                    >
-                                        Calender
-                                    </Text>
-                                </View>
-                            )}
-                            <View style={{ marginTop: 6 }}>
+                            <View>
                                 {focused ? (
-                                    <IndicatorIcon />
+                                    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                        {/* <ActiveCalnder /> */}
+                                        <CalendarSVG fill={theme.bottomTabItemColor.selected} />
+                                        <Text
+                                            style={[
+                                                styles.tabBarLable,
+                                                { color: theme.bottomTabItemColor.selected },
+                                            ]}
+                                        >
+                                            More
+                                        </Text>
+                                    </View>
                                 ) : (
-                                    <View
-                                        style={{
-                                            height: 10,
-                                            width: '100%',
-                                            backgroundColor: 'black',
-                                        }}
-                                    ></View>
+                                    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                        <CalendarSVG fill={theme.bottomTabItemColor.unSelected} />
+
+                                        <Text
+                                            style={[
+                                                styles.tabBarLable,
+                                                { color: theme.bottomTabItemColor.unSelected },
+                                            ]}
+                                        >
+                                            Calender
+                                        </Text>
+                                    </View>
                                 )}
+                                <View style={{ marginTop: 6 }}>
+                                    {focused ? (
+                                        <IndicatorIcon />
+                                    ) : (
+                                        <View
+                                            style={{
+                                                height: 10,
+                                                width: '100%',
+                                            }}
+                                        ></View>
+                                    )}
+                                </View>
                             </View>
+                            <View style={focused ? styles.seperatonIcon : [styles.seperatonIcon, { backgroundColor: '#AD4A44' }]} />
                         </View>
                     ),
                 }}
@@ -249,123 +195,103 @@ export default BottomTab = ({ navigation }) => {
                     tabBarLabel: '',
                     tabBarActiveTintColor: 'white',
                     tabBarShowLabel: false,
-                    // tabBarLabelStyle: {
-                    //     color: '#FFAAA5',
-                    //     fontSize: 10,
-                    //     fontWeight: '600',
-                    //     fontFamily: 'Mulish-Regular'
-                    // },
                     tabBarIcon: ({ color, size, focused }) => (
                         <View style={styles.IconStyles}>
-                            {focused ? (
-                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                    {/* <ActiveFav /> */}
-                                    <FavouriteSVG fill={theme.bottomTabItemColor.selected} />
-                                    <Text
-                                        style={[
-                                            styles.tabBarLable,
-                                            { color: theme.bottomTabItemColor.selected },
-                                        ]}
-                                    >
-                                        Favourite
-                                    </Text>
-                                </View>
-                            ) : (
-                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                    {/* <View style={{ marginBottom: 7 }}> */}
-                                    {/* <InActiveFav /> */}
-
-                                    <FavouriteSVG fill={theme.bottomTabItemColor.unSelected} />
-
-                                    {/* </View> */}
-                                    <Text
-                                        style={[
-                                            styles.tabBarLable,
-                                            { color: theme.bottomTabItemColor.unSelected },
-                                        ]}
-                                    >
-                                        Favourite
-                                    </Text>
-                                </View>
-                            )}
-                            <View style={{ marginTop: 6 }}>
+                            <View>
                                 {focused ? (
-                                    <IndicatorIcon />
+                                    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                        <FavouriteSVG fill={theme.bottomTabItemColor.selected} />
+                                        <Text
+                                            style={[
+                                                styles.tabBarLable,
+                                                { color: theme.bottomTabItemColor.selected },
+                                            ]}
+                                        >
+                                            Favourite
+                                        </Text>
+                                    </View>
                                 ) : (
-                                    <View
-                                        style={{
-                                            height: 10,
-                                            width: '100%',
-                                            backgroundColor: 'black',
-                                        }}
-                                    ></View>
+                                    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                        <FavouriteSVG fill={theme.bottomTabItemColor.unSelected} />
+                                        <Text
+                                            style={[
+                                                styles.tabBarLable,
+                                                { color: theme.bottomTabItemColor.unSelected },
+                                            ]}
+                                        >
+                                            Favourite
+                                        </Text>
+                                    </View>
                                 )}
+                                <View style={{ marginTop: 6 }}>
+                                    {focused ? (
+                                        <IndicatorIcon />
+                                    ) : (
+                                        <View
+                                            style={{
+                                                height: 10,
+                                                width: '100%',
+                                            }}
+                                        ></View>
+                                    )}
+                                </View>
                             </View>
+                            <View style={focused ? styles.seperatonIcon : [styles.seperatonIcon, { backgroundColor: '#AD4A44' }]} />
                         </View>
                     ),
                 }}
                 name={RouteTexts.FAVOURITE}
-                component={Fav}
-            />
+                component={Fav}>
+            </Tab.Screen >
             <Tab.Screen
                 options={{
                     headerShown: false,
                     tabBarLabel: '',
                     tabBarShowLabel: false,
                     tabBarActiveTintColor: 'white',
-                    // tabBarLabelStyle: {
-                    //     // color: '#EDCB76',
-                    //     color: '#FFAAA5',
-                    //     fontSize: 10,
-                    //     fontWeight: '600',
-                    //     fontFamily: 'Mulish-Regular'
-                    // },
                     tabBarIcon: ({ color, size, focused }) => (
-                        <View style={styles.IconStyles}>
-                            {focused ? (
-                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                    <View style={{ marginBottom: 7 }}>
-                                        {/* <ActiveMore /> */}
-                                        <MoreSVG fill={theme.bottomTabItemColor.selected} />
-                                    </View>
-
-                                    <Text
-                                        style={[
-                                            styles.tabBarLable,
-                                            { color: theme.bottomTabItemColor.selected },
-                                        ]}
-                                    >
-                                        More
-                                    </Text>
-                                </View>
-                            ) : (
-                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                    <View style={{ marginBottom: 7 }}>
-                                        {/* <InActiveMore /> */}
-                                        <MoreSVG fill={theme.bottomTabItemColor.unSelected} />
-                                    </View>
-                                    <Text
-                                        style={[
-                                            styles.tabBarLable,
-                                            { color: theme.bottomTabItemColor.unSelected },
-                                        ]}
-                                    >
-                                        More
-                                    </Text>
-                                </View>
-                            )}
-                            <View style={{ marginTop: 10 }}>
+                        <View style={[styles.IconStyles]}>
+                            <View>
                                 {focused ? (
-                                    <IndicatorIcon />
+                                    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                        <View style={{ marginBottom: 7 }}>
+                                            <MoreSVG fill={theme.bottomTabItemColor.selected} />
+                                        </View>
+                                        <Text
+                                            style={[
+                                                styles.tabBarLable,
+                                                { color: theme.bottomTabItemColor.selected },
+                                            ]}>
+                                            More
+                                        </Text>
+                                    </View>
                                 ) : (
-                                    <View
-                                        style={{
-                                            height: 6,
-                                            width: '100%',
-                                            backgroundColor: 'black',
-                                        }}
-                                    ></View>
+                                    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                        <View style={{ marginBottom: 7 }}>
+                                            <MoreSVG fill={theme.bottomTabItemColor.unSelected} />
+                                        </View>
+                                        <Text
+                                            style={[
+                                                styles.tabBarLable,
+                                                { color: theme.bottomTabItemColor.unSelected },
+                                            ]}
+                                        >
+                                            More
+                                        </Text>
+                                    </View>
                                 )}
+                                <View style={{ marginTop: 10 }}>
+                                    {focused ? (
+                                        <IndicatorIcon />
+                                    ) : (
+                                        <View
+                                            style={{
+                                                height: 6,
+                                                width: '100%',
+                                            }}
+                                        ></View>
+                                    )}
+                                </View>
                             </View>
                         </View>
                     ),
@@ -388,7 +314,10 @@ export const styles = StyleSheet.create({
         paddingTop: 10,
         alignSelf: 'center',
         justifyContent: 'center',
-        alignItems: 'center',
+        // alignItems: 'center',
+        flexDirection: 'row',
+        // backgroundColor: 'red',
+        width: Dimensions.get('screen').width / 5
         // position: 'absolute',
         // bottom: 0,
     },
@@ -398,4 +327,5 @@ export const styles = StyleSheet.create({
         // fontWeight: '600',
         fontFamily: 'Mulish-Regular',
     },
+    seperatonIcon: { height: 20, width: 1, backgroundColor: 'white', marginHorizontal: 12, marginVertical: 5 }
 });

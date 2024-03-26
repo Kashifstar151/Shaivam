@@ -17,8 +17,8 @@ import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import MusicContainer from '../../../assets/Images/Frame 83.svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CardComponents from '../../components/CardComponents';
-import { colors } from '../../Helpers';
-import { useTranslation } from 'react-i18next';
+// import { colors } from '../../Helpers';
+// import { useTranslation } from 'react-i18next';
 import '../../../localization';
 import { ThemeContext } from '../../Context/ThemeContext';
 import bgImg from '../../../assets/Images/Background.png';
@@ -32,12 +32,39 @@ import HeadingAndView from './HeadingAndView';
 import PlaceCard from './PlaceCard';
 import { RFValue } from 'react-native-responsive-fontsize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import AntDesign from 'react-native-vector-icons/dist/Feather';
+import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import Feather from 'react-native-vector-icons/dist/Feather'
 // import { gStyles } from '../../Helpers/GlobalStyles';
-import { MostPlayedList } from '../../Databases/AudioPlayerDatabase';
+import { AddSongToDatabase, MostPlayedList } from '../../Databases/AudioPlayerDatabase';
 import { useIsFocused } from '@react-navigation/native';
+import { colors } from '../../Helpers';
 
 const SongAndAudio = ({ item, index, theme }) => {
+    const [fav, setFav] = useState(false)
+    const FavouriteAudios = (res) => {
+        // TrackPlayer.getActiveTrack()
+        //     .then((res) => {
+        AddSongToDatabase(
+            'sf',
+            [
+                res?.id,
+                res?.url,
+                res?.title,
+                res?.artist,
+                res?.categoryName,
+                res?.thalamOdhuvarTamilname,
+                res?.thirumariasiriyar,
+            ],
+            (callbacks) => {
+                if (callbacks?.message == 'Success') {
+                    setFav(true)
+                }
+            }
+        );
+        // })
+        // .catch((err) => {
+        // });
+    };
     return (
         <View
             style={{
@@ -78,14 +105,13 @@ const SongAndAudio = ({ item, index, theme }) => {
                     </Text>
                 </View>
             </View>
-            <TouchableOpacity>
-                <AntDesign name="heart" size={22} />
+            <TouchableOpacity onPress={fav ? null : () => FavouriteAudios(item)}>
+                {fav ? <AntDesign name="heart" size={22} color={'#C1554E'} /> : <Feather name="heart" size={22} />}
             </TouchableOpacity>
         </View>
     );
     // return<Text>dhjkshajk</Text>;
 };
-
 const HomeScreen = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
     const [compHeight, setCompHeight] = useState();
@@ -150,7 +176,6 @@ const HomeScreen = ({ navigation }) => {
             navDetail: '',
         },
     ];
-
     const eventData = [
         {
             date: { day: 'THU', dateNo: '06' },
@@ -189,6 +214,7 @@ const HomeScreen = ({ navigation }) => {
             });
         }
     };
+
     const nearByTempleData = [
         {
             img: 'https://s3-alpha-sig.figma.com/img/6700/69a2/03a54c10e1ad2d1887bbcff155403f1b?Expires=1705881600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=PkT20h7qdc~YIQF~kGaGxb5qLWbWMoNT8MiSQGsZSIoaUduQhJ0yvVXL1udbmoV8cZLi-SlUnHH5AbOpoTnnQhYifWVAynjIZ~Jd8nYrdr3eXY9cwTGaqI2SL3iaff5ffwML2Vgyjqyeg8GQFc~TVs26g8s1R41X-sFWgbyp-J7YaAK6SlvFs3m6lwGKnIe8BFr1qsjom6qDOp8o~y6JgYInVyUpYtemjMMXGUrQgD0BJOrCKaKfG2t-jsW-VTrlrKHrKRe7arx-wVkde531J~IjCjednhvbsCV3e7ZL3Y4u9D7p1MEvkJe5WSxS7sarKFjY2S-qrgRPAvhmAxHfNA__',
@@ -206,7 +232,6 @@ const HomeScreen = ({ navigation }) => {
             address: 'Kanakapura road, Banglore',
         },
     ];
-
     const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
     const [screenHeight, setScreenheight] = useState(Dimensions.get('window').height);
     const [orientation, setOrientation] = useState('PORTRAIT');
@@ -345,7 +370,7 @@ const HomeScreen = ({ navigation }) => {
                         fontSize: RFValue(18, 800),
                         fontWeight: 'bold',
                         letterSpacing: 5,
-                        color: theme.textColor,
+                        color: '#B6B6B6',
                     }}
                     onLayout={(event) => {
                         const { width, height } = event.nativeEvent.layout;
@@ -402,15 +427,17 @@ const HomeScreen = ({ navigation }) => {
                                     We have created playlists for you
                                 </Text>
                             </View>
-
-                            <Text
-                                style={{
-                                    fontSize: RFValue(16, 800),
-                                    color: '#fff',
-                                }}
-                            >
-                                View all
-                            </Text>
+                            <Pressable style={{ flexDirection: 'row', }}>
+                                <Text
+                                    style={{
+                                        fontSize: RFValue(16, 800),
+                                        color: '#fff',
+                                    }}
+                                >
+                                    View all
+                                </Text>
+                                <Icon name='arrow-right-alt' color={'#FFFFFF'} size={24} />
+                            </Pressable>
                         </View>
                     </ImageBackground>
                     <View
@@ -453,7 +480,7 @@ const HomeScreen = ({ navigation }) => {
                 <View style={{ paddingBottom: 15, paddingHorizontal: 15 }}>
                     <HeadingAndView
                         viewBtnColor={'#C1554E'}
-                        title={'Upcoming Events'}
+                        title={'Upcoming Festivals'}
                         theme={{ textColor: theme.textColor }}
                         onPress={() => { }}
                     />
