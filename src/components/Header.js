@@ -16,23 +16,22 @@ const Header = () => {
         await AsyncStorage.setItem('theme', JSON.stringify(isDark ? 'light' : 'dark'));
         // alert(isDark)
         setIsDark(!isDark);
-
     };
     useEffect(() => {
-        getTheme()
-    }, [])
+        getTheme();
+    }, []);
     const getTheme = async () => {
         let key = await AsyncStorage.getItem('theme');
-        console.log("🚀 ~ getTheme ~ key:", key)
-        let k = JSON.parse(key)
+        console.log('🚀 ~ getTheme ~ key:', key);
+        let k = JSON.parse(key);
         if (k == 'light') {
-            setIsDark(false)
+            setIsDark(false);
             setTheme(light);
         } else {
-            setIsDark(true)
+            setIsDark(true);
             setTheme(dark);
         }
-    }
+    };
     useEffect(() => {
         // changeTheme()
         setTheme(isDark ? dark : light);
@@ -48,8 +47,12 @@ const Header = () => {
                     style={{ height: 50, width: 50 }}
                 />
                 <View style={{ justifyContent: 'center', paddingHorizontal: 10 }}>
-                    <Text style={{ fontSize: 11, color: colors.grey2 }}>Welcome to</Text>
-                    <Text style={{ fontSize: 14, fontWeight: '600', color: colors.grey2 }}>
+                    <Text style={{ fontSize: 11, color: colors.grey2, fontFamily: 'Lora-Medium' }}>
+                        Welcome to
+                    </Text>
+                    <Text
+                        style={{ fontSize: 14, fontFamily: 'Lora-SemiBold', color: colors.grey2 }}
+                    >
                         Shaivam.org
                     </Text>
                 </View>
@@ -79,7 +82,13 @@ const Header = () => {
                             </View>
                         )} */}
 
-                        <View style={{ alignItems: 'center', flexDirection: isDark ? 'row-reverse' : 'row', gap: 2 }}>
+                        <View
+                            style={{
+                                alignItems: 'center',
+                                flexDirection: isDark ? 'row-reverse' : 'row',
+                                gap: 2,
+                            }}
+                        >
                             <HalfMoonSVG fill={theme.colorscheme === 'dark' ? '#fff' : '#E66158'} />
                             <Text>{isDark ? 'ON' : 'OFF'}</Text>
                         </View>
