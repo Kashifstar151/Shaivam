@@ -13,6 +13,14 @@ import { colors } from '../Helpers';
 import { t } from 'i18next';
 import Header from './Header';
 import SearchInput from './SearchInput';
+import ShaivamTVSVG from './SVGs/ShaivamTVSVG';
+import Temple1Svg from './SVGs/Temple1Svg';
+import RadioSVG from './SVGs/RadioSVG';
+import CalendarSVG from './SVGs/CalendarSVG';
+import KalaPujaSVG from './SVGs/KalaPujaSVG';
+import QuizSVG from './SVGs/QuizSVG';
+import HeartSVG from './SVGs/HeartSVG';
+import Logo from '../../src/assets/Images/Logo.svg';
 
 const RenderItem = ({ blockRef, item, navigation, theme }) => {
     const [blockWidth, setBlockWidth] = useState(0);
@@ -148,22 +156,22 @@ const CardComponents = ({ navigation }) => {
             textColor: theme.textColor,
             subComp: [
                 {
-                    icon: <BookIcon fill={theme.textColor} />,
+                    icon: <ShaivamTVSVG fill={theme.textColor} />,
                     title: 'Shaivam TV',
                     navName: 'Shaivam TV',
                 },
                 {
-                    icon: <OmLetterSvg fill={theme.textColor} />,
+                    icon: <Temple1Svg fill={theme.textColor} />,
                     title: 'Temples',
                     navName: 'Temples',
                 },
                 {
-                    icon: <StrotasSVG fill={theme.textColor} />,
+                    icon: <RadioSVG fill={theme.textColor} />,
                     title: 'Radio',
                     navName: 'Radio',
                 },
                 {
-                    icon: <ShaivaSVG fill={theme.textColor} />,
+                    icon: <CalendarSVG fill={theme.textColor} />,
                     title: 'Calender',
                     navName: 'Calender',
                 },
@@ -178,22 +186,22 @@ const CardComponents = ({ navigation }) => {
 
             subComp: [
                 {
-                    icon: <BookIcon fill={theme.textColorHomeCardYellow} />,
+                    icon: <KalaPujaSVG fill={theme.textColorHomeCardYellow} />,
                     title: 'Kaala Puja',
                     navName: 'Kaala Puja',
                 },
                 {
-                    icon: <OmLetterSvg fill={theme.textColorHomeCardYellow} />,
+                    icon: <QuizSVG fill={theme.textColorHomeCardYellow} />,
                     title: 'Quiz',
                     navName: 'Quiz',
                 },
                 {
-                    icon: <StrotasSVG fill={theme.textColorHomeCardYellow} />,
+                    icon: <HeartSVG fill={theme.textColorHomeCardYellow} />,
                     title: 'Favourites',
                     navName: 'Favourites',
                 },
                 {
-                    icon: <ShaivaSVG fill={theme.textColorHomeCardYellow} />,
+                    icon: <Logo fill={theme.textColorHomeCardYellow} />,
                     title: 'Website',
                     navName: 'Website',
                 },
@@ -212,13 +220,13 @@ const CardComponents = ({ navigation }) => {
                     extraPad={false}
                     styleOverwrite={{ marginHorizontalUnset: true, paddingTop: 24 }}
                 />
-                <HeadingText text={'Shaivam Exclusive'} />
+                <HeadingText text={'Shaivam Exclusives'} />
                 <Text
                     style={{
-                        color: colors.grey3,
+                        color: '#FFFFFF',
                         fontSize: 12,
                         marginTop: 5,
-                        fontWeight: '600',
+                        fontWeight: '400',
                     }}
                 >
                     Scroll through and check out what Shaiva, offers {t('Thirumurais')}

@@ -236,8 +236,9 @@ GROUP BY
                 payload: data.filter((i) => i.localBased !== null)[0].localeBased,
             });
             getSqlData(detailQuery, (details) => {
-                const query2 = `SELECT * FROM odhuvars WHERE title='${data.filter((i) => i.tamil !== null)[0]?.tamil
-                    }'`;
+                const query2 = `SELECT * FROM odhuvars WHERE title='${
+                    data.filter((i) => i.tamil !== null)[0]?.tamil
+                }'`;
                 getSqlData(query2, (callbacks) => {
                     dispatchMusic({ type: 'SONG_DETAILS', payload: details });
                     dispatchMusic({ type: 'SET_SONG', payload: callbacks });
@@ -539,6 +540,16 @@ GROUP BY
                                 style={styles.InsiderSettingButton}
                             >
                                 <SettingIcon />
+                                <Text
+                                    style={[
+                                        styles.settingText,
+                                        {
+                                            color: colorSet?.textColor,
+                                        },
+                                    ]}
+                                >
+                                    Settings
+                                </Text>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={styles.clearIcon}
@@ -624,8 +635,8 @@ GROUP BY
                                         </Text>
                                     </View>
                                     <Switch
-                                        trackColor={{ false: '#767577', true: '#81b0ff' }}
-                                        thumbColor={tamilSplit ? '#f5dd4b' : '#f4f3f4'}
+                                        trackColor={{ false: '#767577', true: '#000' }}
+                                        thumbColor={tamilSplit ? '#fff' : '#fff'}
                                         ios_backgroundColor="#3e3e3e"
                                         onValueChange={() => {
                                             if (i18n.language === 'en') {
@@ -651,8 +662,8 @@ GROUP BY
                                     </Text>
                                 </View>
                                 <Switch
-                                    trackColor={{ false: '#767577', true: '#81b0ff' }}
-                                    thumbColor={darkMode ? '#f5dd4b' : '#f4f3f4'}
+                                    trackColor={{ false: '#767577', true: '#000' }}
+                                    thumbColor={darkMode ? '#fff' : '#fff'}
                                     ios_backgroundColor="#3e3e3e"
                                     onValueChange={() => toggleSwitch(darkMode, setDarkMode)}
                                     value={darkMode}
@@ -710,7 +721,7 @@ GROUP BY
                                             ? selectedLang !== 'Tamil'
                                                 ? res?.rawSong
                                                 : res?.tamilExplanation ||
-                                                'Text currently not available'
+                                                  'Text currently not available'
                                             : res?.tamilSplit || 'Text currently not available'}
                                     </Text>
                                 )}
