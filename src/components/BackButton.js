@@ -14,7 +14,7 @@ const BackButton = ({
     secondMiddleText,
     rightIcon,
     buttonDisable,
-    nandiLogo
+    nandiLogo,
 }) => {
     console.log(Platform, 'Platform.OS');
     return (
@@ -31,7 +31,14 @@ const BackButton = ({
                     marginTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 30 : 0,
                 }}
             >
-                <View style={{ flexDirection: 'row', marginTop: 10, paddingHorizontal: 5 }}>
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        marginTop: 10,
+                        paddingHorizontal: 5,
+                    }}
+                >
                     {buttonDisable ? null : (
                         <TouchableOpacity
                             style={{ alignSelf: 'center' }}
@@ -70,10 +77,7 @@ const BackButton = ({
                             <Icon name="sharealt" size={24} color="white" />
                         </TouchableOpacity>
                     )}
-                    {
-                        nandiLogo == false ? null : <NandiLogo />
-                    }
-
+                    {nandiLogo == false ? null : <NandiLogo />}
                 </View>
             </View>
             {firstText && (
