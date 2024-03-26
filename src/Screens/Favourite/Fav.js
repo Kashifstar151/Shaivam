@@ -132,7 +132,7 @@ const Fav = ({ navigation }) => {
                             fontSize: RFValue(10),
                             fontWeight: '600',
                             fontFamily: 'Mulish-Regular',
-                            color: theme.textColor,
+                            color: '#222222',
                         }}
                     >
                         {item.title}
@@ -142,7 +142,7 @@ const Fav = ({ navigation }) => {
                             fontSize: RFValue(8),
                             fontWeight: '400',
                             fontFamily: 'Mulish-Regular',
-                            color: theme.textColor,
+                            color: '#222222',
                         }}
                     >
                         {item.title}
@@ -151,13 +151,12 @@ const Fav = ({ navigation }) => {
             </View>
             <View style={{ flexDirection: 'row', }}>
                 <TouchableOpacity style={{ marginRight: 10 }}>
-                    <Icon name="share" size={22} color={theme.textColor} />
+                    <Icon name="share" size={22} color={'#222222'} />
                 </TouchableOpacity>
-
                 <TouchableOpacity onPress={() => confirmRemove(item)}>
                     {selecetedHeader == 'Favourites' ?
                         <AntDesign name="heart" size={20} color={'#C1554E'} /> :
-                        <Icon name="delete" size={22} color={theme.textColor} />}
+                        <Icon name="delete" size={22} color={'#222222'} />}
                 </TouchableOpacity>
             </View>
         </Pressable>

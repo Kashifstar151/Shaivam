@@ -33,6 +33,16 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Want to accept your location</string>
+  <key>NSLocationAlwaysUsageDescription</key>
+  <string>Program requires GPS to track cars and job orders</string>
+  <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+  <string>Program requires GPS to track cars and job orders</string>
+  <key>NSMicrophoneUsageDescription</key>
+  <string>This app uses your Microphone to allow Voice over IP communication with the Program Admin system</string>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>Shaivam want to access your gallary</string>
+  <key>NSAppleMusicUsageDescription</key>
+  <string>Play using while you are hiking</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
