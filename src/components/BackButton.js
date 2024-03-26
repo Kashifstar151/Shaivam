@@ -34,65 +34,88 @@ const BackButton = ({
                 <View
                     style={{
                         flexDirection: 'row',
-                        alignItems: 'center',
-                        marginTop: 10,
                         paddingHorizontal: 5,
+                        alignItems: 'center',
+                        flex: 1,
+                        justifyContent: 'space-between',
                     }}
                 >
-                    {buttonDisable ? null : (
-                        <TouchableOpacity
-                            style={{ alignSelf: 'center' }}
-                            onPress={() => navigation.goBack()}
-                        >
-                            {!color ? <WhiteBackButton /> : <BackIcon />}
-                        </TouchableOpacity>
-                    )}
-
-                    <View>
-                        {middleText && (
-                            <View style={{ paddingHorizontal: 10 }}>
-                                <Text style={{ fontSize: 14, fontWeight: '500', color: '#FFFFFF' }}>
-                                    {middleText}
-                                </Text>
-                            </View>
+                    <View style={{ flexDirection: 'row', flex: 1 }}>
+                        {buttonDisable ? null : (
+                            <TouchableOpacity
+                                style={{ alignSelf: 'center' }}
+                                onPress={() => navigation.goBack()}
+                            >
+                                {!color ? <WhiteBackButton /> : <BackIcon />}
+                            </TouchableOpacity>
                         )}
-                        {secondMiddleText && (
-                            <View style={{ paddingHorizontal: 10, marginTop: 5 }}>
+
+                        <View>
+                            {firstText && (
                                 <Text
                                     style={{
-                                        fontSize: 14,
-                                        fontWeight: '500',
-                                        color: '#FFFFFF',
+                                        marginHorizontal: 10,
+                                        fontFamily: 'Lora-Regular',
+                                        fontSize: 24,
+                                        fontWeight: '700',
+                                        color: 'white',
                                     }}
                                 >
-                                    {secondMiddleText}
+                                    {firstText}
                                 </Text>
-                            </View>
+                            )}
+                            {middleText && (
+                                <View style={{ paddingHorizontal: 10 }}>
+                                    <Text
+                                        style={{
+                                            fontSize: 14,
+                                            fontWeight: '500',
+                                            color: '#FFFFFF',
+                                        }}
+                                    >
+                                        {middleText}
+                                    </Text>
+                                </View>
+                            )}
+
+                            {secondMiddleText && (
+                                <View
+                                    style={{
+                                        paddingHorizontal: 10,
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: 14,
+                                            fontWeight: '500',
+                                            color: '#FFFFFF',
+                                        }}
+                                    >
+                                        {secondMiddleText}
+                                    </Text>
+                                </View>
+                            )}
+                        </View>
+                    </View>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                        }}
+                    >
+                        {rightIcon && (
+                            <TouchableOpacity
+                                style={{
+                                    paddingHorizontal: 5,
+                                    alignSelf: 'center',
+                                }}
+                            >
+                                <Icon name="sharealt" size={24} color="white" />
+                            </TouchableOpacity>
                         )}
+                        {nandiLogo == false ? null : <NandiLogo />}
                     </View>
                 </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    {rightIcon && (
-                        <TouchableOpacity style={{ paddingHorizontal: 5 }}>
-                            <Icon name="sharealt" size={24} color="white" />
-                        </TouchableOpacity>
-                    )}
-                    {nandiLogo == false ? null : <NandiLogo />}
-                </View>
             </View>
-            {firstText && (
-                <Text
-                    style={{
-                        marginHorizontal: 10,
-                        fontFamily: 'Lora-Regular',
-                        fontSize: 24,
-                        fontWeight: '700',
-                        color: 'white',
-                    }}
-                >
-                    {firstText}
-                </Text>
-            )}
         </View>
     );
 };
