@@ -55,7 +55,7 @@ const ThrimuraiList = ({ navigation }) => {
     ];
 
     const { t, i18n } = useTranslation();
-    const isFocuced = useIsFocused()
+    const isFocuced = useIsFocused();
     // const selectedLngCode = i18n.language;
     // const setLng = (lngCode) => i18n.changeLanguage(lngCode);
 
@@ -260,7 +260,7 @@ const ThrimuraiList = ({ navigation }) => {
                     >
                         {/* red */}
                         <GradientContainer
-                            // textColor={theme.textColor}
+                            textColor={theme.textColor}
                             Icon={<BookIcon fill={theme.textColor} />}
                             name={t('(2nd bar pink)')}
                             // name={thrimurais[8]?.name}
