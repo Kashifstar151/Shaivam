@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import { colors } from '../../Helpers';
 import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '../../Context/ThemeContext';
+import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 
 const ChooseLanguage = ({ selected, setSelected }) => {
     const { i18n } = useTranslation();
@@ -41,15 +42,23 @@ const ChooseLanguage = ({ selected, setSelected }) => {
 
     const { theme } = useContext(ThemeContext);
     return (
-        <View style={{ backgroundColor: theme.backgroundColor }}>
-            <View style={{ paddingHorizontal: 10 }}>
+        <View style={{ flex: 1 }}>
+            <View style={{ padding: 10 }}>
                 <Text style={[styles.headingText, { color: theme.textColor }]}>
                     Select Your Language
                 </Text>
-                <Text style={styles.descriptionText}>Changes will be made across the app</Text>
+                <Text
+                    style={[
+                        styles.descriptionText,
+                        {
+                            color: theme.textColor,
+                        },
+                    ]}
+                >
+                    Changes will be made across the app
+                </Text>
             </View>
-            <FlatList
-                contentContainerStyle={{ marginTop: 10 }}
+            <BottomSheetFlatList
                 data={language}
                 renderItem={({ item, index }) => (
                     <Pressable style={styles.list} onPress={() => handleClick(item)}>
