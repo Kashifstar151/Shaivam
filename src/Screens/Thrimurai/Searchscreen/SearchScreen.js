@@ -40,16 +40,23 @@ const SearchScreen = ({ navigation, route }) => {
             setIsSearched(false);
         };
     }, [fktrimuria]);
-
+    const normalizeString = (str) => {
+        setSearchText(str
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase())
+        return str
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase();
+    };
     const getDataFromSql = (e) => {
         setIsSearched(false);
 
         if (searchText && searchText.length >= 2) {
             getSqlData(
-                `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${searchText}%' and locale='${
-                    i18n.language === 'en-IN' ? 'RoI' : i18n.language
-                }' ${
-                    !fktrimuria.has(0) ? `and fkTrimuria IN (${[...fktrimuria].join(',')})` : ''
+                `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${normalizeString(searchText)}%' and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language
+                }' ${!fktrimuria.has(0) ? `and fkTrimuria IN (${[...fktrimuria].join(',')})` : ''
                 } GROUP BY titleS  ;`,
                 // `SELECT * FROM thirumurais WHERE search_title='%திருஞானசம்பந்தர்தேவாரம்-1.031-திருக்குரங்கணின்முட்டம்-விழுநீர்மழுவாள்படை%' LIMIT 10 OFFSET 0;`,
                 (callbacks) => {
@@ -57,12 +64,11 @@ const SearchScreen = ({ navigation, route }) => {
                 }
             );
             getSqlData(
-                `SELECT * FROM thirumurai_songs WHERE searchTitle LIKE '%${searchText}%' ${
-                    !fktrimuria.has(0) ? `and thirumuraiId IN (${[...fktrimuria].join(',')})` : ''
-                } and locale='${
-                    i18n.language === 'en-IN' ? 'RoI' : i18n.language
+                `SELECT * FROM thirumurai_songs WHERE searchTitle LIKE '%${normalizeString(searchText)}%' ${!fktrimuria.has(0) ? `and thirumuraiId IN (${[...fktrimuria].join(',')})` : ''
+                } and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language
                 }' ORDER BY thirumuraiId,prevId,songNo ASC `,
                 (callbacks) => {
+                    // console.log("🚀 ~ getDataFromSql ~ callbacks:", JSON.stringify(callbacks, 0, 2))
                     setRawSongs(callbacks);
                 }
             );
@@ -148,7 +154,7 @@ const SearchScreen = ({ navigation, route }) => {
     };
 
     const renderResult = (item, index, key) => {
-        console.log('🚀 ~ renderResult ~ item:', JSON.stringify(item, 0, 2));
+        // console.log('🚀 ~ renderResult ~ item:', JSON.stringify(item, 0, 2));
         return (
             <Pressable
                 style={{ marginVertical: 10 }}
@@ -157,6 +163,7 @@ const SearchScreen = ({ navigation, route }) => {
                         data: item,
                         searchedword: searchText,
                         searchScreen: true,
+                        songNo: item?.songNo
                     })
                 }
             >
@@ -253,26 +260,22 @@ const SearchScreen = ({ navigation, route }) => {
                                     }}
                                 >
                                     {`${item?.id === 0 ? 'All' : ''} `}
-                                    {`${
-                                        item?.id > 0 && item?.id < 8
-                                            ? `${t(`Thrimurai ${item?.id}`)}`
-                                            : ''
-                                    }`}
-                                    {`${
-                                        item?.id >= 8 && item?.id !== 10 && item?.id !== 11
-                                            ? `${t(nameMap[`Thrimurai ${item?.id}`])}`
-                                            : ''
-                                    }`}
-                                    {`${
-                                        item?.id === 10
-                                            ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[0]}`
-                                            : ''
-                                    }`}
-                                    {`${
-                                        item?.id === 11
-                                            ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[1]}`
-                                            : ''
-                                    }`}
+                                    {`${item?.id > 0 && item?.id < 8
+                                        ? `${t(`Thrimurai ${item?.id}`)}`
+                                        : ''
+                                        }`}
+                                    {`${item?.id >= 8 && item?.id !== 10 && item?.id !== 11
+                                        ? `${t(nameMap[`Thrimurai ${item?.id}`])}`
+                                        : ''
+                                        }`}
+                                    {`${item?.id === 10
+                                        ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[0]}`
+                                        : ''
+                                        }`}
+                                    {`${item?.id === 11
+                                        ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[1]}`
+                                        : ''
+                                        }`}
                                 </Text>
                             </TouchableOpacity>
                         )}

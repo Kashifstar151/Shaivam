@@ -63,7 +63,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     //     createFromLocation: 1,
     // });
     const isFocused = useIsFocused;
-    const { data, downloaded, searchedword, searchScreen } = route.params || {};
+    const { data, downloaded, searchedword, searchScreen, songNo } = route.params || {};
     // console.log('🚀 ~ ThrimuraiSong ~ data:', JSON.stringify(data), downloaded);
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
@@ -76,6 +76,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const language = ['Original', 'Tamil', 'English', 'Hindi'];
     const [selectedLang, setSelectedLang] = useState('Original');
     const [fontSizeCount, setFontSizeCount] = useState(null);
+    const [refFlatList, setRefFlatList] = useState(null)
+    const flatListRef = useRef(null)
 
     const initializeTheFontSize = async () => {
         const value = await AsyncStorage.getItem('@lyricsFontSize');
@@ -241,6 +243,7 @@ GROUP BY
                 getSqlData(query2, (callbacks) => {
                     dispatchMusic({ type: 'SONG_DETAILS', payload: details });
                     dispatchMusic({ type: 'SET_SONG', payload: callbacks });
+                    scrollToIndex()
                 });
             });
         });
@@ -276,7 +279,7 @@ GROUP BY
                     style={{
                         fontFamily: 'AnekTamil-Bold',
                         fontSize: 14,
-                        color: colorSet.textColor,
+                        color: colorSet?.textColor,
                         // fontWeight: '400',
                     }}
                     highlightStyle={{
@@ -293,7 +296,17 @@ GROUP BY
             </View>
         );
     };
-
+    const scrollToIndex = () => {
+        console.log("songnonsjc", typeof songNo)
+        flatListRef?.current.scrollToIndex({
+            animated: true,
+            index: 9,
+        });
+    };
+    const getItemLayOut = (item, index) => {
+        console.log("🚀 ~ getItemLayOut ~ index:", index)
+        return { length: 260, offset: 260 * index, index }
+    }
     const setUpPlayer = useCallback(
         async (song, from) => {
             try {
@@ -535,7 +548,7 @@ GROUP BY
                             }}
                         >
                             <TouchableOpacity
-                                onPress={toggleStatusBar}
+                                onPress={scrollToIndex}
                                 style={styles.InsiderSettingButton}
                             >
                                 <SettingIcon />
@@ -644,7 +657,6 @@ GROUP BY
                                             fontFamily: 'Mulish-Regular',
                                             color: '#777777',
                                             fontSize: 10,
-                                            // fontWeight: '700',
                                         }}
                                     >
                                         Turn on to view thirumurais as songs
@@ -682,79 +694,60 @@ GROUP BY
                     </TouchableOpacity>
                 )}
             </View>
-            <ScrollView style={styles.lyricsContainer} nestedScrollEnabled>
+            <View style={styles.lyricsContainer} nestedScrollEnabled>
                 <View style={{ paddingBottom: 300, paddingHorizontal: 20 }}>
                     {musicState?.songDetails?.length > 0 &&
-                        musicState?.songDetails?.map((res, index) => (
-                            <View
-                                style={{
-                                    borderBottomColor: colors.grey3,
-                                    borderBottomWidth: 1,
-                                    paddingBottom: 7,
-                                    flexDirection: 'row',
-                                }}
-                            >
-                                {searchScreen ? (
-                                    renderResult(res)
-                                ) : (
+                        <FlatList
+                            keyExtractor={item => item?.id}
+                            getItemLayout={getItemLayOut}
+                            ref={flatListRef}
+                            data={musicState?.songDetails}
+                            renderItem={({ item, index }) => (
+                                <View
+                                    style={{
+                                        borderBottomColor: colors.grey3,
+                                        borderBottomWidth: 1,
+                                        paddingBottom: 7,
+                                        flexDirection: 'row',
+                                    }}
+                                >
+                                    {searchScreen ? (
+                                        renderResult(item)
+                                    ) : (
+                                        <Text
+                                            style={[
+                                                styles.lyricsText,
+                                                {
+                                                    fontSize: fontSizeCount,
+                                                    color: colorSet?.lyricsText.color,
+                                                },
+                                            ]}
+                                        >
+                                            {!(tamilSplit && i18n.language === 'en')
+                                                ? selectedLang !== 'Tamil'
+                                                    ? item?.rawSong
+                                                    : item?.tamilExplanation ||
+                                                    'Text currently not available'
+                                                : item?.tamilSplit || 'Text currently not available'}
+                                        </Text>
+                                    )}
                                     <Text
                                         style={[
                                             styles.lyricsText,
                                             {
                                                 fontSize: fontSizeCount,
+                                                alignSelf: 'flex-end',
                                                 color: colorSet?.lyricsText.color,
                                             },
                                         ]}
                                     >
-                                        {!(tamilSplit && i18n.language === 'en')
-                                            ? selectedLang !== 'Tamil'
-                                                ? res?.rawSong
-                                                : res?.tamilExplanation ||
-                                                'Text currently not available'
-                                            : res?.tamilSplit || 'Text currently not available'}
+                                        {item?.songNo}
                                     </Text>
-                                )}
-                                <Text
-                                    style={[
-                                        styles.lyricsText,
-                                        {
-                                            fontSize: fontSizeCount,
-                                            alignSelf: 'flex-end',
-                                            color: colorSet?.lyricsText.color,
-                                        },
-                                    ]}
-                                >
-                                    {res?.songNo}
-                                </Text>
-                            </View>
-                        ))}
+                                </View>
+                            )} />
+                    }
                 </View>
-            </ScrollView>
-            {/* <BottomSheet
-                handleIndicatorStyle={{ backgroundColor: '#FFF7E6' }}
-                handleStyle={{
-                    backgroundColor: '#222222',
-                    // borderTopEndRadius: 15,
-                    // borderTopLeftRadius: 15,
-                    paddingTop: 20,
-                    position: 'absolute',
-                    right: 0,
-                    bottom: 0,
-                    // backgroundColor: '#222222',
-                    borderTopEndRadius: 15,
-                    borderTopLeftRadius: 15,
-                    alignSelf: 'flex-end',
-                    width:
-                        orientation == 'LANDSCAPE'
-                            ? Dimensions.get('window').width / 2
-                            : Dimensions.get('window').width,
-                }}
-
-                ref={bottomSheetRef}
-                snapPoints={snapPoints}
-                index={1}
-
-            > */}
+            </View>
             <Animated.View
                 style={{
                     paddingTop: 20,
