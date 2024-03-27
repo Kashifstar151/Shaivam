@@ -133,13 +133,13 @@ const CardComponents = ({ navigation }) => {
                 },
                 {
                     icon: <OmLetterSvg fill={theme.textColorHomeCardYellow} />,
-                    title: 'Stotras',
-                    navName: 'Stotras',
+                    title: 'Vedas',
+                    navName: 'Vedas',
                 },
                 {
                     icon: <StrotasSVG fill={theme.textColorHomeCardYellow} />,
-                    title: 'Vedas',
-                    navName: 'Vedas',
+                    title: 'Stotras',
+                    navName: 'Stotras',
                 },
                 {
                     icon: <ShaivaSVG fill={theme.textColorHomeCardYellow} />,
