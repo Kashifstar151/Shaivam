@@ -26,7 +26,7 @@ const HomePlaylistCard = ({
             style={{
                 width: 280,
                 // backgroundColor: 'red',
-                height: 160,
+                height: 165,
                 borderRadius: 15,
                 marginRight: 15,
                 padding: 15,
