@@ -244,6 +244,7 @@ GROUP BY
                     dispatchMusic({ type: 'SONG_DETAILS', payload: details });
                     dispatchMusic({ type: 'SET_SONG', payload: callbacks });
                     scrollToIndex()
+
                 });
             });
         });
@@ -258,6 +259,7 @@ GROUP BY
         if (downloaded) {
             setUpPlayer(data);
         }
+
     }, [data]);
 
     const toggleSwitch = (value, callbacks) => {
@@ -296,13 +298,19 @@ GROUP BY
             </View>
         );
     };
+    useEffect(() => {
+        setTimeout(() => {
+            scrollToIndex()
+        }, 2000)
+    }, [flatListRef])
     const scrollToIndex = () => {
-        console.log("songnonsjc", typeof songNo)
-        flatListRef?.current.scrollToIndex({
+        // console.log("songnonsjc", typeof songNo)
+        flatListRef?.current?.scrollToIndex({
             animated: true,
-            index: 9,
+            index: songNo,
         });
     };
+
     const getItemLayOut = (item, index) => {
         console.log("🚀 ~ getItemLayOut ~ index:", index)
         return { length: 260, offset: 260 * index, index }
@@ -745,9 +753,78 @@ GROUP BY
                                     </Text>
                                 </View>
                             )} />
+
+                        // musicState?.songDetails?.map((res, index) => (
+                        //     <View
+                        //         style={{
+                        //             borderBottomColor: colors.grey3,
+                        //             borderBottomWidth: 1,
+                        //             paddingBottom: 7,
+                        //             flexDirection: 'row',
+                        //         }}
+                        //     >
+                        //         {searchScreen ? (
+                        //             renderResult(res)
+                        //         ) : (
+                        //             <Text
+                        //                 style={[
+                        //                     styles.lyricsText,
+                        //                     {
+                        //                         fontSize: fontSizeCount,
+                        //                         color: colorSet?.lyricsText.color,
+                        //                     },
+                        //                 ]}
+                        //             >
+                        //                 {!(tamilSplit && i18n.language === 'en')
+                        //                     ? selectedLang !== 'Tamil'
+                        //                         ? res?.rawSong
+                        //                         : res?.tamilExplanation ||
+                        //                         'Text currently not available'
+                        //                     : res?.tamilSplit || 'Text currently not available'}
+                        //             </Text>
+                        //         )}
+                        //         <Text
+                        //             style={[
+                        //                 styles.lyricsText,
+                        //                 {
+                        //                     fontSize: fontSizeCount,
+                        //                     alignSelf: 'flex-end',
+                        //                     color: colorSet?.lyricsText.color,
+                        //                 },
+                        //             ]}
+                        //         >
+                        //             {res?.songNo}
+                        //         </Text>
+                        //     </View>
+                        // ))}
                     }
                 </View>
             </View>
+            {/* <BottomSheet
+                handleIndicatorStyle={{ backgroundColor: '#FFF7E6' }}
+                handleStyle={{
+                    backgroundColor: '#222222',
+                    // borderTopEndRadius: 15,
+                    // borderTopLeftRadius: 15,
+                    paddingTop: 20,
+                    position: 'absolute',
+                    right: 0,
+                    bottom: 0,
+                    // backgroundColor: '#222222',
+                    borderTopEndRadius: 15,
+                    borderTopLeftRadius: 15,
+                    alignSelf: 'flex-end',
+                    width:
+                        orientation == 'LANDSCAPE'
+                            ? Dimensions.get('window').width / 2
+                            : Dimensions.get('window').width,
+                }}
+
+                ref={bottomSheetRef}
+                snapPoints={snapPoints}
+                index={1}
+
+            > */}
             <Animated.View
                 style={{
                     paddingTop: 20,

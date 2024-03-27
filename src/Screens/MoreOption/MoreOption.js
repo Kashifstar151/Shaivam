@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import {
     Dimensions,
     FlatList,
@@ -11,6 +11,14 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
+import BottomSheet, {
+    BottomSheetBackdrop,
+    BottomSheetModal,
+    BottomSheetModalProvider,
+    BottomSheetScrollView,
+    BottomSheetView,
+} from '@gorhom/bottom-sheet';
+
 import RBSheet from 'react-native-raw-bottom-sheet';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import Background from '../../components/Background';
@@ -74,11 +82,20 @@ const MoreOption = () => {
         },
     ];
     const [selectedLanguage, setSelectedLanguage] = useState(null);
+    const bottomSheetRef = useRef(null);
+
+    const handleSheetChanges = useCallback((index) => {
+        console.log('handleSheetChanges', index);
+    }, []);
+
     const navigationHandler = (item) => {
         if (item.title == 'Language') {
-            SheetRef.current.open();
+            // SheetRef.current.open();
+            console.log('the jsajks');
+            bottomSheetRef.current?.present();
         }
     };
+
     const rednderItem = (item, index) => {
         // console.log("🚀 ~ file: MoreOption.js:19 ~ rednderItem ~ item:", item)
         return (
@@ -98,6 +115,7 @@ const MoreOption = () => {
             </Pressable>
         );
     };
+
     return (
         <View style={[styles.main, { backgroundColor: theme.backgroundColor }]}>
             <Background>
@@ -114,23 +132,45 @@ const MoreOption = () => {
                     data={option}
                 />
             </View>
-            <View>
-                <RBSheet
-                    closeOnDragDown
-                    ref={SheetRef}
-                    height={Dimensions.get('window').height / 2}
-                    customStyles={{
-                        container: {
-                            backgroundColor:
-                                theme.colorscheme === 'dark' ? theme.backgroundColor : '',
-                            borderTopRightRadius: 20,
-                            borderTopLeftRadius: 20,
-                        },
-                    }}
-                >
-                    <ChooseLanguage setSelected={setSelectedLanguage} selected={selectedLanguage} />
-                </RBSheet>
-            </View>
+            <BottomSheetModal
+                ref={bottomSheetRef}
+                onChange={handleSheetChanges}
+                snapPoints={['50%']}
+                backdropComponent={(props) => (
+                    <BottomSheetBackdrop
+                        {...props}
+                        opacity={0.5}
+                        appearsOnIndex={0}
+                        disappearsOnIndex={-1}
+                    />
+                )}
+                backgroundStyle={{
+                    backgroundColor: theme.backgroundColor,
+                }}
+                handleIndicatorStyle={{
+                    backgroundColor: theme.colorscheme === 'dark' ? '#fff' : '#777777',
+                }}
+                handleStyle={{
+                    borderTopLeftRadius: 20,
+                    borderTopRightRadius: 20,
+                    borderBottomColor: theme.colorscheme === 'dark' ? '#fff' : '#777777',
+
+                    borderBottomWidth: 0.5,
+                }}
+            >
+                <ChooseLanguage setSelected={setSelectedLanguage} selected={selectedLanguage} />
+            </BottomSheetModal>
+            {/* </BottomSheetModalProvider> */}
+
+            {/* <BottomSheet
+                ref={bottomSheetRef}
+                onChange={handleSheetChanges}
+                snapPoints={['10%', '50%', '95%']}
+                index={1}
+                style={{ zIndex: 1000 }}
+            >
+                <View style={{ height: 200, width: 200 }}></View>
+            </BottomSheet> */}
         </View>
     );
 };
