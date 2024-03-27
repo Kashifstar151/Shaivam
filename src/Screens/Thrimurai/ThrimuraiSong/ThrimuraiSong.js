@@ -425,18 +425,6 @@ GROUP BY
                             >
                                 <AruliyavarSVG fill={darkMode ? '#787878' : '#3A1917'} />
                             </View>
-                            {musicState?.metaData?.author ? (
-                                <View style={styles.textSectionDD}>
-                                    <Text style={styles.titleDropDown}>{`${t('Aruliyavar')}`}</Text>
-                                    <Text style={styles.valueDropDown}>
-                                        {t(musicState?.metaData?.author)}
-                                    </Text>
-                                </View>
-                            ) : (
-                                <Text style={styles.valueDropDown}>
-                                    {'Text currently not available'}
-                                </Text>
-                            )}
                             <View style={styles.textSectionDD}>
                                 <Text style={styles.titleDropDown}>{`${t('Aruliyavar')}`}</Text>
                                 <Text style={styles.valueDropDown}>
