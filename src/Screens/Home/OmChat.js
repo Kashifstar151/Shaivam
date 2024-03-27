@@ -37,9 +37,16 @@ const OmChat = () => {
                     overflow: 'hidden',
                     padding: 15,
                     width: screenWidth - dimension.height * 3,
+                    // alignItems: 'center',
                 }}
             >
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                    }}
+                >
                     <View>
                         <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white' }}>
                             Om Namah Shivaya
@@ -65,7 +72,7 @@ const OmChat = () => {
                     letterSpacing: 3,
                 }}
             >
-                Om Chant
+                OM CHANT
             </Text>
         </View>
     );
