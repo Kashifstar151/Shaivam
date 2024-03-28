@@ -2,36 +2,64 @@
   "migIndex": 1,
   "data": [
     {
-      "path": "assets/fonts/Lora-Bold.ttf",
+      "path": "src/assets/fonts/AnekTamil-Bold.ttf",
+      "sha1": "35dc3f24c6afdc54b2ff3e7355140e04729322fa"
+    },
+    {
+      "path": "src/assets/fonts/AnekTamil-Regular.ttf",
+      "sha1": "5a680c3040e9142856478bfc9856b6f95df76517"
+    },
+    {
+      "path": "src/assets/fonts/AnekTamil-SemiBold.ttf",
+      "sha1": "35349592664ecd7969966e3bc05b163eb9924535"
+    },
+    {
+      "path": "src/assets/fonts/Lora-Bold.ttf",
       "sha1": "6181c8c5c0046d8f9a484293108a27bba37618de"
     },
     {
-      "path": "assets/fonts/Lora-BoldItalic.ttf",
+      "path": "src/assets/fonts/Lora-BoldItalic.ttf",
       "sha1": "25f9b29ad281cc336e35c516b6d2c73da4e149d9"
     },
     {
-      "path": "assets/fonts/Lora-Italic.ttf",
+      "path": "src/assets/fonts/Lora-Italic.ttf",
       "sha1": "d73f87c37abe1130d87be288cca54f4887dc17a7"
     },
     {
-      "path": "assets/fonts/Lora-Medium.ttf",
+      "path": "src/assets/fonts/Lora-Medium.ttf",
       "sha1": "75a72ab8c80d696a517f4245c837011646756290"
     },
     {
-      "path": "assets/fonts/Lora-MediumItalic.ttf",
+      "path": "src/assets/fonts/Lora-MediumItalic.ttf",
       "sha1": "e13875499470c43930048db1724d65c5ed86971a"
     },
     {
-      "path": "assets/fonts/Lora-Regular.ttf",
+      "path": "src/assets/fonts/Lora-Regular.ttf",
       "sha1": "d4178fd9d41a324df797c06803fb0aeba8fbacd4"
     },
     {
-      "path": "assets/fonts/Lora-SemiBold.ttf",
+      "path": "src/assets/fonts/Lora-SemiBold.ttf",
       "sha1": "a65c10e353bfd67b7aaba44498063bfc71e829d8"
     },
     {
-      "path": "assets/fonts/Lora-SemiBoldItalic.ttf",
+      "path": "src/assets/fonts/Lora-SemiBoldItalic.ttf",
       "sha1": "27403b82ee87deac15f4fca41dd88e36383faadd"
+    },
+    {
+      "path": "src/assets/fonts/Mulish-Black.ttf",
+      "sha1": "45732c45a85c41474a627b449b06a2477c50b5cd"
+    },
+    {
+      "path": "src/assets/fonts/Mulish-Bold.ttf",
+      "sha1": "97cb4086e384a1e2e8688985b7eb8cbbc63354cb"
+    },
+    {
+      "path": "src/assets/fonts/Mulish-ExtraBold.ttf",
+      "sha1": "eab0fa8dcde903b5fdec3bfe94c645f48cf0bf7d"
+    },
+    {
+      "path": "src/assets/fonts/Mulish-Regular.ttf",
+      "sha1": "65aa946a76999c7fe9a6b4478e9c35db9c80b137"
     }
   ]
 }

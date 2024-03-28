@@ -105,7 +105,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
 
     const toggleStatusBar = () => {
         setVisibleStatusBar(!visibleStatusBar);
-
         AnimatedRN.timing(statusBarHeight, {
             toValue: visibleStatusBar ? 0 : 50, // Animate to 0 to hide, 20 to show
             duration: 200, // Milliseconds it takes to animate
@@ -140,6 +139,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     }, []);
 
     useEffect(() => {
+        fetchAndDisplayDownloads();
         Dimensions.addEventListener('change', ({ window: { width, height } }) => {
             if (width < height) {
                 setOrientation('PORTRAIT');
@@ -164,6 +164,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const { theme, setTheme } = useContext(ThemeContext);
     const { t, i18n } = useTranslation();
     const [selectedLngCode, setSelectedLngCode] = useState(i18n.language);
+    const [downloadList, setDownloadList] = useState([]);
     const langMap = {
         'en-IN': 'RoI',
         English: 'en-IN',
@@ -196,7 +197,24 @@ const ThrimuraiSong = ({ route, navigation }) => {
             setColorSet((prev) => colors.light);
         }
     }, [darkMode]);
+    const fetchAndDisplayDownloads = async () => {
+        try {
+            // const keys = await AsyncStorage.getAllKeys();
+            const parsedMetadata = await AsyncStorage.getItem('downloaded');
+            // console.log("🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:", parsedMetadata)
+            // const metadataKeys = keys.filter(key => key.startsWith('downloaded:'));
+            // const metadata = await AsyncStorage.multiGet(metadataKeys);
+            // const parsedMetadata = metadata.map(([key, value]) => JSON.parse(value));
+            setDownloadList(JSON.parse(parsedMetadata));
+            let data = JSON.parse(parsedMetadata);
+            console.log('🚀 ~ fetchAndDisplayDownloads ~ data: sknks', data);
 
+            // Now `parsedMetadta` contains all of your audio files' metadata
+            // You can use this data to render your downloads page
+        } catch (e) {
+            console.error('Failed to fetch metadata', e);
+        }
+    };
     const changeTranlation = (item) => {
         switch (item) {
             case 'Tamil':
@@ -253,9 +271,23 @@ GROUP BY
                     data.filter((i) => i.tamil !== null)[0]?.tamil
                 }'`;
                 getSqlData(query2, (callbacks) => {
+                    console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
                     dispatchMusic({ type: 'SONG_DETAILS', payload: details });
-                    dispatchMusic({ type: 'SET_SONG', payload: callbacks });
-                    // scrollToIndex();
+                    if (downloadList.length > 0) {
+                        alert(true);
+                        const updatedArray2 = callbacks?.map((item2) => {
+                            const match = downloadList.find((item1) => item1.id === item2.id);
+                            console.log();
+                            return match ? { ...match } : item2; // Replace with the object from array1 if there's a match
+                        });
+                        console.log('🚀 ~ arr ~ arr:', updatedArray2);
+                        dispatchMusic({ type: 'SET_SONG', payload: updatedArray2 });
+                    } else {
+                        dispatchMusic({ type: 'SET_SONG', payload: callbacks });
+                    }
+                    // dispatchMusic({ type: 'SET_SONG', payload: updatedArray2 });
+
+                    scrollToIndex();
                 });
             });
         });
@@ -283,7 +315,7 @@ GROUP BY
     }, [musicState.song]);
 
     const renderResult = (item) => {
-        const parts = item?.rawSong.split('\r\n');
+        // const parts = item?.rawSong.split('\r\n');
         // const data = parts?.split(' ')
         return (
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
@@ -309,9 +341,11 @@ GROUP BY
         );
     };
     useEffect(() => {
-        setTimeout(() => {
-            scrollToIndex();
-        }, 2000);
+        if (searchScreen) {
+            setTimeout(() => {
+                scrollToIndex();
+            }, 2000);
+        }
     }, [flatListRef]);
     const scrollToIndex = () => {
         // console.log("songnonsjc", typeof songNo)
@@ -322,7 +356,7 @@ GROUP BY
     };
 
     const getItemLayOut = (item, index) => {
-        console.log('🚀 ~ getItemLayOut ~ index:', index);
+        // console.log("🚀 ~ getItemLayOut ~ index:", index)
         return { length: 260, offset: 260 * index, index };
     };
     const setUpPlayer = useCallback(
@@ -570,7 +604,7 @@ GROUP BY
                             }}
                         >
                             <TouchableOpacity
-                                onPress={scrollToIndex}
+                                // onPress={scrollToIndex}
                                 style={styles.InsiderSettingButton}
                             >
                                 <SettingIcon />
@@ -717,13 +751,13 @@ GROUP BY
                 )}
             </View>
             <View style={styles.lyricsContainer} nestedScrollEnabled>
-                <View style={{ paddingBottom: 300, paddingHorizontal: 20 }}>
+                <View style={{ paddingBottom: 0, paddingHorizontal: 20 }}>
                     {
                         musicState?.songDetails?.length > 0 && (
                             <FlatList
                                 keyExtractor={(item) => item?.id}
                                 getItemLayout={getItemLayOut}
-                                // ref={flatListRef}
+                                ref={flatListRef}
                                 data={musicState?.songDetails}
                                 renderItem={({ item, index }) => (
                                     <View
@@ -742,6 +776,7 @@ GROUP BY
                                                     styles.lyricsText,
                                                     {
                                                         fontSize: fontSizeCount,
+                                                        alignSelf: 'flex-end',
                                                         color: colorSet?.lyricsText.color,
                                                     },
                                                 ]}
@@ -847,9 +882,10 @@ GROUP BY
                 style={{
                     paddingTop: 20,
                     position: 'absolute',
+                    // backgroundColor: 'blue',
                     right: 0,
                     bottom: 0,
-                    // backgroundColor: '#222222',
+                    backgroundColor: '#222222',
                     borderTopEndRadius: 15,
                     borderTopLeftRadius: 15,
                     alignSelf: 'flex-end',
@@ -881,6 +917,17 @@ GROUP BY
                         </Text>
                     </View>
                 )}
+                <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 5 }}>
+                    <TouchableOpacity
+                        onPress={toggleStatusBar}
+                        style={{
+                            width: 30,
+                            height: 8,
+                            backgroundColor: colors.grey6,
+                            borderRadius: 10,
+                        }}
+                    ></TouchableOpacity>
+                </View>
                 <AudioPlayer
                     setDownloadingLoader={setDownloadingLoader}
                     visibleStatusBar={visibleStatusBar}

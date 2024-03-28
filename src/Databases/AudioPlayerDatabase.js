@@ -14,7 +14,7 @@ export async function AddSongToDatabase(query, body, callbacks) {
     // }
 }
 export const updatefavPlaylist = (query, body, callbacks) => {
-    console.log("🚀 ~ updatefavPlaylist ~ body:", body)
+    // console.log("🚀 ~ updatefavPlaylist ~ body:", body)
     audioPlayerDatabase.executeSql(query, body, (result) => {
         console.log("🚀 ~ audioPlayerDatabase.executeSql ~ result:", result)
         // Alert.alert("Success", "User created successfully.");
@@ -27,7 +27,7 @@ export const updatefavPlaylist = (query, body, callbacks) => {
     });
 }
 export const createUserTable = () => {
-    audioPlayerDatabase.executeSql("CREATE TABLE IF NOT EXISTS fav_odhuvar (id INTEGER, url VARCHAR, title VARCHAR , artist VARCHAR , thalamOdhuvarTamilname VARCHAR, categoryName VARCHAR, thirumariasiriyar VARCHAR ,serialNo INTEGER PRIMARY KEY AUTOINCREMENT)", [], (result) => {
+    audioPlayerDatabase.executeSql("CREATE TABLE IF NOT EXISTS fav_odhuvar (id INTEGER PRIMARY KEY, url VARCHAR, title VARCHAR , artist VARCHAR , thalamOdhuvarTamilname VARCHAR, categoryName VARCHAR, thirumariasiriyar VARCHAR ,serialNo)", [], (result) => {
         console.log("Table created successfully");
     }, (error) => {
         console.log("Create table error", error)
