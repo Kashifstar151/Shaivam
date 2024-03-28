@@ -113,6 +113,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     };
     const [orientation, setOrientation] = useState('PORTRAIT');
     useEffect(() => {
+        fetchAndDisplayDownloads()
         Dimensions.addEventListener('change', ({ window: { width, height } }) => {
             if (width < height) {
                 setOrientation('PORTRAIT');
@@ -144,6 +145,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
                 setDarkMode(false);
             }
         })();
+
     }, []); // to initialize the repeat state of the track player
 
     const { musicState, dispatchMusic } = useContext(MusicContext);
@@ -152,6 +154,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const { theme, setTheme } = useContext(ThemeContext);
     const { t, i18n } = useTranslation();
     const [selectedLngCode, setSelectedLngCode] = useState(i18n.language);
+    const [downloadList, setDownloadList] = useState([])
     const langMap = {
         'en-IN': 'RoI',
         English: 'en-IN',
@@ -184,7 +187,24 @@ const ThrimuraiSong = ({ route, navigation }) => {
             setColorSet((prev) => colors.light);
         }
     }, [darkMode]);
+    const fetchAndDisplayDownloads = async () => {
+        try {
+            // const keys = await AsyncStorage.getAllKeys();
+            const parsedMetadata = await AsyncStorage.getItem('downloaded');
+            // console.log("🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:", parsedMetadata)
+            // const metadataKeys = keys.filter(key => key.startsWith('downloaded:'));
+            // const metadata = await AsyncStorage.multiGet(metadataKeys);
+            // const parsedMetadata = metadata.map(([key, value]) => JSON.parse(value));
+            setDownloadList(JSON.parse(parsedMetadata))
+            let data = JSON.parse(parsedMetadata)
+            console.log("🚀 ~ fetchAndDisplayDownloads ~ data: sknks", data)
 
+            // Now `parsedMetadta` contains all of your audio files' metadata
+            // You can use this data to render your downloads page
+        } catch (e) {
+            console.error('Failed to fetch metadata', e);
+        }
+    };
     const changeTranlation = (item) => {
         switch (item) {
             case 'Tamil':
@@ -237,11 +257,25 @@ GROUP BY
                 payload: data.filter((i) => i.localBased !== null)[0].localeBased,
             });
             getSqlData(detailQuery, (details) => {
+                console.log("🚀 ~ getSqlData ~ details:", JSON.stringify(details, 0, 2))
                 const query2 = `SELECT * FROM odhuvars WHERE title='${data.filter((i) => i.tamil !== null)[0]?.tamil
                     }'`;
                 getSqlData(query2, (callbacks) => {
+                    console.log("🚀 ~ getSqlData ~ callbacks:", JSON.stringify(callbacks, 0, 2))
                     dispatchMusic({ type: 'SONG_DETAILS', payload: details });
-                    dispatchMusic({ type: 'SET_SONG', payload: callbacks });
+                    dispatchMusic({ type: 'SET_SONG', payload: updatedArray2 });
+                    // if (downloadList.length > 0) {
+                    //     alert(true)
+                    //     const updatedArray2 = callbacks?.map(item2 => {
+                    //         const match = downloadList.find(item1 => item1.id === item2.id);
+                    //         console.log()
+                    //         return match ? { ...match } : item2;  // Replace with the object from array1 if there's a match
+                    //     });
+                    //     console.log("🚀 ~ arr ~ arr:", updatedArray2)
+                    //     dispatchMusic({ type: 'SET_SONG', payload: updatedArray2 });
+                    // } else {
+                    //     dispatchMusic({ type: 'SET_SONG', payload: callbacks });
+                    // }
                     scrollToIndex()
 
                 });
@@ -272,7 +306,7 @@ GROUP BY
     }, [musicState.song]);
 
     const renderResult = (item) => {
-        const parts = item?.rawSong.split('\r\n');
+        // const parts = item?.rawSong.split('\r\n');
         // const data = parts?.split(' ')
         return (
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
@@ -431,8 +465,7 @@ GROUP BY
                 style={[
                     styles.headerContainer,
                     { backgroundColor: darkMode ? colors?.faintGrey : colors?.skinColor },
-                ]}
-            >
+                ]}>
                 <View style={[styles.detailsSection, { display: showDetail ? 'flex' : 'none' }]}>
                     <>
                         <View style={styles.container}>
@@ -730,8 +763,7 @@ GROUP BY
                                                     fontSize: fontSizeCount,
                                                     color: colorSet?.lyricsText.color,
                                                 },
-                                            ]}
-                                        >
+                                            ]}>
                                             {!(tamilSplit && i18n.language === 'en')
                                                 ? selectedLang !== 'Tamil'
                                                     ? item?.rawSong
@@ -748,8 +780,7 @@ GROUP BY
                                                 alignSelf: 'flex-end',
                                                 color: colorSet?.lyricsText.color,
                                             },
-                                        ]}
-                                    >
+                                        ]}>
                                         {item?.songNo}
                                     </Text>
                                 </View>

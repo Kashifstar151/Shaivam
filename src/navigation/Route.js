@@ -101,6 +101,7 @@ const Route = () => {
         try {
             const granted = await PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+                // PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
                 {
                     title: 'File Permission',
                     message: 'App needs access to your storage to read and write files.',
@@ -108,7 +109,8 @@ const Route = () => {
                     buttonNegative: 'Cancel',
                     buttonPositive: 'OK',
                 }
-            );
+
+            )
 
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                 console.log('File permissions granted');
