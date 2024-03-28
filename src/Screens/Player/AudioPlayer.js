@@ -102,9 +102,9 @@ const AudioPlayer = ({
     queryForNextPrevId,
     queryForPreviousPrevId,
     visibleStatusBar,
-    setDownloadingLoader
+    setDownloadingLoader,
 }) => {
-    console.log('the render of page =>');
+    console.log('the render of page =>', repeatMode);
 
     // const [oprateMostPlayed, setOprateMostPlayed] = useState(0)
     useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], async (event) => {
@@ -112,8 +112,8 @@ const AudioPlayer = ({
             let index = await TrackPlayer.getActiveTrack();
             setActiveTrack(index);
             // console.log('index', index)
-            const newObj = { ...index, prevId: prevId }
-            updateRecentlyPlayed(newObj)
+            const newObj = { ...index, prevId: prevId };
+            updateRecentlyPlayed(newObj);
         }
     });
     const updateRecentlyPlayed = async (newTrack) => {
@@ -128,7 +128,7 @@ const AudioPlayer = ({
         // Store the updated list back to AsyncStorage
         await AsyncStorage.setItem(`recentTrack`, JSON.stringify(updatedTracks));
     };
-    const [fav, setFav] = useState(false)
+    const [fav, setFav] = useState(false);
     const downloadAudios = () => {
         TrackPlayer.getActiveTrack()
             .then((res) => {
@@ -145,22 +145,21 @@ const AudioPlayer = ({
                     ],
                     (callbacks) => {
                         if (callbacks?.message == 'Success') {
-                            setFav(true)
+                            setFav(true);
                         }
                     }
                 );
             })
-            .catch((err) => {
-            });
+            .catch((err) => {});
     };
     const { position, duration } = useProgress();
     const [paused, setPaused] = useState(false);
     const [ThumbImage, setThumbImage] = useState(null);
     // const [downloadingLoader, setDownloadingLoader] = useState(false);
     const [downloadedSong, setDownloadedSong] = useState(false);
-    const [mostPlayedSongs, setMostPlayedSong] = useState([])
-    const [showModal, setShowModal] = useState(false)
-    const [activeTract, setActiveTrack] = useState(null)
+    const [mostPlayedSongs, setMostPlayedSong] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [activeTract, setActiveTrack] = useState(null);
     const playBackState = usePlaybackState();
     const activeTrack = useActiveTrack();
     // console.log("🚀 ~ activeTrack:", activeTrack)
@@ -168,14 +167,13 @@ const AudioPlayer = ({
         (async () => {
             if (playBackState.state === 'ready') {
                 await TrackPlayer.play();
-                mostPlayed()
-
+                mostPlayed();
             } else if (playBackState.state !== 'playing') {
                 setPaused(false);
             } else {
                 setPaused(true);
             }
-            fetchAndDisplayDownloads()
+            fetchAndDisplayDownloads();
         })();
     }, [playBackState]);
     useEffect(() => {
@@ -183,9 +181,8 @@ const AudioPlayer = ({
             return setThumbImage({ thumbIcon: source });
         });
 
-        Promise.allSettled([createUserTable(), MostPlayedSongList(), getMostPlayedSong(),])
+        Promise.allSettled([createUserTable(), MostPlayedSongList(), getMostPlayedSong()]);
         if (activeTrack) {
-
         }
         // createUserTable();
         // MostPlayedSongList();
@@ -221,37 +218,41 @@ const AudioPlayer = ({
 
     const handleNext = async () => {
         // check whether its last long
-        let queue = await TrackPlayer.getQueue();
-        let checkWhetherLastSong =
-            (await TrackPlayer.getActiveTrack()).id === queue[queue.length - 1].id;
-        if (checkWhetherLastSong && repeatMode === 0) {
-            queryForNextPrevId();
-        } else {
-            await TrackPlayer.skipToNext();
-            await TrackPlayer.play();
-        }
+        // let queue = await TrackPlayer.getQueue();
+        // let checkWhetherLastSong =
+        //     (await TrackPlayer.getActiveTrack()).id === queue[queue.length - 1].id;
+        // if (checkWhetherLastSong && repeatMode === 0) {
+        //     queryForNextPrevId();
+        // } else {
+        //     await TrackPlayer.skipToNext();
+        //     await TrackPlayer.play();
+        // }
+        queryForNextPrevId();
+
         // setPaused(true);
     };
     const handlePrevious = async () => {
-        let queue = await TrackPlayer.getQueue();
-        let checkWhetherLastSong = (await TrackPlayer.getActiveTrack()).id === queue[0].id;
-        if (checkWhetherLastSong && repeatMode === 0) {
-            queryForPreviousPrevId();
-        } else {
-            await TrackPlayer.skipToPrevious();
-            await TrackPlayer.play();
-        }
+        // let queue = await TrackPlayer.getQueue();
+        // let checkWhetherLastSong = (await TrackPlayer.getActiveTrack()).id === queue[0].id;
+        // if (checkWhetherLastSong && repeatMode === 0) {
+        //     queryForPreviousPrevId();
+        // } else {
+        //     await TrackPlayer.skipToPrevious();
+        //     await TrackPlayer.play();
+        // }
+
+        queryForPreviousPrevId();
+
         // setPaused(true);
     };
     const getMostPlayedSong = () => {
-        MostPlayedList('s', callbacks => {
+        MostPlayedList('s', (callbacks) => {
             // console.log("🚀 ~ getMostPlayedSong ~ callbacks:", JSON.stringify(callbacks, 0, 2))
-            setMostPlayedSong(callbacks)
+            setMostPlayedSong(callbacks);
             // mostPlayed(callbacks)
-
-        })
-    }
-    const [downlaodList, setDownloadList] = useState([])
+        });
+    };
+    const [downlaodList, setDownloadList] = useState([]);
     const fetchAndDisplayDownloads = async () => {
         try {
             // const keys = await AsyncStorage.getAllKeys();
@@ -260,15 +261,21 @@ const AudioPlayer = ({
             // const metadataKeys = keys.filter(key => key.startsWith('downloaded:'));
             // const metadata = await AsyncStorage.multiGet(metadataKeys);
             // const parsedMetadata = metadata.map(([key, value]) => JSON.parse(value));
-            setDownloadList(JSON.parse(parsedMetadata))
-            let data = JSON.parse(parsedMetadata)
-            console.log("🚀 ~ fetchAndDisplayDownloads ~ data:", activeTrack)
+            setDownloadList(JSON.parse(parsedMetadata));
+            let data = JSON.parse(parsedMetadata);
+            console.log('🚀 ~ fetchAndDisplayDownloads ~ data:', activeTrack);
             data?.map((item) => {
-                console.log("🚀 ~ data?.map ~ item:", item?.id, activeTrack?.id, item?.prevId, prevId)
+                console.log(
+                    '🚀 ~ data?.map ~ item:',
+                    item?.id,
+                    activeTrack?.id,
+                    item?.prevId,
+                    prevId
+                );
                 if (item?.id == activeTrack?.id && item?.prevId == prevId) {
-                    setDownloadedSong(true)
+                    setDownloadedSong(true);
                 }
-            })
+            });
             // Now `parsedMetadta` contains all of your audio files' metadata
             // You can use this data to render your downloads page
         } catch (e) {
@@ -276,55 +283,64 @@ const AudioPlayer = ({
         }
     };
     const mostPlayed = async (callbacks) => {
-        let count = 1
-        let exist = false
-        await TrackPlayer.getActiveTrack().then((res) => {
-            // console.log("🚀 ~ awaitTrackPlayer.getActiveTrack ~ res:", JSON.stringify(callbacks, 0, 2))
-            // console.log("🚀 ~ awaitTrackPlayer.getActiveTrack ~ res:", JSON.stringify(res, 0, 2))
-            let num = mostPlayedSongs.filter(
-                value => { return value?.id == res?.id ? true : false });
-            console.log("🚀 ~ awaitTrackPlayer.getActiveTrack ~ exist:", num)
-            if (num?.length > 0) {
-                let sql = `UPDATE most_played SET count=? WHERE id=?`;
-                UpdateMostPlayed(sql, [num[0].count + 1, num[0].id], callbacks => {
-                    console.log("🚀 ~ mostPlayedSongs.map ~ callbacks:", callbacks)
-                })
-            } else {
-                AddMostPlayed('s', [
-                    res?.id,
-                    res?.url,
-                    res?.title,
-                    res?.artist,
-                    res?.categoryName,
-                    res?.thalamOdhuvarTamilname,
-                    res?.thirumariasiriyar,
-                    count
-                ], callbacks => {
-                    console.log("🚀 ~ awaitTrackPlayer.getActiveTrack ~ callbacks:", callbacks)
-                })
-            }
-        }).catch((error) => {
-            console.log('error occured in getting current track')
-        })
-    }
+        let count = 1;
+        let exist = false;
+        await TrackPlayer.getActiveTrack()
+            .then((res) => {
+                // console.log("🚀 ~ awaitTrackPlayer.getActiveTrack ~ res:", JSON.stringify(callbacks, 0, 2))
+                // console.log("🚀 ~ awaitTrackPlayer.getActiveTrack ~ res:", JSON.stringify(res, 0, 2))
+                let num = mostPlayedSongs.filter((value) => {
+                    return value?.id == res?.id ? true : false;
+                });
+                console.log('🚀 ~ awaitTrackPlayer.getActiveTrack ~ exist:', num);
+                if (num?.length > 0) {
+                    let sql = `UPDATE most_played SET count=? WHERE id=?`;
+                    UpdateMostPlayed(sql, [num[0].count + 1, num[0].id], (callbacks) => {
+                        console.log('🚀 ~ mostPlayedSongs.map ~ callbacks:', callbacks);
+                    });
+                } else {
+                    AddMostPlayed(
+                        's',
+                        [
+                            res?.id,
+                            res?.url,
+                            res?.title,
+                            res?.artist,
+                            res?.categoryName,
+                            res?.thalamOdhuvarTamilname,
+                            res?.thirumariasiriyar,
+                            count,
+                        ],
+                        (callbacks) => {
+                            console.log(
+                                '🚀 ~ awaitTrackPlayer.getActiveTrack ~ callbacks:',
+                                callbacks
+                            );
+                        }
+                    );
+                }
+            })
+            .catch((error) => {
+                console.log('error occured in getting current track');
+            });
+    };
     const removeFromOfflineDownload = async () => {
         await TrackPlayer.getActiveTrack().then((item) => {
-            let arr = downlaodList.filter((res) => res.id !== selectedItem.id)
+            let arr = downlaodList.filter((res) => res.id !== selectedItem.id);
             // console.log("🚀 ~ removeFromPlaylist ~ arr:", arr)
-            setDownloadList(arr)
-            AsyncStorage.setItem('downloaded', JSON.stringify(arr))
-            setDownloadedSong(false)
-            setShowModal(false)
-
-        })
-    }
-    const [selectedItem, setSelectedItem] = useState([])
+            setDownloadList(arr);
+            AsyncStorage.setItem('downloaded', JSON.stringify(arr));
+            setDownloadedSong(false);
+            setShowModal(false);
+        });
+    };
+    const [selectedItem, setSelectedItem] = useState([]);
     const removeDownload = async () => {
         await TrackPlayer.getActiveTrack().then((item) => {
-            setSelectedItem(item)
-            setShowModal(true)
-        })
-    }
+            setSelectedItem(item);
+            setShowModal(true);
+        });
+    };
     const downloadAudio = () => {
         // let dirs = RNFetchBlob.fs.dirs;
         setDownloadingLoader(true);
@@ -351,7 +367,9 @@ const AudioPlayer = ({
                     const recentTracksJSON = await AsyncStorage.getItem('downloaded');
                     const recentTracks = recentTracksJSON ? JSON.parse(recentTracksJSON) : [];
                     // Check if the track already exists and remove it
-                    const filteredTracks = recentTracks.filter(track => track.id !== jsonValue.id);
+                    const filteredTracks = recentTracks.filter(
+                        (track) => track.id !== jsonValue.id
+                    );
                     // Add the new track to the start of the array
                     const updatedTracks = [jsonValue, ...filteredTracks];
                     // console.log("🚀 ~ updateRecentlyPlayed ~ updatedTracks:", updatedTracks)
@@ -379,16 +397,15 @@ const AudioPlayer = ({
 
     return (
         <>
-
             <View
                 style={
                     orientation == 'LANDSCAPE' || !visibleStatusBar
                         ? {
-                            width: Dimensions.get('window').width / 2,
-                            backgroundColor: '#222222',
-                            height: 70,
-                            alignItems: 'center',
-                        }
+                              width: Dimensions.get('window').width / 2,
+                              backgroundColor: '#222222',
+                              height: 70,
+                              alignItems: 'center',
+                          }
                         : { backgroundColor: '#222222', height: 200 }
                 }
             >
@@ -442,7 +459,10 @@ const AudioPlayer = ({
                             </View>
                             <View>
                                 <Text
-                                    style={[styles.AudioText, { fontWeight: '700', color: '#FFFFFF' }]}
+                                    style={[
+                                        styles.AudioText,
+                                        { fontWeight: '700', color: '#FFFFFF' },
+                                    ]}
                                 >
                                     {activeTrack?.thalamOdhuvarTamilname}
                                 </Text>
@@ -458,7 +478,9 @@ const AudioPlayer = ({
                             {/* </TouchableOpacity> */}
                         </View>
                         <View style={{}}>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', width: '50%' }}>
+                            <View
+                                style={{ flexDirection: 'row', alignItems: 'center', width: '50%' }}
+                            >
                                 <TouchableOpacity onPress={() => handlePrevious()}>
                                     <Icon name="stepbackward" size={24} color="white" />
                                 </TouchableOpacity>
@@ -501,7 +523,6 @@ const AudioPlayer = ({
                         </View>
                     </View>
                 ) : (
-
                     <View>
                         <View style={{ justifyContent: 'center', marginTop: 10 }}>
                             <Slider
@@ -518,7 +539,6 @@ const AudioPlayer = ({
                                 minimumTrackTintColor="#C1554E"
                                 maximumTrackTintColor="#EFEFEF"
                                 thumbTintColor="#C1554E"
-
                             />
                             <View
                                 style={{
@@ -602,20 +622,29 @@ const AudioPlayer = ({
                             <TouchableOpacity onPress={() => handleNext()}>
                                 <Icon name="stepforward" size={24} color="white" />
                             </TouchableOpacity>
-                            {
-                                downloadedSong ?
-                                    <TouchableOpacity onPress={() => removeDownload()}
-                                        style={{ marginHorizontal: 20, height: 26, width: 26, borderRadius: 13, backgroundColor: '#389F56', justifyContent: 'center', alignItems: 'center' }}
-                                    >
-                                        <Icon name="check" size={20} color="white" />
-                                    </TouchableOpacity> :
-                                    <TouchableOpacity
-                                        style={{ marginHorizontal: 20 }}
-                                        onPress={() => downloadAudio()}
-                                    >
-                                        <Icon name="download" size={24} color="white" />
-                                    </TouchableOpacity>
-                            }
+                            {downloadedSong ? (
+                                <TouchableOpacity
+                                    onPress={() => removeDownload()}
+                                    style={{
+                                        marginHorizontal: 20,
+                                        height: 26,
+                                        width: 26,
+                                        borderRadius: 13,
+                                        backgroundColor: '#389F56',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <Icon name="check" size={20} color="white" />
+                                </TouchableOpacity>
+                            ) : (
+                                <TouchableOpacity
+                                    style={{ marginHorizontal: 20 }}
+                                    onPress={() => downloadAudio()}
+                                >
+                                    <Icon name="download" size={24} color="white" />
+                                </TouchableOpacity>
+                            )}
                             {/* <TouchableOpacity
                                 style={{ marginHorizontal: 20 }}
                                 onPress={() => downloadAudio()}
@@ -629,22 +658,25 @@ const AudioPlayer = ({
                                 )}
                             </TouchableOpacity> */}
                             <TouchableOpacity onPress={() => downloadAudios()}>
-                                {
-                                    fav ? <Icon name='heart' size={22} color='red' /> :
-                                        <FavouriteIcon />
-                                }
+                                {fav ? (
+                                    <Icon name="heart" size={22} color="red" />
+                                ) : (
+                                    <FavouriteIcon />
+                                )}
                             </TouchableOpacity>
                         </View>
                     </View>
-                )
-                }
-            </View >
-            {
-                showModal &&
+                )}
+            </View>
+            {showModal && (
                 <Modal transparent>
-                    <AlertScreen descriptionText={selectedItem} removeFromPlaylist={removeFromOfflineDownload} setShowModal={setShowModal} />
+                    <AlertScreen
+                        descriptionText={selectedItem}
+                        removeFromPlaylist={removeFromOfflineDownload}
+                        setShowModal={setShowModal}
+                    />
                 </Modal>
-            }
+            )}
         </>
     );
 };
