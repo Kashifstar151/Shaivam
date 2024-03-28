@@ -35,6 +35,7 @@ import {
     AddMostPlayed,
     AddSongToDatabase,
     createUserTable,
+    listfavAudios,
     MostPlayedList,
     MostPlayedSongList,
     UpdateMostPlayed,
@@ -130,28 +131,33 @@ const AudioPlayer = ({
     };
     const [fav, setFav] = useState(false)
     const downloadAudios = () => {
-        TrackPlayer.getActiveTrack()
-            .then((res) => {
-                AddSongToDatabase(
-                    'sf',
-                    [
-                        res?.id,
-                        res?.url,
-                        res?.title,
-                        res?.artist,
-                        res?.categoryName,
-                        res?.thalamOdhuvarTamilname,
-                        res?.thirumariasiriyar,
-                    ],
-                    (callbacks) => {
-                        if (callbacks?.message == 'Success') {
-                            setFav(true)
+        listfavAudios(calbacks => {
+            let lenght = calbacks?.length
+            console.log("🚀 ~ downloadAudios ~ lenght:", lenght)
+            TrackPlayer.getActiveTrack()
+                .then((res) => {
+                    AddSongToDatabase(
+                        'sf',
+                        [
+                            res?.id,
+                            res?.url,
+                            res?.title,
+                            res?.artist,
+                            res?.categoryName,
+                            res?.thalamOdhuvarTamilname,
+                            res?.thirumariasiriyar,
+                            lenght++
+                        ],
+                        (callbacks) => {
+                            if (callbacks?.message == 'Success') {
+                                setFav(true)
+                            }
                         }
-                    }
-                );
-            })
-            .catch((err) => {
-            });
+                    );
+                })
+                .catch((err) => {
+                });
+        })
     };
     const { position, duration } = useProgress();
     const [paused, setPaused] = useState(false);
@@ -182,11 +188,7 @@ const AudioPlayer = ({
         Icon.getImageSource('circle', 18, '#C1554E').then((source) => {
             return setThumbImage({ thumbIcon: source });
         });
-
         Promise.allSettled([createUserTable(), MostPlayedSongList(), getMostPlayedSong(),])
-        if (activeTrack) {
-
-        }
         // createUserTable();
         // MostPlayedSongList();
         // getMostPlayedSong()
@@ -380,21 +382,14 @@ const AudioPlayer = ({
     return (
         <>
 
-            <View
-                style={
-                    orientation == 'LANDSCAPE' || !visibleStatusBar
-                        ? {
-                            width: Dimensions.get('window').width / 2,
-                            backgroundColor: '#222222',
-                            height: 70,
-                            alignItems: 'center',
-                        }
-                        : { backgroundColor: '#222222', height: 200 }
-                }
-            >
-                {/* <TouchableOpacity style={{ height: 6, width: 30, borderRadius: 5, backgroundColor: 'grey', position: 'absolute', top: -15, right: Dimensions.get('window').width / 2 }}>
-
-                </TouchableOpacity> */}
+            <View style={orientation == 'LANDSCAPE' || !visibleStatusBar ? {
+                width: Dimensions.get('window').width / 2,
+                backgroundColor: '#222222',
+                height: 70,
+                alignItems: 'center',
+            }
+                : { backgroundColor: '#222222', height: 200 }
+            }>
                 {orientation == 'LANDSCAPE' || !visibleStatusBar ? null : (
                     <View style={styles.container}>
                         <View>
