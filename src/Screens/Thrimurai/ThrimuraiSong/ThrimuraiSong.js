@@ -76,8 +76,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const language = ['Original', 'Tamil', 'English', 'Hindi'];
     const [selectedLang, setSelectedLang] = useState('Original');
     const [fontSizeCount, setFontSizeCount] = useState(null);
-    const [refFlatList, setRefFlatList] = useState(null)
-    const flatListRef = useRef(null)
+    const [refFlatList, setRefFlatList] = useState(null);
+    const flatListRef = useRef(null);
 
     const initializeTheFontSize = async () => {
         const value = await AsyncStorage.getItem('@lyricsFontSize');
@@ -113,6 +113,32 @@ const ThrimuraiSong = ({ route, navigation }) => {
         }).start();
     };
     const [orientation, setOrientation] = useState('PORTRAIT');
+    const initilizeTheRepeatState = useCallback(async () => {
+        console.log(
+            '🚀 ~ repeatState setting th value :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------',
+            await TrackPlayer.getRepeatMode()
+        );
+        const repeatState = await TrackPlayer.getRepeatMode();
+        console.log(
+            '🚀 ~ repeatState:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------',
+            repeatState
+        );
+        setRepeatMode(repeatState);
+    }, []);
+
+    const initilizeTheTheme = useCallback(async () => {
+        const themeMode = await AsyncStorage.getItem('theme');
+        if (themeMode === 'dark') {
+            setDarkMode(true);
+        } else {
+            setDarkMode(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        initilizeTheTheme();
+    }, []);
+
     useEffect(() => {
         Dimensions.addEventListener('change', ({ window: { width, height } }) => {
             if (width < height) {
@@ -131,21 +157,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
         };
     }, []);
     const [repeatMode, setRepeatMode] = useState();
-    useEffect(() => {
-        (async () => {
-            const repeatState = await TrackPlayer.getRepeatMode();
-            setRepeatMode(repeatState);
-        })();
-
-        (async () => {
-            const themeMode = await AsyncStorage.getItem('theme');
-            if (themeMode === 'dark') {
-                setDarkMode(true);
-            } else {
-                setDarkMode(false);
-            }
-        })();
-    }, []); // to initialize the repeat state of the track player
 
     const { musicState, dispatchMusic } = useContext(MusicContext);
     const [darkMode, setDarkMode] = useState();
@@ -238,13 +249,13 @@ GROUP BY
                 payload: data.filter((i) => i.localBased !== null)[0].localeBased,
             });
             getSqlData(detailQuery, (details) => {
-                const query2 = `SELECT * FROM odhuvars WHERE title='${data.filter((i) => i.tamil !== null)[0]?.tamil
-                    }'`;
+                const query2 = `SELECT * FROM odhuvars WHERE title='${
+                    data.filter((i) => i.tamil !== null)[0]?.tamil
+                }'`;
                 getSqlData(query2, (callbacks) => {
                     dispatchMusic({ type: 'SONG_DETAILS', payload: details });
                     dispatchMusic({ type: 'SET_SONG', payload: callbacks });
-                    scrollToIndex()
-
+                    // scrollToIndex();
                 });
             });
         });
@@ -259,7 +270,6 @@ GROUP BY
         if (downloaded) {
             setUpPlayer(data);
         }
-
     }, [data]);
 
     const toggleSwitch = (value, callbacks) => {
@@ -300,9 +310,9 @@ GROUP BY
     };
     useEffect(() => {
         setTimeout(() => {
-            scrollToIndex()
-        }, 2000)
-    }, [flatListRef])
+            scrollToIndex();
+        }, 2000);
+    }, [flatListRef]);
     const scrollToIndex = () => {
         // console.log("songnonsjc", typeof songNo)
         flatListRef?.current?.scrollToIndex({
@@ -312,14 +322,15 @@ GROUP BY
     };
 
     const getItemLayOut = (item, index) => {
-        console.log("🚀 ~ getItemLayOut ~ index:", index)
-        return { length: 260, offset: 260 * index, index }
-    }
+        console.log('🚀 ~ getItemLayOut ~ index:', index);
+        return { length: 260, offset: 260 * index, index };
+    };
     const setUpPlayer = useCallback(
         async (song, from) => {
             try {
                 if (!TrackPlayer._initialized) {
                     await TrackPlayer.setupPlayer();
+                    // initilizeTheRepeatState();
                 }
                 await TrackPlayer.updateOptions({
                     android: {
@@ -336,6 +347,7 @@ GROUP BY
                     compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
                     progressUpdateEventInterval: 2,
                 });
+                // initilizeTheRepeatState();
                 await TrackPlayer.add(song);
             } catch (error) {
                 await TrackPlayer.updateOptions({
@@ -353,8 +365,10 @@ GROUP BY
                     compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
                     progressUpdateEventInterval: 2,
                 });
-
+                // initilizeTheRepeatState();
                 await TrackPlayer.add(song);
+            } finally {
+                initilizeTheRepeatState();
             }
         },
         [musicState.song]
@@ -645,8 +659,8 @@ GROUP BY
                                         </Text>
                                     </View>
                                     <Switch
-                                        trackColor={{ false: '#767577', true: '#81b0ff' }}
-                                        thumbColor={tamilSplit ? '#f5dd4b' : '#f4f3f4'}
+                                        trackColor={{ false: '#767577', true: '#000' }}
+                                        thumbColor={tamilSplit ? '#f4f3f4' : '#f4f3f4'}
                                         ios_backgroundColor="#3e3e3e"
                                         onValueChange={() => {
                                             if (i18n.language === 'en') {
@@ -671,8 +685,8 @@ GROUP BY
                                     </Text>
                                 </View>
                                 <Switch
-                                    trackColor={{ false: '#767577', true: '#81b0ff' }}
-                                    thumbColor={darkMode ? '#f5dd4b' : '#f4f3f4'}
+                                    trackColor={{ false: '#767577', true: '#000' }}
+                                    thumbColor={darkMode ? '#f4f3f4' : '#f4f3f4'}
                                     ios_backgroundColor="#3e3e3e"
                                     onValueChange={() => toggleSwitch(darkMode, setDarkMode)}
                                     value={darkMode}
@@ -704,55 +718,59 @@ GROUP BY
             </View>
             <View style={styles.lyricsContainer} nestedScrollEnabled>
                 <View style={{ paddingBottom: 300, paddingHorizontal: 20 }}>
-                    {musicState?.songDetails?.length > 0 &&
-                        <FlatList
-                            keyExtractor={item => item?.id}
-                            getItemLayout={getItemLayOut}
-                            ref={flatListRef}
-                            data={musicState?.songDetails}
-                            renderItem={({ item, index }) => (
-                                <View
-                                    style={{
-                                        borderBottomColor: colors.grey3,
-                                        borderBottomWidth: 1,
-                                        paddingBottom: 7,
-                                        flexDirection: 'row',
-                                    }}
-                                >
-                                    {searchScreen ? (
-                                        renderResult(item)
-                                    ) : (
+                    {
+                        musicState?.songDetails?.length > 0 && (
+                            <FlatList
+                                keyExtractor={(item) => item?.id}
+                                getItemLayout={getItemLayOut}
+                                // ref={flatListRef}
+                                data={musicState?.songDetails}
+                                renderItem={({ item, index }) => (
+                                    <View
+                                        style={{
+                                            borderBottomColor: colors.grey3,
+                                            borderBottomWidth: 1,
+                                            paddingBottom: 7,
+                                            flexDirection: 'row',
+                                        }}
+                                    >
+                                        {searchScreen ? (
+                                            renderResult(item)
+                                        ) : (
+                                            <Text
+                                                style={[
+                                                    styles.lyricsText,
+                                                    {
+                                                        fontSize: fontSizeCount,
+                                                        color: colorSet?.lyricsText.color,
+                                                    },
+                                                ]}
+                                            >
+                                                {!(tamilSplit && i18n.language === 'en')
+                                                    ? selectedLang !== 'Tamil'
+                                                        ? item?.rawSong
+                                                        : item?.tamilExplanation ||
+                                                          'Text currently not available'
+                                                    : item?.tamilSplit ||
+                                                      'Text currently not available'}
+                                            </Text>
+                                        )}
                                         <Text
                                             style={[
                                                 styles.lyricsText,
                                                 {
                                                     fontSize: fontSizeCount,
+                                                    alignSelf: 'flex-end',
                                                     color: colorSet?.lyricsText.color,
                                                 },
                                             ]}
                                         >
-                                            {!(tamilSplit && i18n.language === 'en')
-                                                ? selectedLang !== 'Tamil'
-                                                    ? item?.rawSong
-                                                    : item?.tamilExplanation ||
-                                                    'Text currently not available'
-                                                : item?.tamilSplit || 'Text currently not available'}
+                                            {item?.songNo}
                                         </Text>
-                                    )}
-                                    <Text
-                                        style={[
-                                            styles.lyricsText,
-                                            {
-                                                fontSize: fontSizeCount,
-                                                alignSelf: 'flex-end',
-                                                color: colorSet?.lyricsText.color,
-                                            },
-                                        ]}
-                                    >
-                                        {item?.songNo}
-                                    </Text>
-                                </View>
-                            )} />
+                                    </View>
+                                )}
+                            />
+                        )
 
                         // musicState?.songDetails?.map((res, index) => (
                         //     <View
