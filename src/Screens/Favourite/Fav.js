@@ -29,12 +29,23 @@ const Fav = ({ navigation }) => {
     const [showModal, setShowModal] = useState(false)
     const [selectedItem, setSelected] = useState(null)
     const [showToastMessage, setShowToast] = useState(false)
+    const [emptyImage, setEmptyImage] = useState(true)
     useEffect(() => {
-        fetchAndDisplayDownloads()
-        listfavAudios(callbacks => {
+        // fetchAndDisplayDownloads()
+        // listfavAudios(callbacks => {
+        //     console.log("🚀 ~ useEffect ~ callbacks:", JSON.stringify(callbacks, 0, 2))
+        //     setFavList(callbacks)
+        //     if(callbacks?.length>0){
+        //         setEmptyImage(false)
+        //     }
+        // })
+        Promise.all([fetchAndDisplayDownloads(), listfavAudios(callbacks => {
             console.log("🚀 ~ useEffect ~ callbacks:", JSON.stringify(callbacks, 0, 2))
             setFavList(callbacks)
-        })
+            if (callbacks?.length > 0) {
+                setEmptyImage(false)
+            }
+        })])
 
     }, [isFocuced])
     const header = [
@@ -51,7 +62,10 @@ const Fav = ({ navigation }) => {
         try {
             // const keys = await AsyncStorage.getAllKeys();
             const parsedMetadata = await AsyncStorage.getItem('downloaded');
-            // console.log("🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:", parsedMetadata)
+            console.log("🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:", parsedMetadata)
+            if (parsedMetadata?.length > 0) {
+                setEmptyImage(false)
+            }
             // const metadataKeys = keys.filter(key => key.startsWith('downloaded:'));
             // const metadata = await AsyncStorage.multiGet(metadataKeys);
             // const parsedMetadata = metadata.map(([key, value]) => JSON.parse(value));
@@ -179,7 +193,36 @@ const Fav = ({ navigation }) => {
                 )} />
             </Background>
             {
-                favList?.length > 0 ?
+                selecetedHeader == 'Favourites' && favList.length > 0 ?
+                    <View style={{ flex: 1, }}>
+                        <TouchableOpacity style={styles.RearrangsTask}
+                            onPress={() => navigation.navigate(RouteTexts.SONGS_LIST, {
+                                data: favList
+                            })} >
+                            <EditPencil />
+                            <Text style={{ marginHorizontal: 10, fontFamily: 'Mulish-Bold', color: '#C1554E', fontWeight: '700', fontSize: 12 }}>Re arrange task</Text>
+                        </TouchableOpacity>
+                        <FlatList data={favList} renderItem={({ item, index }) => renderSong(item, index)} />
+                    </View> :
+                    selecetedHeader == 'Offline Downloads' && downloadList.length > 0 ?
+                        <View style={{ flex: 1, }}>
+                            <TouchableOpacity style={styles.RearrangsTask}
+                                onPress={() => navigation.navigate(RouteTexts.SONGS_LIST, {
+                                    data: favList
+                                })} >
+                                <EditPencil />
+                                <Text style={{ marginHorizontal: 10, fontFamily: 'Mulish-Bold', color: '#C1554E', fontWeight: '700', fontSize: 12 }}>Re arrange task</Text>
+                            </TouchableOpacity>
+                            <FlatList data={downloadList} renderItem={({ item, index }) => renderSong(item, index)} />
+                        </View> :
+                        <View style={{ paddingHorizontal: 20, flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 100 }}>
+                            <EmptyIcon />
+                            <Text style={{ color: '#222222', fontFamily: 'Mulish-Bold', fontSize: 18, marginVertical: 15 }}>You haven’t favourited anything!</Text>
+                            <Text style={{ color: '#222222', fontFamily: 'Mulish-Regular', fontSize: 14 }}>Start adding stotras, vedas, thirumurais etc. here for easy access to them every time</Text>
+                        </View>
+            }
+            {/* {
+                !emptyImage ?
                     <View style={{ flex: 1, }}>
                         <TouchableOpacity style={styles.RearrangsTask}
                             onPress={() => navigation.navigate(RouteTexts.SONGS_LIST, {
@@ -195,7 +238,7 @@ const Fav = ({ navigation }) => {
                         <Text style={{ color: '#222222', fontFamily: 'Mulish-Bold', fontSize: 18, marginVertical: 15 }}>You haven’t favourited anything!</Text>
                         <Text style={{ color: '#222222', fontFamily: 'Mulish-Regular', fontSize: 14 }}>Start adding stotras, vedas, thirumurais etc. here for easy access to them every time</Text>
                     </View>
-            }
+            } */}
             {
                 showModal &&
                 <Modal transparent>

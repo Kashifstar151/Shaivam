@@ -33,16 +33,16 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Want to accept your location</string>
-  <key>NSLocationAlwaysUsageDescription</key>
-  <string>Program requires GPS to track cars and job orders</string>
-  <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-  <string>Program requires GPS to track cars and job orders</string>
-  <key>NSMicrophoneUsageDescription</key>
-  <string>This app uses your Microphone to allow Voice over IP communication with the Program Admin system</string>
-  <key>NSPhotoLibraryUsageDescription</key>
-  <string>Shaivam want to access your gallary</string>
-  <key>NSAppleMusicUsageDescription</key>
-  <string>Play using while you are hiking</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Program requires GPS to track cars and job orders</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Program requires GPS to track cars and job orders</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app uses your Microphone to allow Voice over IP communication with the Program Admin system</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Shaivam want to access your gallary</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Play using while you are hiking</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
@@ -64,6 +64,9 @@
 		<string>Octicons.ttf</string>
 		<string>Zocial.ttf</string>
 		<string>Fontisto.ttf</string>
+		<string>AnekTamil-Bold.ttf</string>
+		<string>AnekTamil-Regular.ttf</string>
+		<string>AnekTamil-SemiBold.ttf</string>
 		<string>Lora-Bold.ttf</string>
 		<string>Lora-BoldItalic.ttf</string>
 		<string>Lora-Italic.ttf</string>
@@ -72,6 +75,10 @@
 		<string>Lora-Regular.ttf</string>
 		<string>Lora-SemiBold.ttf</string>
 		<string>Lora-SemiBoldItalic.ttf</string>
+		<string>Mulish-Black.ttf</string>
+		<string>Mulish-Bold.ttf</string>
+		<string>Mulish-ExtraBold.ttf</string>
+		<string>Mulish-Regular.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

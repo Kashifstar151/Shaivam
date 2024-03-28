@@ -19,6 +19,7 @@ import Icon from 'react-native-vector-icons/dist/Feather';
 import ButtonComp from '../Temples/Common/ButtonComp';
 import { RouteTexts } from '../../navigation/RouteText';
 import { useTranslation } from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import SplashLogo from "../../assets/Images/SplashLogo.svg"
 
 const Onboarding = ({ navigation }) => {
@@ -26,9 +27,7 @@ const Onboarding = ({ navigation }) => {
     const [selectedLang, setSelectedLang] = useState({ name: 'English', lngCode: 'en-IN' });
     const { i18n } = useTranslation();
     useEffect(() => {
-        setTimeout(() => {
-            setShowImage(false);
-        }, 4000);
+        getStorageItem()
     }, []);
     const language = [
         // { name: 'English', lngCode: 'en' },
@@ -71,6 +70,27 @@ const Onboarding = ({ navigation }) => {
     useEffect(() => {
         handleClick(language.find((i) => i.lngCode === i18n.language));
     }, []);
+    const getStorageItem = async () => {
+        let data = await AsyncStorage.getItem('language')
+        console.log("🚀 ~ getStorageItem ~ data:", data)
+        data = JSON.parse(data)
+
+        if (data) {
+            // setShowImage(false)
+            i18n.changeLanguage(data?.lngCode);
+            setTimeout(() => {
+                navigation.navigate(RouteTexts.BOTTOM_TABS)
+            }, 3000);
+        } else {
+            setTimeout(() => {
+                setShowImage(false);
+            }, 4000);
+        }
+    }
+    const submitNext = () => {
+        AsyncStorage.setItem('language', JSON.stringify(selectedLang))
+        navigation.navigate(RouteTexts.BOTTOM_TABS)
+    }
     return (
         // <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ImageBackground
@@ -132,9 +152,9 @@ const Onboarding = ({ navigation }) => {
                                             style={
                                                 selectedLang?.name == item?.name
                                                     ? [
-                                                          styles.iconContainer,
-                                                          { backgroundColor: '#FCB300' },
-                                                      ]
+                                                        styles.iconContainer,
+                                                        { backgroundColor: '#FCB300' },
+                                                    ]
                                                     : styles.iconContainer
                                             }
                                         >
@@ -159,7 +179,7 @@ const Onboarding = ({ navigation }) => {
                         <ButtonComp
                             color={true}
                             text={'Select & Continue'}
-                            navigation={() => navigation.navigate(RouteTexts.BOTTOM_TABS)}
+                            navigation={() => submitNext()}
                         />
                     </View>
                 )}
