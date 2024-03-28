@@ -55,17 +55,17 @@ const SongLists = ({navigation,route} ) => {
         </ScaleDecorator>
     )
     const updateList = (item)=>{
+
       for (i in item){
         console.log("index" ,i)
         let query = `UPDATE fav_odhuvar SET serialNo=? WHERE id=?`
-        updatefavPlaylist(query, [i, item[i].id],callbacks => {
-            // console.log("🚀 ~ updateList ~ callbacks:", callbacks)
+        updatefavPlaylist(query, [i, item?.[i]?.id],callbacks => {
+            console.log("🚀 ~ updateList ~ callbacks:", callbacks)
         })
       }
-    //   setFavList(data)
+      setFavList(item)
     }
     return (
-        // <ScrollView style={{backgroundColor:'#fff',marginTop:30, borderTopEndRadius: 15,borderTopLeftRadius: 15, }}>
         <Background>
              <View style={{marginTop:30,paddingTop:10, backgroundColor:'#fff',borderTopEndRadius: 15,borderTopLeftRadius: 15, paddingHorizontal:10,height:Dimensions.get('window').height-25}}>
                  <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
@@ -86,13 +86,6 @@ const SongLists = ({navigation,route} ) => {
                        keyExtractor={(item) => item.id}
                        onDragEnd={({ data }) => updateList(data)}
                        />
-            {/* <DraggableFlatList
-               style={{paddingHorizontal:20}}
-                data={data}
-                onDragEnd={({ data }) => setFavList(data)}
-                keyExtractor={(item) => item.id}
-                renderItem={renderItem}
-            /> */}
         </NestableScrollContainer>
                  </View>
         <Button active buttonText={'Save'} navigation={()=>navigation.goBack()}/>

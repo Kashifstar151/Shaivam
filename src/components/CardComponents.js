@@ -21,6 +21,7 @@ import KalaPujaSVG from './SVGs/KalaPujaSVG';
 import QuizSVG from './SVGs/QuizSVG';
 import HeartSVG from './SVGs/HeartSVG';
 import Logo from '../../src/assets/Images/Logo.svg';
+import { RouteTexts } from '../navigation/RouteText';
 
 const RenderItem = ({ blockRef, item, navigation, theme }) => {
     const [blockWidth, setBlockWidth] = useState(0);
@@ -53,7 +54,7 @@ const RenderItem = ({ blockRef, item, navigation, theme }) => {
                     <Text
                         style={{
                             // fontSize: responsiveFontSize(12),
-                            fontSize: RFValue(16, 800),
+                            fontSize: RFValue(16),
                             fontWeight: '600',
                             paddingBottom: 5,
                             color: item.textColor,
@@ -61,7 +62,7 @@ const RenderItem = ({ blockRef, item, navigation, theme }) => {
                     >
                         {item?.text}
                     </Text>
-                    <Text style={{ fontSize: RFValue(12, 800), color: item.textColor }}>
+                    <Text style={{ fontSize: RFValue(12), color: item.textColor }}>
                         {item?.description}
                     </Text>
                 </View>
@@ -74,7 +75,7 @@ const RenderItem = ({ blockRef, item, navigation, theme }) => {
                         ref={blockRef}
                         onLayout={(event) => onLayout(event, _)}
                         onPress={
-                            i?.navName == 'Thirumurais' || i?.navName == 'Stotras'
+                            i?.navName == 'Thirumurais' || i?.navName == 'Stotras' || i?.navName == RouteTexts.TEMPLE_TABS_NAVIGATE || i?.navName == RouteTexts.CALENDER
                                 ? () => navigation.navigate(i?.navName)
                                 : () => alert(`the ${i?.navName}`)
                         }
@@ -163,7 +164,7 @@ const CardComponents = ({ navigation }) => {
                 {
                     icon: <Temple1Svg fill={theme.textColor} />,
                     title: 'Temples',
-                    navName: 'Temples',
+                    navName: RouteTexts.TEMPLE_TABS_NAVIGATE,
                 },
                 {
                     icon: <RadioSVG fill={theme.textColor} />,
