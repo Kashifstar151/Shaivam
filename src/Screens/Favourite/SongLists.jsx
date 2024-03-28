@@ -58,8 +58,8 @@ const SongLists = ({navigation,route} ) => {
       for (i in item){
         console.log("index" ,i)
         let query = `UPDATE fav_odhuvar SET serialNo=? WHERE id=?`
-        updatefavPlaylist(query, [i, item[i].id],callbacks => {
-            // console.log("🚀 ~ updateList ~ callbacks:", callbacks)
+        updatefavPlaylist(query, [i, item?.[i]?.id],callbacks => {
+            console.log("🚀 ~ updateList ~ callbacks:", callbacks)
         })
       }
     //   setFavList(data)

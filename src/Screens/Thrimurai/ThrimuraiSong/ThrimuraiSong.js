@@ -105,7 +105,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
 
     const toggleStatusBar = () => {
         setVisibleStatusBar(!visibleStatusBar);
-
         AnimatedRN.timing(statusBarHeight, {
             toValue: visibleStatusBar ? 0 : 50, // Animate to 0 to hide, 20 to show
             duration: 200, // Milliseconds it takes to animate
@@ -299,9 +298,11 @@ GROUP BY
         );
     };
     useEffect(() => {
-        setTimeout(() => {
-            scrollToIndex()
-        }, 2000)
+        if (searchScreen) {
+            setTimeout(() => {
+                scrollToIndex()
+            }, 2000)
+        }
     }, [flatListRef])
     const scrollToIndex = () => {
         // console.log("songnonsjc", typeof songNo)
@@ -312,7 +313,7 @@ GROUP BY
     };
 
     const getItemLayOut = (item, index) => {
-        console.log("🚀 ~ getItemLayOut ~ index:", index)
+        // console.log("🚀 ~ getItemLayOut ~ index:", index)
         return { length: 260, offset: 260 * index, index }
     }
     const setUpPlayer = useCallback(
@@ -556,7 +557,7 @@ GROUP BY
                             }}
                         >
                             <TouchableOpacity
-                                onPress={scrollToIndex}
+                                // onPress={scrollToIndex}
                                 style={styles.InsiderSettingButton}
                             >
                                 <SettingIcon />
@@ -703,7 +704,7 @@ GROUP BY
                 )}
             </View>
             <View style={styles.lyricsContainer} nestedScrollEnabled>
-                <View style={{ paddingBottom: 300, paddingHorizontal: 20 }}>
+                <View style={{ paddingBottom: 0, paddingHorizontal: 20 }}>
                     {musicState?.songDetails?.length > 0 &&
                         <FlatList
                             keyExtractor={item => item?.id}
@@ -829,9 +830,10 @@ GROUP BY
                 style={{
                     paddingTop: 20,
                     position: 'absolute',
+                    // backgroundColor: 'blue',
                     right: 0,
                     bottom: 0,
-                    // backgroundColor: '#222222',
+                    backgroundColor: '#222222',
                     borderTopEndRadius: 15,
                     borderTopLeftRadius: 15,
                     alignSelf: 'flex-end',
@@ -839,8 +841,7 @@ GROUP BY
                         orientation == 'LANDSCAPE'
                             ? Dimensions.get('window').width / 2
                             : Dimensions.get('window').width,
-                }}
-            >
+                }}>
                 {downloadingLoader && (
                     <View
                         style={{
@@ -863,6 +864,10 @@ GROUP BY
                         </Text>
                     </View>
                 )}
+                <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 5 }}>
+                    <TouchableOpacity onPress={toggleStatusBar} style={{ width: 30, height: 8, backgroundColor: colors.grey6, borderRadius: 10, }}>
+                    </TouchableOpacity>
+                </View>
                 <AudioPlayer
                     setDownloadingLoader={setDownloadingLoader}
                     visibleStatusBar={visibleStatusBar}

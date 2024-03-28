@@ -32,8 +32,8 @@ export default BottomTab = ({ navigation }) => {
                         },
                         Platform.OS !== 'ios'
                             ? {
-                                  height: 65,
-                              }
+                                height: 65,
+                            }
                             : {},
                     ],
                 }}
@@ -184,7 +184,7 @@ export default BottomTab = ({ navigation }) => {
                                                     { color: theme.bottomTabItemColor.selected },
                                                 ]}
                                             >
-                                                More
+                                                Calender
                                             </Text>
                                         </View>
                                     ) : (
