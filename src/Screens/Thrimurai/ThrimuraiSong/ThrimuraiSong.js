@@ -190,6 +190,13 @@ const ThrimuraiSong = ({ route, navigation }) => {
             setColorSet((prev) => colors.light);
         }
     }, [darkMode]);
+
+    // const activeTrack = useActiveTrack();
+    // console.log(
+    //     '🚀 ~ ``````````~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~:',
+    //     activeTrack
+    // );
+
     const fetchAndDisplayDownloads = async () => {
         try {
             // const keys = await AsyncStorage.getAllKeys();
@@ -199,8 +206,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
             // const metadata = await AsyncStorage.multiGet(metadataKeys);
             // const parsedMetadata = metadata.map(([key, value]) => JSON.parse(value));
             setDownloadList(JSON.parse(parsedMetadata));
-            let data = JSON.parse(parsedMetadata);
-            console.log('🚀 ~ fetchAndDisplayDownloads ~ data: sknks', data);
 
             // Now `parsedMetadta` contains all of your audio files' metadata
             // You can use this data to render your downloads page
@@ -266,19 +271,25 @@ GROUP BY
                 getSqlData(query2, (callbacks) => {
                     console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
                     dispatchMusic({ type: 'SONG_DETAILS', payload: details });
-                    if (downloadList.length > 0) {
-                        alert(true);
-                        const updatedArray2 = callbacks?.map((item2) => {
-                            const match = downloadList.find((item1) => item1.id === item2.id);
-                            console.log();
-                            return match ? { ...match } : item2; // Replace with the object from array1 if there's a match
-                        });
-                        console.log('🚀 ~ arr ~ arr:', updatedArray2);
-                        dispatchMusic({ type: 'SET_SONG', payload: updatedArray2 });
-                    } else {
-                        dispatchMusic({ type: 'SET_SONG', payload: callbacks });
-                    }
-                    // dispatchMusic({ type: 'SET_SONG', payload: updatedArray2 });
+                    // if (downloadList.length > 0) {
+                    //     alert(true);
+                    //     const updatedArray2 = callbacks?.map((item2) => {
+                    //         const match = downloadList.find((item1) => {
+                    //             if (item1.id === item2.id) {
+                    //                 return { ...item1, isLocal: true };
+                    //             }
+                    //         });
+                    //         return match ? { ...match } : item2; // Replace with the object from array1 if there's a match
+                    //     });
+                    //     // console.log('🚀 ~ arr ~ arr:', updatedArray2);
+                    //     console.log(
+                    //         'match of the song ---------------==========================---------------------------==============================--------------------------===============================-----------------------------==============================-------------------------------=============================----------------------------==============================-----------------------------------===============================--------------------------==============================-----------------',
+                    //         updatedArray2
+                    //     );
+                    //     dispatchMusic({ type: 'SET_SONG', payload: updatedArray2 });
+                    // } else {
+                    // }
+                    dispatchMusic({ type: 'SET_SONG', payload: callbacks });
 
                     scrollToIndex();
                 });
@@ -300,12 +311,27 @@ GROUP BY
     const toggleSwitch = (value, callbacks) => {
         callbacks(!value);
     };
+    const checkDownloaded = (songList) => {
+        if (downloadList.length > 0) {
+            const updatedArray2 = songList?.map((item2) => {
+                const match = downloadList.find((item1) => item1.id === item2.id);
+                return match ? { ...match, isLocal: true } : item2; // Replace with the object from array1 if there's a match
+            });
+            console.log(
+                '🚀 ~ updatedArray2 _________________________________------------------------------________________________________----------------_________________----------------__________________------------______-----------------_______---___---__---___---__---___----_----__---__----_----_----__---_----_----_----__---___---___---___---___---___---___---___---___---__---___---___---___---___---___---___---___---___---___---___---___---___---__----___---___---___---___---___---___---___---___---___---___---___---___----___---__---____---__----___---___---__---___---___---____----____',
+                updatedArray2
+            );
+            setUpPlayer(updatedArray2);
+        } else {
+            setUpPlayer(songList);
+        }
+    };
+
     useEffect(() => {
         if (musicState.song.length) {
-            // console.log('🚀 ~ useEffect ~ musicState.song:', musicState.song);
-            setUpPlayer(musicState.song);
+            checkDownloaded(musicState.song);
         }
-    }, [musicState.song]);
+    }, [musicState.song, downloadList]);
 
     const renderResult = (item) => {
         // const parts = item?.rawSong.split('\r\n');

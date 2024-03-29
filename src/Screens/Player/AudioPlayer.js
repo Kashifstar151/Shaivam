@@ -179,7 +179,7 @@ const AudioPlayer = ({
             } else {
                 setPaused(true);
             }
-            fetchAndDisplayDownloads();
+            // fetchAndDisplayDownloads();
         })();
     }, [playBackState]);
     useEffect(() => {
@@ -256,35 +256,35 @@ const AudioPlayer = ({
         });
     };
     const [downlaodList, setDownloadList] = useState([]);
-    const fetchAndDisplayDownloads = async () => {
-        try {
-            // const keys = await AsyncStorage.getAllKeys();
-            const parsedMetadata = await AsyncStorage.getItem('downloaded');
-            // console.log("🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:", parsedMetadata)
-            // const metadataKeys = keys.filter(key => key.startsWith('downloaded:'));
-            // const metadata = await AsyncStorage.multiGet(metadataKeys);
-            // const parsedMetadata = metadata.map(([key, value]) => JSON.parse(value));
-            setDownloadList(JSON.parse(parsedMetadata));
-            let data = JSON.parse(parsedMetadata);
-            console.log('🚀 ~ fetchAndDisplayDownloads ~ data:', activeTrack);
-            data?.map((item) => {
-                console.log(
-                    '🚀 ~ data?.map ~ item:',
-                    item?.id,
-                    activeTrack?.id,
-                    item?.prevId,
-                    prevId
-                );
-                if (item?.id == activeTrack?.id && item?.prevId == prevId) {
-                    setDownloadedSong(true);
-                }
-            });
-            // Now `parsedMetadta` contains all of your audio files' metadata
-            // You can use this data to render your downloads page
-        } catch (e) {
-            console.error('Failed to fetch metadata', e);
-        }
-    };
+    // const fetchAndDisplayDownloads = async () => {
+    //     try {
+    //         // const keys = await AsyncStorage.getAllKeys();
+    //         const parsedMetadata = await AsyncStorage.getItem('downloaded');
+    //         // console.log("🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:", parsedMetadata)
+    //         // const metadataKeys = keys.filter(key => key.startsWith('downloaded:'));
+    //         // const metadata = await AsyncStorage.multiGet(metadataKeys);
+    //         // const parsedMetadata = metadata.map(([key, value]) => JSON.parse(value));
+    //         setDownloadList(JSON.parse(parsedMetadata));
+    //         let data = JSON.parse(parsedMetadata);
+    //         console.log('🚀 ~ fetchAndDisplayDownloads ~ data:', activeTrack);
+    //         data?.map((item) => {
+    //             console.log(
+    //                 '🚀 ~ data?.map ~ item:',
+    //                 item?.id,
+    //                 activeTrack?.id,
+    //                 item?.prevId,
+    //                 prevId
+    //             );
+    //             if (item?.id == activeTrack?.id && item?.prevId == prevId) {
+    //                 setDownloadedSong(true);
+    //             }
+    //         });
+    //         // Now `parsedMetadta` contains all of your audio files' metadata
+    //         // You can use this data to render your downloads page
+    //     } catch (e) {
+    //         console.error('Failed to fetch metadata', e);
+    //     }
+    // };
     const mostPlayed = async (callbacks) => {
         let count = 1;
         let exist = false;
@@ -622,7 +622,7 @@ const AudioPlayer = ({
                             <TouchableOpacity onPress={() => handleNext()}>
                                 <Icon name="stepforward" size={24} color="white" />
                             </TouchableOpacity>
-                            {downloadedSong ? (
+                            {downloadedSong || activeTrack?.isLocal ? (
                                 <TouchableOpacity
                                     onPress={() => removeDownload()}
                                     style={{
