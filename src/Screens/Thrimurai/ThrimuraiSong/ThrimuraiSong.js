@@ -276,8 +276,7 @@ GROUP BY
                     // } else {
                     //     dispatchMusic({ type: 'SET_SONG', payload: callbacks });
                     // }
-                    scrollToIndex()
-
+                    // scrollToIndex()
                 });
             });
         });
