@@ -233,20 +233,26 @@ const CardComponents = ({ navigation }) => {
                     Scroll through and check out what Shaiva, offers {t('Thirumurais')}
                 </Text>
             </View>
-            <FlatList
-                style={{ overflow: 'visible' }}
-                horizontal
-                renderItem={({ item, index }) => (
-                    <RenderItem
-                        setBlockWidth={setBlockWidth}
-                        blockRef={blockRef}
-                        item={item}
-                        navigation={navigation}
-                        theme={theme.colorscheme}
-                    />
-                )}
-                data={data}
-            />
+            <View
+                style={{
+                    width: Dimensions.get('window').width,
+                }}
+            >
+                <FlatList
+                    style={{ overflow: 'visible' }}
+                    horizontal
+                    renderItem={({ item, index }) => (
+                        <RenderItem
+                            setBlockWidth={setBlockWidth}
+                            blockRef={blockRef}
+                            item={item}
+                            navigation={navigation}
+                            theme={theme.colorscheme}
+                        />
+                    )}
+                    data={data}
+                />
+            </View>
         </View>
     );
 };

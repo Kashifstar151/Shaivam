@@ -35,6 +35,7 @@ import ContactSVG from '../../components/SVGs/ContactSVG';
 import ShareSVG from '../../components/SVGs/ShareSVG';
 import RateTheAppSVG from '../../components/SVGs/RateTheAppSVG';
 import AboutSVG from '../../components/SVGs/AboutSVG';
+import { useFocusEffect } from '@react-navigation/native';
 
 const MoreOption = () => {
     const { theme } = useContext(ThemeContext);
@@ -82,6 +83,24 @@ const MoreOption = () => {
         },
     ];
     const [selectedLanguage, setSelectedLanguage] = useState(null);
+    const firstTime = useRef(true);
+    useEffect(() => {
+        if (!firstTime.current && selectedLanguage?.name) {
+            bottomSheetRef.current?.dismiss();
+        }
+
+        // return () => {
+        //     console.log('the return function278927892789278297829789');
+        //     bottomSheetRef.current?.close();
+        // };
+    }, [selectedLanguage]);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            return () => bottomSheetRef.current?.close();
+        }, [])
+    );
+
     const bottomSheetRef = useRef(null);
 
     const handleSheetChanges = useCallback((index) => {
@@ -90,12 +109,10 @@ const MoreOption = () => {
 
     const navigationHandler = (item) => {
         if (item.title == 'Language') {
-            // SheetRef.current.open();
-            console.log('the jsajks');
             bottomSheetRef.current?.present();
+            firstTime.current = false;
         }
     };
-
     const rednderItem = (item, index) => {
         // console.log("🚀 ~ file: MoreOption.js:19 ~ rednderItem ~ item:", item)
         return (
@@ -158,19 +175,13 @@ const MoreOption = () => {
                     borderBottomWidth: 0.5,
                 }}
             >
-                <ChooseLanguage setSelected={setSelectedLanguage} selected={selectedLanguage} />
+                <ChooseLanguage
+                    setSelected={(val) => {
+                        setSelectedLanguage((prev) => val);
+                    }}
+                    selected={selectedLanguage}
+                />
             </BottomSheetModal>
-            {/* </BottomSheetModalProvider> */}
-
-            {/* <BottomSheet
-                ref={bottomSheetRef}
-                onChange={handleSheetChanges}
-                snapPoints={['10%', '50%', '95%']}
-                index={1}
-                style={{ zIndex: 1000 }}
-            >
-                <View style={{ height: 200, width: 200 }}></View>
-            </BottomSheet> */}
         </View>
     );
 };
