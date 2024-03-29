@@ -203,8 +203,8 @@ const AudioPlayer = ({
             TrackPlayer.setRepeatMode(RepeatMode.Off);
             setRepeatMode(0);
         } else {
-            TrackPlayer.setRepeatMode(RepeatMode.Queue);
-            setRepeatMode(2);
+            TrackPlayer.setRepeatMode(RepeatMode.Track);
+            setRepeatMode(1);
         }
     };
 
@@ -564,7 +564,7 @@ const AudioPlayer = ({
                                 alignItems: 'center',
                             }}
                         >
-                            {repeatMode == 2 ? (
+                            {repeatMode == 1 ? (
                                 <TouchableOpacity onPress={() => getMode(0)}>
                                     <MaterialIcons name="shuffle" size={24} />
                                 </TouchableOpacity>
