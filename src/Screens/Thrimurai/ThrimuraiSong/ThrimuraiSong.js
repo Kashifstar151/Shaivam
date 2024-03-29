@@ -64,7 +64,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     // });
     const isFocused = useIsFocused;
     const { data, downloaded, searchedword, searchScreen, songNo } = route.params || {};
-    // console.log('🚀 ~ ThrimuraiSong ~ data:', JSON.stringify(data), downloaded);
+    console.log('🚀 ~ ThrimuraiSong ~ data:', JSON.stringify(data, 0, 2), downloaded);
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
@@ -150,8 +150,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
         };
     }, []);
     const [repeatMode, setRepeatMode] = useState();
-
     const { musicState, dispatchMusic } = useContext(MusicContext);
+    // console.log("🚀 ~ ThrimuraiSong ~ musicState:", musicState)
     const [darkMode, setDarkMode] = useState();
     const [tamilSplit, setTamilSplit] = useState(false);
     const { theme, setTheme } = useContext(ThemeContext);
@@ -245,14 +245,9 @@ const ThrimuraiSong = ({ route, navigation }) => {
 
     const getSOngData = (from) => {
         const detailQuery = `SELECT rawSong, tamilExplanation, tamilSplit , songNo , title from thirumurai_songs where prevId=${musicState?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
-
         const titleQuery = `SELECT
         MAX(CASE WHEN locale = 'en' THEN titleS END) AS tamil,
-    MAX(CASE WHEN locale = '${langMap[selectedLngCode]}' THEN title END) AS localeBased
-FROM
-    thirumurais
-WHERE
-    prevId =${musicState?.prevId}
+    MAX(CASE WHEN locale = '${langMap[selectedLngCode]}' THEN title END) AS localeBased FROM thirumurais WHERE prevId =${musicState?.prevId}
     AND titleS IS NOT NULL
     AND titleS != ''
     AND (locale = '${langMap[selectedLngCode]}' OR locale = 'en')
@@ -260,6 +255,7 @@ GROUP BY
     title`;
 
         getSqlData(titleQuery, (data) => {
+            console.log("🚀 ~ getSqlData ~ data:", data)
             dispatchMusic({
                 type: 'SET_TITLE',
                 payload: data.filter((i) => i.localBased !== null)[0].localeBased,
@@ -290,7 +286,7 @@ GROUP BY
                     // }
                     dispatchMusic({ type: 'SET_SONG', payload: callbacks });
 
-                    scrollToIndex();
+                    // scrollToIndex();
                 });
             });
         });
@@ -338,12 +334,13 @@ GROUP BY
         return (
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                 <HighlightText
-                    style={{
-                        fontFamily: 'AnekTamil-Bold',
-                        fontSize: 14,
-                        color: colorSet?.textColor,
-                        // fontWeight: '400',
-                    }}
+                    style={[styles.lyricsText,
+                    {
+                        fontSize: fontSizeCount,
+                        alignSelf: 'flex-end',
+                        color: colorSet?.lyricsText.color,
+
+                    }]}
                     highlightStyle={{
                         backgroundColor: darkMode ? '#A47300' : '#F8E3B2',
                     }}
@@ -769,13 +766,14 @@ GROUP BY
                 )}
             </View>
             <View style={styles.lyricsContainer} nestedScrollEnabled>
-                <View style={{ paddingBottom: 0, paddingHorizontal: 20 }}>
+                <View style={{ paddingBottom: 300, paddingHorizontal: 20 }}>
                     {
                         musicState?.songDetails?.length > 0 && (
                             <FlatList
                                 keyExtractor={(item) => item?.id}
                                 getItemLayout={getItemLayOut}
                                 ref={flatListRef}
+                                contentContainerStyle={{ paddingBottom: 100 }}
                                 data={musicState?.songDetails}
                                 renderItem={({ item, index }) => (
                                     <View
@@ -903,7 +901,7 @@ GROUP BY
                     // backgroundColor: 'blue',
                     right: 0,
                     bottom: 0,
-                    backgroundColor: '#222222',
+                    backgroundColor: !visibleStatusBar ? '#222222' : 'transparent',
                     borderTopEndRadius: 15,
                     borderTopLeftRadius: 15,
                     alignSelf: 'flex-end',
@@ -935,7 +933,7 @@ GROUP BY
                         </Text>
                     </View>
                 )}
-                <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 5 }}>
+                <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 5, backgroundColor: '#222222', paddingVertical: 10, }}>
                     <TouchableOpacity
                         onPress={toggleStatusBar}
                         style={{
