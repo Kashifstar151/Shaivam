@@ -789,6 +789,9 @@ GROUP BY
                                             renderResult(item)
                                         ) : (
                                             <Text
+                                                key={Math.random()}
+                                                selectable={true}
+                                                selectionColor="orange"
                                                 style={[
                                                     styles.lyricsText,
                                                     {
