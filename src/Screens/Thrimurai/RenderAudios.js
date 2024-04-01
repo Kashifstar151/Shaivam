@@ -77,16 +77,33 @@ const RenderAudios = ({
     const getDtataFromSql = async () => {
         let id = songs?.fkTrimuria ? songs?.fkTrimuria : songs?.prevId;
 
-        const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${id}' ${id <= 7 || id === 10 ? `AND pann='${songs?.pann}'` : ''
-            } and  locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language}'   ORDER BY  titleNo `;
+        /*
+         * general query when not temple or varalatimurai
+         !need prevId
+         */
+        const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${id}' ${
+            id <= 7 || id === 10 ? `AND pann='${songs?.pann}'` : `AND pann =''`
+        } and  locale='${
+            i18n.language === 'en-IN' ? 'RoI' : i18n.language
+        }'  and titleS IS NOT NULL  GROUP BY titleS   ORDER BY  titleNo `;
 
-        const templleQuery = `Select * from thirumurais WHERE ${ThalamHeaders == 0 ? 'country' : 'thalam'
-            }='${songs?.thalam}'  and  locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language
-            }' ORDER BY  title ASC LIMIT 10 OFFSET ${pageSize}`;
+        /*
+         ? query when for temple 
+         */
+        const templleQuery = `Select * from thirumurais WHERE ${
+            ThalamHeaders == 0 ? 'country' : 'thalam'
+        }='${songs?.thalam}'  and  locale='${
+            i18n.language === 'en-IN' ? 'RoI' : i18n.language
+        }' ORDER BY  title ASC LIMIT 10 OFFSET ${pageSize}`;
 
-        const query3 = `SELECT * FROM thirumurais WHERE  authorNo='${songs?.authorNo
-            }'  and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language
-            }' GROUP BY titleS ORDER by orderAuthor  `;
+        /*
+         todos: have to optimize the queries  
+         */
+        const query3 = `SELECT * FROM thirumurais WHERE  authorNo='${
+            songs?.authorNo
+        }'  and locale='${
+            i18n.language === 'en-IN' ? 'RoI' : i18n.language
+        }' GROUP BY titleS ORDER by orderAuthor  `;
 
         const makeQuery = thalam ? templleQuery : varakatimurai ? query3 : query;
         getSqlData(makeQuery, (callbacks) => {
@@ -94,8 +111,9 @@ const RenderAudios = ({
         });
     };
     const getSongsData = async () => {
-        const query = `SELECT * FROM thirumurais  where  locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language
-            }' and fkTrimuria ${prevId} ORDER BY fkTrimuria,titleNo LIMIT 20 OFFSET ${dataLength} `;
+        const query = `SELECT * FROM thirumurais  where  locale='${
+            i18n.language === 'en-IN' ? 'RoI' : i18n.language
+        }' and fkTrimuria ${prevId} ORDER BY fkTrimuria,titleNo LIMIT 20 OFFSET ${dataLength} `;
 
         getSqlData(query, (callbacks) => {
             // if (callbacks?.Length > 0) {
