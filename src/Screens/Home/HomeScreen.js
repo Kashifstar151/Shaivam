@@ -384,7 +384,7 @@ const HomeScreen = ({ navigation }) => {
                         setDimentionsOfText1((prev) => ({ width, height }));
                     }}
                 >
-                    PLAYLIST
+                    PLAYLISTS
                 </Text>
                 <View
                     style={{
