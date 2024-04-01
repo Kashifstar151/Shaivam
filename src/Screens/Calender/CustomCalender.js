@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { View, Dimensions, TouchableOpacity, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Swiper from 'react-native-swiper';
+import { Calendar } from 'react-native-calendars';
 
 // import {ExpandableCalendar, AgendaList, CalendarProvider, WeekCalendar} from 'react-native-calendars';
 
@@ -57,7 +58,7 @@ const CustomCalender = ({ setFullScreen }) => {
                 elevation: 10,
             }}
         >
-            <View
+            {/* <View
                 style={{
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -137,7 +138,17 @@ const CustomCalender = ({ setFullScreen }) => {
                         ))}
                     </View>
                 ))}
-            </Swiper>
+
+            </Swiper> */}
+            <Calendar
+                initialDate="2022-12-01"
+                minDate="2024-04-01"
+                maxDate="2024-04-30"
+                disableAllTouchEventsForDisabledDays={true}
+            // disableArrowLeft={true}
+            // disableArrowRight={true}
+            // {...props}
+            />
             <TouchableOpacity style={{ alignSelf: 'center' }} onPress={() => setFullScreen(true)}>
                 <Icon name="chevron-down" size={23} />
             </TouchableOpacity>
