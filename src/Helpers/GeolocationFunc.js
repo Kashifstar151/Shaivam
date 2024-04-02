@@ -74,6 +74,10 @@ export const locationPermission = async () => {
     }
 };
 
+export const checkPermissionAccess = async (accessType) => {
+    return check(accessType);
+};
+
 // for region change callback
 export const onRegionChangeCompleteCallback = (args, clbk) => {
     // console.log('🚀 ~ onRegionChangeCompleteCallback ~ args:', args);
