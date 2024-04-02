@@ -75,7 +75,10 @@ const RenderItem = ({ blockRef, item, navigation, theme }) => {
                         ref={blockRef}
                         onLayout={(event) => onLayout(event, _)}
                         onPress={
-                            i?.navName == 'Thirumurais' || i?.navName == 'Stotras' || i?.navName == RouteTexts.TEMPLE_TABS_NAVIGATE || i?.navName == RouteTexts.CALENDER
+                            i?.navName == 'Thirumurais' ||
+                            i?.navName == 'Stotras' ||
+                            i?.navName == RouteTexts.TEMPLE_TABS_NAVIGATE ||
+                            i?.navName == RouteTexts.CALENDER
                                 ? () => navigation.navigate(i?.navName)
                                 : () => alert(`the ${i?.navName}`)
                         }
@@ -215,6 +218,7 @@ const CardComponents = ({ navigation }) => {
             <View style={{ marginTop: 24 }}>
                 <Header />
                 <SearchInput
+                    placeholder={t('Search for anything (Eg - தோடுடைய செவியன்) ')}
                     setSearchText={setSearchText}
                     state={searchText}
                     setOnFocus={setOnFocus}
@@ -230,7 +234,7 @@ const CardComponents = ({ navigation }) => {
                         fontWeight: '400',
                     }}
                 >
-                    Scroll through and check out what Shaiva, offers {t('Thirumurais')}
+                    Scroll through and check out what Shaiva, offers
                 </Text>
             </View>
             <View

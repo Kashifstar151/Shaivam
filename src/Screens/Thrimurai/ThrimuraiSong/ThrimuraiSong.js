@@ -269,7 +269,6 @@ GROUP BY
     title`;
 
         getSqlData(titleQuery, (data) => {
-            // console.log("🚀 ~ getSqlData ~ data:", data)
             dispatchMusic({
                 type: 'SET_TITLE',
                 payload: data.filter((i) => i.localBased !== null)[0].localeBased,
@@ -320,15 +319,15 @@ GROUP BY
         callbacks(!value);
     };
     const checkDownloaded = (songList) => {
-        if (downloadList.length > 0) {
+        if (downloadList?.length > 0) {
             const updatedArray2 = songList?.map((item2) => {
                 const match = downloadList.find((item1) => item1.id === item2.id);
                 return match ? { ...match, isLocal: true } : item2; // Replace with the object from array1 if there's a match
             });
-            console.log(
-                '🚀 ~ updatedArray2 _________________________________------------------------------________________________________----------------_________________----------------__________________------------______-----------------_______---___---__---___---__---___----_----__---__----_----_----__---_----_----_----__---___---___---___---___---___---___---___---___---__---___---___---___---___---___---___---___---___---___---___---___---___---__----___---___---___---___---___---___---___---___---___---___---___---___----___---__---____---__----___---___---__---___---___---____----____',
-                updatedArray2
-            );
+            // console.log(
+            //     '🚀 ~ updatedArray2 _________________________________------------------------------________________________________----------------_________________----------------__________________------------______-----------------_______---___---__---___---__---___----_----__---__----_----_----__---_----_----_----__---___---___---___---___---___---___---___---___---__---___---___---___---___---___---___---___---___---___---___---___---___---__----___---___---___---___---___---___---___---___---___---___---___---___----___---__---____---__----___---___---__---___---___---____----____',
+            //     updatedArray2
+            // );
             setUpPlayer(updatedArray2);
         } else {
             setUpPlayer(songList);
@@ -348,13 +347,14 @@ GROUP BY
         return (
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                 <HighlightText
-                    style={[styles.lyricsText,
-                    {
-                        fontSize: fontSizeCount,
-                        alignSelf: 'flex-end',
-                        color: colorSet?.lyricsText.color,
-
-                    }]}
+                    style={[
+                        styles.lyricsText,
+                        {
+                            fontSize: fontSizeCount,
+                            alignSelf: 'flex-end',
+                            color: colorSet?.lyricsText.color,
+                        },
+                    ]}
                     highlightStyle={{
                         backgroundColor: darkMode ? '#A47300' : '#F8E3B2',
                     }}
@@ -542,7 +542,6 @@ GROUP BY
                                 </Text>
                             </View>
                         </View>
-
                         <View style={styles.container}>
                             <View
                                 style={[
@@ -562,7 +561,6 @@ GROUP BY
                                 </Text>
                             </View>
                         </View>
-
                         <View style={styles.container}>
                             <View
                                 style={[
@@ -802,6 +800,9 @@ GROUP BY
                                             renderResult(item)
                                         ) : (
                                             <Text
+                                                key={Math.random()}
+                                                selectable={true}
+                                                selectionColor="orange"
                                                 style={[
                                                     styles.lyricsText,
                                                     {
@@ -947,7 +948,15 @@ GROUP BY
                         </Text>
                     </View>
                 )}
-                <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 5, backgroundColor: '#222222', paddingVertical: 10, }}>
+                <View
+                    style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginTop: 5,
+                        backgroundColor: '#222222',
+                        paddingVertical: 10,
+                    }}
+                >
                     <TouchableOpacity
                         onPress={toggleStatusBar}
                         style={{

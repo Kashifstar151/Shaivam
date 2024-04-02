@@ -68,7 +68,7 @@ const EventDetails = ({ navigation }) => {
                 <View style={{ paddingHorizontal: 10 }}>
                     <Text style={styles.descriptionText}>This will be the description. லோரம் இப்சம்" என்பதனை மொழிபெயர்த்தால் "வலி அதனாலேயே" என்பது போல் பொருள் தரும் லோரம் இப்சமலோரம் இப்சம்" என்பதனை மொழிபெயர்த்தால் "வலி அதனாலேயே" என்பது போல் பொருள் தரும் லோரம் இப்சம்்</Text>
                     <FlatList contentContainerStyle={{ marginTop: 10 }} data={keys} renderItem={({ item, index }) => (
-                        <View style={{ flexDirection: 'row', marginTop: 5, justifyContent: 'space-between', width: '70%' }}>
+                        <View style={{ flexDirection: 'row', marginVertical: 5, justifyContent: 'space-between', width: '70%' }}>
                             <Text style={{ color: '#777777', fontFamily: "Mulish-Regular", fontSize: 12, }}>{item?.name}</Text>
                             <Text style={item?.name == 'Url' ? { color: '#C1554E', fontFamily: "Mulish-Regular", fontSize: 12, marginHorizontal: 10 } : { color: '#222222', fontFamily: "Mulish-Regular", fontSize: 12, marginHorizontal: 20 }}>{item?.value}</Text>
                         </View>

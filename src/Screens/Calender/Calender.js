@@ -183,8 +183,7 @@ const Calender = ({ navigation }) => {
                             monthTextColor: '#222222',
                             textDayFontWeight: '600',
                             textMonthFontWeight: '600',
-                            // backgroundColor: 'red',
-                            calendarBackground: "#FFFFFF"
+                            calendarBackground: "#FFFFFF",
 
                         }}
                         onDayPress={(day) => setSelected(day?.dateString)}
