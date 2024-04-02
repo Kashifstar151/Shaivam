@@ -16,26 +16,54 @@ export const locationPermission = async () => {
                         console.log(
                             'This feature is not available (on this device / in this context)'
                         );
-                        break;
+                        return {
+                            status: false,
+                            msg: 'permission not available',
+                            permissionType: RESULTS.UNAVAILABLE,
+                        };
+
                     case RESULTS.DENIED:
                         console.log(
                             'The permission has not been requested / is denied but requestable',
                             result
                         );
-                        break;
+                        return {
+                            status: false,
+                            msg: 'user denied the permission',
+                            permissionType: RESULTS.DENIED,
+                        };
+
                     case RESULTS.LIMITED:
                         console.log('The permission is limited: some actions are possible');
-                        break;
+                        return {
+                            status: true,
+                            msg: 'limited access for requested permission',
+                            permissionType: RESULTS.LIMITED,
+                        };
+
                     case RESULTS.GRANTED:
                         console.log('The permission is granted');
-                        break;
+                        return {
+                            status: true,
+                            msg: 'permission granted ',
+                            permissionType: RESULTS.GRANTED,
+                        };
+
                     case RESULTS.BLOCKED:
                         console.log('The permission is denied and not requestable anymore');
-                        break;
+                        return {
+                            status: false,
+                            msg: 'permission request blocked ',
+                            permissionType: RESULTS.BLOCKED,
+                        };
                 }
             })
             .catch((error) => {
-                // …
+                return {
+                    status: false,
+                    msg: `failed with ${error}`,
+                    permissionType: RESULTS.UNAVAILABLE,
+                };
             });
     } else {
         try {
