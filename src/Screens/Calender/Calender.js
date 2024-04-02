@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useRef, useState } from 'react';
 import {
     FlatList,
     StyleSheet,
@@ -13,6 +13,7 @@ import {
     ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/Entypo';
+import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import Background from '../../components/Background';
 import HeadingText from '../../components/HeadingText';
 import SearchInput from '../../components/SearchInput';
@@ -27,6 +28,12 @@ import { colors } from '../../Helpers';
 import ElevatedCard from '../../components/ElevatedCard';
 import EventCard from '../../components/EventCard';
 import { ThemeContext } from '../../Context/ThemeContext';
+import BottomSheet from '@gorhom/bottom-sheet';
+import EventSelectionType from './EventSelectionType';
+import { useFocusEffect } from '@react-navigation/native';
+import RBSheet from 'react-native-raw-bottom-sheet';
+import ButtonComp from '../Temples/Common/ButtonComp';
+import LocationSelection from './LocationSelection';
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
 }
@@ -37,7 +44,14 @@ const Calender = () => {
         { name: 'Events', selected: <ActiveCalender />, unSelected: <InActiveCalender /> },
     ];
     const [isExpanded, setIsExpanded] = useState(false);
+    const bottomSheetRef = useRef(null)
+    const [selectedFilter, setSelectedFilter] = useState(null)
     const { theme } = useContext(ThemeContext);
+    useFocusEffect(
+        React.useCallback(() => {
+            return () => bottomSheetRef.current?.close();
+        }, [])
+    );
     const eventData = [
         {
             date: { day: 'THU', dateNo: '06' },
@@ -106,6 +120,10 @@ const Calender = () => {
             </View>
         </View>
     );
+    const selectFilter = (item) => {
+        bottomSheetRef.current.open()
+        setSelectedFilter(item)
+    }
     return (
         <ScrollView nestedScrollEnabled style={{ backgroundColor: '#fff', flex: 1 }}>
             {/* <View style={{ backgroundColor: 'red' }}> */}
@@ -143,8 +161,7 @@ const Calender = () => {
                     marginTop: -100,
                     width: Dimensions.get('screen').width,
                     flex: 1,
-                }}
-            >
+                }}>
                 <View
                     style={{
                         alignItems: 'center',
@@ -153,39 +170,43 @@ const Calender = () => {
                         alignSelf: 'center',
                     }}
                 >
-                    {fullScreen ? (
-                        <View style={[styles.calenderContainer, styles.shadowProps]}>
-                            <Calendar
-                                theme={{
-                                    // arrowStyle: { backgroundColor: '#EDEDED', borderRadius: 15,  },
-                                    arrowColor: '#777777',
-                                    // calendarBackground: '#222',
-                                    dayTextColor: '#222222',
-                                    textDayFontFamily: 'Mulish-Bold',
-                                    textDisabledColor: 'grey',
-                                    monthTextColor: '#222222',
-                                    textDayFontWeight: '600',
-                                    textMonthFontWeight: '600',
-                                }}
-                                onDayPress={(day) => setSelected(day?.dateString)}
-                                markingType="custom"
-                                markedDates={marked}
-                                style={styles.calenderTheme}
-                            />
-                            <TouchableOpacity
-                                style={{ alignSelf: 'center' }}
-                                onPress={() => setFullScreen(false)}
-                            >
-                                <Icon name="chevron-up" size={23} />
-                            </TouchableOpacity>
-                        </View>
-                    ) : (
-                        <View style={{ overflow: 'scroll' }}>
-                            <CustomCalender setFullScreen={setFullScreen} />
-                        </View>
-                    )}
+                    <View style={[styles.calenderContainer, styles.shadowProps,]}>
+                        <Calendar
+                            theme={{
+                                arrowColor: '#777777',
+                                dayTextColor: '#222222',
+                                textDayFontFamily: 'Mulish-Bold',
+                                textDisabledColor: 'grey',
+                                monthTextColor: '#222222',
+                                textDayFontWeight: '600',
+                                textMonthFontWeight: '600',
+                            }}
+                            onDayPress={(day) => setSelected(day?.dateString)}
+                            markingType="custom"
+                            markedDates={marked}
+                            style={styles.calenderTheme}
+                        />
+                        <TouchableOpacity
+                            style={{ alignSelf: 'center', }}
+                            onPress={() => setFullScreen(false)}
+                        >
+                            <Icon name="chevron-up" size={23} />
+                        </TouchableOpacity>
+                    </View>
                 </View>
-
+                {
+                    selectedHeader == 'Events' &&
+                    <View style={styles.filterContainer}>
+                        <TouchableOpacity onPress={() => selectFilter('Event')} style={{ flexDirection: 'row', borderColor: 'rgba(229, 229, 229, 1)', borderWidth: 1, borderRadius: 20, height: 30, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 10 }}>
+                            <Text style={styles.filtertext}>Event Category</Text>
+                            <MaterialIcons name='keyboard-arrow-down' size={20} color='rgba(119, 119, 119, 1)' />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => selectFilter('Location')} style={{ marginHorizontal: 15, flexDirection: 'row', borderColor: 'rgba(229, 229, 229, 1)', borderWidth: 1, borderRadius: 20, height: 30, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 10 }}>
+                            <Text style={styles.filtertext}>Location</Text>
+                            <MaterialIcons name='keyboard-arrow-down' size={20} color='rgba(119, 119, 119, 1)' />
+                        </TouchableOpacity>
+                    </View>
+                }
                 <View style={{ paddingHorizontal: 20, marginVertical: 15, }}>
                     <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold', color: '#222222' }}>
                         Today, Oct 06, 2023
@@ -207,8 +228,22 @@ const Calender = () => {
                         </ElevatedCard>
                     )}
                 />
+                <RBSheet height={450} closeOnDragDown ref={bottomSheetRef}>
+                    {
+                        selectedFilter == 'Event' ? <>
+                            <EventSelectionType />
+                            <View style={{ justifyContent: 'center', alignSelf: 'center', position: 'absolute', bottom: 10 }}>
+                                <ButtonComp color={true} text='Search' navigation={() => bottomSheetRef.current.close()} />
+                            </View>
+                        </> :
+                            <LocationSelection />
+                    }
+
+                </RBSheet>
+                {/* <BottomSheet snapPoints={['50%']} ref={bottomSheetRef} >
+                    <EventSelectionType />
+                </BottomSheet> */}
             </View>
-            {/* </View> */}
         </ScrollView>
     );
 };
@@ -229,17 +264,20 @@ export const styles = StyleSheet.create({
         //  elevation: 2, 
     },
     shadowProps: {
+        elevation: 10,
         shadowColor: '#171717',
         shadowOffset: { width: -2, height: 4 },
         shadowOpacity: 0.2,
         shadowRadius: 3,
     },
     calenderTheme: {
-        width: Dimensions.get('window').width - 30, borderRadius: 10, elevation: 20,
+        width: Dimensions.get('window').width - 30, borderRadius: 10,
     },
     itemContainer: { height: 75, backgroundColor: '#fff', marginHorizontal: 10, borderRadius: 10, alignItems: 'center', flexDirection: 'row' },
     itemText: { fontSize: 12, fontFamily: 'Mulish-Regular', color: '#777777' },
     itemDateContainer: { paddingHorizontal: 15, borderRightWidth: 1, borderRightColor: colors.grey3, width: '25%', justifyContent: 'center', alignItems: 'center' },
-    itemDateText: { fontSize: 20, fontFamily: 'Mulish-Bold', color: '#222222' }
+    itemDateText: { fontSize: 20, fontFamily: 'Mulish-Bold', color: '#222222' },
+    filterContainer: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, marginTop: 20 },
+    filtertext: { fontFamily: 'Mulish-Regular', fontSize: 12, color: 'rgba(119, 119, 119, 1)' }
 });
 export default Calender;
