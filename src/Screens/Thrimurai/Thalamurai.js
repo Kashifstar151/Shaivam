@@ -1,5 +1,13 @@
-import React, { useContext, useState } from 'react'
-import { Dimensions, FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useContext, useState } from 'react';
+import {
+    Dimensions,
+    FlatList,
+    Pressable,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import { ThemeContext } from '../../Context/ThemeContext';
 import { colors } from '../../Helpers';
@@ -7,6 +15,8 @@ import RenderThalam from './ThrimuraiHeadingPage/RenderThalam';
 import { useTranslation } from 'react-i18next';
 import temples from '../../../assets/data/temples.json';
 import region from '../../../assets/data/region.json';
+import ThalamSVG from '../../components/SVGs/ThalamSVG';
+import NaduSVG from '../../components/SVGs/NaduSVG';
 
 const Thalamurai = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
@@ -22,8 +32,27 @@ const Thalamurai = ({ navigation }) => {
                 data={ThalamuraiHeaders}
                 renderItem={({ item, index }) => (
                     <>
-                        <Pressable onPress={ThalamHeaders !== null && ThalamHeaders == index ? () => setThalamHeaders(null) : () => setThalamHeaders(index)} style={[styles.chapterBox, { backgroundColor: theme.cardBgColor }]}>
-                            <View style={{ justifyContent: 'center' }}>
+                        <Pressable
+                            onPress={
+                                ThalamHeaders !== null && ThalamHeaders == index
+                                    ? () => setThalamHeaders(null)
+                                    : () => setThalamHeaders(index)
+                            }
+                            style={[styles.chapterBox, { backgroundColor: theme.cardBgColor }]}
+                        >
+                            <View
+                                style={{
+                                    justifyContent: 'center',
+                                    flexDirection: 'row',
+                                    gap: 10,
+                                    alignItems: 'center',
+                                }}
+                            >
+                                {item !== 'Nadu' ? (
+                                    <ThalamSVG fill={theme.textColor} />
+                                ) : (
+                                    <NaduSVG fill={theme.textColor} />
+                                )}
                                 <Text style={[styles.chapterNameTexts, { color: theme.textColor }]}>
                                     {t(item)}
                                 </Text>
@@ -82,4 +111,4 @@ export const styles = StyleSheet.create({
     chapterNameTexts: { fontSize: 14, fontWeight: '600' },
     chapterTexts: { fontSize: 12, fontWeight: '500', color: '#777777', marginTop: 5 },
 });
-export default Thalamurai
+export default Thalamurai;
