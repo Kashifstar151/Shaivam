@@ -33,14 +33,14 @@ import PlaceCard from './PlaceCard';
 import { RFValue } from 'react-native-responsive-fontsize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import Feather from 'react-native-vector-icons/dist/Feather';
+import Feather from 'react-native-vector-icons/dist/Feather'
 // import { gStyles } from '../../Helpers/GlobalStyles';
 import { AddSongToDatabase, MostPlayedList } from '../../Databases/AudioPlayerDatabase';
 import { useIsFocused } from '@react-navigation/native';
 import { colors } from '../../Helpers';
 
 const SongAndAudio = ({ item, index, theme }) => {
-    const [fav, setFav] = useState(false);
+    const [fav, setFav] = useState(false)
     const FavouriteAudios = (res) => {
         // TrackPlayer.getActiveTrack()
         //     .then((res) => {
@@ -57,7 +57,7 @@ const SongAndAudio = ({ item, index, theme }) => {
             ],
             (callbacks) => {
                 if (callbacks?.message == 'Success') {
-                    setFav(true);
+                    setFav(true)
                 }
             }
         );
@@ -106,11 +106,7 @@ const SongAndAudio = ({ item, index, theme }) => {
                 </View>
             </View>
             <TouchableOpacity onPress={fav ? null : () => FavouriteAudios(item)}>
-                {fav ? (
-                    <AntDesign name="heart" size={22} color={'#C1554E'} />
-                ) : (
-                    <Feather name="heart" size={22} />
-                )}
+                {fav ? <AntDesign name="heart" size={22} color={'#C1554E'} /> : <Feather name="heart" size={22} />}
             </TouchableOpacity>
         </View>
     );
@@ -125,7 +121,7 @@ const HomeScreen = ({ navigation }) => {
         width: 0,
         height: 0,
     });
-    const isFocused = useIsFocused();
+    const isFocused = useIsFocused()
     const handleLayout = useCallback(
         (event) => {
             const { height } = event.nativeEvent.layout;
@@ -286,7 +282,6 @@ const HomeScreen = ({ navigation }) => {
             <View
                 style={{
                     paddingHorizontal: 15,
-                    paddingBottom: 10,
                     marginTop:
                         orientation == 'PORTRAIT'
                             ? -screenHeight / 2.3
@@ -304,7 +299,6 @@ const HomeScreen = ({ navigation }) => {
                         fontSize: RFValue(18, 800),
                         fontWeight: '700',
                         color: theme.textColor,
-                        marginVertical: 10,
                     }}
                 >
                     Songs & Audios
@@ -358,8 +352,7 @@ const HomeScreen = ({ navigation }) => {
             </View>
             <View
                 style={{
-                    height: 260,
-                    marginVertical: 20,
+                    height: 250,
                 }}
             >
                 <Text
@@ -374,8 +367,8 @@ const HomeScreen = ({ navigation }) => {
                             { translateX: dimentionsOfText1.width / 2 },
                         ],
 
-                        fontSize: RFValue(14, 800),
-                        fontFamily: 'Mulish-Bold',
+                        fontSize: RFValue(18, 800),
+                        fontWeight: 'bold',
                         letterSpacing: 5,
                         color: '#B6B6B6',
                     }}
@@ -434,7 +427,7 @@ const HomeScreen = ({ navigation }) => {
                                     We have created playlists for you
                                 </Text>
                             </View>
-                            <Pressable style={{ flexDirection: 'row' }}>
+                            <Pressable style={{ flexDirection: 'row', }}>
                                 <Text
                                     style={{
                                         fontSize: RFValue(16, 800),
@@ -443,7 +436,7 @@ const HomeScreen = ({ navigation }) => {
                                 >
                                     View all
                                 </Text>
-                                <Icon name="arrow-right-alt" color={'#FFFFFF'} size={24} />
+                                <Icon name='arrow-right-alt' color={'#FFFFFF'} size={24} />
                             </Pressable>
                         </View>
                     </ImageBackground>
@@ -489,10 +482,9 @@ const HomeScreen = ({ navigation }) => {
                         viewBtnColor={'#C1554E'}
                         title={'Upcoming Festivals'}
                         theme={{ textColor: theme.textColor }}
-                        onPress={() => {}}
+                        onPress={() => { }}
                     />
                 </View>
-
                 <FlatList
                     contentContainerStyle={{
                         rowGap: 4,
@@ -524,7 +516,7 @@ const HomeScreen = ({ navigation }) => {
                     <HeadingAndView
                         viewBtnColor={'#C1554E'}
                         title={'Nearby Temples'}
-                        onPress={() => {}}
+                        onPress={() => { }}
                         theme={{
                             textColor: theme.textColor,
                             colorscheme: theme.colorscheme,

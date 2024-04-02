@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, Linking, Modal, Pressable, Text, View } from 'react-native';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import DirectionSVG from '../../components/SVGs/DirectionSVG';
@@ -11,27 +11,29 @@ import SpottingErrorPage from './SuccuessPages/SpottingErrorPage';
 
 const TempleCard = ({ dataSet, children, showMargin, showButton }) => {
     const nav = useNavigation();
-    const [modalVisible, setModalVisible] = useState(false);
-    const [selectedHeader, setSelectedHeader] = useState('direction');
+    const [modalVisible, setModalVisible] = useState(false)
+    const [selectedHeader, setSelectedHeader] = useState('direction')
     const navigator = (name, data) => {
         nav.navigate('');
     };
     const selectionHandler = (item) => {
-        setSelectedHeader(item);
-        setModalVisible(true);
-    };
+        setSelectedHeader(item)
+        setModalVisible(true)
+    }
+
     return (
         <View style={{ paddingHorizontal: 20 }}>
             {
-                <Modal visible={modalVisible} transparent>
-                    {selectedHeader == 'Submit Images' ? (
-                        <FileUplaoder setModalVisible={setModalVisible} />
-                    ) : selectedHeader == 'Spot an error? Send Corrections' ? (
-                        <SpottingErrorPage setModalVisible={setModalVisible} navigation={nav} />
-                    ) : null}
+                modalVisible &&
+                <Modal transparent>
+                    {
+                        selectedHeader == 'Submit Images' ?
+                            <FileUplaoder setModalVisible={setModalVisible} /> :
+                            selectedHeader == 'Spot an error? Send Corrections' ?
+                                <SpottingErrorPage setModalVisible={setModalVisible} navigation={nav} /> : null
+                    }
                 </Modal>
             }
-
             <Text style={{ color: 'black', fontFamily: 'Lora-Bold', fontSize: 18 }}>
                 {dataSet?.templeName}
             </Text>
@@ -77,6 +79,7 @@ const TempleCard = ({ dataSet, children, showMargin, showButton }) => {
                             margin: 10,
                         }}
                         text={'Submit Images'}
+
                         backgroundColor={'#EDEDED'}
                         textColor={'#777777'}
                     />

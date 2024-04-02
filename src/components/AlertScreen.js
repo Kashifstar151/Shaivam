@@ -23,7 +23,6 @@ const AlertScreen = ({ descriptionText, removeFromPlaylist, setShowModal }) => {
                     </TouchableOpacity>
                 </View>
             </View>
-
         </View>
     )
 };

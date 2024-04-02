@@ -6,7 +6,6 @@ const TextInputCom = ({ headinText, insiderText, width, navigation }) => {
     return (
         <View style={{ marginVertical: 10 }}>
             <Text>{headinText}</Text>
-
             <TouchableOpacity style={{ width: width ? width : Dimensions.get('window').width - 70 }}>
                 <TextInput onFocus={navigation} style={width ? [styles.inputComp, { width: width }] : styles.inputComp} placeholder={insiderText} />
                 {/* <Text>{insiderText}</Text> */}

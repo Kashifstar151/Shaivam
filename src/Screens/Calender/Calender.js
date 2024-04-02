@@ -22,7 +22,7 @@ import InActiveCalender from '../../assets/Images/UnactiveCalender.svg';
 import ActiveStar from '../../assets/Images/ActiveStar.svg';
 import InActiveStar from '../../assets/Images/UnactiveStart.svg';
 import ActiveCalender from '../../assets/Images/CalenderAct.svg';
-import { Calendar, LocaleConfig, WeekCalendar, ExpandableCalendar } from 'react-native-calendars';
+import { Calendar, LocaleConfig, WeekCalendar, ExpandableCalendar, CalendarProvider } from 'react-native-calendars';
 import CustomCalender from './CustomCalender';
 import { colors } from '../../Helpers';
 import ElevatedCard from '../../components/ElevatedCard';
@@ -34,11 +34,12 @@ import { useFocusEffect } from '@react-navigation/native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import ButtonComp from '../Temples/Common/ButtonComp';
 import LocationSelection from './LocationSelection';
+import { RouteTexts } from '../../navigation/RouteText';
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-const Calender = () => {
+const Calender = ({ navigation }) => {
     const data = [
         { name: 'Festivals', selected: <ActiveStar />, unSelected: <InActiveStar /> },
         { name: 'Events', selected: <ActiveCalender />, unSelected: <InActiveCalender /> },
@@ -159,41 +160,40 @@ const Calender = () => {
             <View
                 style={{
                     marginTop: -100,
-                    width: Dimensions.get('screen').width,
+                    // width: Dimensions.get('screen').width,
                     flex: 1,
                 }}>
-                <View
+                {/* <View
                     style={{
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        elevation: 10,
-                        alignSelf: 'center',
+                        // alignItems: 'center',
+                        // justifyContent: 'center',
+                        padding: 5,
+                        backgroundColor: "#ffffff"
+                        // alignSelf: 'center',
                     }}
-                >
-                    <View style={[styles.calenderContainer, styles.shadowProps,]}>
-                        <Calendar
-                            theme={{
-                                arrowColor: '#777777',
-                                dayTextColor: '#222222',
-                                textDayFontFamily: 'Mulish-Bold',
-                                textDisabledColor: 'grey',
-                                monthTextColor: '#222222',
-                                textDayFontWeight: '600',
-                                textMonthFontWeight: '600',
-                            }}
-                            onDayPress={(day) => setSelected(day?.dateString)}
-                            markingType="custom"
-                            markedDates={marked}
-                            style={styles.calenderTheme}
-                        />
-                        <TouchableOpacity
-                            style={{ alignSelf: 'center', }}
-                            onPress={() => setFullScreen(false)}
-                        >
-                            <Icon name="chevron-up" size={23} />
-                        </TouchableOpacity>
-                    </View>
-                </View>
+                > */}
+                {/* <View style={{ padding: 5, borderRadius: 10, backgroundColor: 'red', width: Dimensions.get('window').width - 20 }}> */}
+                <CalendarProvider style={[styles.calenderContainer, styles.shadowProps,]} date={new Date().toISOString()}>
+                    <ExpandableCalendar
+                        theme={{
+                            arrowColor: '#222222',
+                            dayTextColor: '#222222',
+                            textDayFontFamily: 'Mulish-Bold',
+                            textDisabledColor: 'grey',
+                            monthTextColor: '#222222',
+                            textDayFontWeight: '600',
+                            textMonthFontWeight: '600',
+                            // backgroundColor: 'red',
+                            calendarBackground: "#FFFFFF"
+
+                        }}
+                        onDayPress={(day) => setSelected(day?.dateString)}
+                        markingType="custom"
+                        markedDates={marked}
+                        style={styles.calenderTheme} />
+                </CalendarProvider>
+                {/* </View> */}
+                {/* </View> */}
                 {
                     selectedHeader == 'Events' &&
                     <View style={styles.filterContainer}>
@@ -215,7 +215,7 @@ const Calender = () => {
                 <FlatList
                     data={eventData}
                     renderItem={({ item, index }) => (
-                        <ElevatedCard theme={{ colorscheme: theme.colorscheme }}>
+                        <ElevatedCard navigation={() => navigation.navigate(RouteTexts.EVENT_DETAILS)} theme={{ colorscheme: theme.colorscheme }}>
                             <EventCard
                                 date={item.date}
                                 timing={item.timing}
@@ -228,7 +228,7 @@ const Calender = () => {
                         </ElevatedCard>
                     )}
                 />
-                <RBSheet height={450} closeOnDragDown ref={bottomSheetRef}>
+                <RBSheet height={500} closeOnDragDown ref={bottomSheetRef}>
                     {
                         selectedFilter == 'Event' ? <>
                             <EventSelectionType />
@@ -238,7 +238,6 @@ const Calender = () => {
                         </> :
                             <LocationSelection />
                     }
-
                 </RBSheet>
                 {/* <BottomSheet snapPoints={['50%']} ref={bottomSheetRef} >
                     <EventSelectionType />
@@ -259,7 +258,8 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
     },
     calenderContainer: {
-        backgroundColor: '#ffffff',
+        // backgroundColor: 'red',
+        alignSelf: 'center',
         borderRadius: 10,
         //  elevation: 2, 
     },
@@ -271,7 +271,7 @@ export const styles = StyleSheet.create({
         shadowRadius: 3,
     },
     calenderTheme: {
-        width: Dimensions.get('window').width - 30, borderRadius: 10,
+        width: Dimensions.get('window').width - 20, borderRadius: 10,
     },
     itemContainer: { height: 75, backgroundColor: '#fff', marginHorizontal: 10, borderRadius: 10, alignItems: 'center', flexDirection: 'row' },
     itemText: { fontSize: 12, fontFamily: 'Mulish-Regular', color: '#777777' },

@@ -3,16 +3,11 @@ import {
     Dimensions,
     Switch,
     FlatList,
-    Pressable,
-    ScrollView,
     StyleSheet,
     Text,
     TouchableOpacity,
     View,
     Animated as AnimatedRN,
-    useColorScheme,
-    Alert,
-    ActivityIndicator,
     Platform,
     StatusBar,
 } from 'react-native';
@@ -54,6 +49,7 @@ import TrackPlayer, {
     useProgress,
 } from 'react-native-track-player';
 import BottomSheet from '@gorhom/bottom-sheet';
+import { listfavAudios } from '../../../Databases/AudioPlayerDatabase';
 
 const ThrimuraiSong = ({ route, navigation }) => {
     console.log('the render of the song==>');
@@ -64,19 +60,19 @@ const ThrimuraiSong = ({ route, navigation }) => {
     // });
     const isFocused = useIsFocused;
     const { data, downloaded, searchedword, searchScreen, songNo } = route.params || {};
-    console.log('🚀 ~ ThrimuraiSong ~ data:', JSON.stringify(data, 0, 2), downloaded);
+    // console.log('🚀 ~ ThrimuraiSong ~ data:', JSON.stringify(data, 0, 2), downloaded);
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
     }));
-    const bottomSheetRef = useRef(null);
+    // const bottomSheetRef = useRef(null);
     const [downloadingLoader, setDownloadingLoader] = useState(false);
-    const snapPoints = useMemo(() => ['25%', '25%'], []);
+    // const snapPoints = useMemo(() => ['25%', '25%'], []);
     const [showSetting, setShowSetting] = useState(false);
     const language = ['Original', 'Tamil', 'English', 'Hindi'];
     const [selectedLang, setSelectedLang] = useState('Original');
     const [fontSizeCount, setFontSizeCount] = useState(null);
-    const [refFlatList, setRefFlatList] = useState(null);
+    // const [refFlatList, setRefFlatList] = useState(null);
     const flatListRef = useRef(null);
 
     const initializeTheFontSize = async () => {
@@ -130,9 +126,11 @@ const ThrimuraiSong = ({ route, navigation }) => {
     useEffect(() => {
         initilizeTheTheme();
     }, []);
+    const [favList, setFavList] = useState(null)
 
     useEffect(() => {
         fetchAndDisplayDownloads();
+        getFavAudios()
         Dimensions.addEventListener('change', ({ window: { width, height } }) => {
             if (width < height) {
                 setOrientation('PORTRAIT');
@@ -196,7 +194,23 @@ const ThrimuraiSong = ({ route, navigation }) => {
     //     '🚀 ~ ``````````~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~:',
     //     activeTrack
     // );
-
+    const [isFav, setIsFav] = useState(false)
+    const getFavAudios = (songList) => {
+        listfavAudios(callbacks => {
+            console.log("🚀 ~ useEffect ~ callbacks:", JSON.stringify(callbacks, 0, 2))
+            // setFavList(callbacks)
+            const updatedArray2 = songList?.map((item2) => {
+                const match = callbacks.find((item1) => item1.id === item2.id);
+                if (match) {
+                    setIsFav(true)
+                }
+                // console.log("🚀 ~ updatedArray2 ~ match:", match)
+                // console.log("🚀 ~ updatedArray2 ~ match:", match)
+                // return match; // Replace with the object from array1 if there's a match
+            });
+            // console.log("🚀 ~ updatedArray2 ~ updatedArray2:------------", updatedArray2)
+        })
+    }
     const fetchAndDisplayDownloads = async () => {
         try {
             // const keys = await AsyncStorage.getAllKeys();
@@ -255,7 +269,7 @@ GROUP BY
     title`;
 
         getSqlData(titleQuery, (data) => {
-            console.log("🚀 ~ getSqlData ~ data:", data)
+            // console.log("🚀 ~ getSqlData ~ data:", data)
             dispatchMusic({
                 type: 'SET_TITLE',
                 payload: data.filter((i) => i.localBased !== null)[0].localeBased,
@@ -264,7 +278,7 @@ GROUP BY
                 const query2 = `SELECT * FROM odhuvars WHERE title='${data.filter((i) => i.tamil !== null)[0]?.tamil
                     }'`;
                 getSqlData(query2, (callbacks) => {
-                    console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
+                    // console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
                     dispatchMusic({ type: 'SONG_DETAILS', payload: details });
                     // if (downloadList.length > 0) {
                     //     alert(true);
@@ -297,7 +311,6 @@ GROUP BY
     };
     useEffect(() => {
         dispatchMusic({ type: 'PREV_ID', payload: data?.prevId });
-
         if (downloaded) {
             setUpPlayer(data);
         }
@@ -325,6 +338,7 @@ GROUP BY
     useEffect(() => {
         if (musicState.song.length) {
             checkDownloaded(musicState.song);
+            getFavAudios(musicState.song)
         }
     }, [musicState.song, downloadList]);
 
@@ -957,6 +971,7 @@ GROUP BY
                     setRepeatMode={setRepeatMode}
                     queryForNextPrevId={queryForNextPrevId}
                     queryForPreviousPrevId={queryForPreviousPrevId}
+                    isFav={isFav}
                 />
             </Animated.View>
             {/* </BottomSheet> */}
