@@ -204,7 +204,7 @@ const Fav = ({ navigation }) => {
                         </TouchableOpacity>
                         <FlatList data={favList} renderItem={({ item, index }) => renderSong(item, index)} />
                     </View> :
-                    selecetedHeader == 'Offline Downloads' && downloadList.length > 0 ?
+                    selecetedHeader == 'Offline Downloads' && downloadList?.length > 0 ?
                         <View style={{ flex: 1, }}>
                             <TouchableOpacity style={styles.RearrangsTask}
                                 onPress={() => navigation.navigate(RouteTexts.SONGS_LIST, {

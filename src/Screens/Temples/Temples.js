@@ -15,7 +15,9 @@ import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import NearByTemples from './NearByTemples';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import {
+    checkPermissionAccess,
     clearGetCurrentLocationWatcher,
+    getCurrentLocation,
     getCurrentLocationWatcher,
     getTheLocationName,
     locationPermission,
@@ -31,7 +33,7 @@ import { categoryBtnClbk, markerPressClbk } from './CallBacksForClick.js';
 import SearchTemple from './SearchTemple.js';
 import { CustomMarker } from './CustomMarker.js';
 import { ThemeContext } from '../../Context/ThemeContext.js';
-import { openSettings, RESULTS } from 'react-native-permissions';
+import { openSettings, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { BlurView } from '@react-native-community/blur';
 import { CustomLongBtn } from '../../components/Buttons.js';
 import AlertmapSVG from '../../../assets/Images/AlertmapSVG.svg';
@@ -150,9 +152,11 @@ export const Temples = ({ navigation, route }) => {
     const [permissionGranted, setPermissionGranted] = useState(null);
     const onMapReadyCallback = async () => {
         const state = await locationPermission();
-        console.log('🚀 ~ onMapReadyCallback ~ state:', state);
         setPermissionGranted(state.permissionType);
         if (state.status) {
+            getCurrentLocation((val) => {
+                setUserLocation((prev) => ({ ...prev, ...val }));
+            });
             getCurrentLocationWatcher((val) => {
                 setUserLocation((prev) => ({ ...prev, ...val }));
             });
@@ -160,6 +164,42 @@ export const Temples = ({ navigation, route }) => {
             setShowModal(true);
         }
     };
+
+    const [userLocName, setUserLocName] = useState('');
+
+    const handleModalAction = async () => {
+        openSettings();
+        setShowModal(!showModal);
+    };
+
+    // todos : have to implement the async storage to store the access permission value, so that when we get back from changing the permission it must ask for the permission rather than again showing modal of enable the location
+
+    const getTheState = useCallback(async () => {
+        let permissionType = Platform.select({
+            ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+            android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+        });
+        const state = await checkPermissionAccess(permissionType);
+        setPermissionGranted((prev) => state);
+    }, []);
+
+    const handleTrackBack = () => {
+        if (permissionGranted === RESULTS.GRANTED) {
+            console.log('the uuiuui');
+            setRegionCoordinate((prev) => ({
+                ...prev,
+                // latitude: 28.5002,
+                // longitude: 77.381,
+                ...userLocation,
+            }));
+        } else {
+            setShowModal(!showModal);
+        }
+    };
+
+    useFocusEffect(() => {
+        getTheState();
+    });
 
     useEffect(() => {
         (async () => {
@@ -171,10 +211,8 @@ export const Temples = ({ navigation, route }) => {
         };
     }, []);
 
-    const [userLocName, setUserLocName] = useState('');
-
     useEffect(() => {
-        if (userLocation?.latitude && userLocation?.longitude) {
+        if (regionCoordinate?.latitude && regionCoordinate?.longitude) {
             (async () => {
                 const locationDetail = await getTheLocationName({ ...regionCoordinate });
                 setUserLocName((prev) => {
@@ -186,11 +224,7 @@ export const Temples = ({ navigation, route }) => {
                 });
             })();
         }
-    }, [userLocation]);
-
-    useEffect(() => {
-        console.log('the permissionGranted :::::::::::::::::::::::::::::::', permissionGranted);
-    }, [permissionGranted]);
+    }, [regionCoordinate]);
 
     return (
         <>
@@ -216,6 +250,7 @@ export const Temples = ({ navigation, route }) => {
                             }
                         }}
                         region={regionCoordinate}
+                        zoomEnabled
                     >
                         {permissionGranted === RESULTS.GRANTED && (
                             <>
@@ -296,23 +331,7 @@ export const Temples = ({ navigation, route }) => {
                             height: 8,
                         },
                     }}
-                    onPress={() => {
-                        if (permissionGranted === RESULTS.GRANTED) {
-                            console.log('the uuiuui');
-                            setUserLocation((prev) => ({
-                                ...prev,
-                                latitude: 28.5002,
-                                longitude: 77.381,
-                            }));
-                            setRegionCoordinate((prev) => ({
-                                ...prev,
-                                latitude: 28.5002,
-                                longitude: 77.381,
-                            }));
-                        } else {
-                            setShowModal(!showModal);
-                        }
-                    }}
+                    onPress={handleTrackBack}
                 >
                     {/* bring user's location into view */}
                     <TrackBackToLocSVG fill={'#777'} />
@@ -417,10 +436,7 @@ export const Temples = ({ navigation, route }) => {
                                 work
                             </Text>
                             <CustomLongBtn
-                                onPress={() => {
-                                    openSettings()
-                                    setShowModal(!showModal);
-                                }}
+                                onPress={handleModalAction}
                                 text={'Enable location access'}
                                 textStyle={{
                                     color: '#4C3600',
