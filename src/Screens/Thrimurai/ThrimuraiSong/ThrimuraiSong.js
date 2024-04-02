@@ -521,13 +521,6 @@ GROUP BY
                                     {'Text currently not available'}
                                 </Text>
                             )}
-                            <View style={styles.textSectionDD}>
-                                <Text style={styles.titleDropDown}>{`${t('Aruliyavar')}`}</Text>
-                                <Text style={styles.valueDropDown}>
-                                    {t(musicState?.metaData?.author) ||
-                                        'Text currently not available'}
-                                </Text>
-                            </View>
                         </View>
 
                         <View style={styles.container}>
