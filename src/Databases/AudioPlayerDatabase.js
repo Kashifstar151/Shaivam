@@ -40,7 +40,7 @@ export async function listfavAudios(callbacks) {
             var length = resultSet.rows.length;
             let arr = []
             for (var i = 0; i < length; i++) {
-                console.log("row data", resultSet.rows.item(i));
+                // console.log("row data", resultSet.rows.item(i));
                 arr.push(resultSet.rows.item(i))
             }
             callbacks(arr)

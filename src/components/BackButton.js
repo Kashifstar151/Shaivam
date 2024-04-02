@@ -15,6 +15,7 @@ const BackButton = ({
     rightIcon,
     buttonDisable,
     nandiLogo,
+    firstRightIcon
 }) => {
     return (
         <View
@@ -101,6 +102,15 @@ const BackButton = ({
                             flexDirection: 'row',
                         }}
                     >
+                        {firstRightIcon && (
+                            <TouchableOpacity style={{
+                                paddingHorizontal: 5,
+                                alignSelf: 'center'
+                            }}>
+                                <Icon name="download" size={24} color="white" />
+                            </TouchableOpacity>
+                        )
+                        }
                         {rightIcon && (
                             <TouchableOpacity
                                 style={{

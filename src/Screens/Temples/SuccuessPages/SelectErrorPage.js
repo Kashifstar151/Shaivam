@@ -40,7 +40,6 @@ const SelectErrorPage = ({ setShowSubmit, selectedError, navigation, setModalVis
     const animationref = useRef(null)
     useEffect(() => {
         animationref.current?.play();
-
         // Or set a specific startFrame and endFrame with:
         animationref.current?.play(30, 120);
     }, [submitted])

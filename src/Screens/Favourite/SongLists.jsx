@@ -55,9 +55,8 @@ const SongLists = ({navigation,route} ) => {
         </ScaleDecorator>
     )
     const updateList = (item)=>{
-
       for (i in item){
-        console.log("index" ,i)
+        // console.log("index" ,i)
         let query = `UPDATE fav_odhuvar SET serialNo=? WHERE id=?`
         updatefavPlaylist(query, [i, item?.[i]?.id],callbacks => {
             console.log("🚀 ~ updateList ~ callbacks:", callbacks)

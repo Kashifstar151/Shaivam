@@ -104,6 +104,7 @@ const AudioPlayer = ({
     queryForPreviousPrevId,
     visibleStatusBar,
     setDownloadingLoader,
+    isFav
 }) => {
     console.log('the render of page =>', repeatMode);
 
@@ -130,6 +131,7 @@ const AudioPlayer = ({
         await AsyncStorage.setItem(`recentTrack`, JSON.stringify(updatedTracks));
     };
     const [fav, setFav] = useState(false);
+
     const downloadAudios = () => {
         listfavAudios((calbacks) => {
             let lenght = calbacks?.length;
@@ -155,7 +157,7 @@ const AudioPlayer = ({
                         }
                     );
                 })
-                .catch((err) => {});
+                .catch((err) => { });
         });
     };
     const { position, duration } = useProgress();
@@ -186,7 +188,7 @@ const AudioPlayer = ({
         Icon.getImageSource('circle', 18, '#C1554E').then((source) => {
             return setThumbImage({ thumbIcon: source });
         });
-        Promise.allSettled([createUserTable(), MostPlayedSongList(), getMostPlayedSong()]);
+        Promise.allSettled([createUserTable(), MostPlayedSongList(), getMostPlayedSong(), getFavAudios()]);
         // createUserTable();
         // MostPlayedSongList();
         // getMostPlayedSong()
@@ -198,6 +200,18 @@ const AudioPlayer = ({
         //     dispatchMusic({ type: 'SET_SONG', payload: data });
         // }
     }, []);
+    const getFavAudios = () => {
+        listfavAudios(callbacks => {
+            // console.log("🚀 ~ useEffect ~ callbacks:", JSON.stringify(callbacks, 0, 2))
+            if (callbacks?.length > 0) {
+                callbacks?.map((item) => {
+                    if (activeTrack.id == item?.id) {
+                        setFav(true)
+                    }
+                })
+            }
+        })
+    }
     const getMode = (mode) => {
         if (mode == 0) {
             TrackPlayer.setRepeatMode(RepeatMode.Off);
@@ -404,11 +418,11 @@ const AudioPlayer = ({
                 style={
                     orientation == 'LANDSCAPE' || !visibleStatusBar
                         ? {
-                              width: Dimensions.get('window').width / 2,
-                              backgroundColor: '#222222',
-                              height: 70,
-                              alignItems: 'center',
-                          }
+                            width: Dimensions.get('window').width / 2,
+                            backgroundColor: '#222222',
+                            height: 70,
+                            alignItems: 'center',
+                        }
                         : { backgroundColor: '#222222', height: 200 }
                 }
             >
@@ -658,7 +672,7 @@ const AudioPlayer = ({
                                 )}
                             </TouchableOpacity> */}
                             <TouchableOpacity onPress={() => downloadAudios()}>
-                                {fav ? (
+                                {isFav || fav ? (
                                     <Icon name="heart" size={22} color="red" />
                                 ) : (
                                     <FavouriteIcon />

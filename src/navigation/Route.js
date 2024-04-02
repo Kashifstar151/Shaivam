@@ -33,6 +33,7 @@ import SpottingErrorPage from '../Screens/Temples/SuccuessPages/SpottingErrorPag
 import SelectErrorPage from '../Screens/Temples/SuccuessPages/SelectErrorPage';
 // import PinTheLocation from '../Screens/Temples/PinTheLocationPage';
 import Onboarding from '../Screens/OnboardingScreen/Onboarding';
+import EventDetails from '../Screens/Calender/EventDetails';
 // import { ThemeContextProvider } from '../Context/ThemeContext';
 
 const Route = () => {
@@ -195,12 +196,6 @@ const Route = () => {
                             options={{
                                 headerShown: false,
                                 cardStyleInterpolator: CardStyleInterpolators.forBottomSheetAndroid,
-                                //  CardStyleInterpolators.forHorizontalIOS,
-                                // transitionSpec: {
-                                //   open: config,
-                                //   close: config,
-                                // },
-                                // gestureDirection: 'horizontal-inverted',
                                 gestureEnabled: true,
                             }}
                         />
@@ -223,6 +218,7 @@ const Route = () => {
                             name={RouteTexts.THIRIMURAI_HEADING}
                             component={ThrimuraiHeadingPage}
                         />
+                        <Stack.Screen name={RouteTexts.EVENT_DETAILS} component={EventDetails} />
                         <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={MusicComponent} />
                         <Stack.Screen name={'Stotras'} component={Strotras} />
                         <Stack.Screen
