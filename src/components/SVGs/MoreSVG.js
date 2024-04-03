@@ -1,13 +1,13 @@
 import * as React from 'react';
 import Svg, { G, Path, Defs, ClipPath } from 'react-native-svg';
 
-function MoreSVG({ fill, ...props }) {
+function MoreSVG({ fill, height = 4, width = 18, viewBox = '0 0 18 4', ...props }) {
     return (
         <Svg
             xmlns="http://www.w3.org/2000/svg"
-            width={18}
-            height={4}
-            viewBox="0 0 18 4"
+            width={width}
+            height={height}
+            viewBox={viewBox}
             fill="none"
             {...props}
         >
