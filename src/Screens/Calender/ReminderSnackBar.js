@@ -6,11 +6,14 @@ import ToggleSwitch from 'toggle-switch-react-native'
 export const styles = StyleSheet.create({
     main: { justifyContent: 'space-between', paddingHorizontal: 10, alignItems: 'center', flexDirection: 'row', height: 50, width: Dimensions.get('window').width - 40, borderColor: '#F0F0F0', borderWidth: 1, borderRadius: 10 }
 })
-const ReminderSnackBar = () => {
+const ReminderSnackBar = ({ hidebell }) => {
     const [toggleOn, setToggleOn] = useState(false)
     return (
         <View style={toggleOn ? [styles.main, { borderColor: '#C1554E' }] : styles.main}>
-            <BellIcon />
+            {
+                hidebell ? null : <BellIcon />
+            }
+
             <View style={{}}>
                 <Text style={{ fontSize: 14, fontFamily: 'Mulish-Bold', color: '#222222' }}>Turn on reminder for event</Text>
                 <Text style={{ fontSize: 12, fontFamily: 'Mulish-Regular', color: '#777777' }}>Notification will be sent X days prior</Text>

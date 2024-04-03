@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dimensions, FlatList, Image, StyleSheet, Text, View } from "react-native";
 import BackButton from "../../components/BackButton";
 import Background from "../../components/Background";
@@ -9,6 +9,7 @@ import CameraSVG from "../../components/SVGs/CameraSVG";
 import LinkIcon from "../../components/SVGs/LinkIcon";
 import { gStyles } from "../../Helpers/GlobalStyles";
 import ReminderSnackBar from "./ReminderSnackBar";
+import { RouteTexts } from "../../navigation/RouteText";
 
 const EventDetails = ({ navigation }) => {
     const keys = [
@@ -18,8 +19,13 @@ const EventDetails = ({ navigation }) => {
         { name: 'Presenter', value: 'Presenter name' },
         { name: 'Contact No', value: '+91-9876710234' },
         { name: 'Url', value: 'www.thisisurl.com' },
-
     ]
+    const [selectedHeader, setSelectedHeader] = useState('Direction')
+    const selectionHandler = (name) => {
+        if (name == 'Virtual event link') {
+            navigation.navigate(RouteTexts.VIRTUAL_EVENT_CREATE)
+        }
+    }
     return (
         <View style={{ flex: 1, backgroundColor: '#ffffff' }}>
             <Background>
@@ -55,7 +61,7 @@ const EventDetails = ({ navigation }) => {
 
                     <CustomButton
                         svg={<LinkIcon fill={'#ffffff'} />}
-                        // onPress={() => selectionHandler('Submit Images')}
+                        onPress={() => selectionHandler('Virtual event link')}
                         style={{
                             margin: 10,
                         }}
@@ -87,7 +93,6 @@ const EventDetails = ({ navigation }) => {
                 </View>
             </View>
             <View style={{ position: 'absolute', bottom: 30, paddingHorizontal: 20 }}>
-
                 <ReminderSnackBar />
             </View>
         </View>

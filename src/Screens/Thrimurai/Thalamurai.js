@@ -1,5 +1,13 @@
-import React, { useContext, useState } from 'react'
-import { Dimensions, FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useContext, useState } from 'react';
+import {
+    Dimensions,
+    FlatList,
+    Pressable,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import { ThemeContext } from '../../Context/ThemeContext';
 import { colors } from '../../Helpers';
@@ -7,6 +15,8 @@ import RenderThalam from './ThrimuraiHeadingPage/RenderThalam';
 import { useTranslation } from 'react-i18next';
 import temples from '../../../assets/data/temples.json';
 import region from '../../../assets/data/region.json';
+import ThalamSVG from '../../components/SVGs/ThalamSVG';
+import NaduSVG from '../../components/SVGs/NaduSVG';
 
 const Thalamurai = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
@@ -21,34 +31,80 @@ const Thalamurai = ({ navigation }) => {
                 contentContainerStyle={{ marginTop: 10, paddingBottom: 250 }}
                 data={ThalamuraiHeaders}
                 renderItem={({ item, index }) => (
-                    <>
-                        <Pressable onPress={ThalamHeaders !== null && ThalamHeaders == index ? () => setThalamHeaders(null) : () => setThalamHeaders(index)} style={[styles.chapterBox, { backgroundColor: theme.cardBgColor }]}>
-                            <View style={{ justifyContent: 'center' }}>
-                                <Text style={[styles.chapterNameTexts, { color: theme.textColor }]}>
-                                    {t(item)}
-                                </Text>
+                    <View
+                        style={[
+                            ThalamHeaders === index && theme.colorscheme === 'light'
+                                ? styles.boxBorder
+                                : {},
+                            { backgroundColor: theme.cardBgColor, marginBottom: 4 },
+                        ]}
+                    >
+                        <Pressable
+                            onPress={
+                                ThalamHeaders !== null && ThalamHeaders == index
+                                    ? () => setThalamHeaders(null)
+                                    : () => setThalamHeaders(index)
+                            }
+                            style={[{ backgroundColor: theme.cardBgColor, paddingHorizontal: 20 }]}
+                        >
+                            <View style={[styles.chapterBox]}>
+                                <View
+                                    style={{
+                                        justifyContent: 'center',
+                                        flexDirection: 'row',
+                                        gap: 10,
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    {item !== 'Nadu' ? (
+                                        <ThalamSVG fill={theme.textColor} />
+                                    ) : (
+                                        <NaduSVG fill={theme.textColor} />
+                                    )}
+                                    <Text
+                                        style={[
+                                            styles.chapterNameTexts,
+                                            { color: theme.textColor },
+                                        ]}
+                                    >
+                                        {t(item)}
+                                    </Text>
+                                </View>
+                                {ThalamHeaders !== null && ThalamHeaders == index ? (
+                                    <TouchableOpacity onPress={() => setThalamHeaders(null)}>
+                                        <Icon
+                                            name="horizontal-rule"
+                                            size={24}
+                                            color={
+                                                theme.colorscheme === 'light'
+                                                    ? '#000'
+                                                    : colors.grey1
+                                            }
+                                        />
+                                    </TouchableOpacity>
+                                ) : (
+                                    <TouchableOpacity onPress={() => setThalamHeaders(index)}>
+                                        <Icon
+                                            name="add"
+                                            size={24}
+                                            color={
+                                                theme.colorscheme === 'light'
+                                                    ? '#000'
+                                                    : colors.grey1
+                                            }
+                                        />
+                                    </TouchableOpacity>
+                                )}
                             </View>
-                            {ThalamHeaders !== null && ThalamHeaders == index ? (
-                                <TouchableOpacity onPress={() => setThalamHeaders(null)}>
-                                    <Icon
-                                        name="horizontal-rule"
-                                        size={24}
-                                        color={
-                                            theme.colorscheme === 'light' ? '#000' : colors.grey1
-                                        }
-                                    />
-                                </TouchableOpacity>
-                            ) : (
-                                <TouchableOpacity onPress={() => setThalamHeaders(index)}>
-                                    <Icon
-                                        name="add"
-                                        size={24}
-                                        color={
-                                            theme.colorscheme === 'light' ? '#000' : colors.grey1
-                                        }
-                                    />
-                                </TouchableOpacity>
-                            )}
+                            <View
+                                style={
+                                    ThalamHeaders === index && {
+                                        backgroundColor: '#EAEAEA',
+                                        height: 1,
+                                        marginBottom: 10,
+                                    }
+                                }
+                            ></View>
                         </Pressable>
                         {ThalamHeaders == index && (
                             <FlatList
@@ -63,7 +119,7 @@ const Thalamurai = ({ navigation }) => {
                                 )}
                             />
                         )}
-                    </>
+                    </View>
                 )}
             />
         </View>
@@ -77,9 +133,14 @@ export const styles = StyleSheet.create({
         width: Dimensions.get('window').width,
         marginBottom: 4,
         flexDirection: 'row',
-        paddingHorizontal: 20,
+    },
+    boxBorder: {
+        borderBottomColor: '#C0554E',
+        borderTopColor: '#C0554E',
+        borderBottomWidth: 1,
+        borderTopWidth: 1,
     },
     chapterNameTexts: { fontSize: 14, fontWeight: '600' },
     chapterTexts: { fontSize: 12, fontWeight: '500', color: '#777777', marginTop: 5 },
 });
-export default Thalamurai
+export default Thalamurai;

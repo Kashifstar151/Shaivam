@@ -11,7 +11,7 @@ const Varakatrimurai = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
     const [selectedTitle, setSelectedTitle] = useState(null);
     const [authordata, setAuthorData] = useState(null);
-    const flatListRef = useRef(null)
+    const flatListRef = useRef(null);
     const { t } = useTranslation();
 
     useEffect(() => {
@@ -25,30 +25,55 @@ const Varakatrimurai = ({ navigation }) => {
 
     const renderContents = (item, index) => {
         return (
-            <View>
-                <Pressable onPress={selectedTitle !== null && selectedTitle === index ? () => setSelectedTitle(null) : () => setSelectedTitle(index)} style={[styles.chapterBox, { backgroundColor: theme.backgroundColor }]}>
-                    <View style={{ justifyContent: 'center' }}>
-                        <Text style={[styles.chapterNameTexts, { color: theme.textColor }]}>
-                            {t(item?.author)}
-                        </Text>
+            <View
+                style={[
+                    selectedTitle === index && theme.colorscheme === 'light'
+                        ? styles.boxBorder
+                        : {},
+                    { backgroundColor: theme.cardBgColor, marginBottom: 4 },
+                ]}
+            >
+                <Pressable
+                    onPress={
+                        selectedTitle !== null && selectedTitle === index
+                            ? () => setSelectedTitle(null)
+                            : () => setSelectedTitle(index)
+                    }
+                    style={[{ paddingHorizontal: 20 }]}
+                >
+                    <View style={[styles.chapterBox]}>
+                        <View style={{ justifyContent: 'center' }}>
+                            <Text style={[styles.chapterNameTexts, { color: theme.textColor }]}>
+                                {t(item?.author)}
+                            </Text>
+                        </View>
+                        {selectedTitle !== null && selectedTitle === index ? (
+                            <TouchableOpacity onPress={() => setSelectedTitle(null)}>
+                                <Icon
+                                    name="horizontal-rule"
+                                    size={24}
+                                    color={theme.colorscheme === 'light' ? '#000' : '#fff'}
+                                />
+                            </TouchableOpacity>
+                        ) : (
+                            <TouchableOpacity onPress={() => setSelectedTitle(index)}>
+                                <Icon
+                                    name="add"
+                                    size={24}
+                                    color={theme.colorscheme === 'light' ? '#000' : '#fff'}
+                                />
+                            </TouchableOpacity>
+                        )}
                     </View>
-                    {selectedTitle !== null && selectedTitle === index ? (
-                        <TouchableOpacity onPress={() => setSelectedTitle(null)}>
-                            <Icon
-                                name="horizontal-rule"
-                                size={24}
-                                color={theme.colorscheme === 'light' ? '#000' : '#fff'}
-                            />
-                        </TouchableOpacity>
-                    ) : (
-                        <TouchableOpacity onPress={() => setSelectedTitle(index)}>
-                            <Icon
-                                name="add"
-                                size={24}
-                                color={theme.colorscheme === 'light' ? '#000' : '#fff'}
-                            />
-                        </TouchableOpacity>
-                    )}
+                    <View
+                        style={
+                            selectedTitle === index && {
+                                backgroundColor: '#EAEAEA',
+                                height: 1,
+                                marginBottom: 10,
+                            }
+                        }
+                    ></View>
                 </Pressable>
                 {selectedTitle == index && (
                     <RenderAudios songs={item} navigation={navigation} varakatimurai={true} />
@@ -78,7 +103,12 @@ export const styles = StyleSheet.create({
         width: Dimensions.get('window').width,
         marginBottom: 4,
         flexDirection: 'row',
-        paddingHorizontal: 20,
+    },
+    boxBorder: {
+        borderBottomColor: '#C0554E',
+        borderTopColor: '#C0554E',
+        borderBottomWidth: 1,
+        borderTopWidth: 1,
     },
     chapterNameTexts: { fontSize: 12, fontWeight: '600' },
     chapterTexts: { fontSize: 12, fontWeight: '500', color: '#777777', marginTop: 5 },
