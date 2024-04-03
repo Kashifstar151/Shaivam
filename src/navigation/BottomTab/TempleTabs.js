@@ -49,17 +49,15 @@ export default TempleTab = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
     return (
         <Tab.Navigator
+            initialRouteName="Temples"
             screenOptions={{
                 tabBarStyle: [
                     styles.tabContainer,
-                    {
-                        backgroundColor:
-                            theme.colorscheme === 'dark' ? theme.backgroundColor : '#C2514A',
-                    },
+                    {},
                     Platform.OS !== 'ios'
                         ? {
-                            height: 65,
-                        }
+                              height: 65,
+                          }
                         : {},
                 ],
             }}
@@ -79,70 +77,31 @@ export default TempleTab = ({ navigation }) => {
                     //     fontFamily: 'Mulish-Regular'
                     // },
                     tabBarIcon: ({ color, size, focused }) => (
-                        <TouchableOpacity
-                            onPress={() =>
-                                navigation.navigate(RouteTexts.BOTTOM_TABS, {
-                                    screen: 'Home',
-                                })
-                            }
+                        <View
+                            // onPress={() =>
+                            //     navigation.navigate(RouteTexts.BOTTOM_TABS, {
+                            //         screen: 'Home',
+                            //     })
+                            // }
                             style={{
                                 paddingHorizontal: 10,
-                                // shadowOffset: { width: -2, height: 0 },
-                                // borderRightWidth: 2,
                                 height: '100%',
-                                // shadowColor: 'black',
                                 alignItems: 'center',
-                                // shadowOpacity: 0.4,
-                                // shadowRadius: 3,
                                 justifyContent: 'center',
                                 flexDirection: 'row',
-                                // width: 170
-                                // elevation: 1.5,
-                                // borderRightColor: 'white'
-                                // elevation: 2
                             }}
                         >
                             {focused ? (
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                    {/* <ActiveTeample /> */}
                                     <ActiveHome />
-                                    <Text
-                                        style={[
-                                            styles.tabBarLable,
-                                            { color: theme.bottomTabItemColor.unSelected },
-                                        ]}
-                                    >
-                                        Go to Home
-                                    </Text>
+                                    <Text style={[styles.tabBarLable]}>Go to Home</Text>
                                 </View>
                             ) : (
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                    {/* <ActiveTeample /> */}
                                     <ActiveHome />
-                                    <Text
-                                        style={[
-                                            styles.tabBarLable,
-                                            { color: theme.bottomTabItemColor.unSelected },
-                                        ]}
-                                    >
-                                        Go to Home
-                                    </Text>
+                                    <Text style={[styles.tabBarLable]}>Go to Home</Text>
                                 </View>
                             )}
-                            {/* <View style={{ marginTop: 6 }}>
-                                {focused ? (
-                                    <IndicatorIcon />
-                                ) : (
-                                    <View
-                                        style={{
-                                            height: 10,
-                                            width: '100%',
-                                            // backgroundColor: 'black',
-                                        }}
-                                    ></View>
-                                )}
-                            </View> */}
-                            {/* </View> */}
                             <View
                                 style={{
                                     marginHorizontal: 10,
@@ -152,18 +111,21 @@ export default TempleTab = ({ navigation }) => {
                                     backgroundColor: '#C1554E',
                                 }}
                             ></View>
-                        </TouchableOpacity>
+                        </View>
                     ),
                 }}
                 name="Exit Temple"
                 component={NullComponent}
                 listeners={() => ({
                     focus: (e) => {
-                        navigation.navigate(RouteTexts.BOTTOM_TABS);
+                        navigation.navigate('BottomTabs', {
+                            screen: 'Home',
+                        });
                     },
                     tabPress: (e) => {
-                        e.preventDefault(); // Prevents navigation
-                        // Your code here for when you press the tab
+                        navigation.navigate(RouteTexts.BOTTOM_TABS, {
+                            screen: 'Home',
+                        });
                     },
                 })}
             />
@@ -173,40 +135,20 @@ export default TempleTab = ({ navigation }) => {
                     tabBarLabel: '',
                     tabBarActiveTintColor: 'white',
                     tabBarShowLabel: false,
-                    // tabBarLabelStyle: {
-                    //     color: '#FFAAA5',
-                    //     fontSize: 10,
-                    //     fontWeight: '600',
-                    //     fontFamily: 'Mulish-Regular'
-                    // },
                     tabBarIcon: ({ color, size, focused }) => (
                         <View style={styles.IconStyles}>
                             {focused ? (
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                     {/* <ActiveTeample /> */}
                                     <ActiveLocation />
-                                    <Text
-                                        style={[
-                                            styles.tabBarLable,
-                                            { color: theme.bottomTabItemColor.selected },
-                                        ]}
-                                    >
-                                        Explore
-                                    </Text>
+                                    <Text style={[styles.tabBarLable]}>Explore</Text>
                                 </View>
                             ) : (
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                     {/* <ActiveTeample /> */}
                                     <InActiveLocation />
 
-                                    <Text
-                                        style={[
-                                            styles.tabBarLable,
-                                            { color: theme.bottomTabItemColor.unSelected },
-                                        ]}
-                                    >
-                                        Explore
-                                    </Text>
+                                    <Text style={[styles.tabBarLable]}>Explore</Text>
                                 </View>
                             )}
                             <View style={{ marginTop: 6 }}>
@@ -234,40 +176,21 @@ export default TempleTab = ({ navigation }) => {
                     tabBarLabel: '',
                     tabBarActiveTintColor: 'white',
                     tabBarShowLabel: false,
-                    // tabBarLabelStyle: {
-                    //     color: '#FFAAA5',
-                    //     fontSize: 10,
-                    //     fontWeight: '600',
-                    //     fontFamily: 'Mulish-Regular'
-                    // },
+
                     tabBarIcon: ({ color, size, focused }) => (
                         <View style={styles.IconStyles}>
                             {focused ? (
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                     {/* <ActiveTeample /> */}
                                     <ActiveTrip />
-                                    <Text
-                                        style={[
-                                            styles.tabBarLable,
-                                            { color: theme.bottomTabItemColor.selected },
-                                        ]}
-                                    >
-                                        My Trip
-                                    </Text>
+                                    <Text style={[styles.tabBarLable]}>My Trip</Text>
                                 </View>
                             ) : (
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                     {/* <ActiveTeample /> */}
                                     <InActiveTrip />
 
-                                    <Text
-                                        style={[
-                                            styles.tabBarLable,
-                                            { color: theme.bottomTabItemColor.unSelected },
-                                        ]}
-                                    >
-                                        My Trip
-                                    </Text>
+                                    <Text style={[styles.tabBarLable]}>My Trip</Text>
                                 </View>
                             )}
                             <View style={{ marginTop: 6 }}>
@@ -292,48 +215,19 @@ export default TempleTab = ({ navigation }) => {
             <Tab.Screen
                 options={{
                     headerShown: false,
-                    // tabBarLabel: '',
                     tabBarShowLabel: false,
-                    // tabBarActiveTintColor: 'white',
-                    // tabBarLabelStyle: {
-                    //     // color: '#EDCB76',
-                    //     color: '#FFAAA5',
-                    //     fontSize: 10,
-                    //     fontWeight: '600',
-                    //     fontFamily: 'Mulish-Regular'
-                    // },
                     tabBarIcon: ({ color, size, focused }) => (
                         <View style={styles.IconStyles}>
                             {focused ? (
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                    {/* <View style={{ marginBottom: 7 }}> */}
-                                    {/* <ActiveMore /> */}
                                     <InActiveAddTrip />
-                                    {/* </View> */}
 
-                                    <Text
-                                        style={[
-                                            styles.tabBarLable,
-                                            { color: theme.bottomTabItemColor.selected },
-                                        ]}
-                                    >
-                                        Add Temple
-                                    </Text>
+                                    <Text style={[styles.tabBarLable]}>Add Temple</Text>
                                 </View>
                             ) : (
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                    {/* <View style={{ marginBottom: 7 }}> */}
-                                    {/* <InActiveMore /> */}
                                     <ActiveAddTrip />
-                                    {/* </View> */}
-                                    <Text
-                                        style={[
-                                            styles.tabBarLable,
-                                            { color: theme.bottomTabItemColor.unSelected },
-                                        ]}
-                                    >
-                                        Add Temple
-                                    </Text>
+                                    <Text style={[styles.tabBarLable]}>Add Temple</Text>
                                 </View>
                             )}
                             <View style={{ marginTop: 6 }}>
@@ -344,7 +238,6 @@ export default TempleTab = ({ navigation }) => {
                                         style={{
                                             height: 10,
                                             width: '100%',
-                                            // backgroundColor: 'white',
                                         }}
                                     ></View>
                                 )}
@@ -368,6 +261,7 @@ export const styles = StyleSheet.create({
         borderTopStartRadius: 10,
         position: 'absolute',
         bottom: 0,
+        backgroundColor: '#C2514A',
     },
     IconStyles: {
         paddingTop: 10,
