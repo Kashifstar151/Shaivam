@@ -66,7 +66,12 @@ const RenderContents = ({
 
     // console.log('the click ==>', item);
     return (
-        <>
+        <View
+            style={[
+                selectedTitle === index && theme.colorscheme === 'light' ? styles.boxBorder : {},
+                { backgroundColor: theme.cardBgColor, marginBottom: 4 },
+            ]}
+        >
             {!flagShowAudio && (
                 <Pressable
                     onPress={
@@ -74,34 +79,46 @@ const RenderContents = ({
                             ? (onPress = () => setSelectedTitle(null))
                             : () => setSelectedTitle(index)
                     }
-                    style={[styles.chapterBox, { backgroundColor: theme.cardBgColor }]}
+                    style={{ paddingHorizontal: 20 }}
                 >
-                    <View style={{ justifyContent: 'center' }}>
-                        <Text style={[styles.chapterNameTexts, { color: theme.textColor }]}>
-                            {t(item.name)}
-                        </Text>
-                        <Text style={styles.chapterTexts}>
-                            {range[item.prevId]}
-                            {/* {item.prevId} */}
-                        </Text>
+                    <View style={[styles.chapterBox]}>
+                        <View style={{ justifyContent: 'center' }}>
+                            <Text style={[styles.chapterNameTexts, { color: theme.textColor }]}>
+                                {t(item.name)}
+                            </Text>
+                            <Text style={styles.chapterTexts}>
+                                {range[item.prevId]}
+                                {/* {item.prevId} */}
+                            </Text>
+                        </View>
+                        {selectedTitle !== null && selectedTitle == index ? (
+                            <TouchableOpacity onPress={() => setSelectedTitle(null)}>
+                                <Icon
+                                    name="horizontal-rule"
+                                    size={24}
+                                    color={theme.colorscheme === 'light' ? '#000' : colors.grey1}
+                                />
+                            </TouchableOpacity>
+                        ) : (
+                            <TouchableOpacity onPress={() => setSelectedTitle(index)}>
+                                <Icon
+                                    name="add"
+                                    size={24}
+                                    color={theme.colorscheme === 'light' ? '#000' : colors.grey1}
+                                />
+                            </TouchableOpacity>
+                        )}
                     </View>
-                    {selectedTitle !== null && selectedTitle == index ? (
-                        <TouchableOpacity onPress={() => setSelectedTitle(null)}>
-                            <Icon
-                                name="horizontal-rule"
-                                size={24}
-                                color={theme.colorscheme === 'light' ? '#000' : colors.grey1}
-                            />
-                        </TouchableOpacity>
-                    ) : (
-                        <TouchableOpacity onPress={() => setSelectedTitle(index)}>
-                            <Icon
-                                name="add"
-                                size={24}
-                                color={theme.colorscheme === 'light' ? '#000' : colors.grey1}
-                            />
-                        </TouchableOpacity>
-                    )}
+
+                    <View
+                        style={
+                            selectedTitle === index && {
+                                backgroundColor: '#EAEAEA',
+                                height: 1,
+                                marginBottom: 10,
+                            }
+                        }
+                    ></View>
                 </Pressable>
             )}
             {selectedTitle == index && (
@@ -109,7 +126,7 @@ const RenderContents = ({
             )}
 
             {flagShowAudio && <RenderAudios songs={item} navigation={navigation} />}
-        </>
+        </View>
     );
 };
 const ThrimuraiHeadingPage = ({ route, navigation }) => {
@@ -295,9 +312,7 @@ export const styles = StyleSheet.create({
         justifyContent: 'space-between',
 
         height: 60,
-        marginBottom: 4,
         flexDirection: 'row',
-        paddingHorizontal: 20,
     },
     chapterNameTexts: { fontSize: 14, fontWeight: '600' },
     chapterTexts: { fontSize: 12, fontWeight: '500', color: '#777777', marginTop: 5 },
@@ -305,6 +320,12 @@ export const styles = StyleSheet.create({
         fontFamily: 'AnekTamil-Regular',
         fontSize: 14,
         // fontWeight: '500'
+    },
+    boxBorder: {
+        borderBottomColor: '#C0554E',
+        borderTopColor: '#C0554E',
+        borderBottomWidth: 1,
+        borderTopWidth: 1,
     },
 });
 export default ThrimuraiHeadingPage;

@@ -19,5 +19,6 @@ export const RouteTexts = {
     SPOTTING_ERROR_PAGE: "SpottingErrorPage",
     ERROR_SELECTION_PAGE: 'SelectErrorPage',
     ONBOARDING_SCREEN: 'Onboard',
-    EVENT_DETAILS: 'EventDetails'
+    EVENT_DETAILS: 'EventDetails',
+    VIRTUAL_EVENT_CREATE: 'CreateVirtualEvent'
 }

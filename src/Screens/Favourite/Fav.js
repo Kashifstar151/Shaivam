@@ -1,35 +1,46 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import React, { useContext, useEffect, useRef, useState } from 'react'
-import { Alert, Dimensions, FlatList, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import Icon from 'react-native-vector-icons/dist/MaterialIcons'
-import MaterialIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons'
-import Background from '../../components/Background'
-import SearchInput from '../../components/SearchInput'
-import { ThemeContext } from '../../Context/ThemeContext'
-import { listfavAudios, RemoveFavAudios } from '../../Databases/AudioPlayerDatabase'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import {
+    Alert,
+    Dimensions,
+    FlatList,
+    Modal,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native';
+import Icon from 'react-native-vector-icons/dist/MaterialIcons';
+import MaterialIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import Background from '../../components/Background';
+import SearchInput from '../../components/SearchInput';
+import { ThemeContext } from '../../Context/ThemeContext';
+import { listfavAudios, RemoveFavAudios } from '../../Databases/AudioPlayerDatabase';
 import MusicContainer from '../../../assets/Images/Frame 83.svg';
-import { RFValue } from 'react-native-responsive-fontsize'
-import HeadingText from '../../components/HeadingText'
-import { RouteTexts } from '../../navigation/RouteText'
-import { useIsFocused } from '@react-navigation/native'
-import EditPencil from "../../assets/Images/EditPencil.svg"
-import AlertScreen from '../../components/AlertScreen'
-import AntDesign from 'react-native-vector-icons/dist/AntDesign'
-import EmptyIcon from "../../assets/Images/Vector (6).svg"
-import { AnimatedToast } from '../../components/Toast'
+import { RFValue } from 'react-native-responsive-fontsize';
+import HeadingText from '../../components/HeadingText';
+import { RouteTexts } from '../../navigation/RouteText';
+import { useIsFocused } from '@react-navigation/native';
+import EditPencil from '../../assets/Images/EditPencil.svg';
+import AlertScreen from '../../components/AlertScreen';
+import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import EmptyIcon from '../../assets/Images/Vector (6).svg';
+import { AnimatedToast } from '../../components/Toast';
 // import Button from '../Temples/Common/Button'
 // import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 const Fav = ({ navigation }) => {
     // const BottomSheetRef = useRef(null)
     const { theme } = useContext(ThemeContext);
-    const isFocuced = useIsFocused()
-    const [selecetedHeader, setSelectedHeader] = useState('Favourites')
-    const [favList, setFavList] = useState([])
-    const [downloadList, setDownloadList] = useState([])
-    const [showModal, setShowModal] = useState(false)
-    const [selectedItem, setSelected] = useState(null)
-    const [showToastMessage, setShowToast] = useState(false)
-    const [emptyImage, setEmptyImage] = useState(true)
+    const isFocuced = useIsFocused();
+    const [selecetedHeader, setSelectedHeader] = useState('Favourites');
+    const [favList, setFavList] = useState([]);
+    const [downloadList, setDownloadList] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedItem, setSelected] = useState(null);
+    const [showToastMessage, setShowToast] = useState(false);
+    const [emptyImage, setEmptyImage] = useState(true);
     useEffect(() => {
         // fetchAndDisplayDownloads()
         // listfavAudios(callbacks => {
@@ -39,20 +50,45 @@ const Fav = ({ navigation }) => {
         //         setEmptyImage(false)
         //     }
         // })
-        Promise.all([fetchAndDisplayDownloads(), listfavAudios(callbacks => {
-            console.log("🚀 ~ useEffect ~ callbacks:", JSON.stringify(callbacks, 0, 2))
-            setFavList(callbacks)
-            if (callbacks?.length > 0) {
-                setEmptyImage(false)
-            }
-        })])
-
-    }, [isFocuced])
+        Promise.all([
+            fetchAndDisplayDownloads(),
+            listfavAudios((callbacks) => {
+                console.log('🚀 ~ useEffect ~ callbacks:', JSON.stringify(callbacks, 0, 2));
+                setFavList(callbacks);
+                if (callbacks?.length > 0) {
+                    setEmptyImage(false);
+                }
+            }),
+        ]);
+    }, [isFocuced]);
     const header = [
-        { name: 'Favourites', icon: <MaterialIcons name='heart-outline' size={24} color={theme.searchContext.unSelected.textColor} /> },
-        { name: 'Special Playlist', icon: <Icon name='bookmark-outline' size={24} color={theme.searchContext.unSelected.textColor} /> },
-        { name: 'Offline Downloads', icon: <Icon name='download' size={24} color={theme.searchContext.unSelected.textColor} /> },
-    ]
+        {
+            name: 'Favourites',
+            icon: (
+                <MaterialIcons
+                    name="heart-outline"
+                    size={24}
+                    color={theme.searchContext.unSelected.textColor}
+                />
+            ),
+        },
+        {
+            name: 'Special Playlist',
+            icon: (
+                <Icon
+                    name="bookmark-outline"
+                    size={24}
+                    color={theme.searchContext.unSelected.textColor}
+                />
+            ),
+        },
+        {
+            name: 'Offline Downloads',
+            icon: (
+                <Icon name="download" size={24} color={theme.searchContext.unSelected.textColor} />
+            ),
+        },
+    ];
     // const translateX = useSharedValue(0);
     // const animatedStyles = useAnimatedStyle(() => ({
     //     transform: [{ translateX: withSpring(translateX.value * 1) }],
@@ -62,16 +98,16 @@ const Fav = ({ navigation }) => {
         try {
             // const keys = await AsyncStorage.getAllKeys();
             const parsedMetadata = await AsyncStorage.getItem('downloaded');
-            console.log("🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:", parsedMetadata)
+            console.log('🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:', parsedMetadata);
             if (parsedMetadata?.length > 0) {
-                setEmptyImage(false)
+                setEmptyImage(false);
             }
             // const metadataKeys = keys.filter(key => key.startsWith('downloaded:'));
             // const metadata = await AsyncStorage.multiGet(metadataKeys);
             // const parsedMetadata = metadata.map(([key, value]) => JSON.parse(value));
             // console.log("🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:", parsedMetadata)
             // setFavList(JSON.parse(parsedMetadata))
-            setDownloadList(JSON.parse(parsedMetadata))
+            setDownloadList(JSON.parse(parsedMetadata));
             // Now `parsedMetadta` contains all of your audio files' metadata
             // You can use this data to render your downloads page
         } catch (e) {
@@ -80,46 +116,45 @@ const Fav = ({ navigation }) => {
     };
     useEffect(() => {
         if (selecetedHeader == 'Favourites') {
-            listfavAudios(callbacks => {
-                console.log("🚀 ~ useEffect ~ callbacks:", JSON.stringify(callbacks, 0, 2))
-                setFavList(callbacks)
-            })
+            listfavAudios((callbacks) => {
+                console.log('🚀 ~ useEffect ~ callbacks:', JSON.stringify(callbacks, 0, 2));
+                setFavList(callbacks);
+            });
         } else if (selecetedHeader == 'Offline Downloads') {
-            fetchAndDisplayDownloads()
+            fetchAndDisplayDownloads();
         }
-    }, [selecetedHeader])
+    }, [selecetedHeader]);
     useEffect(() => {
         if (showToastMessage) {
             setTimeout(() => {
-                setShowToast(false)
-            }, 2000)
+                setShowToast(false);
+            }, 2000);
         }
-    }, [showToastMessage])
+    }, [showToastMessage]);
     const removeFromPlaylist = (item) => {
         if (selecetedHeader == 'Offline Downloads') {
             let arr = downloadList.filter((res) => {
-                return res.id !== item.id
-            })
-            console.log("🚀 ~ removeFromPlaylist ~ arr:", arr)
-            setDownloadList(arr)
-            AsyncStorage.setItem('downloaded', JSON.stringify(arr))
-            setShowModal(false)
-            setShowToast(true)
+                return res.id !== item.id;
+            });
+            console.log('🚀 ~ removeFromPlaylist ~ arr:', arr);
+            setDownloadList(arr);
+            AsyncStorage.setItem('downloaded', JSON.stringify(arr));
+            setShowModal(false);
+            setShowToast(true);
         } else if (selecetedHeader == 'Favourites') {
-            RemoveFavAudios('d', item, cb => {
+            RemoveFavAudios('d', item, (cb) => {
                 if (cb?.message == 'Success') {
-                    let arr = favList.filter((res) => res?.id !== item.id)
-                    setFavList(arr)
+                    let arr = favList.filter((res) => res?.id !== item.id);
+                    setFavList(arr);
                 }
-                setShowModal(false)
-                setShowToast(true)
-            })
-
+                setShowModal(false);
+                setShowToast(true);
+            });
         }
-    }
+    };
     const confirmRemove = (item) => {
-        setSelected(item)
-        setShowModal(true)
+        setSelected(item);
+        setShowModal(true);
         // Alert.alert('Confirmation', 'Are you sure to remove', [
         //     {
         //         text: 'Confirm',
@@ -130,17 +165,23 @@ const Fav = ({ navigation }) => {
         //         onPress: console.log(false)
         //     }
         // ])
-    }
+    };
+    const [searchText, setSearchText] = useState(null);
+    const [onFocus, setOnFocus] = useState(false);
+
     const renderSong = (item, index) => (
-        <Pressable style={styles.listContainer} onPress={() => {
-            navigation.navigate(RouteTexts.THRIMURAI_SONG, {
-                data: item,
-                downloaded: true
-            });
-        }}>
+        <Pressable
+            style={styles.listContainer}
+            onPress={() => {
+                navigation.navigate(RouteTexts.THRIMURAI_SONG, {
+                    data: item,
+                    downloaded: true,
+                });
+            }}
+        >
             <View style={styles.listInnerContainer}>
                 <MusicContainer />
-                <View style={{ paddingHorizontal: 10, width: '75%', }}>
+                <View style={{ paddingHorizontal: 10, width: '75%' }}>
                     <Text
                         style={{
                             fontSize: RFValue(10),
@@ -163,18 +204,20 @@ const Fav = ({ navigation }) => {
                     </Text>
                 </View>
             </View>
-            <View style={{ flexDirection: 'row', }}>
+            <View style={{ flexDirection: 'row' }}>
                 <TouchableOpacity style={{ marginRight: 10 }}>
                     <Icon name="share" size={22} color={'#222222'} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => confirmRemove(item)}>
-                    {selecetedHeader == 'Favourites' ?
-                        <AntDesign name="heart" size={20} color={'#C1554E'} /> :
-                        <Icon name="delete" size={22} color={'#222222'} />}
+                    {selecetedHeader == 'Favourites' ? (
+                        <AntDesign name="heart" size={20} color={'#C1554E'} />
+                    ) : (
+                        <Icon name="delete" size={22} color={'#222222'} />
+                    )}
                 </TouchableOpacity>
             </View>
         </Pressable>
-    )
+    );
     return (
         <ScrollView>
             {/* <View> */}
@@ -183,44 +226,138 @@ const Fav = ({ navigation }) => {
                     <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
                         <HeadingText text={'Favourites'} nandiLogo={true} />
                     </View>
-                    <SearchInput placeholder={'Search for your favourties (Eg - தோடுடைய)'} />
+                    <SearchInput
+                        placeholder={'Search for your favourties (Eg - தோடுடைய)'}
+                        setState={setSearchText}
+                        state={searchText}
+                        setOnFocus={setOnFocus}
+                    />
                 </View>
-                <FlatList contentContainerStyle={{ marginBottom: 10, }} horizontal data={header} renderItem={({ item, index }) => (
-                    <TouchableOpacity onPress={() => setSelectedHeader(item.name)} style={selecetedHeader == item?.name ? [styles.headerContainer, { backgroundColor: theme.searchContext.selected.bgColor }] : [styles.headerContainer, { backgroundColor: theme.searchContext.unSelected.bgColor }]}>
-                        {item?.icon}
-                        <Text style={selecetedHeader == item?.name ? [styles.headingText, { color: theme.searchContext.selected.textColor }] : [styles.headingText, { color: theme.searchContext.unSelected.textColor }]}>{item?.name}</Text>
-                    </TouchableOpacity>
-                )} />
-            </Background>
-            {
-                selecetedHeader == 'Favourites' && favList.length > 0 ?
-                    <View style={{ flex: 1, }}>
-                        <TouchableOpacity style={styles.RearrangsTask}
-                            onPress={() => navigation.navigate(RouteTexts.SONGS_LIST, {
-                                data: favList
-                            })} >
-                            <EditPencil />
-                            <Text style={{ marginHorizontal: 10, fontFamily: 'Mulish-Bold', color: '#C1554E', fontWeight: '700', fontSize: 12 }}>Re arrange task</Text>
+                <FlatList
+                    contentContainerStyle={{ marginBottom: 10 }}
+                    horizontal
+                    data={header}
+                    renderItem={({ item, index }) => (
+                        <TouchableOpacity
+                            onPress={() => setSelectedHeader(item.name)}
+                            style={
+                                selecetedHeader == item?.name
+                                    ? [
+                                        styles.headerContainer,
+                                        { backgroundColor: theme.searchContext.selected.bgColor },
+                                    ]
+                                    : [
+                                        styles.headerContainer,
+                                        {
+                                            backgroundColor:
+                                                theme.searchContext.unSelected.bgColor,
+                                        },
+                                    ]
+                            }
+                        >
+                            {item?.icon}
+                            <Text
+                                style={
+                                    selecetedHeader == item?.name
+                                        ? [
+                                            styles.headingText,
+                                            { color: theme.searchContext.selected.textColor },
+                                        ]
+                                        : [
+                                            styles.headingText,
+                                            { color: theme.searchContext.unSelected.textColor },
+                                        ]
+                                }
+                            >
+                                {item?.name}
+                            </Text>
                         </TouchableOpacity>
-                        <FlatList data={favList} renderItem={({ item, index }) => renderSong(item, index)} />
-                    </View> :
-                    selecetedHeader == 'Offline Downloads' && downloadList?.length > 0 ?
-                        <View style={{ flex: 1, }}>
-                            <TouchableOpacity style={styles.RearrangsTask}
-                                onPress={() => navigation.navigate(RouteTexts.SONGS_LIST, {
-                                    data: favList
-                                })} >
-                                <EditPencil />
-                                <Text style={{ marginHorizontal: 10, fontFamily: 'Mulish-Bold', color: '#C1554E', fontWeight: '700', fontSize: 12 }}>Re arrange task</Text>
-                            </TouchableOpacity>
-                            <FlatList data={downloadList} renderItem={({ item, index }) => renderSong(item, index)} />
-                        </View> :
-                        <View style={{ paddingHorizontal: 20, flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 100 }}>
-                            <EmptyIcon />
-                            <Text style={{ color: '#222222', fontFamily: 'Mulish-Bold', fontSize: 18, marginVertical: 15 }}>You haven’t favourited anything!</Text>
-                            <Text style={{ color: '#222222', fontFamily: 'Mulish-Regular', fontSize: 14 }}>Start adding stotras, vedas, thirumurais etc. here for easy access to them every time</Text>
-                        </View>
-            }
+                    )}
+                />
+            </Background>
+            {selecetedHeader == 'Favourites' && favList.length > 0 ? (
+                <View style={{ flex: 1 }}>
+                    <TouchableOpacity
+                        style={styles.RearrangsTask}
+                        onPress={() =>
+                            navigation.navigate(RouteTexts.SONGS_LIST, {
+                                data: favList,
+                            })
+                        }
+                    >
+                        <EditPencil />
+                        <Text
+                            style={{
+                                marginHorizontal: 10,
+                                fontFamily: 'Mulish-Bold',
+                                color: '#C1554E',
+                                fontWeight: '700',
+                                fontSize: 12,
+                            }}
+                        >
+                            Re arrange task
+                        </Text>
+                    </TouchableOpacity>
+                    <FlatList
+                        data={favList}
+                        renderItem={({ item, index }) => renderSong(item, index)}
+                    />
+                </View>
+            ) : selecetedHeader == 'Offline Downloads' && downloadList.length > 0 ? (
+                <View style={{ flex: 1 }}>
+                    <TouchableOpacity
+                        style={styles.RearrangsTask}
+                        onPress={() =>
+                            navigation.navigate(RouteTexts.SONGS_LIST, {
+                                data: favList,
+                            })
+                        }
+                    >
+                        <EditPencil />
+                        <Text
+                            style={{
+                                marginHorizontal: 10,
+                                fontFamily: 'Mulish-Bold',
+                                color: '#C1554E',
+                                fontWeight: '700',
+                                fontSize: 12,
+                            }}
+                        >
+                            Re arrange task
+                        </Text>
+                    </TouchableOpacity>
+                    <FlatList
+                        data={downloadList}
+                        renderItem={({ item, index }) => renderSong(item, index)}
+                    />
+                </View>
+            ) : (
+                <View
+                    style={{
+                        paddingHorizontal: 20,
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginTop: 100,
+                    }}
+                >
+                    <EmptyIcon />
+                    <Text
+                        style={{
+                            color: '#222222',
+                            fontFamily: 'Mulish-Bold',
+                            fontSize: 18,
+                            marginVertical: 15,
+                        }}
+                    >
+                        You haven’t favourited anything!
+                    </Text>
+                    <Text style={{ color: '#222222', fontFamily: 'Mulish-Regular', fontSize: 14 }}>
+                        Start adding stotras, vedas, thirumurais etc. here for easy access to them
+                        every time
+                    </Text>
+                </View>
+            )}
             {/* {
                 !emptyImage ?
                     <View style={{ flex: 1, }}>
@@ -239,23 +376,49 @@ const Fav = ({ navigation }) => {
                         <Text style={{ color: '#222222', fontFamily: 'Mulish-Regular', fontSize: 14 }}>Start adding stotras, vedas, thirumurais etc. here for easy access to them every time</Text>
                     </View>
             } */}
-            {
-                showModal &&
+            {showModal && (
                 <Modal transparent>
-                    <AlertScreen descriptionText={selectedItem} removeFromPlaylist={removeFromPlaylist} setShowModal={setShowModal} />
+                    <AlertScreen
+                        descriptionText={selectedItem}
+                        removeFromPlaylist={removeFromPlaylist}
+                        setShowModal={setShowModal}
+                    />
                 </Modal>
-            }
-            <View style={{ position: 'absolute', top: Dimensions.get('window').height / 1.07, right: 10, left: 10 }}>
-                {
-                    showToastMessage && <AnimatedToast state={showToastMessage} type={"ERROR"} svg={true} text={selecetedHeader == 'Favourites' ? 'Removed from favourite' : 'Deleted from offline downloads'} />
-                }
+            )}
+            <View
+                style={{
+                    position: 'absolute',
+                    top: Dimensions.get('window').height / 1.07,
+                    right: 10,
+                    left: 10,
+                }}
+            >
+                {showToastMessage && (
+                    <AnimatedToast
+                        state={showToastMessage}
+                        type={'ERROR'}
+                        svg={true}
+                        text={
+                            selecetedHeader == 'Favourites'
+                                ? 'Removed from favourite'
+                                : 'Deleted from offline downloads'
+                        }
+                    />
+                )}
             </View>
         </ScrollView>
-    )
-}
+    );
+};
 export const styles = StyleSheet.create({
     headingText: { marginHorizontal: 5, fontSize: 12, fontFamily: 'Mulish-Regular' },
-    headerContainer: { marginLeft: 10, paddingHorizontal: 12, height: 40, borderRadius: 25, alignItems: 'center', flexDirection: 'row' },
+    headerContainer: {
+        marginLeft: 10,
+        paddingHorizontal: 12,
+        height: 40,
+        borderRadius: 25,
+        alignItems: 'center',
+        flexDirection: 'row',
+    },
     listContainer: {
         flexDirection: 'row',
         margin: 10,
@@ -279,8 +442,7 @@ export const styles = StyleSheet.create({
         // width: 80,
         alignItems: 'center',
         paddingHorizontal: 10,
-        justifyContent: 'center'
-    }
-
-})
-export default Fav
+        justifyContent: 'center',
+    },
+});
+export default Fav;

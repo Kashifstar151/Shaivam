@@ -34,6 +34,7 @@ import SelectErrorPage from '../Screens/Temples/SuccuessPages/SelectErrorPage';
 // import PinTheLocation from '../Screens/Temples/PinTheLocationPage';
 import Onboarding from '../Screens/OnboardingScreen/Onboarding';
 import EventDetails from '../Screens/Calender/EventDetails';
+import CreateVirtualEvent from '../Screens/Calender/CreateVirtualEvent';
 // import { ThemeContextProvider } from '../Context/ThemeContext';
 
 const Route = () => {
@@ -43,7 +44,6 @@ const Route = () => {
     const [isConnected, setIsConnected] = useState(false);
     // const database = SQLite.openDatabase({ name: databaseName, });
     useEffect(() => {
-        // checkConnection(true)
         AsyncStorage.setItem(
             '@database',
             JSON.stringify({ name: 'songData.db', createFromLocation: 1 })
@@ -182,6 +182,7 @@ const Route = () => {
                         <Stack.Screen name="Thirumurais" component={ThrimuraiList} />
                         <Stack.Screen name={RouteTexts.SEARCH_SCREEN} component={SearchScreen} />
                         <Stack.Screen name={RouteTexts.ONBOARDING_SCREEN} component={Onboarding} />
+                        <Stack.Screen name={RouteTexts.VIRTUAL_EVENT_CREATE} component={CreateVirtualEvent} />
                         <Stack.Screen
                             name={RouteTexts.TEMPLE_SELECTION}
                             component={TempleSelection}
