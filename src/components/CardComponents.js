@@ -219,7 +219,7 @@ const CardComponents = ({ navigation }) => {
                 <Header />
                 <SearchInput
                     placeholder={t('Search for anything (Eg - தோடுடைய செவியன்) ')}
-                    setSearchText={setSearchText}
+                    setState={setSearchText}
                     state={searchText}
                     setOnFocus={setOnFocus}
                     extraPad={false}
