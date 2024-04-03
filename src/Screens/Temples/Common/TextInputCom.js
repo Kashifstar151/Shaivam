@@ -7,7 +7,7 @@ const TextInputCom = ({ headinText, insiderText, width, navigation, locationIcon
     // console.log("🚀 ~ TextInputCom ~ headinText:", headinText)
     return (
         <View style={{ marginVertical: 10 }}>
-            <Text>{headinText}</Text>
+            <Text style={{ color: '#777777' }}>{headinText}</Text>
             <TouchableOpacity style={width ? [styles.inputComp, { width: width }] : styles.inputComp}>
                 {locationIcon && <LocationLogo fill={'#C1554E'} />}
                 <TextInput onFocus={navigation} style={{ paddingHorizontal: 10, }} placeholder={insiderText} />
