@@ -35,6 +35,7 @@ import SelectErrorPage from '../Screens/Temples/SuccuessPages/SelectErrorPage';
 import Onboarding from '../Screens/OnboardingScreen/Onboarding';
 import EventDetails from '../Screens/Calender/EventDetails';
 import CreateVirtualEvent from '../Screens/Calender/CreateVirtualEvent';
+import Success from '../Screens/Success/Success';
 // import { ThemeContextProvider } from '../Context/ThemeContext';
 
 const Route = () => {
@@ -222,6 +223,8 @@ const Route = () => {
                         <Stack.Screen name={RouteTexts.EVENT_DETAILS} component={EventDetails} />
                         <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={MusicComponent} />
                         <Stack.Screen name={'Stotras'} component={Strotras} />
+                        <Stack.Screen name={RouteTexts.SUCCESS} component={Success} />
+
                         <Stack.Screen
                             name={RouteTexts.ERROR_SELECTION_PAGE}
                             component={SelectErrorPage}

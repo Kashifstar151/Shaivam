@@ -20,5 +20,6 @@ export const RouteTexts = {
     ERROR_SELECTION_PAGE: 'SelectErrorPage',
     ONBOARDING_SCREEN: 'Onboard',
     EVENT_DETAILS: 'EventDetails',
-    VIRTUAL_EVENT_CREATE: 'CreateVirtualEvent'
+    VIRTUAL_EVENT_CREATE: 'CreateVirtualEvent',
+    SUCCESS: 'Success'
 }

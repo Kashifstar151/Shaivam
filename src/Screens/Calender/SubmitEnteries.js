@@ -1,32 +1,28 @@
-import React, { useContext, useState } from "react";
-import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useContext } from "react";
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Feather from "react-native-vector-icons/dist/Feather";
 import { ThemeContext } from "../../Context/ThemeContext";
 import { colors } from "../../Helpers";
+import { RouteTexts } from "../../navigation/RouteText";
 
-const SelectFrequency = ({ selectedFrequecy, setSelectedFrequecy, closeBottomSheet, showCategory }) => {
+const SubmitEnteries = ({ setSelectedEvent, selectedEvent, closeSheet, navigation }) => {
     const theme = useContext(ThemeContext)
     const type = [
-        { name: 'Weekly', id: 1 },
-        { name: 'Monthly', id: 2 }
-    ]
-    const category = [
-        { name: 'Festival', id: 1 },
-        { name: 'Concert', id: 2 },
-        { name: 'Discource', id: 3 },
-        { name: 'Pranayam / Recitation', id: 4 },
-        { name: 'Uzhavarappani', id: 5 },
-        { name: 'Others', id: 6 }
-
+        { name: 'Add an event', id: 1 },
+        { name: 'Sends a Festival video', id: 2 }
     ]
     const selectionHandler = (item) => {
-        setSelectedFrequecy(item)
-        closeBottomSheet
+        setSelectedEvent(item)
+        if (item?.name == 'Add an event') {
+            navigation.navigate(RouteTexts.VIRTUAL_EVENT_CREATE)
+        }
+        closeSheet
     }
+
     return (
         <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
             <Text style={{ fontFamily: 'Lora-Bold', fontSize: 16, color: 'black', marginVertical: 10 }}>Select freuency of event</Text>
-            <FlatList data={showCategory ? category : type} renderItem={({ item, index }) => (
+            <FlatList data={type} renderItem={({ item, index }) => (
                 <TouchableOpacity
                     onPress={() => selectionHandler(item)}
                     style={styles.dropDown}
@@ -35,9 +31,9 @@ const SelectFrequency = ({ selectedFrequecy, setSelectedFrequecy, closeBottomShe
                         {item?.name}
                     </Text>
                     <View
-                        style={selectedFrequecy?.name == item?.name ? [styles.iconContainer, { backgroundColor: colors.commonColor }] : styles.iconContainer}
+                        style={selectedEvent?.name == item?.name ? [styles.iconContainer, { backgroundColor: colors.commonColor }] : styles.iconContainer}
                     >
-                        <Feather name="check" size={14} color={selectedFrequecy?.name == item?.name ? 'white' : '#222222'} />
+                        <Feather name="check" size={14} color={selectedEvent?.name == item?.name ? 'white' : '#222222'} />
                     </View>
                     {/* <View style={{ height: 2, width: Dimensions.get('window').width - 20, backgroundColor: '#fff' }} /> */}
                 </TouchableOpacity>
@@ -65,4 +61,4 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
     }
 })
-export default SelectFrequency;
+export default SubmitEnteries;
