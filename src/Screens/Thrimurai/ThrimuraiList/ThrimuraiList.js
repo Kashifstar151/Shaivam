@@ -34,6 +34,8 @@ import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native';
 // import '../../../../localization';
+import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import HeartSVG from '../../../components/SVGs/HeartSVG.js';
 
 const ThrimuraiList = ({ navigation }) => {
     const LANGS = [
@@ -476,7 +478,7 @@ const ThrimuraiList = ({ navigation }) => {
                         />
                     </Pressable> */}
                     <View style={styles.boxCommon}>
-                        <Text style={styles.playlistHeading}>Recently Playlist</Text>
+                        <Text style={styles.playlistHeading}>Recently Playled</Text>
                         <FlatList
                             key={(item) => item?.id}
                             data={recentPlayed}
@@ -525,9 +527,30 @@ const ThrimuraiList = ({ navigation }) => {
                                             </Text>
                                         </View>
                                     </View>
-                                    <TouchableOpacity>
-                                        <Icon name="more-vert" size={22} />
-                                    </TouchableOpacity>
+
+                                    <View
+                                        style={{ flexDirection: 'row', gap: 25, paddingRight: 10 }}
+                                    >
+                                        <TouchableOpacity>
+                                            <Icon name="share" size={22} color={theme.textColor} />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity>
+                                            {/* 
+                                                yet isFav doesn't exist but this should be added which can show the fav and add to fav on click if its not already in fav list 
+                                         */}
+                                            {item?.isFav ? (
+                                                <AntDesign
+                                                    name="heart"
+                                                    size={20}
+                                                    color={'#C1554E'}
+                                                />
+                                            ) : (
+                                                <HeartSVG fill={theme.textColor} />
+                                            )}
+                                        </TouchableOpacity>
+                                    </View>
+
+                                    {/* <Icon name="more-vert" size={22} /> */}
                                 </Pressable>
                             )}
                         />
