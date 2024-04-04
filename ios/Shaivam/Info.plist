@@ -79,6 +79,7 @@
 		<string>Mulish-Bold.ttf</string>
 		<string>Mulish-ExtraBold.ttf</string>
 		<string>Mulish-Regular.ttf</string>
+		<string>Mulish-SemiBold.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
