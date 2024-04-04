@@ -105,13 +105,18 @@ const SongAndAudio = ({ item, index, theme }) => {
                     </Text>
                 </View>
             </View>
-            <TouchableOpacity onPress={fav ? null : () => FavouriteAudios(item)}>
-                {fav ? (
-                    <AntDesign name="heart" size={22} color={'#C1554E'} />
-                ) : (
-                    <Feather name="heart" size={22} />
-                )}
-            </TouchableOpacity>
+            <View style={{ flexDirection: 'row', gap: 25 }}>
+                <TouchableOpacity onPress={() => {}}>
+                    <Icon name="share" size={22} color={theme.textColor} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={fav ? null : () => FavouriteAudios(item)}>
+                    {fav ? (
+                        <AntDesign name="heart" size={22} color={'#C1554E'} />
+                    ) : (
+                        <Feather name="heart" size={22} />
+                    )}
+                </TouchableOpacity>
+            </View>
         </View>
     );
     // return<Text>dhjkshajk</Text>;
