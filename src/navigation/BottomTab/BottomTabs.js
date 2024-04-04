@@ -53,6 +53,7 @@ const MyTabBar = ({ state, descriptors, navigation, theme, ...restProps }) => {
                 position: 'absolute',
                 bottom: 0,
                 paddingTop: 8,
+                // paddingBottom: 5,
                 overflow: 'hidden',
                 borderTopLeftRadius: 10,
                 borderTopRightRadius: 10,
@@ -67,8 +68,8 @@ const MyTabBar = ({ state, descriptors, navigation, theme, ...restProps }) => {
                     options.tabBarLabel !== undefined
                         ? options.tabBarLabel
                         : options.title !== undefined
-                        ? options.title
-                        : route.name;
+                            ? options.title
+                            : route.name;
 
                 const isFocused = state.index === index;
 
@@ -124,7 +125,7 @@ const MyTabBar = ({ state, descriptors, navigation, theme, ...restProps }) => {
                                 ) : (
                                     <View
                                         style={{
-                                            height: 10,
+                                            // height: 10,
                                             width: '100%',
                                         }}
                                     ></View>
@@ -157,9 +158,9 @@ export default BottomTab = ({ navigation }) => {
                         styles.tabContainer,
                         Platform.OS !== 'ios'
                             ? {
-                                  height: 65,
-                              }
-                            : {},
+                                height: 65,
+                            }
+                            : { height: 0, },
                     ],
                     tabBarHideOnKeyboard: true,
                 }}
@@ -241,6 +242,7 @@ export const styles = StyleSheet.create({
         borderTopStartRadius: 10,
         position: 'absolute',
         bottom: 0,
+        // backgroundColor: 'red'
     },
     IconStyles: {
         paddingTop: 10,

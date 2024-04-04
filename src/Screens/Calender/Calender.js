@@ -35,6 +35,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import ButtonComp from '../Temples/Common/ButtonComp';
 import LocationSelection from './LocationSelection';
 import { RouteTexts } from '../../navigation/RouteText';
+import SubmitEnteries from './SubmitEnteries';
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
 }
@@ -44,9 +45,10 @@ const Calender = ({ navigation }) => {
         { name: 'Festivals', selected: <ActiveStar />, unSelected: <InActiveStar /> },
         { name: 'Events', selected: <ActiveCalender />, unSelected: <InActiveCalender /> },
     ];
-    const [isExpanded, setIsExpanded] = useState(false);
+    // const [isExpanded, setIsExpanded] = useState(false);
     const bottomSheetRef = useRef(null)
     const [selectedFilter, setSelectedFilter] = useState(null)
+    const [selectedEvent, setSelectedEvent] = useState(null)
     const { theme } = useContext(ThemeContext);
     useFocusEffect(
         React.useCallback(() => {
@@ -122,8 +124,9 @@ const Calender = ({ navigation }) => {
         </View>
     );
     const selectFilter = (item) => {
-        bottomSheetRef.current.open()
+        // alert(item)
         setSelectedFilter(item)
+        bottomSheetRef?.current?.open()
     }
     return (
         <ScrollView nestedScrollEnabled style={{ backgroundColor: '#fff', flex: 1 }}>
@@ -137,7 +140,7 @@ const Calender = ({ navigation }) => {
                         <View style={{ width: '84%' }}>
                             <SearchInput placeholder={'Search for Festivals/events'} />
                         </View>
-                        <TouchableOpacity style={styles.AddBtnContainer}>
+                        <TouchableOpacity style={styles.AddBtnContainer} onPress={() => selectFilter('Add Event')}>
                             <Icon name="plus" size={28} color="#222222" />
                         </TouchableOpacity>
                     </View>
@@ -191,8 +194,6 @@ const Calender = ({ navigation }) => {
                         markedDates={marked}
                         style={styles.calenderTheme} />
                 </CalendarProvider>
-                {/* </View> */}
-                {/* </View> */}
                 {
                     selectedHeader == 'Events' &&
                     <View style={styles.filterContainer}>
@@ -232,14 +233,17 @@ const Calender = ({ navigation }) => {
                         selectedFilter == 'Event' ? <>
                             <EventSelectionType />
                             <View style={{ justifyContent: 'center', alignSelf: 'center', position: 'absolute', bottom: 10 }}>
-                                <ButtonComp color={true} text='Search' navigation={() => bottomSheetRef.current.close()} />
+                                <ButtonComp color={true} text='Search' navigation={() => bottomSheetRef?.current?.close()} />
                             </View>
                         </> :
-                            <LocationSelection />
+                            selectedFilter == 'Add Event' ?
+                                <SubmitEnteries navigation={navigation} setSelectedEvent={setSelectedEvent} selectedEvent={selectedEvent} closeSheet={() => bottomSheetRef.current.close()} />
+                                :
+                                <LocationSelection />
                     }
                 </RBSheet>
                 {/* <BottomSheet snapPoints={['50%']} ref={bottomSheetRef} >
-                    <EventSelectionType />
+                    <SubmitEnteries setSelectedEvent={setSelectedEvent} selectedEvent={selectedEvent} closeSheet={() => bottomSheetRef.current.close()} />
                 </BottomSheet> */}
             </View>
         </ScrollView>
