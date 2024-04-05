@@ -146,6 +146,8 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
     useEffect(() => {
         getDtataFromSql();
     }, []);
+    const { i18n } = useTranslation();
+
     const getDtataFromSql = async () => {
         setShowLoading(true);
         let query;
@@ -156,7 +158,9 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
         }
         const query2 = `Select * from thirumurais where ${
             ThalamHeaders === 0 ? 'country' : 'thalam'
-        }='${data}' GROUP BY thalam ORDER BY  titleNo ASC `;
+        }='${data}' ${ThalamHeaders === 0 ? 'GROUP BY thalam' : ''} and locale='${
+            i18n.language === 'en-IN' ? 'RoI' : i18n.language
+        }' ORDER BY  titleNo ASC `;
         getSqlData(thalam ? query2 : query, (callbacks) => {
             console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
             setShowLoading(false);
