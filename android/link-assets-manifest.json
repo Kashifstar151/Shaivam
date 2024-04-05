@@ -60,6 +60,10 @@
     {
       "path": "src/assets/fonts/Mulish-Regular.ttf",
       "sha1": "65aa946a76999c7fe9a6b4478e9c35db9c80b137"
+    },
+    {
+      "path": "src/assets/fonts/Mulish-SemiBold.ttf",
+      "sha1": "0935586660615fe1c41fc1bc8aa3a5e0c8c744a8"
     }
   ]
 }

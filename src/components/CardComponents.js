@@ -176,7 +176,7 @@ const CardComponents = ({ navigation }) => {
                 },
                 {
                     icon: <CalendarSVG fill={theme.textColor} />,
-                    title: 'Calender',
+                    title: 'Calendar',
                     navName: 'Calender',
                 },
             ],
@@ -206,7 +206,7 @@ const CardComponents = ({ navigation }) => {
                 },
                 {
                     icon: <Logo fill={theme.textColorHomeCardYellow} />,
-                    title: 'Website',
+                    title: 'Shaivam.org',
                     navName: 'Website',
                 },
             ],
@@ -219,7 +219,7 @@ const CardComponents = ({ navigation }) => {
                 <Header />
                 <SearchInput
                     placeholder={t('Search for anything (Eg - தோடுடைய செவியன்) ')}
-                    setState={setSearchText}
+                    setSearchText={setSearchText}
                     state={searchText}
                     setOnFocus={setOnFocus}
                     extraPad={false}
@@ -234,7 +234,7 @@ const CardComponents = ({ navigation }) => {
                         fontWeight: '400',
                     }}
                 >
-                    Scroll through and check out what Shaiva, offers
+                    Scroll through and check out what Shaivam offers
                 </Text>
             </View>
             <View
@@ -301,6 +301,7 @@ const styles = StyleSheet.create({
     subCompText: {
         alignContent: 'center',
         // flex: 1,
+        fontFamily: 'Mulish-SemiBold',
         fontSize: RFValue(6, Dimensions.get('window').width),
     },
 });
