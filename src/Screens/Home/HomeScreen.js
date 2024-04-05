@@ -17,8 +17,6 @@ import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import MusicContainer from '../../../assets/Images/Frame 83.svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CardComponents from '../../components/CardComponents';
-// import { colors } from '../../Helpers';
-// import { useTranslation } from 'react-i18next';
 import '../../../localization';
 import { ThemeContext } from '../../Context/ThemeContext';
 import bgImg from '../../../assets/Images/Background.png';
@@ -27,22 +25,22 @@ import HomePlaylistCard from '../../components/HomePlaylistCard';
 import ElevatedCard from '../../components/ElevatedCard';
 import EventCard from '../../components/EventCard';
 import OmChat from './OmChat';
-// import RightDirSVG from '../../components/SVGs/RightDirSVG';
 import HeadingAndView from './HeadingAndView';
 import PlaceCard from './PlaceCard';
 import { RFValue } from 'react-native-responsive-fontsize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Feather from 'react-native-vector-icons/dist/Feather';
-// import { gStyles } from '../../Helpers/GlobalStyles';
 import { AddSongToDatabase, MostPlayedList } from '../../Databases/AudioPlayerDatabase';
 import { useIsFocused } from '@react-navigation/native';
-import { colors } from '../../Helpers';
 import Quiz from './Quiz';
 import VideosList from './VideosList';
+import { useSelector } from 'react-redux';
 
 const SongAndAudio = ({ item, index, theme }) => {
     const [fav, setFav] = useState(false);
+    const authState = useSelector((store) => store.auth);
+    // console.log('🚀 ~ SongAndAudio ~ authState:', authState);
     const FavouriteAudios = (res) => {
         // TrackPlayer.getActiveTrack()
         //     .then((res) => {
