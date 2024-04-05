@@ -16,9 +16,7 @@ import FavouriteSVG from '../../components/SVGs/FavouriteSVG';
 import MoreSVG from '../../components/SVGs/MoreSVG';
 import TempleTabsNavigate from '../../Screens/Temples/TempleTabsNavigate';
 import { colors } from '../../Helpers';
-console.log('🚀 ~ colors:', colors?.dark.bottomTabItemColor.selected);
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { BlurView } from '@react-native-community/blur';
 const Tab = createBottomTabNavigator();
 
 const MyTabBar = ({ state, descriptors, navigation, theme, ...restProps }) => {

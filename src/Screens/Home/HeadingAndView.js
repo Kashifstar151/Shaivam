@@ -18,7 +18,14 @@ const HeadingAndView = ({ title, onPress, viewBtnColor, theme }) => {
                 {title}
             </Text>
 
-            <Pressable style={{ flexDirection: 'row', rowGap: 8 }} onPress={onPress}>
+            <Pressable
+                style={{
+                    flexDirection: 'row',
+                    rowGap: 8,
+                    alignItems: 'center',
+                }}
+                onPress={onPress}
+            >
                 <Text style={{ color: viewBtnColor, fontSize: RFValue(14, 800) }}>View All</Text>
                 <RightDirSVG fill={viewBtnColor} />
             </Pressable>
