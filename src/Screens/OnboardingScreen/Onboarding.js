@@ -27,7 +27,7 @@ const Onboarding = ({ navigation }) => {
     const [selectedLang, setSelectedLang] = useState({ name: 'English', lngCode: 'en-IN' });
     const { i18n } = useTranslation();
     useEffect(() => {
-        getStorageItem()
+        getStorageItem();
     }, []);
     const language = [
         // { name: 'English', lngCode: 'en' },
@@ -58,6 +58,7 @@ const Onboarding = ({ navigation }) => {
     };
     useEffect(() => {
         fadeIn();
+        handleClick(language.find((i) => i.lngCode === i18n.language));
     }, []);
     const fadeIn = () => {
         // Will change fadeAnim value to 1 in 5 seconds
@@ -67,30 +68,27 @@ const Onboarding = ({ navigation }) => {
             useNativeDriver: true,
         }).start();
     };
-    useEffect(() => {
-        handleClick(language.find((i) => i.lngCode === i18n.language));
-    }, []);
     const getStorageItem = async () => {
-        let data = await AsyncStorage.getItem('language')
-        console.log("🚀 ~ getStorageItem ~ data:", data)
-        data = JSON.parse(data)
+        let data = await AsyncStorage.getItem('language');
+        console.log('🚀 ~ getStorageItem ~ data:', data);
+        data = JSON.parse(data);
 
         if (data) {
             // setShowImage(false)
             i18n.changeLanguage(data?.lngCode);
             setTimeout(() => {
-                navigation.navigate(RouteTexts.BOTTOM_TABS)
+                navigation.replace(RouteTexts.BOTTOM_TABS);
             }, 3000);
         } else {
             setTimeout(() => {
                 setShowImage(false);
             }, 4000);
         }
-    }
+    };
     const submitNext = () => {
-        AsyncStorage.setItem('language', JSON.stringify(selectedLang))
-        navigation.navigate(RouteTexts.BOTTOM_TABS)
-    }
+        AsyncStorage.setItem('language', JSON.stringify(selectedLang));
+        navigation.replace(RouteTexts.BOTTOM_TABS);
+    };
     return (
         // <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ImageBackground
@@ -152,9 +150,9 @@ const Onboarding = ({ navigation }) => {
                                             style={
                                                 selectedLang?.name == item?.name
                                                     ? [
-                                                        styles.iconContainer,
-                                                        { backgroundColor: '#FCB300' },
-                                                    ]
+                                                          styles.iconContainer,
+                                                          { backgroundColor: '#FCB300' },
+                                                      ]
                                                     : styles.iconContainer
                                             }
                                         >
