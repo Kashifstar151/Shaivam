@@ -157,7 +157,9 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
             activeIcon: <AkarthiLogo fill={theme.iconHeadingColor.active} />,
         },
     ];
-    const [selectedHeader, setSelectedheader] = useState(headerData[0]);
+    const [selectedHeader, setSelectedheader] = useState(
+        prevId == '=10' ? headerData[3] : headerData[0]
+    );
     const [selectedTitle, setSelectedTitle] = useState(null);
     const [searchedText, setSearchedText] = useState(null);
     const [showLoading, setShowLoading] = useState(false);
@@ -214,7 +216,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                 {prevId == '=10' && (
                     <FlatList
                         contentContainerStyle={{ marginTop: 10 }}
-                        data={headerData}
+                        data={headerData.reverse()}
                         renderItem={({ item, index }) => (
                             <ThrimuraiHeader
                                 selectedHeader={selectedHeader}

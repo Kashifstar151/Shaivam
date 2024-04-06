@@ -15,10 +15,13 @@ import { launchImageLibrary } from "react-native-image-picker";
 import Feather from "react-native-vector-icons/dist/Feather";
 import ButtonComp from "../Temples/Common/ButtonComp";
 import { RouteTexts } from "../../navigation/RouteText";
+import { useGetListQuery } from "../../store/features/Calender/CalenderApiSlice";
 const CreateVirtualEvent = ({ navigation }) => {
     const weekDays = [
         'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'
     ]
+    const { data } = useGetListQuery()
+    console.log("🚀 ~ Calender ~ authState:", JSON.stringify(data, 0, 2))
     const RbSheetRef = useRef(null)
     const [selectedFrequecy, setSelectedFrequecy] = useState(null)
     const [selectedWeek, setSelectedWeek] = useState(null)
