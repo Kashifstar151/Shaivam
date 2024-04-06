@@ -22,13 +22,12 @@ import InActiveCalender from '../../assets/Images/UnactiveCalender.svg';
 import ActiveStar from '../../assets/Images/ActiveStar.svg';
 import InActiveStar from '../../assets/Images/UnactiveStart.svg';
 import ActiveCalender from '../../assets/Images/CalenderAct.svg';
-import { Calendar, LocaleConfig, WeekCalendar, ExpandableCalendar, CalendarProvider } from 'react-native-calendars';
+import { ExpandableCalendar, CalendarProvider } from 'react-native-calendars';
 import CustomCalender from './CustomCalender';
 import { colors } from '../../Helpers';
 import ElevatedCard from '../../components/ElevatedCard';
 import EventCard from '../../components/EventCard';
 import { ThemeContext } from '../../Context/ThemeContext';
-import BottomSheet from '@gorhom/bottom-sheet';
 import EventSelectionType from './EventSelectionType';
 import { useFocusEffect } from '@react-navigation/native';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -36,15 +35,22 @@ import ButtonComp from '../Temples/Common/ButtonComp';
 import LocationSelection from './LocationSelection';
 import { RouteTexts } from '../../navigation/RouteText';
 import SubmitEnteries from './SubmitEnteries';
+import { useSelector } from 'react-redux';
+import moment from 'moment'
+import { useGetListQuery } from '../../store/features/Calender/CalenderApiSlice';
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
 const Calender = ({ navigation }) => {
-    const data = [
+    const data1 = [
         { name: 'Festivals', selected: <ActiveStar />, unSelected: <InActiveStar /> },
         { name: 'Events', selected: <ActiveCalender />, unSelected: <InActiveCalender /> },
     ];
+    const { data } = useGetListQuery()
+    console.log("🚀 ~ Calender ~ authState:", JSON.stringify(data?.data, 0, 2))
+    // const authState = useSelector((store) => store.calender);
+
     // const [isExpanded, setIsExpanded] = useState(false);
     const bottomSheetRef = useRef(null)
     const [selectedFilter, setSelectedFilter] = useState(null)
@@ -147,7 +153,7 @@ const Calender = ({ navigation }) => {
                     <FlatList
                         contentContainerStyle={{ paddingHorizontal: 15, marginVertical: 10 }}
                         horizontal
-                        data={data}
+                        data={data1}
                         renderItem={({ item, index }) => (
                             <HeadingComponent
                                 selectedHeader={selectedHeader}
@@ -213,13 +219,15 @@ const Calender = ({ navigation }) => {
                     </Text>
                 </View>
                 <FlatList
-                    data={eventData}
+                    data={data?.data}
+                    contentContainerStyle={{ paddingBottom: 100 }}
                     renderItem={({ item, index }) => (
                         <ElevatedCard navigation={() => navigation.navigate(RouteTexts.EVENT_DETAILS)} theme={{ colorscheme: theme.colorscheme }}>
                             <EventCard
-                                date={item.date}
-                                timing={item.timing}
-                                title={item.title}
+                                date={day = moment(item?.start_date).get('D')}
+                                timing={`${moment(item?.attributes?.start_date).format('MMMM DD YYYY')} -${moment(item?.attributes?.end_date).format('MMMM DD YYYY')} `}
+                                title={item?.attributes?.title}
+                                item={item}
                                 theme={{
                                     textColor: theme.textColor,
                                     colorscheme: theme.colorscheme,

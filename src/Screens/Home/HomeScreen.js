@@ -17,8 +17,6 @@ import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import MusicContainer from '../../../assets/Images/Frame 83.svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CardComponents from '../../components/CardComponents';
-// import { colors } from '../../Helpers';
-// import { useTranslation } from 'react-i18next';
 import '../../../localization';
 import { ThemeContext } from '../../Context/ThemeContext';
 import bgImg from '../../../assets/Images/Background.png';
@@ -27,20 +25,22 @@ import HomePlaylistCard from '../../components/HomePlaylistCard';
 import ElevatedCard from '../../components/ElevatedCard';
 import EventCard from '../../components/EventCard';
 import OmChat from './OmChat';
-// import RightDirSVG from '../../components/SVGs/RightDirSVG';
 import HeadingAndView from './HeadingAndView';
 import PlaceCard from './PlaceCard';
 import { RFValue } from 'react-native-responsive-fontsize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import Feather from 'react-native-vector-icons/dist/Feather'
-// import { gStyles } from '../../Helpers/GlobalStyles';
+import Feather from 'react-native-vector-icons/dist/Feather';
 import { AddSongToDatabase, MostPlayedList } from '../../Databases/AudioPlayerDatabase';
 import { useIsFocused } from '@react-navigation/native';
-import { colors } from '../../Helpers';
+import Quiz from './Quiz';
+import VideosList from './VideosList';
+import { useSelector } from 'react-redux';
 
 const SongAndAudio = ({ item, index, theme }) => {
-    const [fav, setFav] = useState(false)
+    const [fav, setFav] = useState(false);
+    const authState = useSelector((store) => store.auth);
+    // console.log('🚀 ~ SongAndAudio ~ authState:', authState);
     const FavouriteAudios = (res) => {
         // TrackPlayer.getActiveTrack()
         //     .then((res) => {
@@ -295,8 +295,6 @@ const HomeScreen = ({ navigation }) => {
                         orientation == 'PORTRAIT'
                             ? -screenHeight / 2.3
                             : -Dimensions.get('window').height / 1.3,
-                    // position: 'absolute',
-                    // top: -10
                 }}
                 onLayout={handleLayout}
             >
@@ -334,7 +332,6 @@ const HomeScreen = ({ navigation }) => {
                                             ? theme.searchContext.unSelected.bgColor
                                             : '#EDEDED',
 
-                                    // height: 30,
                                     borderRadius: 20,
                                     justifyContent: 'center',
                                     alignItems: 'center',
@@ -524,11 +521,12 @@ const HomeScreen = ({ navigation }) => {
                     )}
                 />
             </View>
+            {/* om chant */}
             <View>
                 <OmChat />
             </View>
             {/* last section */}
-            <View style={{ paddingBottom: 100 }}>
+            <View>
                 <View style={{ padding: 15 }}>
                     <HeadingAndView
                         viewBtnColor={'#C1554E'}
@@ -561,6 +559,27 @@ const HomeScreen = ({ navigation }) => {
                         </ElevatedCard>
                     )}
                 />
+            </View>
+            {/* Quiz */}
+            <Quiz />
+            {/* video list */}
+            <View
+                style={{
+                    paddingBottom: 60,
+                    paddingHorizontal: 15,
+                }}
+            >
+                <HeadingAndView
+                    viewBtnColor={'#C1554E'}
+                    title={'App Walkthrough Videos '}
+                    // todos : add the fn that take it to the dedicated video page
+                    onPress={() => { }}
+                    theme={{
+                        textColor: theme.textColor,
+                        colorscheme: theme.colorscheme,
+                    }}
+                />
+                <VideosList screenDimension={{ screenHeight, screenWidth }} />
             </View>
         </ScrollView>
     );
