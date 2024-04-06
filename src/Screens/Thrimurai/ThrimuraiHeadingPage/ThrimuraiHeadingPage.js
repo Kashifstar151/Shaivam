@@ -165,6 +165,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const [showLoading, setShowLoading] = useState(false);
     / Get latest DB from the disk /;
     const [thrimurais, setThrimurais] = useState(null);
+    console.log('🚀 ~ ThrimuraiHeadingPage ~ thrimurais:', thrimurais);
     useEffect(() => {
         retrieveData(query);
     }, []);
