@@ -144,10 +144,10 @@ const ThrimuraiSong = ({ route, navigation }) => {
         if (isFocused) {
             changeTranlation('Original');
         }
-        return () => {
-            TrackPlayer.stop();
-            TrackPlayer.reset();
-        };
+        // return () => {
+        //     TrackPlayer.stop();
+        //     TrackPlayer.reset();
+        // };
     }, []);
     const [repeatMode, setRepeatMode] = useState();
     const { musicState, dispatchMusic } = useContext(MusicContext);
@@ -244,6 +244,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     };
 
     const getSOngData = (from) => {
+        TrackPlayer.reset();
         const detailQuery = `SELECT rawSong, tamilExplanation, tamilSplit , songNo , title from thirumurai_songs where prevId=${musicState?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
         const titleQuery = `SELECT
         MAX(CASE WHEN locale = 'en' THEN titleS END) AS tamil,
