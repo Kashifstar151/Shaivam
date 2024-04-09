@@ -58,7 +58,7 @@ const SearchScreen = ({ navigation, route }) => {
         if (searchText && searchText.length >= 2) {
             getSqlData(
                 `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${normalizeString(
-                    searchText
+                    searchText.trim()
                 )}%' and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language}' ${
                     !fktrimuria.has(0) ? `and fkTrimuria IN (${[...fktrimuria].join(',')})` : ''
                 } GROUP BY titleS;`,
@@ -73,7 +73,7 @@ const SearchScreen = ({ navigation, route }) => {
                 // } and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language
                 // }' ORDER BY thirumuraiId,prevId,songNo ASC `,
                 `SELECT t.prevId, t.titleNo ,ts.thirumuraiId, ts.songNo ,ts.rawSong FROM thirumurais t  JOIN thirumurai_songs ts ON t.prevId = ts.prevId WHERE ts.searchTitle LIKE '%${normalizeString(
-                    searchText
+                    searchText.trim()
                 )}%'  ${
                     !fktrimuria.has(0)
                         ? `and ts.thirumuraiId IN (${[...fktrimuria].join(',')})`
