@@ -339,7 +339,7 @@ GROUP BY
                         {
                             fontSize: fontSizeCount,
                             alignSelf: 'flex-end',
-                            color: colorSet?.lyricsText.color,
+                            color: !darkMode ? colors.grey6 : colors.white,
                         },
                     ]}
                     highlightStyle={{
@@ -626,8 +626,17 @@ GROUP BY
                             </TouchableOpacity>
                         </View>
                         <View style={styles.TranslationContainer}>
-                            <Text style={styles.translationText}>Translation</Text>
                             <View style={{ marginHorizontal: 0 }}>
+                                <Text
+                                    style={[
+                                        styles.translationText,
+                                        {
+                                            color: darkMode ? colors.white : colors.black,
+                                        },
+                                    ]}
+                                >
+                                    Translation
+                                </Text>
                                 <FlatList
                                     horizontal
                                     data={language}
@@ -668,7 +677,16 @@ GROUP BY
                                 />
                             </View>
                             <View style={styles.TextSize}>
-                                <Text style={styles.TextSizeText}>Text Size</Text>
+                                <Text
+                                    style={[
+                                        styles.TextSizeText,
+                                        {
+                                            color: darkMode ? colors.white : colors.black,
+                                        },
+                                    ]}
+                                >
+                                    Text Size
+                                </Text>
                                 <View style={{ flexDirection: 'row' }}>
                                     <TouchableOpacity
                                         style={styles.addMinusIcon}
@@ -688,7 +706,16 @@ GROUP BY
                             {i18n.language === 'en' && (
                                 <View style={styles.otherOption}>
                                     <View>
-                                        <Text style={styles.otherOptionText}>Tamil Split</Text>
+                                        <Text
+                                            style={[
+                                                styles.otherOptionText,
+                                                {
+                                                    color: darkMode ? colors.white : colors.black,
+                                                },
+                                            ]}
+                                        >
+                                            Tamil Split
+                                        </Text>
 
                                         <Text
                                             style={{
@@ -716,7 +743,16 @@ GROUP BY
                             )}
                             <View style={styles.otherOption}>
                                 <View>
-                                    <Text style={styles.otherOptionText}>Dark Mode</Text>
+                                    <Text
+                                        style={[
+                                            styles.otherOptionText,
+                                            {
+                                                color: darkMode ? colors.white : colors.black,
+                                            },
+                                        ]}
+                                    >
+                                        Dark Mode
+                                    </Text>
                                     <Text
                                         style={{
                                             fontFamily: 'Mulish-Regular',
@@ -724,7 +760,7 @@ GROUP BY
                                             fontSize: 10,
                                         }}
                                     >
-                                        Turn on to view thirumurais as songs
+                                        Screen will be easier on the eyes
                                     </Text>
                                 </View>
                                 <Switch
@@ -790,7 +826,9 @@ GROUP BY
                                                     {
                                                         fontSize: fontSizeCount,
                                                         alignSelf: 'flex-end',
-                                                        color: colorSet?.lyricsText.color,
+                                                        color: !darkMode
+                                                            ? colors.grey6
+                                                            : colors.white,
                                                     },
                                                 ]}
                                             >
@@ -809,7 +847,7 @@ GROUP BY
                                                 {
                                                     fontSize: fontSizeCount,
                                                     alignSelf: 'flex-end',
-                                                    color: colorSet?.lyricsText.color,
+                                                    color: !darkMode ? colors.grey6 : colors.white,
                                                 },
                                             ]}
                                         >
@@ -837,7 +875,7 @@ GROUP BY
                         //                     styles.lyricsText,
                         //                     {
                         //                         fontSize: fontSizeCount,
-                        //                         color: colorSet?.lyricsText.color,
+                        //                         color: !darkMode ? colors.grey6 : colors.white,
                         //                     },
                         //                 ]}
                         //             >
@@ -855,7 +893,7 @@ GROUP BY
                         //                 {
                         //                     fontSize: fontSizeCount,
                         //                     alignSelf: 'flex-end',
-                        //                     color: colorSet?.lyricsText.color,
+                        //                     color: !darkMode ? colors.grey6 : colors.white,
                         //                 },
                         //             ]}
                         //         >
@@ -1039,13 +1077,13 @@ export const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '700',
         fontFamily: 'Lora-Bold',
-        color: 'black',
         marginBottom: 5,
     },
     TranslationContainer: {
         paddingHorizontal: 20,
         paddingBottom: 10,
         flex: 1,
+        gap: 10,
     },
     languageBox: {
         alignItems: 'center',
@@ -1091,12 +1129,11 @@ export const styles = StyleSheet.create({
     },
     InsiderSettingButton: { flexDirection: 'row', alignItems: 'center', padding: 5 },
     clearIcon: { alignItems: 'center', padding: 5 },
-    TextSize: { marginTop: 5 },
+    TextSize: { marginTop: 5, gap: 5 },
     TextSizeText: { color: 'black', fontFamily: 'Lora-Bold' },
     fontSizeText: {
         marginHorizontal: 4,
         fontFamily: 'Mulish-Regular',
-        color: '#777777',
         // fontWeight: '600',
     },
     otherOption: { justifyContent: 'space-between', flexDirection: 'row', marginTop: 6 },
