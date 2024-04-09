@@ -120,7 +120,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
 
     const initilizeTheTheme = useCallback(async () => {
         const themeMode = await AsyncStorage.getItem('theme');
-        if (themeMode === 'dark') {
+        if (JSON.parse(themeMode) === 'dark') {
             setDarkMode(true);
         } else {
             setDarkMode(false);
