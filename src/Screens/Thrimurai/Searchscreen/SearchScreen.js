@@ -72,9 +72,13 @@ const SearchScreen = ({ navigation, route }) => {
                 // `SELECT * FROM thirumurai_songs WHERE searchTitle LIKE '%${normalizeString(searchText)}%' ${!fktrimuria.has(0) ? `and thirumuraiId IN (${[...fktrimuria].join(',')})` : ''
                 // } and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language
                 // }' ORDER BY thirumuraiId,prevId,songNo ASC `,
-                `SELECT t.prevId, t.titleNo ,ts.thirumuraiId, ts.songNo ,ts.rawSong FROM thirumurais t JOIN thirumurai_songs ts ON t.prevId = ts.prevId WHERE ts.searchTitle LIKE '%${normalizeString(
+                `SELECT t.prevId, t.titleNo ,ts.thirumuraiId, ts.songNo ,ts.rawSong FROM thirumurais t  JOIN thirumurai_songs ts ON t.prevId = ts.prevId WHERE ts.searchTitle LIKE '%${normalizeString(
                     searchText
-                )}%' AND ts.locale='${
+                )}%'  ${
+                    !fktrimuria.has(0)
+                        ? `and ts.thirumuraiId IN (${[...fktrimuria].join(',')})`
+                        : ''
+                }  AND ts.locale='${
                     i18n.language === 'en-IN' ? 'RoI' : i18n.language
                 }' GROUP BY   ts.thirumuraiId, ts.prevId, ts.songNo ORDER BY ts.thirumuraiId, ts.prevId, ts.songNo ASC`,
                 (callbacks) => {
@@ -165,7 +169,9 @@ const SearchScreen = ({ navigation, route }) => {
         return (n < 10 ? '0' : '') + n;
     }
     const renderResult = (item, index, key) => {
-        // console.log('🚀 ~ renderResult ~ item:', JSON.stringify(item, 0, 2));
+        if (key === 'title') {
+            console.log('🚀 ~ renderResult ~ item:', JSON.stringify(item, 0, 2));
+        }
         return (
             <Pressable
                 style={{ marginVertical: 10 }}
