@@ -64,7 +64,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
     // });
     const isFocused = useIsFocused;
     const { data, downloaded, searchedword, searchScreen, songNo } = route.params || {};
-    console.log('🚀 ~ ThrimuraiSong ~ data:', JSON.stringify(data, 0, 2), downloaded);
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
@@ -350,20 +349,20 @@ GROUP BY
             </View>
         );
     };
-    useEffect(() => {
-        if (searchScreen) {
-            setTimeout(() => {
-                scrollToIndex();
-            }, 2000);
-        }
-    }, [flatListRef]);
-    const scrollToIndex = () => {
-        // console.log("songnonsjc", typeof songNo)
-        flatListRef?.current?.scrollToIndex({
-            animated: true,
-            index: songNo,
-        });
-    };
+    // useEffect(() => {
+    //     if (searchScreen) {
+    //         setTimeout(() => {
+    //             scrollToIndex();
+    //         }, 2000);
+    //     }
+    // }, [flatListRef]);
+    // const scrollToIndex = () => {
+    //     // console.log("songnonsjc", typeof songNo)
+    //     flatListRef?.current?.scrollToIndex({
+    //         animated: true,
+    //         index: songNo,
+    //     });
+    // };
 
     const getItemLayOut = (item, index) => {
         // console.log("🚀 ~ getItemLayOut ~ index:", index)
@@ -467,6 +466,7 @@ GROUP BY
 
     return (
         <View style={{ flex: 1, backgroundColor: colorSet?.backgroundColor }}>
+            {/* the header */}
             <AnimatedRN.View
                 style={{
                     height: Platform.OS == 'ios' ? 'auto' : statusBarHeight,
@@ -484,6 +484,7 @@ GROUP BY
                     />
                 </Background>
             </AnimatedRN.View>
+            {/* details */}
             <View
                 style={[
                     styles.headerContainer,
@@ -571,10 +572,6 @@ GROUP BY
                                 <Text style={styles.titleDropDown}>{`${t('Thalam')}`}</Text>
                                 <Text style={styles.valueDropDown}>
                                     {t(musicState?.metaData?.thalam)}
-
-                                    {/* {metaData?.thalam === 'சீர்காழி - 06 - பூந்தராய்'
-                                        ? 'true'
-                                        : 'false'} */}
                                 </Text>
                             </View>
                         </View>
@@ -586,7 +583,7 @@ GROUP BY
                     <DownArrow />
                 </TouchableOpacity>
             </View>
-
+            {/* setting part */}
             <View
                 style={{
                     width: '100%',
@@ -798,6 +795,7 @@ GROUP BY
                     </TouchableOpacity>
                 )}
             </View>
+            {/* lyrics part */}
             <View style={styles.lyricsContainer}>
                 <View style={{ paddingHorizontal: 20 }}>
                     {musicState?.songDetails?.length > 0 && (
@@ -805,8 +803,8 @@ GROUP BY
                             keyExtractor={(item) => item?.id}
                             getItemLayout={getItemLayOut}
                             ref={flatListRef}
-                            contentContainerStyle={{ paddingBottom: 100 }}
                             data={musicState?.songDetails}
+                            initialScrollIndex={songNo ? songNo - 1 : 0}
                             renderItem={({ item, index }) => (
                                 <View
                                     style={{
@@ -863,10 +861,6 @@ GROUP BY
             <Animated.View
                 style={{
                     paddingTop: 20,
-                    position: 'absolute',
-                    // backgroundColor: 'blue',
-                    right: 0,
-                    bottom: 0,
                     backgroundColor: !visibleStatusBar ? '#222222' : 'transparent',
                     borderTopEndRadius: 15,
                     borderTopLeftRadius: 15,
@@ -1036,7 +1030,7 @@ export const styles = StyleSheet.create({
         fontFamily: 'Mulish-Regular',
         color: '#777777',
     },
-    lyricsContainer: { flexGrow: 1, paddingHorizontal: 0, marginTop: 10 },
+    lyricsContainer: { flex: 1, paddingHorizontal: 0, marginTop: 10 },
     lyricsText: {
         // fontWeight: '500',
         fontFamily: 'AnekTamil-Regular',
