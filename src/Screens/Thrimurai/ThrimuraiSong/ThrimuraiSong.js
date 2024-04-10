@@ -119,8 +119,13 @@ const ThrimuraiSong = ({ route, navigation }) => {
     }, []);
 
     const initilizeTheTheme = useCallback(async () => {
+        // console.log('🚀 ~ useEffect ~ initilizeTheTheme: 2');
+
         const themeMode = await AsyncStorage.getItem('theme');
-        if (JSON.parse(themeMode) === 'dark') {
+
+        // console.log('🚀 ~ useEffect ~ initilizeTheTheme: 3', themeMode === 'dark');
+
+        if (themeMode === 'dark') {
             setDarkMode(true);
         } else {
             setDarkMode(false);
@@ -128,6 +133,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     }, []);
 
     useEffect(() => {
+        // console.log('🚀 ~ useEffect ~ initilizeTheTheme: 1');
         initilizeTheTheme();
     }, []);
 
@@ -682,7 +688,16 @@ GROUP BY
                                     >
                                         <AntDesign name="minus" color="white" />
                                     </TouchableOpacity>
-                                    <Text style={styles.fontSizeText}>{fontSizeCount}</Text>
+                                    <Text
+                                        style={[
+                                            styles.fontSizeText,
+                                            {
+                                                color: darkMode ? colors.white : colors.black,
+                                            },
+                                        ]}
+                                    >
+                                        {fontSizeCount}
+                                    </Text>
                                     <TouchableOpacity
                                         style={styles.addMinusIcon}
                                         onPress={() => setFontSizeCount(fontSizeCount + 1)}
