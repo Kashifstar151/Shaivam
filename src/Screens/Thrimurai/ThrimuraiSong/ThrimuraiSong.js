@@ -344,7 +344,9 @@ GROUP BY
                         backgroundColor: darkMode ? '#A47300' : '#F8E3B2',
                     }}
                     searchWords={[`${searchedword}`]}
-                    textToHighlight={item?.rawSong}
+                    textToHighlight={
+                        selectedLang !== 'Tamil' ? item?.rawSong : item?.tamilExplanation
+                    }
                 />
             </View>
         );
