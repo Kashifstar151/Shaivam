@@ -84,6 +84,8 @@ const BackButton = ({
                                     }}
                                 >
                                     <Text
+                                        numberOfLines={1}
+                                        ellipsizeMode="tail"
                                         style={{
                                             fontSize: 14,
                                             fontWeight: '500',

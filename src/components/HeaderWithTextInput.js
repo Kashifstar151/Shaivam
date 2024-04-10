@@ -15,68 +15,65 @@ import BackIcon from '../../src/assets/Images/BackIcon.svg';
 import WhiteBackButton from '../../src/assets/Images/arrow (1) 1.svg';
 import { ThemeContext } from '../Context/ThemeContext';
 
-const HeaderWithTextInput = ({
-    navigation,
-    color,
-    rightIcon,
-    setState,
-    state,
-    setOnFocus,
-    placeholder,
-    onSubmitEditing,
-}) => {
-    const { theme } = useContext(ThemeContext);
-    return (
-        <View
-            style={{
-                paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 40 : 0,
-                paddingHorizontal: 15,
-            }}
-        >
+const HeaderWithTextInput = React.forwardRef(
+    (
+        { navigation, color, rightIcon, setState, state, setOnFocus, placeholder, onSubmitEditing },
+        ref
+    ) => {
+        const { theme } = useContext(ThemeContext);
+        return (
             <View
                 style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginTop: 10,
-                    alignItems: 'center',
+                    paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 40 : 0,
+                    paddingHorizontal: 15,
                 }}
             >
-                <TouchableOpacity
-                    style={{ alignSelf: 'center' }}
-                    onPress={() => navigation.goBack()}
-                >
-                    <BackIcon />
-                </TouchableOpacity>
                 <View
-                    style={
-                        color
-                            ? [
-                                  styles.inputcontainer,
-                                  {
-                                      backgroundColor: '#F3F3F3',
-                                  },
-                              ]
-                            : [styles.inputcontainer, { backgroundColor: theme.searchBox.bgColor }]
-                    }
+                    style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        marginTop: 10,
+                        alignItems: 'center',
+                    }}
                 >
-                    <Icon name="search1" size={28} color={color ? '#777777' : colors.grey1} />
-                    <TextInput
-                        onSubmitEditing={onSubmitEditing}
-                        onBlur={() => setOnFocus(false)}
-                        onFocus={() => setOnFocus(true)}
-                        placeholder={placeholder}
-                        onChangeText={(e) => setState(e)}
-                        placeholderTextColor={theme.searchBox.textColor}
-                        value={state}
-                        style={{
-                            fontSize: 12,
-                            paddingHorizontal: 5,
-                            color: theme.searchBox.textColor,
-                            width: '90%',
-                        }}
-                    />
-                </View>
-                {/* <View style={{ flexDirection: 'row', marginTop: 10, paddingHorizontal: 5 }}>
+                    <TouchableOpacity
+                        style={{ alignSelf: 'center' }}
+                        onPress={() => navigation.goBack()}
+                    >
+                        <BackIcon />
+                    </TouchableOpacity>
+                    <View
+                        style={
+                            color
+                                ? [
+                                      styles.inputcontainer,
+                                      {
+                                          backgroundColor: '#F3F3F3',
+                                      },
+                                  ]
+                                : [
+                                      styles.inputcontainer,
+                                      { backgroundColor: theme.searchBox.bgColor },
+                                  ]
+                        }
+                    >
+                        <Icon name="search1" size={28} color={color ? '#777777' : colors.grey1} />
+                        <TextInput
+                            onSubmitEditing={onSubmitEditing}
+                            placeholder={placeholder}
+                            onChangeText={(e) => setState(e)}
+                            placeholderTextColor={theme.searchBox.textColor}
+                            value={state}
+                            ref={ref}
+                            style={{
+                                fontSize: 12,
+                                paddingHorizontal: 5,
+                                color: theme.searchBox.textColor,
+                                width: '90%',
+                            }}
+                        />
+                    </View>
+                    {/* <View style={{ flexDirection: 'row', marginTop: 10, paddingHorizontal: 5 }}>
                 <TouchableOpacity style={{ alignSelf: 'center' }} onPress={() => navigation.goBack()}>
                     {!color ? <WhiteBackButton /> : <BackIcon />}
                 </TouchableOpacity>
@@ -94,20 +91,21 @@ const HeaderWithTextInput = ({
                     }
 
                 </View> */}
-                {/* </View> */}
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    {rightIcon && (
-                        <TouchableOpacity style={{ paddingHorizontal: 5 }}>
-                            <Icon name="sharealt" size={24} color="white" />
-                        </TouchableOpacity>
-                    )}
-                    <NandiLogo />
+                    {/* </View> */}
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        {rightIcon && (
+                            <TouchableOpacity style={{ paddingHorizontal: 5 }}>
+                                <Icon name="sharealt" size={24} color="white" />
+                            </TouchableOpacity>
+                        )}
+                        <NandiLogo />
+                    </View>
                 </View>
+                {/* <Text style={{ marginHorizontal: 10, fontFamily: 'Lora-Regular', fontSize: 24, fontWeight: '700', color: 'white' }}>{firstText}</Text> */}
             </View>
-            {/* <Text style={{ marginHorizontal: 10, fontFamily: 'Lora-Regular', fontSize: 24, fontWeight: '700', color: 'white' }}>{firstText}</Text> */}
-        </View>
-    );
-};
+        );
+    }
+);
 export const styles = StyleSheet.create({
     inputcontainer: {
         width: '80%',
