@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 import MusicIcon1 from '../../assets/Images/music 1.svg';
 import { RouteTexts } from '../../navigation/RouteText';
 import SQLite from 'react-native-sqlite-storage';
@@ -58,7 +58,6 @@ const RenderAudios = ({
     varakatimurai,
     prevId, //passed from the thrimurai song
 }) => {
-    // console.log('🚀 ~ RenderAudios ~ songs:', songs);
     const { theme } = useContext(ThemeContext);
     const [dataLength, setDataLength] = useState(0);
     const [audioData, setAudioData] = useState([]);
@@ -110,11 +109,15 @@ const RenderAudios = ({
             setAudioData(callbacks);
         });
     };
+
+    const [isFetchingNextPage, setIsFetchingNextPage] = useState(false);
     const getSongsData = async () => {
         const query = `SELECT * FROM thirumurais  where  locale='${
             i18n.language === 'en-IN' ? 'RoI' : i18n.language
-        }' and fkTrimuria ${prevId} ORDER BY fkTrimuria,titleNo LIMIT 20 OFFSET ${dataLength} `;
-
+        }' and fkTrimuria ${prevId} and titleS != "" ORDER BY fkTrimuria,titleNo LIMIT 20 OFFSET ${dataLength} `;
+        if (audioData?.length > 0) {
+            setIsFetchingNextPage(true);
+        }
         getSqlData(query, (callbacks) => {
             // if (callbacks?.Length > 0) {
             //     set
@@ -127,13 +130,22 @@ const RenderAudios = ({
                     setAudioData(callbacks);
                 }
                 setDataLength(dataLength + 20);
+                setIsFetchingNextPage(false);
             }
         });
     };
 
     const navigationHandler = (item) => {
+        let type = akarthi
+            ? 'akarthi'
+            : varakatimurai
+            ? 'varakatimurai'
+            : thalam
+            ? 'thalam'
+            : 'raga';
         navigation.navigate(RouteTexts.THRIMURAI_SONG, {
             data: item,
+            type,
             // nextIndxId,
         });
     };
@@ -144,6 +156,10 @@ const RenderAudios = ({
         <View>
             {audioData.length > 0 ? (
                 <FlatList
+                    contentContainerStyle={{
+                        paddingBottom: 30,
+                    }}
+                    disableVirtualization
                     nestedScrollEnabled
                     keyExtractor={(item, index) => {
                         // setNextIndxId((prev) => {
@@ -169,11 +185,15 @@ const RenderAudios = ({
                         );
                     }}
                     data={audioData}
+                    onEndReachedThreshold={0.6}
                     onEndReached={() => {
                         if (akarthi) {
                             getSongsData();
                         }
                     }}
+                    ListFooterComponent={
+                        isFetchingNextPage ? <ActivityIndicator size={'small'} /> : null
+                    }
                 />
             ) : (
                 <View
