@@ -110,19 +110,15 @@ const RenderAudios = ({
         });
     };
 
-    const [isFetchingNextPage, setIsFetchingNextPage] = useState(false);
+    const [isFetchingNextPage, setIsFetchingNextPage] = useState({ state: false, haveMore: true });
     const getSongsData = async () => {
         const query = `SELECT * FROM thirumurais  where  locale='${
             i18n.language === 'en-IN' ? 'RoI' : i18n.language
         }' and fkTrimuria ${prevId} and titleS != "" ORDER BY fkTrimuria,titleNo LIMIT 20 OFFSET ${dataLength} `;
         if (audioData?.length > 0) {
-            setIsFetchingNextPage(true);
+            setIsFetchingNextPage((prev) => ({ ...prev, state: true }));
         }
         getSqlData(query, (callbacks) => {
-            // if (callbacks?.Length > 0) {
-            //     set
-            // }
-            // let arr = audioData
             if (callbacks.length > 0) {
                 if (audioData?.length > 0) {
                     setAudioData(audioData.concat(callbacks));
@@ -130,7 +126,9 @@ const RenderAudios = ({
                     setAudioData(callbacks);
                 }
                 setDataLength(dataLength + 20);
-                setIsFetchingNextPage(false);
+                setIsFetchingNextPage((prev) => ({ ...prev, state: false }));
+            } else if (callbacks.error) {
+                setIsFetchingNextPage((prev) => ({ ...prev, haveMore: false, state: false }));
             }
         });
     };
@@ -187,12 +185,12 @@ const RenderAudios = ({
                     data={audioData}
                     onEndReachedThreshold={0.6}
                     onEndReached={() => {
-                        if (akarthi) {
+                        if (akarthi && isFetchingNextPage?.haveMore) {
                             getSongsData();
                         }
                     }}
                     ListFooterComponent={
-                        isFetchingNextPage ? <ActivityIndicator size={'small'} /> : null
+                        isFetchingNextPage.state ? <ActivityIndicator size={'small'} /> : null
                     }
                 />
             ) : (
