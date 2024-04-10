@@ -9,26 +9,22 @@ import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 const ChooseLanguage = ({ selected, setSelected }) => {
     const { i18n } = useTranslation();
     const language = [
-        // { name: 'English', lngCode: 'en' },
-        // { name: 'Hindi', lngCode: 'hi' },
-        // { name: 'Kannada', lngCode: 'kn' },
-
-        { name: 'Arabic', lngCode: 'ar' },
-        { name: 'Assamese', lngCode: 'as' },
-        { name: 'Bengali', lngCode: 'bn' },
+        { name: 'العربية', lngCode: 'ar' },
+        { name: ' অসমীয়া', lngCode: 'as' },
+        { name: 'বাংলা', lngCode: 'bn' },
         { name: 'English', lngCode: 'en-IN' },
-        { name: 'Gujrati', lngCode: 'gu' },
-        { name: 'Hebrew', lngCode: 'he' },
-        { name: 'Hindi', lngCode: 'DV' },
-        { name: 'Japanese', lngCode: 'ja' },
-        { name: 'Kannada', lngCode: 'kn-IN' },
-        { name: 'Malayalam', lngCode: 'ml' },
-        { name: 'Oriya', lngCode: 'od' },
-        { name: 'Punjabi', lngCode: 'pa' },
-        { name: 'Sindhi', lngCode: 'si' },
-        { name: 'Tamil', lngCode: 'en' },
-        { name: 'Telgu', lngCode: 'te' },
-        { name: 'Urdu', lngCode: 'ur' },
+        { name: 'ગુજરાતી', lngCode: 'gu' },
+        { name: 'עברית', lngCode: 'he' },
+        { name: 'हिन्दी', lngCode: 'DV' },
+        { name: '日本語', lngCode: 'ja' },
+        { name: 'ಕನ್ನಡ', lngCode: 'kn-IN' },
+        { name: 'മലയാളം', lngCode: 'ml' },
+        { name: 'ଓଡ଼ିଆ', lngCode: 'od' },
+        { name: 'ਪੰਜਾਬੀ', lngCode: 'pa' },
+        { name: 'सिन्धी', lngCode: 'si' },
+        { name: 'தமிழ்', lngCode: 'en' },
+        { name: 'తెలుగు', lngCode: 'te' },
+        { name: 'اُردُو', lngCode: 'ur' },
     ];
 
     const handleClick = (item) => {

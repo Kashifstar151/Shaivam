@@ -119,7 +119,12 @@ const ThrimuraiSong = ({ route, navigation }) => {
     }, []);
 
     const initilizeTheTheme = useCallback(async () => {
+        // console.log('🚀 ~ useEffect ~ initilizeTheTheme: 2');
+
         const themeMode = await AsyncStorage.getItem('theme');
+
+        // console.log('🚀 ~ useEffect ~ initilizeTheTheme: 3', themeMode === 'dark');
+
         if (themeMode === 'dark') {
             setDarkMode(true);
         } else {
@@ -128,6 +133,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     }, []);
 
     useEffect(() => {
+        // console.log('🚀 ~ useEffect ~ initilizeTheTheme: 1');
         initilizeTheTheme();
     }, []);
 
@@ -144,10 +150,10 @@ const ThrimuraiSong = ({ route, navigation }) => {
         if (isFocused) {
             changeTranlation('Original');
         }
-        return () => {
-            TrackPlayer.stop();
-            TrackPlayer.reset();
-        };
+        // return () => {
+        //     TrackPlayer.stop();
+        //     TrackPlayer.reset();
+        // };
     }, []);
     const [repeatMode, setRepeatMode] = useState();
     const { musicState, dispatchMusic } = useContext(MusicContext);
@@ -191,11 +197,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
         }
     }, [darkMode]);
 
-    // const activeTrack = useActiveTrack();
-    // console.log(
-    //     '🚀 ~ ``````````~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~:',
-    //     activeTrack
-    // );
+    const activeTrack = useActiveTrack();
 
     const fetchAndDisplayDownloads = async () => {
         try {
@@ -244,6 +246,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     };
 
     const getSOngData = (from) => {
+        TrackPlayer.reset();
         const detailQuery = `SELECT rawSong, tamilExplanation, tamilSplit , songNo , title from thirumurai_songs where prevId=${musicState?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
         const titleQuery = `SELECT
         MAX(CASE WHEN locale = 'en' THEN titleS END) AS tamil,
@@ -307,15 +310,11 @@ GROUP BY
         callbacks(!value);
     };
     const checkDownloaded = (songList) => {
-        if (downloadList.length > 0) {
+        if (downloadList?.length > 0) {
             const updatedArray2 = songList?.map((item2) => {
                 const match = downloadList.find((item1) => item1.id === item2.id);
                 return match ? { ...match, isLocal: true } : item2; // Replace with the object from array1 if there's a match
             });
-            // console.log(
-            //     '🚀 ~ updatedArray2 _________________________________------------------------------________________________________----------------_________________----------------__________________------------______-----------------_______---___---__---___---__---___----_----__---__----_----_----__---_----_----_----__---___---___---___---___---___---___---___---___---__---___---___---___---___---___---___---___---___---___---___---___---___---__----___---___---___---___---___---___---___---___---___---___---___---___----___---__---____---__----___---___---__---___---___---____----____',
-            //     updatedArray2
-            // );
             setUpPlayer(updatedArray2);
         } else {
             setUpPlayer(songList);
@@ -339,7 +338,7 @@ GROUP BY
                         {
                             fontSize: fontSizeCount,
                             alignSelf: 'flex-end',
-                            color: colorSet?.lyricsText.color,
+                            color: !darkMode ? colors.grey6 : colors.white,
                         },
                     ]}
                     highlightStyle={{
@@ -348,11 +347,6 @@ GROUP BY
                     searchWords={[`${searchedword}`]}
                     textToHighlight={item?.rawSong}
                 />
-                {/* {parts?.map((word) => (
-                    word?.split(' ')?.map((res) => (
-                        <HighlightedText highlight={searchedword} text={res} lyrics={true} />
-                    ))
-                ))} */}
             </View>
         );
     };
@@ -626,8 +620,17 @@ GROUP BY
                             </TouchableOpacity>
                         </View>
                         <View style={styles.TranslationContainer}>
-                            <Text style={styles.translationText}>Translation</Text>
                             <View style={{ marginHorizontal: 0 }}>
+                                <Text
+                                    style={[
+                                        styles.translationText,
+                                        {
+                                            color: darkMode ? colors.white : colors.black,
+                                        },
+                                    ]}
+                                >
+                                    Translation
+                                </Text>
                                 <FlatList
                                     horizontal
                                     data={language}
@@ -668,7 +671,16 @@ GROUP BY
                                 />
                             </View>
                             <View style={styles.TextSize}>
-                                <Text style={styles.TextSizeText}>Text Size</Text>
+                                <Text
+                                    style={[
+                                        styles.TextSizeText,
+                                        {
+                                            color: darkMode ? colors.white : colors.black,
+                                        },
+                                    ]}
+                                >
+                                    Text Size
+                                </Text>
                                 <View style={{ flexDirection: 'row' }}>
                                     <TouchableOpacity
                                         style={styles.addMinusIcon}
@@ -676,7 +688,16 @@ GROUP BY
                                     >
                                         <AntDesign name="minus" color="white" />
                                     </TouchableOpacity>
-                                    <Text style={styles.fontSizeText}>{fontSizeCount}</Text>
+                                    <Text
+                                        style={[
+                                            styles.fontSizeText,
+                                            {
+                                                color: darkMode ? colors.white : colors.black,
+                                            },
+                                        ]}
+                                    >
+                                        {fontSizeCount}
+                                    </Text>
                                     <TouchableOpacity
                                         style={styles.addMinusIcon}
                                         onPress={() => setFontSizeCount(fontSizeCount + 1)}
@@ -688,7 +709,16 @@ GROUP BY
                             {i18n.language === 'en' && (
                                 <View style={styles.otherOption}>
                                     <View>
-                                        <Text style={styles.otherOptionText}>Tamil Split</Text>
+                                        <Text
+                                            style={[
+                                                styles.otherOptionText,
+                                                {
+                                                    color: darkMode ? colors.white : colors.black,
+                                                },
+                                            ]}
+                                        >
+                                            Tamil Split
+                                        </Text>
 
                                         <Text
                                             style={{
@@ -716,7 +746,16 @@ GROUP BY
                             )}
                             <View style={styles.otherOption}>
                                 <View>
-                                    <Text style={styles.otherOptionText}>Dark Mode</Text>
+                                    <Text
+                                        style={[
+                                            styles.otherOptionText,
+                                            {
+                                                color: darkMode ? colors.white : colors.black,
+                                            },
+                                        ]}
+                                    >
+                                        Dark Mode
+                                    </Text>
                                     <Text
                                         style={{
                                             fontFamily: 'Mulish-Regular',
@@ -724,7 +763,7 @@ GROUP BY
                                             fontSize: 10,
                                         }}
                                     >
-                                        Turn on to view thirumurais as songs
+                                        Screen will be easier on the eyes
                                     </Text>
                                 </View>
                                 <Switch
@@ -759,138 +798,68 @@ GROUP BY
                     </TouchableOpacity>
                 )}
             </View>
-            <View style={styles.lyricsContainer} nestedScrollEnabled>
-                <View style={{ paddingBottom: 300, paddingHorizontal: 20 }}>
-                    {
-                        musicState?.songDetails?.length > 0 && (
-                            <FlatList
-                                keyExtractor={(item) => item?.id}
-                                getItemLayout={getItemLayOut}
-                                ref={flatListRef}
-                                contentContainerStyle={{ paddingBottom: 100 }}
-                                data={musicState?.songDetails}
-                                renderItem={({ item, index }) => (
-                                    <View
-                                        style={{
-                                            borderBottomColor: colors.grey3,
-                                            borderBottomWidth: 1,
-                                            paddingBottom: 7,
-                                            flexDirection: 'row',
-                                        }}
-                                    >
-                                        {searchScreen ? (
-                                            renderResult(item)
-                                        ) : (
-                                            <Text
-                                                key={Math.random()}
-                                                selectable={true}
-                                                selectionColor="orange"
-                                                style={[
-                                                    styles.lyricsText,
-                                                    {
-                                                        fontSize: fontSizeCount,
-                                                        alignSelf: 'flex-end',
-                                                        color: colorSet?.lyricsText.color,
-                                                    },
-                                                ]}
-                                            >
-                                                {!(tamilSplit && i18n.language === 'en')
-                                                    ? selectedLang !== 'Tamil'
-                                                        ? item?.rawSong
-                                                        : item?.tamilExplanation ||
-                                                          'Text currently not available'
-                                                    : item?.tamilSplit ||
-                                                      'Text currently not available'}
-                                            </Text>
-                                        )}
+            <View style={styles.lyricsContainer}>
+                <View style={{ paddingHorizontal: 20 }}>
+                    {musicState?.songDetails?.length > 0 && (
+                        <FlatList
+                            keyExtractor={(item) => item?.id}
+                            getItemLayout={getItemLayOut}
+                            ref={flatListRef}
+                            contentContainerStyle={{ paddingBottom: 100 }}
+                            data={musicState?.songDetails}
+                            renderItem={({ item, index }) => (
+                                <View
+                                    style={{
+                                        borderBottomColor: colors.grey3,
+                                        borderBottomWidth: 1,
+                                        paddingBottom: 7,
+                                        flexDirection: 'row',
+                                    }}
+                                >
+                                    {searchScreen ? (
+                                        renderResult(item)
+                                    ) : (
                                         <Text
+                                            key={Math.random()}
+                                            selectable={true}
+                                            selectionColor="orange"
                                             style={[
                                                 styles.lyricsText,
                                                 {
                                                     fontSize: fontSizeCount,
                                                     alignSelf: 'flex-end',
-                                                    color: colorSet?.lyricsText.color,
+                                                    color: !darkMode ? colors.grey6 : colors.white,
                                                 },
                                             ]}
                                         >
-                                            {item?.songNo}
+                                            {!(tamilSplit && i18n.language === 'en')
+                                                ? selectedLang !== 'Tamil'
+                                                    ? item?.rawSong
+                                                    : item?.tamilExplanation ||
+                                                      'Text currently not available'
+                                                : item?.tamilSplit ||
+                                                  'Text currently not available'}
                                         </Text>
-                                    </View>
-                                )}
-                            />
-                        )
-
-                        // musicState?.songDetails?.map((res, index) => (
-                        //     <View
-                        //         style={{
-                        //             borderBottomColor: colors.grey3,
-                        //             borderBottomWidth: 1,
-                        //             paddingBottom: 7,
-                        //             flexDirection: 'row',
-                        //         }}
-                        //     >
-                        //         {searchScreen ? (
-                        //             renderResult(res)
-                        //         ) : (
-                        //             <Text
-                        //                 style={[
-                        //                     styles.lyricsText,
-                        //                     {
-                        //                         fontSize: fontSizeCount,
-                        //                         color: colorSet?.lyricsText.color,
-                        //                     },
-                        //                 ]}
-                        //             >
-                        //                 {!(tamilSplit && i18n.language === 'en')
-                        //                     ? selectedLang !== 'Tamil'
-                        //                         ? res?.rawSong
-                        //                         : res?.tamilExplanation ||
-                        //                         'Text currently not available'
-                        //                     : res?.tamilSplit || 'Text currently not available'}
-                        //             </Text>
-                        //         )}
-                        //         <Text
-                        //             style={[
-                        //                 styles.lyricsText,
-                        //                 {
-                        //                     fontSize: fontSizeCount,
-                        //                     alignSelf: 'flex-end',
-                        //                     color: colorSet?.lyricsText.color,
-                        //                 },
-                        //             ]}
-                        //         >
-                        //             {res?.songNo}
-                        //         </Text>
-                        //     </View>
-                        // ))}
-                    }
+                                    )}
+                                    <Text
+                                        style={[
+                                            styles.lyricsText,
+                                            {
+                                                fontSize: fontSizeCount,
+                                                alignSelf: 'flex-end',
+                                                color: !darkMode ? colors.grey6 : colors.white,
+                                            },
+                                        ]}
+                                    >
+                                        {item?.songNo}
+                                    </Text>
+                                </View>
+                            )}
+                        />
+                    )}
                 </View>
             </View>
-            {/* <BottomSheet
-                handleIndicatorStyle={{ backgroundColor: '#FFF7E6' }}
-                handleStyle={{
-                    backgroundColor: '#222222',
-                    // borderTopEndRadius: 15,
-                    // borderTopLeftRadius: 15,
-                    paddingTop: 20,
-                    position: 'absolute',
-                    right: 0,
-                    bottom: 0,
-                    // backgroundColor: '#222222',
-                    borderTopEndRadius: 15,
-                    borderTopLeftRadius: 15,
-                    alignSelf: 'flex-end',
-                    width:
-                        orientation == 'LANDSCAPE'
-                            ? Dimensions.get('window').width / 2
-                            : Dimensions.get('window').width,
-                }}
 
-                ref={bottomSheetRef}
-                snapPoints={snapPoints}
-                index={1}
-
-            > */}
             <Animated.View
                 style={{
                     paddingTop: 20,
@@ -949,21 +918,25 @@ GROUP BY
                         }}
                     ></TouchableOpacity>
                 </View>
-                <AudioPlayer
-                    setDownloadingLoader={setDownloadingLoader}
-                    visibleStatusBar={visibleStatusBar}
-                    prevId={data?.prevId}
-                    songsData={musicState?.song}
-                    title={musicState?.title}
-                    orientation={orientation}
-                    downloaded={downloaded}
-                    data={data}
-                    repeatMode={repeatMode}
-                    setRepeatMode={setRepeatMode}
-                    queryForNextPrevId={queryForNextPrevId}
-                    queryForPreviousPrevId={queryForPreviousPrevId}
-                />
+                {activeTrack?.url ? (
+                    <AudioPlayer
+                        activeTrack={activeTrack}
+                        setDownloadingLoader={setDownloadingLoader}
+                        visibleStatusBar={visibleStatusBar}
+                        prevId={data?.prevId}
+                        songsData={musicState?.song}
+                        title={musicState?.title}
+                        orientation={orientation}
+                        downloaded={downloaded}
+                        data={data}
+                        repeatMode={repeatMode}
+                        setRepeatMode={setRepeatMode}
+                        queryForNextPrevId={queryForNextPrevId}
+                        queryForPreviousPrevId={queryForPreviousPrevId}
+                    />
+                ) : null}
             </Animated.View>
+
             {/* </BottomSheet> */}
         </View>
     );
@@ -1039,13 +1012,13 @@ export const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '700',
         fontFamily: 'Lora-Bold',
-        color: 'black',
         marginBottom: 5,
     },
     TranslationContainer: {
         paddingHorizontal: 20,
         paddingBottom: 10,
         flex: 1,
+        gap: 10,
     },
     languageBox: {
         alignItems: 'center',
@@ -1091,12 +1064,11 @@ export const styles = StyleSheet.create({
     },
     InsiderSettingButton: { flexDirection: 'row', alignItems: 'center', padding: 5 },
     clearIcon: { alignItems: 'center', padding: 5 },
-    TextSize: { marginTop: 5 },
+    TextSize: { marginTop: 5, gap: 5 },
     TextSizeText: { color: 'black', fontFamily: 'Lora-Bold' },
     fontSizeText: {
         marginHorizontal: 4,
         fontFamily: 'Mulish-Regular',
-        color: '#777777',
         // fontWeight: '600',
     },
     otherOption: { justifyContent: 'space-between', flexDirection: 'row', marginTop: 6 },
