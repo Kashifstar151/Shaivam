@@ -34,8 +34,15 @@ const Header = () => {
     };
     useEffect(() => {
         // changeTheme()
-        setTheme(isDark ? dark : light);
-    }, [isDark]);
+        if (colorScheme === 'dark') {
+            setIsDark(true);
+            setTheme(dark);
+        } else {
+            setIsDark(false);
+            setTheme(light);
+        }
+    }, [isDark, colorScheme]);
+
     // const changeTheme = async () => {
     //     await AsyncStorage.setItem('theme', JSON.stringify(isDark ? 'dark' : 'light'));
     // }
