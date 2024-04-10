@@ -179,7 +179,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
         });
     };
     return (
-        <View style={[styles.main, { backgroundColor: 'red' }]}>
+        <View style={[styles.main, { backgroundColor: theme.backgroundColor }]}>
             <View>
                 <Background>
                     <BackButton navigation={navigation} color={true} middleText={name} />
@@ -234,7 +234,6 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
             <View
                 style={{
                     flex: 1,
-                    backgroundColor: 'blue',
                 }}
             >
                 {showLoading ? (
