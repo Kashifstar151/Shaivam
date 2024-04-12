@@ -77,6 +77,9 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const [fontSizeCount, setFontSizeCount] = useState(null);
     const [refFlatList, setRefFlatList] = useState(null);
     const flatListRef = useRef(null);
+    const firstRender = useRef(true);
+
+    const activeTrack = useActiveTrack();
 
     const initializeTheFontSize = async () => {
         const value = await AsyncStorage.getItem('@lyricsFontSize');
@@ -126,8 +129,14 @@ const ThrimuraiSong = ({ route, navigation }) => {
     }, []);
 
     useEffect(() => {
+        if (searchScreen && firstRender.current) {
+            scrollToIndex();
+        }
+    }, [flatListRef, activeTrack?.url]);
+    useEffect(() => {
         // console.log('🚀 ~ useEffect ~ initilizeTheTheme: 1');
         initilizeTheTheme();
+        firstRender.current = false;
     }, []);
 
     useEffect(() => {
@@ -189,15 +198,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
             setColorSet((prev) => colors.light);
         }
     }, [darkMode]);
-
-    const activeTrack = useActiveTrack();
-    useEffect(() => {
-        if (searchScreen) {
-            setTimeout(() => {
-                scrollToIndex();
-            }, 2000);
-        }
-    }, [flatListRef, activeTrack?.url]);
 
     const fetchAndDisplayDownloads = async () => {
         try {
@@ -357,7 +357,7 @@ GROUP BY
         // console.log("songnonsjc", typeof songNo)
         flatListRef?.current?.scrollToIndex({
             animated: true,
-            index: songNo,
+            index: songNo - 1,
         });
     };
 
