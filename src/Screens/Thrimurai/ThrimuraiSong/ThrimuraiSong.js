@@ -453,7 +453,7 @@ GROUP BY
     useEffect(() => {
         if (musicState.prevId && selectedLang) {
             getSqlData(
-                `SELECT author,thalam,country,pann from thirumurais WHERE prevId=${musicState?.prevId}`,
+                `SELECT author,thalam,country,pann from thirumurais WHERE prevId=${musicState?.prevId} and locale='${i18n.language}'`,
                 (cb) => {
                     const { author, country, thalam, pann } = cb[0];
                     dispatchMusic({
@@ -495,88 +495,88 @@ GROUP BY
             >
                 <View style={[styles.detailsSection, { display: showDetail ? 'flex' : 'none' }]}>
                     <>
-                        <View style={styles.container}>
-                            <View
-                                style={[
-                                    styles.iconContainer,
-                                    {
-                                        backgroundColor: darkMode ? '#2B2B2B' : '#E0AAA7',
-                                    },
-                                ]}
-                            >
-                                <AruliyavarSVG fill={darkMode ? '#787878' : '#3A1917'} />
-                            </View>
-                            {musicState?.metaData?.author ? (
+                        {musicState?.metaData?.author && (
+                            <View style={styles.container}>
+                                <View
+                                    style={[
+                                        styles.iconContainer,
+                                        {
+                                            backgroundColor: darkMode ? '#2B2B2B' : '#E0AAA7',
+                                        },
+                                    ]}
+                                >
+                                    <AruliyavarSVG fill={darkMode ? '#787878' : '#3A1917'} />
+                                </View>
                                 <View style={styles.textSectionDD}>
                                     <Text style={styles.titleDropDown}>{`${t('Aruliyavar')}`}</Text>
                                     <Text style={styles.valueDropDown}>
                                         {t(musicState?.metaData?.author)}
                                     </Text>
                                 </View>
-                            ) : (
-                                <Text style={styles.valueDropDown}>
-                                    {'Text currently not available'}
-                                </Text>
-                            )}
-                        </View>
+                            </View>
+                        )}
+                        {musicState?.metaData?.country && (
+                            <View style={styles.container}>
+                                <View
+                                    style={[
+                                        styles.iconContainer,
+                                        {
+                                            backgroundColor: darkMode ? '#2B2B2B' : '#E0AAA7',
+                                        },
+                                    ]}
+                                >
+                                    <NaduSVG fill={darkMode ? '#787878' : '#3A1917'} />
+                                </View>
+                                <View style={styles.textSectionDD}>
+                                    <Text style={styles.titleDropDown}>{`${t('Nadu')}`}</Text>
+                                    <Text style={styles.valueDropDown}>
+                                        {t(musicState?.metaData?.country)}
+                                    </Text>
+                                </View>
+                            </View>
+                        )}
 
-                        <View style={styles.container}>
-                            <View
-                                style={[
-                                    styles.iconContainer,
-                                    {
-                                        backgroundColor: darkMode ? '#2B2B2B' : '#E0AAA7',
-                                    },
-                                ]}
-                            >
-                                <NaduSVG fill={darkMode ? '#787878' : '#3A1917'} />
+                        {musicState?.metaData?.pann && (
+                            <View style={styles.container}>
+                                <View
+                                    style={[
+                                        styles.iconContainer,
+                                        {
+                                            backgroundColor: darkMode ? '#2B2B2B' : '#E0AAA7',
+                                        },
+                                    ]}
+                                >
+                                    <PannSVG fill={darkMode ? '#787878' : '#3A1917'} />
+                                </View>
+                                <View style={styles.textSectionDD}>
+                                    <Text style={styles.titleDropDown}>{`${t('Pann')}`}</Text>
+                                    <Text style={styles.valueDropDown}>
+                                        {t(musicState?.metaData?.pann)}
+                                    </Text>
+                                </View>
                             </View>
-                            <View style={styles.textSectionDD}>
-                                <Text style={styles.titleDropDown}>{`${t('Nadu')}`}</Text>
-                                <Text style={styles.valueDropDown}>
-                                    {t(musicState?.metaData?.country) ||
-                                        'Text currently not available '}
-                                </Text>
-                            </View>
-                        </View>
+                        )}
 
-                        <View style={styles.container}>
-                            <View
-                                style={[
-                                    styles.iconContainer,
-                                    {
-                                        backgroundColor: darkMode ? '#2B2B2B' : '#E0AAA7',
-                                    },
-                                ]}
-                            >
-                                <PannSVG fill={darkMode ? '#787878' : '#3A1917'} />
+                        {musicState?.metaData?.thalam && (
+                            <View style={styles.container}>
+                                <View
+                                    style={[
+                                        styles.iconContainer,
+                                        {
+                                            backgroundColor: darkMode ? '#2B2B2B' : '#E0AAA7',
+                                        },
+                                    ]}
+                                >
+                                    <ThalamSVG fill={darkMode ? '#787878' : '#3A1917'} />
+                                </View>
+                                <View style={styles.textSectionDD}>
+                                    <Text style={styles.titleDropDown}>{`${t('Thalam')}`}</Text>
+                                    <Text style={styles.valueDropDown}>
+                                        {t(musicState?.metaData?.thalam)}
+                                    </Text>
+                                </View>
                             </View>
-                            <View style={styles.textSectionDD}>
-                                <Text style={styles.titleDropDown}>{`${t('Pann')}`}</Text>
-                                <Text style={styles.valueDropDown}>
-                                    {t(musicState?.metaData?.pann)}
-                                </Text>
-                            </View>
-                        </View>
-
-                        <View style={styles.container}>
-                            <View
-                                style={[
-                                    styles.iconContainer,
-                                    {
-                                        backgroundColor: darkMode ? '#2B2B2B' : '#E0AAA7',
-                                    },
-                                ]}
-                            >
-                                <ThalamSVG fill={darkMode ? '#787878' : '#3A1917'} />
-                            </View>
-                            <View style={styles.textSectionDD}>
-                                <Text style={styles.titleDropDown}>{`${t('Thalam')}`}</Text>
-                                <Text style={styles.valueDropDown}>
-                                    {t(musicState?.metaData?.thalam)}
-                                </Text>
-                            </View>
-                        </View>
+                        )}
                     </>
                 </View>
                 <TouchableOpacity style={styles.textContainer} onPress={makeTheViewVisible}>
