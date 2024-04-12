@@ -191,6 +191,13 @@ const ThrimuraiSong = ({ route, navigation }) => {
     }, [darkMode]);
 
     const activeTrack = useActiveTrack();
+    useEffect(() => {
+        if (searchScreen) {
+            setTimeout(() => {
+                scrollToIndex();
+            }, 2000);
+        }
+    }, [flatListRef, activeTrack?.url]);
 
     const fetchAndDisplayDownloads = async () => {
         try {
@@ -345,20 +352,14 @@ GROUP BY
             </View>
         );
     };
-    // useEffect(() => {
-    //     if (searchScreen) {
-    //         setTimeout(() => {
-    //             scrollToIndex();
-    //         }, 2000);
-    //     }
-    // }, [flatListRef]);
-    // const scrollToIndex = () => {
-    //     // console.log("songnonsjc", typeof songNo)
-    //     flatListRef?.current?.scrollToIndex({
-    //         animated: true,
-    //         index: songNo,
-    //     });
-    // };
+
+    const scrollToIndex = () => {
+        // console.log("songnonsjc", typeof songNo)
+        flatListRef?.current?.scrollToIndex({
+            animated: true,
+            index: songNo,
+        });
+    };
 
     const getItemLayOut = (item, index) => {
         // console.log("🚀 ~ getItemLayOut ~ index:", index)
@@ -920,6 +921,7 @@ GROUP BY
                               bottom: 0,
                           }
                         : {
+                              position: 'relative',
                               width: Dimensions.get('window').width,
                           },
                 ]}
@@ -966,7 +968,7 @@ GROUP BY
                         }}
                     ></TouchableOpacity>
                 </View>
-                {activeTrack?.url ? (
+                {activeTrack?.url && (
                     <AudioPlayer
                         activeTrack={activeTrack}
                         setDownloadingLoader={setDownloadingLoader}
@@ -982,7 +984,7 @@ GROUP BY
                         queryForNextPrevId={queryForNextPrevId}
                         queryForPreviousPrevId={queryForPreviousPrevId}
                     />
-                ) : null}
+                )}
             </Animated.View>
 
             {/* </BottomSheet> */}
