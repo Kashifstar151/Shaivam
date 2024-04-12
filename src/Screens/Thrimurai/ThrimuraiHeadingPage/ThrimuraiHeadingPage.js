@@ -254,7 +254,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                         ) : selectedHeader.name == 'Varalatrumurai' ? (
                             <Varakatrimurai navigation={navigation} />
                         ) : selectedHeader?.name == 'Thalamurai' ? (
-                            <Thalamurai navigation={navigation} />
+                            <Thalamurai navigation={navigation} prevId={prevId} />
                         ) : (
                             <FlatList
                                 contentContainerStyle={{ marginTop: 10, paddingBottom: 250 }}
