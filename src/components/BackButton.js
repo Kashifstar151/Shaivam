@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Platform, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/AntDesign';
 import BackIcon from '../../src/assets/Images/BackIcon.svg';
 import WhiteBackButton from '../../src/assets/Images/arrow (1) 1.svg';
 import NandiLogo from '../../src/assets/Images/NandiLogo.svg';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
+import Share from 'react-native-share';
+import { MusicContext } from './Playbacks/TrackPlayerContext';
 
 const BackButton = ({
     secondText,
@@ -15,8 +18,37 @@ const BackButton = ({
     rightIcon,
     buttonDisable,
     nandiLogo,
-    firstRightIcon
+    firstRightIcon,
+    prevId
 }) => {
+    const { musicState, dispatchMusic } = useContext(MusicContext);
+    console.log("🚀 ~ musicState:", musicState)
+    async function buildLink() {
+        // alert(true)
+        const link = await dynamicLinks().buildShortLink({
+            link: `https://shaivaam.page.link/org?prevId=${musicState?.prevId}`,
+            domainUriPrefix: 'https://shaivaam.page.link',
+            ios: {
+                appStoreId: '123456',
+                bundleId: 'com.shaivam.app',
+                minimumVersion: '18',
+            },
+            // optional setup which updates Firebase analytics campaign
+            // "banner". This also needs setting up before hand
+        },
+            dynamicLinks.ShortLinkType.DEFAULT,
+        );
+
+        console.log("🚀 ~ link ~ link:", link)
+        return link;
+    }
+    const shareSong = async () => {
+        const link = await buildLink()
+        Share.open({
+            message: `${secondMiddleText} link here ${link}`
+
+        })
+    }
     return (
         <View
             style={{
@@ -112,7 +144,7 @@ const BackButton = ({
                         )
                         }
                         {rightIcon && (
-                            <TouchableOpacity
+                            <TouchableOpacity onPress={shareSong}
                                 style={{
                                     paddingHorizontal: 5,
                                     alignSelf: 'center',

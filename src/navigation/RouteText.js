@@ -21,5 +21,7 @@ export const RouteTexts = {
     ONBOARDING_SCREEN: 'Onboard',
     EVENT_DETAILS: 'EventDetails',
     VIRTUAL_EVENT_CREATE: 'CreateVirtualEvent',
-    SUCCESS: 'Success'
+    SUCCESS: 'Success',
+    RADIO: 'Radios',
+    OM_CHANTING: 'OmChanting'
 }

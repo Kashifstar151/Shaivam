@@ -36,6 +36,8 @@ import { useIsFocused } from '@react-navigation/native';
 import Quiz from './Quiz';
 import VideosList from './VideosList';
 import { useSelector } from 'react-redux';
+import RBSheet from 'react-native-raw-bottom-sheet';
+import OmChanting from './OmChanting';
 
 const SongAndAudio = ({ item, index, theme }) => {
     const [fav, setFav] = useState(false);
@@ -122,6 +124,7 @@ const SongAndAudio = ({ item, index, theme }) => {
     // return<Text>dhjkshajk</Text>;
 };
 const HomeScreen = ({ navigation }) => {
+    const RBSheetRef = useRef(null)
     const { theme } = useContext(ThemeContext);
     const [compHeight, setCompHeight] = useState();
     const [textInsidePlaylistCard, setTextInsidePlaylistCard] = useState(0);
@@ -523,7 +526,7 @@ const HomeScreen = ({ navigation }) => {
             </View>
             {/* om chant */}
             <View>
-                <OmChat />
+                <OmChat navigation={navigation} onPress={() => RBSheetRef.current.open()} />
             </View>
             {/* last section */}
             <View>
@@ -581,6 +584,9 @@ const HomeScreen = ({ navigation }) => {
                 />
                 <VideosList screenDimension={{ screenHeight, screenWidth }} />
             </View>
+            <RBSheet height={340} ref={RBSheetRef} customStyles={{ container: { borderTopEndRadius: 15, borderTopLeftRadius: 15 } }}>
+                <OmChanting />
+            </RBSheet>
         </ScrollView>
     );
 };
