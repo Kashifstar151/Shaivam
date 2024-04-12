@@ -453,7 +453,7 @@ GROUP BY
     useEffect(() => {
         if (musicState.prevId && selectedLang) {
             getSqlData(
-                `SELECT author,thalam,country,pann from thirumurais WHERE prevId=${musicState?.prevId} and locale='${i18n.language}'`,
+                `SELECT author,thalam,country,pann from thirumurais WHERE prevId=${musicState?.prevId}`,
                 (cb) => {
                     const { author, country, thalam, pann } = cb[0];
                     dispatchMusic({
