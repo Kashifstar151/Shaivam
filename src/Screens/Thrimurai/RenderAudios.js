@@ -80,8 +80,9 @@ const RenderAudios = ({
          * general query when not temple or varalatimurai
          !need prevId
          */
+
         const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${id}' ${
-            id <= 7 || id === 10 ? `AND pann='${songs?.pann}'` : `AND pann =''`
+            id <= 7 || id === 10 || id === 11 ? `AND pann='${songs?.pann}'` : `AND pann =''`
         } and  locale='${
             i18n.language === 'en-IN' ? 'RoI' : i18n.language
         }'  and titleS IS NOT NULL  GROUP BY titleS   ORDER BY  titleNo `;
@@ -93,7 +94,7 @@ const RenderAudios = ({
             ThalamHeaders == 0 ? 'country' : 'thalam'
         }='${songs?.thalam}'  and  locale='${
             i18n.language === 'en-IN' ? 'RoI' : i18n.language
-        }' ORDER BY  title ASC LIMIT 10 OFFSET ${pageSize}`;
+        }' ORDER BY  fkTrimuria,titleNo  ASC LIMIT 10 OFFSET ${pageSize}`;
 
         /*
          todos: have to optimize the queries  
