@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Dimensions, ImageBackground, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import bgImg from '../../../assets/Images/Background.png';
 import PlayBtnSVG from '../../components/SVGs/PlayBtnSVG';
+import { RouteTexts } from '../../navigation/RouteText';
 
-const OmChat = () => {
+const OmChat = ({ navigation, onPress }) => {
     const [dimension, setDimension] = useState({
         width: 0,
         height: 0,
@@ -55,7 +56,9 @@ const OmChat = () => {
                             Chat along with our endless Om Player
                         </Text>
                     </View>
-                    <PlayBtnSVG fill={'#4C3600'} />
+                    <TouchableOpacity onPress={onPress}>
+                        <PlayBtnSVG fill={'#4C3600'} />
+                    </TouchableOpacity>
                 </View>
             </ImageBackground>
             <Text

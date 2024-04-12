@@ -3,59 +3,56 @@ import ApiSlice from '../../apiSlice';
 const CalenderApiSlice = ApiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getList: builder.query({
-            query: (creds) => ({
-                url: `regular-events?filters[start_date][$lte]=2024-05-31&filters[end_date][$gte]=2024-05-01&populate[Files][fields][0]=url&filters[status][$eq]=Approved&pagination[pageSize]=200`,
-                method: 'GET',
-                // body: creds,
-            }),
+            query: (date) => {
+                // console.log(date, 'date from calender')
+                const url = `regular-events?filters[start_date][$lte]=${getLastDayOfMonth(date)}&filters[end_date][$gte]=${date}&populate[Files][fields][0]=url&filters[status][$eq]=Approved&pagination[pageSize]=200`
+                console.log("🚀 ~ url:", url)
+                return {
+                    url: url,
+                    method: 'GET',
+                }
+            },
             providesTags: ['Calender'],
+        }),
+        AddRegularEvent: builder.mutation({
+            query: (data) => {
+                // console.log(date, 'date from calender')
+                const url = `regular-events`
+                // console.log("🚀 ~ url:", url)
+                return {
+                    url: url,
+                    method: 'POST',
+                    body: data,
+                    headers: { "Content-Type": "application/json" },
+                }
+            },
+            providesTags: ['Calender'],
+            // const url = 'regular-events',
         })
-        // logIn: builder.mutation({
-        //     query: (creds) => ({
-        //         url: '/user/login',
-        //         method: 'POST',
-        //         body: creds,
+        // getList: builder.query({
+        //     query: ({ date }) => ({
+        //         url: `regular-events?filters[start_date][$lte]=${date}&filters[end_date][$gte]=${getLastDayOfMonth(date)}&populate[Files][fields][0]=url&filters[status][$eq]=Approved&pagination[pageSize]=200`,
+        //         method: 'GET',
+        //         // body: creds,
         //     }),
-        // providesTags: ['Auth'],
-        // }),
-
-        // getOTP: builder.mutation({
-        //     query: (phoneNo) => ({
-        //         url: '/user/phoneAuth',
-        //         method: 'POST',
-        //         body: { ...phoneNo, countryCode: '+91', purpose: 'registration' },
-        //     }),
-        // }),
-
-        // verifyOTP: builder.mutation({
-        //     query: ({ phone, code }) => {
-        //         return {
-        //             url: '/user/verify',
-        //             method: 'POST',
-        //             body: { phone, countryCode: '+91', code },
-        //         };
-        //     },
-        // }),
-
-        // forgorPaswrd: builder.mutation({
-        //     query: (dataForSend) => {
-        //         return {
-        //             url: '/user/resetPassword',
-        //             method: 'POST',
-        //             body: dataForSend,
-        //         };
-        //     },
-        // }),
-
-        // logout: builder.mutation({
-        //     query: () => ({
-        //         url: '/user/logout/',
-        //         method: 'DELETE',
-        //     }),
-        //     invalidatesTags: ['Auth'],
-        // }),
+        //     
+        // })
     }),
 });
+function getLastDayOfMonth(dateString) {
+    console.log("🚀 ~ getLastDayOfMonth ~ dateString:", dateString)
+    // Parse the start date
+    const startDate = new Date(dateString);
+
+    // Create a new Date object from the start date
+    const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
+
+    // Format the end date as a string in 'YYYY-MM-DD' format   
+    const endDateString = endDate.toISOString().split('T')[0];
+    console.log("🚀 ~ getLastDayOfMonth ~ endDateString:", endDateString)
+
+    return endDateString;
+}
 
 export const {
     useGetListQuery
