@@ -64,7 +64,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
     // });
     const isFocused = useIsFocused;
     const { data, downloaded, searchedword, searchScreen, songNo } = route.params || {};
-    console.log('🚀 ~ ThrimuraiSong ~ data:', JSON.stringify(data, 0, 2), downloaded);
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
@@ -78,6 +77,9 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const [fontSizeCount, setFontSizeCount] = useState(null);
     const [refFlatList, setRefFlatList] = useState(null);
     const flatListRef = useRef(null);
+    const firstRender = useRef(true);
+
+    const activeTrack = useActiveTrack();
 
     const initializeTheFontSize = async () => {
         const value = await AsyncStorage.getItem('@lyricsFontSize');
@@ -104,27 +106,21 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const statusBarHeight = useRef(new AnimatedRN.Value(50)).current; // Assume 20 is the normal height of your custom status bar
 
     const toggleStatusBar = () => {
-        setVisibleStatusBar(!visibleStatusBar);
         AnimatedRN.timing(statusBarHeight, {
             toValue: visibleStatusBar ? 0 : 50, // Animate to 0 to hide, 20 to show
             duration: 200, // Milliseconds it takes to animate
             useNativeDriver: false, // Height is not supported by native driver, set this to false
         }).start();
+        setVisibleStatusBar(!visibleStatusBar);
     };
     const [orientation, setOrientation] = useState('PORTRAIT');
     const initilizeTheRepeatState = useCallback(async () => {
         const repeatState = await TrackPlayer.getRepeatMode();
-
         setRepeatMode(repeatState);
     }, []);
 
     const initilizeTheTheme = useCallback(async () => {
-        // console.log('🚀 ~ useEffect ~ initilizeTheTheme: 2');
-
         const themeMode = await AsyncStorage.getItem('theme');
-
-        // console.log('🚀 ~ useEffect ~ initilizeTheTheme: 3', themeMode === 'dark');
-
         if (themeMode === 'dark') {
             setDarkMode(true);
         } else {
@@ -133,8 +129,14 @@ const ThrimuraiSong = ({ route, navigation }) => {
     }, []);
 
     useEffect(() => {
+        if (searchScreen && firstRender.current) {
+            scrollToIndex();
+        }
+    }, [flatListRef, activeTrack?.url]);
+    useEffect(() => {
         // console.log('🚀 ~ useEffect ~ initilizeTheTheme: 1');
         initilizeTheTheme();
+        firstRender.current = false;
     }, []);
 
     useEffect(() => {
@@ -196,8 +198,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
             setColorSet((prev) => colors.light);
         }
     }, [darkMode]);
-
-    const activeTrack = useActiveTrack();
 
     const fetchAndDisplayDownloads = async () => {
         try {
@@ -345,23 +345,19 @@ GROUP BY
                         backgroundColor: darkMode ? '#A47300' : '#F8E3B2',
                     }}
                     searchWords={[`${searchedword}`]}
-                    textToHighlight={item?.rawSong}
+                    textToHighlight={
+                        selectedLang !== 'Tamil' ? item?.rawSong : item?.tamilExplanation
+                    }
                 />
             </View>
         );
     };
-    useEffect(() => {
-        if (searchScreen) {
-            setTimeout(() => {
-                scrollToIndex();
-            }, 2000);
-        }
-    }, [flatListRef]);
+
     const scrollToIndex = () => {
         // console.log("songnonsjc", typeof songNo)
         flatListRef?.current?.scrollToIndex({
             animated: true,
-            index: songNo,
+            index: songNo - 1,
         });
     };
 
@@ -465,12 +461,16 @@ GROUP BY
         }
     }, [musicState.prevId, selectedLang]);
 
+    console.log('the statuusBarHeight=====>', statusBarHeight);
+
     return (
         <View style={{ flex: 1, backgroundColor: colorSet?.backgroundColor }}>
+            {/* the header */}
             <AnimatedRN.View
                 style={{
                     height: Platform.OS == 'ios' ? 'auto' : statusBarHeight,
                     paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight : 0,
+                    overflow: 'hidden',
                 }}
             >
                 <Background>
@@ -484,320 +484,365 @@ GROUP BY
                     />
                 </Background>
             </AnimatedRN.View>
-            <View
-                style={[
-                    styles.headerContainer,
-                    { backgroundColor: darkMode ? colors?.faintGrey : colors?.skinColor },
-                ]}
-            >
-                <View style={[styles.detailsSection, { display: showDetail ? 'flex' : 'none' }]}>
-                    <>
-                        <View style={styles.container}>
-                            <View
-                                style={[
-                                    styles.iconContainer,
-                                    {
-                                        backgroundColor: darkMode ? '#2B2B2B' : '#E0AAA7',
-                                    },
-                                ]}
-                            >
-                                <AruliyavarSVG fill={darkMode ? '#787878' : '#3A1917'} />
-                            </View>
-                            {musicState?.metaData?.author ? (
-                                <View style={styles.textSectionDD}>
-                                    <Text style={styles.titleDropDown}>{`${t('Aruliyavar')}`}</Text>
-                                    <Text style={styles.valueDropDown}>
-                                        {t(musicState?.metaData?.author)}
-                                    </Text>
-                                </View>
-                            ) : (
-                                <Text style={styles.valueDropDown}>
-                                    {'Text currently not available'}
-                                </Text>
-                            )}
-                        </View>
-
-                        <View style={styles.container}>
-                            <View
-                                style={[
-                                    styles.iconContainer,
-                                    {
-                                        backgroundColor: darkMode ? '#2B2B2B' : '#E0AAA7',
-                                    },
-                                ]}
-                            >
-                                <NaduSVG fill={darkMode ? '#787878' : '#3A1917'} />
-                            </View>
-                            <View style={styles.textSectionDD}>
-                                <Text style={styles.titleDropDown}>{`${t('Nadu')}`}</Text>
-                                <Text style={styles.valueDropDown}>
-                                    {t(musicState?.metaData?.country) ||
-                                        'Text currently not available '}
-                                </Text>
-                            </View>
-                        </View>
-
-                        <View style={styles.container}>
-                            <View
-                                style={[
-                                    styles.iconContainer,
-                                    {
-                                        backgroundColor: darkMode ? '#2B2B2B' : '#E0AAA7',
-                                    },
-                                ]}
-                            >
-                                <PannSVG fill={darkMode ? '#787878' : '#3A1917'} />
-                            </View>
-                            <View style={styles.textSectionDD}>
-                                <Text style={styles.titleDropDown}>{`${t('Pann')}`}</Text>
-                                <Text style={styles.valueDropDown}>
-                                    {t(musicState?.metaData?.pann)}
-                                </Text>
-                            </View>
-                        </View>
-
-                        <View style={styles.container}>
-                            <View
-                                style={[
-                                    styles.iconContainer,
-                                    {
-                                        backgroundColor: darkMode ? '#2B2B2B' : '#E0AAA7',
-                                    },
-                                ]}
-                            >
-                                <ThalamSVG fill={darkMode ? '#787878' : '#3A1917'} />
-                            </View>
-                            <View style={styles.textSectionDD}>
-                                <Text style={styles.titleDropDown}>{`${t('Thalam')}`}</Text>
-                                <Text style={styles.valueDropDown}>
-                                    {t(musicState?.metaData?.thalam)}
-
-                                    {/* {metaData?.thalam === 'சீர்காழி - 06 - பூந்தராய்'
-                                        ? 'true'
-                                        : 'false'} */}
-                                </Text>
-                            </View>
-                        </View>
-                    </>
-                </View>
-                <TouchableOpacity style={styles.textContainer} onPress={makeTheViewVisible}>
-                    <DownArrow />
-                    <Text style={styles.headerText}>{t('Thirumurai Details')}</Text>
-                    <DownArrow />
-                </TouchableOpacity>
-            </View>
-
-            <View
-                style={{
-                    width: '100%',
-                    position: 'absolute',
-                    right: -3,
-                    top: '20%',
-                    zIndex: 10,
-                }}
-            >
-                {showSetting ? (
-                    <Animated.View
-                        style={[styles.animatedView, animatedStyles, { ...colorSet?.setting }]}
+            {visibleStatusBar && (
+                <>
+                    {/* details */}
+                    <View
+                        style={[
+                            styles.headerContainer,
+                            { backgroundColor: darkMode ? colors?.faintGrey : colors?.skinColor },
+                        ]}
                     >
                         <View
-                            style={{
-                                justifyContent: 'space-between',
-                                flexDirection: 'row',
-                            }}
+                            style={[
+                                styles.detailsSection,
+                                { display: showDetail ? 'flex' : 'none' },
+                            ]}
                         >
-                            <TouchableOpacity
-                                // onPress={scrollToIndex}
-                                style={styles.InsiderSettingButton}
-                            >
-                                <SettingIcon />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.clearIcon}
-                                onPress={() => closeAnimatedView()}
-                            >
-                                <Icon name="clear" size={24} color={!darkMode ? '#000' : '#fff'} />
-                            </TouchableOpacity>
+                            <>
+                                {musicState?.metaData?.author && (
+                                    <View style={styles.container}>
+                                        <View
+                                            style={[
+                                                styles.iconContainer,
+                                                {
+                                                    backgroundColor: darkMode
+                                                        ? '#2B2B2B'
+                                                        : '#E0AAA7',
+                                                },
+                                            ]}
+                                        >
+                                            <AruliyavarSVG
+                                                fill={darkMode ? '#787878' : '#3A1917'}
+                                            />
+                                        </View>
+                                        <View style={styles.textSectionDD}>
+                                            <Text style={styles.titleDropDown}>{`${t(
+                                                'Aruliyavar'
+                                            )}`}</Text>
+                                            <Text style={styles.valueDropDown}>
+                                                {t(musicState?.metaData?.author)}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                )}
+                                {musicState?.metaData?.country && (
+                                    <View style={styles.container}>
+                                        <View
+                                            style={[
+                                                styles.iconContainer,
+                                                {
+                                                    backgroundColor: darkMode
+                                                        ? '#2B2B2B'
+                                                        : '#E0AAA7',
+                                                },
+                                            ]}
+                                        >
+                                            <NaduSVG fill={darkMode ? '#787878' : '#3A1917'} />
+                                        </View>
+                                        <View style={styles.textSectionDD}>
+                                            <Text style={styles.titleDropDown}>{`${t(
+                                                'Nadu'
+                                            )}`}</Text>
+                                            <Text style={styles.valueDropDown}>
+                                                {t(musicState?.metaData?.country)}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                )}
+
+                                {musicState?.metaData?.pann && (
+                                    <View style={styles.container}>
+                                        <View
+                                            style={[
+                                                styles.iconContainer,
+                                                {
+                                                    backgroundColor: darkMode
+                                                        ? '#2B2B2B'
+                                                        : '#E0AAA7',
+                                                },
+                                            ]}
+                                        >
+                                            <PannSVG fill={darkMode ? '#787878' : '#3A1917'} />
+                                        </View>
+                                        <View style={styles.textSectionDD}>
+                                            <Text style={styles.titleDropDown}>{`${t(
+                                                'Pann'
+                                            )}`}</Text>
+                                            <Text style={styles.valueDropDown}>
+                                                {t(musicState?.metaData?.pann)}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                )}
+
+                                {musicState?.metaData?.thalam && (
+                                    <View style={styles.container}>
+                                        <View
+                                            style={[
+                                                styles.iconContainer,
+                                                {
+                                                    backgroundColor: darkMode
+                                                        ? '#2B2B2B'
+                                                        : '#E0AAA7',
+                                                },
+                                            ]}
+                                        >
+                                            <ThalamSVG fill={darkMode ? '#787878' : '#3A1917'} />
+                                        </View>
+                                        <View style={styles.textSectionDD}>
+                                            <Text style={styles.titleDropDown}>{`${t(
+                                                'Thalam'
+                                            )}`}</Text>
+                                            <Text style={styles.valueDropDown}>
+                                                {t(musicState?.metaData?.thalam)}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                )}
+                            </>
                         </View>
-                        <View style={styles.TranslationContainer}>
-                            <View style={{ marginHorizontal: 0 }}>
-                                <Text
-                                    style={[
-                                        styles.translationText,
-                                        {
-                                            color: darkMode ? colors.white : colors.black,
-                                        },
-                                    ]}
+                        <TouchableOpacity style={styles.textContainer} onPress={makeTheViewVisible}>
+                            <DownArrow />
+                            <Text style={styles.headerText}>{t('Thirumurai Details')}</Text>
+                            <DownArrow />
+                        </TouchableOpacity>
+                    </View>
+                    {/* setting */}
+                    <View
+                        style={{
+                            width: '100%',
+                            position: 'absolute',
+                            right: -3,
+                            top: '20%',
+                            zIndex: 10,
+                        }}
+                    >
+                        {showSetting ? (
+                            <Animated.View
+                                style={[
+                                    styles.animatedView,
+                                    animatedStyles,
+                                    { ...colorSet?.setting },
+                                ]}
+                            >
+                                <View
+                                    style={{
+                                        justifyContent: 'space-between',
+                                        flexDirection: 'row',
+                                    }}
                                 >
-                                    Translation
-                                </Text>
-                                <FlatList
-                                    horizontal
-                                    data={language}
-                                    renderItem={({ item, index }) => (
-                                        <>
-                                            {selectedLang == item ? (
-                                                <TouchableOpacity
-                                                    style={[
-                                                        styles.languageBox,
-                                                        { backgroundColor: '#C1554E' },
-                                                    ]}
-                                                    onPress={() => changeTranlation(item)}
-                                                >
-                                                    <Text
-                                                        style={[
-                                                            styles.languageOptionText,
-                                                            {
-                                                                color: 'white',
-                                                                fontWeight: '700',
-                                                            },
-                                                        ]}
-                                                    >
-                                                        {t(item)}
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            ) : (
-                                                <TouchableOpacity
-                                                    style={styles.languageBox}
-                                                    onPress={() => changeTranlation(item)}
-                                                >
-                                                    <Text style={styles.languageOptionText}>
-                                                        {t(item)}
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                        </>
-                                    )}
-                                />
-                            </View>
-                            <View style={styles.TextSize}>
-                                <Text
-                                    style={[
-                                        styles.TextSizeText,
-                                        {
-                                            color: darkMode ? colors.white : colors.black,
-                                        },
-                                    ]}
-                                >
-                                    Text Size
-                                </Text>
-                                <View style={{ flexDirection: 'row' }}>
                                     <TouchableOpacity
-                                        style={styles.addMinusIcon}
-                                        onPress={() => setFontSizeCount(fontSizeCount - 1)}
+                                        // onPress={scrollToIndex}
+                                        style={styles.InsiderSettingButton}
                                     >
-                                        <AntDesign name="minus" color="white" />
+                                        <SettingIcon />
                                     </TouchableOpacity>
-                                    <Text
-                                        style={[
-                                            styles.fontSizeText,
-                                            {
-                                                color: darkMode ? colors.white : colors.black,
-                                            },
-                                        ]}
-                                    >
-                                        {fontSizeCount}
-                                    </Text>
                                     <TouchableOpacity
-                                        style={styles.addMinusIcon}
-                                        onPress={() => setFontSizeCount(fontSizeCount + 1)}
+                                        style={styles.clearIcon}
+                                        onPress={() => closeAnimatedView()}
                                     >
-                                        <Icon name="add" color="white" />
+                                        <Icon
+                                            name="clear"
+                                            size={24}
+                                            color={!darkMode ? '#000' : '#fff'}
+                                        />
                                     </TouchableOpacity>
                                 </View>
-                            </View>
-                            {i18n.language === 'en' && (
-                                <View style={styles.otherOption}>
-                                    <View>
+                                <View style={styles.TranslationContainer}>
+                                    <View style={{ marginHorizontal: 0 }}>
                                         <Text
                                             style={[
-                                                styles.otherOptionText,
+                                                styles.translationText,
                                                 {
                                                     color: darkMode ? colors.white : colors.black,
                                                 },
                                             ]}
                                         >
-                                            Tamil Split
+                                            Translation
                                         </Text>
-
-                                        <Text
-                                            style={{
-                                                fontFamily: 'Mulish-Regular',
-                                                color: '#777777',
-                                                fontSize: 10,
-                                                // fontWeight: '700',
-                                            }}
-                                        >
-                                            Turn on to view thirumurais as songs
-                                        </Text>
+                                        <FlatList
+                                            horizontal
+                                            data={language}
+                                            renderItem={({ item, index }) => (
+                                                <>
+                                                    {selectedLang == item ? (
+                                                        <TouchableOpacity
+                                                            style={[
+                                                                styles.languageBox,
+                                                                { backgroundColor: '#C1554E' },
+                                                            ]}
+                                                            onPress={() => changeTranlation(item)}
+                                                        >
+                                                            <Text
+                                                                style={[
+                                                                    styles.languageOptionText,
+                                                                    {
+                                                                        color: 'white',
+                                                                        fontWeight: '700',
+                                                                    },
+                                                                ]}
+                                                            >
+                                                                {t(item)}
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    ) : (
+                                                        <TouchableOpacity
+                                                            style={styles.languageBox}
+                                                            onPress={() => changeTranlation(item)}
+                                                        >
+                                                            <Text style={styles.languageOptionText}>
+                                                                {t(item)}
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                </>
+                                            )}
+                                        />
                                     </View>
-                                    <Switch
-                                        trackColor={{ false: '#767577', true: '#000' }}
-                                        thumbColor={tamilSplit ? '#f4f3f4' : '#f4f3f4'}
-                                        ios_backgroundColor="#3e3e3e"
-                                        onValueChange={() => {
-                                            if (i18n.language === 'en') {
-                                                return toggleSwitch(tamilSplit, setTamilSplit);
+                                    <View style={styles.TextSize}>
+                                        <Text
+                                            style={[
+                                                styles.TextSizeText,
+                                                {
+                                                    color: darkMode ? colors.white : colors.black,
+                                                },
+                                            ]}
+                                        >
+                                            Text Size
+                                        </Text>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <TouchableOpacity
+                                                style={styles.addMinusIcon}
+                                                onPress={() => setFontSizeCount(fontSizeCount - 1)}
+                                            >
+                                                <AntDesign name="minus" color="white" />
+                                            </TouchableOpacity>
+                                            <Text
+                                                style={[
+                                                    styles.fontSizeText,
+                                                    {
+                                                        color: darkMode
+                                                            ? colors.white
+                                                            : colors.black,
+                                                    },
+                                                ]}
+                                            >
+                                                {fontSizeCount}
+                                            </Text>
+                                            <TouchableOpacity
+                                                style={styles.addMinusIcon}
+                                                onPress={() => setFontSizeCount(fontSizeCount + 1)}
+                                            >
+                                                <Icon name="add" color="white" />
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                    {i18n.language === 'en' && (
+                                        <View style={styles.otherOption}>
+                                            <View>
+                                                <Text
+                                                    style={[
+                                                        styles.otherOptionText,
+                                                        {
+                                                            color: darkMode
+                                                                ? colors.white
+                                                                : colors.black,
+                                                        },
+                                                    ]}
+                                                >
+                                                    Tamil Split
+                                                </Text>
+
+                                                <Text
+                                                    style={{
+                                                        fontFamily: 'Mulish-Regular',
+                                                        color: '#777777',
+                                                        fontSize: 10,
+                                                        // fontWeight: '700',
+                                                    }}
+                                                >
+                                                    Turn on to view thirumurais as songs
+                                                </Text>
+                                            </View>
+                                            <Switch
+                                                trackColor={{ false: '#767577', true: '#000' }}
+                                                thumbColor={tamilSplit ? '#f4f3f4' : '#f4f3f4'}
+                                                ios_backgroundColor="#3e3e3e"
+                                                onValueChange={() => {
+                                                    if (i18n.language === 'en') {
+                                                        return toggleSwitch(
+                                                            tamilSplit,
+                                                            setTamilSplit
+                                                        );
+                                                    }
+                                                }}
+                                                value={tamilSplit}
+                                            />
+                                        </View>
+                                    )}
+                                    <View style={styles.otherOption}>
+                                        <View>
+                                            <Text
+                                                style={[
+                                                    styles.otherOptionText,
+                                                    {
+                                                        color: darkMode
+                                                            ? colors.white
+                                                            : colors.black,
+                                                    },
+                                                ]}
+                                            >
+                                                Dark Mode
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    fontFamily: 'Mulish-Regular',
+                                                    color: '#777777',
+                                                    fontSize: 10,
+                                                }}
+                                            >
+                                                Screen will be easier on the eyes
+                                            </Text>
+                                        </View>
+                                        <Switch
+                                            trackColor={{ false: '#767577', true: '#000' }}
+                                            thumbColor={darkMode ? '#f4f3f4' : '#f4f3f4'}
+                                            ios_backgroundColor="#3e3e3e"
+                                            onValueChange={() =>
+                                                toggleSwitch(darkMode, setDarkMode)
                                             }
-                                        }}
-                                        value={tamilSplit}
-                                    />
+                                            value={darkMode}
+                                        />
+                                    </View>
                                 </View>
-                            )}
-                            <View style={styles.otherOption}>
-                                <View>
-                                    <Text
-                                        style={[
-                                            styles.otherOptionText,
-                                            {
-                                                color: darkMode ? colors.white : colors.black,
-                                            },
-                                        ]}
-                                    >
-                                        Dark Mode
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            fontFamily: 'Mulish-Regular',
-                                            color: '#777777',
-                                            fontSize: 10,
-                                        }}
-                                    >
-                                        Screen will be easier on the eyes
-                                    </Text>
-                                </View>
-                                <Switch
-                                    trackColor={{ false: '#767577', true: '#000' }}
-                                    thumbColor={darkMode ? '#f4f3f4' : '#f4f3f4'}
-                                    ios_backgroundColor="#3e3e3e"
-                                    onValueChange={() => toggleSwitch(darkMode, setDarkMode)}
-                                    value={darkMode}
-                                />
-                            </View>
-                        </View>
-                    </Animated.View>
-                ) : (
-                    <TouchableOpacity
-                        style={[
-                            styles.settingButton,
-                            { backgroundColor: colorSet?.settingBtn.backgroundColor },
-                        ]}
-                        onPress={handlePress}
-                    >
-                        <SettingIcon />
-                        <Text
-                            style={[
-                                styles.settingText,
-                                {
-                                    color: colorSet?.textColor,
-                                },
-                            ]}
-                        >
-                            Settings
-                        </Text>
-                    </TouchableOpacity>
-                )}
-            </View>
+                            </Animated.View>
+                        ) : (
+                            <TouchableOpacity
+                                style={[
+                                    styles.settingButton,
+                                    { backgroundColor: colorSet?.settingBtn.backgroundColor },
+                                ]}
+                                onPress={handlePress}
+                            >
+                                <SettingIcon />
+                                <Text
+                                    style={[
+                                        styles.settingText,
+                                        {
+                                            color: colorSet?.textColor,
+                                        },
+                                    ]}
+                                >
+                                    Settings
+                                </Text>
+                            </TouchableOpacity>
+                        )}
+                    </View>
+                </>
+            )}
+
+            {/* lyrics part */}
             <View style={styles.lyricsContainer}>
                 <View style={{ paddingHorizontal: 20 }}>
                     {musicState?.songDetails?.length > 0 && (
@@ -805,8 +850,8 @@ GROUP BY
                             keyExtractor={(item) => item?.id}
                             getItemLayout={getItemLayOut}
                             ref={flatListRef}
-                            contentContainerStyle={{ paddingBottom: 100 }}
                             data={musicState?.songDetails}
+                            initialScrollIndex={songNo ? songNo - 1 : 0}
                             renderItem={({ item, index }) => (
                                 <View
                                     style={{
@@ -861,21 +906,25 @@ GROUP BY
             </View>
 
             <Animated.View
-                style={{
-                    paddingTop: 20,
-                    position: 'absolute',
-                    // backgroundColor: 'blue',
-                    right: 0,
-                    bottom: 0,
-                    backgroundColor: !visibleStatusBar ? '#222222' : 'transparent',
-                    borderTopEndRadius: 15,
-                    borderTopLeftRadius: 15,
-                    alignSelf: 'flex-end',
-                    width:
-                        orientation == 'LANDSCAPE'
-                            ? Dimensions.get('window').width / 2
-                            : Dimensions.get('window').width,
-                }}
+                style={[
+                    {
+                        backgroundColor: !visibleStatusBar ? '#222222' : 'transparent',
+                        borderTopEndRadius: 15,
+                        borderTopLeftRadius: 15,
+                        alignSelf: 'flex-end',
+                    },
+
+                    orientation == 'LANDSCAPE'
+                        ? {
+                              width: Dimensions.get('window').width / 2,
+                              position: 'absolute',
+                              bottom: 0,
+                          }
+                        : {
+                              position: 'relative',
+                              width: Dimensions.get('window').width,
+                          },
+                ]}
             >
                 {downloadingLoader && (
                     <View
@@ -903,9 +952,10 @@ GROUP BY
                     style={{
                         justifyContent: 'center',
                         alignItems: 'center',
-                        marginTop: 5,
                         backgroundColor: '#222222',
                         paddingVertical: 10,
+                        borderTopLeftRadius: 10,
+                        borderTopRightRadius: 10,
                     }}
                 >
                     <TouchableOpacity
@@ -918,7 +968,7 @@ GROUP BY
                         }}
                     ></TouchableOpacity>
                 </View>
-                {activeTrack?.url ? (
+                {activeTrack?.url && (
                     <AudioPlayer
                         activeTrack={activeTrack}
                         setDownloadingLoader={setDownloadingLoader}
@@ -934,7 +984,7 @@ GROUP BY
                         queryForNextPrevId={queryForNextPrevId}
                         queryForPreviousPrevId={queryForPreviousPrevId}
                     />
-                ) : null}
+                )}
             </Animated.View>
 
             {/* </BottomSheet> */}
@@ -1036,7 +1086,7 @@ export const styles = StyleSheet.create({
         fontFamily: 'Mulish-Regular',
         color: '#777777',
     },
-    lyricsContainer: { flexGrow: 1, paddingHorizontal: 0, marginTop: 10 },
+    lyricsContainer: { flex: 1, paddingHorizontal: 0, marginTop: 10 },
     lyricsText: {
         // fontWeight: '500',
         fontFamily: 'AnekTamil-Regular',

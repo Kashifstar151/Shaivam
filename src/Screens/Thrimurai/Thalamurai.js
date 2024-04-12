@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
     Dimensions,
     FlatList,
@@ -13,18 +13,48 @@ import { ThemeContext } from '../../Context/ThemeContext';
 import { colors } from '../../Helpers';
 import RenderThalam from './ThrimuraiHeadingPage/RenderThalam';
 import { useTranslation } from 'react-i18next';
-import temples from '../../../assets/data/temples.json';
-import region from '../../../assets/data/region.json';
 import ThalamSVG from '../../components/SVGs/ThalamSVG';
 import NaduSVG from '../../components/SVGs/NaduSVG';
+import { getSqlData } from '../Database';
 
-const Thalamurai = ({ navigation }) => {
+const Thalamurai = ({ navigation, prevId }) => {
     const { theme } = useContext(ThemeContext);
-    const nadu = region;
-    const Thalam = temples;
     const ThalamuraiHeaders = ['Nadu', 'Thalam'];
     const [ThalamHeaders, setThalamHeaders] = useState(null);
     const { t } = useTranslation();
+    const [data, setData] = useState([]);
+
+    const thalamQuery = `SELECT GROUP_CONCAT( thalam,";" ) AS thalams
+    FROM (
+      SELECT thalam
+      FROM thirumurais
+      WHERE fkTrimuria ${prevId} AND thalam IS NOT NULL AND thalam != ''
+      GROUP BY thalam
+      ORDER BY thalam ASC
+    )`;
+    const naduQuery = `SELECT GROUP_CONCAT( country,";") AS countries
+    FROM (
+      SELECT country
+      FROM thirumurais
+      WHERE fkTrimuria ${prevId} AND country IS NOT NULL AND country != ''
+      GROUP BY country
+      ORDER BY country ASC
+    )`;
+
+    useEffect(() => {
+        if (ThalamHeaders == 0) {
+            // nadu
+            getSqlData(naduQuery, (naduData) => {
+                setData(naduData[0].countries.split(';'));
+            });
+        } else if (ThalamHeaders == 1) {
+            // thalam
+            getSqlData(thalamQuery, (thalamData) => {
+                setData(thalamData[0].thalams.split(';'));
+            });
+        }
+    }, [ThalamHeaders, prevId]);
+
     return (
         <View>
             <FlatList
@@ -108,7 +138,7 @@ const Thalamurai = ({ navigation }) => {
                         </Pressable>
                         {ThalamHeaders == index && (
                             <FlatList
-                                data={ThalamHeaders == 0 ? nadu : Thalam}
+                                data={data}
                                 renderItem={({ item, index }) => (
                                     <RenderThalam
                                         item={item}

@@ -350,7 +350,9 @@ const AudioPlayer = ({
                 style={
                     orientation == 'LANDSCAPE' || !visibleStatusBar
                         ? {
-                              width: Dimensions.get('window').width,
+                              width: !(orientation == 'LANDSCAPE')
+                                  ? Dimensions.get('window').width
+                                  : Dimensions.get('window').width / 2,
                               backgroundColor: '#222222',
                               height: 70,
                               alignItems: 'center',
@@ -364,19 +366,25 @@ const AudioPlayer = ({
                             <Text style={styles.headingText}>Odhuvar</Text>
                             <Text style={styles.headingText}>(Select One)</Text>
                         </View>
-                        <FlatList
-                            contentContainerStyle={{ backgroundColor: '#222222' }}
-                            horizontal
-                            data={songsData}
-                            renderItem={({ item, index }) => (
-                                <RenderAudios
-                                    item={item}
-                                    index={index}
-                                    clb={playById}
-                                    activeTrack={activeTrack}
-                                />
-                            )}
-                        />
+                        <View
+                            style={{
+                                width: 'auto',
+                            }}
+                        >
+                            <FlatList
+                                contentContainerStyle={{ backgroundColor: '#222222' }}
+                                horizontal
+                                data={songsData}
+                                renderItem={({ item, index }) => (
+                                    <RenderAudios
+                                        item={item}
+                                        index={index}
+                                        clb={playById}
+                                        activeTrack={activeTrack}
+                                    />
+                                )}
+                            />
+                        </View>
                     </View>
                 )}
                 {orientation == 'LANDSCAPE' || !visibleStatusBar ? (
@@ -387,9 +395,10 @@ const AudioPlayer = ({
                             justifyContent: 'space-between',
                             paddingHorizontal: 10,
                             width: '100%',
+                            flex: 1,
                         }}
                     >
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                             <View
                                 style={{
                                     height: 50,
