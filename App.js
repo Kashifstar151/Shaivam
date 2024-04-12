@@ -21,7 +21,7 @@ const App = () => {
             .then(link => {
                 console.log("🚀 ~ useEffect ~ link:", link)
                 const getId = link?.url?.split('=').pop()
-                console.log("🚀 ~ useEffect ~ getId:", getId)
+                // console.log("🚀 ~ useEffect ~ getId:", getId)
                 if (link !== null) {
                     NavigationServices.navigate(RouteTexts.THRIMURAI_SONG, {
                         data: {
@@ -30,7 +30,26 @@ const App = () => {
                     });
                 }
             });
-    }, []); 3
+    }, []);
+    const HandleDynamicLink = link => {
+        console.log("🚀 ~ HandleDynamicLink ~ link:", link)
+        const getId = link?.url?.split('=').pop()
+        if (link) {
+            NavigationServices.navigate(RouteTexts.THRIMURAI_SONG, {
+                data: {
+                    prevId: getId
+                }
+            });
+        }
+        // Handle dynamic link inside your own application
+
+    };
+
+    useEffect(() => {
+        const unsubscribe = dynamicLinks().onLink(HandleDynamicLink);
+        // When the component is unmounted, remove the listener
+        return () => unsubscribe();
+    }, []);
     return (
         <StoreProvider>
             <ThemeContextProvider>

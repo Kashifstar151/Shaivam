@@ -22,7 +22,7 @@ const BackButton = ({
     prevId
 }) => {
     const { musicState, dispatchMusic } = useContext(MusicContext);
-    console.log("🚀 ~ musicState:", musicState)
+    // console.log("🚀 ~ musicState:", musicState)
     async function buildLink() {
         // alert(true)
         const link = await dynamicLinks().buildShortLink({
@@ -33,6 +33,9 @@ const BackButton = ({
                 bundleId: 'com.shaivam.app',
                 minimumVersion: '18',
             },
+            android: {
+                packageName: 'com.shaivam'
+            }
             // optional setup which updates Firebase analytics campaign
             // "banner". This also needs setting up before hand
         },
@@ -45,7 +48,8 @@ const BackButton = ({
     const shareSong = async () => {
         const link = await buildLink()
         Share.open({
-            message: `${secondMiddleText} link here ${link}`
+            message: `${secondMiddleText}I want to share this Thirumurai with you.
+            இந்தத் திருமுறையை Shaivam.org Mobile செயலியில் படித்தேன். மிகவும் பிடித்திருந்தது. பகிர்கின்றேன். படித்து மகிழவும் ${link}`
 
         })
     }
@@ -117,6 +121,8 @@ const BackButton = ({
                                     }}
                                 >
                                     <Text
+                                        numberOfLines={1}
+                                        ellipsizeMode="tail"
                                         style={{
                                             fontSize: 14,
                                             fontWeight: '500',

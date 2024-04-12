@@ -1,16 +1,12 @@
 import SQLite from 'react-native-sqlite-storage';
-import { JSONData } from "../../output.js"
 import { unzip } from 'react-native-zip-archive';
-import * as RNFS from 'react-native-fs'
+import * as RNFS from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob';
-import { decode } from 'base-64';
-import base64 from 'react-native-base64'
-import { useEffect } from 'react';
-import { Alert, AppState, PermissionsAndroid } from 'react-native';
+import { PermissionsAndroid } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // const databaseName = 'main.db';
 // const database = SQLite.openDatabase({ name: databaseName, });
-const database = SQLite.openDatabase({ name: 'main.db', });
+const database = SQLite.openDatabase({ name: 'main.db' });
 const offlineDatabase = SQLite.openDatabase({ name: 'SongsData.db', createFromLocation: 1 });
 // export const initDatabase = () => {
 //     database.transaction((tx) => {
@@ -29,7 +25,7 @@ export async function attachDb() {
         })
             .fetch(
                 'GET',
-                'https://shaivamfiles.fra1.digitaloceanspaces.com/sqlitedump/thirumuraiSongs_10.zip'
+                'https://shaivamfiles.fra1.cdn.digitaloceanspaces.com/sqlitedump/thirumuraiSong_12.zip'
             )
             .then((res) => {
                 // the temp file path
@@ -46,7 +42,7 @@ export async function attachDb() {
                                     async (tx) => {
                                         await tx.executeSql(
                                             'ATTACH DATABASE ? AS Updated_db',
-                                            [`${jsonFilePath}/thirumuraiSongs_10.db`],
+                                            [`${jsonFilePath}/thirumuraiSong_12.db`],
                                             async (tx, results) => {
                                                 console.log(
                                                     '🚀 ~ file: Database.js:49 ~ database.transaction ~ results:',
@@ -81,7 +77,7 @@ export async function attachDb() {
                         .catch((error) => console.error('Error reading directory:', error));
                 });
             });
-    })
+    });
 }
 // export const attachDb = (link) => {
 //     RNFetchBlob
@@ -140,7 +136,7 @@ export async function attachDb() {
 //                     console.log("🚀 ~ file: Database.js:49 ~ database.transaction ~ results:", tx, results)
 //                 }
 //             );
-//             // tx.executeSql('COMMIT;'); 
+//             // tx.executeSql('COMMIT;');
 //         }, (error) => {
 
 //         });
@@ -172,10 +168,10 @@ async function requestFilePermissions() {
     }
 }
 function unzipDownloadFile(target, cb) {
-    requestFilePermissions()
+    requestFilePermissions();
     const sourcePath = target;
     // console.log("🚀 ~ file: Database.js:72 ~ unzipDownloadFile ~ targetPath:", sourcePath)
-    const targetPath = `${RNFS.ExternalDirectoryPath}/Thrimurai`
+    const targetPath = `${RNFS.ExternalDirectoryPath}/Thrimurai`;
     const filePath = RNFS.DocumentDirectoryPath + '/myData.db';
     const charset = 'UTF-8';
     RNFS.mkdir(targetPath)
@@ -183,25 +179,25 @@ function unzipDownloadFile(target, cb) {
             console.log('Output directory created successfully');
             unzip(sourcePath, targetPath, charset)
                 .then((path) => {
-                    console.log(`unzip completed at ${path}`)
+                    console.log(`unzip completed at ${path}`);
                     // downloadFile(path, filePath)
                     return cb(path);
                 })
                 .catch((error) => {
-                    console.log("🚀 ~ file: Database.js:81 ~ unzipDownloadFile ~ error:", error)
-                    console.error(error)
+                    console.log('🚀 ~ file: Database.js:81 ~ unzipDownloadFile ~ error:', error);
+                    console.error(error);
                 });
-        }).catch((error) => {
-            console.log("🚀 ~ file: Database.js:130 ~ .then ~ error:", error)
-
         })
+        .catch((error) => {
+            console.log('🚀 ~ file: Database.js:130 ~ .then ~ error:', error);
+        });
 }
 
 export async function getSqlData(query, callbacks) {
-    console.log("🚀 ~ file: Database.js:146 ~ getSqlData ~ query:", query)
+    console.log('🚀 ~ file: Database.js:146 ~ getSqlData ~ query:', query);
     const data = await AsyncStorage.getItem('@database');
     const databasename = JSON.parse(data);
-    console.log("🚀 ~ file: Database.js:142 ~ getSqlData ~ data:", JSON.parse(data))
+    console.log('🚀 ~ file: Database.js:142 ~ getSqlData ~ data:', JSON.parse(data));
     if (databasename?.name !== 'songData.db') {
         // alert(true)
         await database.transaction(
@@ -231,7 +227,7 @@ export async function getSqlData(query, callbacks) {
         await offlineDatabase.transaction(
             (tx) => {
                 tx.executeSql(query, [], (_, results) => {
-                    console.log("🚀 ~ file: Database.js:149 ~ tx.executeSql ~ results:", results)
+                    console.log('🚀 ~ file: Database.js:149 ~ tx.executeSql ~ results:', results);
                     let arr = [];
                     if (results?.rows?.length > 0) {
                         for (let i = 0; i < results?.rows?.length; i++) {

@@ -124,73 +124,7 @@ const ThrimuraiList = ({ navigation }) => {
         getSqlData('SELECT * FROM category', (callbacks) => {
             setThrimurais(callbacks);
         });
-        // getSqlData('SELECT * FROM strotras', (callbacks) => {
-        //     // setThrimurais(callbacks)
-        // });
-        // }, (error) => {
-        //     console.error("error occured in fetching data at route", error);
-        // })
     };
-    // const sleep = (time) => new Promise((resolve) => setTimeout(() => resolve(), time));
-
-    // You can do anything in your task such as network requests, timers and so on,
-    // as long as it doesn't touch UI. Once your task completes (i.e. the promise is resolved),
-    // React Native will go into "paused" mode (unless there are other tasks running,
-    // or there is a foreground app).
-    // const veryIntensiveTask = async (taskDataArguments) => {
-    //     // Example of an infinite loop task
-    //     const { delay } = taskDataArguments;
-    //     await new Promise(async (resolve) => {
-    //         for (let i = 0; BackgroundService.isRunning(); i++) {
-    //             console.log(i);
-    //             await BackgroundService.updateNotification({ taskDesc: 'New ExampleTask description' + i });
-    //             await sleep(delay);
-    //         }
-    //     });
-    // };
-    // const options = {
-    //     taskName: 'Example',
-    //     taskTitle: 'ExampleTask title',
-    //     taskDesc: 'ExampleTask description',
-    //     taskIcon: {
-    //         name: 'ic_launcher',
-    //         type: 'mipmap',
-    //     },
-    //     color: '#ff00ff',
-    //     linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
-    //     parameters: {
-    //         delay: 1000,
-    //     },
-    // };
-
-    // const startNotification = async () => {
-
-    //     await BackgroundService.start(veryIntensiveTask, options);
-    //     await BackgroundService.updateNotification({ taskDesc: 'New ExampleTask description' }); // Only Android, iOS will ignore this call
-    // }
-    // iOS will also run everything here in the background until .stop() is called
-    // const stopNotification = async () => {
-    //     await BackgroundService.stop();
-    // }
-
-    const data = [
-        {
-            id: 1,
-            songName: 'Ashtakam-1 Adhyayam-1',
-            description: 'सम्पूर्ण ऋग्वेद पारायणम् Complete ...',
-        },
-        {
-            id: 2,
-            songName: 'Ashtakam-2 Adhyayam-2',
-            description: 'सम्पूर्ण ऋग्वेद पाराणम् Complete ...',
-        },
-        {
-            id: 3,
-            songName: 'Ashtakam-2 Adhyayam-2',
-            description: 'सम्पूर्ण ऋग्वेद पाराणम् Complete ...',
-        },
-    ];
-
     const { theme } = useContext(ThemeContext);
 
     return (
@@ -202,11 +136,19 @@ const ThrimuraiList = ({ navigation }) => {
         >
             <Background>
                 <>
-                    <BackButton color={true} middleText={'Thirumurais'} navigation={navigation} />
+                    <BackButton
+                        color={true}
+                        middleText={t('Thirumurais')}
+                        navigation={navigation}
+                    />
                     <View
                         style={[
                             styles.inputcontainer,
-                            { backgroundColor: theme.searchBox.bgColor },
+                            {
+                                backgroundColor: theme.searchBox.bgColor,
+                                overflow: 'hidden',
+                                paddingRight: 10,
+                            },
                         ]}
                     >
                         <Icon name="search" size={28} color={colors.grey1} />
@@ -220,13 +162,15 @@ const ThrimuraiList = ({ navigation }) => {
                                     query2: `ORDER BY Thirumurai_title  ASC LIMIT 10 OFFSET 0;`,
                                 })
                             }
-                            placeholder={`${t('Search for anything')} (Eg - ${t(
-                                'தோடுடைய செவியன்'
-                            )})`}
+                            placeholder={`${t('Search for any Thirumurai here')}`}
                             onChangeText={(e) => setSearchText(e)}
                             placeholderTextColor={theme.searchBox.textColor}
                             value={searchText}
-                            style={{ fontSize: 12, paddingHorizontal: 5, color: '#FF9D9D' }}
+                            style={{
+                                fontSize: 12,
+                                paddingHorizontal: 5,
+                                color: '#FF9D9D',
+                            }}
                         />
                     </View>
                 </>
@@ -243,7 +187,7 @@ const ThrimuraiList = ({ navigation }) => {
                         fontSize: 18,
                     }}
                 >
-                    {onFocus ? 'Recent searches' : 'Thirumurais'}
+                    {onFocus ? t('Recent searches') : t('Thirumurais')}
                 </Text>
             </View>
             {!onFocus && (
@@ -512,7 +456,7 @@ const ThrimuraiList = ({ navigation }) => {
                         />
                     </Pressable> */}
                     <View style={styles.boxCommon}>
-                        <Text style={styles.playlistHeading}>Recently Playled</Text>
+                        <Text style={styles.playlistHeading}>{t('Recently Played')}</Text>
                         <FlatList
                             key={(item) => item?.id}
                             data={recentPlayed}
@@ -537,7 +481,7 @@ export const styles = StyleSheet.create({
         marginHorizontal: 15,
         borderRadius: 10,
         paddingHorizontal: 10,
-
+        flex: 1,
         height: 50,
         marginBottom: 10,
         flexDirection: 'row',
