@@ -180,96 +180,110 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     };
     return (
         <View style={[styles.main, { backgroundColor: theme.backgroundColor }]}>
-            <Background>
-                <BackButton navigation={navigation} color={true} middleText={name} />
-                <SearchInput
-                    setState={setSearchedText}
-                    state={searchedText}
-                    setOnFocus={() =>
-                        navigation.navigate(RouteTexts.SEARCH_SCREEN, {
-                            query1: `SELECT * FROM thirumurais WHERE search_thirumurai_title LIKE`,
-                            query2: `AND fkTrimuria <=7 LIMIT 10 OFFSET 0`,
-                            allThirumirai: false,
-                        })
-                    }
-                    // placeholder={'Search for anything (Eg - தோடுடைய செவியன்) '}
-                    placeholder={t('Search for any Thirumurai here')}
-                    styleOverwrite={{ paddingTop: 10 }}
-                />
-                {prevId == '<=7' && (
-                    <FlatList
-                        contentContainerStyle={{
-                            marginTop: 10,
-                            width: '100%',
-                            flexGrow: 1,
-                        }}
-                        data={headerData}
-                        renderItem={({ item, index }) => (
-                            <ThrimuraiHeader
-                                selectedHeader={selectedHeader}
-                                setSelectedheader={setSelectedheader}
-                                item={item}
-                            />
-                        )}
-                        horizontal
+            <View>
+                <Background>
+                    <BackButton navigation={navigation} color={true} middleText={name} />
+                    <SearchInput
+                        setState={setSearchedText}
+                        state={searchedText}
+                        setOnFocus={() =>
+                            navigation.navigate(RouteTexts.SEARCH_SCREEN, {
+                                query1: `SELECT * FROM thirumurais WHERE search_thirumurai_title LIKE`,
+                                query2: `AND fkTrimuria <=7 LIMIT 10 OFFSET 0`,
+                                allThirumirai: false,
+                            })
+                        }
+                        // placeholder={'Search for anything (Eg - தோடுடைய செவியன்) '}
+                        placeholder={t('Search for any Thirumurai here')}
+                        styleOverwrite={{ paddingTop: 10 }}
                     />
-                )}
-                {prevId == '=10' && (
-                    <FlatList
-                        contentContainerStyle={{ marginTop: 10 }}
-                        data={headerData.reverse()}
-                        renderItem={({ item, index }) => (
-                            <ThrimuraiHeader
-                                selectedHeader={selectedHeader}
-                                setSelectedheader={setSelectedheader}
-                                item={item}
-                            />
-                        )}
-                        horizontal
-                    />
-                )}
-            </Background>
-            {showLoading ? (
-                // <Modal transparent presentationStyle='overFullScreen'>
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <ActivityIndicator size={'small'} />
-                </View>
-            ) : (
-                <View style={{ backgroundColor: theme.backgroundColor }}>
-                    {selectedHeader.name == 'Agarathi' ? (
-                        <View style={{ marginTop: 10 }}>
-                            <RenderAudios akarthi={true} navigation={navigation} prevId={prevId} />
-                        </View>
-                    ) : selectedHeader.name == 'Varalatrumurai' ? (
-                        <Varakatrimurai navigation={navigation} />
-                    ) : selectedHeader?.name == 'Thalamurai' ? (
-                        <Thalamurai navigation={navigation} />
-                    ) : (
+                    {prevId == '<=7' && (
                         <FlatList
-                            contentContainerStyle={{ marginTop: 10, paddingBottom: 250 }}
-                            data={thrimurais}
+                            contentContainerStyle={{
+                                marginTop: 10,
+                                width: '100%',
+                                flexGrow: 1,
+                            }}
+                            data={headerData}
                             renderItem={({ item, index }) => (
-                                // renderContents(item, index)
-                                <RenderContents
+                                <ThrimuraiHeader
+                                    selectedHeader={selectedHeader}
+                                    setSelectedheader={setSelectedheader}
                                     item={item}
-                                    index={index}
-                                    selectedTitle={selectedTitle}
-                                    setSelectedTitle={setSelectedTitle}
-                                    navigation={navigation}
-                                    range={range}
-                                    setRange={setRange}
-                                    flagShowAudio={flagShowAudio}
                                 />
                             )}
+                            horizontal
                         />
                     )}
-                </View>
-            )}
+                    {prevId == '=10' && (
+                        <FlatList
+                            contentContainerStyle={{ marginTop: 10 }}
+                            data={headerData.reverse()}
+                            renderItem={({ item, index }) => (
+                                <ThrimuraiHeader
+                                    selectedHeader={selectedHeader}
+                                    setSelectedheader={setSelectedheader}
+                                    item={item}
+                                />
+                            )}
+                            horizontal
+                        />
+                    )}
+                </Background>
+            </View>
+            <View
+                style={{
+                    flex: 1,
+                }}
+            >
+                {showLoading ? (
+                    // <Modal transparent presentationStyle='overFullScreen'>
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <ActivityIndicator size={'small'} />
+                    </View>
+                ) : (
+                    <View style={{ backgroundColor: theme.backgroundColor }}>
+                        {selectedHeader.name == 'Agarathi' ? (
+                            <View style={{ marginTop: 10 }}>
+                                <RenderAudios
+                                    akarthi={true}
+                                    navigation={navigation}
+                                    prevId={prevId}
+                                />
+                            </View>
+                        ) : selectedHeader.name == 'Varalatrumurai' ? (
+                            <Varakatrimurai navigation={navigation} />
+                        ) : selectedHeader?.name == 'Thalamurai' ? (
+                            <Thalamurai navigation={navigation} />
+                        ) : (
+                            <FlatList
+                                contentContainerStyle={{ marginTop: 10, paddingBottom: 250 }}
+                                data={thrimurais}
+                                renderItem={({ item, index }) => (
+                                    // renderContents(item, index)
+                                    <RenderContents
+                                        item={item}
+                                        index={index}
+                                        selectedTitle={selectedTitle}
+                                        setSelectedTitle={setSelectedTitle}
+                                        navigation={navigation}
+                                        range={range}
+                                        setRange={setRange}
+                                        flagShowAudio={flagShowAudio}
+                                    />
+                                )}
+                            />
+                        )}
+                    </View>
+                )}
+            </View>
         </View>
     );
 };
 export const styles = StyleSheet.create({
-    main: { flex: 1 },
+    main: {
+        flex: 1,
+    },
     mainContainer: {
         shadowColor: '#FFFFFF',
         shadowOffset: { height: 8, width: 10 },

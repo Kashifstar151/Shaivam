@@ -44,14 +44,10 @@ import RNFetchBlob from 'rn-fetch-blob';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import { colors } from '../../Helpers';
-import { MusicContext } from '../../components/Playbacks/TrackPlayerContext';
 import AlertScreen from '../../components/AlertScreen';
 
 const RenderAudios = ({ item, index, clb, activeTrack, setSelectedOdhuvar }) => {
-    // console.log('🚀 ~ file: AudioPlayer.js:70 ~ RenderAudios ~ clb:', clb);
-
     const setItemForPlayer = (item) => {
-        // console.log('🚀 ~ file: AudioPlayer.js:73 ~ setItemForPlayer ~ item:', item);
         clb(index);
     };
 
@@ -104,7 +100,8 @@ const AudioPlayer = ({
     queryForPreviousPrevId,
     visibleStatusBar,
     setDownloadingLoader,
-    isFav
+    isFav,
+    activeTrack,
 }) => {
     console.log('the render of page =>', repeatMode);
 
@@ -112,8 +109,6 @@ const AudioPlayer = ({
     useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], async (event) => {
         if (event?.state == State?.nextTrack) {
             let index = await TrackPlayer.getActiveTrack();
-            setActiveTrack(index);
-            // console.log('index', index)
             const newObj = { ...index, prevId: prevId };
             updateRecentlyPlayed(newObj);
         }
@@ -163,14 +158,10 @@ const AudioPlayer = ({
     const { position, duration } = useProgress();
     const [paused, setPaused] = useState(false);
     const [ThumbImage, setThumbImage] = useState(null);
-    // const [downloadingLoader, setDownloadingLoader] = useState(false);
     const [downloadedSong, setDownloadedSong] = useState(false);
     const [mostPlayedSongs, setMostPlayedSong] = useState([]);
     const [showModal, setShowModal] = useState(false);
-    const [activeTract, setActiveTrack] = useState(null);
     const playBackState = usePlaybackState();
-    const activeTrack = useActiveTrack();
-    // console.log("🚀 ~ activeTrack:", activeTrack)
     useEffect(() => {
         (async () => {
             if (playBackState.state === 'ready') {
@@ -249,18 +240,7 @@ const AudioPlayer = ({
         // setPaused(true);
     };
     const handlePrevious = async () => {
-        // let queue = await TrackPlayer.getQueue();
-        // let checkWhetherLastSong = (await TrackPlayer.getActiveTrack()).id === queue[0].id;
-        // if (checkWhetherLastSong && repeatMode === 0) {
-        //     queryForPreviousPrevId();
-        // } else {
-        //     await TrackPlayer.skipToPrevious();
-        //     await TrackPlayer.play();
-        // }
-
         queryForPreviousPrevId();
-
-        // setPaused(true);
     };
     const getMostPlayedSong = () => {
         MostPlayedList('s', (callbacks) => {
@@ -270,46 +250,14 @@ const AudioPlayer = ({
         });
     };
     const [downlaodList, setDownloadList] = useState([]);
-    // const fetchAndDisplayDownloads = async () => {
-    //     try {
-    //         // const keys = await AsyncStorage.getAllKeys();
-    //         const parsedMetadata = await AsyncStorage.getItem('downloaded');
-    //         // console.log("🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:", parsedMetadata)
-    //         // const metadataKeys = keys.filter(key => key.startsWith('downloaded:'));
-    //         // const metadata = await AsyncStorage.multiGet(metadataKeys);
-    //         // const parsedMetadata = metadata.map(([key, value]) => JSON.parse(value));
-    //         setDownloadList(JSON.parse(parsedMetadata));
-    //         let data = JSON.parse(parsedMetadata);
-    //         console.log('🚀 ~ fetchAndDisplayDownloads ~ data:', activeTrack);
-    //         data?.map((item) => {
-    //             console.log(
-    //                 '🚀 ~ data?.map ~ item:',
-    //                 item?.id,
-    //                 activeTrack?.id,
-    //                 item?.prevId,
-    //                 prevId
-    //             );
-    //             if (item?.id == activeTrack?.id && item?.prevId == prevId) {
-    //                 setDownloadedSong(true);
-    //             }
-    //         });
-    //         // Now `parsedMetadta` contains all of your audio files' metadata
-    //         // You can use this data to render your downloads page
-    //     } catch (e) {
-    //         console.error('Failed to fetch metadata', e);
-    //     }
-    // };
     const mostPlayed = async (callbacks) => {
         let count = 1;
         let exist = false;
         await TrackPlayer.getActiveTrack()
             .then((res) => {
-                // console.log("🚀 ~ awaitTrackPlayer.getActiveTrack ~ res:", JSON.stringify(callbacks, 0, 2))
-                // console.log("🚀 ~ awaitTrackPlayer.getActiveTrack ~ res:", JSON.stringify(res, 0, 2))
                 let num = mostPlayedSongs.filter((value) => {
                     return value?.id == res?.id ? true : false;
                 });
-                console.log('🚀 ~ awaitTrackPlayer.getActiveTrack ~ exist:', num);
                 if (num?.length > 0) {
                     let sql = `UPDATE most_played SET count=? WHERE id=?`;
                     UpdateMostPlayed(sql, [num[0].count + 1, num[0].id], (callbacks) => {
@@ -362,9 +310,7 @@ const AudioPlayer = ({
         // let dirs = RNFetchBlob.fs.dirs;
         setDownloadingLoader(true);
         TrackPlayer.getActiveTrack().then(async (item) => {
-            // console.log("🚀 ~ TrackPlayer.getActiveTrack ~ item:", item)
             const path = `${RNFS.ExternalDirectoryPath}/${item?.thalamOdhuvarTamilname}`;
-
             RNFetchBlob.config({
                 path: path,
             })
@@ -418,7 +364,9 @@ const AudioPlayer = ({
                 style={
                     orientation == 'LANDSCAPE' || !visibleStatusBar
                         ? {
-                            width: Dimensions.get('window').width / 2,
+                            width: !(orientation == 'LANDSCAPE')
+                                ? Dimensions.get('window').width
+                                : Dimensions.get('window').width / 2,
                             backgroundColor: '#222222',
                             height: 70,
                             alignItems: 'center',
@@ -455,9 +403,10 @@ const AudioPlayer = ({
                             justifyContent: 'space-between',
                             paddingHorizontal: 10,
                             width: '100%',
+                            flex: 1,
                         }}
                     >
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                             <View
                                 style={{
                                     height: 50,
@@ -493,7 +442,11 @@ const AudioPlayer = ({
                         </View>
                         <View style={{}}>
                             <View
-                                style={{ flexDirection: 'row', alignItems: 'center', width: '50%' }}
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    width: '50%',
+                                }}
                             >
                                 <TouchableOpacity onPress={() => handlePrevious()}>
                                     <Icon name="stepbackward" size={24} color="white" />
