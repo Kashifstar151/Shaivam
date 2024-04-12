@@ -350,7 +350,9 @@ const AudioPlayer = ({
                 style={
                     orientation == 'LANDSCAPE' || !visibleStatusBar
                         ? {
-                              width: Dimensions.get('window').width,
+                              width: !(orientation == 'LANDSCAPE')
+                                  ? Dimensions.get('window').width
+                                  : Dimensions.get('window').width / 2,
                               backgroundColor: '#222222',
                               height: 70,
                               alignItems: 'center',
@@ -387,9 +389,10 @@ const AudioPlayer = ({
                             justifyContent: 'space-between',
                             paddingHorizontal: 10,
                             width: '100%',
+                            flex: 1,
                         }}
                     >
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                             <View
                                 style={{
                                     height: 50,
