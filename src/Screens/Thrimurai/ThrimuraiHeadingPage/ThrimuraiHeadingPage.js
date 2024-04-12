@@ -215,7 +215,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                             horizontal
                         />
                     )}
-                    {prevId == '=10' && (
+                    {prevId == ' IN (10,11)' && (
                         <FlatList
                             contentContainerStyle={{ marginTop: 10 }}
                             data={headerData.reverse()}

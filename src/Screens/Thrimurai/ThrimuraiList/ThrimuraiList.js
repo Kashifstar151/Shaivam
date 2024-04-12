@@ -225,6 +225,7 @@ const ThrimuraiList = ({ navigation }) => {
                             }
                         />
                     </Pressable>
+
                     <Pressable
                         style={styles.boxCommon}
                         onPress={() =>
@@ -259,6 +260,7 @@ const ThrimuraiList = ({ navigation }) => {
                             }
                         />
                     </Pressable>
+
                     <Pressable
                         style={styles.boxCommon}
                         onPress={() =>
@@ -293,6 +295,7 @@ const ThrimuraiList = ({ navigation }) => {
                             }
                         />
                     </Pressable>
+
                     <Pressable
                         style={styles.boxCommon}
                         onPress={() =>
@@ -300,7 +303,7 @@ const ThrimuraiList = ({ navigation }) => {
                                 page: 1,
                                 list: thrimurais.slice(0, 7),
                                 query: 'SELECT name ,prevId FROM  category WHERE prevId=10',
-                                prevId: '=10',
+                                prevId: ' IN (10,11)',
                                 flagShowAudio: false,
                                 name: `${t('(4th bar yellow)')}`,
                             })
@@ -326,6 +329,7 @@ const ThrimuraiList = ({ navigation }) => {
                             }
                         />
                     </Pressable>
+
                     <Pressable
                         style={styles.boxCommon}
                         onPress={() =>
@@ -333,7 +337,7 @@ const ThrimuraiList = ({ navigation }) => {
                                 page: 2,
                                 list: thrimurais.slice(7, 14),
                                 query: 'SELECT name ,prevId FROM  category WHERE prevId=11',
-                                prevId: '=11',
+                                prevId: '=12',
                                 flagShowAudio: true,
                                 name: `${t('(5th bar pink)')}`,
                             })
@@ -359,6 +363,7 @@ const ThrimuraiList = ({ navigation }) => {
                             }
                         />
                     </Pressable>
+
                     <Pressable
                         style={styles.boxCommon}
                         onPress={() =>
@@ -366,7 +371,7 @@ const ThrimuraiList = ({ navigation }) => {
                                 page: 1,
                                 list: thrimurais.slice(0, 7),
                                 query: 'SELECT name ,prevId FROM  category WHERE prevId=12',
-                                prevId: '=12',
+                                prevId: '=13',
                                 flagShowAudio: true,
                                 name: `${t('(6th bar Green)')}`,
                             })
@@ -392,6 +397,7 @@ const ThrimuraiList = ({ navigation }) => {
                             }
                         />
                     </Pressable>
+
                     <Pressable
                         style={styles.boxCommon}
                         onPress={() =>
@@ -399,7 +405,7 @@ const ThrimuraiList = ({ navigation }) => {
                                 page: 1,
                                 list: thrimurais.slice(0, 7),
                                 query: 'SELECT name ,prevId FROM  category WHERE prevId=13',
-                                prevId: '=13',
+                                prevId: '=14',
                                 flagShowAudio: true,
                                 name: `${t('(7th bar yellow)')}`,
                             })
