@@ -94,7 +94,7 @@ const RenderAudios = ({
             ThalamHeaders == 0 ? 'country' : 'thalam'
         }='${songs?.thalam}'  and  locale='${
             i18n.language === 'en-IN' ? 'RoI' : i18n.language
-        }' ORDER BY  title ASC LIMIT 10 OFFSET ${pageSize}`;
+        }' ORDER BY  fkTrimuria,titleNo  ASC LIMIT 10 OFFSET ${pageSize}`;
 
         /*
          todos: have to optimize the queries  
