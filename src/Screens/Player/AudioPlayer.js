@@ -366,19 +366,25 @@ const AudioPlayer = ({
                             <Text style={styles.headingText}>Odhuvar</Text>
                             <Text style={styles.headingText}>(Select One)</Text>
                         </View>
-                        <FlatList
-                            contentContainerStyle={{ backgroundColor: '#222222' }}
-                            horizontal
-                            data={songsData}
-                            renderItem={({ item, index }) => (
-                                <RenderAudios
-                                    item={item}
-                                    index={index}
-                                    clb={playById}
-                                    activeTrack={activeTrack}
-                                />
-                            )}
-                        />
+                        <View
+                            style={{
+                                width: 'auto',
+                            }}
+                        >
+                            <FlatList
+                                contentContainerStyle={{ backgroundColor: '#222222' }}
+                                horizontal
+                                data={songsData}
+                                renderItem={({ item, index }) => (
+                                    <RenderAudios
+                                        item={item}
+                                        index={index}
+                                        clb={playById}
+                                        activeTrack={activeTrack}
+                                    />
+                                )}
+                            />
+                        </View>
                     </View>
                 )}
                 {orientation == 'LANDSCAPE' || !visibleStatusBar ? (
