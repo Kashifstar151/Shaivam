@@ -26,20 +26,18 @@ const HeaderWithTextInput = React.forwardRef(
                 style={{
                     paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 40 : 0,
                     paddingHorizontal: 15,
+                    justifyContent: 'center',
                 }}
             >
                 <View
                     style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',
-                        marginTop: 10,
+                        marginVertical: 10,
                         alignItems: 'center',
                     }}
                 >
-                    <TouchableOpacity
-                        style={{ alignSelf: 'center' }}
-                        onPress={() => navigation.goBack()}
-                    >
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
                         <BackIcon />
                     </TouchableOpacity>
                     <View
@@ -57,7 +55,7 @@ const HeaderWithTextInput = React.forwardRef(
                                   ]
                         }
                     >
-                        <Icon name="search1" size={28} color={color ? '#777777' : colors.grey1} />
+                        <Icon name="search1" size={20} color={color ? '#777777' : colors.grey1} />
                         <TextInput
                             onSubmitEditing={onSubmitEditing}
                             placeholder={placeholder}
@@ -114,7 +112,6 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 10,
 
         height: 50,
-        marginBottom: 10,
         flexDirection: 'row',
         alignItems: 'center',
     },
