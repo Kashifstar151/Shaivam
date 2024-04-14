@@ -78,6 +78,9 @@ export default {
         greenGradBallRight: { startColor: '#BAE6C6', stopColor: '#8EC99F' },
         greenGradBallLeft: { startColor: '#BAE6C6', stopColor: '#8EC99F' },
 
+        // separator
+        separator: '#EAEAEA',
+
         // search box
 
         searchBox: { bgColor: '#8F3630', textColor: '#FF9D9D' },
@@ -132,6 +135,9 @@ export default {
         yellowGradBallRight: darkCardGrad,
         yellowGradBallLeft: darkCardGrad,
         yellowGradcolors: greyForCard,
+
+        // separator
+        separator: '#4D4D4D',
 
         // red
         redGradcolors: greyForCard,

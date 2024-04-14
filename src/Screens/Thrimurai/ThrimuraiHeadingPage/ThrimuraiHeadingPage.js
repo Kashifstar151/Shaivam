@@ -113,7 +113,7 @@ const RenderContents = ({
                     <View
                         style={
                             selectedTitle === index && {
-                                backgroundColor: '#EAEAEA',
+                                backgroundColor: theme.separator,
                                 height: 1,
                                 marginBottom: 10,
                             }

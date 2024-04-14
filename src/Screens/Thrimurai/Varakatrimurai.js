@@ -64,16 +64,11 @@ const Varakatrimurai = ({ navigation }) => {
                                 />
                             </TouchableOpacity>
                         )}
-
-                        {console.log(
-                            'selectedTitle !== null && selectedTitle === index   ',
-                            selectedTitle !== null && selectedTitle === index
-                        )}
                     </View>
                     <View
                         style={
                             selectedTitle === index && {
-                                backgroundColor: '#EAEAEA',
+                                backgroundColor: theme.separator,
                                 height: 1,
                                 marginBottom: 10,
                             }
