@@ -79,8 +79,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const flatListRef = useRef(null);
     const firstRender = useRef(true);
 
-    const activeTrack = useActiveTrack();
-
     const initializeTheFontSize = async () => {
         const value = await AsyncStorage.getItem('@lyricsFontSize');
         if (!value) {
@@ -119,6 +117,11 @@ const ThrimuraiSong = ({ route, navigation }) => {
         setRepeatMode(repeatState);
     }, []);
 
+    const initilizeActiveTrack = useCallback(async () => {
+        const activeSong = await TrackPlayer.getActiveTrack();
+        setActiveTrackState(activeSong);
+    }, []);
+
     const initilizeTheTheme = useCallback(async () => {
         const themeMode = await AsyncStorage.getItem('theme');
         if (themeMode === 'dark') {
@@ -132,7 +135,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
         if (searchScreen && firstRender.current) {
             scrollToIndex();
         }
-    }, [flatListRef, activeTrack?.url]);
+    }, [flatListRef, activeTrackState?.url]);
     useEffect(() => {
         // console.log('🚀 ~ useEffect ~ initilizeTheTheme: 1');
         initilizeTheTheme();
@@ -333,6 +336,9 @@ GROUP BY
         return (
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                 <HighlightText
+                    key={Math.random()}
+                    selectable={true}
+                    selectionColor="orange"
                     style={[
                         styles.lyricsText,
                         {
@@ -409,6 +415,7 @@ GROUP BY
                 await TrackPlayer.add(song);
             } finally {
                 initilizeTheRepeatState();
+                initilizeActiveTrack();
             }
         },
         [musicState.song]
@@ -439,11 +446,17 @@ GROUP BY
         });
     };
 
-    useTrackPlayerEvents([Event.PlaybackQueueEnded], async (event) => {
-        if (event.type === Event.PlaybackQueueEnded && repeatMode === 0) {
-            queryForNextPrevId();
+    useTrackPlayerEvents(
+        [Event.PlaybackQueueEnded, Event.PlaybackActiveTrackChanged],
+        async (event) => {
+            if (event.type === Event.PlaybackQueueEnded && repeatMode === 0) {
+                queryForNextPrevId();
+            } else if (event.type === Event.PlaybackActiveTrackChanged) {
+                setActiveTrackState(event.track);
+            }
         }
-    });
+    );
+    const [activeTrackState, setActiveTrackState] = useState({});
 
     useEffect(() => {
         if (musicState.prevId && selectedLang) {
@@ -968,9 +981,9 @@ GROUP BY
                         }}
                     ></TouchableOpacity>
                 </View>
-                {activeTrack?.url && (
+                {activeTrackState?.url && (
                     <AudioPlayer
-                        activeTrack={activeTrack}
+                        activeTrack={activeTrackState}
                         setDownloadingLoader={setDownloadingLoader}
                         visibleStatusBar={visibleStatusBar}
                         prevId={data?.prevId}
