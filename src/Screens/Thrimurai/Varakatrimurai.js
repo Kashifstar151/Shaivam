@@ -64,6 +64,11 @@ const Varakatrimurai = ({ navigation }) => {
                                 />
                             </TouchableOpacity>
                         )}
+
+                        {console.log(
+                            'selectedTitle !== null && selectedTitle === index   ',
+                            selectedTitle !== null && selectedTitle === index
+                        )}
                     </View>
                     <View
                         style={
@@ -98,9 +103,7 @@ export const styles = StyleSheet.create({
     chapterBox: {
         alignItems: 'center',
         justifyContent: 'space-between',
-
         height: 50,
-        width: Dimensions.get('window').width,
         marginBottom: 4,
         flexDirection: 'row',
     },
