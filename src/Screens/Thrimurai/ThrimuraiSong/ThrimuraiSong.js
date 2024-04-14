@@ -53,7 +53,6 @@ import TrackPlayer, {
     useActiveTrack,
     useProgress,
 } from 'react-native-track-player';
-import BottomSheet from '@gorhom/bottom-sheet';
 
 const ThrimuraiSong = ({ route, navigation }) => {
     console.log('the render of the song==>');
@@ -376,7 +375,6 @@ GROUP BY
             try {
                 if (!TrackPlayer._initialized) {
                     await TrackPlayer.setupPlayer();
-                    // initilizeTheRepeatState();
                 }
                 await TrackPlayer.updateOptions({
                     android: {
@@ -393,7 +391,7 @@ GROUP BY
                     compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
                     progressUpdateEventInterval: 2,
                 });
-                // initilizeTheRepeatState();
+                await TrackPlayer.reset();
                 await TrackPlayer.add(song);
             } catch (error) {
                 await TrackPlayer.updateOptions({
@@ -411,7 +409,7 @@ GROUP BY
                     compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
                     progressUpdateEventInterval: 2,
                 });
-                // initilizeTheRepeatState();
+                await TrackPlayer.reset();
                 await TrackPlayer.add(song);
             } finally {
                 initilizeTheRepeatState();
