@@ -235,7 +235,7 @@ const CardComponents = ({ navigation }) => {
                         fontWeight: '400',
                     }}
                 >
-                    Scroll through and check out what Shaivam offers
+                    Scroll through & check out what Shaivam offers
                 </Text>
             </View>
             <View
