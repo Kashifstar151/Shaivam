@@ -306,7 +306,8 @@ const HomeScreen = ({ navigation }) => {
                 <Text
                     style={{
                         fontSize: RFValue(18, 800),
-                        fontWeight: '700',
+                        // fontWeight: '700',
+                        fontFamily: 'Lora-Bold',
                         color: theme.textColor,
                         marginVertical: 10,
                     }}
