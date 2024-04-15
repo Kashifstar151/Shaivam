@@ -194,15 +194,16 @@ const CardComponents = ({ navigation }) => {
                     title: 'Kaala Puja',
                     navName: 'Kaala Puja',
                 },
-                {
-                    icon: <QuizSVG fill={theme.textColorHomeCardYellow} />,
-                    title: 'Quiz',
-                    navName: 'Quiz',
-                },
+
                 {
                     icon: <HeartSVG fill={theme.textColorHomeCardYellow} />,
                     title: 'Favourites',
                     navName: 'Favourites',
+                },
+                {
+                    icon: <QuizSVG fill={theme.textColorHomeCardYellow} />,
+                    title: 'Quiz',
+                    navName: 'Quiz',
                 },
                 {
                     icon: <Logo fill={theme.textColorHomeCardYellow} />,
