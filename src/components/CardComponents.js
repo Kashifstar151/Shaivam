@@ -165,14 +165,14 @@ const CardComponents = ({ navigation }) => {
                     navName: 'Shaivam TV',
                 },
                 {
-                    icon: <Temple1Svg fill={theme.textColor} />,
-                    title: 'Temples',
-                    navName: RouteTexts.TEMPLE_TABS_NAVIGATE,
-                },
-                {
                     icon: <RadioSVG fill={theme.textColor} />,
                     title: 'Radio',
                     navName: 'Radio',
+                },
+                {
+                    icon: <Temple1Svg fill={theme.textColor} />,
+                    title: 'Temples',
+                    navName: RouteTexts.TEMPLE_TABS_NAVIGATE,
                 },
                 {
                     icon: <CalendarSVG fill={theme.textColor} />,
