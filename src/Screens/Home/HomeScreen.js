@@ -498,7 +498,7 @@ const HomeScreen = ({ navigation }) => {
             <View>
                 <View style={{ paddingBottom: 15, paddingHorizontal: 15 }}>
                     <HeadingAndView
-                        viewBtnColor={theme.colorscheme === 'light' ? theme.maroon : colors.white}
+                        viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                         title={'Upcoming Festivals'}
                         theme={{ textColor: theme.textColor, colorscheme: theme.colorscheme }}
                         onPress={() => {}}
@@ -535,7 +535,7 @@ const HomeScreen = ({ navigation }) => {
             <View>
                 <View style={{ padding: 15 }}>
                     <HeadingAndView
-                        viewBtnColor={theme.colorscheme === 'light' ? theme.maroon : colors.white}
+                        viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                         title={'Nearby Temples'}
                         onPress={() => {}}
                         theme={{
@@ -576,7 +576,7 @@ const HomeScreen = ({ navigation }) => {
                 }}
             >
                 <HeadingAndView
-                    viewBtnColor={theme.colorscheme === 'light' ? theme.maroon : colors.white}
+                    viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                     title={'App Walkthrough Videos '}
                     // todos : add the fn that take it to the dedicated video page
                     onPress={() => {}}
