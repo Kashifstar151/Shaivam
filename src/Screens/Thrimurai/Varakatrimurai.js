@@ -68,7 +68,7 @@ const Varakatrimurai = ({ navigation }) => {
                     <View
                         style={
                             selectedTitle === index && {
-                                backgroundColor: '#EAEAEA',
+                                backgroundColor: theme.separator,
                                 height: 1,
                                 marginBottom: 10,
                             }
@@ -98,9 +98,7 @@ export const styles = StyleSheet.create({
     chapterBox: {
         alignItems: 'center',
         justifyContent: 'space-between',
-
         height: 50,
-        width: Dimensions.get('window').width,
         marginBottom: 4,
         flexDirection: 'row',
     },
