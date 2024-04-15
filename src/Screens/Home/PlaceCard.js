@@ -53,10 +53,10 @@ const PlaceCard = ({ img, templeName, address, theme }) => {
 
                 <View style={{ columnGap: 24, flexDirection: 'row' }}>
                     <Pressable>
-                        <ShareSVG fill={'#777777'} />
+                        <ShareSVG fill={theme.textColor} />
                     </Pressable>
                     <Pressable>
-                        <LocationSVG fill={'#777777'} />
+                        <LocationSVG fill={theme.textColor} />
                     </Pressable>
                 </View>
             </View>
