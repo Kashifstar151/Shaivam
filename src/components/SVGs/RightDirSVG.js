@@ -1,13 +1,13 @@
 import * as React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
-function RightDirSVG({ fill, ...props }) {
+function RightDirSVG({ fill, width = 18, height = 19, viewBox = '0 0 18 19', ...props }) {
     return (
         <Svg
             xmlns="http://www.w3.org/2000/svg"
-            width={18}
-            height={19}
-            viewBox="0 0 18 19"
+            width={width}
+            height={height}
+            viewBox={viewBox}
             fill="none"
             {...props}
         >
