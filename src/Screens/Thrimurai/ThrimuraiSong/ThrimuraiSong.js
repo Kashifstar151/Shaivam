@@ -252,7 +252,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
         const detailQuery = `SELECT rawSong, tamilExplanation, tamilSplit , songNo , title from thirumurai_songs where prevId=${musicState?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
         const titleQuery = `SELECT
         MAX(CASE WHEN locale = 'en' THEN titleS END) AS tamil,
-    MAX(CASE WHEN locale = '${langMap[selectedLngCode]}' THEN title END) AS localeBased FROM thirumurais WHERE prevId =${musicState?.prevId}
+    MAX(CASE WHEN locale = '${langMap[selectedLngCode]}' THEN titleS END) AS localeBased FROM thirumurais WHERE prevId =${musicState?.prevId}
     AND titleS IS NOT NULL
     AND titleS != ''
     AND (locale = '${langMap[selectedLngCode]}' OR locale = 'en')
