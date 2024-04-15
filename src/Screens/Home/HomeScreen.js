@@ -329,18 +329,17 @@ const HomeScreen = ({ navigation }) => {
                             <Pressable
                                 style={{
                                     marginRight: 8,
-                                    // elevation: {
                                     elevation: 5,
                                     backgroundColor:
                                         selectedPlaylistType == item
-                                            ? theme.searchContext.unSelected.bgColor
-                                            : '#EDEDED',
+                                            ? '#C1554E'
+                                            : theme.unSelectedBox.bgColor,
 
                                     borderRadius: 20,
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                     paddingHorizontal: 15,
-                                    paddingVertical: 5,
+                                    paddingVertical: 10,
                                 }}
                                 onPress={() => {
                                     setSelectedPlaylistType(item);
@@ -348,7 +347,8 @@ const HomeScreen = ({ navigation }) => {
                             >
                                 <Text
                                     style={{
-                                        color: selectedPlaylistType == item ? 'white' : '#777777',
+                                        color:
+                                            selectedPlaylistType == item ? colors.white : '#777777',
                                         fontFamily: 'Mulish-Bold',
                                         fontWeight: '700',
                                     }}
