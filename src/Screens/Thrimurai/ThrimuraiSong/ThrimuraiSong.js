@@ -53,7 +53,6 @@ import TrackPlayer, {
     useActiveTrack,
     useProgress,
 } from 'react-native-track-player';
-import BottomSheet from '@gorhom/bottom-sheet';
 
 const ThrimuraiSong = ({ route, navigation }) => {
     console.log('the render of the song==>');
@@ -78,8 +77,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const [refFlatList, setRefFlatList] = useState(null);
     const flatListRef = useRef(null);
     const firstRender = useRef(true);
-
-    const activeTrack = useActiveTrack();
 
     const initializeTheFontSize = async () => {
         const value = await AsyncStorage.getItem('@lyricsFontSize');
@@ -119,6 +116,11 @@ const ThrimuraiSong = ({ route, navigation }) => {
         setRepeatMode(repeatState);
     }, []);
 
+    const initilizeActiveTrack = useCallback(async () => {
+        const activeSong = await TrackPlayer.getActiveTrack();
+        setActiveTrackState(activeSong);
+    }, []);
+
     const initilizeTheTheme = useCallback(async () => {
         const themeMode = await AsyncStorage.getItem('theme');
         if (themeMode === 'dark') {
@@ -132,7 +134,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
         if (searchScreen && firstRender.current) {
             scrollToIndex();
         }
-    }, [flatListRef, activeTrack?.url]);
+    }, [flatListRef, activeTrackState?.url]);
     useEffect(() => {
         // console.log('🚀 ~ useEffect ~ initilizeTheTheme: 1');
         initilizeTheTheme();
@@ -333,6 +335,9 @@ GROUP BY
         return (
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                 <HighlightText
+                    key={Math.random()}
+                    selectable={true}
+                    selectionColor="orange"
                     style={[
                         styles.lyricsText,
                         {
@@ -370,7 +375,6 @@ GROUP BY
             try {
                 if (!TrackPlayer._initialized) {
                     await TrackPlayer.setupPlayer();
-                    // initilizeTheRepeatState();
                 }
                 await TrackPlayer.updateOptions({
                     android: {
@@ -387,7 +391,7 @@ GROUP BY
                     compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
                     progressUpdateEventInterval: 2,
                 });
-                // initilizeTheRepeatState();
+                await TrackPlayer.reset();
                 await TrackPlayer.add(song);
             } catch (error) {
                 await TrackPlayer.updateOptions({
@@ -405,10 +409,11 @@ GROUP BY
                     compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
                     progressUpdateEventInterval: 2,
                 });
-                // initilizeTheRepeatState();
+                await TrackPlayer.reset();
                 await TrackPlayer.add(song);
             } finally {
                 initilizeTheRepeatState();
+                initilizeActiveTrack();
             }
         },
         [musicState.song]
@@ -439,11 +444,17 @@ GROUP BY
         });
     };
 
-    useTrackPlayerEvents([Event.PlaybackQueueEnded], async (event) => {
-        if (event.type === Event.PlaybackQueueEnded && repeatMode === 0) {
-            queryForNextPrevId();
+    useTrackPlayerEvents(
+        [Event.PlaybackQueueEnded, Event.PlaybackActiveTrackChanged],
+        async (event) => {
+            if (event.type === Event.PlaybackQueueEnded && repeatMode === 0) {
+                queryForNextPrevId();
+            } else if (event.type === Event.PlaybackActiveTrackChanged) {
+                setActiveTrackState(event.track);
+            }
         }
-    });
+    );
+    const [activeTrackState, setActiveTrackState] = useState({});
 
     useEffect(() => {
         if (musicState.prevId && selectedLang) {
@@ -968,9 +979,9 @@ GROUP BY
                         }}
                     ></TouchableOpacity>
                 </View>
-                {activeTrack?.url && (
+                {activeTrackState?.url && (
                     <AudioPlayer
-                        activeTrack={activeTrack}
+                        activeTrack={activeTrackState}
                         setDownloadingLoader={setDownloadingLoader}
                         visibleStatusBar={visibleStatusBar}
                         prevId={data?.prevId}

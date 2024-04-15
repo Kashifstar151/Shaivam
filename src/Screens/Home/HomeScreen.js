@@ -36,6 +36,7 @@ import { useIsFocused } from '@react-navigation/native';
 import Quiz from './Quiz';
 import VideosList from './VideosList';
 import { useSelector } from 'react-redux';
+import { colors } from '../../Helpers';
 
 const SongAndAudio = ({ item, index, theme }) => {
     const [fav, setFav] = useState(false);
@@ -305,7 +306,8 @@ const HomeScreen = ({ navigation }) => {
                 <Text
                     style={{
                         fontSize: RFValue(18, 800),
-                        fontWeight: '700',
+                        // fontWeight: '700',
+                        fontFamily: 'Lora-Bold',
                         color: theme.textColor,
                         marginVertical: 10,
                     }}
@@ -327,18 +329,17 @@ const HomeScreen = ({ navigation }) => {
                             <Pressable
                                 style={{
                                     marginRight: 8,
-                                    // elevation: {
                                     elevation: 5,
                                     backgroundColor:
                                         selectedPlaylistType == item
-                                            ? theme.searchContext.unSelected.bgColor
-                                            : '#EDEDED',
+                                            ? '#C1554E'
+                                            : theme.unSelectedBox.bgColor,
 
                                     borderRadius: 20,
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                     paddingHorizontal: 15,
-                                    paddingVertical: 5,
+                                    paddingVertical: 10,
                                 }}
                                 onPress={() => {
                                     setSelectedPlaylistType(item);
@@ -346,7 +347,8 @@ const HomeScreen = ({ navigation }) => {
                             >
                                 <Text
                                     style={{
-                                        color: selectedPlaylistType == item ? 'white' : '#777777',
+                                        color:
+                                            selectedPlaylistType == item ? colors.white : '#777777',
                                         fontFamily: 'Mulish-Bold',
                                         fontWeight: '700',
                                     }}
@@ -496,9 +498,9 @@ const HomeScreen = ({ navigation }) => {
             <View>
                 <View style={{ paddingBottom: 15, paddingHorizontal: 15 }}>
                     <HeadingAndView
-                        viewBtnColor={'#C1554E'}
+                        viewBtnColor={theme.colorscheme === 'light' ? theme.maroon : colors.white}
                         title={'Upcoming Festivals'}
-                        theme={{ textColor: theme.textColor }}
+                        theme={{ textColor: theme.textColor, colorscheme: theme.colorscheme }}
                         onPress={() => {}}
                     />
                 </View>
@@ -533,7 +535,7 @@ const HomeScreen = ({ navigation }) => {
             <View>
                 <View style={{ padding: 15 }}>
                     <HeadingAndView
-                        viewBtnColor={'#C1554E'}
+                        viewBtnColor={theme.colorscheme === 'light' ? theme.maroon : colors.white}
                         title={'Nearby Temples'}
                         onPress={() => {}}
                         theme={{
@@ -574,7 +576,7 @@ const HomeScreen = ({ navigation }) => {
                 }}
             >
                 <HeadingAndView
-                    viewBtnColor={'#C1554E'}
+                    viewBtnColor={theme.colorscheme === 'light' ? theme.maroon : colors.white}
                     title={'App Walkthrough Videos '}
                     // todos : add the fn that take it to the dedicated video page
                     onPress={() => {}}

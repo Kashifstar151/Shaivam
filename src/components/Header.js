@@ -14,24 +14,24 @@ const Header = () => {
     const { theme, setTheme } = useContext(ThemeContext);
     const onSwitchTheme = async () => {
         await AsyncStorage.setItem('theme', JSON.stringify(isDark ? 'light' : 'dark'));
-        // alert(isDark)
+        setTheme(!isDark ? dark : light);
         setIsDark(!isDark);
     };
-    useEffect(() => {
-        getTheme();
-    }, []);
-    const getTheme = async () => {
-        let key = await AsyncStorage.getItem('theme');
-        console.log('🚀 ~ getTheme ~ key:', key);
-        let k = JSON.parse(key);
-        if (k == 'light') {
-            setIsDark(false);
-            setTheme(light);
-        } else {
-            setIsDark(true);
-            setTheme(dark);
-        }
-    };
+    // useEffect(() => {
+    //     getTheme();
+    // }, []);
+    // const getTheme = async () => {
+    //     let key = await AsyncStorage.getItem('theme');
+    //     console.log('🚀 ~ getTheme ~ key:', key);
+    //     let k = JSON.parse(key);
+    //     if (k == 'light') {
+    //         setIsDark(false);
+    //         setTheme(light);
+    //     } else {
+    //         setIsDark(true);
+    //         setTheme(dark);
+    //     }
+    // };
     useEffect(() => {
         // changeTheme()
         if (colorScheme === 'dark') {
@@ -41,7 +41,7 @@ const Header = () => {
             setIsDark(false);
             setTheme(light);
         }
-    }, [isDark, colorScheme]);
+    }, [colorScheme]);
 
     // const changeTheme = async () => {
     //     await AsyncStorage.setItem('theme', JSON.stringify(isDark ? 'dark' : 'light'));

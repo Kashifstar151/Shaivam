@@ -165,14 +165,14 @@ const CardComponents = ({ navigation }) => {
                     navName: 'Shaivam TV',
                 },
                 {
-                    icon: <Temple1Svg fill={theme.textColor} />,
-                    title: 'Temples',
-                    navName: RouteTexts.TEMPLE_TABS_NAVIGATE,
-                },
-                {
                     icon: <RadioSVG fill={theme.textColor} />,
                     title: 'Radio',
                     navName: 'Radio',
+                },
+                {
+                    icon: <Temple1Svg fill={theme.textColor} />,
+                    title: 'Temples',
+                    navName: RouteTexts.TEMPLE_TABS_NAVIGATE,
                 },
                 {
                     icon: <CalendarSVG fill={theme.textColor} />,
@@ -194,15 +194,16 @@ const CardComponents = ({ navigation }) => {
                     title: 'Kaala Puja',
                     navName: 'Kaala Puja',
                 },
-                {
-                    icon: <QuizSVG fill={theme.textColorHomeCardYellow} />,
-                    title: 'Quiz',
-                    navName: 'Quiz',
-                },
+
                 {
                     icon: <HeartSVG fill={theme.textColorHomeCardYellow} />,
                     title: 'Favourites',
                     navName: 'Favourites',
+                },
+                {
+                    icon: <QuizSVG fill={theme.textColorHomeCardYellow} />,
+                    title: 'Quiz',
+                    navName: 'Quiz',
                 },
                 {
                     icon: <Logo fill={theme.textColorHomeCardYellow} />,
