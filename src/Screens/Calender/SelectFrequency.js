@@ -1,15 +1,19 @@
 import React, { useContext, useState } from "react";
 import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Feather from "react-native-vector-icons/dist/Feather";
+import { useDispatch } from "react-redux";
 import { ThemeContext } from "../../Context/ThemeContext";
 import { colors } from "../../Helpers";
+import { setInputValue } from "../../store/features/Calender/FormSlice";
 
 const SelectFrequency = ({ selectedFrequecy, setSelectedFrequecy, closeBottomSheet, showCategory }) => {
     const theme = useContext(ThemeContext)
+    const dispatch = useDispatch()
     const type = [
         { name: 'Weekly', id: 1 },
         { name: 'Monthly', id: 2 }
     ]
+    let inputKey = showCategory ? 'category' : 'frequency'
     const category = [
         { name: 'Festival', id: 1 },
         { name: 'Concert', id: 2 },
@@ -21,6 +25,7 @@ const SelectFrequency = ({ selectedFrequecy, setSelectedFrequecy, closeBottomShe
     ]
     const selectionHandler = (item) => {
         setSelectedFrequecy(item)
+        dispatch(setInputValue({ inputKey, inputValue: item?.name }))
         closeBottomSheet
     }
     return (

@@ -4,7 +4,7 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getList: builder.query({
             query: (date) => {
-                // console.log(date, 'date from calender')
+                console.log(date, 'date from calender')
                 const url = `regular-events?filters[start_date][$lte]=${getLastDayOfMonth(date)}&filters[end_date][$gte]=${date}&populate[Files][fields][0]=url&filters[status][$eq]=Approved&pagination[pageSize]=200`
                 console.log("🚀 ~ url:", url)
                 return {

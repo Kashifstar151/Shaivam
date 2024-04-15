@@ -28,6 +28,10 @@ import AlertScreen from '../../components/AlertScreen';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import EmptyIcon from '../../assets/Images/Vector (6).svg';
 import { AnimatedToast } from '../../components/Toast';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
+import Share from 'react-native-share'
+import ShareSVG from '../../components/SVGs/ShareSVG';
+import DeleteSVG from '../../components/SVGs/DeleteSVG';
 // import Button from '../Temples/Common/Button'
 // import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 const Fav = ({ navigation }) => {
@@ -168,6 +172,38 @@ const Fav = ({ navigation }) => {
     };
     const [searchText, setSearchText] = useState(null);
     const [onFocus, setOnFocus] = useState(false);
+    async function buildLink(item) {
+        // alert(true)
+        const link = await dynamicLinks().buildShortLink({
+            link: `https://shaivaam.page.link/org?prevId=${item?.prevId}`,
+            domainUriPrefix: 'https://shaivaam.page.link',
+            ios: {
+                appStoreId: '123456',
+                bundleId: 'com.shaivam.app',
+                minimumVersion: '18',
+            },
+            android: {
+                packageName: 'com.shaivam'
+            }
+            // optional setup which updates Firebase analytics campaign
+            // "banner". This also needs setting up before hand
+        },
+            dynamicLinks.ShortLinkType.DEFAULT,
+        );
+
+        console.log("🚀 ~ link ~ link:", link)
+        return link;
+    }
+    const shareSong = async (item) => {
+        // alert(JSON.stringify(item))
+        console.log('Stringinfy', JSON.stringify(item, 0, 2))
+        const link = await buildLink(item)
+        Share.open({
+            message: `${item?.title} I want to share this Thirumurai with you.
+            இந்தத் திருமுறையை Shaivam.org Mobile செயலியில் படித்தேன். மிகவும் பிடித்திருந்தது. பகிர்கின்றேன். படித்து மகிழவும் ${link}`
+
+        })
+    }
 
     const renderSong = (item, index) => (
         <Pressable
@@ -205,14 +241,14 @@ const Fav = ({ navigation }) => {
                 </View>
             </View>
             <View style={{ flexDirection: 'row' }}>
-                <TouchableOpacity style={{ marginRight: 10 }}>
-                    <Icon name="share" size={22} color={'#222222'} />
+                <TouchableOpacity style={{ marginRight: 10 }} onPress={() => shareSong(item)}>
+                    <ShareSVG fill={'#777777'} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => confirmRemove(item)}>
                     {selecetedHeader == 'Favourites' ? (
                         <AntDesign name="heart" size={20} color={'#C1554E'} />
                     ) : (
-                        <Icon name="delete" size={22} color={'#222222'} />
+                        <DeleteSVG fill={'#777777'} />
                     )}
                 </TouchableOpacity>
             </View>
@@ -382,6 +418,7 @@ const Fav = ({ navigation }) => {
                         descriptionText={selectedItem}
                         removeFromPlaylist={removeFromPlaylist}
                         setShowModal={setShowModal}
+                        headingText={selecetedHeader == 'Favourites' ? 'Are you sure you want to remove this from Favourite Songs?' : 'Are you sure you want to delete this from Offline Download?'}
                     />
                 </Modal>
             )}
