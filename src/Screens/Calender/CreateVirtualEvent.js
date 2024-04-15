@@ -16,12 +16,16 @@ import Feather from "react-native-vector-icons/dist/Feather";
 import ButtonComp from "../Temples/Common/ButtonComp";
 import { RouteTexts } from "../../navigation/RouteText";
 import { useGetListQuery } from "../../store/features/Calender/CalenderApiSlice";
+import { useDispatch, useSelector } from 'react-redux';
+import { setInputValue } from "../../store/features/Calender/FormSlice";
 const CreateVirtualEvent = ({ navigation }) => {
+    const dispatch = useDispatch()
     const weekDays = [
         'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'
     ]
-    const { data } = useGetListQuery()
-    console.log("🚀 ~ Calender ~ authState:", JSON.stringify(data, 0, 2))
+    const inputValue = useSelector(state => state.form?.inputValues || '');
+    console.log("🚀 ~ CreateVirtualEvent ~ inputValue:", inputValue)
+
     const RbSheetRef = useRef(null)
     const [selectedFrequecy, setSelectedFrequecy] = useState(null)
     const [selectedWeek, setSelectedWeek] = useState(null)
@@ -83,6 +87,12 @@ const CreateVirtualEvent = ({ navigation }) => {
             </View>
         );
     };
+    const [title, setTitle] = useState(false)
+    const handleChange = (val) => {
+        console.log("🚀 ~ handleChange ~ val:", val)
+        return
+        dispatch(setInputValue({ eventTitle, inputValue: val }))
+    }
     return (
         <ScrollView style={{ backgroundColor: '#fff', flex: 1 }}>
             <Background>
@@ -151,7 +161,7 @@ const CreateVirtualEvent = ({ navigation }) => {
                             )}
                         </View> :
                         <View>
-                            <TextInputCom insiderText={'Enter event title'} headinText={'Event title*'} width={Dimensions.get('window').width - 40} />
+                            <TextInputCom value={inputValue['title']} inputKey={'title'} insiderText={'Enter event title'} headinText={'Event title*'} width={Dimensions.get('window').width - 40} />
                             {/* <TextInputCom insiderText={'Enter event category'} headinText={'Event category'} width={Dimensions.get('window').width - 40} /> */}
                             <View style={{ marginVertical: 10 }}>
                                 <Text style={{ color: '#777777' }}>{'Event category'}</Text>
@@ -167,15 +177,15 @@ const CreateVirtualEvent = ({ navigation }) => {
                                     <MaterialIcons name="keyboard-arrow-down" size={24} color="#777777" />
                                 </TouchableOpacity>
                             </View>
-                            <View style={{ marginVertical: 10 }}>
+                            {/* <View style={{ marginVertical: 10 }}>
                                 <Text style={{ color: '#777777' }}>{'Brief Description of the Event'}</Text>
                                 <TouchableOpacity style={{ width: Dimensions.get('window').width - 30 }}>
-                                    <TextInput style={styles.inputComp} />
-                                    {/* <Text>{insiderText}</Text> */}
+                                    <TextInput style={styles.inputComp} onChangeText={() => dispatch(setInputValue({ description, inputValue: e }))} />
                                 </TouchableOpacity>
-                            </View>
-                            <TextInputCom locationIcon={true} insiderText={'Search event location'} headinText={'location'} width={Dimensions.get('window').width - 40} />
-                            <TextInputCom insiderText={'Enter event Url'} headinText={'URL'} width={Dimensions.get('window').width - 40} />
+                            </View> */}
+                            <TextInputCom value={inputValue['description']} inputKey={'description'} insiderText={''} headinText={'Brief Description of the Event'} width={Dimensions.get('window').width - 40} height={110} />
+                            <TextInputCom value={inputValue['location']} inputKey={'location'} locationIcon={true} insiderText={'Search event location'} headinText={'location'} width={Dimensions.get('window').width - 40} />
+                            <TextInputCom value={inputValue['url']} inputKey={'url'} insiderText={'Enter event Url'} headinText={'URL'} width={Dimensions.get('window').width - 40} />
                             <View style={{ marginVertical: 10 }}>
                                 <Text style={{ color: '#777777' }}>{'Upload Images (You can upload multiple images)'}</Text>
                                 <TouchableOpacity onPress={openGallary} style={styles.uploadContainer}>
@@ -242,11 +252,11 @@ const CreateVirtualEvent = ({ navigation }) => {
                                     </View>
                                 </>
                             }
-                            <TextInputCom insiderText={'Enter country name'} headinText='Country' width={Dimensions.get('window').width - 40} />
-                            <TextInputCom insiderText={'Enter city name'} headinText='City' width={Dimensions.get('window').width - 40} />
-                            <TextInputCom insiderText={'Enter state name'} headinText='State' width={Dimensions.get('window').width - 40} />
-                            <TextInputCom insiderText={'Enter district name'} headinText='District' width={Dimensions.get('window').width - 40} />
-                            <TextInputCom insiderText={'Enter Pincode name'} headinText='Pincode' width={Dimensions.get('window').width - 40} />
+                            <TextInputCom value={inputValue['Country']} inputKey={'Country'} insiderText={'Enter country name'} headinText='Country' width={Dimensions.get('window').width - 40} />
+                            <TextInputCom value={inputValue['City']} inputKey={'City'} insiderText={'Enter city name'} headinText='City' width={Dimensions.get('window').width - 40} />
+                            <TextInputCom value={inputValue['state']} inputKey={'state'} insiderText={'Enter state name'} headinText='State' width={Dimensions.get('window').width - 40} />
+                            <TextInputCom value={inputValue['District']} inputKey={'District'} insiderText={'Enter district name'} headinText='District' width={Dimensions.get('window').width - 40} />
+                            <TextInputCom value={inputValue['Pin']} inputKey={'Pin'} insiderText={'Enter Pincode name'} headinText='Pincode' width={Dimensions.get('window').width - 40} />
                             <View style={{ marginVertical: 10 }}>
                                 <Text>{'Start date'}</Text>
                                 <TouchableOpacity style={styles.startDateContainer}>
@@ -272,8 +282,8 @@ const CreateVirtualEvent = ({ navigation }) => {
                                     </Text>
                                 </TouchableOpacity>
                             </View>
-                            <TextInputCom insiderText={'Enter your name'} headinText={'Name'} width={Dimensions.get('window').width - 40} />
-                            <TextInputCom insiderText={'Enter your email'} headinText={'Email'} width={Dimensions.get('window').width - 40} />
+                            <TextInputCom value={inputValue['name']} inputKey={'name'} insiderText={'Enter your name'} headinText={'Name'} width={Dimensions.get('window').width - 40} />
+                            <TextInputCom value={inputValue['email']} inputKey={'email'} insiderText={'Enter your email'} headinText={'Email'} width={Dimensions.get('window').width - 40} />
 
                         </View>
                 }
@@ -308,6 +318,8 @@ export const styles = StyleSheet.create({
     startDateContainer: {
         paddingHorizontal: 20,
         alignItems: 'center',
+
+
         flexDirection: 'row',
         marginTop: 5,
         backgroundColor: '#F3F3F3',

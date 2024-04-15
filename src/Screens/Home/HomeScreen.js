@@ -38,10 +38,45 @@ import VideosList from './VideosList';
 import { useSelector } from 'react-redux';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import OmChanting from './OmChanting';
+import ShareSVG from '../../components/SVGs/ShareSVG';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
+import Share from "react-native-share"
 
 const SongAndAudio = ({ item, index, theme }) => {
     const [fav, setFav] = useState(false);
     const authState = useSelector((store) => store.auth);
+    async function buildLink(item) {
+        // alert(true)
+        const link = await dynamicLinks().buildShortLink({
+            link: `https://shaivaam.page.link/org?prevId=${item?.prevId}`,
+            domainUriPrefix: 'https://shaivaam.page.link',
+            ios: {
+                appStoreId: '123456',
+                bundleId: 'com.shaivam.app',
+                minimumVersion: '18',
+            },
+            android: {
+                packageName: 'com.shaivam'
+            }
+            // optional setup which updates Firebase analytics campaign
+            // "banner". This also needs setting up before hand
+        },
+            dynamicLinks.ShortLinkType.DEFAULT,
+        );
+
+        console.log("🚀 ~ link ~ link:", link)
+        return link;
+    }
+    const shareSong = async () => {
+        // alert(JSON.stringify(item))
+        console.log('Stringinfy', JSON.stringify(item, 0, 2))
+        const link = await buildLink(item)
+        Share.open({
+            message: `${item?.title} I want to share this Thirumurai with you.
+            இந்தத் திருமுறையை Shaivam.org Mobile செயலியில் படித்தேன். மிகவும் பிடித்திருந்தது. பகிர்கின்றேன். படித்து மகிழவும் ${link}`
+
+        })
+    }
     // console.log('🚀 ~ SongAndAudio ~ authState:', authState);
     const FavouriteAudios = (res) => {
         // TrackPlayer.getActiveTrack()
@@ -108,8 +143,9 @@ const SongAndAudio = ({ item, index, theme }) => {
                 </View>
             </View>
             <View style={{ flexDirection: 'row', gap: 25 }}>
-                <TouchableOpacity onPress={() => { }}>
-                    <Icon name="share" size={22} color={theme.textColor} />
+                <TouchableOpacity onPress={() => shareSong()}>
+                    {/* <Icon name="share" size={22}  /> */}
+                    <ShareSVG fill={theme.textColor} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={fav ? null : () => FavouriteAudios(item)}>
                     {fav ? (
@@ -551,6 +587,7 @@ const HomeScreen = ({ navigation }) => {
                     renderItem={({ item, index }) => (
                         <ElevatedCard theme={{ colorscheme: theme.colorscheme }}>
                             <PlaceCard
+
                                 img={item.img}
                                 templeName={item.templeName}
                                 address={item.address}

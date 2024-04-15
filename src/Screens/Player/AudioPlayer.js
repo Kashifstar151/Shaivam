@@ -115,13 +115,14 @@ const AudioPlayer = ({
     });
     const updateRecentlyPlayed = async (newTrack) => {
         const maxRecentTracks = 4;
+        console.log('track')
         const recentTracksJSON = await AsyncStorage.getItem('recentTrack');
         const recentTracks = recentTracksJSON ? JSON.parse(recentTracksJSON) : [];
         // Check if the track already exists and remove it
         const filteredTracks = recentTracks.filter((track) => track.id !== newTrack.id);
         // Add the new track to the start of the array
         const updatedTracks = [newTrack, ...filteredTracks].slice(0, maxRecentTracks);
-        // console.log("🚀 ~ updateRecentlyPlayed ~ updatedTracks:", updatedTracks)
+        console.log("🚀 ~ updateRecentlyPlayed ~ updatedTracks:", updatedTracks)
         // Store the updated list back to AsyncStorage
         await AsyncStorage.setItem(`recentTrack`, JSON.stringify(updatedTracks));
     };
@@ -130,7 +131,7 @@ const AudioPlayer = ({
     const downloadAudios = () => {
         listfavAudios((calbacks) => {
             let lenght = calbacks?.length;
-            console.log('🚀 ~ downloadAudios ~ lenght:', lenght);
+            console.log('🚀 ~ downloadAudios ~ lenght:', prevId);
             TrackPlayer.getActiveTrack()
                 .then((res) => {
                     AddSongToDatabase(
@@ -144,6 +145,7 @@ const AudioPlayer = ({
                             res?.thalamOdhuvarTamilname,
                             res?.thirumariasiriyar,
                             lenght++,
+                            prevId
                         ],
                         (callbacks) => {
                             if (callbacks?.message == 'Success') {
@@ -261,7 +263,7 @@ const AudioPlayer = ({
                 if (num?.length > 0) {
                     let sql = `UPDATE most_played SET count=? WHERE id=?`;
                     UpdateMostPlayed(sql, [num[0].count + 1, num[0].id], (callbacks) => {
-                        console.log('🚀 ~ mostPlayedSongs.map ~ callbacks:', callbacks);
+                        // console.log('🚀 ~ mostPlayedSongs.map ~ callbacks:', callbacks);
                     });
                 } else {
                     AddMostPlayed(
@@ -275,12 +277,13 @@ const AudioPlayer = ({
                             res?.thalamOdhuvarTamilname,
                             res?.thirumariasiriyar,
                             count,
+                            prevId
                         ],
                         (callbacks) => {
-                            console.log(
-                                '🚀 ~ awaitTrackPlayer.getActiveTrack ~ callbacks:',
-                                callbacks
-                            );
+                            // console.log(
+                            //     '🚀 ~ awaitTrackPlayer.getActiveTrack ~ callbacks:',
+                            //     callbacks
+                            // );
                         }
                     );
                 }
@@ -335,7 +338,7 @@ const AudioPlayer = ({
                     );
                     // Add the new track to the start of the array
                     const updatedTracks = [jsonValue, ...filteredTracks];
-                    // console.log("🚀 ~ updateRecentlyPlayed ~ updatedTracks:", updatedTracks)
+                    console.log("🚀 ~ updateRecentlyPlayed ~ updatedTracks:", updatedTracks)
                     // Store the updated list back to AsyncStorage
                     await AsyncStorage.setItem(`downloaded`, JSON.stringify(updatedTracks));
                     // await AsyncStorage.setItem(
