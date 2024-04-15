@@ -91,6 +91,9 @@ export default {
             selected: { bgColor: '#F3DDDC', textColor: '#8F3630' },
         },
 
+        unSelectedBox: {
+            bgColor: '#EDEDED',
+        },
         // iconHeadingColor
         iconHeadingColor: {
             inactive: '#FFE0E0',
@@ -132,6 +135,10 @@ export default {
     },
     dark: {
         ...darkTheme,
+
+        unSelectedBox: {
+            bgColor: '#353535',
+        },
         // yellow
         yellowGradBallRight: darkCardGrad,
         yellowGradBallLeft: darkCardGrad,
@@ -164,8 +171,8 @@ export default {
             inactive: '#777777',
             active: '#FFFFFF',
             bgColor: '#C2534C',
-            activeTextColor: '#8F3630',
-            inactiveTextColor: '#FFE0E0',
+            activeTextColor: '#FFFFFF',
+            inactiveTextColor: '#777777',
         },
 
         // setting

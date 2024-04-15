@@ -29,7 +29,10 @@ const ThrimuraiHeader = ({ selectedHeader, setSelectedheader, item }) => {
                 >
                     {item?.activeIcon}
                     <Text
-                        style={[styles.headerText, { fontWeight: '700', color: theme.textColor }]}
+                        style={[
+                            styles.headerText,
+                            { fontWeight: '700', color: theme.iconHeadingColor.activeTextColor },
+                        ]}
                     >
                         {t(item.name)}
                     </Text>
@@ -44,7 +47,7 @@ const ThrimuraiHeader = ({ selectedHeader, setSelectedheader, item }) => {
                         style={[
                             styles.headerText,
                             {
-                                color: theme.textColor,
+                                color: theme.iconHeadingColor.inactiveTextColor,
                             },
                         ]}
                     >
