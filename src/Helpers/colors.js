@@ -48,6 +48,7 @@ export default {
     grey8: '#1e1e1e',
     grey9: '#2C2C2C',
     black: '#121212',
+    maroon: '#C1554E',
 
     //dynamic color schema based on theme
 

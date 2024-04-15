@@ -36,6 +36,7 @@ import { useIsFocused } from '@react-navigation/native';
 import Quiz from './Quiz';
 import VideosList from './VideosList';
 import { useSelector } from 'react-redux';
+import { colors } from '../../Helpers';
 
 const SongAndAudio = ({ item, index, theme }) => {
     const [fav, setFav] = useState(false);
@@ -496,9 +497,9 @@ const HomeScreen = ({ navigation }) => {
             <View>
                 <View style={{ paddingBottom: 15, paddingHorizontal: 15 }}>
                     <HeadingAndView
-                        viewBtnColor={'#C1554E'}
+                        viewBtnColor={theme.colorscheme === 'light' ? theme.maroon : colors.white}
                         title={'Upcoming Festivals'}
-                        theme={{ textColor: theme.textColor }}
+                        theme={{ textColor: theme.textColor, colorscheme: theme.colorscheme }}
                         onPress={() => {}}
                     />
                 </View>
@@ -533,7 +534,7 @@ const HomeScreen = ({ navigation }) => {
             <View>
                 <View style={{ padding: 15 }}>
                     <HeadingAndView
-                        viewBtnColor={'#C1554E'}
+                        viewBtnColor={theme.colorscheme === 'light' ? theme.maroon : colors.white}
                         title={'Nearby Temples'}
                         onPress={() => {}}
                         theme={{
@@ -574,7 +575,7 @@ const HomeScreen = ({ navigation }) => {
                 }}
             >
                 <HeadingAndView
-                    viewBtnColor={'#C1554E'}
+                    viewBtnColor={theme.colorscheme === 'light' ? theme.maroon : colors.white}
                     title={'App Walkthrough Videos '}
                     // todos : add the fn that take it to the dedicated video page
                     onPress={() => {}}
