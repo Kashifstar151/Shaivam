@@ -53,6 +53,7 @@ import TrackPlayer, {
     useActiveTrack,
     useProgress,
 } from 'react-native-track-player';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 const ThrimuraiSong = ({ route, navigation }) => {
     console.log('the render of the song==>');
@@ -472,7 +473,47 @@ GROUP BY
         }
     }, [musicState.prevId, selectedLang]);
 
-    console.log('the statuusBarHeight=====>', statusBarHeight);
+    const [clipBoardString, setClipBoardString] = useState('');
+    const clipBoardStringRef = useRef('');
+    const setIosClipBoard = useCallback(async (initialString) => {
+        clipBoardStringRef.current = initialString.join(' ');
+        clipBoardStringRef.current += ' Read more at shaivam.org';
+        // Clipboard.setStrings(clipBoardStringRef.current);
+    });
+
+    const setAndroidClipBoard = useCallback(async (initialString) => {
+        clipBoardStringRef.current = initialString;
+        clipBoardStringRef.current += ' Read more at shaivam.org';
+        // Clipboard.setString(clipBoardStringRef.current);
+    }, []);
+
+    const fetchClipBoardString = useCallback(async () => {
+        return Platform.select({
+            ios: Clipboard.getStrings(),
+            android: Clipboard.getString(),
+        });
+    }, []);
+
+    useEffect(() => {
+        Clipboard.addListener(async () => {
+            // console.log('the string of the value ==>', await fetchClipBoardString());
+            fetchClipBoardString().then((string) => {
+                console.log('🚀 ~ fetchClipBoardString ~ string:', string);
+                setClipBoardString((prev) => string);
+            });
+        });
+
+        return () => Clipboard.removeAllListeners();
+    }, []);
+
+    useEffect(() => {
+        if (clipBoardString) {
+            Platform.select({
+                ios: setIosClipBoard(clipBoardString),
+                android: setAndroidClipBoard(clipBoardString),
+            });
+        }
+    }, [clipBoardString]);
 
     return (
         <View style={{ flex: 1, backgroundColor: colorSet?.backgroundColor }}>
