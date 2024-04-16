@@ -55,7 +55,6 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 
 const ThrimuraiSong = ({ route, navigation }) => {
-    console.log('the render of the song==>');
     // let key = true;
     // const database = SQLite.openDatabase({
     //     name: key ? 'SongsData.db' : 'main.db',
@@ -252,7 +251,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
         const detailQuery = `SELECT rawSong, tamilExplanation, tamilSplit , songNo , title from thirumurai_songs where prevId=${musicState?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
         const titleQuery = `SELECT
         MAX(CASE WHEN locale = 'en' THEN titleS END) AS tamil,
-    MAX(CASE WHEN locale = '${langMap[selectedLngCode]}' THEN title END) AS localeBased FROM thirumurais WHERE prevId =${musicState?.prevId}
+    MAX(CASE WHEN locale = '${langMap[selectedLngCode]}' THEN titleS END) AS localeBased FROM thirumurais WHERE prevId =${musicState?.prevId}
     AND titleS IS NOT NULL
     AND titleS != ''
     AND (locale = '${langMap[selectedLngCode]}' OR locale = 'en')
@@ -445,12 +444,15 @@ GROUP BY
     };
 
     useTrackPlayerEvents(
-        [Event.PlaybackQueueEnded, Event.PlaybackActiveTrackChanged],
+        [Event.PlaybackQueueEnded, Event.PlaybackActiveTrackChanged, Event.RemoteSeek],
         async (event) => {
             if (event.type === Event.PlaybackQueueEnded && repeatMode === 0) {
                 queryForNextPrevId();
             } else if (event.type === Event.PlaybackActiveTrackChanged) {
                 setActiveTrackState(event.track);
+            }
+            if (event.type === Event.RemoteSeek) {
+                TrackPlayer.seekTo(event.position);
             }
         }
     );

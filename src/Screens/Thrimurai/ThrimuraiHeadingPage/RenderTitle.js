@@ -121,7 +121,6 @@ const RenderEachTitle = ({
 };
 
 const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio }) => {
-    console.log('🚀 ~ RenderTitle ~ data:', data);
     let key = true;
 
     const [selectedChapter, setSelectedChapter] = useState(null);

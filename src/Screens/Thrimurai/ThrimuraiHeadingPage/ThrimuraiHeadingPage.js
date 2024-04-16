@@ -132,7 +132,6 @@ const RenderContents = ({
 const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const { theme } = useContext(ThemeContext);
     const [range, setRange] = useState({});
-    const isFocuced = useIsFocused;
     const { page, list, query, prevId, flagShowAudio, name } = route.params;
     // //console.log('🚀 ~ ThrimuraiHeadingPage ~ prevId:', prevId);
     const headerData = [
