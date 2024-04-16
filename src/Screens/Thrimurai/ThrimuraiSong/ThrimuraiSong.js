@@ -55,7 +55,6 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 
 const ThrimuraiSong = ({ route, navigation }) => {
-    console.log('the render of the song==>');
     // let key = true;
     // const database = SQLite.openDatabase({
     //     name: key ? 'SongsData.db' : 'main.db',
@@ -445,12 +444,15 @@ GROUP BY
     };
 
     useTrackPlayerEvents(
-        [Event.PlaybackQueueEnded, Event.PlaybackActiveTrackChanged],
+        [Event.PlaybackQueueEnded, Event.PlaybackActiveTrackChanged, Event.RemoteSeek],
         async (event) => {
             if (event.type === Event.PlaybackQueueEnded && repeatMode === 0) {
                 queryForNextPrevId();
             } else if (event.type === Event.PlaybackActiveTrackChanged) {
                 setActiveTrackState(event.track);
+            }
+            if (event.type === Event.RemoteSeek) {
+                TrackPlayer.seekTo(event.position);
             }
         }
     );
