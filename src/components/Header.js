@@ -97,7 +97,7 @@ const Header = () => {
                             }}
                         >
                             <HalfMoonSVG fill={theme.colorscheme === 'dark' ? '#fff' : '#E66158'} />
-                            <Text>{isDark ? 'ON' : 'OFF'}</Text>
+                            <Text style={[{ color: 'white' }]}>{isDark ? 'ON' : 'OFF'}</Text>
                         </View>
                     </View>
                     {/* <Icon name="notifications" size={24} color='white' /> */}
