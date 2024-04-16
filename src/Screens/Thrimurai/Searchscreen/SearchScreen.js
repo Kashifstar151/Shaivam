@@ -43,16 +43,8 @@ const SearchScreen = ({ navigation, route }) => {
         };
     }, [fktrimuria]);
     const normalizeString = (str) => {
-        setSearchText(
-            str
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .toLowerCase()
-        );
-        return str
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .toLowerCase();
+        setSearchText(str.normalize('NFD').replace(/[\u0300-\u036f]/g, ''));
+        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     };
     const getDataFromSql = (e) => {
         setIsSearched(false);
@@ -139,6 +131,7 @@ const SearchScreen = ({ navigation, route }) => {
                     }}
                     searchWords={[`${searchText}`]}
                     textToHighlight={textContent}
+                    sanitize={(text) => normalizeString(text)}
                 />
                 {/* {key == 'title'
                     ? parts?.map((statement, i) => {
