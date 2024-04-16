@@ -53,6 +53,7 @@ import TrackPlayer, {
     useActiveTrack,
     useProgress,
 } from 'react-native-track-player';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 const ThrimuraiSong = ({ route, navigation }) => {
     // let key = true;
@@ -474,7 +475,49 @@ GROUP BY
         }
     }, [musicState.prevId, selectedLang]);
 
-    console.log('the statuusBarHeight=====>', statusBarHeight);
+    const [clipBoardString, setClipBoardString] = useState('');
+    const clipBoardStringRef = useRef('');
+    const setIosClipBoard = useCallback(async (initialString) => {
+        if (!initialString.includes('Read more at https://shaivam.org/')) {
+            clipBoardStringRef.current = initialString.join(' ');
+            clipBoardStringRef.current += ' Read more at https://shaivam.org/';
+            Clipboard.setStrings(clipBoardStringRef.current);
+        }
+    });
+
+    const setAndroidClipBoard = useCallback(async (initialString) => {
+        if (!initialString.includes('Read more at https://shaivam.org/')) {
+            clipBoardStringRef.current = initialString;
+            clipBoardStringRef.current += ' Read more at https://shaivam.org/';
+            Clipboard.setString(clipBoardStringRef.current);
+        }
+    }, []);
+
+    const fetchClipBoardString = useCallback(async () => {
+        return Platform.select({
+            ios: Clipboard.getStrings(),
+            android: Clipboard.getString(),
+        });
+    }, []);
+
+    useEffect(() => {
+        Clipboard.addListener(async () => {
+            fetchClipBoardString().then((string) => {
+                setClipBoardString((prev) => string);
+            });
+        });
+
+        return () => Clipboard.removeAllListeners();
+    }, []);
+
+    useEffect(() => {
+        if (clipBoardString) {
+            Platform.select({
+                ios: setIosClipBoard(clipBoardString),
+                android: setAndroidClipBoard(clipBoardString),
+            });
+        }
+    }, [clipBoardString]);
 
     return (
         <View style={{ flex: 1, backgroundColor: colorSet?.backgroundColor }}>
