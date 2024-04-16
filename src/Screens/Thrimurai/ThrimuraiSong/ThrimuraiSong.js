@@ -476,15 +476,19 @@ GROUP BY
     const [clipBoardString, setClipBoardString] = useState('');
     const clipBoardStringRef = useRef('');
     const setIosClipBoard = useCallback(async (initialString) => {
-        clipBoardStringRef.current = initialString.join(' ');
-        clipBoardStringRef.current += ' Read more at shaivam.org';
-        // Clipboard.setStrings(clipBoardStringRef.current);
+        if (!initialString.includes('Read more at https://shaivam.org/')) {
+            clipBoardStringRef.current = initialString.join(' ');
+            clipBoardStringRef.current += ' Read more at https://shaivam.org/';
+            Clipboard.setStrings(clipBoardStringRef.current);
+        }
     });
 
     const setAndroidClipBoard = useCallback(async (initialString) => {
-        clipBoardStringRef.current = initialString;
-        clipBoardStringRef.current += ' Read more at shaivam.org';
-        // Clipboard.setString(clipBoardStringRef.current);
+        if (!initialString.includes('Read more at https://shaivam.org/')) {
+            clipBoardStringRef.current = initialString;
+            clipBoardStringRef.current += ' Read more at https://shaivam.org/';
+            Clipboard.setString(clipBoardStringRef.current);
+        }
     }, []);
 
     const fetchClipBoardString = useCallback(async () => {
@@ -496,9 +500,7 @@ GROUP BY
 
     useEffect(() => {
         Clipboard.addListener(async () => {
-            // console.log('the string of the value ==>', await fetchClipBoardString());
             fetchClipBoardString().then((string) => {
-                console.log('🚀 ~ fetchClipBoardString ~ string:', string);
                 setClipBoardString((prev) => string);
             });
         });
