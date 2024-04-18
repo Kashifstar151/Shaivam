@@ -41,6 +41,18 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+  <key>UIFileSharingEnabled</key>
+      <true/>
+      <key>LSSupportsOpeningDocumentsInPlace</key>
+      <true/>
+      <key>UISupportsDocumentBrowser</key>
+      <true/>
+  <key>NSDocumentDirectoryUsageDescription</key>
+  <string>Your message explaining why the app needs access to the document directory</string>
+  <key>NSAppleMusicUsageDescription</key>
+  <string>Describe why your app needs access to the user's media library</string>
+  <key>NSFileProviderDomainUsageDescription</key>
+  <string>Describe why your app needs access to the user's file system</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>

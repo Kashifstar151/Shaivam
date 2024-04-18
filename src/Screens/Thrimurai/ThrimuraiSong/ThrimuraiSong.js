@@ -73,6 +73,9 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const [fontSizeCount, setFontSizeCount] = useState(null);
     // const [refFlatList, setRefFlatList] = useState(null);
     const flatListRef = useRef(null);
+    const firstRender = useRef(true);
+
+    const activeTrack = useActiveTrack();
 
     const initializeTheFontSize = async () => {
         const value = await AsyncStorage.getItem('@lyricsFontSize');
@@ -122,8 +125,14 @@ const ThrimuraiSong = ({ route, navigation }) => {
     }, []);
 
     useEffect(() => {
+        if (searchScreen && firstRender.current) {
+            scrollToIndex();
+        }
+    }, [flatListRef, activeTrack?.url]);
+    useEffect(() => {
         // console.log('🚀 ~ useEffect ~ initilizeTheTheme: 1');
         initilizeTheTheme();
+        firstRender.current = false;
     }, []);
     const [favList, setFavList] = useState(null)
 
@@ -195,6 +204,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     // );
     const [isFav, setIsFav] = useState(false)
     const getFavAudios = (songList) => {
+        // const activeTrack = useActiveTrack();
         listfavAudios(callbacks => {
             console.log("🚀 ~ useEffect ~ callbacks:", JSON.stringify(callbacks, 0, 2))
             // setFavList(callbacks)
@@ -210,13 +220,12 @@ const ThrimuraiSong = ({ route, navigation }) => {
             // console.log("🚀 ~ updatedArray2 ~ updatedArray2:------------", updatedArray2)
         })
     }
-    const activeTrack = useActiveTrack();
 
     const fetchAndDisplayDownloads = async () => {
         try {
             // const keys = await AsyncStorage.getAllKeys();
             const parsedMetadata = await AsyncStorage.getItem('downloaded');
-            // console.log("🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:", parsedMetadata)
+            console.log("🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:", JSON.stringify(parsedMetadata, 0, 2))
             // const metadataKeys = keys.filter(key => key.startsWith('downloaded:'));
             // const metadata = await AsyncStorage.multiGet(metadataKeys);
             // const parsedMetadata = metadata.map(([key, value]) => JSON.parse(value));
@@ -326,6 +335,7 @@ GROUP BY
                 const match = downloadList.find((item1) => item1.id === item2.id);
                 return match ? { ...match, isLocal: true } : item2; // Replace with the object from array1 if there's a match
             });
+            console.log("🚀 ~ updatedArray2 ~ updatedArray2:", updatedArray2)
             setUpPlayer(updatedArray2);
         } else {
             setUpPlayer(songList);
@@ -364,20 +374,14 @@ GROUP BY
             </View>
         );
     };
-    // useEffect(() => {
-    //     if (searchScreen) {
-    //         setTimeout(() => {
-    //             scrollToIndex();
-    //         }, 2000);
-    //     }
-    // }, [flatListRef]);
-    // const scrollToIndex = () => {
-    //     // console.log("songnonsjc", typeof songNo)
-    //     flatListRef?.current?.scrollToIndex({
-    //         animated: true,
-    //         index: songNo,
-    //     });
-    // };
+
+    const scrollToIndex = () => {
+        // console.log("songnonsjc", typeof songNo)
+        flatListRef?.current?.scrollToIndex({
+            animated: true,
+            index: songNo - 1,
+        });
+    };
 
     const getItemLayOut = (item, index) => {
         // console.log("🚀 ~ getItemLayOut ~ index:", index)
@@ -940,6 +944,7 @@ GROUP BY
                             bottom: 0,
                         }
                         : {
+                            position: 'relative',
                             width: Dimensions.get('window').width,
                         },
                 ]}
@@ -986,7 +991,7 @@ GROUP BY
                         }}
                     ></TouchableOpacity>
                 </View>
-                {activeTrack?.url ? (
+                {activeTrack?.url && (
                     <AudioPlayer
                         activeTrack={activeTrack}
                         setDownloadingLoader={setDownloadingLoader}
@@ -1002,7 +1007,7 @@ GROUP BY
                         queryForNextPrevId={queryForNextPrevId}
                         queryForPreviousPrevId={queryForPreviousPrevId}
                     />
-                ) : <></>}
+                )}
             </Animated.View>
 
             {/* </BottomSheet> */}

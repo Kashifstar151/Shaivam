@@ -44,92 +44,77 @@ const RenderEachTitle = ({
     };
     return (
         <>
-            {!flagShowAudio ? (
-                <>
-                    <Pressable
-                        style={{
-                            justifyContent: 'space-between',
-                            flexDirection: 'row',
-                            paddingHorizontal: 25,
-                            alignItems: 'center',
-                            paddingBottom: 10,
-                        }}
-                        onPress={() => {
-                            if (thalam && ThalamHeaders === 1) {
-                                navigation.navigate(RouteTexts?.THRIMURAI_SONG, {
-                                    data: item,
-                                });
-                            } else {
-                                if (selectedChapter === index) {
-                                    setSelectedChapter(null);
-                                } else {
-                                    setSelectedChapter(index);
-                                }
-                            }
-                        }}
+            <Pressable
+                style={{
+                    justifyContent: 'space-between',
+                    flexDirection: 'row',
+                    paddingHorizontal: 25,
+                    alignItems: 'center',
+                    paddingBottom: 10,
+                }}
+                onPress={() => {
+                    if (thalam && ThalamHeaders === 1) {
+                        navigation.navigate(RouteTexts?.THRIMURAI_SONG, {
+                            data: item,
+                        });
+                    } else {
+                        if (selectedChapter === index) {
+                            setSelectedChapter(null);
+                        } else {
+                            setSelectedChapter(index);
+                        }
+                    }
+                }}
+            >
+                <View style={{ width: '95%' }}>
+                    <Text
+                        style={[
+                            styles.titleText,
+                            {
+                                color: selectedChapter === index ? '#C1554E' : theme.textColor,
+                            },
+                        ]}
                     >
-                        <View style={{ width: '95%' }}>
-                            <Text
-                                style={[
-                                    styles.titleText,
-                                    {
-                                        color:
-                                            selectedChapter === index ? '#C1554E' : theme.textColor,
-                                    },
-                                ]}
-                            >
-                                {thalam && ThalamHeaders === 0
-                                    ? t(renderTitle(item?.thalam))
-                                    : thalam && ThalamHeaders !== 0
-                                    ? t(item?.title)
-                                    : t(item?.pann)}
-                            </Text>
+                        {thalam && ThalamHeaders === 0
+                            ? t(renderTitle(item?.thalam))
+                            : thalam && ThalamHeaders !== 0
+                            ? t(item?.title)
+                            : t(item?.pann)}
+                    </Text>
+                </View>
+                {!thalam || (thalam && ThalamHeaders === 0) ? (
+                    selectedChapter !== null && selectedChapter == index ? (
+                        <View
+                        // onPress={() => setSelectedChapter(null)}
+                        >
+                            {
+                                <Icon
+                                    name="keyboard-arrow-down"
+                                    size={24}
+                                    color={theme.colorscheme === 'light' ? '#000' : colors?.grey1}
+                                />
+                            }
                         </View>
-                        {!thalam || (thalam && ThalamHeaders === 0) ? (
-                            selectedChapter !== null && selectedChapter == index ? (
-                                <View
-                                // onPress={() => setSelectedChapter(null)}
-                                >
-                                    {
-                                        <Icon
-                                            name="keyboard-arrow-down"
-                                            size={24}
-                                            color={
-                                                theme.colorscheme === 'light'
-                                                    ? '#000'
-                                                    : colors?.grey1
-                                            }
-                                        />
-                                    }
-                                </View>
-                            ) : (
-                                <View
-                                // onPress={() => setSelectedChapter(index)}
-                                >
-                                    {
-                                        <Icon
-                                            name="keyboard-arrow-right"
-                                            size={24}
-                                            color={
-                                                theme.colorscheme === 'light'
-                                                    ? '#000'
-                                                    : colors?.grey1
-                                            }
-                                        />
-                                    }
-                                </View>
-                            )
-                        ) : null}
-                    </Pressable>
-                    {selectedChapter == index && (
-                        <View style={{ marginBottom: 10 }}>
-                            {/* <FlatList renderItem={({ item, index }) => renderAudios(item, index)} data={item.songLyrics} /> */}
-                            <RenderAudios thalam={thalam} songs={item} navigation={navigation} />
+                    ) : (
+                        <View
+                        // onPress={() => setSelectedChapter(index)}
+                        >
+                            {
+                                <Icon
+                                    name="keyboard-arrow-right"
+                                    size={24}
+                                    color={theme.colorscheme === 'light' ? '#000' : colors?.grey1}
+                                />
+                            }
                         </View>
-                    )}
-                </>
-            ) : (
-                <RenderAudios songs={item} navigation={navigation} />
+                    )
+                ) : null}
+            </Pressable>
+            {selectedChapter == index && (
+                <View style={{ marginBottom: 10 }}>
+                    {/* <FlatList renderItem={({ item, index }) => renderAudios(item, index)} data={item.songLyrics} /> */}
+                    <RenderAudios thalam={thalam} songs={item} navigation={navigation} />
+                </View>
             )}
         </>
     );
@@ -160,9 +145,9 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
             ThalamHeaders === 0 ? 'country' : 'thalam'
         }='${data}' ${ThalamHeaders === 0 ? 'GROUP BY thalam' : ''} and locale='${
             i18n.language === 'en-IN' ? 'RoI' : i18n.language
-        }' ORDER BY  titleNo ASC `;
+        }' ORDER BY fkTrimuria,titleNo  ASC `;
         getSqlData(thalam ? query2 : query, (callbacks) => {
-            console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
+            // console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
             setShowLoading(false);
             setTitleData(callbacks);
         });

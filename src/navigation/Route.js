@@ -76,6 +76,8 @@ const Route = () => {
         // connectDataBaseToFolder()
     }, []);
 
+
+
     const checkConnection = (connected) => {
         if (connected && !__DEV__) {
             Alert.alert('New Update Available', 'Click ok to sync latest data', [
@@ -114,9 +116,7 @@ const Route = () => {
                     buttonNegative: 'Cancel',
                     buttonPositive: 'OK',
                 }
-
             )
-
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                 console.log('File permissions granted');
             } else {
@@ -126,6 +126,7 @@ const Route = () => {
             console.warn(err);
         }
     }
+
     const checkFileExist = async () => {
         RNFS.exists(`${RNFS.ExternalDirectoryPath}/Thrimurai/thirumuraiSongs_10.db`)
             .then(async (res) => {
