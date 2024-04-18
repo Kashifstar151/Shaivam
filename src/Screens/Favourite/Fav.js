@@ -34,6 +34,7 @@ import ShareSVG from '../../components/SVGs/ShareSVG';
 import DeleteSVG from '../../components/SVGs/DeleteSVG';
 // import Button from '../Temples/Common/Button'
 // import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
+import * as RNFS from 'react-native-fs';
 const Fav = ({ navigation }) => {
     // const BottomSheetRef = useRef(null)
     const { theme } = useContext(ThemeContext);
@@ -54,6 +55,7 @@ const Fav = ({ navigation }) => {
         //         setEmptyImage(false)
         //     }
         // })
+
         Promise.all([
             fetchAndDisplayDownloads(),
             listfavAudios((callbacks) => {
@@ -64,7 +66,18 @@ const Fav = ({ navigation }) => {
                 }
             }),
         ]);
+        checkFile()
     }, [isFocuced]);
+    const checkFile = async (path) => {
+        RNFS.readFile(`file://${RNFS.MainBundlePath}`).then((res) => {
+            console.log("🚀 ~ RNFS.exists ~ res:", res)
+        }).catch((error) => {
+            console.log("🚀 ~ RNFS.exists ~ error:", error)
+        })
+        // const exists = await RNFetchBlob.fs.exists(`file://${RNFS.DocumentDirectoryPath}`);
+        // console.log('File exists: ', exists);
+        // return exists;
+    };
     const header = [
         {
             name: 'Favourites',
@@ -339,7 +352,7 @@ const Fav = ({ navigation }) => {
                         renderItem={({ item, index }) => renderSong(item, index)}
                     />
                 </View>
-            ) : selecetedHeader == 'Offline Downloads' && downloadList.length > 0 ? (
+            ) : selecetedHeader == 'Offline Downloads' && downloadList?.length > 0 ? (
                 <View style={{ flex: 1 }}>
                     <TouchableOpacity
                         style={styles.RearrangsTask}

@@ -47,13 +47,21 @@ const Calender = ({ navigation }) => {
         { name: 'Festivals', selected: <ActiveStar />, unSelected: <InActiveStar /> },
         { name: 'Events', selected: <ActiveCalender />, unSelected: <InActiveCalender /> },
     ];
-    const [selectMonth, setSelectMonth] = useState(new Date('2024-04-01').toISOString())
+    const [selectMonth, setSelectMonth] = useState(new Date())
     const [eventCaetgory, setEventCategory] = useState(null)
+    const [todaysEvent, setTodaysEvent] = useState(null)
     const { data, isLoading, isSuccess, refetch } = useGetListQuery(selectMonth)
-    console.log("🚀 ~ Calender ~ authState:", JSON.stringify(data?.data, 0, 2))
+    // console.log("🚀 ~ Calender ~ authState:", JSON.stringify(data?.data, 0, 2))
     useEffect(() => {
         if (isSuccess) {
             console.log("Fetched data for the month:", JSON.stringify(data?.data, 0, 2));
+            console.log('today date', moment().format('YYYY-MM-DD'))
+            data?.data?.map((item) => {
+                if (item?.attributes?.start_date == moment().format('YYYY-MM-DD')) {
+                    setTodaysEvent(item)
+                    // alert(true)
+                }
+            })
             // You can also set state here to trigger a re-render if necessary
         }
     }, [data, isSuccess]);
@@ -176,8 +184,12 @@ const Calender = ({ navigation }) => {
                                 marginTop: -100,
                                 flex: 1,
                             }}>
-                            <CalendarProvider style={[styles.calenderContainer, styles.shadowProps,]} date={selectMonth}>
+                            <CalendarProvider style={[styles.calenderContainer, styles.shadowProps,]}
+                                date={selectMonth}
+                            >
                                 <ExpandableCalendar
+                                    // initialDate={new Date()}
+                                    // date={new Date()}
                                     theme={{
                                         arrowColor: '#222222',
                                         dayTextColor: '#222222',
@@ -187,8 +199,11 @@ const Calender = ({ navigation }) => {
                                         textDayFontWeight: '600',
                                         textMonthFontWeight: '600',
                                         calendarBackground: "#FFFFFF",
-
+                                        todayBackgroundColor: 'white',
+                                        selectedDayBackgroundColor: 'white',
+                                        selectedDayTextColor: 'black'
                                     }}
+                                    displayLoadingIndicator={isLoading}
                                     onMonthChange={(month) => setSelectMonth(new Date(month?.dateString).toISOString())}
                                     markingType='custom'
                                     markedDates={marked}
@@ -207,11 +222,33 @@ const Calender = ({ navigation }) => {
                                     </TouchableOpacity>
                                 </View>
                             }
+
+                            {
+                                todaysEvent !== null &&
+                                < View style={{ paddingHorizontal: 0, marginVertical: 15, }}>
+                                    <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold', color: '#222222', marginHorizontal: 20 }}>
+                                        Today {moment().format('MMMM Do YYYY,')}
+                                    </Text>
+                                    <ElevatedCard navigation={() => navigation.navigate(RouteTexts.EVENT_DETAILS)} theme={{ colorscheme: theme.colorscheme }}>
+                                        <EventCard
+                                            date={day = moment(todaysEvent?.start_date).get('D')}
+                                            timing={`${moment(todaysEvent?.attributes?.start_date).format('MMMM DD YYYY')} -${moment(todaysEvent?.attributes?.end_date).format('MMMM DD YYYY')} `}
+                                            title={todaysEvent?.attributes?.title}
+                                            item={todaysEvent}
+                                            theme={{
+                                                textColor: theme.textColor,
+                                                colorscheme: theme.colorscheme,
+                                            }}
+                                        />
+                                    </ElevatedCard>
+                                </View>
+                            }
                             <View style={{ paddingHorizontal: 20, marginVertical: 15, }}>
                                 <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold', color: '#222222' }}>
-                                    Today, Oct 06, 2023
+                                    This Month
                                 </Text>
                             </View>
+
                             <FlatList
                                 data={data?.data}
                                 contentContainerStyle={{ paddingBottom: 100 }}

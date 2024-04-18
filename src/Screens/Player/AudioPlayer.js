@@ -9,6 +9,7 @@ import {
     TouchableOpacity,
     TouchableWithoutFeedback,
     View,
+    Platform
 } from 'react-native';
 import Slider from '@kashifum8299/react-native-slider';
 import ShuffleIcon from '../../assets/Images/music (1).svg';
@@ -313,9 +314,12 @@ const AudioPlayer = ({
         // let dirs = RNFetchBlob.fs.dirs;
         setDownloadingLoader(true);
         TrackPlayer.getActiveTrack().then(async (item) => {
-            const path = `${RNFS.ExternalDirectoryPath}/${item?.thalamOdhuvarTamilname}`;
+            const path = Platform.OS == 'android' ? `${RNFS.ExternalDirectoryPath}/${item?.thalamOdhuvarTamilname}` : `${RNFS.DocumentDirectoryPath}/${item?.id}`;
+            const pathIOS =
+                console.log("🚀 ~ TrackPlayer.getActiveTrack ~ pathIOS:", pathIOS, path)
             RNFetchBlob.config({
                 path: path,
+                fileCache: true,
             })
                 .fetch('GET', `${item?.url}`)
                 .then(async (res) => {
@@ -324,7 +328,7 @@ const AudioPlayer = ({
                         id: item?.id,
                         title: item?.title,
                         artist: item?.artist,
-                        url: 'file://' + res.path(),
+                        url: `file://${RNFS.DocumentDirectoryPath}/${item?.id}/audio.mp3`,
                         categoryName: item?.categoryName,
                         thalamOdhuvarTamilname: item?.thalamOdhuvarTamilname,
                         thirumariasiriyar: item?.thirumariasiriyar,
@@ -338,7 +342,7 @@ const AudioPlayer = ({
                     );
                     // Add the new track to the start of the array
                     const updatedTracks = [jsonValue, ...filteredTracks];
-                    console.log("🚀 ~ updateRecentlyPlayed ~ updatedTracks:", updatedTracks)
+                    // console.log("🚀 ~ updateRecentlyPlayed ~ updatedTracks:", updatedTracks)
                     // Store the updated list back to AsyncStorage
                     await AsyncStorage.setItem(`downloaded`, JSON.stringify(updatedTracks));
                     // await AsyncStorage.setItem(
@@ -383,19 +387,25 @@ const AudioPlayer = ({
                             <Text style={styles.headingText}>Odhuvar</Text>
                             <Text style={styles.headingText}>(Select One)</Text>
                         </View>
-                        <FlatList
-                            contentContainerStyle={{ backgroundColor: '#222222' }}
-                            horizontal
-                            data={songsData}
-                            renderItem={({ item, index }) => (
-                                <RenderAudios
-                                    item={item}
-                                    index={index}
-                                    clb={playById}
-                                    activeTrack={activeTrack}
-                                />
-                            )}
-                        />
+                        <View
+                            style={{
+                                width: 'auto',
+                            }}
+                        >
+                            <FlatList
+                                contentContainerStyle={{ backgroundColor: '#222222' }}
+                                horizontal
+                                data={songsData}
+                                renderItem={({ item, index }) => (
+                                    <RenderAudios
+                                        item={item}
+                                        index={index}
+                                        clb={playById}
+                                        activeTrack={activeTrack}
+                                    />
+                                )}
+                            />
+                        </View>
                     </View>
                 )}
                 {orientation == 'LANDSCAPE' || !visibleStatusBar ? (
