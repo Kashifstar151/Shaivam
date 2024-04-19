@@ -9,6 +9,7 @@ import {
     TouchableOpacity,
     TouchableWithoutFeedback,
     View,
+    Platform
 } from 'react-native';
 import Slider from '@kashifum8299/react-native-slider';
 import ShuffleIcon from '../../assets/Images/music (1).svg';
@@ -100,6 +101,7 @@ const AudioPlayer = ({
     queryForPreviousPrevId,
     visibleStatusBar,
     setDownloadingLoader,
+    isFav,
     activeTrack,
 }) => {
     // console.log('the render of page =>', repeatMode);
@@ -114,21 +116,23 @@ const AudioPlayer = ({
     });
     const updateRecentlyPlayed = async (newTrack) => {
         const maxRecentTracks = 4;
+        console.log('track')
         const recentTracksJSON = await AsyncStorage.getItem('recentTrack');
         const recentTracks = recentTracksJSON ? JSON.parse(recentTracksJSON) : [];
         // Check if the track already exists and remove it
         const filteredTracks = recentTracks.filter((track) => track.id !== newTrack.id);
         // Add the new track to the start of the array
         const updatedTracks = [newTrack, ...filteredTracks].slice(0, maxRecentTracks);
-        // console.log("🚀 ~ updateRecentlyPlayed ~ updatedTracks:", updatedTracks)
+        console.log("🚀 ~ updateRecentlyPlayed ~ updatedTracks:", updatedTracks)
         // Store the updated list back to AsyncStorage
         await AsyncStorage.setItem(`recentTrack`, JSON.stringify(updatedTracks));
     };
     const [fav, setFav] = useState(false);
+
     const downloadAudios = () => {
         listfavAudios((calbacks) => {
             let lenght = calbacks?.length;
-            console.log('🚀 ~ downloadAudios ~ lenght:', lenght);
+            console.log('🚀 ~ downloadAudios ~ lenght:', prevId);
             TrackPlayer.getActiveTrack()
                 .then((res) => {
                     AddSongToDatabase(
@@ -142,6 +146,7 @@ const AudioPlayer = ({
                             res?.thalamOdhuvarTamilname,
                             res?.thirumariasiriyar,
                             lenght++,
+                            prevId
                         ],
                         (callbacks) => {
                             if (callbacks?.message == 'Success') {
@@ -150,7 +155,7 @@ const AudioPlayer = ({
                         }
                     );
                 })
-                .catch((err) => {});
+                .catch((err) => { });
         });
     };
     const { position, duration } = useProgress();
@@ -177,7 +182,7 @@ const AudioPlayer = ({
         Icon.getImageSource('circle', 18, '#C1554E').then((source) => {
             return setThumbImage({ thumbIcon: source });
         });
-        Promise.allSettled([createUserTable(), MostPlayedSongList(), getMostPlayedSong()]);
+        Promise.allSettled([createUserTable(), MostPlayedSongList(), getMostPlayedSong(), getFavAudios()]);
         // createUserTable();
         // MostPlayedSongList();
         // getMostPlayedSong()
@@ -189,6 +194,18 @@ const AudioPlayer = ({
         //     dispatchMusic({ type: 'SET_SONG', payload: data });
         // }
     }, []);
+    const getFavAudios = () => {
+        listfavAudios(callbacks => {
+            // console.log("🚀 ~ useEffect ~ callbacks:", JSON.stringify(callbacks, 0, 2))
+            if (callbacks?.length > 0) {
+                callbacks?.map((item) => {
+                    if (activeTrack.id == item?.id) {
+                        setFav(true)
+                    }
+                })
+            }
+        })
+    }
     const getMode = (mode) => {
         if (mode == 0) {
             TrackPlayer.setRepeatMode(RepeatMode.Off);
@@ -247,7 +264,7 @@ const AudioPlayer = ({
                 if (num?.length > 0) {
                     let sql = `UPDATE most_played SET count=? WHERE id=?`;
                     UpdateMostPlayed(sql, [num[0].count + 1, num[0].id], (callbacks) => {
-                        console.log('🚀 ~ mostPlayedSongs.map ~ callbacks:', callbacks);
+                        // console.log('🚀 ~ mostPlayedSongs.map ~ callbacks:', callbacks);
                     });
                 } else {
                     AddMostPlayed(
@@ -261,12 +278,13 @@ const AudioPlayer = ({
                             res?.thalamOdhuvarTamilname,
                             res?.thirumariasiriyar,
                             count,
+                            prevId
                         ],
                         (callbacks) => {
-                            console.log(
-                                '🚀 ~ awaitTrackPlayer.getActiveTrack ~ callbacks:',
-                                callbacks
-                            );
+                            // console.log(
+                            //     '🚀 ~ awaitTrackPlayer.getActiveTrack ~ callbacks:',
+                            //     callbacks
+                            // );
                         }
                     );
                 }
@@ -296,9 +314,12 @@ const AudioPlayer = ({
         // let dirs = RNFetchBlob.fs.dirs;
         setDownloadingLoader(true);
         TrackPlayer.getActiveTrack().then(async (item) => {
-            const path = `${RNFS.ExternalDirectoryPath}/${item?.thalamOdhuvarTamilname}`;
+            const path = Platform.OS == 'android' ? `${RNFS.ExternalDirectoryPath}/${item?.thalamOdhuvarTamilname}` : `${RNFS.DocumentDirectoryPath}/${item?.id}`;
+            const pathIOS =
+                console.log("🚀 ~ TrackPlayer.getActiveTrack ~ pathIOS:", pathIOS, path)
             RNFetchBlob.config({
                 path: path,
+                fileCache: true,
             })
                 .fetch('GET', `${item?.url}`)
                 .then(async (res) => {
@@ -307,7 +328,7 @@ const AudioPlayer = ({
                         id: item?.id,
                         title: item?.title,
                         artist: item?.artist,
-                        url: 'file://' + res.path(),
+                        url: `file://${RNFS.DocumentDirectoryPath}/${item?.id}/audio.mp3`,
                         categoryName: item?.categoryName,
                         thalamOdhuvarTamilname: item?.thalamOdhuvarTamilname,
                         thirumariasiriyar: item?.thirumariasiriyar,
@@ -350,13 +371,13 @@ const AudioPlayer = ({
                 style={
                     orientation == 'LANDSCAPE' || !visibleStatusBar
                         ? {
-                              width: !(orientation == 'LANDSCAPE')
-                                  ? Dimensions.get('window').width
-                                  : Dimensions.get('window').width / 2,
-                              backgroundColor: '#222222',
-                              height: 70,
-                              alignItems: 'center',
-                          }
+                            width: !(orientation == 'LANDSCAPE')
+                                ? Dimensions.get('window').width
+                                : Dimensions.get('window').width / 2,
+                            backgroundColor: '#222222',
+                            height: 70,
+                            alignItems: 'center',
+                        }
                         : { backgroundColor: '#222222', height: 200 }
                 }
             >
@@ -617,7 +638,7 @@ const AudioPlayer = ({
                                 )}
                             </TouchableOpacity> */}
                             <TouchableOpacity onPress={() => downloadAudios()}>
-                                {fav ? (
+                                {isFav || fav ? (
                                     <Icon name="heart" size={22} color="red" />
                                 ) : (
                                     <FavouriteIcon />

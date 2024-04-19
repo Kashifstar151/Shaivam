@@ -9,10 +9,46 @@ import SQLite from 'react-native-sqlite-storage';
 import { ThemeContextProvider } from './src/Context/ThemeContext';
 import { enableLatestRenderer } from 'react-native-maps';
 import StoreProvider from './src/store/storeProvider';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
+import NavigationServices from './src/navigation/NavigationServices';
+import { RouteTexts } from './src/navigation/RouteText';
 
 const App = () => {
     useEffect(() => {
         enableLatestRenderer();
+        dynamicLinks()
+            .getInitialLink()
+            .then(link => {
+                console.log("🚀 ~ useEffect ~ link:", link)
+                const getId = link?.url?.split('=').pop()
+                // console.log("🚀 ~ useEffect ~ getId:", getId)
+                if (link !== null) {
+                    NavigationServices.navigate(RouteTexts.THRIMURAI_SONG, {
+                        data: {
+                            prevId: getId
+                        }
+                    });
+                }
+            });
+    }, []);
+    const HandleDynamicLink = link => {
+        console.log("🚀 ~ HandleDynamicLink ~ link:", link)
+        const getId = link?.url?.split('=').pop()
+        if (link) {
+            NavigationServices.navigate(RouteTexts.THRIMURAI_SONG, {
+                data: {
+                    prevId: getId
+                }
+            });
+        }
+        // Handle dynamic link inside your own application
+
+    };
+
+    useEffect(() => {
+        const unsubscribe = dynamicLinks().onLink(HandleDynamicLink);
+        // When the component is unmounted, remove the listener
+        return () => unsubscribe();
     }, []);
     return (
         <StoreProvider>

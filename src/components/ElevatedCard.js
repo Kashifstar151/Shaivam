@@ -1,11 +1,12 @@
 import React from 'react';
-import { View } from 'react-native';
+import { Pressable, TouchableOpacity, View } from 'react-native';
 
-const ElevatedCard = ({ children, theme }) => {
+const ElevatedCard = ({ children, theme, navigation }) => {
     return (
-        <View
+        <Pressable
+            onPress={navigation}
             style={{
-                elevation: theme?.colorscheme === 'light' ? 10: 0,
+                elevation: theme?.colorscheme === 'light' ? 10 : 0,
                 shadowColor: '#a0a0a0',
                 marginHorizontal: 15,
                 marginBottom: 5,
@@ -15,7 +16,7 @@ const ElevatedCard = ({ children, theme }) => {
             }}
         >
             {children}
-        </View>
+        </Pressable>
     );
 };
 

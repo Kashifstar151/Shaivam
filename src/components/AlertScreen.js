@@ -3,7 +3,7 @@ import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-nati
 import { BlurView } from "@react-native-community/blur";
 import ErrorIcon from "../Screens/Temples/TempleAssets/Vector (5).svg"
 
-const AlertScreen = ({ descriptionText, removeFromPlaylist, setShowModal }) => {
+const AlertScreen = ({ descriptionText, removeFromPlaylist, setShowModal, headingText }) => {
     // console.log("🚀 ~ AlertScreen ~ descriptionText:", removeFromPlaylist)
     return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
@@ -12,8 +12,8 @@ const AlertScreen = ({ descriptionText, removeFromPlaylist, setShowModal }) => {
                 <View style={styles.errorContainer}>
                     <ErrorIcon />
                 </View>
-                <Text style={styles.heading}>Are you sure you want to delete this from offline downloads?</Text>
-                <Text style={styles.title}>{descriptionText.thalamOdhuvarTamilname}</Text>
+                <Text style={styles.heading}>{headingText ? headingText : 'Are you sure you want to delete this from offline downloads?'}</Text>
+                <Text style={styles.title}>{descriptionText.title}</Text>
                 <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', marginTop: 30 }}>
                     <TouchableOpacity style={styles.cancelButton} onPress={() => setShowModal(false)}>
                         <Text style={styles.text}>Cancel</Text>
@@ -23,7 +23,6 @@ const AlertScreen = ({ descriptionText, removeFromPlaylist, setShowModal }) => {
                     </TouchableOpacity>
                 </View>
             </View>
-
         </View>
     )
 };

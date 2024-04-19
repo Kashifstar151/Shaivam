@@ -147,23 +147,23 @@ const FileUplaoder = ({ setModalVisible }) => {
                             </Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={{ paddingHorizontal: 10 }}>
-                        {images?.length > 0 ? (
-                            <FlatList
-                                contentContainerStyle={{ marginBottom: 20 }}
-                                horizontal
-                                data={images}
-                                renderItem={({ item, index }) => RenderImage(item)}
-                            />
-                        ) : (
-                            <View style={{ height: 100 }}></View>
-                        )}
-                        <ButtonComp
+                    {/* <View style={{ paddingHorizontal: 10, height: 120 }}> */}
+                    {images?.length > 0 ? (
+                        <FlatList
+                            contentContainerStyle={{ marginBottom: 20, height: 120, flex: 1 }}
+                            horizontal
+                            data={images}
+                            renderItem={({ item, index }) => RenderImage(item)}
+                        />
+                    ) : (
+                        <View style={{ height: 100 }}></View>
+                    )}
+                    {/* <ButtonComp
                             navigation={() => setSubmitted(true)}
                             text={'Submit'}
                             color={images?.length > 0 ? true : false}
-                        />
-                    </View>
+                        /> */}
+                    {/* </View> */}
                 </View>
             )}
         </View>

@@ -3,8 +3,11 @@ import { Image, Pressable, Text, View } from 'react-native';
 import ShareSVG from '../../components/SVGs/ShareSVG';
 import LocationSVG from '../../components/SVGs/LocationSVG';
 import { RFValue } from 'react-native-responsive-fontsize';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
+import Share from 'react-native-share'
 
-const PlaceCard = ({ img, templeName, address, theme }) => {
+const PlaceCard = ({ img, templeName, address, theme, prevId }) => {
+
     return (
         <View
             style={{
