@@ -48,6 +48,7 @@ import TrackPlayer, {
     useActiveTrack,
     useProgress,
 } from 'react-native-track-player';
+import Clipboard from '@react-native-clipboard/clipboard';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { listfavAudios } from '../../../Databases/AudioPlayerDatabase';
 
@@ -136,11 +137,11 @@ const ThrimuraiSong = ({ route, navigation }) => {
         initilizeTheTheme();
         firstRender.current = false;
     }, []);
-    const [favList, setFavList] = useState(null)
+    const [favList, setFavList] = useState(null);
 
     useEffect(() => {
         fetchAndDisplayDownloads();
-        getFavAudios()
+        getFavAudios();
         Dimensions.addEventListener('change', ({ window: { width, height } }) => {
             if (width < height) {
                 setOrientation('PORTRAIT');
@@ -204,30 +205,33 @@ const ThrimuraiSong = ({ route, navigation }) => {
     //     '🚀 ~ ``````````~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~:',
     //     activeTrack
     // );
-    const [isFav, setIsFav] = useState(false)
+    const [isFav, setIsFav] = useState(false);
     const getFavAudios = (songList) => {
         // const activeTrack = useActiveTrack();
-        listfavAudios(callbacks => {
-            console.log("🚀 ~ useEffect ~ callbacks:", JSON.stringify(callbacks, 0, 2))
+        listfavAudios((callbacks) => {
+            console.log('🚀 ~ useEffect ~ callbacks:', JSON.stringify(callbacks, 0, 2));
             // setFavList(callbacks)
             const updatedArray2 = songList?.map((item2) => {
                 const match = callbacks.find((item1) => item1.id === item2.id);
                 if (match) {
-                    setIsFav(true)
+                    setIsFav(true);
                 }
                 // console.log("🚀 ~ updatedArray2 ~ match:", match)
                 // console.log("🚀 ~ updatedArray2 ~ match:", match)
                 // return match; // Replace with the object from array1 if there's a match
             });
             // console.log("🚀 ~ updatedArray2 ~ updatedArray2:------------", updatedArray2)
-        })
-    }
+        });
+    };
 
     const fetchAndDisplayDownloads = async () => {
         try {
             // const keys = await AsyncStorage.getAllKeys();
             const parsedMetadata = await AsyncStorage.getItem('downloaded');
-            console.log("🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:", JSON.stringify(parsedMetadata, 0, 2))
+            console.log(
+                '🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:',
+                JSON.stringify(parsedMetadata, 0, 2)
+            );
             // const metadataKeys = keys.filter(key => key.startsWith('downloaded:'));
             // const metadata = await AsyncStorage.multiGet(metadataKeys);
             // const parsedMetadata = metadata.map(([key, value]) => JSON.parse(value));
@@ -287,8 +291,9 @@ GROUP BY
                 payload: data.filter((i) => i.localBased !== null)[0].localeBased,
             });
             getSqlData(detailQuery, (details) => {
-                const query2 = `SELECT * FROM odhuvars WHERE title='${data.filter((i) => i.tamil !== null)[0]?.tamil
-                    }'`;
+                const query2 = `SELECT * FROM odhuvars WHERE title='${
+                    data.filter((i) => i.tamil !== null)[0]?.tamil
+                }'`;
                 getSqlData(query2, (callbacks) => {
                     // console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
                     dispatchMusic({ type: 'SONG_DETAILS', payload: details });
@@ -337,7 +342,7 @@ GROUP BY
                 const match = downloadList.find((item1) => item1.id === item2.id);
                 return match ? { ...match, isLocal: true } : item2; // Replace with the object from array1 if there's a match
             });
-            console.log("🚀 ~ updatedArray2 ~ updatedArray2:", updatedArray2)
+            console.log('🚀 ~ updatedArray2 ~ updatedArray2:', updatedArray2);
             setUpPlayer(updatedArray2);
         } else {
             setUpPlayer(songList);
@@ -347,7 +352,7 @@ GROUP BY
     useEffect(() => {
         if (musicState.song.length) {
             checkDownloaded(musicState.song);
-            getFavAudios(musicState.song)
+            getFavAudios(musicState.song);
         }
     }, [musicState.song, downloadList]);
 
@@ -497,7 +502,49 @@ GROUP BY
         }
     }, [musicState.prevId, selectedLang]);
 
-    console.log('the statuusBarHeight=====>', statusBarHeight);
+    const [clipBoardString, setClipBoardString] = useState('');
+    const clipBoardStringRef = useRef('');
+    const setIosClipBoard = useCallback(async (initialString) => {
+        if (!initialString.includes('Read more at https://shaivam.org/')) {
+            clipBoardStringRef.current = initialString.join(' ');
+            clipBoardStringRef.current += ' Read more at https://shaivam.org/';
+            Clipboard.setStrings(clipBoardStringRef.current);
+        }
+    });
+
+    const setAndroidClipBoard = useCallback(async (initialString) => {
+        if (!initialString.includes('Read more at https://shaivam.org/')) {
+            clipBoardStringRef.current = initialString;
+            clipBoardStringRef.current += ' Read more at https://shaivam.org/';
+            Clipboard.setString(clipBoardStringRef.current);
+        }
+    }, []);
+
+    const fetchClipBoardString = useCallback(async () => {
+        return Platform.select({
+            ios: Clipboard.getStrings(),
+            android: Clipboard.getString(),
+        });
+    }, []);
+
+    useEffect(() => {
+        Clipboard.addListener(async () => {
+            fetchClipBoardString().then((string) => {
+                setClipBoardString((prev) => string);
+            });
+        });
+
+        return () => Clipboard.removeAllListeners();
+    }, []);
+
+    useEffect(() => {
+        if (clipBoardString) {
+            Platform.select({
+                ios: setIosClipBoard(clipBoardString),
+                android: setAndroidClipBoard(clipBoardString),
+            });
+        }
+    }, [clipBoardString]);
 
     return (
         <View style={{ flex: 1, backgroundColor: colorSet?.backgroundColor }}>
@@ -918,9 +965,9 @@ GROUP BY
                                                 ? selectedLang !== 'Tamil'
                                                     ? item?.rawSong
                                                     : item?.tamilExplanation ||
-                                                    'Text currently not available'
+                                                      'Text currently not available'
                                                 : item?.tamilSplit ||
-                                                'Text currently not available'}
+                                                  'Text currently not available'}
                                         </Text>
                                     )}
                                     <Text
@@ -953,14 +1000,14 @@ GROUP BY
 
                     orientation == 'LANDSCAPE'
                         ? {
-                            width: Dimensions.get('window').width / 2,
-                            position: 'absolute',
-                            bottom: 0,
-                        }
+                              width: Dimensions.get('window').width / 2,
+                              position: 'absolute',
+                              bottom: 0,
+                          }
                         : {
-                            position: 'relative',
-                            width: Dimensions.get('window').width,
-                        },
+                              position: 'relative',
+                              width: Dimensions.get('window').width,
+                          },
                 ]}
             >
                 {downloadingLoader && (

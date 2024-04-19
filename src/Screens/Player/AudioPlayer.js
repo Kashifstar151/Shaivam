@@ -104,7 +104,7 @@ const AudioPlayer = ({
     isFav,
     activeTrack,
 }) => {
-    console.log('the render of page =>', repeatMode);
+    // console.log('the render of page =>', repeatMode);
 
     // const [oprateMostPlayed, setOprateMostPlayed] = useState(0)
     useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], async (event) => {
