@@ -3,7 +3,7 @@ import { Alert } from 'react-native';
 const audioPlayerDatabase = SQLite.openDatabase({ name: 'audio.db' })
 export async function AddSongToDatabase(query, body, callbacks) {
     // console.log("🚀 ~ AddSongToDatabase ~ body:", body) 
-    let sql = "INSERT INTO fav_odhuvar (id,url,title,artist,thalamOdhuvarTamilname,categoryName,thirumariasiriyar,serialNo) VALUES (?, ?, ?, ?, ?, ?, ?,?)"; //storing user data in an array
+    let sql = "INSERT INTO fav_odhuvar (id,url,title,artist,thalamOdhuvarTamilname,categoryName,thirumariasiriyar,serialNo,prevId) VALUES (?, ?, ?, ?, ?, ?, ?,?,?)"; //storing user data in an array
     audioPlayerDatabase.executeSql(sql, body, (result) => {
         Alert.alert("Success", "Added to Favourite");
         console.log('audio created successfully.')
@@ -27,7 +27,7 @@ export const updatefavPlaylist = (query, body, callbacks) => {
     });
 }
 export const createUserTable = () => {
-    audioPlayerDatabase.executeSql("CREATE TABLE IF NOT EXISTS fav_odhuvar (id INTEGER PRIMARY KEY, url VARCHAR, title VARCHAR , artist VARCHAR , thalamOdhuvarTamilname VARCHAR, categoryName VARCHAR, thirumariasiriyar VARCHAR ,serialNo)", [], (result) => {
+    audioPlayerDatabase.executeSql("CREATE TABLE IF NOT EXISTS fav_odhuvar (id INTEGER PRIMARY KEY, url VARCHAR, title VARCHAR , artist VARCHAR , thalamOdhuvarTamilname VARCHAR, categoryName VARCHAR, thirumariasiriyar VARCHAR ,serialNo , prevId)", [], (result) => {
         console.log("Table created successfully");
     }, (error) => {
         console.log("Create table error", error)
@@ -40,7 +40,7 @@ export async function listfavAudios(callbacks) {
             var length = resultSet.rows.length;
             let arr = []
             for (var i = 0; i < length; i++) {
-                console.log("row data", resultSet.rows.item(i));
+                // console.log("row data", resultSet.rows.item(i));
                 arr.push(resultSet.rows.item(i))
             }
             callbacks(arr)
@@ -81,14 +81,14 @@ export async function RemoveFavAudios(query, body, callbacks) {
     });
 }
 export const MostPlayedSongList = () => {
-    audioPlayerDatabase.executeSql("CREATE TABLE IF NOT EXISTS most_played (id INTEGER PRIMARY KEY, url VARCHAR, title VARCHAR , artist VARCHAR , thalamOdhuvarTamilname VARCHAR, categoryName VARCHAR, thirumariasiriyar VARCHAR ,count INTEGER)", [], (result) => {
+    audioPlayerDatabase.executeSql("CREATE TABLE IF NOT EXISTS most_played (id INTEGER PRIMARY KEY, url VARCHAR, title VARCHAR , artist VARCHAR , thalamOdhuvarTamilname VARCHAR, categoryName VARCHAR, thirumariasiriyar VARCHAR ,count INTEGER , prevId INTEGER)", [], (result) => {
         console.log("Most Played Playlist created");
     }, (error) => {
         console.log("Create Most Played Playlist table error", error)
     })
 }
 export async function AddMostPlayed(query, body, callbacks) {
-    let sql = "INSERT INTO most_played (id,url,title,artist,thalamOdhuvarTamilname,categoryName,thirumariasiriyar,count) VALUES (?, ?, ?, ?, ?, ?, ?,?)"; //storing user data in an array
+    let sql = "INSERT INTO most_played (id,url,title,artist,thalamOdhuvarTamilname,categoryName,thirumariasiriyar,count,prevId) VALUES (?, ?, ?, ?, ?, ?, ?,?,?)"; //storing user data in an array
     audioPlayerDatabase.executeSql(sql, body, (result) => {
         // Alert.alert("Success", "User created successfully.");
         console.log('audio created successfully.')

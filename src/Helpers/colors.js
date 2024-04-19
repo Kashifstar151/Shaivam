@@ -5,6 +5,7 @@ const darkCardGrad = { startColor: '#404040', stopColor: '#404040' };
 const greyForCard = ['#333333', '#333333'];
 
 export default {
+    commonColor: '#C1554E',
     primaryColor: '#EDCB76',
     primaryDarkColor: '#0D0D0D',
     primaryOrangeColor: '#F9A84D;',

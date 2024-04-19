@@ -28,11 +28,17 @@ import CreateTrip from '../Screens/Temples/MyTrip/CreateTrip';
 import TempleSelection from '../Screens/Temples/TempleSelection';
 import TempleDetails from '../Screens/Temples/TempleDetails';
 import FilteredTemplesPage from '../Screens/Temples/FilteredTemplesPage';
-import ImageSubmitPage from '../Screens/Temples/SuccuessPages/SpottingErrorPage';
+// import ImageSubmitPage from '../Screens/Temples/SuccuessPages/SpottingErrorPage';
 import SpottingErrorPage from '../Screens/Temples/SuccuessPages/SpottingErrorPage';
 import SelectErrorPage from '../Screens/Temples/SuccuessPages/SelectErrorPage';
 // import PinTheLocation from '../Screens/Temples/PinTheLocationPage';
 import Onboarding from '../Screens/OnboardingScreen/Onboarding';
+import EventDetails from '../Screens/Calender/EventDetails';
+import CreateVirtualEvent from '../Screens/Calender/CreateVirtualEvent';
+import Success from '../Screens/Success/Success';
+import Radios from '../Screens/Radio/Radios';
+import OmChanting from '../Screens/Home/OmChanting';
+import NavigationServices from './NavigationServices';
 // import { ThemeContextProvider } from '../Context/ThemeContext';
 
 const Route = () => {
@@ -42,7 +48,6 @@ const Route = () => {
     const [isConnected, setIsConnected] = useState(false);
     // const database = SQLite.openDatabase({ name: databaseName, });
     useEffect(() => {
-        // checkConnection(true)
         AsyncStorage.setItem(
             '@database',
             JSON.stringify({ name: 'songData.db', createFromLocation: 1 })
@@ -70,6 +75,8 @@ const Route = () => {
         // attachDb()
         // connectDataBaseToFolder()
     }, []);
+
+
 
     const checkConnection = (connected) => {
         if (connected && !__DEV__) {
@@ -109,9 +116,7 @@ const Route = () => {
                     buttonNegative: 'Cancel',
                     buttonPositive: 'OK',
                 }
-
             )
-
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                 console.log('File permissions granted');
             } else {
@@ -121,6 +126,7 @@ const Route = () => {
             console.warn(err);
         }
     }
+
     const checkFileExist = async () => {
         RNFS.exists(`${RNFS.ExternalDirectoryPath}/Thrimurai/thirumuraiSongs_10.db`)
             .then(async (res) => {
@@ -168,7 +174,7 @@ const Route = () => {
                     />
                 </View>
             ) : (
-                <NavigationContainer>
+                <NavigationContainer ref={ref => NavigationServices.setTopLevelNavigator(ref)}>
                     <Stack.Navigator
                         initialRouteName={RouteTexts.ONBOARDING_SCREEN}
                         screenOptions={{
@@ -181,6 +187,7 @@ const Route = () => {
                         <Stack.Screen name="Thirumurais" component={ThrimuraiList} />
                         <Stack.Screen name={RouteTexts.SEARCH_SCREEN} component={SearchScreen} />
                         <Stack.Screen name={RouteTexts.ONBOARDING_SCREEN} component={Onboarding} />
+                        <Stack.Screen name={RouteTexts.VIRTUAL_EVENT_CREATE} component={CreateVirtualEvent} />
                         <Stack.Screen
                             name={RouteTexts.TEMPLE_SELECTION}
                             component={TempleSelection}
@@ -195,12 +202,6 @@ const Route = () => {
                             options={{
                                 headerShown: false,
                                 cardStyleInterpolator: CardStyleInterpolators.forBottomSheetAndroid,
-                                //  CardStyleInterpolators.forHorizontalIOS,
-                                // transitionSpec: {
-                                //   open: config,
-                                //   close: config,
-                                // },
-                                // gestureDirection: 'horizontal-inverted',
                                 gestureEnabled: true,
                             }}
                         />
@@ -223,8 +224,11 @@ const Route = () => {
                             name={RouteTexts.THIRIMURAI_HEADING}
                             component={ThrimuraiHeadingPage}
                         />
+                        <Stack.Screen name={RouteTexts.EVENT_DETAILS} component={EventDetails} />
                         <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={MusicComponent} />
                         <Stack.Screen name={'Stotras'} component={Strotras} />
+                        <Stack.Screen name={RouteTexts.SUCCESS} component={Success} />
+
                         <Stack.Screen
                             name={RouteTexts.ERROR_SELECTION_PAGE}
                             component={SelectErrorPage}
@@ -246,6 +250,10 @@ const Route = () => {
                         />
 
                         <Stack.Screen name={'filteredTemples'} component={FilteredTemplesPage} />
+                        <Stack.Screen name={RouteTexts.RADIO} component={Radios} />
+                        <Stack.Screen name={RouteTexts.OM_CHANTING} component={OmChanting} />
+
+
                         {/* <Stack.Screen name={'PinTheLocation'} component={PinTheLocation} /> */}
                         {/* <Stack.Screen name={'templeDetails'} component={TempleDetails} /> */}
                     </Stack.Navigator>

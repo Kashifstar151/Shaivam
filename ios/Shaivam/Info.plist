@@ -20,10 +20,39 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>Bundle ID</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.shaivam.app</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>FirebaseDynamicLinksCustomDomains</key>
+	<array>
+		<string>https://shaivaam.page.link</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+  <key>UIFileSharingEnabled</key>
+      <true/>
+      <key>LSSupportsOpeningDocumentsInPlace</key>
+      <true/>
+      <key>UISupportsDocumentBrowser</key>
+      <true/>
+  <key>NSDocumentDirectoryUsageDescription</key>
+  <string>Your message explaining why the app needs access to the document directory</string>
+  <key>NSAppleMusicUsageDescription</key>
+  <string>Describe why your app needs access to the user's media library</string>
+  <key>NSFileProviderDomainUsageDescription</key>
+  <string>Describe why your app needs access to the user's file system</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -31,18 +60,18 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Want to accept your location</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Program requires GPS to track cars and job orders</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Play using while you are hiking</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Program requires GPS to track cars and job orders</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Program requires GPS to track cars and job orders</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Want to accept your location</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app uses your Microphone to allow Voice over IP communication with the Program Admin system</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Shaivam want to access your gallary</string>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>Play using while you are hiking</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

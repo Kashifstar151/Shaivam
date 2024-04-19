@@ -36,6 +36,8 @@ import { useIsFocused } from '@react-navigation/native';
 // import '../../../../localization';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import HeartSVG from '../../../components/SVGs/HeartSVG.js';
+import { AddSongToDatabase, listfavAudios } from '../../../Databases/AudioPlayerDatabase';
+import ListAudios from './ListAudios';
 
 const ThrimuraiList = ({ navigation }) => {
     const LANGS = [
@@ -65,13 +67,19 @@ const ThrimuraiList = ({ navigation }) => {
     const [thrimurais, setThrimurais] = useState([]);
     const [onFocus, setOnFocus] = useState(false);
     const [recentPlayed, setRecentPlayed] = useState([]);
+    const [listFav, setListFav] = useState([])
     // const database = SQLite.openDatabase({ name: '/storage/emulated/0/Android/data/com.shaivam/files/Thrimurai/thirumuraiData.db', createFromLocation: 1 });
     // const database = SQLite.openDatabase({
     //     name: 'SongsData.db',
     //     createFromLocation: 1,
     // });
+    // const [favList, setFavlist] = useState([])
     useEffect(() => {
         getRecentPlaylist();
+        listfavAudios(callbacks => {
+            setListFav(callbacks)
+            console.log("🚀 ~ useEffect ~ callbacks:", callbacks)
+        })
     }, [isFocuced]);
     const getRecentPlaylist = async () => {
         const songs = await AsyncStorage.getItem('recentTrack');
@@ -81,6 +89,32 @@ const ThrimuraiList = ({ navigation }) => {
         } else {
             setRecentPlayed([]);
         }
+    };
+    const [favSong, setFavSong] = useState(false)
+    const FavouriteAudios = (res) => {
+        // TrackPlayer.getActiveTrack()
+        //     .then((res) => {
+        AddSongToDatabase(
+            'sf',
+            [
+                res?.id,
+                res?.url,
+                res?.title,
+                res?.artist,
+                res?.categoryName,
+                res?.thalamOdhuvarTamilname,
+                res?.thirumariasiriyar,
+            ],
+            (callbacks) => {
+
+                if (callbacks?.message == 'Success') {
+                    setFavSong(true)
+                }
+            }
+        );
+        // })
+        // .catch((err) => {
+        // });
     };
 
     useEffect(() => {
@@ -433,75 +467,7 @@ const ThrimuraiList = ({ navigation }) => {
                             key={(item) => item?.id}
                             data={recentPlayed}
                             renderItem={({ item, index }) => (
-                                <Pressable
-                                    onPress={() =>
-                                        navigation.navigate(RouteTexts.THRIMURAI_SONG, {
-                                            data: item,
-                                        })
-                                    }
-                                    style={{
-                                        flexDirection: 'row',
-                                        margin: 10,
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between',
-                                    }}
-                                >
-                                    <View
-                                        style={{
-                                            paddingHorizontal: 0,
-                                            flexDirection: 'row',
-                                            alignItems: 'center',
-                                        }}
-                                    >
-                                        <MusicContainer />
-                                        <View style={{ paddingHorizontal: 10 }}>
-                                            <Text
-                                                style={{
-                                                    fontSize: 14,
-                                                    // fontWeight: '600',
-                                                    fontFamily: 'Mulish-Regular',
-                                                    color: theme.textColor,
-                                                }}
-                                            >
-                                                {item?.thalamOdhuvarTamilname}
-                                            </Text>
-                                            <Text
-                                                style={{
-                                                    fontSize: 12,
-                                                    // fontWeight: '400',
-                                                    fontFamily: 'Mulish-Regular',
-                                                    color: theme.textColor,
-                                                }}
-                                            >
-                                                {item.title}
-                                            </Text>
-                                        </View>
-                                    </View>
-
-                                    <View
-                                        style={{ flexDirection: 'row', gap: 25, paddingRight: 10 }}
-                                    >
-                                        <TouchableOpacity>
-                                            <Icon name="share" size={22} color={theme.textColor} />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity>
-                                            {/* 
-                                                yet isFav doesn't exist but this should be added which can show the fav and add to fav on click if its not already in fav list 
-                                         */}
-                                            {item?.isFav ? (
-                                                <AntDesign
-                                                    name="heart"
-                                                    size={20}
-                                                    color={'#C1554E'}
-                                                />
-                                            ) : (
-                                                <HeartSVG fill={theme.textColor} />
-                                            )}
-                                        </TouchableOpacity>
-                                    </View>
-
-                                    {/* <Icon name="more-vert" size={22} /> */}
-                                </Pressable>
+                                <ListAudios listFav={listFav} item={item} navigation={navigation} />
                             )}
                         />
                     </View>

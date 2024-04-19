@@ -3,8 +3,8 @@ import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from "
 import Icon from "react-native-vector-icons/dist/Feather";
 import ButtonComp from "../Temples/Common/ButtonComp";
 
-const EventSelectionType = () => {
-    const [selectedEvent, setSelectedEvent] = useState(null)
+const EventSelectionType = ({ setEventCategory, eventCaetgory }) => {
+    console.log("🚀 ~ EventSelectionType ~ eventCaetgory:", eventCaetgory)
     const data = [
         { name: 'Festival' },
         { name: 'Concert' },
@@ -16,7 +16,7 @@ const EventSelectionType = () => {
     const rednerItem = (item, index) => (
         <View style={{ height: 40, flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={{ color: 'rgba(34, 34, 34, 1)', fontFamily: 'Mulish-Regular' }}>{item?.name}</Text>
-            <TouchableOpacity onPress={() => setSelectedEvent(item)} style={selectedEvent?.name == item?.name ? [styles.texIContContainer, { backgroundColor: '#C1554E' }] : styles.texIContContainer}>
+            <TouchableOpacity onPress={() => setEventCategory(item)} style={eventCaetgory?.name == item?.name ? [styles.texIContContainer, { backgroundColor: '#C1554E' }] : styles.texIContContainer}>
                 <Icon name='check' size={16} color={'#FFFFFF'} />
             </TouchableOpacity>
         </View>
