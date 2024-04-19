@@ -24,9 +24,7 @@ import getDimension from '../../../Helpers/getDimension';
 const SearchScreen = ({ navigation, route }) => {
     const { i18n } = useTranslation();
     const { thrimurais } = route?.params;
-    console.log('🚀 ~ SearchScreen ~ thrimurais:', thrimurais);
     const updatedThrimurai = thrimurais.length ? [{ id: 0, name: 'All' }, ...thrimurais] : null;
-    console.log('🚀 ~ SearchScreen ~ updatedThrimurai:', updatedThrimurai);
     const [searchText, setSearchText] = useState('');
     const [searchResult, setSearchedResult] = useState([]);
     const [onFocus, setOnFocus] = useState(false);
@@ -52,11 +50,6 @@ const SearchScreen = ({ navigation, route }) => {
         setIsSearched(false);
 
         if (searchText && searchText.length >= 3) {
-            console.log(
-                '--------------------==================================>',
-                [...thrimurais.map((item) => item.id)].join(',')
-            );
-
             getSqlData(
                 `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${normalizeString(
                     searchText.trim()
@@ -65,16 +58,11 @@ const SearchScreen = ({ navigation, route }) => {
                         ? `and fkTrimuria IN (${[...fktrimuria].join(',')})`
                         : `and fkTrimuria IN (${[...thrimurais.map((item) => item.id)].join(',')})`
                 } GROUP BY titleS;`,
-                // `SELECT * FROM thirumurais WHERE search_title='%திருஞானசம்பந்தர்தேவாரம்-1.031-திருக்குரங்கணின்முட்டம்-விழுநீர்மழுவாள்படை%' LIMIT 10 OFFSET 0;`,
                 (callbacks) => {
-                    // console.log("🚀 ~ getDataFromSql ~ callbacks:", JSON.stringify(callbacks, 0, 2))
                     setSearchedResult(callbacks);
                 }
             );
             getSqlData(
-                // `SELECT * FROM thirumurai_songs WHERE searchTitle LIKE '%${normalizeString(searchText)}%' ${!fktrimuria.has(0) ? `and thirumuraiId IN (${[...fktrimuria].join(',')})` : ''
-                // } and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language
-                // }' ORDER BY thirumuraiId,prevId,songNo ASC `,
                 `SELECT t.prevId, t.titleNo ,ts.thirumuraiId, ts.songNo ,ts.rawSong FROM thirumurais t  JOIN thirumurai_songs ts ON t.prevId = ts.prevId WHERE ts.searchTitle LIKE '%${normalizeString(
                     searchText.trim()
                 )}%'  ${
