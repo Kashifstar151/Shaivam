@@ -24,7 +24,7 @@ import getDimension from '../../../Helpers/getDimension';
 const SearchScreen = ({ navigation, route }) => {
     const { i18n } = useTranslation();
     const { thrimurais } = route?.params;
-    const updatedThrimurai = thrimurais ? [{ id: 0, name: 'All' }, ...thrimurais] : null;
+    const updatedThrimurai = thrimurais.length ? [{ id: 0, name: 'All' }, ...thrimurais] : null;
     const [searchText, setSearchText] = useState('');
     const [searchResult, setSearchedResult] = useState([]);
     const [onFocus, setOnFocus] = useState(false);
