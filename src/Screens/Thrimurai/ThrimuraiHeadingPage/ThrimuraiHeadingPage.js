@@ -133,7 +133,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const { theme } = useContext(ThemeContext);
     const [range, setRange] = useState({});
     const { page, list, query, prevId, flagShowAudio, name } = route.params;
-    // //console.log('🚀 ~ ThrimuraiHeadingPage ~ prevId:', prevId);
+    console.log('🚀 ~ ThrimuraiHeadingPage ~ prevId:', prevId);
     const headerData = [
         {
             name: 'Panmurai',
@@ -157,7 +157,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
         },
     ];
     const [selectedHeader, setSelectedheader] = useState(
-        prevId == '=10' ? headerData[3] : headerData[0]
+        prevId == ' IN (10,11)' ? headerData[3] : headerData[0]
     );
     const [selectedTitle, setSelectedTitle] = useState(null);
     const [searchedText, setSearchedText] = useState(null);
