@@ -14,11 +14,11 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
             },
             providesTags: ['Calender'],
         }),
-        AddRegularEvent: builder.mutation({
+        addRegularEvent: builder.mutation({
             query: (data) => {
-                // console.log(date, 'date from calender')
+                console.log(data, 'date from calender')
                 const url = `regular-events`
-                // console.log("🚀 ~ url:", url)
+                console.log("🚀 ~ url:", url)
                 return {
                     url: url,
                     method: 'POST',
@@ -55,5 +55,6 @@ function getLastDayOfMonth(dateString) {
 }
 
 export const {
-    useGetListQuery
+    useGetListQuery,
+    useAddRegularEventMutation
 } = CalenderApiSlice;
