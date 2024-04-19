@@ -24,7 +24,9 @@ import getDimension from '../../../Helpers/getDimension';
 const SearchScreen = ({ navigation, route }) => {
     const { i18n } = useTranslation();
     const { thrimurais } = route?.params;
+    console.log('🚀 ~ SearchScreen ~ thrimurais:', thrimurais);
     const updatedThrimurai = thrimurais.length ? [{ id: 0, name: 'All' }, ...thrimurais] : null;
+    console.log('🚀 ~ SearchScreen ~ updatedThrimurai:', updatedThrimurai);
     const [searchText, setSearchText] = useState('');
     const [searchResult, setSearchedResult] = useState([]);
     const [onFocus, setOnFocus] = useState(false);
@@ -49,12 +51,19 @@ const SearchScreen = ({ navigation, route }) => {
     const getDataFromSql = (e) => {
         setIsSearched(false);
 
-        if (searchText && searchText.length >= 2) {
+        if (searchText && searchText.length >= 3) {
+            console.log(
+                '--------------------==================================>',
+                [...thrimurais.map((item) => item.id)].join(',')
+            );
+
             getSqlData(
                 `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${normalizeString(
                     searchText.trim()
                 )}%' and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language}' ${
-                    !fktrimuria.has(0) ? `and fkTrimuria IN (${[...fktrimuria].join(',')})` : ''
+                    !fktrimuria.has(0)
+                        ? `and fkTrimuria IN (${[...fktrimuria].join(',')})`
+                        : `and fkTrimuria IN (${[...thrimurais.map((item) => item.id)].join(',')})`
                 } GROUP BY titleS;`,
                 // `SELECT * FROM thirumurais WHERE search_title='%திருஞானசம்பந்தர்தேவாரம்-1.031-திருக்குரங்கணின்முட்டம்-விழுநீர்மழுவாள்படை%' LIMIT 10 OFFSET 0;`,
                 (callbacks) => {
@@ -71,7 +80,9 @@ const SearchScreen = ({ navigation, route }) => {
                 )}%'  ${
                     !fktrimuria.has(0)
                         ? `and ts.thirumuraiId IN (${[...fktrimuria].join(',')})`
-                        : ''
+                        : `and ts.thirumuraiId IN (${[...thrimurais.map((item) => item.id)].join(
+                              ','
+                          )})`
                 }  AND ts.locale='${
                     i18n.language === 'en-IN' ? 'RoI' : i18n.language
                 }' GROUP BY   ts.thirumuraiId, ts.prevId, ts.songNo ORDER BY ts.thirumuraiId, ts.prevId, ts.songNo ASC`,
