@@ -19,6 +19,7 @@ import HighlightedText from './HighlightedText';
 import { RouteTexts } from '../../../navigation/RouteText';
 import { useTranslation } from 'react-i18next';
 import HighlightText from '@sanar/react-native-highlight-text';
+import getDimension from '../../../Helpers/getDimension';
 
 const SearchScreen = ({ navigation, route }) => {
     const { i18n } = useTranslation();
@@ -32,6 +33,7 @@ const SearchScreen = ({ navigation, route }) => {
 
     const [fktrimuria, setFkTrimuria] = useState(new Set([0]));
     const [isSearched, setIsSearched] = useState(false);
+    const { screenHeight } = getDimension();
 
     useEffect(() => {
         getDataFromSql();
@@ -41,16 +43,8 @@ const SearchScreen = ({ navigation, route }) => {
         };
     }, [fktrimuria]);
     const normalizeString = (str) => {
-        setSearchText(
-            str
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .toLowerCase()
-        );
-        return str
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .toLowerCase();
+        setSearchText(str.normalize('NFD').replace(/[\u0300-\u036f]/g, ''));
+        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     };
     const getDataFromSql = (e) => {
         setIsSearched(false);
@@ -137,6 +131,7 @@ const SearchScreen = ({ navigation, route }) => {
                     }}
                     searchWords={[`${searchText}`]}
                     textToHighlight={textContent}
+                    sanitize={(text) => normalizeString(text)}
                 />
                 {/* {key == 'title'
                     ? parts?.map((statement, i) => {
@@ -239,14 +234,20 @@ const SearchScreen = ({ navigation, route }) => {
     return (
         <View style={[styles.main, { backgroundColor: theme.backgroundColor }]}>
             <Background>
-                <HeaderWithTextInput
-                    onSubmitEditing={getDataFromSql}
-                    placeholder={`${t('Search for any')} ( முதல்-திருமுறை )`}
-                    navigation={navigation}
-                    setState={(e) => setSearchText(e)}
-                    state={searchText}
-                    ref={focusRef}
-                />
+                <View
+                    style={{
+                        paddingTop: screenHeight * 0.03,
+                    }}
+                >
+                    <HeaderWithTextInput
+                        onSubmitEditing={getDataFromSql}
+                        placeholder={`${t('Search for any')} ( முதல்-திருமுறை )`}
+                        navigation={navigation}
+                        setState={(e) => setSearchText(e)}
+                        state={searchText}
+                        ref={focusRef}
+                    />
+                </View>
                 <View
                     style={{
                         paddingLeft: 10,
