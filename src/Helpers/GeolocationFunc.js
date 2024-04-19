@@ -1,104 +1,53 @@
 // for location permission
 import Geolocation from 'react-native-geolocation-service';
-import { PERMISSIONS, check, request, RESULTS } from 'react-native-permissions';
-import { Platform } from 'react-native';
+import { check, request, RESULTS } from 'react-native-permissions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const locationPermission = async () => {
-    console.log('Platform.OS', Platform.OS);
-    if (Platform.OS == 'ios') {
-        console.log('PERMISSIONS.IOS.LOCATION_ALWAYS', PERMISSIONS.IOS.LOCATION_ALWAYS);
-        const granted = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-        // console.log('🚀 ~ locationPermission ~ checkTheLocState:', granted);
-        check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE)
-            .then((result) => {
-                switch (result) {
-                    case RESULTS.UNAVAILABLE:
-                        console.log(
-                            'This feature is not available (on this device / in this context)'
-                        );
-                        return {
-                            status: false,
-                            msg: 'permission not available',
-                            permissionType: RESULTS.UNAVAILABLE,
-                        };
+export const setTheLocationPermissionToStorage = async (value) => {
+    await AsyncStorage.setItem('LOC_PERM', value);
+};
 
-                    case RESULTS.DENIED:
-                        console.log(
-                            'The permission has not been requested / is denied but requestable',
-                            result
-                        );
-                        return {
-                            status: false,
-                            msg: 'user denied the permission',
-                            permissionType: RESULTS.DENIED,
-                        };
+export const getTheLocationPermissionToStorage = async () => {
+    return AsyncStorage.getItem('LOC_PERM');
+};
 
-                    case RESULTS.LIMITED:
-                        console.log('The permission is limited: some actions are possible');
-                        return {
-                            status: true,
-                            msg: 'limited access for requested permission',
-                            permissionType: RESULTS.LIMITED,
-                        };
-
-                    case RESULTS.GRANTED:
-                        console.log('The permission is granted');
-                        return {
-                            status: true,
-                            msg: 'permission granted ',
-                            permissionType: RESULTS.GRANTED,
-                        };
-
-                    case RESULTS.BLOCKED:
-                        console.log('The permission is denied and not requestable anymore');
-                        return {
-                            status: false,
-                            msg: 'permission request blocked ',
-                            permissionType: RESULTS.BLOCKED,
-                        };
-                }
-            })
-            .catch((error) => {
-                return {
-                    status: false,
-                    msg: `failed with ${error}`,
-                    permissionType: RESULTS.UNAVAILABLE,
-                };
-            });
-    } else {
-        try {
-            const checkTheLocState = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-            if (checkTheLocState !== RESULTS.GRANTED) {
-                const granted = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-                if (granted === RESULTS.GRANTED) {
-                    console.log('the access grandted ');
-                    return {
-                        status: true,
-                        msg: 'User granted the permission',
-                        permissionType: granted,
-                    };
-                } else {
-                    console.log('the access not grandted ');
-
-                    return {
-                        status: false,
-                        msg: 'User denied permission',
-                        permissionType: granted,
-                    };
-                }
-            } else {
+export const requestThePermission = async (accessType) => {
+    try {
+        const granted = await request(accessType);
+        setTheLocationPermissionToStorage(granted);
+        console.log('🚀 ~ requestThePermission ~ granted:', granted);
+        switch (granted) {
+            case RESULTS.GRANTED:
                 return {
                     status: true,
-                    msg: 'SUCCESS',
+                    msg: 'User granted the permission',
                     permissionType: RESULTS.GRANTED,
                 };
-            }
-        } catch (err) {
-            return {
-                status: false,
-                msg: err,
-            };
+            case RESULTS.BLOCKED:
+                return {
+                    status: false,
+                    msg: 'User have blocked the permission',
+                    permissionType: RESULTS.BLOCKED,
+                };
+            case RESULTS.DENIED:
+                return {
+                    status: false,
+                    msg: 'User have denied the permission',
+                    permissionType: RESULTS.DENIED,
+                };
+            case RESULTS.LIMITED:
+                return {
+                    status: true,
+                    msg: 'Limited Permission',
+                    permissionType: RESULTS.LIMITED,
+                };
         }
+    } catch (err) {
+        return {
+            status: false,
+            msg: err,
+            permissionType: RESULTS.UNAVAILABLE,
+        };
     }
 };
 
