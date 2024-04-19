@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createApi } from '@reduxjs/toolkit/query';
 const initialAuthState = {
     accessToken: 'kya hai ',
     refreshToken: 'check purpose ',
@@ -6,7 +7,7 @@ const initialAuthState = {
     userDetails: 'check purpose ',
     // logoutCallThunk: [],
 };
-const CalenderSlice = createSlice({
+const CalenderSlice = createApi({
     name: 'Calender',
     initialState: initialAuthState,
     reducers: {
@@ -25,6 +26,9 @@ const CalenderSlice = createSlice({
         //     state.isLoggedIn = false;
         // },
     },
+    tagTypes: [
+        'Calender'
+    ]
 
     // extraReducers: (builder) => {
     //     builder.addCase(logoutCallThunk.fulfilled, (state, action) => {

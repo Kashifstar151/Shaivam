@@ -15,16 +15,17 @@ import { launchImageLibrary } from "react-native-image-picker";
 import Feather from "react-native-vector-icons/dist/Feather";
 import ButtonComp from "../Temples/Common/ButtonComp";
 import { RouteTexts } from "../../navigation/RouteText";
-import { useGetListQuery } from "../../store/features/Calender/CalenderApiSlice";
+import { useAddRegularEventMutation, useGetListQuery } from "../../store/features/Calender/CalenderApiSlice";
 import { useDispatch, useSelector } from 'react-redux';
 import { setInputValue } from "../../store/features/Calender/FormSlice";
 const CreateVirtualEvent = ({ navigation }) => {
+    const [AddRegularEvent, { isLoading, isError, isSuccess }] = useAddRegularEventMutation()
     const dispatch = useDispatch()
     const weekDays = [
         'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'
     ]
     const inputValue = useSelector(state => state.form?.inputValues || '');
-    console.log("🚀 ~ CreateVirtualEvent ~ inputValue:", inputValue)
+    // console.log("🚀 ~ CreateVirtualEvent ~ inputValue:", inputValue)
 
     const RbSheetRef = useRef(null)
     const [selectedFrequecy, setSelectedFrequecy] = useState(null)
@@ -88,10 +89,15 @@ const CreateVirtualEvent = ({ navigation }) => {
         );
     };
     const [title, setTitle] = useState(false)
-    const handleChange = (val) => {
-        console.log("🚀 ~ handleChange ~ val:", val)
-        return
-        dispatch(setInputValue({ eventTitle, inputValue: val }))
+    const onSubmit = async () => {
+        alert(true)
+        await AddRegularEvent(inputValue).then((res) => {
+            console.log("🚀 ~ awaitAddRegularEvent ~ res:", JSON.stringify(res, 0, 2))
+        }).catch((error) => {
+            console.log("🚀 ~ awaitAddRegularEvent ~ error:", JSON.stringify(error, 0, 2))
+
+        })
+        // alert('Successfull')
     }
     return (
         <ScrollView style={{ backgroundColor: '#fff', flex: 1 }}>
@@ -287,7 +293,7 @@ const CreateVirtualEvent = ({ navigation }) => {
 
                         </View>
                 }
-                <ButtonComp text={'Submit'} navigation={() => navigation.navigate(RouteTexts.SUCCESS)} />
+                <ButtonComp text={'Submit'} navigation={() => onSubmit()} />
             </View>
             <RBSheet ref={RbSheetRef} height={Dimensions.get('window').height / 2}>
                 {
