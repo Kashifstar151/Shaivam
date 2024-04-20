@@ -130,7 +130,6 @@ const SearchScreen = ({ navigation, route }) => {
                     }}
                     searchWords={[`${searchText}`]}
                     textToHighlight={textContent}
-                    sanitize={(text) => normalizeString(text)}
                 />
                 {/* {key == 'title'
                     ? parts?.map((statement, i) => {
