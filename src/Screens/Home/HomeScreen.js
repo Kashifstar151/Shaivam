@@ -40,7 +40,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import OmChanting from './OmChanting';
 import ShareSVG from '../../components/SVGs/ShareSVG';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
-import Share from "react-native-share"
+import Share from 'react-native-share';
 import { colors } from '../../Helpers';
 
 const SongAndAudio = ({ item, index, theme }) => {
@@ -48,36 +48,36 @@ const SongAndAudio = ({ item, index, theme }) => {
     const authState = useSelector((store) => store.auth);
     async function buildLink(item) {
         // alert(true)
-        const link = await dynamicLinks().buildShortLink({
-            link: `https://shaivaam.page.link/org?prevId=${item?.prevId}`,
-            domainUriPrefix: 'https://shaivaam.page.link',
-            ios: {
-                appStoreId: '123456',
-                bundleId: 'com.shaivam.app',
-                minimumVersion: '18',
+        const link = await dynamicLinks().buildShortLink(
+            {
+                link: `https://shaivaam.page.link/org?prevId=${item?.prevId}`,
+                domainUriPrefix: 'https://shaivaam.page.link',
+                ios: {
+                    appStoreId: '123456',
+                    bundleId: 'com.shaivam.app',
+                    minimumVersion: '18',
+                },
+                android: {
+                    packageName: 'com.shaivam',
+                },
+                // optional setup which updates Firebase analytics campaign
+                // "banner". This also needs setting up before hand
             },
-            android: {
-                packageName: 'com.shaivam'
-            }
-            // optional setup which updates Firebase analytics campaign
-            // "banner". This also needs setting up before hand
-        },
-            dynamicLinks.ShortLinkType.DEFAULT,
+            dynamicLinks.ShortLinkType.DEFAULT
         );
 
-        console.log("🚀 ~ link ~ link:", link)
+        console.log('🚀 ~ link ~ link:', link);
         return link;
     }
     const shareSong = async () => {
         // alert(JSON.stringify(item))
-        console.log('Stringinfy', JSON.stringify(item, 0, 2))
-        const link = await buildLink(item)
+        console.log('Stringinfy', JSON.stringify(item, 0, 2));
+        const link = await buildLink(item);
         Share.open({
             message: `${item?.title} I want to share this Thirumurai with you.
-            இந்தத் திருமுறையை Shaivam.org Mobile செயலியில் படித்தேன். மிகவும் பிடித்திருந்தது. பகிர்கின்றேன். படித்து மகிழவும் ${link}`
-
-        })
-    }
+            இந்தத் திருமுறையை Shaivam.org Mobile செயலியில் படித்தேன். மிகவும் பிடித்திருந்தது. பகிர்கின்றேன். படித்து மகிழவும் ${link}`,
+        });
+    };
     // console.log('🚀 ~ SongAndAudio ~ authState:', authState);
     const FavouriteAudios = (res) => {
         // TrackPlayer.getActiveTrack()
@@ -94,8 +94,13 @@ const SongAndAudio = ({ item, index, theme }) => {
                 res?.thirumariasiriyar,
             ],
             (callbacks) => {
-                if (callbacks?.message == 'Success') {
-                    setFav(true)
+                if (callbacks?.message == 'Success' && callbacks.operationType === 'CREATION') {
+                    setFav(true);
+                } else if (
+                    callbacks?.message == 'Success' &&
+                    callbacks.operationType === 'DELETION'
+                ) {
+                    setFav(false);
                 }
             }
         );
@@ -148,7 +153,7 @@ const SongAndAudio = ({ item, index, theme }) => {
                     {/* <Icon name="share" size={22}  /> */}
                     <ShareSVG fill={theme.textColor} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={fav ? null : () => FavouriteAudios(item)}>
+                <TouchableOpacity onPress={() => FavouriteAudios(item)}>
                     {fav ? (
                         <AntDesign name="heart" size={22} color={'#C1554E'} />
                     ) : (
@@ -161,7 +166,7 @@ const SongAndAudio = ({ item, index, theme }) => {
     // return<Text>dhjkshajk</Text>;
 };
 const HomeScreen = ({ navigation }) => {
-    const RBSheetRef = useRef(null)
+    const RBSheetRef = useRef(null);
     const { theme } = useContext(ThemeContext);
     const [compHeight, setCompHeight] = useState();
     const [textInsidePlaylistCard, setTextInsidePlaylistCard] = useState(0);
@@ -170,7 +175,7 @@ const HomeScreen = ({ navigation }) => {
         width: 0,
         height: 0,
     });
-    const isFocused = useIsFocused()
+    const isFocused = useIsFocused();
     const handleLayout = useCallback(
         (event) => {
             const { height } = event.nativeEvent.layout;
@@ -482,7 +487,7 @@ const HomeScreen = ({ navigation }) => {
                                     We have created playlists for you
                                 </Text>
                             </View>
-                            <Pressable style={{ flexDirection: 'row', }}>
+                            <Pressable style={{ flexDirection: 'row' }}>
                                 <Text
                                     style={{
                                         fontSize: RFValue(16, 800),
@@ -491,7 +496,7 @@ const HomeScreen = ({ navigation }) => {
                                 >
                                     View all
                                 </Text>
-                                <Icon name='arrow-right-alt' color={'#FFFFFF'} size={24} />
+                                <Icon name="arrow-right-alt" color={'#FFFFFF'} size={24} />
                             </Pressable>
                         </View>
                     </ImageBackground>
@@ -537,7 +542,7 @@ const HomeScreen = ({ navigation }) => {
                         viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                         title={'Upcoming Festivals'}
                         theme={{ textColor: theme.textColor, colorscheme: theme.colorscheme }}
-                        onPress={() => { }}
+                        onPress={() => {}}
                     />
                 </View>
                 <FlatList
@@ -572,7 +577,7 @@ const HomeScreen = ({ navigation }) => {
                     <HeadingAndView
                         viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                         title={'Nearby Temples'}
-                        onPress={() => { }}
+                        onPress={() => {}}
                         theme={{
                             textColor: theme.textColor,
                             colorscheme: theme.colorscheme,
@@ -589,7 +594,6 @@ const HomeScreen = ({ navigation }) => {
                     renderItem={({ item, index }) => (
                         <ElevatedCard theme={{ colorscheme: theme.colorscheme }}>
                             <PlaceCard
-
                                 img={item.img}
                                 templeName={item.templeName}
                                 address={item.address}
@@ -615,7 +619,7 @@ const HomeScreen = ({ navigation }) => {
                     viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                     title={'App Walkthrough Videos '}
                     // todos : add the fn that take it to the dedicated video page
-                    onPress={() => { }}
+                    onPress={() => {}}
                     theme={{
                         textColor: theme.textColor,
                         colorscheme: theme.colorscheme,
@@ -623,7 +627,11 @@ const HomeScreen = ({ navigation }) => {
                 />
                 <VideosList screenDimension={{ screenHeight, screenWidth }} />
             </View>
-            <RBSheet height={340} ref={RBSheetRef} customStyles={{ container: { borderTopEndRadius: 15, borderTopLeftRadius: 15 } }}>
+            <RBSheet
+                height={340}
+                ref={RBSheetRef}
+                customStyles={{ container: { borderTopEndRadius: 15, borderTopLeftRadius: 15 } }}
+            >
                 <OmChanting />
             </RBSheet>
         </ScrollView>
