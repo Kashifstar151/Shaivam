@@ -76,9 +76,10 @@ const RenderItem = ({ blockRef, item, navigation, theme }) => {
                         onLayout={(event) => onLayout(event, _)}
                         onPress={
                             i?.navName == 'Thirumurais' ||
-                                i?.navName == 'Stotras' ||
-                                i?.navName == RouteTexts.TEMPLE_TABS_NAVIGATE ||
-                                i?.navName == RouteTexts.CALENDER || i?.navName == RouteTexts.RADIO
+                            i?.navName == 'Stotras' ||
+                            i?.navName == RouteTexts.TEMPLE_TABS_NAVIGATE ||
+                            i?.navName == RouteTexts.CALENDER ||
+                            i?.navName == RouteTexts.RADIO
                                 ? () => navigation.navigate(i?.navName)
                                 : () => alert(`the ${i?.navName}`)
                         }
@@ -220,7 +221,7 @@ const CardComponents = ({ navigation }) => {
                 <Header />
                 <SearchInput
                     placeholder={t('Search for anything (Eg - தோடுடைய செவியன்) ')}
-                    setSearchText={setSearchText}
+                    setState={setSearchText}
                     state={searchText}
                     setOnFocus={setOnFocus}
                     extraPad={false}
