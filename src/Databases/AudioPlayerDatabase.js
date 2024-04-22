@@ -22,9 +22,11 @@ export async function AddSongToDatabase(query, body, callbacks) {
                         url: body[1],
                         title: body[2],
                         artist: body[3],
-                        categoryName: body[4],
-                        thalamOdhuvarTamilname: body[5],
+                        thalamOdhuvarTamilname: body[4],
+                        categoryName: body[5],
                         thirumariasiriyar: body[6],
+                        serialNo: body[7],
+                        prevId: body[8],
                     },
                     callbacks
                 );

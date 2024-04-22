@@ -45,9 +45,7 @@ import { colors } from '../../Helpers';
 
 const SongAndAudio = ({ item, index, theme }) => {
     const [fav, setFav] = useState(false);
-    const authState = useSelector((store) => store.auth);
     async function buildLink(item) {
-        // alert(true)
         const link = await dynamicLinks().buildShortLink(
             {
                 link: `https://shaivaam.page.link/org?prevId=${item?.prevId}`,
@@ -89,9 +87,11 @@ const SongAndAudio = ({ item, index, theme }) => {
                 res?.url,
                 res?.title,
                 res?.artist,
-                res?.categoryName,
                 res?.thalamOdhuvarTamilname,
+                res?.categoryName,
                 res?.thirumariasiriyar,
+                res?.serialNo,
+                res.prevId,
             ],
             (callbacks) => {
                 if (callbacks?.message == 'Success' && callbacks.operationType === 'CREATION') {
@@ -157,7 +157,7 @@ const SongAndAudio = ({ item, index, theme }) => {
                     {fav ? (
                         <AntDesign name="heart" size={22} color={'#C1554E'} />
                     ) : (
-                        <Feather name="heart" size={22} />
+                        <Feather name="heart" size={22} color={theme.textColor} />
                     )}
                 </TouchableOpacity>
             </View>

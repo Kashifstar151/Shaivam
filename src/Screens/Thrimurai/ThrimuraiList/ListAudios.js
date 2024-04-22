@@ -5,10 +5,8 @@ import HeartSVG from '../../../components/SVGs/HeartSVG';
 import { RouteTexts } from '../../../navigation/RouteText';
 import MusicContainer from '../../../../assets/Images/Frame 83.svg';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
-import { ThemeContext } from '../../../Context/ThemeContext';
 import { AddSongToDatabase, listfavAudios } from '../../../Databases/AudioPlayerDatabase';
-const ListAudios = ({ item, navigation, listFav }) => {
-    const theme = useContext(ThemeContext);
+const ListAudios = ({ item, navigation, listFav, colorSet }) => {
     const [favrted, setFavrted] = useState(false);
     useEffect(() => {
         if (listFav.length) {
@@ -30,9 +28,11 @@ const ListAudios = ({ item, navigation, listFav }) => {
                 res?.url,
                 res?.title,
                 res?.artist,
-                res?.categoryName,
                 res?.thalamOdhuvarTamilname,
+                res?.categoryName,
                 res?.thirumariasiriyar,
+                res?.serialNo,
+                res.prevId,
             ],
             (callbacks) => {
                 if (callbacks?.message == 'Success' && callbacks.operationType === 'CREATION') {
@@ -78,7 +78,7 @@ const ListAudios = ({ item, navigation, listFav }) => {
                             fontSize: 14,
                             // fontWeight: '600',
                             fontFamily: 'Mulish-Regular',
-                            color: theme.textColor,
+                            color: colorSet.textColor,
                         }}
                     >
                         {item?.thalamOdhuvarTamilname}
@@ -88,7 +88,7 @@ const ListAudios = ({ item, navigation, listFav }) => {
                             fontSize: 12,
                             // fontWeight: '400',
                             fontFamily: 'Mulish-Regular',
-                            color: theme.textColor,
+                            color: colorSet.textColor,
                         }}
                     >
                         {item.title}
@@ -98,7 +98,7 @@ const ListAudios = ({ item, navigation, listFav }) => {
 
             <View style={{ flexDirection: 'row', gap: 25, paddingRight: 10 }}>
                 <TouchableOpacity>
-                    <Icon name="share" size={22} color={theme.textColor} />
+                    <Icon name="share" size={22} color={colorSet.textColor} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => FavouriteAudios(item)}>
                     {/* 
@@ -107,7 +107,12 @@ const ListAudios = ({ item, navigation, listFav }) => {
                     {favrted ? (
                         <AntDesign name="heart" size={20} color={'#C1554E'} />
                     ) : (
-                        <HeartSVG fill={'#777777'} viewBox="2 2 20 20 " width={20} height={20} />
+                        <HeartSVG
+                            fill={colorSet.textColor}
+                            viewBox="2 2 20 20 "
+                            width={20}
+                            height={20}
+                        />
                     )}
                 </TouchableOpacity>
             </View>
