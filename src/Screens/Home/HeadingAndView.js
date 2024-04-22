@@ -13,7 +13,11 @@ const HeadingAndView = ({ title, onPress, viewBtnColor, theme }) => {
             }}
         >
             <Text
-                style={{ fontSize: RFValue(18, 800), fontWeight: 'bold', color: theme?.textColor }}
+                style={{
+                    fontSize: RFValue(18, 800),
+                    fontFamily: 'Lora-Bold',
+                    color: theme?.textColor,
+                }}
             >
                 {title}
             </Text>
