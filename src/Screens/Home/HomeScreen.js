@@ -15,7 +15,6 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import MusicContainer from '../../../assets/Images/Frame 83.svg';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import CardComponents from '../../components/CardComponents';
 import '../../../localization';
 import { ThemeContext } from '../../Context/ThemeContext';
@@ -39,44 +38,13 @@ import { useSelector } from 'react-redux';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import OmChanting from './OmChanting';
 import ShareSVG from '../../components/SVGs/ShareSVG';
-import dynamicLinks from '@react-native-firebase/dynamic-links';
-import Share from 'react-native-share';
 import { colors } from '../../Helpers';
+import { RouteTexts } from '../../navigation/RouteText';
+import { shareSong } from '../../Helpers/SongShare';
 
-const SongAndAudio = ({ item, index, theme }) => {
+const SongAndAudio = ({ item, index, theme, navigation }) => {
     const [fav, setFav] = useState(false);
-    async function buildLink(item) {
-        const link = await dynamicLinks().buildShortLink(
-            {
-                link: `https://shaivaam.page.link/org?prevId=${item?.prevId}`,
-                domainUriPrefix: 'https://shaivaam.page.link',
-                ios: {
-                    appStoreId: '123456',
-                    bundleId: 'com.shaivam.app',
-                    minimumVersion: '18',
-                },
-                android: {
-                    packageName: 'com.shaivam',
-                },
-                // optional setup which updates Firebase analytics campaign
-                // "banner". This also needs setting up before hand
-            },
-            dynamicLinks.ShortLinkType.DEFAULT
-        );
 
-        console.log('🚀 ~ link ~ link:', link);
-        return link;
-    }
-    const shareSong = async () => {
-        // alert(JSON.stringify(item))
-        console.log('Stringinfy', JSON.stringify(item, 0, 2));
-        const link = await buildLink(item);
-        Share.open({
-            message: `${item?.title} I want to share this Thirumurai with you.
-            இந்தத் திருமுறையை Shaivam.org Mobile செயலியில் படித்தேன். மிகவும் பிடித்திருந்தது. பகிர்கின்றேன். படித்து மகிழவும் ${link}`,
-        });
-    };
-    // console.log('🚀 ~ SongAndAudio ~ authState:', authState);
     const FavouriteAudios = (res) => {
         // TrackPlayer.getActiveTrack()
         //     .then((res) => {
@@ -109,13 +77,18 @@ const SongAndAudio = ({ item, index, theme }) => {
         // });
     };
     return (
-        <View
+        <Pressable
             style={{
                 flexDirection: 'row',
                 margin: 10,
                 alignItems: 'center',
                 justifyContent: 'space-between',
             }}
+            onPress={() =>
+                navigation.navigate(RouteTexts.THRIMURAI_SONG, {
+                    data: item,
+                })
+            }
         >
             <View
                 style={{
@@ -144,12 +117,12 @@ const SongAndAudio = ({ item, index, theme }) => {
                             color: theme.textColor,
                         }}
                     >
-                        {item.categoryName}
+                        {item.title}
                     </Text>
                 </View>
             </View>
             <View style={{ flexDirection: 'row', gap: 25 }}>
-                <TouchableOpacity onPress={() => shareSong()}>
+                <TouchableOpacity onPress={() => shareSong(item)}>
                     {/* <Icon name="share" size={22}  /> */}
                     <ShareSVG fill={theme.textColor} />
                 </TouchableOpacity>
@@ -161,7 +134,7 @@ const SongAndAudio = ({ item, index, theme }) => {
                     )}
                 </TouchableOpacity>
             </View>
-        </View>
+        </Pressable>
     );
     // return<Text>dhjkshajk</Text>;
 };
@@ -406,7 +379,9 @@ const HomeScreen = ({ navigation }) => {
                     <FlatList
                         key={(item) => item?.id}
                         data={playlistSong}
-                        renderItem={({ item, index }) => <SongAndAudio item={item} theme={theme} />}
+                        renderItem={({ item, index }) => (
+                            <SongAndAudio item={item} theme={theme} navigation={navigation} />
+                        )}
                     />
                 </View>
             </View>

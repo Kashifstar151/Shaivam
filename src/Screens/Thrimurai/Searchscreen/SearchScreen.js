@@ -183,7 +183,6 @@ const SearchScreen = ({ navigation, route }) => {
                     )}`}</Text>
                 )}
                 {highlight(item, index, key)}
-                {key !== 'title' ? null : <Text>सम्पूर्ण ऋग्वेद पारायणम् Complete ...</Text>}
             </Pressable>
         );
     };
