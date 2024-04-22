@@ -6,6 +6,7 @@ import { RouteTexts } from '../../../navigation/RouteText';
 import MusicContainer from '../../../../assets/Images/Frame 83.svg';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import { AddSongToDatabase, listfavAudios } from '../../../Databases/AudioPlayerDatabase';
+import { shareSong } from '../../../Helpers/SongShare';
 const ListAudios = ({ item, navigation, listFav, colorSet }) => {
     const [favrted, setFavrted] = useState(false);
     useEffect(() => {
@@ -97,7 +98,7 @@ const ListAudios = ({ item, navigation, listFav, colorSet }) => {
             </View>
 
             <View style={{ flexDirection: 'row', gap: 25, paddingRight: 10 }}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => shareSong(item)}>
                     <Icon name="share" size={22} color={colorSet.textColor} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => FavouriteAudios(item)}>
