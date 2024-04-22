@@ -467,7 +467,14 @@ const ThrimuraiList = ({ navigation }) => {
                             key={(item) => item?.id}
                             data={recentPlayed}
                             renderItem={({ item, index }) => (
-                                <ListAudios listFav={listFav} item={item} navigation={navigation} />
+                                <ListAudios
+                                    listFav={listFav}
+                                    colorSet={{
+                                        textColor: theme.textColor,
+                                    }}
+                                    item={item}
+                                    navigation={navigation}
+                                />
                             )}
                         />
                     </View>
