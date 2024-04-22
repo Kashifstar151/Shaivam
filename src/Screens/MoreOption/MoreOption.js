@@ -19,11 +19,9 @@ import BottomSheet, {
     BottomSheetView,
 } from '@gorhom/bottom-sheet';
 
-import RBSheet from 'react-native-raw-bottom-sheet';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import Background from '../../components/Background';
 import ConstantHeader from '../../components/ConstantHeader';
-import Header from '../../components/Header';
 import { colors } from '../../Helpers';
 import ChooseLanguage from './ChooseLanguage';
 import { ThemeContext } from '../../Context/ThemeContext';
@@ -36,6 +34,7 @@ import ShareSVG from '../../components/SVGs/ShareSVG';
 import RateTheAppSVG from '../../components/SVGs/RateTheAppSVG';
 import AboutSVG from '../../components/SVGs/AboutSVG';
 import { useFocusEffect } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 const MoreOption = () => {
     const { theme } = useContext(ThemeContext);
@@ -82,7 +81,8 @@ const MoreOption = () => {
             icon: <AboutSVG fill={'#333333'} />,
         },
     ];
-    const [selectedLanguage, setSelectedLanguage] = useState(null);
+    const [selectedLanguage, setSelectedLanguage] = useState('');
+
     const firstTime = useRef(true);
     useEffect(() => {
         if (!firstTime.current && selectedLanguage?.name) {
@@ -113,6 +113,37 @@ const MoreOption = () => {
             firstTime.current = false;
         }
     };
+
+    const { i18n } = useTranslation();
+
+    const language = [
+        { name: 'العربية', lngCode: 'ar' },
+        { name: ' অসমীয়া', lngCode: 'as' },
+        { name: 'বাংলা', lngCode: 'bn' },
+        { name: 'English', lngCode: 'en-IN' },
+        { name: 'ગુજરાતી', lngCode: 'gu' },
+        { name: 'עברית', lngCode: 'he' },
+        { name: 'हिन्दी', lngCode: 'DV' },
+        { name: '日本語', lngCode: 'ja' },
+        { name: 'ಕನ್ನಡ', lngCode: 'kn-IN' },
+        { name: 'മലയാളം', lngCode: 'ml' },
+        { name: 'ଓଡ଼ିଆ', lngCode: 'od' },
+        { name: 'ਪੰਜਾਬੀ', lngCode: 'pa' },
+        { name: 'सिन्धी', lngCode: 'si' },
+        { name: 'தமிழ்', lngCode: 'en' },
+        { name: 'తెలుగు', lngCode: 'te' },
+        { name: 'اُردُو', lngCode: 'ur' },
+    ];
+
+    const handleLanguageClick = (item) => {
+        i18n.changeLanguage(item.lngCode); // 12
+        setSelectedLanguage(item);
+    };
+
+    useEffect(() => {
+        handleLanguageClick(language.find((i) => i.lngCode === i18n.language));
+    }, []);
+
     const rednderItem = (item, index) => {
         // console.log("🚀 ~ file: MoreOption.js:19 ~ rednderItem ~ item:", item)
         return (
@@ -123,7 +154,9 @@ const MoreOption = () => {
                         <Text style={[styles.titleText, { color: theme.textColor }]}>
                             {item.title}
                         </Text>
-                        <Text style={{ color: colors.grey6 }}>{item.Description}</Text>
+                        <Text style={{ color: colors.grey6 }}>
+                            {item.title === 'Language' ? selectedLanguage.name : item.Description}
+                        </Text>
                     </View>
                 </View>
                 <TouchableOpacity style={{ paddingHorizontal: 10 }}>
@@ -180,6 +213,8 @@ const MoreOption = () => {
                         setSelectedLanguage((prev) => val);
                     }}
                     selected={selectedLanguage}
+                    language={language}
+                    handleClick={handleLanguageClick}
                 />
             </BottomSheetModal>
         </View>

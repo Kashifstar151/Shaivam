@@ -6,32 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '../../Context/ThemeContext';
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 
-const ChooseLanguage = ({ selected, setSelected }) => {
+const ChooseLanguage = ({ selected, setSelected, language, handleClick }) => {
     const { i18n } = useTranslation();
-    const language = [
-        { name: 'العربية', lngCode: 'ar' },
-        { name: ' অসমীয়া', lngCode: 'as' },
-        { name: 'বাংলা', lngCode: 'bn' },
-        { name: 'English', lngCode: 'en-IN' },
-        { name: 'ગુજરાતી', lngCode: 'gu' },
-        { name: 'עברית', lngCode: 'he' },
-        { name: 'हिन्दी', lngCode: 'DV' },
-        { name: '日本語', lngCode: 'ja' },
-        { name: 'ಕನ್ನಡ', lngCode: 'kn-IN' },
-        { name: 'മലയാളം', lngCode: 'ml' },
-        { name: 'ଓଡ଼ିଆ', lngCode: 'od' },
-        { name: 'ਪੰਜਾਬੀ', lngCode: 'pa' },
-        { name: 'सिन्धी', lngCode: 'si' },
-        { name: 'தமிழ்', lngCode: 'en' },
-        { name: 'తెలుగు', lngCode: 'te' },
-        { name: 'اُردُو', lngCode: 'ur' },
-    ];
-
-    const handleClick = (item) => {
-        i18n.changeLanguage(item.lngCode); // 12
-        setSelected(item);
-    };
-
     useEffect(() => {
         handleClick(language.find((i) => i.lngCode === i18n.language));
     }, []);
