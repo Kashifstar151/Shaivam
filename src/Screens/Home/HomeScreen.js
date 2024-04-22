@@ -15,7 +15,6 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import MusicContainer from '../../../assets/Images/Frame 83.svg';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import CardComponents from '../../components/CardComponents';
 import '../../../localization';
 import { ThemeContext } from '../../Context/ThemeContext';
@@ -39,46 +38,13 @@ import { useSelector } from 'react-redux';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import OmChanting from './OmChanting';
 import ShareSVG from '../../components/SVGs/ShareSVG';
-import dynamicLinks from '@react-native-firebase/dynamic-links';
-import Share from "react-native-share"
 import { colors } from '../../Helpers';
+import { RouteTexts } from '../../navigation/RouteText';
+import { shareSong } from '../../Helpers/SongShare';
 
-const SongAndAudio = ({ item, index, theme }) => {
+const SongAndAudio = ({ item, index, theme, navigation }) => {
     const [fav, setFav] = useState(false);
-    const authState = useSelector((store) => store.auth);
-    async function buildLink(item) {
-        // alert(true)
-        const link = await dynamicLinks().buildShortLink({
-            link: `https://shaivaam.page.link/org?prevId=${item?.prevId}`,
-            domainUriPrefix: 'https://shaivaam.page.link',
-            ios: {
-                appStoreId: '123456',
-                bundleId: 'com.shaivam.app',
-                minimumVersion: '18',
-            },
-            android: {
-                packageName: 'com.shaivam'
-            }
-            // optional setup which updates Firebase analytics campaign
-            // "banner". This also needs setting up before hand
-        },
-            dynamicLinks.ShortLinkType.DEFAULT,
-        );
 
-        console.log("🚀 ~ link ~ link:", link)
-        return link;
-    }
-    const shareSong = async () => {
-        // alert(JSON.stringify(item))
-        console.log('Stringinfy', JSON.stringify(item, 0, 2))
-        const link = await buildLink(item)
-        Share.open({
-            message: `${item?.title} I want to share this Thirumurai with you.
-            இந்தத் திருமுறையை Shaivam.org Mobile செயலியில் படித்தேன். மிகவும் பிடித்திருந்தது. பகிர்கின்றேன். படித்து மகிழவும் ${link}`
-
-        })
-    }
-    // console.log('🚀 ~ SongAndAudio ~ authState:', authState);
     const FavouriteAudios = (res) => {
         // TrackPlayer.getActiveTrack()
         //     .then((res) => {
@@ -89,13 +55,20 @@ const SongAndAudio = ({ item, index, theme }) => {
                 res?.url,
                 res?.title,
                 res?.artist,
-                res?.categoryName,
                 res?.thalamOdhuvarTamilname,
+                res?.categoryName,
                 res?.thirumariasiriyar,
+                res?.serialNo,
+                res.prevId,
             ],
             (callbacks) => {
-                if (callbacks?.message == 'Success') {
-                    setFav(true)
+                if (callbacks?.message == 'Success' && callbacks.operationType === 'CREATION') {
+                    setFav(true);
+                } else if (
+                    callbacks?.message == 'Success' &&
+                    callbacks.operationType === 'DELETION'
+                ) {
+                    setFav(false);
                 }
             }
         );
@@ -104,13 +77,18 @@ const SongAndAudio = ({ item, index, theme }) => {
         // });
     };
     return (
-        <View
+        <Pressable
             style={{
                 flexDirection: 'row',
                 margin: 10,
                 alignItems: 'center',
                 justifyContent: 'space-between',
             }}
+            onPress={() =>
+                navigation.navigate(RouteTexts.THRIMURAI_SONG, {
+                    data: item,
+                })
+            }
         >
             <View
                 style={{
@@ -139,29 +117,29 @@ const SongAndAudio = ({ item, index, theme }) => {
                             color: theme.textColor,
                         }}
                     >
-                        {item.categoryName}
+                        {item.title}
                     </Text>
                 </View>
             </View>
             <View style={{ flexDirection: 'row', gap: 25 }}>
-                <TouchableOpacity onPress={() => shareSong()}>
+                <TouchableOpacity onPress={() => shareSong(item)}>
                     {/* <Icon name="share" size={22}  /> */}
                     <ShareSVG fill={theme.textColor} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={fav ? null : () => FavouriteAudios(item)}>
+                <TouchableOpacity onPress={() => FavouriteAudios(item)}>
                     {fav ? (
                         <AntDesign name="heart" size={22} color={'#C1554E'} />
                     ) : (
-                        <Feather name="heart" size={22} />
+                        <Feather name="heart" size={22} color={theme.textColor} />
                     )}
                 </TouchableOpacity>
             </View>
-        </View>
+        </Pressable>
     );
     // return<Text>dhjkshajk</Text>;
 };
 const HomeScreen = ({ navigation }) => {
-    const RBSheetRef = useRef(null)
+    const RBSheetRef = useRef(null);
     const { theme } = useContext(ThemeContext);
     const [compHeight, setCompHeight] = useState();
     const [textInsidePlaylistCard, setTextInsidePlaylistCard] = useState(0);
@@ -170,7 +148,7 @@ const HomeScreen = ({ navigation }) => {
         width: 0,
         height: 0,
     });
-    const isFocused = useIsFocused()
+    const isFocused = useIsFocused();
     const handleLayout = useCallback(
         (event) => {
             const { height } = event.nativeEvent.layout;
@@ -330,7 +308,6 @@ const HomeScreen = ({ navigation }) => {
             </View>
             <View
                 style={{
-                    paddingHorizontal: 15,
                     marginTop:
                         orientation == 'PORTRAIT'
                             ? -screenHeight / 2.3
@@ -344,9 +321,9 @@ const HomeScreen = ({ navigation }) => {
                 <Text
                     style={{
                         fontSize: RFValue(18, 800),
-                        // fontWeight: '700',
                         fontFamily: 'Lora-Bold',
                         color: theme.textColor,
+                        paddingTop: 10,
                     }}
                 >
                     Songs & Audios
@@ -401,7 +378,9 @@ const HomeScreen = ({ navigation }) => {
                     <FlatList
                         key={(item) => item?.id}
                         data={playlistSong}
-                        renderItem={({ item, index }) => <SongAndAudio item={item} theme={theme} />}
+                        renderItem={({ item, index }) => (
+                            <SongAndAudio item={item} theme={theme} navigation={navigation} />
+                        )}
                     />
                 </View>
             </View>
@@ -482,7 +461,7 @@ const HomeScreen = ({ navigation }) => {
                                     We have created playlists for you
                                 </Text>
                             </View>
-                            <Pressable style={{ flexDirection: 'row', }}>
+                            <Pressable style={{ flexDirection: 'row' }}>
                                 <Text
                                     style={{
                                         fontSize: RFValue(16, 800),
@@ -491,7 +470,7 @@ const HomeScreen = ({ navigation }) => {
                                 >
                                     View all
                                 </Text>
-                                <Icon name='arrow-right-alt' color={'#FFFFFF'} size={24} />
+                                <Icon name="arrow-right-alt" color={'#FFFFFF'} size={24} />
                             </Pressable>
                         </View>
                     </ImageBackground>
@@ -537,7 +516,7 @@ const HomeScreen = ({ navigation }) => {
                         viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                         title={'Upcoming Festivals'}
                         theme={{ textColor: theme.textColor, colorscheme: theme.colorscheme }}
-                        onPress={() => { }}
+                        onPress={() => {}}
                     />
                 </View>
                 <FlatList
@@ -572,7 +551,7 @@ const HomeScreen = ({ navigation }) => {
                     <HeadingAndView
                         viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                         title={'Nearby Temples'}
-                        onPress={() => { }}
+                        onPress={() => {}}
                         theme={{
                             textColor: theme.textColor,
                             colorscheme: theme.colorscheme,
@@ -589,7 +568,6 @@ const HomeScreen = ({ navigation }) => {
                     renderItem={({ item, index }) => (
                         <ElevatedCard theme={{ colorscheme: theme.colorscheme }}>
                             <PlaceCard
-
                                 img={item.img}
                                 templeName={item.templeName}
                                 address={item.address}
@@ -615,7 +593,7 @@ const HomeScreen = ({ navigation }) => {
                     viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                     title={'App Walkthrough Videos '}
                     // todos : add the fn that take it to the dedicated video page
-                    onPress={() => { }}
+                    onPress={() => {}}
                     theme={{
                         textColor: theme.textColor,
                         colorscheme: theme.colorscheme,
@@ -623,7 +601,11 @@ const HomeScreen = ({ navigation }) => {
                 />
                 <VideosList screenDimension={{ screenHeight, screenWidth }} />
             </View>
-            <RBSheet height={340} ref={RBSheetRef} customStyles={{ container: { borderTopEndRadius: 15, borderTopLeftRadius: 15 } }}>
+            <RBSheet
+                height={340}
+                ref={RBSheetRef}
+                customStyles={{ container: { borderTopEndRadius: 15, borderTopLeftRadius: 15 } }}
+            >
                 <OmChanting />
             </RBSheet>
         </ScrollView>

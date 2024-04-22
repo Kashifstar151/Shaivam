@@ -36,7 +36,7 @@ const Quiz = () => {
                     letterSpacing: 3,
                 }}
             >
-                Quiz
+                QUIZ
             </Text>
 
             <ImageBackground
@@ -47,7 +47,7 @@ const Quiz = () => {
                     borderBottomLeftRadius: 25,
                     overflow: 'hidden',
                     padding: 15,
-                    width: screenWidth - dimension.height * 2,
+                    width: screenWidth - dimension.height * 2.5,
                     position: 'absolute',
                     right: 0,
                     // alignItems: 'center',

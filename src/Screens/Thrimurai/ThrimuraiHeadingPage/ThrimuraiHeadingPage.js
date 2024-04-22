@@ -133,7 +133,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const { theme } = useContext(ThemeContext);
     const [range, setRange] = useState({});
     const { page, list, query, prevId, flagShowAudio, name } = route.params;
-    console.log('🚀 ~ ThrimuraiHeadingPage ~ prevId:', prevId);
+    console.log('🚀 ~ ThrimuraiHeadingPage ~ prevId---------------->:', prevId, name);
     const headerData = [
         {
             name: 'Panmurai',
@@ -190,6 +190,11 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                                 query1: `SELECT * FROM thirumurais WHERE search_thirumurai_title LIKE`,
                                 query2: `AND fkTrimuria <=7 LIMIT 10 OFFSET 0`,
                                 allThirumirai: false,
+                                thrimurais: thrimurais.map((item) => {
+                                    let itemToReturn = { ...item, id: item.prevId };
+                                    return itemToReturn;
+                                }),
+                                prevId: prevId,
                             })
                         }
                         // placeholder={'Search for anything (Eg - தோடுடைய செவியன்) '}
