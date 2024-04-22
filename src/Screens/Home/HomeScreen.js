@@ -308,7 +308,6 @@ const HomeScreen = ({ navigation }) => {
             </View>
             <View
                 style={{
-                    paddingHorizontal: 15,
                     marginTop:
                         orientation == 'PORTRAIT'
                             ? -screenHeight / 2.3
