@@ -1,25 +1,55 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Pressable, Text, TouchableOpacity, View } from "react-native";
-import AntDesign from "react-native-vector-icons/dist/AntDesign";
-import HeartSVG from "../../../components/SVGs/HeartSVG";
-import { RouteTexts } from "../../../navigation/RouteText";
+import React, { useContext, useEffect, useState } from 'react';
+import { Pressable, Text, TouchableOpacity, View } from 'react-native';
+import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import HeartSVG from '../../../components/SVGs/HeartSVG';
+import { RouteTexts } from '../../../navigation/RouteText';
 import MusicContainer from '../../../../assets/Images/Frame 83.svg';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
-import { ThemeContext } from "../../../Context/ThemeContext";
-import { listfavAudios } from "../../../Databases/AudioPlayerDatabase";
-import { useIsFocused } from "@react-navigation/native";
+import { ThemeContext } from '../../../Context/ThemeContext';
+import { AddSongToDatabase, listfavAudios } from '../../../Databases/AudioPlayerDatabase';
 const ListAudios = ({ item, navigation, listFav }) => {
-    console.log("🚀 ~ ListAudios ~ item:", item, listFav)
-    const theme = useContext(ThemeContext)
-    const [favrted, setFavrted] = useState(false)
+    const theme = useContext(ThemeContext);
+    const [favrted, setFavrted] = useState(false);
     useEffect(() => {
-        listFav?.map((res) => {
-            if (res?.id == item?.id) {
-                alert(true)
-                setFavrted(true)
+        if (listFav.length) {
+            listFav?.forEach((element) => {
+                if (element?.id === item?.id) {
+                    setFavrted(true);
+                }
+            });
+        }
+    }, [listFav]);
+
+    const FavouriteAudios = (res) => {
+        // TrackPlayer.getActiveTrack()
+        //     .then((res) => {
+        AddSongToDatabase(
+            'sf',
+            [
+                res?.id,
+                res?.url,
+                res?.title,
+                res?.artist,
+                res?.categoryName,
+                res?.thalamOdhuvarTamilname,
+                res?.thirumariasiriyar,
+            ],
+            (callbacks) => {
+                if (callbacks?.message == 'Success' && callbacks.operationType === 'CREATION') {
+                    setFavrted(true);
+                } else if (
+                    callbacks?.message == 'Success' &&
+                    callbacks.operationType === 'DELETION'
+                ) {
+                    setFavrted(false);
+                }
             }
-        })
-    }, [])
+        );
+        // })
+        // .catch((err) => {
+        // });
+    };
+
     return (
         <Pressable
             onPress={() =>
@@ -66,9 +96,7 @@ const ListAudios = ({ item, navigation, listFav }) => {
                 </View>
             </View>
 
-            <View
-                style={{ flexDirection: 'row', gap: 25, paddingRight: 10 }}
-            >
+            <View style={{ flexDirection: 'row', gap: 25, paddingRight: 10 }}>
                 <TouchableOpacity>
                     <Icon name="share" size={22} color={theme.textColor} />
                 </TouchableOpacity>
@@ -77,20 +105,13 @@ const ListAudios = ({ item, navigation, listFav }) => {
                                                 yet isFav doesn't exist but this should be added which can show the fav and add to fav on click if its not already in fav list 
                                          */}
                     {favrted ? (
-                        <AntDesign
-                            name="heart"
-                            size={20}
-                            color={'#C1554E'}
-                        />
+                        <AntDesign name="heart" size={20} color={'#C1554E'} />
                     ) : (
-                        <HeartSVG fill={theme.textColor} />
+                        <HeartSVG fill={'#777777'} viewBox="2 2 20 20 " width={20} height={20} />
                     )}
                 </TouchableOpacity>
             </View>
-
-            {/* <Icon name="more-vert" size={22} /> */}
         </Pressable>
     );
 };
-
 export default ListAudios;
