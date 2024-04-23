@@ -153,7 +153,8 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
             query = `SELECT * FROM thirumurais where fkTrimuria=${data.prevId}  ORDER BY titleNo ASC `;
         }
         const query2 = `Select * from thirumurais where ${ThalamHeaders === 0 ? 'country' : 'thalam'
-            }='${data}' GROUP BY thalam ORDER BY  titleNo ASC `;
+            }='${data}'  and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language}' ${ThalamHeaders === 0 ? 'GROUP BY thalam' : ''
+            }  ORDER BY fkTrimuria,titleNo  ASC `;
         getSqlData(thalam ? query2 : query, (callbacks) => {
             console.log("🚀 ~ getSqlData ~ callbacks:", JSON.stringify(callbacks, 0, 2))
             setShowLoading(false);

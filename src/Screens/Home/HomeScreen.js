@@ -119,7 +119,7 @@ const SongAndAudio = ({ item, index, theme }) => {
                 }}
             >
                 <MusicContainer />
-                <View style={{ paddingHorizontal: 10 }}>
+                <View style={{ paddingHorizontal: 10, width: '75%' }}>
                     <Text
                         style={{
                             fontSize: RFValue(14, 800),
@@ -374,7 +374,7 @@ const HomeScreen = ({ navigation }) => {
                                         backgroundColor:
                                             selectedPlaylistType == item
                                                 ? '#C1554E'
-                                                : theme.unSelectedBox.bgColor,
+                                                : theme?.unSelectedBox?.bgColor,
 
                                         borderRadius: 20,
                                         justifyContent: 'center',
@@ -389,7 +389,7 @@ const HomeScreen = ({ navigation }) => {
                                     <Text
                                         style={{
                                             color:
-                                                selectedPlaylistType == item ? colors.white : '#777777',
+                                                selectedPlaylistType == item ? colors?.white : '#777777',
                                             fontFamily: 'Mulish-Bold',
                                             fontWeight: '700',
                                         }}
@@ -405,7 +405,7 @@ const HomeScreen = ({ navigation }) => {
                         <FlatList
                             key={(item) => item?.id}
                             data={playlistSong}
-                            renderItem={({ item, index }) => <SongAndAudio item={item} theme={theme} />}
+                            renderItem={({ item, index }) => <SongAndAudio item={item} theme={theme} navigation={navigation} />}
                         />
                     </View>
                 </View>

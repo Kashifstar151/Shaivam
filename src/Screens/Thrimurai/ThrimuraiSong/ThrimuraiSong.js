@@ -321,6 +321,7 @@ GROUP BY
     };
     useEffect(() => {
         dispatchMusic({ type: 'PREV_ID', payload: data?.prevId });
+
         if (downloaded) {
             setUpPlayer(data);
         }
@@ -408,6 +409,7 @@ GROUP BY
                     ],
                     compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
                     progressUpdateEventInterval: 2,
+                    icon: require('../../../assets/Images/Component.png'),
                 });
                 // initilizeTheRepeatState();
                 await TrackPlayer.add(song);
@@ -426,6 +428,7 @@ GROUP BY
                     ],
                     compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
                     progressUpdateEventInterval: 2,
+                    icon: require('../../../assets/Images/Component.png'),
                 });
                 // initilizeTheRepeatState();
                 await TrackPlayer.add(song);
