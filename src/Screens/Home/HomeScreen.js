@@ -394,6 +394,7 @@ const HomeScreen = ({ navigation }) => {
             <View
                 style={{
                     height: 250,
+                    marginVertical: 20,
                 }}
             >
                 <Text
