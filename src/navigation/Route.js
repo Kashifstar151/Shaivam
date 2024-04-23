@@ -79,7 +79,7 @@ const Route = () => {
 
 
     const checkConnection = (connected) => {
-        if (connected && !__DEV__) {
+        if (connected) {
             Alert.alert('New Update Available', 'Click ok to sync latest data', [
                 {
                     text: 'Cancel',
@@ -128,7 +128,9 @@ const Route = () => {
     }
 
     const checkFileExist = async () => {
-        RNFS.exists(`${RNFS.ExternalDirectoryPath}/Thrimurai/thirumuraiSongs_10.db`)
+        let path = Platform.OS == 'android' ? `${RNFS.ExternalDirectoryPath}/Thrimurai/thirumuraiSongs_10.db` : `${RNFS.DocumentDirectoryPath}/Thrimurai/thirumuraiSongs_10.db`
+        console.log("🚀 ~ checkFileExist ~ path:", path)
+        RNFS.exists(path)
             .then(async (res) => {
                 if (res == true) {
                     // InitializeDatabase()
@@ -137,13 +139,14 @@ const Route = () => {
                         '@database',
                         JSON.stringify({ name: 'songData.db', createFromLocation: 1 })
                     );
+                    alert(true)
                     setShowDownloading(true);
                     setTimeout(() => {
                         setShowDownloading(false);
                     }, 2000);
                 } else {
                     setShowDownloading(true);
-                    console.log(false);
+                    alert(false);
                     const promise = attachDb();
                     promise
                         .then((res) => {
@@ -228,7 +231,6 @@ const Route = () => {
                         <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={MusicComponent} />
                         <Stack.Screen name={'Stotras'} component={Strotras} />
                         <Stack.Screen name={RouteTexts.SUCCESS} component={Success} />
-
                         <Stack.Screen
                             name={RouteTexts.ERROR_SELECTION_PAGE}
                             component={SelectErrorPage}
@@ -239,21 +241,12 @@ const Route = () => {
                             options={{
                                 headerShown: false,
                                 cardStyleInterpolator: CardStyleInterpolators.forBottomSheetAndroid,
-                                //  CardStyleInterpolators.forHorizontalIOS,
-                                // transitionSpec: {
-                                //   open: config,
-                                //   close: config,
-                                // },
-                                // gestureDirection: 'horizontal-inverted',
                                 gestureEnabled: true,
                             }}
                         />
-
                         <Stack.Screen name={'filteredTemples'} component={FilteredTemplesPage} />
                         <Stack.Screen name={RouteTexts.RADIO} component={Radios} />
                         <Stack.Screen name={RouteTexts.OM_CHANTING} component={OmChanting} />
-
-
                         {/* <Stack.Screen name={'PinTheLocation'} component={PinTheLocation} /> */}
                         {/* <Stack.Screen name={'templeDetails'} component={TempleDetails} /> */}
                     </Stack.Navigator>
