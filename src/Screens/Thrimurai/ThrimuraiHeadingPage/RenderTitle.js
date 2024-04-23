@@ -44,84 +44,97 @@ const RenderEachTitle = ({
     };
     return (
         <>
-            <Pressable
-                style={{
-                    justifyContent: 'space-between',
-                    flexDirection: 'row',
-                    paddingHorizontal: 25,
-                    alignItems: 'center',
-                    paddingBottom: 10,
-                }}
-                onPress={() => {
-                    if (thalam && ThalamHeaders === 1) {
-                        navigation.navigate(RouteTexts?.THRIMURAI_SONG, {
-                            data: item,
-                        });
-                    } else {
-                        if (selectedChapter === index) {
-                            setSelectedChapter(null);
-                        } else {
-                            setSelectedChapter(index);
-                        }
-                    }
-                }}
-            >
-                <View style={{ width: '95%' }}>
-                    <Text
-                        style={[
-                            styles.titleText,
-                            {
-                                color: selectedChapter === index ? '#C1554E' : theme.textColor,
-                            },
-                        ]}
+            {!flagShowAudio ? (
+                <>
+                    <Pressable
+                        style={{
+                            justifyContent: 'space-between',
+                            flexDirection: 'row',
+                            paddingHorizontal: 25,
+                            alignItems: 'center',
+                            paddingBottom: 10,
+                        }}
+                        onPress={() => {
+                            if (thalam && ThalamHeaders === 1) {
+                                navigation.navigate(RouteTexts?.THRIMURAI_SONG, {
+                                    data: item,
+                                });
+                            } else {
+                                if (selectedChapter === index) {
+                                    setSelectedChapter(null);
+                                } else {
+                                    setSelectedChapter(index);
+                                }
+                            }
+                        }}
                     >
-                        {thalam && ThalamHeaders === 0
-                            ? t(renderTitle(item?.thalam))
-                            : thalam && ThalamHeaders !== 0
-                            ? t(item?.title)
-                            : t(item?.pann)}
-                    </Text>
-                </View>
-                {!thalam || (thalam && ThalamHeaders === 0) ? (
-                    selectedChapter !== null && selectedChapter == index ? (
-                        <View
-                        // onPress={() => setSelectedChapter(null)}
-                        >
-                            {
-                                <Icon
-                                    name="keyboard-arrow-down"
-                                    size={24}
-                                    color={theme.colorscheme === 'light' ? '#000' : colors?.grey1}
-                                />
-                            }
+                        <View style={{ width: '95%' }}>
+                            <Text
+                                style={
+                                    selectedChapter == index
+                                        ? [styles.titleText, { color: theme.textColor }]
+                                        : [styles.titleText, { color: theme.textColor }]
+                                }
+                            >
+                                {thalam && ThalamHeaders === 0
+                                    ? t(renderTitle(item?.thalam))
+                                    : thalam && ThalamHeaders !== 0
+                                        ? t(item?.title)
+                                        : t(item?.pann)}
+                            </Text>
                         </View>
-                    ) : (
-                        <View
-                        // onPress={() => setSelectedChapter(index)}
-                        >
-                            {
-                                <Icon
-                                    name="keyboard-arrow-right"
-                                    size={24}
-                                    color={theme.colorscheme === 'light' ? '#000' : colors?.grey1}
-                                />
-                            }
+                        {!thalam || (thalam && ThalamHeaders === 0) ? (
+                            selectedChapter !== null && selectedChapter == index ? (
+                                <View
+                                // onPress={() => setSelectedChapter(null)}
+                                >
+                                    {
+                                        <Icon
+                                            name="keyboard-arrow-down"
+                                            size={24}
+                                            color={
+                                                theme.colorscheme === 'light'
+                                                    ? '#000'
+                                                    : colors?.grey1
+                                            }
+                                        />
+                                    }
+                                </View>
+                            ) : (
+                                <View
+                                // onPress={() => setSelectedChapter(index)}
+                                >
+                                    {
+                                        <Icon
+                                            name="keyboard-arrow-right"
+                                            size={24}
+                                            color={
+                                                theme.colorscheme === 'light'
+                                                    ? '#000'
+                                                    : colors?.grey1
+                                            }
+                                        />
+                                    }
+                                </View>
+                            )
+                        ) : null}
+                    </Pressable>
+                    {selectedChapter == index && (
+                        <View style={{ marginBottom: 10 }}>
+                            {/* <FlatList renderItem={({ item, index }) => renderAudios(item, index)} data={item.songLyrics} /> */}
+                            <RenderAudios thalam={thalam} songs={item} navigation={navigation} />
                         </View>
-                    )
-                ) : null}
-            </Pressable>
-            {selectedChapter == index && (
-                <View style={{ marginBottom: 10 }}>
-                    {/* <FlatList renderItem={({ item, index }) => renderAudios(item, index)} data={item.songLyrics} /> */}
-                    <RenderAudios thalam={thalam} songs={item} navigation={navigation} />
-                </View>
+                    )}
+                </>
+            ) : (
+                <RenderAudios songs={item} navigation={navigation} />
             )}
         </>
     );
 };
 
 const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio }) => {
-    console.log('🚀 ~ RenderTitle ~ data:', data);
+    // console.log('🚀 ~ RenderTitle ~ data:', data);
     let key = true;
 
     const [selectedChapter, setSelectedChapter] = useState(null);
@@ -131,8 +144,6 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
     useEffect(() => {
         getDtataFromSql();
     }, []);
-    const { i18n } = useTranslation();
-
     const getDtataFromSql = async () => {
         setShowLoading(true);
         let query;
@@ -141,13 +152,10 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
         } else {
             query = `SELECT * FROM thirumurais where fkTrimuria=${data.prevId}  ORDER BY titleNo ASC `;
         }
-        const query2 = `Select * from thirumurais where ${
-            ThalamHeaders === 0 ? 'country' : 'thalam'
-        }='${data}' ${ThalamHeaders === 0 ? 'GROUP BY thalam' : ''} and locale='${
-            i18n.language === 'en-IN' ? 'RoI' : i18n.language
-        }' ORDER BY fkTrimuria,titleNo  ASC `;
+        const query2 = `Select * from thirumurais where ${ThalamHeaders === 0 ? 'country' : 'thalam'
+            }='${data}' GROUP BY thalam ORDER BY  titleNo ASC `;
         getSqlData(thalam ? query2 : query, (callbacks) => {
-            // console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
+            console.log("🚀 ~ getSqlData ~ callbacks:", JSON.stringify(callbacks, 0, 2))
             setShowLoading(false);
             setTitleData(callbacks);
         });

@@ -7,13 +7,13 @@ import { colors } from "../../Helpers";
 const SelectWeek = ({ setSelectedWeek, selectedWeek, closeBottomSheet }) => {
     const theme = useContext(ThemeContext)
     const weekData = [
-        { name: 'Mon', id: 1 },
-        { name: 'Tue', id: 2 },
-        { name: 'Wed', id: 3 },
-        { name: 'Thu', id: 4 },
-        { name: 'Fri', id: 5 },
-        { name: 'Sat', id: 6 },
-        { name: 'Sun', id: 7 },
+        { name: 'One', id: 1 },
+        { name: 'Two', id: 2 },
+        { name: 'Three', id: 3 },
+        { name: 'Four', id: 4 },
+        { name: 'Last', id: 5 },
+        // { name: 'Sat', id: 6 },
+        // { name: 'Sun', id: 7 },
 
     ]
     const selectionHandler = (item) => {

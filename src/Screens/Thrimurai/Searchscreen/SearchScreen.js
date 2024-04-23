@@ -59,8 +59,9 @@ const SearchScreen = ({ navigation, route }) => {
             getSqlData(
                 `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${normalizeString(
                     searchText.trim()
-                )}%' and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language}' ${
-                    !fktrimuria.has(0) ? `and fkTrimuria IN (${[...fktrimuria].join(',')})` : ''
+                )}%' and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language}' ${!fktrimuria.has(0)
+                    ? `and fkTrimuria IN (${[...fktrimuria].join(',')})`
+                    : `and fkTrimuria IN (${[...thrimurais.map((item) => item.id)].join(',')})`
                 } GROUP BY titleS;`,
                 // `SELECT * FROM thirumurais WHERE search_title='%திருஞானசம்பந்தர்தேவாரம்-1.031-திருக்குரங்கணின்முட்டம்-விழுநீர்மழுவாள்படை%' LIMIT 10 OFFSET 0;`,
                 (callbacks) => {
@@ -74,12 +75,12 @@ const SearchScreen = ({ navigation, route }) => {
                 // }' ORDER BY thirumuraiId,prevId,songNo ASC `,
                 `SELECT t.prevId, t.titleNo ,ts.thirumuraiId, ts.songNo ,ts.rawSong FROM thirumurais t  JOIN thirumurai_songs ts ON t.prevId = ts.prevId WHERE ts.searchTitle LIKE '%${normalizeString(
                     searchText.trim()
-                )}%'  ${
-                    !fktrimuria.has(0)
-                        ? `and ts.thirumuraiId IN (${[...fktrimuria].join(',')})`
-                        : ''
-                }  AND ts.locale='${
-                    i18n.language === 'en-IN' ? 'RoI' : i18n.language
+                )}%'  ${!fktrimuria.has(0)
+                    ? `and ts.thirumuraiId IN (${[...fktrimuria].join(',')})`
+                    : `and ts.thirumuraiId IN (${[...thrimurais.map((item) => item.id)].join(
+                        ','
+                    )})`
+                }  AND ts.locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language
                 }' GROUP BY   ts.thirumuraiId, ts.prevId, ts.songNo ORDER BY ts.thirumuraiId, ts.prevId, ts.songNo ASC`,
                 (callbacks) => {
                     setRawSongs(callbacks);
@@ -288,26 +289,22 @@ const SearchScreen = ({ navigation, route }) => {
                                     }}
                                 >
                                     {`${item?.id === 0 ? 'All' : ''} `}
-                                    {`${
-                                        item?.id > 0 && item?.id < 8
-                                            ? `${t(`Thrimurai ${item?.id}`)}`
-                                            : ''
-                                    }`}
-                                    {`${
-                                        item?.id >= 8 && item?.id !== 10 && item?.id !== 11
-                                            ? `${t(nameMap[`Thrimurai ${item?.id}`])}`
-                                            : ''
-                                    }`}
-                                    {`${
-                                        item?.id === 10
-                                            ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[0]}`
-                                            : ''
-                                    }`}
-                                    {`${
-                                        item?.id === 11
-                                            ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[1]}`
-                                            : ''
-                                    }`}
+                                    {`${item?.id > 0 && item?.id < 8
+                                        ? `${t(`Thrimurai ${item?.id}`)}`
+                                        : ''
+                                        }`}
+                                    {`${item?.id >= 8 && item?.id !== 10 && item?.id !== 11
+                                        ? `${t(nameMap[`Thrimurai ${item?.id}`])}`
+                                        : ''
+                                        }`}
+                                    {`${item?.id === 10
+                                        ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[0]}`
+                                        : ''
+                                        }`}
+                                    {`${item?.id === 11
+                                        ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[1]}`
+                                        : ''
+                                        }`}
                                 </Text>
                             </TouchableOpacity>
                         )}

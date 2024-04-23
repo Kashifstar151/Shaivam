@@ -15,25 +15,25 @@ import { launchImageLibrary } from "react-native-image-picker";
 import Feather from "react-native-vector-icons/dist/Feather";
 import ButtonComp from "../Temples/Common/ButtonComp";
 import { RouteTexts } from "../../navigation/RouteText";
-import { useAddRegularEventMutation, useGetListQuery } from "../../store/features/Calender/CalenderApiSlice";
+import { useAddImageForEventMutation, useAddRegularEventMutation, useGetListQuery } from "../../store/features/Calender/CalenderApiSlice";
 import { useDispatch, useSelector } from 'react-redux';
-import { setInputValue } from "../../store/features/Calender/FormSlice";
+import DatePickerCalender from "./DatePickerCalender";
+import DateSelection from "./DateSelection";
 const CreateVirtualEvent = ({ navigation }) => {
-    const [AddRegularEvent, { isLoading, isError, isSuccess }] = useAddRegularEventMutation()
-    const dispatch = useDispatch()
+    const [AddRegularEvent, { isSuccess, isError }] = useAddRegularEventMutation()
+    const [AddImage, { isLoading }] = useAddImageForEventMutation()
     const weekDays = [
         'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'
     ]
     const inputValue = useSelector(state => state.form?.inputValues || '');
-    // console.log("🚀 ~ CreateVirtualEvent ~ inputValue:", inputValue)
-
     const RbSheetRef = useRef(null)
     const [selectedFrequecy, setSelectedFrequecy] = useState(null)
     const [selectedWeek, setSelectedWeek] = useState(null)
-    const [selectedDay, setSelectedDay] = useState(null)
     const [bottomCom, setBottomCom] = useState(null)
     const [recurringEvent, setRecurringEvent] = useState(false)
     const [virtualEvent, setVirtualEvent] = useState(false)
+    const [showDatePicker, setShowDatePicker] = useState(false)
+    const [showEndDatePicker, setShowEndDatePicker] = useState(false)
     const selectionHandlerBottomShhet = (name) => {
         setBottomCom(name)
         if (bottomCom !== null) {
@@ -48,6 +48,7 @@ const CreateVirtualEvent = ({ navigation }) => {
         launchImageLibrary(options, (callback) => {
             console.log('🚀 ~ openGallary ~ callback:', callback);
             setImage(callback?.assets);
+
         });
     };
     const removeImage = (res) => {
@@ -89,18 +90,40 @@ const CreateVirtualEvent = ({ navigation }) => {
         );
     };
     const [title, setTitle] = useState(false)
-    const onSubmit = async () => {
-        alert(true)
-        await AddRegularEvent(inputValue).then((res) => {
-            console.log("🚀 ~ awaitAddRegularEvent ~ res:", JSON.stringify(res, 0, 2))
+    const onSubmit = () => {
+        const formData = new FormData();
+        AddRegularEvent({ data: inputValue, eventType: recurringEvent }).then((res) => {
+            // console.log("🚀 ~ AddRegularEvent ~ res:", JSON.stringify(res))
+            // console.log("🚀 ~ AddRegularEvent ~ res:", JSON.stringify(images))
+
+            if (isSuccess && images?.length > 0) {
+                let id = res?.data?.data?.id;
+                formData.append('files', {
+                    name: images[0]?.fileName,
+                    type: images[0]?.type,
+                    uri: images[0]?.uri,
+                });
+                // formData.append("files", file);
+                formData.append("ref", "api::recurring-event.recurring-event");
+                formData.append("refId", id);
+                formData.append("field", "File");
+                console.log("🚀 ~ AddRegularEvent ~ formData:", JSON.stringify(formData))
+                AddImage(formData).then((res) => {
+                    console.log("🚀 ~ AddImage ~ res:", res)
+                }).catch((error) => {
+                    console.log("🚀 ~ AddImage ~ error:", error)
+
+                })
+            }
+
         }).catch((error) => {
-            console.log("🚀 ~ awaitAddRegularEvent ~ error:", JSON.stringify(error, 0, 2))
+            console.log("🚀 ~ AddRegularEvent ~ error:", error)
 
         })
         // alert('Successfull')
     }
     return (
-        <ScrollView style={{ backgroundColor: '#fff', flex: 1 }}>
+        <ScrollView style={{ backgroundColor: '#fff', flex: 1 }} bounces={false}>
             <Background>
                 <View style={styles.mainCom}>
                     <View>
@@ -168,18 +191,15 @@ const CreateVirtualEvent = ({ navigation }) => {
                         </View> :
                         <View>
                             <TextInputCom value={inputValue['title']} inputKey={'title'} insiderText={'Enter event title'} headinText={'Event title*'} width={Dimensions.get('window').width - 40} />
-                            {/* <TextInputCom insiderText={'Enter event category'} headinText={'Event category'} width={Dimensions.get('window').width - 40} /> */}
                             <View style={{ marginVertical: 10 }}>
                                 <Text style={{ color: '#777777' }}>{'Event category'}</Text>
                                 <TouchableOpacity onPress={() => selectionHandlerBottomShhet('Event category')} style={styles.dropdownContainer}>
-                                    {/* <Icon name="calender" size={24} color="#777777" /> */}
                                     <Text style={[
                                         styles.descriptionText,
                                         { fontSize: 14, marginHorizontal: 10 },
                                     ]}>
                                         {selectedFrequecy == null ? 'Select Category' : selectedFrequecy?.name}
                                     </Text>
-                                    {/* <CalendarSVG fill={'#777777'} /> */}
                                     <MaterialIcons name="keyboard-arrow-down" size={24} color="#777777" />
                                 </TouchableOpacity>
                             </View>
@@ -248,12 +268,13 @@ const CreateVirtualEvent = ({ navigation }) => {
                                             <MaterialIcons name="keyboard-arrow-down" size={24} color="#777777" />
                                         </TouchableOpacity>
                                     </View>
-                                    <View style={{ marginVertical: 0, height: 70 }}>
+                                    <View style={{ marginVertical: 0, height: 80 }}>
                                         <Text style={{ color: '#777777' }}>{'Select day'}</Text>
-                                        <FlatList contentContainerStyle={{ marginVertical: 10, height: 'auto' }} horizontal data={weekDays} renderItem={({ item, index }) => (
-                                            <TouchableOpacity onPress={() => setSelectedDay(item)} style={selectedDay == item ? [styles.weekDaysContainer, { backgroundColor: '#FCB300' }] : styles.weekDaysContainer}>
-                                                <Text style={{ fontFamily: 'Mulish-Regular', fontSize: 12, color: '#777777' }}>{item}</Text>
-                                            </TouchableOpacity>
+                                        <FlatList contentContainerStyle={{ marginVertical: 15, height: 'auto' }} horizontal data={weekDays} renderItem={({ item, index }) => (
+                                            // <TouchableOpacity onPress={() => setSelectedDay(item)} style={selectedDay == item ? [styles.weekDaysContainer, { backgroundColor: '#FCB300' }] : styles.weekDaysContainer}>
+                                            //     <Text style={{ fontFamily: 'Mulish-Regular', fontSize: 12, color: '#777777' }}>{item}</Text>
+                                            // </TouchableOpacity>
+                                            <DateSelection item={item} inputKey={'day'} value={inputValue['day']} style={styles.weekDaysContainer} />
                                         )} />
                                     </View>
                                 </>
@@ -263,36 +284,43 @@ const CreateVirtualEvent = ({ navigation }) => {
                             <TextInputCom value={inputValue['state']} inputKey={'state'} insiderText={'Enter state name'} headinText='State' width={Dimensions.get('window').width - 40} />
                             <TextInputCom value={inputValue['District']} inputKey={'District'} insiderText={'Enter district name'} headinText='District' width={Dimensions.get('window').width - 40} />
                             <TextInputCom value={inputValue['Pin']} inputKey={'Pin'} insiderText={'Enter Pincode name'} headinText='Pincode' width={Dimensions.get('window').width - 40} />
-                            <View style={{ marginVertical: 10 }}>
-                                <Text>{'Start date'}</Text>
-                                <TouchableOpacity style={styles.startDateContainer}>
-                                    {/* <Icon name="calender" size={24} color="#777777" /> */}
-                                    <CalendarSVG fill={'#777777'} />
-                                    <Text style={[
-                                        styles.descriptionText,
-                                        { fontSize: 14, marginHorizontal: 10 },
-                                    ]}>
-                                        DD/MM/YY
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={{ marginVertical: 10 }}>
-                                <Text>{'End date'}</Text>
-                                <TouchableOpacity style={styles.startDateContainer}>
-                                    <CalendarSVG fill={'#777777'} />
-                                    <Text style={[
-                                        styles.descriptionText,
-                                        { fontSize: 14, marginHorizontal: 10 },
-                                    ]}>
-                                        DD/MM/YY
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
+                            {
+                                recurringEvent ? <></> :
+                                    <>
+
+                                        <View style={{ marginVertical: 10 }}>
+                                            <Text>{'Start date'}</Text>
+                                            <TouchableOpacity style={styles.startDateContainer} onPress={() => setShowDatePicker(true)}>
+                                                {/* <Icon name="calender" size={24} color="#777777" /> */}
+                                                <CalendarSVG fill={'#777777'} />
+                                                <Text style={[
+                                                    styles.descriptionText,
+                                                    { fontSize: 14, marginHorizontal: 10 },
+                                                ]}>
+                                                    {inputValue['start_date'] ? inputValue['start_date'] : 'DD/MM/YY'}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                        <View style={{ marginVertical: 10 }}>
+                                            <Text>{'End date'}</Text>
+                                            <TouchableOpacity style={styles.startDateContainer} onPress={() => setShowEndDatePicker(true)}>
+                                                <CalendarSVG fill={'#777777'} />
+                                                <Text style={[
+                                                    styles.descriptionText,
+                                                    { fontSize: 14, marginHorizontal: 10 },
+                                                ]}>
+                                                    {inputValue['end_date'] ? inputValue['end_date'] : 'DD/MM/YY'}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </>
+                            }
                             <TextInputCom value={inputValue['name']} inputKey={'name'} insiderText={'Enter your name'} headinText={'Name'} width={Dimensions.get('window').width - 40} />
                             <TextInputCom value={inputValue['email']} inputKey={'email'} insiderText={'Enter your email'} headinText={'Email'} width={Dimensions.get('window').width - 40} />
-
                         </View>
                 }
+                <DatePickerCalender inputKey={'start_date'} showDatePicker={showDatePicker} setShowDatePicker={setShowDatePicker} />
+                <DatePickerCalender inputKey={'end_date'} showDatePicker={showEndDatePicker} setShowDatePicker={setShowEndDatePicker} />
                 <ButtonComp text={'Submit'} navigation={() => onSubmit()} />
             </View>
             <RBSheet ref={RbSheetRef} height={Dimensions.get('window').height / 2}>

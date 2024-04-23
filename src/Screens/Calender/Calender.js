@@ -38,6 +38,7 @@ import SubmitEnteries from './SubmitEnteries';
 import { useSelector } from 'react-redux';
 import moment from 'moment'
 import { useGetListQuery } from '../../store/features/Calender/CalenderApiSlice';
+import DatePickerCalender from './DatePickerCalender';
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
 }
@@ -47,7 +48,7 @@ const Calender = ({ navigation }) => {
         { name: 'Festivals', selected: <ActiveStar />, unSelected: <InActiveStar /> },
         { name: 'Events', selected: <ActiveCalender />, unSelected: <InActiveCalender /> },
     ];
-    const [selectMonth, setSelectMonth] = useState(new Date())
+    const [selectMonth, setSelectMonth] = useState(new Date().toISOString())
     const [eventCaetgory, setEventCategory] = useState(null)
     const [todaysEvent, setTodaysEvent] = useState(null)
     const { data, isLoading, isSuccess, refetch } = useGetListQuery(selectMonth)
@@ -69,6 +70,7 @@ const Calender = ({ navigation }) => {
     const [selectedFilter, setSelectedFilter] = useState(null)
     const [selectedEvent, setSelectedEvent] = useState(null)
     const [startDate, setStartDate] = useState(new Date())
+
     const { theme } = useContext(ThemeContext);
     useFocusEffect(
         React.useCallback(() => {
@@ -129,7 +131,7 @@ const Calender = ({ navigation }) => {
                 customStyles: {
                     container: {
                         backgroundColor: '#FCB300',
-                        // height: 40,
+                        // height: 30,
                         borderRadius: 5,
                     },
                     text: {
@@ -201,7 +203,7 @@ const Calender = ({ navigation }) => {
                                         calendarBackground: "#FFFFFF",
                                         todayBackgroundColor: 'white',
                                         selectedDayBackgroundColor: 'white',
-                                        selectedDayTextColor: 'black'
+                                        selectedDayTextColor: 'black', textDayFontSize: 11, textDayStyle: { fontsize: 11 },
                                     }}
                                     displayLoadingIndicator={isLoading}
                                     onMonthChange={(month) => setSelectMonth(new Date(month?.dateString).toISOString())}
@@ -222,7 +224,6 @@ const Calender = ({ navigation }) => {
                                     </TouchableOpacity>
                                 </View>
                             }
-
                             {
                                 todaysEvent !== null &&
                                 < View style={{ paddingHorizontal: 0, marginVertical: 15, }}>
@@ -301,6 +302,7 @@ export const styles = StyleSheet.create({
     },
     calenderContainer: {
         // backgroundColor: 'red',
+        marginHorizontal: 3,
         alignSelf: 'center',
         borderRadius: 10,
         //  elevation: 2, 
@@ -313,7 +315,7 @@ export const styles = StyleSheet.create({
         shadowRadius: 3,
     },
     calenderTheme: {
-        width: Dimensions.get('window').width - 20, borderRadius: 10,
+        borderRadius: 10,
     },
     itemContainer: { height: 75, backgroundColor: '#fff', marginHorizontal: 10, borderRadius: 10, alignItems: 'center', flexDirection: 'row' },
     itemText: { fontSize: 12, fontFamily: 'Mulish-Regular', color: '#777777' },

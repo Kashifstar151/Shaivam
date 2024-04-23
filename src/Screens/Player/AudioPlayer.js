@@ -110,6 +110,7 @@ const AudioPlayer = ({
     useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], async (event) => {
         if (event?.state == State?.nextTrack) {
             let index = await TrackPlayer.getActiveTrack();
+            console.log("🚀 ~ useTrackPlayerEvents ~ index:", index)
             const newObj = { ...index, prevId: prevId };
             updateRecentlyPlayed(newObj);
         }
@@ -281,10 +282,10 @@ const AudioPlayer = ({
                             prevId
                         ],
                         (callbacks) => {
-                            // console.log(
-                            //     '🚀 ~ awaitTrackPlayer.getActiveTrack ~ callbacks:',
-                            //     callbacks
-                            // );
+                            console.log(
+                                '🚀 ~ awaitTrackPlayer.getActiveTrack ~ callbacks:',
+                                callbacks
+                            );
                         }
                     );
                 }
@@ -314,49 +315,49 @@ const AudioPlayer = ({
         // let dirs = RNFetchBlob.fs.dirs;
         setDownloadingLoader(true);
         TrackPlayer.getActiveTrack().then(async (item) => {
-            const path = Platform.OS == 'android' ? `${RNFS.ExternalDirectoryPath}/${item?.thalamOdhuvarTamilname}` : `${RNFS.DocumentDirectoryPath}/${item?.id}`;
+            const path = Platform.OS == 'android' ? `${RNFS.ExternalDirectoryPath}/${item?.thalamOdhuvarTamilname}` : `${RNFS.DocumentDirectoryPath}/${item?.id}/audio.mp3`;
             const pathIOS =
-                console.log("🚀 ~ TrackPlayer.getActiveTrack ~ pathIOS:", pathIOS, path)
-            RNFetchBlob.config({
-                path: path,
-                fileCache: true,
-            })
-                .fetch('GET', `${item?.url}`)
-                .then(async (res) => {
-                    console.log('the audio file save to this path', res.path());
-                    const jsonValue = {
-                        id: item?.id,
-                        title: item?.title,
-                        artist: item?.artist,
-                        url: `file://${RNFS.DocumentDirectoryPath}/${item?.id}/audio.mp3`,
-                        categoryName: item?.categoryName,
-                        thalamOdhuvarTamilname: item?.thalamOdhuvarTamilname,
-                        thirumariasiriyar: item?.thirumariasiriyar,
-                        prevId: prevId,
-                    };
-                    const recentTracksJSON = await AsyncStorage.getItem('downloaded');
-                    const recentTracks = recentTracksJSON ? JSON.parse(recentTracksJSON) : [];
-                    // Check if the track already exists and remove it
-                    const filteredTracks = recentTracks.filter(
-                        (track) => track.id !== jsonValue.id
-                    );
-                    // Add the new track to the start of the array
-                    const updatedTracks = [jsonValue, ...filteredTracks];
-                    // console.log("🚀 ~ updateRecentlyPlayed ~ updatedTracks:", updatedTracks)
-                    // Store the updated list back to AsyncStorage
-                    await AsyncStorage.setItem(`downloaded`, JSON.stringify(updatedTracks));
-                    // await AsyncStorage.setItem(
-                    //     `downloaded:${item?.thalamOdhuvarTamilname}`,
-                    //     jsonValue
-                    // );
-                    setDownloadingLoader(false);
-                    setDownloadedSong(true);
-                    console.log('Metadata saved');
+                // console.log("🚀 ~ TrackPlayer.getActiveTrack ~ pathIOS:", pathIOS, path)
+                RNFetchBlob.config({
+                    path: path,
+                    fileCache: true,
                 })
-                .catch((err) => {
-                    console.log('error occured in downloading audio', err);
-                    setDownloadingLoader(false);
-                });
+                    .fetch('GET', `${item?.url}`)
+                    .then(async (res) => {
+                        console.log('the audio file save to this path', res.path());
+                        const jsonValue = {
+                            id: item?.id,
+                            title: item?.title,
+                            artist: item?.artist,
+                            url: `file://${res.path()}`,
+                            categoryName: item?.categoryName,
+                            thalamOdhuvarTamilname: item?.thalamOdhuvarTamilname,
+                            thirumariasiriyar: item?.thirumariasiriyar,
+                            prevId: prevId,
+                        };
+                        const recentTracksJSON = await AsyncStorage.getItem('downloaded');
+                        const recentTracks = recentTracksJSON ? JSON.parse(recentTracksJSON) : [];
+                        // Check if the track already exists and remove it
+                        const filteredTracks = recentTracks.filter(
+                            (track) => track.id !== jsonValue.id
+                        );
+                        // Add the new track to the start of the array
+                        const updatedTracks = [jsonValue, ...filteredTracks];
+                        // console.log("🚀 ~ updateRecentlyPlayed ~ updatedTracks:", updatedTracks)
+                        // Store the updated list back to AsyncStorage
+                        await AsyncStorage.setItem(`downloaded`, JSON.stringify(updatedTracks));
+                        // await AsyncStorage.setItem(
+                        //     `downloaded:${item?.thalamOdhuvarTamilname}`,
+                        //     jsonValue
+                        // );
+                        setDownloadingLoader(false);
+                        setDownloadedSong(true);
+                        console.log('Metadata saved');
+                    })
+                    .catch((err) => {
+                        console.log('error occured in downloading audio', err);
+                        setDownloadingLoader(false);
+                    });
         });
     };
     const playById = async (id) => {
