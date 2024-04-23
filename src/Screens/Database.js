@@ -2,7 +2,7 @@ import SQLite from 'react-native-sqlite-storage';
 import { unzip } from 'react-native-zip-archive';
 import * as RNFS from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob';
-import { PermissionsAndroid } from 'react-native';
+import { PermissionsAndroid, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // const databaseName = 'main.db';
 // const database = SQLite.openDatabase({ name: databaseName, });
@@ -171,7 +171,7 @@ function unzipDownloadFile(target, cb) {
     requestFilePermissions();
     const sourcePath = target;
     // console.log("🚀 ~ file: Database.js:72 ~ unzipDownloadFile ~ targetPath:", sourcePath)
-    const targetPath = `${RNFS.ExternalDirectoryPath}/Thrimurai`;
+    const targetPath = Platform.OS == 'android' ? `${RNFS.ExternalDirectoryPath}/Thrimurai` : `${RNFS.DocumentDirectoryPath}/Thrimurai`;
     const filePath = RNFS.DocumentDirectoryPath + '/myData.db';
     const charset = 'UTF-8';
     RNFS.mkdir(targetPath)
