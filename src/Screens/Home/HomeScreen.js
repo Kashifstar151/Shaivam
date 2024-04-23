@@ -234,9 +234,11 @@ const HomeScreen = ({ navigation }) => {
     const getPlaylistSong = async () => {
         if (selectedPlaylistType == 'Recently Played') {
             const data = await AsyncStorage.getItem('recentTrack');
+            console.log('🚀 ~ getPlaylistSong ~ data:', data);
             setPlaylistSong(JSON.parse(data));
         } else {
             MostPlayedList('d', (callbacks) => {
+                console.log('🚀 ~ MostPlayedList ~ callbacks:', callbacks);
                 setPlaylistSong(callbacks.slice(0, 4));
             });
         }
@@ -282,6 +284,7 @@ const HomeScreen = ({ navigation }) => {
 
     return (
         <ScrollView
+            bounces={false}
             style={{
                 flex: 1,
                 overflow: 'visible',
@@ -317,73 +320,77 @@ const HomeScreen = ({ navigation }) => {
             >
                 <CardComponents navigation={navigation} />
             </View>
-            <View style={{ paddingHorizontal: 10 }}>
-                <Text
-                    style={{
-                        fontSize: RFValue(18, 800),
-                        fontFamily: 'Lora-Bold',
-                        color: theme.textColor,
-                        paddingTop: 10,
-                    }}
-                >
-                    Songs & Audios
-                </Text>
-                <View>
-                    <FlatList
-                        contentContainerStyle={{
-                            marginVertical: 10,
-                            paddingHorizontal: 10,
-                        }}
-                        horizontal
+            {playlistSong?.length > 0 && (
+                <View style={{ paddingHorizontal: 10 }}>
+                    <Text
                         style={{
-                            alignSelf: 'flex-start',
+                            fontSize: RFValue(18, 800),
+                            // fontWeight: '700',
+                            fontFamily: 'Lora-Bold',
+                            color: theme.textColor,
                         }}
-                        data={playlisType}
-                        renderItem={({ item }) => (
-                            <Pressable
-                                style={{
-                                    marginRight: 8,
-                                    elevation: 5,
-                                    backgroundColor:
-                                        selectedPlaylistType == item
-                                            ? '#C1554E'
-                                            : theme.unSelectedBox.bgColor,
-
-                                    borderRadius: 20,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    paddingHorizontal: 15,
-                                    paddingVertical: 10,
-                                }}
-                                onPress={() => {
-                                    setSelectedPlaylistType(item);
-                                }}
-                            >
-                                <Text
+                    >
+                        Songs & Audios
+                    </Text>
+                    <View>
+                        <FlatList
+                            contentContainerStyle={{
+                                marginVertical: 10,
+                                paddingHorizontal: 10,
+                            }}
+                            horizontal
+                            style={{
+                                alignSelf: 'flex-start',
+                            }}
+                            data={playlisType}
+                            renderItem={({ item }) => (
+                                <Pressable
                                     style={{
-                                        color:
-                                            selectedPlaylistType == item ? colors.white : '#777777',
-                                        fontFamily: 'Mulish-Bold',
-                                        fontWeight: '700',
+                                        marginRight: 8,
+                                        elevation: 5,
+                                        backgroundColor:
+                                            selectedPlaylistType == item
+                                                ? '#C1554E'
+                                                : theme.unSelectedBox.bgColor,
+
+                                        borderRadius: 20,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        paddingHorizontal: 15,
+                                        paddingVertical: 10,
+                                    }}
+                                    onPress={() => {
+                                        setSelectedPlaylistType(item);
                                     }}
                                 >
-                                    {item}
-                                </Text>
-                            </Pressable>
-                        )}
-                    />
-                </View>
+                                    <Text
+                                        style={{
+                                            color:
+                                                selectedPlaylistType == item
+                                                    ? colors.white
+                                                    : '#777777',
+                                            fontFamily: 'Mulish-Bold',
+                                            fontWeight: '700',
+                                        }}
+                                    >
+                                        {item}
+                                    </Text>
+                                </Pressable>
+                            )}
+                        />
+                    </View>
 
-                <View style={styles.boxCommon}>
-                    <FlatList
-                        key={(item) => item?.id}
-                        data={playlistSong}
-                        renderItem={({ item, index }) => (
-                            <SongAndAudio item={item} theme={theme} navigation={navigation} />
-                        )}
-                    />
+                    <View style={styles.boxCommon}>
+                        <FlatList
+                            key={(item) => item?.id}
+                            data={playlistSong}
+                            renderItem={({ item, index }) => (
+                                <SongAndAudio item={item} theme={theme} />
+                            )}
+                        />
+                    </View>
                 </View>
-            </View>
+            )}
             <View
                 style={{
                     height: 250,

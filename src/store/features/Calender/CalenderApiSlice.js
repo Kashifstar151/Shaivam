@@ -4,7 +4,7 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getList: builder.query({
             query: (date) => {
-                console.log(date, 'date from calender');
+                // console.log(date, 'date from calender');
                 const url = `regular-events?filters[start_date][$lte]=${getLastDayOfMonth(
                     date
                 )}&filters[end_date][$gte]=${date}&populate[Files][fields][0]=url&filters[status][$eq]=Approved&pagination[pageSize]=200`;
@@ -17,9 +17,10 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
             providesTags: ['Calender'],
         }),
         addRegularEvent: builder.mutation({
-            query: (data) => {
-                console.log(data, 'date from calender');
-                const url = `regular-events`;
+            query: (data, eventType) => {
+                console.log('🚀 ~ data:', data?.eventType, eventType);
+                // console.log('date from calender');
+                const url = data?.eventType ? 'recurring-event' : `regular-events`;
                 console.log('🚀 ~ url:', url);
                 return {
                     url: url,
@@ -30,6 +31,21 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
             },
             providesTags: ['Calender'],
             // const url = 'regular-events',
+        }),
+        addImageForEvent: builder.mutation({
+            query: (data) => {
+                console.log('🚀 ~ data:', data);
+                return {
+                    url: `upload`,
+                    method: 'POST',
+                    body: data,
+                    headers: {
+                        accept: 'application/json',
+                        'Content-Type': 'multipart/form-data',
+                    },
+                };
+            },
+            providesTags: ['Calender'],
         }),
         // getList: builder.query({
         //     query: ({ date }) => ({
@@ -56,4 +72,5 @@ function getLastDayOfMonth(dateString) {
     return endDateString;
 }
 
-export const { useGetListQuery, useAddRegularEventMutation } = CalenderApiSlice;
+export const { useGetListQuery, useAddRegularEventMutation, useAddImageForEventMutation } =
+    CalenderApiSlice;
