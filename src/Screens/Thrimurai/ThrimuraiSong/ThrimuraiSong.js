@@ -417,6 +417,7 @@ GROUP BY
                     ],
                     compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
                     progressUpdateEventInterval: 2,
+                    icon: require('../../../assets/Images/Component.png'),
                 });
                 await TrackPlayer.reset();
                 await TrackPlayer.add(song);
@@ -435,6 +436,7 @@ GROUP BY
                     ],
                     compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
                     progressUpdateEventInterval: 2,
+                    icon: require('../../../assets/Images/Component.png'),
                 });
                 await TrackPlayer.reset();
                 await TrackPlayer.add(song);
