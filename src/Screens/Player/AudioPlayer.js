@@ -29,7 +29,7 @@ import TrackPlayer, {
     useActiveTrack,
     useProgress,
 } from 'react-native-track-player';
-import { getSqlData } from '../Database';
+// import { getSqlData } from '../Database';
 import { useIsFocused } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
 import {
@@ -110,11 +110,18 @@ const AudioPlayer = ({
     useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], async (event) => {
         if (event?.state == State?.nextTrack) {
             let index = await TrackPlayer.getActiveTrack();
-            console.log("🚀 ~ useTrackPlayerEvents ~ index:", index)
-            const newObj = { ...index, prevId: prevId };
+            // console.log("🚀 ~ useTrackPlayerEvents ~ index:", index)
+            const newObj = { ...activeTrack, prevId: prevId };
+            console.log("🚀 ~ useTrackPlayerEvents ~ newObj:", newObj)
             updateRecentlyPlayed(newObj);
         }
     });
+    useEffect(() => {
+        Icon.getImageSource('circle', 18, '#C1554E').then((source) => {
+            return setThumbImage({ thumbIcon: source });
+        });
+        Promise.allSettled([createUserTable(), MostPlayedSongList(), getMostPlayedSong(), getFavAudios(), updateRecentlyPlayed(activeTrack)]);
+    }, []);
     const updateRecentlyPlayed = async (newTrack) => {
         const maxRecentTracks = 4;
         console.log('track')
@@ -179,22 +186,7 @@ const AudioPlayer = ({
             // fetchAndDisplayDownloads();
         })();
     }, [playBackState]);
-    useEffect(() => {
-        Icon.getImageSource('circle', 18, '#C1554E').then((source) => {
-            return setThumbImage({ thumbIcon: source });
-        });
-        Promise.allSettled([createUserTable(), MostPlayedSongList(), getMostPlayedSong(), getFavAudios()]);
-        // createUserTable();
-        // MostPlayedSongList();
-        // getMostPlayedSong()
-        // fetchAndDisplayDownloads()
-        // mostPlayed()
-        // if (downloaded) {
-        //     setUpPlayer(data);
-        //     // setOdhuvar(data);
-        //     dispatchMusic({ type: 'SET_SONG', payload: data });
-        // }
-    }, []);
+
     const getFavAudios = () => {
         listfavAudios(callbacks => {
             // console.log("🚀 ~ useEffect ~ callbacks:", JSON.stringify(callbacks, 0, 2))

@@ -134,9 +134,9 @@ const RenderEachTitle = ({
 };
 
 const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio }) => {
-    // console.log('🚀 ~ RenderTitle ~ data:', data);
+    console.log('🚀 ~ RenderTitle ~ data:', data);
     let key = true;
-
+    const { i18n } = useTranslation();
     const [selectedChapter, setSelectedChapter] = useState(null);
     const [TitleData, setTitleData] = useState([]);
     const [showLoading, setShowLoading] = useState(false);
@@ -157,6 +157,7 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
         }='${data}'  and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language}' ${
             ThalamHeaders === 0 ? 'GROUP BY thalam' : ''
         }  ORDER BY fkTrimuria,titleNo  ASC `;
+
         getSqlData(thalam ? query2 : query, (callbacks) => {
             console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
             setShowLoading(false);

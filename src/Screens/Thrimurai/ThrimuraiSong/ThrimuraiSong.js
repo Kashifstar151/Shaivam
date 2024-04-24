@@ -328,6 +328,7 @@ GROUP BY
     };
     useEffect(() => {
         dispatchMusic({ type: 'PREV_ID', payload: data?.prevId });
+
         if (downloaded) {
             setUpPlayer(data);
         }

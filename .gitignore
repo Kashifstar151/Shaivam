@@ -21,7 +21,9 @@ DerivedData
 *.ipa
 *.xcuserstate
 /ios/Shaivam/www/
+SongsData.db
 ios/.xcode.env.local
+thrimuraiSong*.db
 
 # Android/IntelliJ
 #
@@ -65,5 +67,5 @@ buck-out/
 /ios/Pods/
 /ios/Shaivam/www/
 /vendor/bundle/
-
+.git_backup/*
 git_backup/*

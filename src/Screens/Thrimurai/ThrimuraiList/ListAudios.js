@@ -73,7 +73,7 @@ const ListAudios = ({ item, navigation, listFav, colorSet }) => {
                 }}
             >
                 <MusicContainer />
-                <View style={{ paddingHorizontal: 10 }}>
+                <View style={{ paddingHorizontal: 10, width: '75%' }}>
                     <Text
                         style={{
                             fontSize: 14,
