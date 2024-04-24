@@ -73,7 +73,7 @@ const ListAudios = ({ item, navigation, listFav, colorSet }) => {
                 }}
             >
                 <MusicContainer />
-                <View style={{ paddingHorizontal: 10, width: '75%' }}>
+                <View style={{ paddingHorizontal: 10, width: '70%' }}>
                     <Text
                         style={{
                             fontSize: 14,
@@ -81,6 +81,8 @@ const ListAudios = ({ item, navigation, listFav, colorSet }) => {
                             fontFamily: 'Mulish-Regular',
                             color: colorSet.textColor,
                         }}
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
                     >
                         {item?.thalamOdhuvarTamilname}
                     </Text>
@@ -91,6 +93,8 @@ const ListAudios = ({ item, navigation, listFav, colorSet }) => {
                             fontFamily: 'Mulish-Regular',
                             color: colorSet.textColor,
                         }}
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
                     >
                         {item.title}
                     </Text>

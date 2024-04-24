@@ -2,12 +2,13 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import OpenBookSVG from './SVGs/OpenBookSVG';
 import { RFValue } from 'react-native-responsive-fontsize';
-import moment from "moment"
+import moment from 'moment';
+import { colors } from '../Helpers';
 
 const EventCard = ({ date, timing, title, theme, item }) => {
-    let d = moment(item?.attributes?.start_date)
-    let dayname = d.format('ddd')
-    let day = d.format('DD')
+    let d = moment(item?.attributes?.start_date);
+    let dayname = d.format('ddd');
+    let day = d.format('DD');
     return (
         <View
             style={[
@@ -19,12 +20,17 @@ const EventCard = ({ date, timing, title, theme, item }) => {
             ]}
         >
             <View>
-                <Text style={{ color: theme.textColor, fontSize: RFValue(12, 800) }}>
+                <Text
+                    style={{
+                        color: theme.colorscheme === 'light' ? colors.grey6 : colors.nobalGrey,
+                        fontSize: RFValue(12, 800),
+                    }}
+                >
                     {dayname ? dayname : date.day}
                 </Text>
                 <Text
                     style={{
-                        color: theme.textColor,
+                        color: theme.colorscheme === 'light' ? colors.mineGrey : theme.textColor,
                         fontSize: RFValue(20, 800),
                         fontWeight: '600',
                     }}
@@ -34,7 +40,7 @@ const EventCard = ({ date, timing, title, theme, item }) => {
             </View>
             <View style={{ height: 30, borderRightWidth: 1, borderRightColor: '#EAEAEA' }}></View>
             <OpenBookSVG fill={theme.colorscheme === 'light' ? '#4C3600' : '#fff'} />
-            <View style={{ rowGap: 5, justifyContent: 'center', rowGap: 4, }}>
+            <View style={{ rowGap: 5, justifyContent: 'center', rowGap: 4 }}>
                 <Text
                     style={{
                         fontWeight: '600',
