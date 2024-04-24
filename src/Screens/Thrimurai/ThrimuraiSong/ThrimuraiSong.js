@@ -22,14 +22,12 @@ import SettingIcon from '../../../assets/Images/Settings (1) 1.svg';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { getSqlData } from '../../Database';
 import { useIsFocused } from '@react-navigation/native';
-// import TrackPlayer from 'react-native-track-player';
 import { ThemeContext } from '../../../Context/ThemeContext';
 import { colors } from '../../../Helpers';
 import { useTranslation } from 'react-i18next';
 import '../../../../localization';
 import AruliyavarSVG from '../../../components/SVGs/AruliyavarSVG';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { dark, light } from '../../../Helpers/GlobalStyles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MusicContext } from '../../../components/Playbacks/TrackPlayerContext';
 import NaduSVG from '../../../components/SVGs/NaduSVG';
@@ -40,24 +38,13 @@ import HighlightText from '@sanar/react-native-highlight-text';
 import TrackPlayer, {
     AppKilledPlaybackBehavior,
     Capability,
-    RepeatMode,
-    usePlaybackState,
     Event,
-    State,
     useTrackPlayerEvents,
-    useActiveTrack,
-    useProgress,
 } from 'react-native-track-player';
 import Clipboard from '@react-native-clipboard/clipboard';
-import BottomSheet from '@gorhom/bottom-sheet';
 import { listfavAudios } from '../../../Databases/AudioPlayerDatabase';
 
 const ThrimuraiSong = ({ route, navigation }) => {
-    // let key = true;
-    // const database = SQLite.openDatabase({
-    //     name: key ? 'SongsData.db' : 'main.db',
-    //     createFromLocation: 1,
-    // });
     const isFocused = useIsFocused;
     const { data, downloaded, searchedword, searchScreen, songNo } = route.params || {};
     const translateX = useSharedValue(0);

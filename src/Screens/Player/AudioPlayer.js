@@ -162,8 +162,16 @@ const AudioPlayer = ({
                             prevId,
                         ],
                         (callbacks) => {
-                            if (callbacks?.message == 'Success') {
+                            if (
+                                callbacks?.message == 'Success' &&
+                                callbacks.operationType === 'CREATION'
+                            ) {
                                 setFav(true);
+                            } else if (
+                                callbacks?.message == 'Success' &&
+                                callbacks.operationType === 'DELETION'
+                            ) {
+                                setFav(false);
                             }
                         }
                     );
@@ -640,7 +648,7 @@ const AudioPlayer = ({
                             </TouchableOpacity> */}
                             <TouchableOpacity onPress={() => downloadAudios()}>
                                 {isFav || fav ? (
-                                    <Icon name="heart" size={22} color="red" />
+                                    <Icon name="heart" size={22} color={'#C1554E'} />
                                 ) : (
                                     <FavouriteIcon />
                                 )}
