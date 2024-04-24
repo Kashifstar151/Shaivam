@@ -48,15 +48,17 @@ const RenderItem = ({ blockRef, item, navigation, theme }) => {
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                     paddingBottom: 11,
+
                 }}
             >
-                <View style={{ justifyContent: 'center' }}>
+                <View style={{ justifyContent: 'center', paddingHorizontal: 5 }}>
                     <Text
                         style={{
                             // fontSize: responsiveFontSize(12),
-                            fontSize: RFValue(16),
-                            fontWeight: '600',
-                            paddingBottom: 5,
+                            fontSize: 16,
+                            // fontWeight: '600',
+                            paddingVertical: 3,
+                            fontFamily: 'Lora-SemiBold',
                             color: item.textColor,
                         }}
                     >

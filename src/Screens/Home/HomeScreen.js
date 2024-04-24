@@ -31,7 +31,7 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Feather from 'react-native-vector-icons/dist/Feather';
-import { AddSongToDatabase, MostPlayedList } from '../../Databases/AudioPlayerDatabase';
+import { AddSongToDatabase, listfavAudios, MostPlayedList } from '../../Databases/AudioPlayerDatabase';
 import { useIsFocused } from '@react-navigation/native';
 import Quiz from './Quiz';
 import VideosList from './VideosList';
@@ -41,8 +41,11 @@ import OmChanting from './OmChanting';
 import ShareSVG from '../../components/SVGs/ShareSVG';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import Share from "react-native-share"
+import { colors } from '../../Helpers';
+import { RouteTexts } from '../../navigation/RouteText';
 
-const SongAndAudio = ({ item, index, theme }) => {
+const SongAndAudio = ({ item, index, theme, navigation, isFav }) => {
+    console.log("🚀 ~ SongAndAudio ~ isFav:", isFav)
     const [fav, setFav] = useState(false);
     const authState = useSelector((store) => store.auth);
     async function buildLink(item) {
@@ -77,6 +80,7 @@ const SongAndAudio = ({ item, index, theme }) => {
 
         })
     }
+
     // console.log('🚀 ~ SongAndAudio ~ authState:', authState);
     const FavouriteAudios = (res) => {
         // TrackPlayer.getActiveTrack()
@@ -103,13 +107,18 @@ const SongAndAudio = ({ item, index, theme }) => {
         // });
     };
     return (
-        <View
+        <Pressable
             style={{
                 flexDirection: 'row',
                 margin: 10,
                 alignItems: 'center',
                 justifyContent: 'space-between',
             }}
+            onPress={() =>
+                navigation.navigate(RouteTexts.THRIMURAI_SONG, {
+                    data: item,
+                })
+            }
         >
             <View
                 style={{
@@ -119,7 +128,7 @@ const SongAndAudio = ({ item, index, theme }) => {
                 }}
             >
                 <MusicContainer />
-                <View style={{ paddingHorizontal: 10, width: '75%' }}>
+                <View style={{ paddingHorizontal: 10 }}>
                     <Text
                         style={{
                             fontSize: RFValue(14, 800),
@@ -138,24 +147,24 @@ const SongAndAudio = ({ item, index, theme }) => {
                             color: theme.textColor,
                         }}
                     >
-                        {item.categoryName}
+                        {item.title}
                     </Text>
                 </View>
             </View>
             <View style={{ flexDirection: 'row', gap: 25 }}>
-                <TouchableOpacity onPress={() => shareSong()}>
+                <TouchableOpacity onPress={() => shareSong(item)}>
                     {/* <Icon name="share" size={22}  /> */}
                     <ShareSVG fill={theme.textColor} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={fav ? null : () => FavouriteAudios(item)}>
-                    {fav ? (
+                <TouchableOpacity onPress={() => FavouriteAudios(item)}>
+                    {fav || isFav ? (
                         <AntDesign name="heart" size={22} color={'#C1554E'} />
                     ) : (
-                        <Feather name="heart" size={22} />
+                        <Feather name="heart" size={22} color={theme.textColor} />
                     )}
                 </TouchableOpacity>
             </View>
-        </View>
+        </Pressable>
     );
     // return<Text>dhjkshajk</Text>;
 };
@@ -248,9 +257,11 @@ const HomeScreen = ({ navigation }) => {
     ];
     const [selectedPlaylistType, setSelectedPlaylistType] = useState('Recently Played');
     const [playlistSong, setPlaylistSong] = useState([]);
+    const [favList, setFavList] = useState([])
     const playlisType = ['Recently Played', 'Most Played'];
     useEffect(() => {
         getPlaylistSong();
+        listFav()
     }, [selectedPlaylistType, isFocused]);
     const getPlaylistSong = async () => {
         if (selectedPlaylistType == 'Recently Played') {
@@ -302,7 +313,20 @@ const HomeScreen = ({ navigation }) => {
             subscription?.remove();
         };
     }, []);
-
+    const listFav = () => {
+        listfavAudios(callbacks => {
+            setFavList(callbacks)
+        })
+    }
+    const checkFav = (res) => {
+        let v = false
+        favList.map((item) => {
+            if (item?.id == res?.id) {
+                v = true
+            }
+        })
+        return v
+    }
     return (
         <ScrollView
             bounces={false}
@@ -405,7 +429,7 @@ const HomeScreen = ({ navigation }) => {
                         <FlatList
                             key={(item) => item?.id}
                             data={playlistSong}
-                            renderItem={({ item, index }) => <SongAndAudio item={item} theme={theme} navigation={navigation} />}
+                            renderItem={({ item, index }) => <SongAndAudio item={item} theme={theme} navigation={navigation} isFav={checkFav(item)} />}
                         />
                     </View>
                 </View>
@@ -629,7 +653,7 @@ const HomeScreen = ({ navigation }) => {
                 <VideosList screenDimension={{ screenHeight, screenWidth }} />
             </View>
             <RBSheet height={340} ref={RBSheetRef} customStyles={{ container: { borderTopEndRadius: 15, borderTopLeftRadius: 15 } }}>
-                <OmChanting />
+                <OmChanting close={RBSheetRef} />
             </RBSheet>
         </ScrollView>
     );
