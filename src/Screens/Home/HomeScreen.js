@@ -127,11 +127,23 @@ const HomeScreen = ({ navigation }) => {
     const playlisType = ['Recently Played', 'Most Played'];
     useEffect(() => {
         getPlaylistSong();
-
         listfavAudios((callbacks) => {
+            console.log("🚀 ~ listfavAudios ~ callbacks:", callbacks)
             setFavList(callbacks);
         });
     }, [selectedPlaylistType, isFocused]);
+
+    const checkIsFav = (item) => {
+        let v = false
+        if (favList?.length) {
+            favList?.map((res) => {
+                if (item?.id == res?.id) {
+                    v = true
+                }
+            })
+            return v
+        }
+    }
     const getPlaylistSong = async () => {
         if (selectedPlaylistType == 'Recently Played') {
             const data = await AsyncStorage.getItem('recentTrack');
@@ -293,6 +305,7 @@ const HomeScreen = ({ navigation }) => {
                                     }}
                                     item={item}
                                     navigation={navigation}
+                                    isFav={() => checkIsFav(item)}
                                 />
                             )}
                         />
@@ -432,7 +445,7 @@ const HomeScreen = ({ navigation }) => {
                         viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                         title={'Upcoming Festivals'}
                         theme={{ textColor: theme.textColor, colorscheme: theme.colorscheme }}
-                        onPress={() => {}}
+                        onPress={() => { }}
                     />
                 </View>
                 <FlatList
@@ -467,7 +480,7 @@ const HomeScreen = ({ navigation }) => {
                     <HeadingAndView
                         viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                         title={'Nearby Temples'}
-                        onPress={() => {}}
+                        onPress={() => { }}
                         theme={{
                             textColor: theme.textColor,
                             colorscheme: theme.colorscheme,
@@ -510,7 +523,7 @@ const HomeScreen = ({ navigation }) => {
                     viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                     title={'App Walkthrough Videos '}
                     // todos : add the fn that take it to the dedicated video page
-                    onPress={() => {}}
+                    onPress={() => { }}
                     theme={{
                         textColor: theme.textColor,
                         colorscheme: theme.colorscheme,

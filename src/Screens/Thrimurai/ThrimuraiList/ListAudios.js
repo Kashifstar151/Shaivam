@@ -7,17 +7,16 @@ import MusicContainer from '../../../../assets/Images/Frame 83.svg';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import { AddSongToDatabase, listfavAudios } from '../../../Databases/AudioPlayerDatabase';
 import { shareSong } from '../../../Helpers/SongShare';
-const ListAudios = ({ item, navigation, listFav, colorSet }) => {
+import { useIsFocused } from '@react-navigation/native';
+const ListAudios = ({ item, navigation, listFav, colorSet, isFav }) => {
+    console.log("🚀 ~ ListAudios ~ listFav:", isFav)
     const [favrted, setFavrted] = useState(false);
+    const isFocused = useIsFocused()
     useEffect(() => {
-        if (listFav.length) {
-            listFav?.forEach((element) => {
-                if (element?.id === item?.id) {
-                    setFavrted(true);
-                }
-            });
-        }
-    }, [listFav]);
+        // if (listFav) {
+        setFavrted(isFav)
+        // }
+    }, [isFav, isFocused]);
 
     const FavouriteAudios = (res) => {
         // TrackPlayer.getActiveTrack()
@@ -73,7 +72,7 @@ const ListAudios = ({ item, navigation, listFav, colorSet }) => {
                 }}
             >
                 <MusicContainer />
-                <View style={{ paddingHorizontal: 10, width: '70%' }}>
+                <View style={{ paddingHorizontal: 10, width: '70%', }}>
                     <Text
                         style={{
                             fontSize: 14,
@@ -101,7 +100,7 @@ const ListAudios = ({ item, navigation, listFav, colorSet }) => {
                 </View>
             </View>
 
-            <View style={{ flexDirection: 'row', gap: 25, paddingRight: 10 }}>
+            <View style={{ flexDirection: 'row', gap: 15, paddingRight: 10 }}>
                 <TouchableOpacity onPress={() => shareSong(item)}>
                     <Icon name="share" size={22} color={colorSet.textColor} />
                 </TouchableOpacity>
