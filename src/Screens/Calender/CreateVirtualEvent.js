@@ -5,7 +5,7 @@ import Icon from "react-native-vector-icons/dist/Feather";
 import ReminderSnackBar from "./ReminderSnackBar";
 import { colors } from "../../Helpers";
 import TextInputCom from "../Temples/Common/TextInputCom";
-import LocationLogo from "../../components/SVGs/LocationLogo";
+// import LocationLogo from "../../components/SVGs/LocationLogo";
 import CalendarSVG from "../../components/SVGs/CalendarSVG";
 import MaterialIcons from "react-native-vector-icons/dist/MaterialIcons";
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -16,7 +16,7 @@ import Feather from "react-native-vector-icons/dist/Feather";
 import ButtonComp from "../Temples/Common/ButtonComp";
 import { RouteTexts } from "../../navigation/RouteText";
 import { useAddImageForEventMutation, useAddRegularEventMutation, useGetListQuery } from "../../store/features/Calender/CalenderApiSlice";
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import DatePickerCalender from "./DatePickerCalender";
 import DateSelection from "./DateSelection";
 const CreateVirtualEvent = ({ navigation }) => {
@@ -90,37 +90,34 @@ const CreateVirtualEvent = ({ navigation }) => {
         );
     };
     const [title, setTitle] = useState(false)
+
     const onSubmit = () => {
         const formData = new FormData();
         AddRegularEvent({ data: inputValue, eventType: recurringEvent }).then((res) => {
             // console.log("🚀 ~ AddRegularEvent ~ res:", JSON.stringify(res))
             // console.log("🚀 ~ AddRegularEvent ~ res:", JSON.stringify(images))
 
-            if (isSuccess && images?.length > 0) {
+            if (res && images?.length > 0) {
                 let id = res?.data?.data?.id;
                 formData.append('files', {
                     name: images[0]?.fileName,
                     type: images[0]?.type,
-                    uri: images[0]?.uri,
+                    uri: images[0]?.url?.replace('file://', ''),
                 });
-                // formData.append("files", file);
                 formData.append("ref", "api::recurring-event.recurring-event");
                 formData.append("refId", id);
                 formData.append("field", "File");
                 console.log("🚀 ~ AddRegularEvent ~ formData:", JSON.stringify(formData))
+                navigation.navigation(RouteTexts.SUCCESS)
                 AddImage(formData).then((res) => {
                     console.log("🚀 ~ AddImage ~ res:", res)
                 }).catch((error) => {
                     console.log("🚀 ~ AddImage ~ error:", error)
-
                 })
             }
-
         }).catch((error) => {
             console.log("🚀 ~ AddRegularEvent ~ error:", error)
-
         })
-        // alert('Successfull')
     }
     return (
         <ScrollView style={{ backgroundColor: '#fff', flex: 1 }} bounces={false}>
@@ -141,6 +138,7 @@ const CreateVirtualEvent = ({ navigation }) => {
                 {
                     virtualEvent ?
                         <View>
+                            <TextInputCom insiderText={'Virtual event url'} headinText={'Virtual event url'} width={Dimensions.get('window').width - 40} />
                             <TextInputCom insiderText={'Enter event title'} headinText={'Event title*'} width={Dimensions.get('window').width - 40} />
                             <View style={{ marginVertical: 10 }}>
                                 <Text style={{ color: '#777777' }}>{'Event category'}</Text>
@@ -156,7 +154,6 @@ const CreateVirtualEvent = ({ navigation }) => {
                                     <MaterialIcons name="keyboard-arrow-down" size={24} color="#777777" />
                                 </TouchableOpacity>
                             </View>
-                            <TextInputCom insiderText={'Enter event title'} headinText={'Event title*'} width={Dimensions.get('window').width - 40} />
                             <View style={{ marginVertical: 10 }}>
                                 <Text style={{ color: '#777777' }}>{'Brief Description of the Event'}</Text>
                                 <TouchableOpacity style={{ width: Dimensions.get('window').width - 30 }}>

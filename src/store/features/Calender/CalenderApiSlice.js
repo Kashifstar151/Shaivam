@@ -1,4 +1,4 @@
-import ApiSlice from '../../apiSlice';
+import { ApiSlice } from '../../apiSlice';
 
 const CalenderApiSlice = ApiSlice.injectEndpoints({
     endpoints: (builder) => ({

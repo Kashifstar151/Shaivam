@@ -13,7 +13,7 @@ const assetMapWithTempleType = {
         content:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magnam.',
         path: require('./TempleAssets/ThirumuraiTemple.png'),
-        svg: ThrimuraiTemple,
+        Svg: <ThrimuraiTemple />,
         metaData: {
             color: '#E62828',
             letterAssociated: null,
@@ -28,7 +28,7 @@ const assetMapWithTempleType = {
             letterAssociated: null,
         },
         path: require('./TempleAssets/Temples.png'),
-        svg: <Temples />,
+        Svg: <Temples />,
     },
     3: {
         fullName: 'Popular Temples',
@@ -39,7 +39,7 @@ const assetMapWithTempleType = {
             letterAssociated: null,
         },
         path: require('./TempleAssets/PopularTemples.png'),
-        svg: <PopularTemples />,
+        Svg: <PopularTemples />,
     },
 
     4: {
@@ -52,7 +52,7 @@ const assetMapWithTempleType = {
             letterAssociated: 'C',
         },
         path: require('./TempleAssets/ParashuramaTemple.png'),
-        svg: <ParashuramaTemple />,
+        Svg: <ParashuramaTemple />,
     },
     5: {
         fullName: 'Nayanmar birth/mukti sthalam',
@@ -64,7 +64,7 @@ const assetMapWithTempleType = {
             letterAssociated: 'B',
         },
         path: require('./TempleAssets/MuktiSthalamTemple.png'),
-        svg: <MuktiSthalamTemple />,
+        Svg: <MuktiSthalamTemple />,
     },
     6: {
         fullName: 'Unclear Temples',
@@ -76,7 +76,7 @@ const assetMapWithTempleType = {
             letterAssociated: null,
         },
         path: require('./TempleAssets/UnknownTemple.png'),
-        svg: <UnknownTemple />,
+        Svg: <UnknownTemple />,
     },
 
     7: {
@@ -88,7 +88,7 @@ const assetMapWithTempleType = {
             letterAssociated: 'A',
         },
         path: require('./TempleAssets/VaippuSthalamTemple.png'),
-        svg: <VaippuSthalamTemple />,
+        Svg: <VaippuSthalamTemple />,
     },
     8: {
         fullName: 'User Location',
@@ -100,7 +100,7 @@ const assetMapWithTempleType = {
             letterAssociated: null,
         },
         path: require('./TempleAssets/UsersLocation.png'),
-        svg: <UsersLocation />,
+        Svg: <UsersLocation />,
     },
 };
 
