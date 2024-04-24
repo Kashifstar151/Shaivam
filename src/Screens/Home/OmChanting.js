@@ -48,7 +48,7 @@ const OmChanting = ({ close }) => {
                             <OMIcon />
                         </View>
                         <Text style={{ fontSize: 20, color: '#222222', fontFamily: 'Mulish-Bold' }}>Om Namah Shivaya Chant</Text>
-                        <Text style={{ fontSize: 14, fontFamily: 'Mulish-SemiBold', marginVertical: 20 }}>Here, you can set a timer for your Om meditation.
+                        <Text style={{ fontSize: 14, fontFamily: 'Mulish-SemiBold', marginVertical: 20, color: 'black' }}>Here, you can set a timer for your Om meditation.
                             This can be changed later in the More options </Text>
                         <View style={{ position: 'absolute', bottom: 10 }}>
                             <ButtonComp color={true} text='Continue' navigation={() => setShowTimer(true)} />

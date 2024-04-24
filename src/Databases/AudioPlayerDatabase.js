@@ -14,7 +14,7 @@ export async function AddSongToDatabase(query, body, callbacks) {
             callbacks({ message: 'Success', operationType: 'CREATION' });
         },
         (error) => {
-            if (error.message.includes('SQLITE_CONSTRAINT'))
+            if (error.message.includes('SQLITE_CONSTRAINT') || error?.message?.includes('UNIQUE constraint'))
                 RemoveFavAudios(
                     'd',
                     {
