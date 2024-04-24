@@ -79,8 +79,8 @@ const RenderEachTitle = ({
                                 {thalam && ThalamHeaders === 0
                                     ? t(renderTitle(item?.thalam))
                                     : thalam && ThalamHeaders !== 0
-                                        ? t(item?.title)
-                                        : t(item?.pann)}
+                                    ? t(item?.title)
+                                    : t(item?.pann)}
                             </Text>
                         </View>
                         {!thalam || (thalam && ThalamHeaders === 0) ? (
@@ -134,9 +134,9 @@ const RenderEachTitle = ({
 };
 
 const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio }) => {
-    // console.log('🚀 ~ RenderTitle ~ data:', data);
+    console.log('🚀 ~ RenderTitle ~ data:', data);
     let key = true;
-
+    const { i18n } = useTranslation();
     const [selectedChapter, setSelectedChapter] = useState(null);
     const [TitleData, setTitleData] = useState([]);
     const [showLoading, setShowLoading] = useState(false);
@@ -152,11 +152,14 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
         } else {
             query = `SELECT * FROM thirumurais where fkTrimuria=${data.prevId}  ORDER BY titleNo ASC `;
         }
-        const query2 = `Select * from thirumurais where ${ThalamHeaders === 0 ? 'country' : 'thalam'
-            }='${data}'  and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language}' ${ThalamHeaders === 0 ? 'GROUP BY thalam' : ''
-            }  ORDER BY fkTrimuria,titleNo  ASC `;
+        const query2 = `Select * from thirumurais where ${
+            ThalamHeaders === 0 ? 'country' : 'thalam'
+        }='${data}'  and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language}' ${
+            ThalamHeaders === 0 ? 'GROUP BY thalam' : ''
+        }  ORDER BY fkTrimuria,titleNo  ASC `;
+
         getSqlData(thalam ? query2 : query, (callbacks) => {
-            console.log("🚀 ~ getSqlData ~ callbacks:", JSON.stringify(callbacks, 0, 2))
+            console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
             setShowLoading(false);
             setTitleData(callbacks);
         });

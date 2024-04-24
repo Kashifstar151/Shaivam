@@ -67,7 +67,7 @@ const ThrimuraiList = ({ navigation }) => {
     const [thrimurais, setThrimurais] = useState([]);
     const [onFocus, setOnFocus] = useState(false);
     const [recentPlayed, setRecentPlayed] = useState([]);
-    const [listFav, setListFav] = useState([])
+    const [listFav, setListFav] = useState([]);
     // const database = SQLite.openDatabase({ name: '/storage/emulated/0/Android/data/com.shaivam/files/Thrimurai/thirumuraiData.db', createFromLocation: 1 });
     // const database = SQLite.openDatabase({
     //     name: 'SongsData.db',
@@ -76,10 +76,10 @@ const ThrimuraiList = ({ navigation }) => {
     // const [favList, setFavlist] = useState([])
     useEffect(() => {
         getRecentPlaylist();
-        listfavAudios(callbacks => {
-            setListFav(callbacks)
-            console.log("🚀 ~ useEffect ~ callbacks:", callbacks)
-        })
+        listfavAudios((callbacks) => {
+            setListFav(callbacks);
+            console.log('🚀 ~ useEffect ~ callbacks:', callbacks);
+        });
     }, [isFocuced]);
     const getRecentPlaylist = async () => {
         const songs = await AsyncStorage.getItem('recentTrack');
@@ -90,32 +90,32 @@ const ThrimuraiList = ({ navigation }) => {
             setRecentPlayed([]);
         }
     };
-    const [favSong, setFavSong] = useState(false)
-    const FavouriteAudios = (res) => {
-        // TrackPlayer.getActiveTrack()
-        //     .then((res) => {
-        AddSongToDatabase(
-            'sf',
-            [
-                res?.id,
-                res?.url,
-                res?.title,
-                res?.artist,
-                res?.categoryName,
-                res?.thalamOdhuvarTamilname,
-                res?.thirumariasiriyar,
-            ],
-            (callbacks) => {
+    // const [favSong, setFavSong] = useState(false)
+    // const FavouriteAudios = (res) => {
+    //     // TrackPlayer.getActiveTrack()
+    //     //     .then((res) => {
+    //     AddSongToDatabase(
+    //         'sf',
+    //         [
+    //             res?.id,
+    //             res?.url,
+    //             res?.title,
+    //             res?.artist,
+    //             res?.categoryName,
+    //             res?.thalamOdhuvarTamilname,
+    //             res?.thirumariasiriyar,
+    //         ],
+    //         (callbacks) => {
 
-                if (callbacks?.message == 'Success') {
-                    setFavSong(true)
-                }
-            }
-        );
-        // })
-        // .catch((err) => {
-        // });
-    };
+    //             if (callbacks?.message == 'Success') {
+    //                 setFavSong(true)
+    //             }
+    //         }
+    //     );
+    //     // })
+    //     // .catch((err) => {
+    //     // });
+    // };
 
     useEffect(() => {
         retrieveData();
@@ -467,7 +467,14 @@ const ThrimuraiList = ({ navigation }) => {
                             key={(item) => item?.id}
                             data={recentPlayed}
                             renderItem={({ item, index }) => (
-                                <ListAudios listFav={listFav} item={item} navigation={navigation} />
+                                <ListAudios
+                                    listFav={listFav}
+                                    colorSet={{
+                                        textColor: theme.textColor,
+                                    }}
+                                    item={item}
+                                    navigation={navigation}
+                                />
                             )}
                         />
                     </View>

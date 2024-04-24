@@ -10,6 +10,8 @@ import {
     Platform,
     Modal,
     PermissionsAndroid,
+    Alert,
+    AppState,
 } from 'react-native';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import NearByTemples from './NearByTemples';
@@ -20,8 +22,9 @@ import {
     getCurrentLocation,
     getCurrentLocationWatcher,
     getTheLocationName,
-    locationPermission,
+    getTheLocationPermissionToStorage,
     onRegionChangeCompleteCallback,
+    requestThePermission,
 } from '../../Helpers/GeolocationFunc';
 import SearchContainerWithIcon from './SearchContainerWithIcon';
 import TrackBackToLocSVG from '../../components/SVGs/TrackBackToLocSVG';
@@ -155,10 +158,37 @@ export const Temples = ({ navigation, route }) => {
     const [showModal, setShowModal] = useState(false);
     const [padState, setPadState] = useState(1);
     const [permissionGranted, setPermissionGranted] = useState(null);
+
+    const [userLocName, setUserLocName] = useState('');
+    const permissionTypeRef = useRef(
+        Platform.select({
+            ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+            android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+        })
+    );
+
+    // Alert.alert('the render');
+
     const onMapReadyCallback = async () => {
-        const state = await locationPermission();
-        setPermissionGranted(state.permissionType);
-        if (state.status) {
+        // Alert.alert('on Entry');
+        let state = await checkPermissionAccess(permissionTypeRef.current);
+
+        let isPermissionExist = await getTheLocationPermissionToStorage();
+        console.log('🚀 ~ onMapReadyCallback ~ isPermissionExist:', isPermissionExist);
+        setPermissionGranted((prev) => state);
+
+        if (
+            state !== RESULTS.GRANTED &&
+            (isPermissionExist === 'undefined' || isPermissionExist === null)
+        ) {
+            // Alert.alert('requesting permission');
+            let requestedVal = await requestThePermission(permissionTypeRef.current);
+            // state = requestedVal.permissionType;
+            // Alert.alert(`${requestedVal.permissionType}`);
+            setPermissionGranted(() => requestedVal.permissionType);
+        } else if (state === RESULTS.GRANTED) {
+            console.log('🚀 ~ onMapReadyCallback ~ state when true :', state);
+            // Alert.alert('setting location ');
             getCurrentLocation((val) => {
                 console.log("🚀 ~ getCurrentLocation ~ val:", val)
                 setUserLocation((prev) => ({ ...prev, ...val }));
@@ -168,16 +198,13 @@ export const Temples = ({ navigation, route }) => {
                 setUserLocation((prev) => ({ ...prev, ...val }));
             });
         } else {
+            console.log('🚀 ~ onMapReadyCallback ~ state when false :', state);
+            // Alert.alert('opening modal ');
             setShowModal(true);
         }
+        // Alert.alert('Completed Execution');
     };
 
-    const [userLocName, setUserLocName] = useState('');
-
-    const handleModalAction = async () => {
-        openSettings();
-        setShowModal(!showModal);
-    };
     // todos : have to implement the async storage to store the access permission value, so that when we get back from changing the permission it must ask for the permission rather than again showing modal of enable the location
     const getTheState = useCallback(async () => {
         let permissionType = Platform.select({
@@ -202,14 +229,44 @@ export const Temples = ({ navigation, route }) => {
         }
     };
 
-    useFocusEffect(() => {
-        getTheState();
-    });
+    const subcriptionEventListner = useRef();
+    const handleFocusEvent = () => {
+        let grantState = '';
+        checkPermissionAccess(permissionTypeRef.current).then((state) => {
+            grantState = state;
+            if (state !== RESULTS.GRANTED) {
+                requestThePermission(permissionTypeRef.current).then((finalState) => {
+                    grantState = finalState;
+                });
+            }
+            requestThePermission(permissionTypeRef.current).then((finalState) => {
+                grantState = finalState;
+            });
+            setPermissionGranted(() => grantState);
+        });
+    };
+
+    const handleModalAction = async () => {
+        subcriptionEventListner.current = AppState.addEventListener('focus', handleFocusEvent);
+        // });
+        openSettings();
+        setShowModal(!showModal);
+    };
+
+    // check on active and background state
 
     useEffect(() => {
-        (async () => {
-            await onMapReadyCallback();
-        })();
+        return () => {
+            if (subcriptionEventListner.current) {
+                subcriptionEventListner.current.remove();
+            }
+        };
+    }, []);
+
+    // ---------------------------------------
+
+    useEffect(() => {
+        onMapReadyCallback();
 
         return () => {
             clearGetCurrentLocationWatcher();

@@ -45,7 +45,7 @@ const NullComponent = () => <></>;
 //     );
 // };
 const Tab = createBottomTabNavigator();
-export default TempleTab = ({ navigation }) => {
+const TempleTab = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
     return (
         <Tab.Navigator
@@ -251,6 +251,8 @@ export default TempleTab = ({ navigation }) => {
         </Tab.Navigator>
     );
 };
+
+export default TempleTab;
 export const styles = StyleSheet.create({
     tabContainer: {
         paddingTop: 5,

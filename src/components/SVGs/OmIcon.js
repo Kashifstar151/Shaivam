@@ -1,13 +1,13 @@
 import * as React from 'react';
 import Svg, { G, Path } from 'react-native-svg';
 
-function OmIcon({ fill, ...props }) {
+function OmIcon({ fill, width = 48, height = 48, viewBox = '0 0 48 48', ...props }) {
     return (
         <Svg
             xmlns="http://www.w3.org/2000/svg"
-            width={48}
-            height={48}
-            viewBox="0 0 48 48"
+            width={width}
+            height={height}
+            viewBox={viewBox}
             fill="none"
             {...props}
         >

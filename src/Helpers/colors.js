@@ -49,6 +49,9 @@ export default {
     grey8: '#1e1e1e',
     grey9: '#2C2C2C',
     black: '#121212',
+    maroon: '#C1554E',
+    mineGrey: '#222222',
+    nobalGrey: '#B6B6B6',
 
     //dynamic color schema based on theme
 
@@ -79,6 +82,9 @@ export default {
         greenGradBallRight: { startColor: '#BAE6C6', stopColor: '#8EC99F' },
         greenGradBallLeft: { startColor: '#BAE6C6', stopColor: '#8EC99F' },
 
+        // separator
+        separator: '#EAEAEA',
+
         // search box
 
         searchBox: { bgColor: '#8F3630', textColor: '#FF9D9D' },
@@ -88,6 +94,9 @@ export default {
             selected: { bgColor: '#F3DDDC', textColor: '#8F3630' },
         },
 
+        unSelectedBox: {
+            bgColor: '#EDEDED',
+        },
         // iconHeadingColor
         iconHeadingColor: {
             inactive: '#FFE0E0',
@@ -129,10 +138,17 @@ export default {
     },
     dark: {
         ...darkTheme,
+
+        unSelectedBox: {
+            bgColor: '#353535',
+        },
         // yellow
         yellowGradBallRight: darkCardGrad,
         yellowGradBallLeft: darkCardGrad,
         yellowGradcolors: greyForCard,
+
+        // separator
+        separator: '#4D4D4D',
 
         // red
         redGradcolors: greyForCard,
@@ -158,8 +174,8 @@ export default {
             inactive: '#777777',
             active: '#FFFFFF',
             bgColor: '#C2534C',
-            activeTextColor: '#8F3630',
-            inactiveTextColor: '#FFE0E0',
+            activeTextColor: '#FFFFFF',
+            inactiveTextColor: '#777777',
         },
 
         // setting
