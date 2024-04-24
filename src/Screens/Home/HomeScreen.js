@@ -342,7 +342,7 @@ const HomeScreen = ({ navigation }) => {
                 <CardComponents navigation={navigation} />
             </View>
             {playlistSong?.length > 0 && (
-                <View style={{ paddingHorizontal: 10 }}>
+                <View style={{ paddingVertical: 10, paddingHorizontal: 15 }}>
                     <Text
                         style={{
                             fontSize: RFValue(18, 800),
@@ -357,7 +357,7 @@ const HomeScreen = ({ navigation }) => {
                         <FlatList
                             contentContainerStyle={{
                                 marginVertical: 10,
-                                paddingHorizontal: 10,
+                                paddingBottom: 10,
                             }}
                             horizontal
                             style={{
@@ -595,7 +595,8 @@ const HomeScreen = ({ navigation }) => {
                 <FlatList
                     contentContainerStyle={{
                         rowGap: 4,
-                        paddingBottom: 15,
+                        paddingTop: 15,
+                        paddingBottom: 30,
                     }}
                     key={(item) => item?.id}
                     data={nearByTempleData}
@@ -650,7 +651,6 @@ export const styles = StyleSheet.create({
     firstContainer: {
         height: Dimensions.get('window').height / 2.5,
     },
-    secondContainer: { backgroundColor: 'white' },
     headerContainer: {
         paddingTop: StatusBar.currentHeight + 50,
         justifyContent: 'space-between',
