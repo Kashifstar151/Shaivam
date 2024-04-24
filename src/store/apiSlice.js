@@ -4,7 +4,7 @@ export const ApiSlice = createApi({
     reducerPath: 'apiSlice',
     baseQuery: fetchBaseQuery({ baseUrl: 'https://prod-admin.shaivam.in/api/' }), // ! add the base query of server if not auth else use baseQueryWithReAuth
     tagTypes: ['Calendar'],
-    endpoints: (builder) => ({}),
+    endpoints: () => ({}),
 });
 export const TempleApiSlice = createApi({
     reducerPath: 'templeSlice',

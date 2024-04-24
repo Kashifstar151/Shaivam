@@ -19,11 +19,12 @@ import HighlightedText from './HighlightedText';
 import { RouteTexts } from '../../../navigation/RouteText';
 import { useTranslation } from 'react-i18next';
 import HighlightText from '@sanar/react-native-highlight-text';
+import getDimension from '../../../Helpers/getDimension';
 
 const SearchScreen = ({ navigation, route }) => {
     const { i18n } = useTranslation();
     const { thrimurais } = route?.params;
-    const updatedThrimurai = thrimurais ? [{ id: 0, name: 'All' }, ...thrimurais] : null;
+    const updatedThrimurai = thrimurais.length ? [{ id: 0, name: 'All' }, ...thrimurais] : null;
     const [searchText, setSearchText] = useState('');
     const [searchResult, setSearchedResult] = useState([]);
     const [onFocus, setOnFocus] = useState(false);
@@ -32,6 +33,7 @@ const SearchScreen = ({ navigation, route }) => {
 
     const [fktrimuria, setFkTrimuria] = useState(new Set([0]));
     const [isSearched, setIsSearched] = useState(false);
+    const { screenHeight } = getDimension();
 
     useEffect(() => {
         getDataFromSql();
@@ -41,46 +43,36 @@ const SearchScreen = ({ navigation, route }) => {
         };
     }, [fktrimuria]);
     const normalizeString = (str) => {
-        setSearchText(
-            str
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .toLowerCase()
-        );
-        return str
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .toLowerCase();
+        setSearchText(str.normalize('NFD').replace(/[\u0300-\u036f]/g, ''));
+        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     };
     const getDataFromSql = (e) => {
         setIsSearched(false);
 
-        if (searchText && searchText.length >= 2) {
+        if (searchText && searchText.length >= 3) {
             getSqlData(
                 `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${normalizeString(
                     searchText.trim()
-                )}%' and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language}' ${!fktrimuria.has(0)
-                    ? `and fkTrimuria IN (${[...fktrimuria].join(',')})`
-                    : `and fkTrimuria IN (${[...thrimurais.map((item) => item.id)].join(',')})`
+                )}%' and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language}' ${
+                    !fktrimuria.has(0)
+                        ? `and fkTrimuria IN (${[...fktrimuria].join(',')})`
+                        : `and fkTrimuria IN (${[...thrimurais.map((item) => item.id)].join(',')})`
                 } GROUP BY titleS;`,
-                // `SELECT * FROM thirumurais WHERE search_title='%திருஞானசம்பந்தர்தேவாரம்-1.031-திருக்குரங்கணின்முட்டம்-விழுநீர்மழுவாள்படை%' LIMIT 10 OFFSET 0;`,
                 (callbacks) => {
-                    // console.log("🚀 ~ getDataFromSql ~ callbacks:", JSON.stringify(callbacks, 0, 2))
                     setSearchedResult(callbacks);
                 }
             );
             getSqlData(
-                // `SELECT * FROM thirumurai_songs WHERE searchTitle LIKE '%${normalizeString(searchText)}%' ${!fktrimuria.has(0) ? `and thirumuraiId IN (${[...fktrimuria].join(',')})` : ''
-                // } and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language
-                // }' ORDER BY thirumuraiId,prevId,songNo ASC `,
                 `SELECT t.prevId, t.titleNo ,ts.thirumuraiId, ts.songNo ,ts.rawSong FROM thirumurais t  JOIN thirumurai_songs ts ON t.prevId = ts.prevId WHERE ts.searchTitle LIKE '%${normalizeString(
                     searchText.trim()
-                )}%'  ${!fktrimuria.has(0)
-                    ? `and ts.thirumuraiId IN (${[...fktrimuria].join(',')})`
-                    : `and ts.thirumuraiId IN (${[...thrimurais.map((item) => item.id)].join(
-                        ','
-                    )})`
-                }  AND ts.locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language
+                )}%'  ${
+                    !fktrimuria.has(0)
+                        ? `and ts.thirumuraiId IN (${[...fktrimuria].join(',')})`
+                        : `and ts.thirumuraiId IN (${[...thrimurais.map((item) => item.id)].join(
+                              ','
+                          )})`
+                }  AND ts.locale='${
+                    i18n.language === 'en-IN' ? 'RoI' : i18n.language
                 }' GROUP BY   ts.thirumuraiId, ts.prevId, ts.songNo ORDER BY ts.thirumuraiId, ts.prevId, ts.songNo ASC`,
                 (callbacks) => {
                     setRawSongs(callbacks);
@@ -191,7 +183,6 @@ const SearchScreen = ({ navigation, route }) => {
                     )}`}</Text>
                 )}
                 {highlight(item, index, key)}
-                {key !== 'title' ? null : <Text>सम्पूर्ण ऋग्वेद पारायणम् Complete ...</Text>}
             </Pressable>
         );
     };
@@ -240,14 +231,20 @@ const SearchScreen = ({ navigation, route }) => {
     return (
         <View style={[styles.main, { backgroundColor: theme.backgroundColor }]}>
             <Background>
-                <HeaderWithTextInput
-                    onSubmitEditing={getDataFromSql}
-                    placeholder={`${t('Search for any')} ( முதல்-திருமுறை )`}
-                    navigation={navigation}
-                    setState={(e) => setSearchText(e)}
-                    state={searchText}
-                    ref={focusRef}
-                />
+                <View
+                    style={{
+                        paddingTop: screenHeight * 0.03,
+                    }}
+                >
+                    <HeaderWithTextInput
+                        onSubmitEditing={getDataFromSql}
+                        placeholder={`${t('Search for any')} ( முதல்-திருமுறை )`}
+                        navigation={navigation}
+                        setState={(e) => setSearchText(e)}
+                        state={searchText}
+                        ref={focusRef}
+                    />
+                </View>
                 <View
                     style={{
                         paddingLeft: 10,
@@ -289,22 +286,26 @@ const SearchScreen = ({ navigation, route }) => {
                                     }}
                                 >
                                     {`${item?.id === 0 ? 'All' : ''} `}
-                                    {`${item?.id > 0 && item?.id < 8
-                                        ? `${t(`Thrimurai ${item?.id}`)}`
-                                        : ''
-                                        }`}
-                                    {`${item?.id >= 8 && item?.id !== 10 && item?.id !== 11
-                                        ? `${t(nameMap[`Thrimurai ${item?.id}`])}`
-                                        : ''
-                                        }`}
-                                    {`${item?.id === 10
-                                        ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[0]}`
-                                        : ''
-                                        }`}
-                                    {`${item?.id === 11
-                                        ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[1]}`
-                                        : ''
-                                        }`}
+                                    {`${
+                                        item?.id > 0 && item?.id < 8
+                                            ? `${t(`Thrimurai ${item?.id}`)}`
+                                            : ''
+                                    }`}
+                                    {`${
+                                        item?.id >= 8 && item?.id !== 10 && item?.id !== 11
+                                            ? `${t(nameMap[`Thrimurai ${item?.id}`])}`
+                                            : ''
+                                    }`}
+                                    {`${
+                                        item?.id === 10
+                                            ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[0]}`
+                                            : ''
+                                    }`}
+                                    {`${
+                                        item?.id === 11
+                                            ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[1]}`
+                                            : ''
+                                    }`}
                                 </Text>
                             </TouchableOpacity>
                         )}

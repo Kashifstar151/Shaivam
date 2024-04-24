@@ -1,21 +1,17 @@
 import React, { useCallback, useContext, useEffect, useState, useRef } from 'react';
 import {
     Dimensions,
-    Image,
     Pressable,
     StatusBar,
     StyleSheet,
     Text,
     View,
-    TouchableOpacity,
     ImageBackground,
     ScrollView,
     FlatList,
     Platform,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
-import MusicContainer from '../../../assets/Images/Frame 83.svg';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import CardComponents from '../../components/CardComponents';
 import '../../../localization';
 import { ThemeContext } from '../../Context/ThemeContext';
@@ -29,147 +25,17 @@ import HeadingAndView from './HeadingAndView';
 import PlaceCard from './PlaceCard';
 import { RFValue } from 'react-native-responsive-fontsize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import Feather from 'react-native-vector-icons/dist/Feather';
-import { AddSongToDatabase, listfavAudios, MostPlayedList } from '../../Databases/AudioPlayerDatabase';
+import { listfavAudios, MostPlayedList } from '../../Databases/AudioPlayerDatabase';
 import { useIsFocused } from '@react-navigation/native';
 import Quiz from './Quiz';
 import VideosList from './VideosList';
-import { useSelector } from 'react-redux';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import OmChanting from './OmChanting';
-import ShareSVG from '../../components/SVGs/ShareSVG';
-import dynamicLinks from '@react-native-firebase/dynamic-links';
-import Share from "react-native-share"
 import { colors } from '../../Helpers';
-import { RouteTexts } from '../../navigation/RouteText';
+import ListAudios from '../Thrimurai/ThrimuraiList/ListAudios';
 
-const SongAndAudio = ({ item, index, theme, navigation, isFav }) => {
-    console.log("🚀 ~ SongAndAudio ~ isFav:", isFav)
-    const [fav, setFav] = useState(false);
-    const authState = useSelector((store) => store.auth);
-    async function buildLink(item) {
-        // alert(true)
-        const link = await dynamicLinks().buildShortLink({
-            link: `https://shaivaam.page.link/org?prevId=${item?.prevId}`,
-            domainUriPrefix: 'https://shaivaam.page.link',
-            ios: {
-                appStoreId: '123456',
-                bundleId: 'com.shaivam.app',
-                minimumVersion: '18',
-            },
-            android: {
-                packageName: 'com.shaivam'
-            }
-            // optional setup which updates Firebase analytics campaign
-            // "banner". This also needs setting up before hand
-        },
-            dynamicLinks.ShortLinkType.DEFAULT,
-        );
-
-        console.log("🚀 ~ link ~ link:", link)
-        return link;
-    }
-    const shareSong = async () => {
-        // alert(JSON.stringify(item))
-        console.log('Stringinfy', JSON.stringify(item, 0, 2))
-        const link = await buildLink(item)
-        Share.open({
-            message: `${item?.title} I want to share this Thirumurai with you.
-            இந்தத் திருமுறையை Shaivam.org Mobile செயலியில் படித்தேன். மிகவும் பிடித்திருந்தது. பகிர்கின்றேன். படித்து மகிழவும் ${link}`
-
-        })
-    }
-
-    // console.log('🚀 ~ SongAndAudio ~ authState:', authState);
-    const FavouriteAudios = (res) => {
-        // TrackPlayer.getActiveTrack()
-        //     .then((res) => {
-        AddSongToDatabase(
-            'sf',
-            [
-                res?.id,
-                res?.url,
-                res?.title,
-                res?.artist,
-                res?.categoryName,
-                res?.thalamOdhuvarTamilname,
-                res?.thirumariasiriyar,
-            ],
-            (callbacks) => {
-                if (callbacks?.message == 'Success') {
-                    setFav(true)
-                }
-            }
-        );
-        // })
-        // .catch((err) => {
-        // });
-    };
-    return (
-        <Pressable
-            style={{
-                flexDirection: 'row',
-                margin: 10,
-                alignItems: 'center',
-                justifyContent: 'space-between',
-            }}
-            onPress={() =>
-                navigation.navigate(RouteTexts.THRIMURAI_SONG, {
-                    data: item,
-                })
-            }
-        >
-            <View
-                style={{
-                    paddingHorizontal: 0,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                }}
-            >
-                <MusicContainer />
-                <View style={{ paddingHorizontal: 10 }}>
-                    <Text
-                        style={{
-                            fontSize: RFValue(14, 800),
-                            // fontWeight: '600',
-                            fontFamily: 'Mulish-Regular',
-                            color: theme.textColor,
-                        }}
-                    >
-                        {item.thalamOdhuvarTamilname}
-                    </Text>
-                    <Text
-                        style={{
-                            fontSize: RFValue(12, 800),
-                            // fontWeight: '400',
-                            fontFamily: 'Mulish-Regular',
-                            color: theme.textColor,
-                        }}
-                    >
-                        {item.title}
-                    </Text>
-                </View>
-            </View>
-            <View style={{ flexDirection: 'row', gap: 25 }}>
-                <TouchableOpacity onPress={() => shareSong(item)}>
-                    {/* <Icon name="share" size={22}  /> */}
-                    <ShareSVG fill={theme.textColor} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => FavouriteAudios(item)}>
-                    {fav || isFav ? (
-                        <AntDesign name="heart" size={22} color={'#C1554E'} />
-                    ) : (
-                        <Feather name="heart" size={22} color={theme.textColor} />
-                    )}
-                </TouchableOpacity>
-            </View>
-        </Pressable>
-    );
-    // return<Text>dhjkshajk</Text>;
-};
 const HomeScreen = ({ navigation }) => {
-    const RBSheetRef = useRef(null)
+    const RBSheetRef = useRef(null);
     const { theme } = useContext(ThemeContext);
     const [compHeight, setCompHeight] = useState();
     const [textInsidePlaylistCard, setTextInsidePlaylistCard] = useState(0);
@@ -178,7 +44,7 @@ const HomeScreen = ({ navigation }) => {
         width: 0,
         height: 0,
     });
-    const isFocused = useIsFocused()
+    const isFocused = useIsFocused();
     const handleLayout = useCallback(
         (event) => {
             const { height } = event.nativeEvent.layout;
@@ -257,20 +123,23 @@ const HomeScreen = ({ navigation }) => {
     ];
     const [selectedPlaylistType, setSelectedPlaylistType] = useState('Recently Played');
     const [playlistSong, setPlaylistSong] = useState([]);
-    const [favList, setFavList] = useState([])
+    const [favList, setFavList] = useState([]);
     const playlisType = ['Recently Played', 'Most Played'];
     useEffect(() => {
         getPlaylistSong();
-        listFav()
+
+        listfavAudios((callbacks) => {
+            setFavList(callbacks);
+        });
     }, [selectedPlaylistType, isFocused]);
     const getPlaylistSong = async () => {
         if (selectedPlaylistType == 'Recently Played') {
             const data = await AsyncStorage.getItem('recentTrack');
-            console.log("🚀 ~ getPlaylistSong ~ data:", data)
+            console.log('🚀 ~ getPlaylistSong ~ data:', data);
             setPlaylistSong(JSON.parse(data));
         } else {
             MostPlayedList('d', (callbacks) => {
-                console.log("🚀 ~ MostPlayedList ~ callbacks:", callbacks)
+                console.log('🚀 ~ MostPlayedList ~ callbacks:', callbacks);
                 setPlaylistSong(callbacks.slice(0, 4));
             });
         }
@@ -313,20 +182,7 @@ const HomeScreen = ({ navigation }) => {
             subscription?.remove();
         };
     }, []);
-    const listFav = () => {
-        listfavAudios(callbacks => {
-            setFavList(callbacks)
-        })
-    }
-    const checkFav = (res) => {
-        let v = false
-        favList.map((item) => {
-            if (item?.id == res?.id) {
-                v = true
-            }
-        })
-        return v
-    }
+
     return (
         <ScrollView
             bounces={false}
@@ -356,7 +212,6 @@ const HomeScreen = ({ navigation }) => {
             </View>
             <View
                 style={{
-                    paddingHorizontal: 15,
                     marginTop:
                         orientation == 'PORTRAIT'
                             ? -screenHeight / 2.3
@@ -366,9 +221,8 @@ const HomeScreen = ({ navigation }) => {
             >
                 <CardComponents navigation={navigation} />
             </View>
-            {
-                playlistSong?.length > 0 &&
-                <View style={{ paddingHorizontal: 10 }}>
+            {playlistSong?.length > 0 && (
+                <View style={{ paddingVertical: 10, paddingHorizontal: 15 }}>
                     <Text
                         style={{
                             fontSize: RFValue(18, 800),
@@ -383,7 +237,7 @@ const HomeScreen = ({ navigation }) => {
                         <FlatList
                             contentContainerStyle={{
                                 marginVertical: 10,
-                                paddingHorizontal: 10,
+                                paddingBottom: 10,
                             }}
                             horizontal
                             style={{
@@ -413,7 +267,9 @@ const HomeScreen = ({ navigation }) => {
                                     <Text
                                         style={{
                                             color:
-                                                selectedPlaylistType == item ? colors?.white : '#777777',
+                                                selectedPlaylistType == item
+                                                    ? colors?.white
+                                                    : '#777777',
                                             fontFamily: 'Mulish-Bold',
                                             fontWeight: '700',
                                         }}
@@ -429,14 +285,24 @@ const HomeScreen = ({ navigation }) => {
                         <FlatList
                             key={(item) => item?.id}
                             data={playlistSong}
-                            renderItem={({ item, index }) => <SongAndAudio item={item} theme={theme} navigation={navigation} isFav={checkFav(item)} />}
+                            renderItem={({ item, index }) => (
+                                <ListAudios
+                                    listFav={favList}
+                                    colorSet={{
+                                        textColor: theme.textColor,
+                                    }}
+                                    item={item}
+                                    navigation={navigation}
+                                />
+                            )}
                         />
                     </View>
                 </View>
-            }
+            )}
             <View
                 style={{
                     height: 250,
+                    marginVertical: 20,
                 }}
             >
                 <Text
@@ -511,7 +377,7 @@ const HomeScreen = ({ navigation }) => {
                                     We have created playlists for you
                                 </Text>
                             </View>
-                            <Pressable style={{ flexDirection: 'row', }}>
+                            <Pressable style={{ flexDirection: 'row' }}>
                                 <Text
                                     style={{
                                         fontSize: RFValue(16, 800),
@@ -520,7 +386,7 @@ const HomeScreen = ({ navigation }) => {
                                 >
                                     View all
                                 </Text>
-                                <Icon name='arrow-right-alt' color={'#FFFFFF'} size={24} />
+                                <Icon name="arrow-right-alt" color={'#FFFFFF'} size={24} />
                             </Pressable>
                         </View>
                     </ImageBackground>
@@ -563,10 +429,10 @@ const HomeScreen = ({ navigation }) => {
             <View>
                 <View style={{ paddingBottom: 15, paddingHorizontal: 15 }}>
                     <HeadingAndView
-                        viewBtnColor={'#C1554E'}
+                        viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                         title={'Upcoming Festivals'}
                         theme={{ textColor: theme.textColor, colorscheme: theme.colorscheme }}
-                        onPress={() => { }}
+                        onPress={() => {}}
                     />
                 </View>
                 <FlatList
@@ -599,9 +465,9 @@ const HomeScreen = ({ navigation }) => {
             <View>
                 <View style={{ padding: 15 }}>
                     <HeadingAndView
-                        viewBtnColor={'#C1554E'}
+                        viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                         title={'Nearby Temples'}
-                        onPress={() => { }}
+                        onPress={() => {}}
                         theme={{
                             textColor: theme.textColor,
                             colorscheme: theme.colorscheme,
@@ -611,14 +477,14 @@ const HomeScreen = ({ navigation }) => {
                 <FlatList
                     contentContainerStyle={{
                         rowGap: 4,
-                        paddingBottom: 15,
+                        paddingTop: 15,
+                        paddingBottom: 30,
                     }}
                     key={(item) => item?.id}
                     data={nearByTempleData}
                     renderItem={({ item, index }) => (
                         <ElevatedCard theme={{ colorscheme: theme.colorscheme }}>
                             <PlaceCard
-
                                 img={item.img}
                                 templeName={item.templeName}
                                 address={item.address}
@@ -641,10 +507,10 @@ const HomeScreen = ({ navigation }) => {
                 }}
             >
                 <HeadingAndView
-                    viewBtnColor={'#C1554E'}
+                    viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                     title={'App Walkthrough Videos '}
                     // todos : add the fn that take it to the dedicated video page
-                    onPress={() => { }}
+                    onPress={() => {}}
                     theme={{
                         textColor: theme.textColor,
                         colorscheme: theme.colorscheme,
@@ -652,7 +518,11 @@ const HomeScreen = ({ navigation }) => {
                 />
                 <VideosList screenDimension={{ screenHeight, screenWidth }} />
             </View>
-            <RBSheet height={340} ref={RBSheetRef} customStyles={{ container: { borderTopEndRadius: 15, borderTopLeftRadius: 15 } }}>
+            <RBSheet
+                height={340}
+                ref={RBSheetRef}
+                customStyles={{ container: { borderTopEndRadius: 15, borderTopLeftRadius: 15 } }}
+            >
                 <OmChanting close={RBSheetRef} />
             </RBSheet>
         </ScrollView>
@@ -663,7 +533,6 @@ export const styles = StyleSheet.create({
     firstContainer: {
         height: Dimensions.get('window').height / 2.5,
     },
-    secondContainer: { backgroundColor: 'white' },
     headerContainer: {
         paddingTop: StatusBar.currentHeight + 50,
         justifyContent: 'space-between',

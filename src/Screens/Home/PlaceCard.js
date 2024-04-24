@@ -6,7 +6,6 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import { colors } from '../../Helpers';
 
 const PlaceCard = ({ img, templeName, address, theme }) => {
-
     return (
         <View
             style={{
@@ -22,7 +21,7 @@ const PlaceCard = ({ img, templeName, address, theme }) => {
                 shadowOffset: { width: -2, height: 4 },
                 shadowOpacity: 0.2,
                 shadowRadius: 3,
-                elevation: 20
+                elevation: 15,
             }}
         >
             <View>
@@ -64,10 +63,14 @@ const PlaceCard = ({ img, templeName, address, theme }) => {
 
                 <View style={{ columnGap: 24, flexDirection: 'row' }}>
                     <Pressable>
-                        <ShareSVG fill={'#777777'} />
+                        <ShareSVG
+                            fill={theme.colorscheme === 'light' ? colors.grey6 : theme.textColor}
+                        />
                     </Pressable>
                     <Pressable>
-                        <LocationSVG fill={'#777777'} />
+                        <LocationSVG
+                            fill={theme.colorscheme === 'light' ? colors.grey6 : theme.textColor}
+                        />
                     </Pressable>
                 </View>
             </View>

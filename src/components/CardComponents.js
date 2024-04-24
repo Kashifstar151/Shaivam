@@ -22,6 +22,7 @@ import QuizSVG from './SVGs/QuizSVG';
 import HeartSVG from './SVGs/HeartSVG';
 import Logo from '../../src/assets/Images/Logo.svg';
 import { RouteTexts } from '../navigation/RouteText';
+import { Linking } from 'react-native';
 
 const RenderItem = ({ blockRef, item, navigation, theme }) => {
     const [blockWidth, setBlockWidth] = useState(0);
@@ -78,10 +79,13 @@ const RenderItem = ({ blockRef, item, navigation, theme }) => {
                         onLayout={(event) => onLayout(event, _)}
                         onPress={
                             i?.navName == 'Thirumurais' ||
-                                i?.navName == 'Stotras' ||
-                                i?.navName == RouteTexts.TEMPLE_TABS_NAVIGATE ||
-                                i?.navName == RouteTexts.CALENDER || i?.navName == RouteTexts.RADIO
+                            i?.navName == 'Stotras' ||
+                            i?.navName == RouteTexts.TEMPLE_TABS_NAVIGATE ||
+                            i?.navName == RouteTexts.CALENDER ||
+                            i?.navName == RouteTexts.RADIO
                                 ? () => navigation.navigate(i?.navName)
+                                : i?.navName == 'Website'
+                                ? () => Linking.openURL('https://shaivam.org/')
                                 : () => alert(`the ${i?.navName}`)
                         }
                         style={[
@@ -167,14 +171,14 @@ const CardComponents = ({ navigation }) => {
                     navName: 'Shaivam TV',
                 },
                 {
-                    icon: <Temple1Svg fill={theme.textColor} />,
-                    title: 'Temples',
-                    navName: RouteTexts.TEMPLE_TABS_NAVIGATE,
-                },
-                {
                     icon: <RadioSVG fill={theme.textColor} />,
                     title: 'Radio',
                     navName: RouteTexts.RADIO,
+                },
+                {
+                    icon: <Temple1Svg fill={theme.textColor} />,
+                    title: 'Temples',
+                    navName: RouteTexts.TEMPLE_TABS_NAVIGATE,
                 },
                 {
                     icon: <CalendarSVG fill={theme.textColor} />,
@@ -196,15 +200,16 @@ const CardComponents = ({ navigation }) => {
                     title: 'Kaala Puja',
                     navName: 'Kaala Puja',
                 },
-                {
-                    icon: <QuizSVG fill={theme.textColorHomeCardYellow} />,
-                    title: 'Quiz',
-                    navName: 'Quiz',
-                },
+
                 {
                     icon: <HeartSVG fill={theme.textColorHomeCardYellow} />,
                     title: 'Favourites',
                     navName: 'Favourites',
+                },
+                {
+                    icon: <QuizSVG fill={theme.textColorHomeCardYellow} />,
+                    title: 'Quiz',
+                    navName: 'Quiz',
                 },
                 {
                     icon: <Logo fill={theme.textColorHomeCardYellow} />,
@@ -217,11 +222,11 @@ const CardComponents = ({ navigation }) => {
 
     return (
         <View style={{ paddingLeft: 0 }}>
-            <View style={{ marginTop: 24 }}>
+            <View style={{ marginTop: 24, paddingHorizontal: 15 }}>
                 <Header />
                 <SearchInput
                     placeholder={t('Search for anything (Eg - தோடுடைய செவியன்) ')}
-                    setSearchText={setSearchText}
+                    setState={setSearchText}
                     state={searchText}
                     setOnFocus={setOnFocus}
                     extraPad={false}
@@ -236,7 +241,7 @@ const CardComponents = ({ navigation }) => {
                         fontWeight: '400',
                     }}
                 >
-                    Scroll through and check out what Shaivam offers
+                    Scroll through & check out what Shaivam offers
                 </Text>
             </View>
             <View
@@ -247,6 +252,7 @@ const CardComponents = ({ navigation }) => {
                 <FlatList
                     style={{ overflow: 'visible' }}
                     horizontal
+                    contentContainerStyle={{ paddingLeft: 10 }}
                     renderItem={({ item, index }) => (
                         <RenderItem
                             setBlockWidth={setBlockWidth}

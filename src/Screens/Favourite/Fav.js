@@ -29,7 +29,7 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import EmptyIcon from '../../assets/Images/Vector (6).svg';
 import { AnimatedToast } from '../../components/Toast';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
-import Share from 'react-native-share'
+import Share from 'react-native-share';
 import ShareSVG from '../../components/SVGs/ShareSVG';
 import DeleteSVG from '../../components/SVGs/DeleteSVG';
 // import Button from '../Temples/Common/Button'
@@ -66,14 +66,16 @@ const Fav = ({ navigation }) => {
                 }
             }),
         ]);
-        checkFile()
+        checkFile();
     }, [isFocuced]);
     const checkFile = async (path) => {
-        RNFS.readFile(`file://${RNFS.MainBundlePath}`).then((res) => {
-            console.log("🚀 ~ RNFS.exists ~ res:", res)
-        }).catch((error) => {
-            console.log("🚀 ~ RNFS.exists ~ error:", error)
-        })
+        RNFS.readFile(`file://${RNFS.MainBundlePath}`)
+            .then((res) => {
+                console.log('🚀 ~ RNFS.exists ~ res:', res);
+            })
+            .catch((error) => {
+                console.log('🚀 ~ RNFS.exists ~ error:', error);
+            });
         // const exists = await RNFetchBlob.fs.exists(`file://${RNFS.DocumentDirectoryPath}`);
         // console.log('File exists: ', exists);
         // return exists;
@@ -187,40 +189,40 @@ const Fav = ({ navigation }) => {
     const [onFocus, setOnFocus] = useState(false);
     async function buildLink(item) {
         // alert(true)
-        const link = await dynamicLinks().buildShortLink({
-            link: `https://shaivaam.page.link/org?prevId=${item?.prevId}`,
-            domainUriPrefix: 'https://shaivaam.page.link',
-            ios: {
-                appStoreId: '123456',
-                bundleId: 'com.shaivam.app',
-                minimumVersion: '18',
+        const link = await dynamicLinks().buildShortLink(
+            {
+                link: `https://shaivaam.page.link/org?prevId=${item?.prevId}`,
+                domainUriPrefix: 'https://shaivaam.page.link',
+                ios: {
+                    appStoreId: '123456',
+                    bundleId: 'com.shaivam.app',
+                    minimumVersion: '18',
+                },
+                android: {
+                    packageName: 'com.shaivam',
+                },
+                // optional setup which updates Firebase analytics campaign
+                // "banner". This also needs setting up before hand
             },
-            android: {
-                packageName: 'com.shaivam'
-            }
-            // optional setup which updates Firebase analytics campaign
-            // "banner". This also needs setting up before hand
-        },
-            dynamicLinks.ShortLinkType.DEFAULT,
+            dynamicLinks.ShortLinkType.DEFAULT
         );
 
-        console.log("🚀 ~ link ~ link:", link)
+        console.log('🚀 ~ link ~ link:', link);
         return link;
     }
     const shareSong = async (item) => {
         // alert(JSON.stringify(item))
-        console.log('Stringinfy', JSON.stringify(item, 0, 2))
-        const link = await buildLink(item)
+        console.log('Stringinfy', JSON.stringify(item, 0, 2));
+        const link = await buildLink(item);
         Share.open({
             message: `${item?.title} I want to share this Thirumurai with you.
-            இந்தத் திருமுறையை Shaivam.org Mobile செயலியில் படித்தேன். மிகவும் பிடித்திருந்தது. பகிர்கின்றேன். படித்து மகிழவும் ${link}`
-
-        })
-    }
+            இந்தத் திருமுறையை Shaivam.org Mobile செயலியில் படித்தேன். மிகவும் பிடித்திருந்தது. பகிர்கின்றேன். படித்து மகிழவும் ${link}`,
+        });
+    };
 
     const renderSong = (item, index) => (
         <Pressable
-            style={styles.listContainer}
+            style={[styles.listContainer, { justifyContent: 'space-between' }]}
             onPress={() => {
                 navigation.navigate(RouteTexts.THRIMURAI_SONG, {
                     data: item,
@@ -292,16 +294,16 @@ const Fav = ({ navigation }) => {
                             style={
                                 selecetedHeader == item?.name
                                     ? [
-                                        styles.headerContainer,
-                                        { backgroundColor: theme.searchContext.selected.bgColor },
-                                    ]
+                                          styles.headerContainer,
+                                          { backgroundColor: theme.searchContext.selected.bgColor },
+                                      ]
                                     : [
-                                        styles.headerContainer,
-                                        {
-                                            backgroundColor:
-                                                theme.searchContext.unSelected.bgColor,
-                                        },
-                                    ]
+                                          styles.headerContainer,
+                                          {
+                                              backgroundColor:
+                                                  theme.searchContext.unSelected.bgColor,
+                                          },
+                                      ]
                             }
                         >
                             {item?.icon}
@@ -309,13 +311,13 @@ const Fav = ({ navigation }) => {
                                 style={
                                     selecetedHeader == item?.name
                                         ? [
-                                            styles.headingText,
-                                            { color: theme.searchContext.selected.textColor },
-                                        ]
+                                              styles.headingText,
+                                              { color: theme.searchContext.selected.textColor },
+                                          ]
                                         : [
-                                            styles.headingText,
-                                            { color: theme.searchContext.unSelected.textColor },
-                                        ]
+                                              styles.headingText,
+                                              { color: theme.searchContext.unSelected.textColor },
+                                          ]
                                 }
                             >
                                 {item?.name}
@@ -431,7 +433,11 @@ const Fav = ({ navigation }) => {
                         descriptionText={selectedItem}
                         removeFromPlaylist={removeFromPlaylist}
                         setShowModal={setShowModal}
-                        headingText={selecetedHeader == 'Favourites' ? 'Are you sure you want to remove this from Favourite Songs?' : 'Are you sure you want to delete this from Offline Download?'}
+                        headingText={
+                            selecetedHeader == 'Favourites'
+                                ? 'Are you sure you want to remove this from Favourite Songs?'
+                                : 'Are you sure you want to delete this from Offline Download?'
+                        }
                     />
                 </Modal>
             )}

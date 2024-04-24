@@ -1,8 +1,8 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { ApiSlice, TempleApiSlice } from './apiSlice';
 import authReducer from './features/Auth/authSlice';
-import CalenderReducer from './features/Calender/CalenderSlice'
-import FormReducer from './features/Calender/FormSlice'
+import CalenderReducer from './features/Calender/CalenderSlice';
+import FormReducer from './features/Calender/FormSlice';
 
 const rootReducer = combineReducers({
     [ApiSlice.reducerPath]: ApiSlice.reducer,
@@ -11,10 +11,10 @@ const rootReducer = combineReducers({
     //* here goes your all reducer like one given below
     // auth: authReducer,
     calender: CalenderReducer,
-    form: FormReducer
+    form: FormReducer,
 });
 
-export default store = configureStore({
+const store = configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) => {
         return getDefaultMiddleware()
@@ -22,3 +22,5 @@ export default store = configureStore({
             .concat(TempleApiSlice.middleware);
     },
 });
+
+export default store;

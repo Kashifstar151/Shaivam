@@ -85,7 +85,7 @@ const RenderAudios = ({
             id <= 7 || id === 10 || id === 11 ? `AND pann='${songs?.pann}'` : `AND pann =''`
         } and  locale='${
             i18n.language === 'en-IN' ? 'RoI' : i18n.language
-        }'  and titleS IS NOT NULL  GROUP BY titleS   ORDER BY  titleNo `;
+        }'  and titleS IS NOT NULL  GROUP BY titleS   ORDER BY  titleS ASC`;
 
         /*
          ? query when for temple 
