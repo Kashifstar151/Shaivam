@@ -76,7 +76,7 @@ const RenderContents = ({
                 <Pressable
                     onPress={
                         selectedTitle !== null && selectedTitle == index
-                            ? (onPress = () => setSelectedTitle(null))
+                            ? () => setSelectedTitle(null)
                             : () => setSelectedTitle(index)
                     }
                     style={{ paddingHorizontal: 20 }}

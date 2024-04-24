@@ -12,9 +12,11 @@ const rootReducer = combineReducers({
     form: FormReducer,
 });
 
-export default store = configureStore({
+const store = configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) => {
         return getDefaultMiddleware().concat(ApiSlice.middleware);
     },
 });
+
+export default store;
