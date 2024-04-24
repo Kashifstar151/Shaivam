@@ -6,7 +6,7 @@ import Feather from "react-native-vector-icons/dist/Feather";
 import OMIcon from "../../assets/Images/om 2.svg"
 import ButtonComp from "../Temples/Common/ButtonComp";
 
-const OmChanting = () => {
+const OmChanting = ({ close }) => {
     const [showTimer, setShowTimer] = useState(false)
     return (
         <>
@@ -15,7 +15,7 @@ const OmChanting = () => {
                     <View style={{ paddingHorizontal: 10, flex: 1, borderTopRightRadius: 15, borderTopLeftRadius: 15, backgroundColor: '#fff' }}>
                         <View style={styles.topConatiner}>
                             <Text style={styles.title}>Om Namah Shivaya Chant</Text>
-                            <TouchableOpacity style={styles.iconContainer}>
+                            <TouchableOpacity style={styles.iconContainer} onPress={() => close?.current?.close()}>
                                 <Feather name='x' size={26} />
                             </TouchableOpacity>
                         </View>

@@ -7,7 +7,7 @@ const initialAuthState = {
     userDetails: 'check purpose ',
     // logoutCallThunk: [],
 };
-const CalenderSlice = createApi({
+const CalenderSlice = createSlice({
     name: 'Calender',
     initialState: initialAuthState,
     reducers: {

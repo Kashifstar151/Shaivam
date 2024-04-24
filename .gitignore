@@ -21,7 +21,10 @@ DerivedData
 *.ipa
 *.xcuserstate
 /ios/Shaivam/www/
+thirumuraiSong_12.db
+SongsData.db
 ios/.xcode.env.local
+thrimuraiSong*.db
 
 # Android/IntelliJ
 #
