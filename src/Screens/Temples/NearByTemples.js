@@ -103,7 +103,7 @@ import DownArrowSVG from '../../components/SVGs/DownArrowSVG';
 import SearchContainerWithIcon from './SearchContainerWithIcon';
 import SearchTemple from './SearchTemple';
 const NearByTemples = ({ close, data, locationName, snapIndex, navigation }) => {
-    // console.log('🚀 ~ NearByTemples ~ data:', data);
+    console.log('🚀 ~ NearByTemples ~ data:', JSON.stringify(data, 0, 2));
     const { snapToIndex, snapToPosition } = useBottomSheet();
     const nav = useNavigation();
 
@@ -176,7 +176,7 @@ const NearByTemples = ({ close, data, locationName, snapIndex, navigation }) => 
             </TouchableWithoutFeedback>
 
             <ScrollView style={{ zIndex: -20 }}>
-                {data.map((item, indx) => (
+                {data?.map((item, indx) => (
                     <View key={indx}>
                         <CardForNearByTemple item={item} />
                     </View>

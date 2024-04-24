@@ -38,6 +38,7 @@ import { BlurView } from '@react-native-community/blur';
 import { CustomLongBtn } from '../../components/Buttons.js';
 import AlertmapSVG from '../../../assets/Images/AlertmapSVG.svg';
 import getDimension from '../../Helpers/getDimension.js';
+import { useGetNearByTemplesQuery } from '../../store/features/Temple/TemplApiSlice';
 
 export const Temples = ({ navigation, route }) => {
     const bottomSheetRef = useRef(null);
@@ -49,6 +50,8 @@ export const Temples = ({ navigation, route }) => {
         longitudeDelta: 0.0121,
         locationName: '',
     });
+    const { data, isSuccess } = useGetNearByTemplesQuery(regionCoordinate)
+    console.log("🚀 ~ Temples ~ data:", JSON.stringify(data?.data, 0, 2))
 
     const [userLocation, setUserLocation] = useState({
         latitude: 28.500271,
@@ -65,86 +68,88 @@ export const Temples = ({ navigation, route }) => {
         setSnapIndex(index);
     }, []);
 
-    const [nearByTempleList, setNearByTempleList] = useState([
-        {
-            name: 'Vaippu Sthalam Temple',
-            flag: 8,
-            metadata: function () {
-                return assetMapWithTempleType[this.flag]?.metaData;
+    const [nearByTempleList, setNearByTempleList] = useState(
+        [
+            {
+                name: 'Vaippu Sthalam Temple',
+                flag: 8,
+                metadata: function () {
+                    return assetMapWithTempleType[this.flag]?.metaData;
+                },
             },
-        },
 
-        {
-            name: 'Thirumurai Temple',
-            flag: 1,
-            metadata: function () {
-                return assetMapWithTempleType[this.flag]?.metaData;
+            {
+                name: 'Thirumurai Temple',
+                flag: 1,
+                metadata: function () {
+                    return assetMapWithTempleType[this.flag]?.metaData;
+                },
             },
-        },
-        {
-            name: 'Temples',
-            flag: 2,
-            metadata: function () {
-                return assetMapWithTempleType[this.flag]?.metaData;
+            {
+                name: 'Temples',
+                flag: 2,
+                metadata: function () {
+                    return assetMapWithTempleType[this.flag]?.metaData;
+                },
             },
-        },
-        {
-            name: 'Popular Temple',
-            flag: 3,
-            metadata: function () {
-                return assetMapWithTempleType[this.flag]?.metaData;
+            {
+                name: 'Popular Temple',
+                flag: 3,
+                metadata: function () {
+                    return assetMapWithTempleType[this.flag]?.metaData;
+                },
             },
-        },
-        {
-            name: 'Parashurama Temple',
-            flag: 4,
-            metadata: function () {
-                return assetMapWithTempleType[this.flag]?.metaData;
+            {
+                name: 'Parashurama Temple',
+                flag: 4,
+                metadata: function () {
+                    return assetMapWithTempleType[this.flag]?.metaData;
+                },
             },
-        },
-        {
-            name: 'Mukti Sthalam Temple',
-            flag: 5,
-            metadata: function () {
-                return assetMapWithTempleType[this.flag]?.metaData;
+            {
+                name: 'Mukti Sthalam Temple',
+                flag: 5,
+                metadata: function () {
+                    return assetMapWithTempleType[this.flag]?.metaData;
+                },
             },
-        },
-        {
-            name: 'Unknown Temple',
-            flag: 6,
-            metadata: function () {
-                return assetMapWithTempleType[this.flag]?.metaData;
+            {
+                name: 'Unknown Temple',
+                flag: 6,
+                metadata: function () {
+                    return assetMapWithTempleType[this.flag]?.metaData;
+                },
             },
-        },
-        {
-            name: 'Unknown Temple',
-            flag: 6,
-            metadata: function () {
-                return assetMapWithTempleType[this.flag]?.metaData;
+            {
+                name: 'Unknown Temple',
+                flag: 6,
+                metadata: function () {
+                    return assetMapWithTempleType[this.flag]?.metaData;
+                },
             },
-        },
-        {
-            name: 'Unknown Temple',
-            flag: 6,
-            metadata: function () {
-                return assetMapWithTempleType[this.flag]?.metaData;
+            {
+                name: 'Unknown Temple',
+                flag: 6,
+                metadata: function () {
+                    return assetMapWithTempleType[this.flag]?.metaData;
+                },
             },
-        },
-        {
-            name: 'Unknown Temple',
-            flag: 6,
-            metadata: function () {
-                return assetMapWithTempleType[this.flag]?.metaData;
+            {
+                name: 'Unknown Temple',
+                flag: 6,
+                metadata: function () {
+                    return assetMapWithTempleType[this.flag]?.metaData;
+                },
             },
-        },
-        {
-            name: 'Unknown Temple',
-            flag: 6,
-            metadata: function () {
-                return assetMapWithTempleType[this.flag]?.metaData;
+            {
+                name: 'Unknown Temple',
+                flag: 6,
+                metadata: function () {
+                    return assetMapWithTempleType[this.flag]?.metaData;
+                },
             },
-        },
-    ]);
+        ]
+    );
     const { theme } = useContext(ThemeContext);
     const { screenHeight, screenWidth } = getDimension();
     const [showModal, setShowModal] = useState(false);
@@ -155,7 +160,9 @@ export const Temples = ({ navigation, route }) => {
         setPermissionGranted(state.permissionType);
         if (state.status) {
             getCurrentLocation((val) => {
+                console.log("🚀 ~ getCurrentLocation ~ val:", val)
                 setUserLocation((prev) => ({ ...prev, ...val }));
+
             });
             getCurrentLocationWatcher((val) => {
                 setUserLocation((prev) => ({ ...prev, ...val }));
@@ -171,9 +178,7 @@ export const Temples = ({ navigation, route }) => {
         openSettings();
         setShowModal(!showModal);
     };
-
     // todos : have to implement the async storage to store the access permission value, so that when we get back from changing the permission it must ask for the permission rather than again showing modal of enable the location
-
     const getTheState = useCallback(async () => {
         let permissionType = Platform.select({
             ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
@@ -215,6 +220,7 @@ export const Temples = ({ navigation, route }) => {
         if (regionCoordinate?.latitude && regionCoordinate?.longitude) {
             (async () => {
                 const locationDetail = await getTheLocationName({ ...regionCoordinate });
+                console.log("🚀 ~ locationDetail:", locationDetail)
                 setUserLocName((prev) => {
                     return (
                         locationDetail?.address?.village ||
@@ -253,7 +259,7 @@ export const Temples = ({ navigation, route }) => {
                         zoomEnabled
                     >
                         {permissionGranted === RESULTS.GRANTED && (
-                            <>
+                            <View>
                                 <CustomMarker
                                     setPadState={setPadState}
                                     flag={8}
@@ -271,8 +277,23 @@ export const Temples = ({ navigation, route }) => {
                                     coordinate={regionCoordinate}
                                     keyName={'COORDINATE'}
                                 />
-                            </>
+                            </View>
                         )}
+                        {
+                            data?.data?.map((item, index) => (
+                                <Marker
+                                    tracksViewChanges={false}
+                                    coordinate={{
+                                        latitude: item?.attributes?.temple?.lat,
+                                        longitude: item?.attributes?.temple?.lng
+                                    }}
+                                    description={'This is a marker in React Natve'}
+                                // onPress={callback ? callback : null}
+                                >
+                                    {assetMapWithTempleType[index + 1]?.Svg}
+                                </Marker>
+                            ))
+                        }
                     </MapView>
                 ) : null}
 
@@ -377,7 +398,7 @@ export const Temples = ({ navigation, route }) => {
                     >
                         <NearByTemples
                             locationName={userLocName}
-                            data={nearByTempleList}
+                            data={data?.data}
                             snapIndex={snapIndex}
                             navigation={navigation}
                             close={() => bottomSheetRef.current.snapToIndex(0)}

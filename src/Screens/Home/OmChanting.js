@@ -15,7 +15,7 @@ const OmChanting = ({ close }) => {
                     <View style={{ paddingHorizontal: 10, flex: 1, borderTopRightRadius: 15, borderTopLeftRadius: 15, backgroundColor: '#fff' }}>
                         <View style={styles.topConatiner}>
                             <Text style={styles.title}>Om Namah Shivaya Chant</Text>
-                            <TouchableOpacity style={styles.iconContainer} onPress={() => close?.current?.close()}>
+                            <TouchableOpacity style={styles.iconContainer} >
                                 <Feather name='x' size={26} />
                             </TouchableOpacity>
                         </View>
@@ -41,8 +41,7 @@ const OmChanting = ({ close }) => {
                     </View>
                     :
                     <View style={{ paddingHorizontal: 10, flex: 1, borderTopRightRadius: 15, borderTopLeftRadius: 15, backgroundColor: '#fff', alignItems: 'center' }}>
-
-                        <TouchableOpacity style={[styles.iconContainer, { position: 'absolute', top: 10 }]}>
+                        <TouchableOpacity style={[styles.iconContainer, { position: 'absolute', top: 10 }]} onPress={() => close?.current?.close()}>
                             <Feather name='x' size={24} />
                         </TouchableOpacity>
                         <View style={{ marginVertical: 30, alignSelf: 'center' }}>
@@ -52,7 +51,6 @@ const OmChanting = ({ close }) => {
                         <Text style={{ fontSize: 14, fontFamily: 'Mulish-SemiBold', marginVertical: 20 }}>Here, you can set a timer for your Om meditation.
                             This can be changed later in the More options </Text>
                         <View style={{ position: 'absolute', bottom: 10 }}>
-
                             <ButtonComp color={true} text='Continue' navigation={() => setShowTimer(true)} />
                         </View>
                     </View>

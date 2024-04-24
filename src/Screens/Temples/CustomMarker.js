@@ -8,7 +8,7 @@ export const MarkerCallOut = ({ setPadState, callback, flag, coordinate, keyName
             coordinate={coordinate}
             description={'This is a marker in React Natve'}
             onPress={callback ? callback : null}
-            // image={assetMapWithTempleType[1].path}
+        // image={assetMapWithTempleType[1].path}
         >
             <Image
                 onLoadEnd={() => {
@@ -68,9 +68,10 @@ export const CustomMarker = ({ setPadState, callback, flag, coordinate, keyName,
             coordinate={coordinate}
             description={'This is a marker in React Natve'}
             onPress={callback ? callback : null}
-            // image={assetMapWithTempleType[1].path}
+        // image={assetMapWithTempleType[1].path}
         >
-            <Image
+            {assetMapWithTempleType[flag]?.Svg}
+            {/* <Image
                 onLoadEnd={() => {
                     setTimeout(() => {
                         setPadState((prev) => !prev);
@@ -80,7 +81,7 @@ export const CustomMarker = ({ setPadState, callback, flag, coordinate, keyName,
                 resizeMode="contain"
                 key={`${keyName}-${flag}`}
             />
-            {children}
+            {children} */}
         </Marker>
     );
 };

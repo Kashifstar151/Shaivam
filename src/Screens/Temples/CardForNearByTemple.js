@@ -12,13 +12,15 @@ const CardForNearByTemple = ({ item }) => {
                         style={[
                             styles.widthForColorBar,
                             {
-                                backgroundColor: `${item?.metadata().color}`,
+                                // backgroundColor: `${item?.metadata().color}`,
+                                backgroundColor: `red`,
+
                             },
                         ]}
                     ></View>
                     <View style={styles.textContainer}>
-                        <Text style={styles.textBold}>SHIvam</Text>
-                        <Text style={{ color: 'black' }}>Sharma</Text>
+                        <Text style={styles.textBold}>{item?.attributes?.Name_of_the_place}</Text>
+                        <Text style={{ color: 'black' }}>{item?.attributes?.Swamy_name}</Text>
                     </View>
                 </View>
 

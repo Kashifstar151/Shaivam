@@ -254,7 +254,9 @@ const Calender = ({ navigation }) => {
                                 data={data?.data}
                                 contentContainerStyle={{ paddingBottom: 100 }}
                                 renderItem={({ item, index }) => (
-                                    <ElevatedCard navigation={() => navigation.navigate(RouteTexts.EVENT_DETAILS)} theme={{ colorscheme: theme.colorscheme }}>
+                                    <ElevatedCard navigation={() => navigation.navigate(RouteTexts.EVENT_DETAILS, {
+                                        item: item
+                                    })} theme={{ colorscheme: theme.colorscheme }}>
                                         <EventCard
                                             date={day = moment(item?.start_date).get('D')}
                                             timing={`${moment(item?.attributes?.start_date).format('MMMM DD YYYY')} -${moment(item?.attributes?.end_date).format('MMMM DD YYYY')} `}
