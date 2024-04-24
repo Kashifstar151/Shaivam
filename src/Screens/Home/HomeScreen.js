@@ -30,7 +30,11 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Feather from 'react-native-vector-icons/dist/Feather';
-import { AddSongToDatabase, MostPlayedList } from '../../Databases/AudioPlayerDatabase';
+import {
+    AddSongToDatabase,
+    listfavAudios,
+    MostPlayedList,
+} from '../../Databases/AudioPlayerDatabase';
 import { useIsFocused } from '@react-navigation/native';
 import Quiz from './Quiz';
 import VideosList from './VideosList';
@@ -42,9 +46,8 @@ import { colors } from '../../Helpers';
 import { RouteTexts } from '../../navigation/RouteText';
 import { shareSong } from '../../Helpers/SongShare';
 
-const SongAndAudio = ({ item, index, theme, navigation }) => {
+const SongAndAudio = ({ item, index, theme, navigation, isFav }) => {
     const [fav, setFav] = useState(false);
-
     const FavouriteAudios = (res) => {
         // TrackPlayer.getActiveTrack()
         //     .then((res) => {
@@ -127,7 +130,7 @@ const SongAndAudio = ({ item, index, theme, navigation }) => {
                     <ShareSVG fill={theme.textColor} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => FavouriteAudios(item)}>
-                    {fav ? (
+                    {fav || isFav ? (
                         <AntDesign name="heart" size={22} color={'#C1554E'} />
                     ) : (
                         <Feather name="heart" size={22} color={theme.textColor} />
@@ -227,9 +230,11 @@ const HomeScreen = ({ navigation }) => {
     ];
     const [selectedPlaylistType, setSelectedPlaylistType] = useState('Recently Played');
     const [playlistSong, setPlaylistSong] = useState([]);
+    const [favList, setFavList] = useState([]);
     const playlisType = ['Recently Played', 'Most Played'];
     useEffect(() => {
         getPlaylistSong();
+        listFav();
     }, [selectedPlaylistType, isFocused]);
     const getPlaylistSong = async () => {
         if (selectedPlaylistType == 'Recently Played') {
@@ -281,7 +286,20 @@ const HomeScreen = ({ navigation }) => {
             subscription?.remove();
         };
     }, []);
-
+    const listFav = () => {
+        listfavAudios((callbacks) => {
+            setFavList(callbacks);
+        });
+    };
+    const checkFav = (res) => {
+        let v = false;
+        favList.map((item) => {
+            if (item?.id == res?.id) {
+                v = true;
+            }
+        });
+        return v;
+    };
     return (
         <ScrollView
             bounces={false}
@@ -351,7 +369,7 @@ const HomeScreen = ({ navigation }) => {
                                         backgroundColor:
                                             selectedPlaylistType == item
                                                 ? '#C1554E'
-                                                : theme.unSelectedBox.bgColor,
+                                                : theme?.unSelectedBox?.bgColor,
 
                                         borderRadius: 20,
                                         justifyContent: 'center',
@@ -367,7 +385,7 @@ const HomeScreen = ({ navigation }) => {
                                         style={{
                                             color:
                                                 selectedPlaylistType == item
-                                                    ? colors.white
+                                                    ? colors?.white
                                                     : '#777777',
                                             fontFamily: 'Mulish-Bold',
                                             fontWeight: '700',
@@ -385,7 +403,12 @@ const HomeScreen = ({ navigation }) => {
                             key={(item) => item?.id}
                             data={playlistSong}
                             renderItem={({ item, index }) => (
-                                <SongAndAudio item={item} theme={theme} />
+                                <SongAndAudio
+                                    item={item}
+                                    theme={theme}
+                                    navigation={navigation}
+                                    isFav={checkFav(item)}
+                                />
                             )}
                         />
                     </View>
@@ -614,7 +637,7 @@ const HomeScreen = ({ navigation }) => {
                 ref={RBSheetRef}
                 customStyles={{ container: { borderTopEndRadius: 15, borderTopLeftRadius: 15 } }}
             >
-                <OmChanting />
+                <OmChanting close={RBSheetRef} />
             </RBSheet>
         </ScrollView>
     );

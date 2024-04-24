@@ -232,7 +232,7 @@ const Fav = ({ navigation }) => {
         >
             <View style={styles.listInnerContainer}>
                 <MusicContainer />
-                <View style={{ paddingHorizontal: 10 }}>
+                <View style={{ paddingHorizontal: 10, width: '73%' }}>
                     <Text
                         style={{
                             fontSize: RFValue(10),
@@ -255,7 +255,7 @@ const Fav = ({ navigation }) => {
                     </Text>
                 </View>
             </View>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <TouchableOpacity style={{ marginRight: 10 }} onPress={() => shareSong(item)}>
                     <ShareSVG fill={'#777777'} />
                 </TouchableOpacity>
