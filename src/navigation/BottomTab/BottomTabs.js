@@ -66,8 +66,8 @@ const MyTabBar = ({ state, descriptors, navigation, theme, ...restProps }) => {
                     options.tabBarLabel !== undefined
                         ? options.tabBarLabel
                         : options.title !== undefined
-                            ? options.title
-                            : route.name;
+                        ? options.title
+                        : route.name;
 
                 const isFocused = state.index === index;
 
@@ -146,7 +146,7 @@ const MyTabBar = ({ state, descriptors, navigation, theme, ...restProps }) => {
     );
 };
 
-export default BottomTab = ({ navigation }) => {
+const BottomTab = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
     return (
         <BottomSheetModalProvider>
@@ -156,9 +156,9 @@ export default BottomTab = ({ navigation }) => {
                         styles.tabContainer,
                         Platform.OS !== 'ios'
                             ? {
-                                height: 65,
-                            }
-                            : { height: 0, },
+                                  height: 65,
+                              }
+                            : { height: 0 },
                     ],
                     tabBarHideOnKeyboard: true,
                 }}
@@ -233,6 +233,8 @@ export default BottomTab = ({ navigation }) => {
         </BottomSheetModalProvider>
     );
 };
+
+export default BottomTab;
 export const styles = StyleSheet.create({
     tabContainer: {
         paddingTop: 5,
