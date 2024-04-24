@@ -47,7 +47,10 @@ import { RouteTexts } from '../../navigation/RouteText';
 import { shareSong } from '../../Helpers/SongShare';
 
 const SongAndAudio = ({ item, index, theme, navigation, isFav }) => {
-    const [fav, setFav] = useState(false);
+    const [fav, setFav] = useState(null);
+    useEffect(() => {
+        setFav(isFav);
+    }, [isFav]);
     const FavouriteAudios = (res) => {
         // TrackPlayer.getActiveTrack()
         //     .then((res) => {
@@ -130,7 +133,7 @@ const SongAndAudio = ({ item, index, theme, navigation, isFav }) => {
                     <ShareSVG fill={theme.textColor} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => FavouriteAudios(item)}>
-                    {fav || isFav ? (
+                    {fav ? (
                         <AntDesign name="heart" size={22} color={'#C1554E'} />
                     ) : (
                         <Feather name="heart" size={22} color={theme.textColor} />
