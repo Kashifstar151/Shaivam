@@ -53,8 +53,8 @@ export const Temples = ({ navigation, route }) => {
         longitudeDelta: 0.0121,
         locationName: '',
     });
-    const { data, isSuccess } = useGetNearByTemplesQuery(regionCoordinate)
-    console.log("🚀 ~ Temples ~ data:", JSON.stringify(data?.data, 0, 2))
+    const { data, isSuccess } = useGetNearByTemplesQuery(regionCoordinate);
+    // console.log('🚀 ~ Temples ~ data:', JSON.stringify(data?.data, 0, 2));
 
     const [userLocation, setUserLocation] = useState({
         latitude: 28.500271,
@@ -67,92 +67,90 @@ export const Temples = ({ navigation, route }) => {
 
     // callbacks
     const handleSheetChanges = useCallback((index) => {
-        console.log('handleSheetChanges', index);
+        // console.log('handleSheetChanges', index);
         setSnapIndex(index);
     }, []);
 
-    const [nearByTempleList, setNearByTempleList] = useState(
-        [
-            {
-                name: 'Vaippu Sthalam Temple',
-                flag: 8,
-                metadata: function () {
-                    return assetMapWithTempleType[this.flag]?.metaData;
-                },
+    const [nearByTempleList, setNearByTempleList] = useState([
+        {
+            name: 'Vaippu Sthalam Temple',
+            flag: 8,
+            metadata: function () {
+                return assetMapWithTempleType[this.flag]?.metaData;
             },
+        },
 
-            {
-                name: 'Thirumurai Temple',
-                flag: 1,
-                metadata: function () {
-                    return assetMapWithTempleType[this.flag]?.metaData;
-                },
+        {
+            name: 'Thirumurai Temple',
+            flag: 1,
+            metadata: function () {
+                return assetMapWithTempleType[this.flag]?.metaData;
             },
-            {
-                name: 'Temples',
-                flag: 2,
-                metadata: function () {
-                    return assetMapWithTempleType[this.flag]?.metaData;
-                },
+        },
+        {
+            name: 'Temples',
+            flag: 2,
+            metadata: function () {
+                return assetMapWithTempleType[this.flag]?.metaData;
             },
-            {
-                name: 'Popular Temple',
-                flag: 3,
-                metadata: function () {
-                    return assetMapWithTempleType[this.flag]?.metaData;
-                },
+        },
+        {
+            name: 'Popular Temple',
+            flag: 3,
+            metadata: function () {
+                return assetMapWithTempleType[this.flag]?.metaData;
             },
-            {
-                name: 'Parashurama Temple',
-                flag: 4,
-                metadata: function () {
-                    return assetMapWithTempleType[this.flag]?.metaData;
-                },
+        },
+        {
+            name: 'Parashurama Temple',
+            flag: 4,
+            metadata: function () {
+                return assetMapWithTempleType[this.flag]?.metaData;
             },
-            {
-                name: 'Mukti Sthalam Temple',
-                flag: 5,
-                metadata: function () {
-                    return assetMapWithTempleType[this.flag]?.metaData;
-                },
+        },
+        {
+            name: 'Mukti Sthalam Temple',
+            flag: 5,
+            metadata: function () {
+                return assetMapWithTempleType[this.flag]?.metaData;
             },
-            {
-                name: 'Unknown Temple',
-                flag: 6,
-                metadata: function () {
-                    return assetMapWithTempleType[this.flag]?.metaData;
-                },
+        },
+        {
+            name: 'Unknown Temple',
+            flag: 6,
+            metadata: function () {
+                return assetMapWithTempleType[this.flag]?.metaData;
             },
-            {
-                name: 'Unknown Temple',
-                flag: 6,
-                metadata: function () {
-                    return assetMapWithTempleType[this.flag]?.metaData;
-                },
+        },
+        {
+            name: 'Unknown Temple',
+            flag: 6,
+            metadata: function () {
+                return assetMapWithTempleType[this.flag]?.metaData;
             },
-            {
-                name: 'Unknown Temple',
-                flag: 6,
-                metadata: function () {
-                    return assetMapWithTempleType[this.flag]?.metaData;
-                },
+        },
+        {
+            name: 'Unknown Temple',
+            flag: 6,
+            metadata: function () {
+                return assetMapWithTempleType[this.flag]?.metaData;
             },
-            {
-                name: 'Unknown Temple',
-                flag: 6,
-                metadata: function () {
-                    return assetMapWithTempleType[this.flag]?.metaData;
-                },
+        },
+        {
+            name: 'Unknown Temple',
+            flag: 6,
+            metadata: function () {
+                return assetMapWithTempleType[this.flag]?.metaData;
             },
-            {
-                name: 'Unknown Temple',
-                flag: 6,
-                metadata: function () {
-                    return assetMapWithTempleType[this.flag]?.metaData;
-                },
+        },
+        {
+            name: 'Unknown Temple',
+            flag: 6,
+            metadata: function () {
+                return assetMapWithTempleType[this.flag]?.metaData;
             },
-        ]
-    );
+        },
+    ]);
     const { theme } = useContext(ThemeContext);
     const { screenHeight, screenWidth } = getDimension();
     const [showModal, setShowModal] = useState(false);
@@ -170,54 +168,43 @@ export const Temples = ({ navigation, route }) => {
     // Alert.alert('the render');
 
     const onMapReadyCallback = async () => {
-        // Alert.alert('on Entry');
         let state = await checkPermissionAccess(permissionTypeRef.current);
-
         let isPermissionExist = await getTheLocationPermissionToStorage();
-        console.log('🚀 ~ onMapReadyCallback ~ isPermissionExist:', isPermissionExist);
-        setPermissionGranted((prev) => state);
+        setPermissionGranted(() => state);
 
         if (
             state !== RESULTS.GRANTED &&
             (isPermissionExist === 'undefined' || isPermissionExist === null)
         ) {
-            // Alert.alert('requesting permission');
-            let requestedVal = await requestThePermission(permissionTypeRef.current);
-            // state = requestedVal.permissionType;
-            // Alert.alert(`${requestedVal.permissionType}`);
+            let requestedVal = await requestThePermission(
+                permissionTypeRef.current,
+                'from  state !== RESULTS.GRANTED'
+            );
             setPermissionGranted(() => requestedVal.permissionType);
+        } else if (state === RESULTS.DENIED) {
+            let requestedVal = await requestThePermission(
+                permissionTypeRef.current,
+                'from state === RESULTS.DENIED'
+            );
+            setPermissionGranted(() => requestedVal.permissionType);
+        } else if (state === RESULTS.BLOCKED) {
+            setShowModal(!showModal);
         } else if (state === RESULTS.GRANTED) {
-            console.log('🚀 ~ onMapReadyCallback ~ state when true :', state);
-            // Alert.alert('setting location ');
             getCurrentLocation((val) => {
-                console.log("🚀 ~ getCurrentLocation ~ val:", val)
                 setUserLocation((prev) => ({ ...prev, ...val }));
-
             });
             getCurrentLocationWatcher((val) => {
                 setUserLocation((prev) => ({ ...prev, ...val }));
             });
         } else {
-            console.log('🚀 ~ onMapReadyCallback ~ state when false :', state);
-            // Alert.alert('opening modal ');
             setShowModal(true);
         }
-        // Alert.alert('Completed Execution');
     };
 
-    // todos : have to implement the async storage to store the access permission value, so that when we get back from changing the permission it must ask for the permission rather than again showing modal of enable the location
-    const getTheState = useCallback(async () => {
-        let permissionType = Platform.select({
-            ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
-            android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-        });
-        const state = await checkPermissionAccess(permissionType);
-        setPermissionGranted((prev) => state);
-    }, []);
-
-    const handleTrackBack = () => {
-        if (permissionGranted === RESULTS.GRANTED) {
-            console.log('the uuiuui');
+    const handleTrackBack = async () => {
+        let theCurrentPermission = await checkPermissionAccess(permissionTypeRef.current);
+        if (theCurrentPermission === RESULTS.GRANTED) {
+            setPermissionGranted(() => RESULTS.GRANTED);
             setRegionCoordinate((prev) => ({
                 ...prev,
                 // latitude: 28.5002,
@@ -225,45 +212,56 @@ export const Temples = ({ navigation, route }) => {
                 ...userLocation,
             }));
         } else {
-            setShowModal(!showModal);
+            requestThePermission(
+                permissionTypeRef.current,
+                'state === RESULTS.DENIED handleModalAction'
+            ).then((finalState) => {
+                grantState = finalState.permissionType;
+                setPermissionGranted(() => grantState);
+                if (finalState.permissionType === RESULTS.BLOCKED) {
+                    setShowModal(!showModal);
+                }
+            });
         }
     };
-
+    // extra code
     const subcriptionEventListner = useRef();
-    const handleFocusEvent = () => {
-        let grantState = '';
-        checkPermissionAccess(permissionTypeRef.current).then((state) => {
-            grantState = state;
-            if (state !== RESULTS.GRANTED) {
-                requestThePermission(permissionTypeRef.current).then((finalState) => {
-                    grantState = finalState;
-                });
-            }
-            requestThePermission(permissionTypeRef.current).then((finalState) => {
-                grantState = finalState;
-            });
-            setPermissionGranted(() => grantState);
-        });
+    const unmountTheListner = () => {
+        console.log('🚀 ~ unmountTheListner ~ unmountTheListner:');
+        if (subcriptionEventListner.current) {
+            subcriptionEventListner.current.remove();
+        }
     };
+    const handleFocusEvent = async () => {
+        let grantState = '';
+        let theCurrentPermission = await checkPermissionAccess(permissionTypeRef.current);
+        if (theCurrentPermission !== RESULTS.GRANTED) {
+            requestThePermission(permissionTypeRef.current).then((finalState) => {
+                grantState = finalState.permissionType;
+                setPermissionGranted(() => finalState.permissionType);
+                if (finalState.permissionType === RESULTS.BLOCKED) {
+                    setShowModal(!showModal);
+                }
+            });
+        } else {
+            setPermissionGranted(() => RESULTS.GRANTED);
+        }
+        // // todos: we have commented THE above code because its breaking in  condition when the permission is removed
+        // if (theCurrentPermission === RESULTS.GRANTED) {
+        //     setPermissionGranted(() => RESULTS.GRANTED);
+        // }
+        unmountTheListner();
+        return;
+    };
+    // end
 
     const handleModalAction = async () => {
+        // extra code
         subcriptionEventListner.current = AppState.addEventListener('focus', handleFocusEvent);
-        // });
+        // end
         openSettings();
         setShowModal(!showModal);
     };
-
-    // check on active and background state
-
-    useEffect(() => {
-        return () => {
-            if (subcriptionEventListner.current) {
-                subcriptionEventListner.current.remove();
-            }
-        };
-    }, []);
-
-    // ---------------------------------------
 
     useEffect(() => {
         onMapReadyCallback();
@@ -277,7 +275,7 @@ export const Temples = ({ navigation, route }) => {
         if (regionCoordinate?.latitude && regionCoordinate?.longitude) {
             (async () => {
                 const locationDetail = await getTheLocationName({ ...regionCoordinate });
-                console.log("🚀 ~ locationDetail:", locationDetail)
+                console.log('🚀 ~ locationDetail:', locationDetail);
                 setUserLocName((prev) => {
                     return (
                         locationDetail?.address?.village ||
@@ -336,21 +334,19 @@ export const Temples = ({ navigation, route }) => {
                                 />
                             </View>
                         )}
-                        {
-                            data?.data?.map((item, index) => (
-                                <Marker
-                                    tracksViewChanges={false}
-                                    coordinate={{
-                                        latitude: item?.attributes?.temple?.lat,
-                                        longitude: item?.attributes?.temple?.lng
-                                    }}
-                                    description={'This is a marker in React Natve'}
+                        {data?.data?.map((item, index) => (
+                            <Marker
+                                tracksViewChanges={false}
+                                coordinate={{
+                                    latitude: item?.attributes?.temple?.lat,
+                                    longitude: item?.attributes?.temple?.lng,
+                                }}
+                                description={'This is a marker in React Natve'}
                                 // onPress={callback ? callback : null}
-                                >
-                                    {assetMapWithTempleType[index + 1]?.Svg}
-                                </Marker>
-                            ))
-                        }
+                            >
+                                {assetMapWithTempleType[index + 1]?.Svg}
+                            </Marker>
+                        ))}
                     </MapView>
                 ) : null}
 
