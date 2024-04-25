@@ -1,8 +1,8 @@
 import assetMapWithTempleType from './AssetMapWithTempleType';
-const markerPressClbk = (navigation, flag) => {
+const markerPressClbk = (navigation, flag, item) => {
     console.log('🚀 ~ markerPressClbk ~ agrs:', flag);
     navigation.navigate('templeDetails', {
-        data: assetMapWithTempleType[flag],
+        data: item ? item : assetMapWithTempleType[flag],
     });
 };
 
