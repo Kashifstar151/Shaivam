@@ -127,10 +127,10 @@ const Calender = ({ navigation }) => {
         arr.forEach((date) => {
             markedDates[date] = {
                 marked: true,
-                dotColor: 'black',
+                dotColor: '#FCB300',
                 customStyles: {
                     container: {
-                        backgroundColor: '#FCB300',
+                        // backgroundColor: '#FCB300',
                         // height: 30,
                         borderRadius: 5,
                     },
@@ -220,8 +220,12 @@ const Calender = ({ navigation }) => {
                                     textDayFontWeight: '600',
                                     textMonthFontWeight: '600',
                                     calendarBackground: '#FFFFFF',
-                                    todayBackgroundColor: 'white',
-                                    selectedDayBackgroundColor: 'white',
+                                    selectedDotColor: '#222222',
+                                    dotColor: 'black',
+                                    // todayBackgroundColor: 'white',
+                                    selectedDayBackgroundColor: '#FCB300',
+                                    todayBackgroundColor: '#FCB300',
+                                    todayTextColor: '#222222',
                                     selectedDayTextColor: 'black',
                                     textDayFontSize: 11,
                                     textDayStyle: { fontsize: 11 },
@@ -305,7 +309,7 @@ const Calender = ({ navigation }) => {
                                     theme={{ colorscheme: theme.colorscheme }}
                                 >
                                     <EventCard
-                                        date={(day = moment(todaysEvent?.start_date).get('D'))}
+                                        date={(moment(todaysEvent?.start_date).get('D'))}
                                         timing={`${moment(
                                             todaysEvent?.attributes?.start_date
                                         ).format('MMMM DD YYYY')} -${moment(
