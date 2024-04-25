@@ -293,11 +293,15 @@ const Calender = ({ navigation }) => {
                                     Today {moment().format('MMMM Do YYYY,')}
                                 </Text>
                                 <ElevatedCard
-                                    navigation={() => navigation.navigate(RouteTexts.EVENT_DETAILS)}
+                                    navigation={() =>
+                                        navigation.navigate(RouteTexts.EVENT_DETAILS, {
+                                            item: item,
+                                        })
+                                    }
                                     theme={{ colorscheme: theme.colorscheme }}
                                 >
                                     <EventCard
-                                        date={(day = moment(todaysEvent?.start_date).get('D'))}
+                                        date={moment(todaysEvent?.start_date).get('D')}
                                         timing={`${moment(
                                             todaysEvent?.attributes?.start_date
                                         ).format('MMMM DD YYYY')} -${moment(
@@ -326,7 +330,11 @@ const Calender = ({ navigation }) => {
                             contentContainerStyle={{ paddingBottom: 100 }}
                             renderItem={({ item, index }) => (
                                 <ElevatedCard
-                                    navigation={() => navigation.navigate(RouteTexts.EVENT_DETAILS)}
+                                    navigation={() =>
+                                        navigation.navigate(RouteTexts.EVENT_DETAILS, {
+                                            item: item,
+                                        })
+                                    }
                                     theme={{ colorscheme: theme.colorscheme }}
                                 >
                                     <EventCard
