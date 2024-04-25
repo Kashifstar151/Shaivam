@@ -128,22 +128,22 @@ const HomeScreen = ({ navigation }) => {
     useEffect(() => {
         getPlaylistSong();
         listfavAudios((callbacks) => {
-            console.log("🚀 ~ listfavAudios ~ callbacks:", callbacks)
+            console.log('🚀 ~ listfavAudios ~ callbacks:', callbacks);
             setFavList(callbacks);
         });
     }, [selectedPlaylistType, isFocused]);
 
     const checkIsFav = (item) => {
-        let v = false
+        let v = false;
         if (favList?.length) {
             favList?.map((res) => {
                 if (item?.id == res?.id) {
-                    v = true
+                    v = true;
                 }
-            })
-            return v
+            });
+            return v;
         }
-    }
+    };
     const getPlaylistSong = async () => {
         if (selectedPlaylistType == 'Recently Played') {
             const data = await AsyncStorage.getItem('recentTrack');
@@ -250,6 +250,7 @@ const HomeScreen = ({ navigation }) => {
                             contentContainerStyle={{
                                 marginVertical: 10,
                                 paddingBottom: 10,
+                                gap: 10,
                             }}
                             horizontal
                             style={{
@@ -258,36 +259,56 @@ const HomeScreen = ({ navigation }) => {
                             data={playlisType}
                             renderItem={({ item }) => (
                                 <Pressable
-                                    style={{
-                                        marginRight: 8,
-                                        elevation: 5,
-                                        backgroundColor:
-                                            selectedPlaylistType == item
-                                                ? '#C1554E'
-                                                : theme?.unSelectedBox?.bgColor,
-
-                                        borderRadius: 20,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        paddingHorizontal: 15,
-                                        paddingVertical: 10,
-                                    }}
                                     onPress={() => {
                                         setSelectedPlaylistType(item);
                                     }}
                                 >
-                                    <Text
+                                    <View
                                         style={{
-                                            color:
+                                            // marginRight: 8,
+                                            // elevation: 5,
+                                            backgroundColor:
                                                 selectedPlaylistType == item
-                                                    ? colors?.white
-                                                    : '#777777',
-                                            fontFamily: 'Mulish-Bold',
-                                            fontWeight: '700',
+                                                    ? '#C1554E'
+                                                    : theme?.unSelectedBox?.bgColor,
+
+                                            borderRadius: 20,
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            paddingHorizontal: 15,
+                                            paddingVertical: 10,
+                                            zIndex: 19,
                                         }}
                                     >
-                                        {item}
-                                    </Text>
+                                        <Text
+                                            style={{
+                                                color:
+                                                    selectedPlaylistType == item
+                                                        ? colors?.white
+                                                        : '#777777',
+                                                fontFamily: 'Mulish-Bold',
+                                                fontWeight: '700',
+                                            }}
+                                        >
+                                            {item}
+                                        </Text>
+                                    </View>
+                                    {selectedPlaylistType === item &&
+                                        theme.colorScheme === 'light' && (
+                                            <View
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: 4,
+                                                    backgroundColor: 'black',
+                                                    width: '100%',
+                                                    height: 40,
+                                                    paddingHorizontal: 15,
+                                                    paddingVertical: 8,
+                                                    borderRadius: 40,
+                                                    opacity: 0.2,
+                                                }}
+                                            ></View>
+                                        )}
                                 </Pressable>
                             )}
                         />
@@ -445,7 +466,7 @@ const HomeScreen = ({ navigation }) => {
                         viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                         title={'Upcoming Festivals'}
                         theme={{ textColor: theme.textColor, colorscheme: theme.colorscheme }}
-                        onPress={() => { }}
+                        onPress={() => {}}
                     />
                 </View>
                 <FlatList
@@ -480,7 +501,7 @@ const HomeScreen = ({ navigation }) => {
                     <HeadingAndView
                         viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                         title={'Nearby Temples'}
-                        onPress={() => { }}
+                        onPress={() => {}}
                         theme={{
                             textColor: theme.textColor,
                             colorscheme: theme.colorscheme,
@@ -523,7 +544,7 @@ const HomeScreen = ({ navigation }) => {
                     viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                     title={'App Walkthrough Videos '}
                     // todos : add the fn that take it to the dedicated video page
-                    onPress={() => { }}
+                    onPress={() => {}}
                     theme={{
                         textColor: theme.textColor,
                         colorscheme: theme.colorscheme,
