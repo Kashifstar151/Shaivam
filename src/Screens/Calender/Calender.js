@@ -158,7 +158,7 @@ const Calender = ({ navigation }) => {
                             }}
                         >
                             <View style={styles.HeadeingContainer}>
-                                <HeadingText text={'Calenders'} nandiLogo={true} />
+                                <HeadingText text={'Calender'} nandiLogo={true} />
                             </View>
                             <View style={styles.SearchInputContainer}>
                                 <View style={{ width: '84%' }}>
@@ -179,20 +179,12 @@ const Calender = ({ navigation }) => {
                                 horizontal
                                 data={data1}
                                 renderItem={({ item, index }) => (
-                                    <ElevatedCard navigation={() => navigation.navigate(RouteTexts.EVENT_DETAILS, {
-                                        item: item
-                                    })} theme={{ colorscheme: theme.colorscheme }}>
-                                        <EventCard
-                                            date={moment(item?.start_date).get('D')}
-                                            timing={`${moment(item?.attributes?.start_date).format('MMMM DD YYYY')} -${moment(item?.attributes?.end_date).format('MMMM DD YYYY')} `}
-                                            title={item?.attributes?.title}
-                                            item={item}
-                                            theme={{
-                                                textColor: theme.textColor,
-                                                colorscheme: theme.colorscheme,
-                                            }}
-                                        />
-                                    </ElevatedCard>
+                                    <HeadingComponent
+                                        selectedHeader={selectedHeader}
+                                        setHeader={setSelectedheader}
+                                        item={item}
+                                        index={index}
+                                    />
                                 )}
                             />
                         </View>
@@ -242,9 +234,9 @@ const Calender = ({ navigation }) => {
                                     style={
                                         eventCaetgory?.name
                                             ? [
-                                                styles.filterButton,
-                                                { borderColor: colors.commonColor },
-                                            ]
+                                                  styles.filterButton,
+                                                  { borderColor: colors.commonColor },
+                                              ]
                                             : styles.filterButton
                                     }
                                 >
