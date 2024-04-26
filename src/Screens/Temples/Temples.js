@@ -176,16 +176,10 @@ export const Temples = ({ navigation, route }) => {
             state !== RESULTS.GRANTED &&
             (isPermissionExist === 'undefined' || isPermissionExist === null)
         ) {
-            let requestedVal = await requestThePermission(
-                permissionTypeRef.current,
-                'from  state !== RESULTS.GRANTED'
-            );
+            let requestedVal = await requestThePermission(permissionTypeRef.current);
             setPermissionGranted(() => requestedVal.permissionType);
         } else if (state === RESULTS.DENIED) {
-            let requestedVal = await requestThePermission(
-                permissionTypeRef.current,
-                'from state === RESULTS.DENIED'
-            );
+            let requestedVal = await requestThePermission(permissionTypeRef.current);
             setPermissionGranted(() => requestedVal.permissionType);
         } else if (state === RESULTS.BLOCKED) {
             setShowModal(!showModal);
@@ -212,10 +206,7 @@ export const Temples = ({ navigation, route }) => {
                 ...userLocation,
             }));
         } else {
-            requestThePermission(
-                permissionTypeRef.current,
-                'state === RESULTS.DENIED handleModalAction'
-            ).then((finalState) => {
+            requestThePermission(permissionTypeRef.current).then((finalState) => {
                 grantState = finalState.permissionType;
                 setPermissionGranted(() => grantState);
                 if (finalState.permissionType === RESULTS.BLOCKED) {
@@ -224,15 +215,17 @@ export const Temples = ({ navigation, route }) => {
             });
         }
     };
+
     // extra code
     const subcriptionEventListner = useRef();
+
     const unmountTheListner = () => {
-        console.log('🚀 ~ unmountTheListner ~ unmountTheListner:');
         if (subcriptionEventListner.current) {
             subcriptionEventListner.current.remove();
         }
     };
     const handleFocusEvent = async () => {
+        // console.log('the mounting of the listner confirmed ');
         let grantState = '';
         let theCurrentPermission = await checkPermissionAccess(permissionTypeRef.current);
         if (theCurrentPermission !== RESULTS.GRANTED) {
@@ -256,9 +249,7 @@ export const Temples = ({ navigation, route }) => {
     // end
 
     const handleModalAction = async () => {
-        // extra code
         subcriptionEventListner.current = AppState.addEventListener('focus', handleFocusEvent);
-        // end
         openSettings();
         setShowModal(!showModal);
     };
