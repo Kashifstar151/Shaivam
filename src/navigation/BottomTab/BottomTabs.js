@@ -17,6 +17,7 @@ import MoreSVG from '../../components/SVGs/MoreSVG';
 import TempleTabsNavigate from '../../Screens/Temples/TempleTabsNavigate';
 import { colors } from '../../Helpers';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import SelectedCalenderSVG from '../../components/SVGs/SelectedCalenderSVG';
 const Tab = createBottomTabNavigator();
 
 const MyTabBar = ({ state, descriptors, navigation, theme, ...restProps }) => {
@@ -30,7 +31,9 @@ const MyTabBar = ({ state, descriptors, navigation, theme, ...restProps }) => {
             unSelected: <TempleSVG fill={theme?.bottomTabItemColor.unSelected} />,
         },
         Calender: {
-            selected: <CalendarSVG fill={theme?.bottomTabItemColor.selected} />,
+            selected: (
+                <SelectedCalenderSVG fill={theme?.bcolorScheme === 'light' ? '#C1554E' : '#000'} />
+            ),
             unSelected: <CalendarSVG fill={theme?.bottomTabItemColor.unSelected} />,
         },
         Favourite: {
@@ -266,7 +269,6 @@ export const styles = StyleSheet.create({
         height: 20,
         width: 1,
         backgroundColor: 'white',
-        marginHorizontal: 12,
         marginVertical: 5,
     },
 });
