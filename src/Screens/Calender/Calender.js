@@ -168,7 +168,7 @@ const Calender = ({ navigation }) => {
                                     style={styles.AddBtnContainer}
                                     onPress={() => selectFilter('Add Event')}
                                 >
-                                    <Icon name="plus" size={28} color="#222222" />
+                                    <Icon name="plus" size={20} color="#222222" />
                                 </TouchableOpacity>
                             </View>
                             <FlatList
@@ -398,8 +398,8 @@ export const styles = StyleSheet.create({
     SearchInputContainer: { flexDirection: 'row' },
     AddBtnContainer: {
         backgroundColor: '#FCB300',
-        height: 50,
-        width: 50,
+        height: 55,
+        width: 55,
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
