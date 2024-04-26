@@ -15,7 +15,6 @@ export const requestThePermission = async (accessType) => {
     try {
         const granted = await request(accessType);
         setTheLocationPermissionToStorage(granted);
-        console.log('🚀 ~ requestThePermission ~ granted:', granted);
         switch (granted) {
             case RESULTS.GRANTED:
                 return {
