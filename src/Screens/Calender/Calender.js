@@ -150,7 +150,7 @@ const Calender = ({ navigation }) => {
     return (
         <>
             {isLoading ? null : (
-                <ScrollView nestedScrollEnabled style={{ backgroundColor: '#fff', flex: 1 }}>
+                <ScrollView bounces={false} nestedScrollEnabled style={{ backgroundColor: '#fff', flex: 1 }}>
                     <Background>
                         <View
                             style={{
@@ -158,7 +158,7 @@ const Calender = ({ navigation }) => {
                             }}
                         >
                             <View style={styles.HeadeingContainer}>
-                                <HeadingText text={'Calenders'} nandiLogo={true} />
+                                <HeadingText text={'Calender'} nandiLogo={true} />
                             </View>
                             <View style={styles.SearchInputContainer}>
                                 <View style={{ width: '84%' }}>
@@ -179,20 +179,12 @@ const Calender = ({ navigation }) => {
                                 horizontal
                                 data={data1}
                                 renderItem={({ item, index }) => (
-                                    <ElevatedCard navigation={() => navigation.navigate(RouteTexts.EVENT_DETAILS, {
-                                        item: item
-                                    })} theme={{ colorscheme: theme.colorscheme }}>
-                                        <EventCard
-                                            date={moment(item?.start_date).get('D')}
-                                            timing={`${moment(item?.attributes?.start_date).format('MMMM DD YYYY')} -${moment(item?.attributes?.end_date).format('MMMM DD YYYY')} `}
-                                            title={item?.attributes?.title}
-                                            item={item}
-                                            theme={{
-                                                textColor: theme.textColor,
-                                                colorscheme: theme.colorscheme,
-                                            }}
-                                        />
-                                    </ElevatedCard>
+                                    <HeadingComponent
+                                        selectedHeader={selectedHeader}
+                                        setHeader={setSelectedheader}
+                                        item={item}
+                                        index={index}
+                                    />
                                 )}
                             />
                         </View>
@@ -209,6 +201,11 @@ const Calender = ({ navigation }) => {
                             date={selectMonth}
                         >
                             <ExpandableCalendar
+                                calendarWidth={Dimensions.get('window').width - 20}
+                                customHeaderTitle={
+                                    <Text style={{ color: 'black', fontFamily: 'Mulish-Bold' }}>{moment().get('M') == moment(selectMonth).get('M') && 'Today,'} {moment(selectMonth).format('MMM DD, YYYY')}</Text>
+                                }
+
                                 // initialDate={new Date()}
                                 // date={new Date()}
                                 theme={{
@@ -231,8 +228,13 @@ const Calender = ({ navigation }) => {
                                     textDayStyle: { fontsize: 11 },
                                 }}
                                 displayLoadingIndicator={isLoading}
-                                onMonthChange={(month) =>
-                                    setSelectMonth(new Date(month?.dateString).toISOString())
+                                onMonthChange={(month) => {
+                                    // console.log("🚀 ~ Calender ~ month?.dateString:", month?.dateString)
+                                    if (!isLoading) {
+                                        setSelectMonth(new Date(month?.dateString).toISOString())
+                                    }
+                                }
+                                    // console.log(new Date(month?.dateString).toISOString())
                                 }
                                 markingType="custom"
                                 markedDates={marked}
@@ -305,11 +307,15 @@ const Calender = ({ navigation }) => {
                                     Today {moment().format('MMMM Do YYYY,')}
                                 </Text>
                                 <ElevatedCard
-                                    navigation={() => navigation.navigate(RouteTexts.EVENT_DETAILS)}
+                                    navigation={() =>
+                                        navigation.navigate(RouteTexts.EVENT_DETAILS, {
+                                            item: item,
+                                        })
+                                    }
                                     theme={{ colorscheme: theme.colorscheme }}
                                 >
                                     <EventCard
-                                        date={(moment(todaysEvent?.start_date).get('D'))}
+                                        date={moment(todaysEvent?.start_date).get('D')}
                                         timing={`${moment(
                                             todaysEvent?.attributes?.start_date
                                         ).format('MMMM DD YYYY')} -${moment(
@@ -338,7 +344,11 @@ const Calender = ({ navigation }) => {
                             contentContainerStyle={{ paddingBottom: 100 }}
                             renderItem={({ item, index }) => (
                                 <ElevatedCard
-                                    navigation={() => navigation.navigate(RouteTexts.EVENT_DETAILS)}
+                                    navigation={() =>
+                                        navigation.navigate(RouteTexts.EVENT_DETAILS, {
+                                            item: item,
+                                        })
+                                    }
                                     theme={{ colorscheme: theme.colorscheme }}
                                 >
                                     <EventCard
@@ -392,6 +402,7 @@ const Calender = ({ navigation }) => {
                             )}
                         </RBSheet>
                     </View>
+
                 </ScrollView>
             )}
         </>
@@ -413,6 +424,7 @@ export const styles = StyleSheet.create({
         marginHorizontal: 3,
         alignSelf: 'center',
         borderRadius: 10,
+        width: Dimensions.get('window').width - 20
         //  elevation: 2,
     },
     shadowProps: {

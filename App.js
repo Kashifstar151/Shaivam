@@ -1,6 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import React, { useEffect } from 'react';
-import { StatusBar, View, useColorScheme } from 'react-native';
+import { StatusBar, View, useColorScheme, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Route from './src/navigation/Route';
 import HomeScreen from './src/Screens/Home/HomeScreen';
@@ -55,6 +55,7 @@ const App = () => {
             <ThemeContextProvider>
                 <SafeAreaView style={{ flex: 1 }}>
                     <GestureHandlerRootView style={{ flex: 1 }}>
+
                         <Route />
                     </GestureHandlerRootView>
                 </SafeAreaView>
