@@ -160,7 +160,6 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         height: 60,
-        width: Dimensions.get('window').width,
         marginBottom: 4,
         flexDirection: 'row',
     },
