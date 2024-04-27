@@ -51,12 +51,11 @@ const Calender = ({ navigation }) => {
     const [selectMonth, setSelectMonth] = useState(new Date().toISOString());
     const [eventCaetgory, setEventCategory] = useState(null);
     const [todaysEvent, setTodaysEvent] = useState(null);
-    const { data, isLoading, isSuccess, refetch } = useGetListQuery(selectMonth);
+    const { data, isLoading, isFetching, isSuccess, refetch } = useGetListQuery(selectMonth);
+    console.log('🚀 ~ Calender ~ isSuccess:', isSuccess, isLoading);
     // console.log("🚀 ~ Calender ~ authState:", JSON.stringify(data?.data, 0, 2))
     useEffect(() => {
         if (isSuccess) {
-            console.log('Fetched data for the month:', JSON.stringify(data?.data, 0, 2));
-            console.log('today date', moment().format('YYYY-MM-DD'));
             data?.data?.map((item) => {
                 if (item?.attributes?.start_date == moment().format('YYYY-MM-DD')) {
                     setTodaysEvent(item);
@@ -70,6 +69,8 @@ const Calender = ({ navigation }) => {
     const [selectedFilter, setSelectedFilter] = useState(null);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [startDate, setStartDate] = useState(new Date());
+    const [disableMonthChangeVal, setDisableMonthChangeVal] = useState(false);
+    const disableMonthChangeValRef = useRef();
 
     const { theme } = useContext(ThemeContext);
     useFocusEffect(
@@ -147,249 +148,255 @@ const Calender = ({ navigation }) => {
         setSelectedFilter(item);
         bottomSheetRef?.current?.open();
     };
+
     return (
         <>
-            {isLoading ? null : (
-                <ScrollView nestedScrollEnabled style={{ backgroundColor: '#fff', flex: 1 }}>
-                    <Background>
-                        <View
-                            style={{
-                                paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 20 : 0,
-                            }}
-                        >
-                            <View style={styles.HeadeingContainer}>
-                                <HeadingText text={'Calender'} nandiLogo={true} />
-                            </View>
-                            <View style={styles.SearchInputContainer}>
-                                <View style={{ width: '84%' }}>
-                                    <SearchInput placeholder={'Search for Festivals/events'} />
-                                </View>
-                                <TouchableOpacity
-                                    style={styles.AddBtnContainer}
-                                    onPress={() => selectFilter('Add Event')}
-                                >
-                                    <Icon name="plus" size={20} color="#222222" />
-                                </TouchableOpacity>
-                            </View>
-                            <FlatList
-                                contentContainerStyle={{
-                                    paddingHorizontal: 15,
-                                    marginVertical: 10,
-                                }}
-                                horizontal
-                                data={data1}
-                                renderItem={({ item, index }) => (
-                                    <HeadingComponent
-                                        selectedHeader={selectedHeader}
-                                        setHeader={setSelectedheader}
-                                        item={item}
-                                        index={index}
-                                    />
-                                )}
-                            />
-                        </View>
-                        <View style={{ height: 100 }}></View>
-                    </Background>
+            {/* {isFetching ? null : ( */}
+            <ScrollView nestedScrollEnabled style={{ backgroundColor: '#fff', flex: 1 }}>
+                <Background>
                     <View
                         style={{
-                            marginTop: -100,
-                            flex: 1,
+                            paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 20 : 0,
                         }}
                     >
-                        <CalendarProvider
-                            style={[styles.calenderContainer, styles.shadowProps]}
-                            date={selectMonth}
-                        >
-                            <ExpandableCalendar
-                                // initialDate={new Date()}
-                                // date={new Date()}
-                                theme={{
-                                    arrowColor: '#222222',
-                                    dayTextColor: '#222222',
-                                    textDayFontFamily: 'Mulish-Bold',
-                                    textDisabledColor: 'grey',
-                                    monthTextColor: '#222222',
-                                    textDayFontWeight: '600',
-                                    textMonthFontWeight: '600',
-                                    calendarBackground: '#FFFFFF',
-                                    todayBackgroundColor: 'white',
-                                    selectedDayBackgroundColor: 'white',
-                                    selectedDayTextColor: 'black',
-                                    textDayFontSize: 11,
-                                    textDayStyle: { fontsize: 11 },
-                                }}
-                                displayLoadingIndicator={isLoading}
-                                onMonthChange={(month) =>
-                                    setSelectMonth(new Date(month?.dateString).toISOString())
-                                }
-                                markingType="custom"
-                                markedDates={marked}
-                                style={styles.calenderTheme}
-                            />
-                        </CalendarProvider>
-                        {selectedHeader == 'Events' && (
-                            <View style={styles.filterContainer}>
-                                <TouchableOpacity
-                                    onPress={() => selectFilter('Event')}
-                                    style={
-                                        eventCaetgory?.name
-                                            ? [
-                                                  styles.filterButton,
-                                                  { borderColor: colors.commonColor },
-                                              ]
-                                            : styles.filterButton
-                                    }
-                                >
-                                    <Text
-                                        style={
-                                            eventCaetgory?.name
-                                                ? [styles.filtertext, { color: colors.commonColor }]
-                                                : styles.filtertext
-                                        }
-                                    >
-                                        {eventCaetgory == null
-                                            ? 'Event Category'
-                                            : eventCaetgory?.name}
-                                    </Text>
-                                    <MaterialIcons
-                                        name="keyboard-arrow-down"
-                                        size={20}
-                                        color="rgba(119, 119, 119, 1)"
-                                    />
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    onPress={() => selectFilter('Location')}
-                                    style={{
-                                        marginHorizontal: 15,
-                                        flexDirection: 'row',
-                                        borderColor: 'rgba(229, 229, 229, 1)',
-                                        borderWidth: 1,
-                                        borderRadius: 20,
-                                        height: 30,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        paddingHorizontal: 10,
-                                    }}
-                                >
-                                    <Text style={styles.filtertext}>Location</Text>
-                                    <MaterialIcons
-                                        name="keyboard-arrow-down"
-                                        size={20}
-                                        color="rgba(119, 119, 119, 1)"
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                        )}
-                        {todaysEvent !== null && (
-                            <View style={{ paddingHorizontal: 0, marginVertical: 15 }}>
-                                <Text
-                                    style={{
-                                        fontSize: 16,
-                                        fontFamily: 'Lora-Bold',
-                                        color: '#222222',
-                                        marginHorizontal: 20,
-                                    }}
-                                >
-                                    Today {moment().format('MMMM Do YYYY,')}
-                                </Text>
-                                <ElevatedCard
-                                    navigation={() =>
-                                        navigation.navigate(RouteTexts.EVENT_DETAILS, {
-                                            item: item,
-                                        })
-                                    }
-                                    theme={{ colorscheme: theme.colorscheme }}
-                                >
-                                    <EventCard
-                                        date={moment(todaysEvent?.start_date).get('D')}
-                                        timing={`${moment(
-                                            todaysEvent?.attributes?.start_date
-                                        ).format('MMMM DD YYYY')} -${moment(
-                                            todaysEvent?.attributes?.end_date
-                                        ).format('MMMM DD YYYY')} `}
-                                        title={todaysEvent?.attributes?.title}
-                                        item={todaysEvent}
-                                        theme={{
-                                            textColor: theme.textColor,
-                                            colorscheme: theme.colorscheme,
-                                        }}
-                                    />
-                                </ElevatedCard>
-                            </View>
-                        )}
-                        <View style={{ paddingHorizontal: 20, marginVertical: 15 }}>
-                            <Text
-                                style={{ fontSize: 16, fontFamily: 'Lora-Bold', color: '#222222' }}
-                            >
-                                This Month
-                            </Text>
+                        <View style={styles.HeadeingContainer}>
+                            <HeadingText text={'Calender'} nandiLogo={true} />
                         </View>
-
+                        <View style={styles.SearchInputContainer}>
+                            <View style={{ width: '84%' }}>
+                                <SearchInput placeholder={'Search for Festivals/events'} />
+                            </View>
+                            <TouchableOpacity
+                                style={styles.AddBtnContainer}
+                                onPress={() => selectFilter('Add Event')}
+                            >
+                                <Icon name="plus" size={20} color="#222222" />
+                            </TouchableOpacity>
+                        </View>
                         <FlatList
-                            data={data?.data}
-                            contentContainerStyle={{ paddingBottom: 100 }}
+                            contentContainerStyle={{
+                                paddingHorizontal: 15,
+                                marginVertical: 10,
+                            }}
+                            horizontal
+                            data={data1}
                             renderItem={({ item, index }) => (
-                                <ElevatedCard
-                                    navigation={() =>
-                                        navigation.navigate(RouteTexts.EVENT_DETAILS, {
-                                            item: item,
-                                        })
-                                    }
-                                    theme={{ colorscheme: theme.colorscheme }}
-                                >
-                                    <EventCard
-                                        date={moment(item?.start_date).get('D')}
-                                        timing={`${moment(item?.attributes?.start_date).format(
-                                            'MMMM DD YYYY'
-                                        )} -${moment(item?.attributes?.end_date).format(
-                                            'MMMM DD YYYY'
-                                        )} `}
-                                        title={item?.attributes?.title}
-                                        item={item}
-                                        theme={{
-                                            textColor: theme.textColor,
-                                            colorscheme: theme.colorscheme,
-                                        }}
-                                    />
-                                </ElevatedCard>
+                                <HeadingComponent
+                                    selectedHeader={selectedHeader}
+                                    setHeader={setSelectedheader}
+                                    item={item}
+                                    index={index}
+                                />
                             )}
                         />
-                        <RBSheet height={500} closeOnDragDown ref={bottomSheetRef}>
-                            {selectedFilter == 'Event' ? (
-                                <>
-                                    <EventSelectionType
-                                        setEventCategory={setEventCategory}
-                                        eventCaetgory={eventCaetgory}
-                                    />
-                                    <View
-                                        style={{
-                                            justifyContent: 'center',
-                                            alignSelf: 'center',
-                                            position: 'absolute',
-                                            bottom: 10,
-                                        }}
-                                    >
-                                        <ButtonComp
-                                            color={true}
-                                            text="Search"
-                                            navigation={() => alert(eventCaetgory)}
-                                        />
-                                    </View>
-                                </>
-                            ) : selectedFilter == 'Add Event' ? (
-                                <SubmitEnteries
-                                    navigation={navigation}
-                                    setSelectedEvent={setSelectedEvent}
-                                    selectedEvent={selectedEvent}
-                                    closeSheet={() => bottomSheetRef.current.close()}
-                                />
-                            ) : (
-                                <LocationSelection />
-                            )}
-                        </RBSheet>
                     </View>
-                </ScrollView>
-            )}
+                    <View style={{ height: 100 }}></View>
+                </Background>
+                <View
+                    style={{
+                        marginTop: -100,
+                        flex: 1,
+                    }}
+                >
+                    <CalendarProvider
+                        style={[styles.calenderContainer, styles.shadowProps]}
+                        date={selectMonth}
+                    >
+                        <ExpandableCalendar
+                            // initialDate={new Date()}
+                            // date={new Date()}
+                            theme={{
+                                arrowColor: '#222222',
+                                dayTextColor: '#222222',
+                                textDayFontFamily: 'Mulish-Bold',
+                                textDisabledColor: 'grey',
+                                monthTextColor: '#222222',
+                                textDayFontWeight: '600',
+                                textMonthFontWeight: '600',
+                                calendarBackground: '#FFFFFF',
+                                todayBackgroundColor: 'white',
+                                selectedDayBackgroundColor: 'white',
+                                selectedDayTextColor: 'black',
+                                textDayFontSize: 11,
+                                textDayStyle: { fontsize: 11 },
+                            }}
+                            current={selectMonth}
+                            key={selectMonth}
+                            enableSwipeMonths={false}
+                            disableArrowLeft={isFetching || disableMonthChangeVal}
+                            disableArrowRight={isFetching || disableMonthChangeVal}
+                            displayLoadingIndicator={isFetching || disableMonthChangeVal}
+                            onMonthChange={(month) => {
+                                setDisableMonthChangeVal(() => true);
+                                if (disableMonthChangeValRef.current) {
+                                    clearTimeout(disableMonthChangeValRef.current);
+                                }
+                                disableMonthChangeValRef.current = setTimeout(() => {
+                                    setDisableMonthChangeVal(() => false);
+                                    setSelectMonth(new Date(month?.dateString).toISOString());
+                                }, 1000);
+                            }}
+                            markingType="custom"
+                            markedDates={marked}
+                            style={styles.calenderTheme}
+                        />
+                    </CalendarProvider>
+                    {selectedHeader == 'Events' && (
+                        <View style={styles.filterContainer}>
+                            <TouchableOpacity
+                                onPress={() => selectFilter('Event')}
+                                style={
+                                    eventCaetgory?.name
+                                        ? [styles.filterButton, { borderColor: colors.commonColor }]
+                                        : styles.filterButton
+                                }
+                            >
+                                <Text
+                                    style={
+                                        eventCaetgory?.name
+                                            ? [styles.filtertext, { color: colors.commonColor }]
+                                            : styles.filtertext
+                                    }
+                                >
+                                    {eventCaetgory == null ? 'Event Category' : eventCaetgory?.name}
+                                </Text>
+                                <MaterialIcons
+                                    name="keyboard-arrow-down"
+                                    size={20}
+                                    color="rgba(119, 119, 119, 1)"
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => selectFilter('Location')}
+                                style={{
+                                    marginHorizontal: 15,
+                                    flexDirection: 'row',
+                                    borderColor: 'rgba(229, 229, 229, 1)',
+                                    borderWidth: 1,
+                                    borderRadius: 20,
+                                    height: 30,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    paddingHorizontal: 10,
+                                }}
+                            >
+                                <Text style={styles.filtertext}>Location</Text>
+                                <MaterialIcons
+                                    name="keyboard-arrow-down"
+                                    size={20}
+                                    color="rgba(119, 119, 119, 1)"
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    )}
+                    {todaysEvent !== null && (
+                        <View style={{ paddingHorizontal: 0, marginVertical: 15 }}>
+                            <Text
+                                style={{
+                                    fontSize: 16,
+                                    fontFamily: 'Lora-Bold',
+                                    color: '#222222',
+                                    marginHorizontal: 20,
+                                }}
+                            >
+                                Today {moment().format('MMMM Do YYYY,')}
+                            </Text>
+                            <ElevatedCard
+                                navigation={() =>
+                                    navigation.navigate(RouteTexts.EVENT_DETAILS, {
+                                        item: item,
+                                    })
+                                }
+                                theme={{ colorscheme: theme.colorscheme }}
+                            >
+                                <EventCard
+                                    date={moment(todaysEvent?.start_date).get('D')}
+                                    timing={`${moment(todaysEvent?.attributes?.start_date).format(
+                                        'MMMM DD YYYY'
+                                    )} -${moment(todaysEvent?.attributes?.end_date).format(
+                                        'MMMM DD YYYY'
+                                    )} `}
+                                    title={todaysEvent?.attributes?.title}
+                                    item={todaysEvent}
+                                    theme={{
+                                        textColor: theme.textColor,
+                                        colorscheme: theme.colorscheme,
+                                    }}
+                                />
+                            </ElevatedCard>
+                        </View>
+                    )}
+                    <View style={{ paddingHorizontal: 20, marginVertical: 15 }}>
+                        <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold', color: '#222222' }}>
+                            This Month
+                        </Text>
+                    </View>
+
+                    <FlatList
+                        data={data?.data}
+                        contentContainerStyle={{ paddingBottom: 100 }}
+                        renderItem={({ item, index }) => (
+                            <ElevatedCard
+                                navigation={() =>
+                                    navigation.navigate(RouteTexts.EVENT_DETAILS, {
+                                        item: item,
+                                    })
+                                }
+                                theme={{ colorscheme: theme.colorscheme }}
+                            >
+                                <EventCard
+                                    date={moment(item?.start_date).get('D')}
+                                    timing={`${moment(item?.attributes?.start_date).format(
+                                        'MMMM DD YYYY'
+                                    )} -${moment(item?.attributes?.end_date).format(
+                                        'MMMM DD YYYY'
+                                    )} `}
+                                    title={item?.attributes?.title}
+                                    item={item}
+                                    theme={{
+                                        textColor: theme.textColor,
+                                        colorscheme: theme.colorscheme,
+                                    }}
+                                />
+                            </ElevatedCard>
+                        )}
+                    />
+                    <RBSheet height={500} closeOnDragDown ref={bottomSheetRef}>
+                        {selectedFilter == 'Event' ? (
+                            <>
+                                <EventSelectionType
+                                    setEventCategory={setEventCategory}
+                                    eventCaetgory={eventCaetgory}
+                                />
+                                <View
+                                    style={{
+                                        justifyContent: 'center',
+                                        alignSelf: 'center',
+                                        position: 'absolute',
+                                        bottom: 10,
+                                    }}
+                                >
+                                    <ButtonComp
+                                        color={true}
+                                        text="Search"
+                                        navigation={() => alert(eventCaetgory)}
+                                    />
+                                </View>
+                            </>
+                        ) : selectedFilter == 'Add Event' ? (
+                            <SubmitEnteries
+                                navigation={navigation}
+                                setSelectedEvent={setSelectedEvent}
+                                selectedEvent={selectedEvent}
+                                closeSheet={() => bottomSheetRef.current.close()}
+                            />
+                        ) : (
+                            <LocationSelection />
+                        )}
+                    </RBSheet>
+                </View>
+            </ScrollView>
+            {/* )} */}
         </>
     );
 };
