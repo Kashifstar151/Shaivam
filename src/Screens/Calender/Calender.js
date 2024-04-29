@@ -304,7 +304,7 @@ const Calender = ({ navigation }) => {
                             <ElevatedCard
                                 navigation={() =>
                                     navigation.navigate(RouteTexts.EVENT_DETAILS, {
-                                        item: item,
+                                        item: todaysEvent,
                                     })
                                 }
                                 theme={{ colorscheme: theme.colorscheme }}
