@@ -39,6 +39,7 @@ import Success from '../Screens/Success/Success';
 import Radios from '../Screens/Radio/Radios';
 import OmChanting from '../Screens/Home/OmChanting';
 import NavigationServices from './NavigationServices';
+import { RESULTS } from 'react-native-permissions';
 // import { ThemeContextProvider } from '../Context/ThemeContext';
 
 const Route = () => {
@@ -76,8 +77,6 @@ const Route = () => {
         // connectDataBaseToFolder()
     }, []);
 
-
-
     const checkConnection = (connected) => {
         if (connected) {
             Alert.alert('New Update Available', 'Click ok to sync latest data', [
@@ -104,7 +103,11 @@ const Route = () => {
         //     setShowDownloading(false)
         // }, 2000)
     };
-    async function requestFilePermissions() {
+
+    async function filePermissionProcess() {
+        console.log(
+            '🚀 ~ filePermissionProcess ~ filePermissionProcess:*********************************************************'
+        );
         try {
             const granted = await PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
@@ -116,20 +119,43 @@ const Route = () => {
                     buttonNegative: 'Cancel',
                     buttonPositive: 'OK',
                 }
-            )
-            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                console.log('File permissions granted');
-            } else {
-                console.log('File permissions denied');
-            }
+            );
+            return { permissionType: granted, status: 'SUCCESS', error: null };
         } catch (err) {
             console.warn(err);
+            return { permissionType: null, status: 'ERROR', error: err };
+        }
+    }
+
+    async function requestFilePermissions() {
+        let fileAccessRequest = { permissionType: null, status: null, error: null };
+        if (
+            (!(Platform.constants['Release'] >= 13) && Platform.OS === 'android') ||
+            Platform.OS === 'ios'
+        ) {
+            fileAccessRequest = await filePermissionProcess();
+        } else {
+            fileAccessRequest = {
+                permissionType: RESULTS.GRANTED,
+                status: 'SUCCESS',
+            };
+        }
+        if (
+            fileAccessRequest?.status === 'SUCCESS' &&
+            fileAccessRequest.permissionType === PermissionsAndroid.RESULTS.GRANTED
+        ) {
+            console.log('File permissions granted');
+        } else {
+            console.log('File permissions denied', fileAccessRequest);
         }
     }
 
     const checkFileExist = async () => {
-        let path = Platform.OS == 'android' ? `${RNFS.ExternalDirectoryPath}/Thrimurai/thirumuraiSongs_10.db` : `${RNFS.DocumentDirectoryPath}/Thrimurai/thirumuraiSongs_10.db`
-        console.log("🚀 ~ checkFileExist ~ path:", path)
+        let path =
+            Platform.OS == 'android'
+                ? `${RNFS.ExternalDirectoryPath}/Thrimurai/thirumuraiSongs_10.db`
+                : `${RNFS.DocumentDirectoryPath}/Thrimurai/thirumuraiSongs_10.db`;
+        console.log('🚀 ~ checkFileExist ~ path:', path);
         RNFS.exists(path)
             .then(async (res) => {
                 if (res == true) {
@@ -139,7 +165,7 @@ const Route = () => {
                         '@database',
                         JSON.stringify({ name: 'songData.db', createFromLocation: 1 })
                     );
-                    alert(true)
+                    alert(true);
                     setShowDownloading(true);
                     setTimeout(() => {
                         setShowDownloading(false);
@@ -177,7 +203,7 @@ const Route = () => {
                     />
                 </View>
             ) : (
-                <NavigationContainer ref={ref => NavigationServices.setTopLevelNavigator(ref)}>
+                <NavigationContainer ref={(ref) => NavigationServices.setTopLevelNavigator(ref)}>
                     <Stack.Navigator
                         initialRouteName={RouteTexts.ONBOARDING_SCREEN}
                         screenOptions={{
@@ -190,7 +216,10 @@ const Route = () => {
                         <Stack.Screen name="Thirumurais" component={ThrimuraiList} />
                         <Stack.Screen name={RouteTexts.SEARCH_SCREEN} component={SearchScreen} />
                         <Stack.Screen name={RouteTexts.ONBOARDING_SCREEN} component={Onboarding} />
-                        <Stack.Screen name={RouteTexts.VIRTUAL_EVENT_CREATE} component={CreateVirtualEvent} />
+                        <Stack.Screen
+                            name={RouteTexts.VIRTUAL_EVENT_CREATE}
+                            component={CreateVirtualEvent}
+                        />
                         <Stack.Screen
                             name={RouteTexts.TEMPLE_SELECTION}
                             component={TempleSelection}

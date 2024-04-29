@@ -4,6 +4,7 @@ import * as RNFS from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob';
 import { PermissionsAndroid, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { RESULTS } from 'react-native-permissions';
 // const databaseName = 'main.db';
 // const database = SQLite.openDatabase({ name: databaseName, });
 const database = SQLite.openDatabase({ name: 'main.db' });
@@ -144,11 +145,14 @@ export async function attachDb() {
 //     } catch (error) {
 //     }
 // }
-
-async function requestFilePermissions() {
+async function filePermissionProcess() {
+    console.log(
+        '🚀 ~ filePermissionProcess ~ filePermissionProcess:*********************************************************'
+    );
     try {
         const granted = await PermissionsAndroid.request(
             PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+            // PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
             {
                 title: 'File Permission',
                 message: 'App needs access to your storage to read and write files.',
@@ -157,21 +161,44 @@ async function requestFilePermissions() {
                 buttonPositive: 'OK',
             }
         );
-
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            console.log('File permissions granted');
-        } else {
-            console.log('File permissions denied');
-        }
+        return { permissionType: granted, status: 'SUCCESS', error: null };
     } catch (err) {
         console.warn(err);
+        return { permissionType: null, status: 'ERROR', error: err };
     }
 }
+
+async function requestFilePermissions() {
+    let fileAccessRequest = { permissionType: null, status: null, error: null };
+    if (
+        (!(Platform.constants['Release'] >= 13) && Platform.OS === 'android') ||
+        Platform.OS === 'ios'
+    ) {
+        fileAccessRequest = await filePermissionProcess();
+    } else {
+        fileAccessRequest = {
+            permissionType: RESULTS.GRANTED,
+            status: 'SUCCESS',
+        };
+    }
+    if (
+        fileAccessRequest?.status === 'SUCCESS' &&
+        fileAccessRequest.permissionType === PermissionsAndroid.RESULTS.GRANTED
+    ) {
+        console.log('File permissions granted');
+    } else {
+        console.log('File permissions denied', fileAccessRequest);
+    }
+}
+
 function unzipDownloadFile(target, cb) {
     requestFilePermissions();
     const sourcePath = target;
     // console.log("🚀 ~ file: Database.js:72 ~ unzipDownloadFile ~ targetPath:", sourcePath)
-    const targetPath = Platform.OS == 'android' ? `${RNFS.ExternalDirectoryPath}/Thrimurai` : `${RNFS.DocumentDirectoryPath}/Thrimurai`;
+    const targetPath =
+        Platform.OS == 'android'
+            ? `${RNFS.ExternalDirectoryPath}/Thrimurai`
+            : `${RNFS.DocumentDirectoryPath}/Thrimurai`;
     const filePath = RNFS.DocumentDirectoryPath + '/myData.db';
     const charset = 'UTF-8';
     RNFS.mkdir(targetPath)

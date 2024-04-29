@@ -1,7 +1,7 @@
 // setting the type of the marker you pressed
 // callback function for naving to page which has the temple details
 import { StackActions, useRoute } from '@react-navigation/native';
-import React, { useContext, useState } from 'react';
+import React, { useCallback, useContext, useRef, useState } from 'react';
 import {
     Dimensions,
     Image,
@@ -23,6 +23,11 @@ import TempleCard from './TempleCard';
 import { WebView } from 'react-native-webview';
 import { CustomButton } from '../../components/Buttons';
 import Toast, { AnimatedToast } from '../../components/Toast';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import SearchContainerWithIcon from './SearchContainerWithIcon';
+import SearchTemple from './SearchTemple';
+import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
+import BottomSheetTempleTemplate from './BottomSheetTempleTemplate';
 
 const details = {
     basicDetails: {
@@ -42,7 +47,6 @@ const TempleDetails = ({ navigation }) => {
     const { data, locationName } = route?.params;
     console.log('🚀 ~ TempleDetails ~ data:', data);
     const { theme } = useContext(ThemeContext);
-    console.log('🚀 ~ NearByPage ~ state:', data);
     const popAction = StackActions.pop(1);
     const [fav, setFav] = useState(true);
     const [animateToast, setAnimateToast] = useState();
@@ -50,181 +54,274 @@ const TempleDetails = ({ navigation }) => {
         setAnimateToast(!fav);
         setFav(!fav);
     };
-    return (
-        <View style={{ flex: 1 }}>
-            <ImageBackground
-                source={theme.colorscheme === 'light' ? bgImg : bgImgDark}
-                resizeMode="cover"
-                style={{ width: '100%', height: 50 }}
-            />
 
-            <View
-                style={[
-                    styles.wholeContainerWrapper,
-                    {
-                        backgroundColor: 'white',
-                        flex: 1,
-                    },
-                ]}
+    const bottomSheetRef = useRef(null);
+    const [snapIndex, setSnapIndex] = useState(0);
+    const [modalVisible, setModalVisible] = useState(true);
+
+    const handleSheetChanges = useCallback((index) => {
+        console.log('handleSheetChanges', index);
+        setSnapIndex(index);
+    }, []);
+
+    const [regionCoordinate, setRegionCoordinate] = useState({
+        latitude: 28.500271,
+        longitude: 77.387901,
+        latitudeDelta: 0.015,
+        longitudeDelta: 0.0121,
+        locationName: '',
+    });
+    return (
+        <>
+            <BottomSheetTempleTemplate
+                snapPoints={['50%', '95%']}
+                showSearchBarWhenFullSize={false}
+                regionCoordinate={{
+                    latitude: 28.500271,
+                    longitude: 77.387901,
+                    latitudeDelta: 0.015,
+                    longitudeDelta: 0.0121,
+                    locationName: '',
+                }}
+                initialIndexOfSize={0}
+                appearsOnIndex={1}
+                disappearsOnIndex={0}
+                isNavigable={true}
+                routeName={route.name}
+                valueToBePreFilled={route.params?.data?.name ?? route.params?.searchText}
             >
                 <View
-                    style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        paddingVertical: 20,
-                        paddingHorizontal: 15,
-                        alignItems: 'center',
-                    }}
+                    style={[
+                        styles.wholeContainerWrapper,
+                        {
+                            backgroundColor: 'white',
+                            flex: 1,
+                        },
+                    ]}
                 >
-                    <CustomButton
-                        svg={<DownArrowSVG fill={'#000'} width={20} height={20} />}
+                    <View
                         style={{
-                            paddingVertical: 0,
-                            paddingHorizontal: 0,
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            paddingVertical: 20,
+                            paddingHorizontal: 15,
+                            alignItems: 'center',
                         }}
-                        onPress={() => {
-                            navigation.dispatch(popAction);
-                        }}
-                        type="TouchableOpacity"
-                    />
-                    <View style={{ flexDirection: 'row', gap: 20, alignItems: 'center' }}>
+                    >
                         <CustomButton
-                            svg={<SearchSVG fill={'#777777'} width={17} height={17} />}
+                            svg={<DownArrowSVG fill={'#000'} width={20} height={20} />}
                             style={{
                                 paddingVertical: 0,
                                 paddingHorizontal: 0,
-                                borderRadius: 0,
                             }}
                             onPress={() => {
                                 navigation.dispatch(popAction);
                             }}
                             type="TouchableOpacity"
                         />
-                        <CustomButton
-                            svg={
-                                <FavSVG
-                                    outerfill={fav ? '#C1554E' : '#777777'}
-                                    innerfill={fav ? '#C1554E' : '#fff'}
-                                    fill={'#777777'}
-                                    width={14}
-                                    height={20}
-                                />
-                            }
-                            style={{
-                                paddingVertical: 0,
-                                paddingHorizontal: 0,
-                                borderRadius: 0,
+                        <View style={{ flexDirection: 'row', gap: 20, alignItems: 'center' }}>
+                            <CustomButton
+                                svg={<SearchSVG fill={'#777777'} width={17} height={17} />}
+                                style={{
+                                    paddingVertical: 0,
+                                    paddingHorizontal: 0,
+                                    borderRadius: 0,
+                                }}
+                                onPress={() => {
+                                    navigation.dispatch(popAction);
+                                }}
+                                type="TouchableOpacity"
+                            />
+                            <CustomButton
+                                svg={
+                                    <FavSVG
+                                        outerfill={fav ? '#C1554E' : '#777777'}
+                                        innerfill={fav ? '#C1554E' : '#fff'}
+                                        fill={'#777777'}
+                                        width={14}
+                                        height={20}
+                                    />
+                                }
+                                style={{
+                                    paddingVertical: 0,
+                                    paddingHorizontal: 0,
+                                    borderRadius: 0,
+                                }}
+                                onPress={onFavBtnClick}
+                                type="TouchableOpacity"
+                            />
+                            <CustomButton
+                                svg={<ShareSVG fill={'#777777'} width={18} height={18} />}
+                                style={{
+                                    paddingVertical: 0,
+                                    paddingHorizontal: 0,
+                                    borderRadius: 0,
+                                }}
+                                onPress={() => {
+                                    navigation.dispatch(popAction);
+                                }}
+                                type="TouchableOpacity"
+                            />
+                        </View>
+                    </View>
+                    <View>
+                        <TempleCard
+                            dataSet={{
+                                templeName: 'Brahmalingeshwara',
+                                flag: 1,
+                                templeType: 'Jyotirlingas/Thirumurai Temples',
+                                coordinate: {
+                                    latitude: '26.868851939300207',
+                                    longitude: '80.91296407698843',
+                                },
                             }}
-                            onPress={onFavBtnClick}
-                            type="TouchableOpacity"
+                            showButton={false}
+                            showMargin={false}
                         />
-                        <CustomButton
-                            svg={<ShareSVG fill={'#777777'} width={18} height={18} />}
-                            style={{
-                                paddingVertical: 0,
-                                paddingHorizontal: 0,
-                                borderRadius: 0,
-                            }}
-                            onPress={() => {
-                                navigation.dispatch(popAction);
-                            }}
-                            type="TouchableOpacity"
+
+                        <View style={{ marginHorizontal: 20, marginVertical: 10, gap: 8 }}>
+                            <Text
+                                style={{
+                                    color: 'black',
+                                    fontFamily: 'Mulish-Bold',
+                                    fontSize: 18,
+                                    paddingVertical: 8,
+                                }}
+                            >
+                                Basic Details
+                            </Text>
+                            {Object.entries(details.basicDetails).map(([key, value], index) => (
+                                <KeyValueComp key={index} keyVal={key} value={value} />
+                            ))}
+                        </View>
+
+                        <View style={{ marginHorizontal: 20, gap: 8 }}>
+                            <Text
+                                style={{
+                                    color: 'black',
+                                    fontFamily: 'Mulish-Bold',
+                                    fontSize: 18,
+                                    paddingVertical: 10,
+                                }}
+                            >
+                                Temple Description
+                            </Text>
+
+                            <Text
+                                style={{
+                                    color: 'black',
+                                    fontFamily: 'Mulish-Regular',
+                                    fontWeight: 600,
+                                }}
+                            >
+                                {details.description}
+                            </Text>
+                        </View>
+                    </View>
+
+                    <View style={{ backgroundColor: 'red', flexGrow: 1, marginHorizontal: 20 }}>
+                        <WebView
+                            originWhitelist={['*']}
+                            source={{ html: details.expandedDesc }}
+                            containerStyle={
+                                {
+                                    // flex: 0,
+                                    // height: 200,
+                                }
+                            }
+                            style={
+                                {
+                                    // flex: 0,
+                                    // height: '100%',
+                                    // width: '100%',
+                                }
+                            }
                         />
                     </View>
+
+                    {/* <Toast /> */}
+                    {fav && animateToast ? (
+                        <AnimatedToast
+                            state={animateToast && fav}
+                            type={'SUCCESS'}
+                            text={'Saved in My Trips > Saved Temples'}
+                        />
+                    ) : (
+                        <AnimatedToast
+                            state={animateToast && fav}
+                            type={'ERROR'}
+                            text={'Temple removed from saved'}
+                        />
+                    )}
                 </View>
-                <View>
-                    <TempleCard
-                        dataSet={{
-                            templeName: 'Brahmalingeshwara',
-                            flag: 1,
-                            templeType: 'Jyotirlingas/Thirumurai Temples',
-                            coordinate: {
-                                latitude: '26.868851939300207',
-                                longitude: '80.91296407698843',
-                            },
-                        }}
-                        showButton={false}
-                        showMargin={false}
-                    />
-
-                    <View style={{ marginHorizontal: 20, marginVertical: 10, gap: 8 }}>
-                        <Text
-                            style={{
-                                color: 'black',
-                                fontFamily: 'Mulish-Bold',
-                                fontSize: 18,
-                                paddingVertical: 8,
-                            }}
-                        >
-                            Basic Details
-                        </Text>
-                        {Object.entries(details.basicDetails).map(([key, value], index) => (
-                            <KeyValueComp key={index} keyVal={key} value={value} />
-                        ))}
-                    </View>
-
-                    <View style={{ marginHorizontal: 20, gap: 8 }}>
-                        <Text
-                            style={{
-                                color: 'black',
-                                fontFamily: 'Mulish-Bold',
-                                fontSize: 18,
-                                paddingVertical: 10,
-                            }}
-                        >
-                            Temple Description
-                        </Text>
-
-                        <Text
-                            style={{
-                                color: 'black',
-                                fontFamily: 'Mulish-Regular',
-                                fontWeight: 600,
-                            }}
-                        >
-                            {details.description}
-                        </Text>
-                    </View>
-                </View>
-
-                <View style={{ backgroundColor: 'red', flexGrow: 1, marginHorizontal: 20 }}>
-                    <WebView
-                        originWhitelist={['*']}
-                        source={{ html: details.expandedDesc }}
-                        containerStyle={
-                            {
-                                // flex: 0,
-                                // height: 200,
-                            }
-                        }
-                        style={
-                            {
-                                // flex: 0,
-                                // height: '100%',
-                                // width: '100%',
-                            }
-                        }
-                    />
-                </View>
-
-                {/* <Toast /> */}
-                {fav && animateToast ? (
-                    <AnimatedToast
-                        state={animateToast && fav}
-                        type={'SUCCESS'}
-                        text={'Saved in My Trips > Saved Temples'}
-                    />
-                ) : (
-                    <AnimatedToast
-                        state={animateToast && fav}
-                        type={'ERROR'}
-                        text={'Temple removed from saved'}
-                    />
-                )}
-            </View>
-        </View>
+            </BottomSheetTempleTemplate>
+        </>
     );
 };
+
+// const tt = () => (
+//     <View style={{ flex: 1 }}>
+//         <MapView
+//             provider={PROVIDER_GOOGLE}
+//             initialRegion={null}
+//             style={styles.map}
+//             region={regionCoordinate}
+//         ></MapView>
+//         {/* <ImageBackground
+// source={theme.colorscheme === 'light' ? bgImg : bgImgDark}
+// resizeMode="cover"
+// style={{ width: '100%', height: 50 }}
+// /> */}
+
+//         <View
+//             style={{
+//                 position: 'absolute',
+//                 width: '100%',
+//                 padding: 20,
+//             }}
+//         >
+//             <SearchContainerWithIcon>
+//                 <SearchTemple
+//                     route={route.name}
+//                     value={route.params?.data?.name ?? route.params?.searchText}
+//                     isNavigable={true}
+//                 />
+//             </SearchContainerWithIcon>
+//         </View>
+
+//         <BottomSheet
+//             ref={bottomSheetRef}
+//             onChange={handleSheetChanges}
+//             snapPoints={['50%', '95%']}
+//             index={0}
+//             backdropComponent={(props) => (
+//                 <BottomSheetBackdrop
+//                     opacity={1}
+//                     appearsOnIndex={1}
+//                     disappearsOnIndex={0}
+//                     pressBehavior={'collapse'}
+//                     {...props}
+//                 >
+//                     <ImageBackground
+//                         source={
+//                             theme.colorscheme === 'light'
+//                                 ? require('../../../assets/Images/Background.png')
+//                                 : require('../../../assets/Images/BackgroundCommon.png')
+//                         }
+//                         style={{
+//                             paddingVertical: 0,
+//                             borderRadius: 10,
+//                             width: '100%',
+//                             height: '40%',
+//                         }}
+//                     ></ImageBackground>
+//                 </BottomSheetBackdrop>
+//             )}
+//         >
+//             {}
+//         </BottomSheet>
+//     </View>
+// );
 
 const KeyValueComp = ({ keyVal, value }) => (
     <View
