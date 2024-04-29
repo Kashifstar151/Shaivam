@@ -92,18 +92,13 @@ import {
     TouchableWithoutFeedback,
     Pressable,
 } from 'react-native';
-import Slider from '@react-native-community/slider';
-import SearchInput from '../../components/SearchInput';
-import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import { ScrollView } from 'react-native-gesture-handler';
 import CardForNearByTemple from './CardForNearByTemple';
 import { useNavigation } from '@react-navigation/native';
-import { RouteTexts } from '../../navigation/RouteText';
 import DownArrowSVG from '../../components/SVGs/DownArrowSVG';
 import SearchContainerWithIcon from './SearchContainerWithIcon';
 import SearchTemple from './SearchTemple';
 const NearByTemples = ({ close, data, locationName, snapIndex, navigation }) => {
-    console.log('🚀 ~ NearByTemples ~ data:', JSON.stringify(data, 0, 2));
     const { snapToIndex, snapToPosition } = useBottomSheet();
     const nav = useNavigation();
 
