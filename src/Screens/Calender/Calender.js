@@ -22,7 +22,7 @@ import InActiveCalender from '../../assets/Images/UnactiveCalender.svg';
 import ActiveStar from '../../assets/Images/ActiveStar.svg';
 import InActiveStar from '../../assets/Images/UnactiveStart.svg';
 import ActiveCalender from '../../assets/Images/CalenderAct.svg';
-import { ExpandableCalendar, CalendarProvider } from 'react-native-calendars';
+import { ExpandableCalendar, CalendarProvider, Calendar } from 'react-native-calendars';
 import CustomCalender from './CustomCalender';
 import { colors } from '../../Helpers';
 import ElevatedCard from '../../components/ElevatedCard';
@@ -198,13 +198,12 @@ const Calender = ({ navigation }) => {
                         flex: 1,
                     }}
                 >
-                    <CalendarProvider
+                    {/* <CalendarProvider
                         style={[styles.calenderContainer, styles.shadowProps]}
                         date={selectMonth}
                     >
                         <ExpandableCalendar
-                            // initialDate={new Date()}
-                            // date={new Date()}
+                            context={{ date: selectMonth ?? new Date() }}
                             theme={{
                                 arrowColor: '#222222',
                                 dayTextColor: '#222222',
@@ -233,14 +232,58 @@ const Calender = ({ navigation }) => {
                                 }
                                 disableMonthChangeValRef.current = setTimeout(() => {
                                     setDisableMonthChangeVal(() => false);
-                                    setSelectMonth(new Date(month?.dateString).toISOString());
+                                    setSelectMonth(() => new Date(month?.dateString).toISOString());
+                                    // setDate(() => new Date(month?.dateString).toISOString());
                                 }, 1000);
                             }}
                             markingType="custom"
                             markedDates={marked}
                             style={styles.calenderTheme}
                         />
-                    </CalendarProvider>
+                    </CalendarProvider> */}
+                    <Calendar
+                        pinchGestureEnabled={false}
+                        disableMonthChange={isFetching}
+                        // horizontal={false}
+                        // initialDate={new Date()}
+                        // date={new Date()}
+                        theme={{
+                            arrowColor: '#222222',
+                            dayTextColor: '#222222',
+                            textDayFontFamily: 'Mulish-Bold',
+                            textDisabledColor: 'grey',
+                            monthTextColor: '#222222',
+                            textDayFontWeight: '600',
+                            textMonthFontWeight: '600',
+                            calendarBackground: '#FFFFFF',
+                            todayBackgroundColor: 'white',
+                            selectedDayBackgroundColor: 'white',
+                            selectedDayTextColor: 'black',
+                            textDayFontSize: 11,
+                            textDayStyle: { fontsize: 11 },
+                        }}
+                        current={selectMonth}
+                        key={selectMonth}
+                        enableSwipeMonths={false}
+                        disableArrowLeft={isFetching || disableMonthChangeVal}
+                        disableArrowRight={isFetching || disableMonthChangeVal}
+                        displayLoadingIndicator={isFetching || disableMonthChangeVal}
+                        onMonthChange={(month) => {
+                            setDisableMonthChangeVal(() => true);
+                            if (disableMonthChangeValRef.current) {
+                                clearTimeout(disableMonthChangeValRef.current);
+                            }
+                            disableMonthChangeValRef.current = setTimeout(() => {
+                                setDisableMonthChangeVal(() => false);
+                                setSelectMonth(() => new Date(month?.dateString).toISOString());
+                                // setDate(() => new Date(month?.dateString).toISOString());
+                            }, 1000);
+                        }}
+                        markingType="custom"
+                        markedDates={marked}
+                        style={styles.calenderTheme}
+                    />
+
                     {selectedHeader == 'Events' && (
                         <View style={styles.filterContainer}>
                             <TouchableOpacity
@@ -297,6 +340,7 @@ const Calender = ({ navigation }) => {
                                     fontFamily: 'Lora-Bold',
                                     color: '#222222',
                                     marginHorizontal: 20,
+                                    marginBottom: 15,
                                 }}
                             >
                                 Today {moment().format('MMMM Do YYYY,')}
