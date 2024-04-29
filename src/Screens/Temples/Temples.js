@@ -337,32 +337,28 @@ export const Temples = ({ navigation, route }) => {
                             </View>
                         )}
                         {
-                            data?.data?.map((item, index) => (
-                                <CustomMarker
-                                    setPadState={setPadState}
-                                    callback={() => {
-                                        // setting the type of the marker you pressed
-                                        // callback function for naving to page which has the temple details
-                                        markerPressClbk(navigation, 7, item);
-                                    }}
-                                    flag={index + 1}
-                                    coordinate={{
-                                        latitude: item?.attributes?.temple?.lat,
-                                        longitude: item?.attributes?.temple?.lng
-                                    }}
-                                    keyName={'COORDINATE'}
-                                />
-                                // <Marker
-                                //     tracksViewChanges={false}
-                                //     coordinate={{
-                                //         latitude: item?.attributes?.temple?.lat,
-                                //         longitude: item?.attributes?.temple?.lng
-                                //     }}
-                                //     description={'This is a marker in React Natve'}
-                                //     onPress={item ? item : null}
-                                // >
-                                //     {assetMapWithTempleType[index + 1]?.Svg}
-                                // </Marker>
+                            data?.data?.length
+                            && data?.data?.map((item, index) => (
+                                <>
+                                    {
+                                        item?.attributes?.temple?.lat && item?.attributes?.temple?.lng &&
+                                        <CustomMarker
+                                            setPadState={setPadState}
+                                            callback={() => {
+                                                // setting the type of the marker you pressed
+                                                // callback function for naving to page which has the temple details
+                                                markerPressClbk(navigation, 7, item);
+                                            }}
+                                            flag={index + 1}
+                                            coordinate={{
+                                                latitude: item?.attributes?.temple?.lat,
+                                                longitude: item?.attributes?.temple?.lng
+                                            }}
+                                            keyName={'COORDINATE'}
+                                        />
+                                    }
+
+                                </>
                             ))
                         }
                     </MapView>

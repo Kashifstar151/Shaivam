@@ -190,7 +190,7 @@ const TempleDetails = ({ navigation }) => {
                 <View style={{ backgroundColor: 'red', flexGrow: 1, marginHorizontal: 20 }}>
                     <WebView
                         originWhitelist={['*']}
-                        source={{ html: data?.attributes?.Specialities_Description ? data?.attributes?.Specialities_Description : details.expandedDesc }}
+                        source={{ html: details.expandedDesc }}
                         containerStyle={
                             {
                                 // flex: 0,

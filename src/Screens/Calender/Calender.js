@@ -49,6 +49,8 @@ const Calender = ({ navigation }) => {
         { name: 'Events', selected: <ActiveCalender />, unSelected: <InActiveCalender /> },
     ];
     const [selectMonth, setSelectMonth] = useState(new Date().toISOString());
+    const [searchText, setSearchText] = useState(null)
+
     const [eventCaetgory, setEventCategory] = useState(null);
     const [todaysEvent, setTodaysEvent] = useState(null);
     const { data, isLoading, isSuccess, refetch } = useGetListQuery(selectMonth);
@@ -162,7 +164,7 @@ const Calender = ({ navigation }) => {
                             </View>
                             <View style={styles.SearchInputContainer}>
                                 <View style={{ width: '84%' }}>
-                                    <SearchInput placeholder={'Search for Festivals/events'} />
+                                    <SearchInput placeholder={'Search for Festivals/events'} setState={setSearchText} />
                                 </View>
                                 <TouchableOpacity
                                     style={styles.AddBtnContainer}
@@ -197,6 +199,7 @@ const Calender = ({ navigation }) => {
                         }}
                     >
                         <CalendarProvider
+
                             style={[styles.calenderContainer, styles.shadowProps]}
                             date={selectMonth}
                         >
@@ -205,9 +208,9 @@ const Calender = ({ navigation }) => {
                                 customHeaderTitle={
                                     <Text style={{ color: 'black', fontFamily: 'Mulish-Bold' }}>{moment().get('M') == moment(selectMonth).get('M') && 'Today,'} {moment(selectMonth).format('MMM DD, YYYY')}</Text>
                                 }
-
                                 // initialDate={new Date()}
                                 // date={new Date()}
+                                enableSwipeMonths={false}
                                 theme={{
                                     arrowColor: '#222222',
                                     dayTextColor: '#222222',
