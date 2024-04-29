@@ -43,6 +43,7 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { listfavAudios } from '../../../Databases/AudioPlayerDatabase';
+import SettingsSVG from '../../../components/SVGs/SettingsSVG';
 
 const ThrimuraiSong = ({ route, navigation }) => {
     const isFocused = useIsFocused;
@@ -688,7 +689,7 @@ GROUP BY
                             width: '100%',
                             position: 'absolute',
                             right: -3,
-                            top: '20%',
+                            top: '40%',
                             zIndex: 10,
                         }}
                     >
@@ -899,8 +900,9 @@ GROUP BY
                                 ]}
                                 onPress={handlePress}
                             >
-                                <SettingIcon />
-                                <Text
+                                {/* <SettingIcon /> */}
+                                <SettingsSVG />
+                                {/* <Text
                                     style={[
                                         styles.settingText,
                                         {
@@ -909,7 +911,7 @@ GROUP BY
                                     ]}
                                 >
                                     Settings
-                                </Text>
+                                </Text> */}
                             </TouchableOpacity>
                         )}
                     </View>
