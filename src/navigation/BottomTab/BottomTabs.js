@@ -16,6 +16,7 @@ import FavouriteSVG from '../../components/SVGs/FavouriteSVG';
 import MoreSVG from '../../components/SVGs/MoreSVG';
 import TempleTabsNavigate from '../../Screens/Temples/TempleTabsNavigate';
 import { colors } from '../../Helpers';
+import Icon from 'react-native-vector-icons/dist/AntDesign';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import SelectedCalenderSVG from '../../components/SVGs/SelectedCalenderSVG';
 const Tab = createBottomTabNavigator();
@@ -69,8 +70,8 @@ const MyTabBar = ({ state, descriptors, navigation, theme, ...restProps }) => {
                     options.tabBarLabel !== undefined
                         ? options.tabBarLabel
                         : options.title !== undefined
-                        ? options.title
-                        : route.name;
+                            ? options.title
+                            : route.name;
 
                 const isFocused = state.index === index;
 
@@ -152,88 +153,107 @@ const MyTabBar = ({ state, descriptors, navigation, theme, ...restProps }) => {
 const BottomTab = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
     return (
-        <BottomSheetModalProvider>
-            <Tab.Navigator
-                screenOptions={{
-                    tabBarStyle: [
-                        styles.tabContainer,
-                        Platform.OS !== 'ios'
-                            ? {
-                                  height: 65,
-                              }
-                            : { height: 0 },
-                    ],
-                    tabBarHideOnKeyboard: true,
-                }}
-                tabBar={(props) => <MyTabBar {...props} theme={theme} />}
-            >
-                <Tab.Screen
-                    options={{
-                        headerShown: false,
-                        tabBarLabel: 'Home',
-                        tabBarActiveTintColor: 'white',
-                        tabBarShowLabel: false,
+        <>
+            {/* <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', borderRadius: 15, alignSelf: 'center', zIndex: 100, height: 70, width: Dimensions.get('window').width - 20, backgroundColor: '#222222', position: 'absolute', top: Dimensions.get('window').height / 1.18 }}>
+                <Text></Text>
+                <TouchableOpacity
+                    style={{
+                        height: 40,
+                        width: 40,
+                        borderRadius: 20,
+                        // backgroundColor: '#FAF8FF',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginHorizontal: 30,
                     }}
-                    initialParams={{
-                        svg: 'Home',
+                    onPress={() => handlePlay(playBackState)}
+                >
+                    <Icon name="play" size={40} color="white" />
+                </TouchableOpacity>
+            </View> */}
+            <BottomSheetModalProvider>
+                <Tab.Navigator
+                    screenOptions={{
+                        tabBarStyle: [
+                            styles.tabContainer,
+                            Platform.OS !== 'ios'
+                                ? {
+                                    height: 65,
+                                }
+                                : { height: 0 },
+                        ],
+                        tabBarHideOnKeyboard: true,
                     }}
-                    name="Home"
-                    component={HomeScreen}
-                />
-                <Tab.Screen
-                    options={{
-                        headerShown: false,
-                        tabBarLabel: 'Temple',
-                        tabBarActiveTintColor: 'white',
-                        tabBarShowLabel: false,
-                    }}
-                    initialParams={{
-                        svg: 'Temple',
-                    }}
-                    name={RouteTexts.TEMPLE_TABS_NAVIGATE}
-                    component={TempleTabsNavigate}
-                />
-                <Tab.Screen
-                    options={{
-                        headerShown: false,
-                        tabBarLabel: 'Calender',
-                        tabBarActiveTintColor: 'white',
-                        tabBarShowLabel: false,
-                    }}
-                    initialParams={{
-                        svg: 'Calender',
-                    }}
-                    name={RouteTexts.CALENDER}
-                    component={Calender}
-                />
-                <Tab.Screen
-                    options={{
-                        headerShown: false,
-                        tabBarLabel: 'Favourite',
-                        tabBarActiveTintColor: 'white',
-                        tabBarShowLabel: false,
-                    }}
-                    initialParams={{
-                        svg: 'Favourite',
-                    }}
-                    name={RouteTexts.FAVOURITE}
-                    component={Fav}
-                ></Tab.Screen>
-                <Tab.Screen
-                    options={{
-                        headerShown: false,
-                        tabBarLabel: 'More',
-                        tabBarShowLabel: false,
-                        tabBarActiveTintColor: 'white',
-                    }}
-                    initialParams={{
-                        svg: 'More',
-                    }}
-                    name={RouteTexts.MORE_OPTION}
-                    component={MoreOption}
-                />
-            </Tab.Navigator>
-        </BottomSheetModalProvider>
+                    tabBar={(props) => <MyTabBar {...props} theme={theme} />}
+                >
+                    <Tab.Screen
+                        options={{
+                            headerShown: false,
+                            tabBarLabel: 'Home',
+                            tabBarActiveTintColor: 'white',
+                            tabBarShowLabel: false,
+                        }}
+                        initialParams={{
+                            svg: 'Home',
+                        }}
+                        name="Home"
+                        component={HomeScreen}
+                    />
+                    <Tab.Screen
+                        options={{
+                            headerShown: false,
+                            tabBarLabel: 'Temple',
+                            tabBarActiveTintColor: 'white',
+                            tabBarShowLabel: false,
+                        }}
+                        initialParams={{
+                            svg: 'Temple',
+                        }}
+                        name={RouteTexts.TEMPLE_TABS_NAVIGATE}
+                        component={TempleTabsNavigate}
+                    />
+                    <Tab.Screen
+                        options={{
+                            headerShown: false,
+                            tabBarLabel: 'Calender',
+                            tabBarActiveTintColor: 'white',
+                            tabBarShowLabel: false,
+                        }}
+                        initialParams={{
+                            svg: 'Calender',
+                        }}
+                        name={RouteTexts.CALENDER}
+                        component={Calender}
+                    />
+                    <Tab.Screen
+                        options={{
+                            headerShown: false,
+                            tabBarLabel: 'Favourite',
+                            tabBarActiveTintColor: 'white',
+                            tabBarShowLabel: false,
+                        }}
+                        initialParams={{
+                            svg: 'Favourite',
+                        }}
+                        name={RouteTexts.FAVOURITE}
+                        component={Fav}
+                    ></Tab.Screen>
+                    <Tab.Screen
+                        options={{
+                            headerShown: false,
+                            tabBarLabel: 'More',
+                            tabBarShowLabel: false,
+                            tabBarActiveTintColor: 'white',
+                        }}
+                        initialParams={{
+                            svg: 'More',
+                        }}
+                        name={RouteTexts.MORE_OPTION}
+                        component={MoreOption}
+                    />
+                </Tab.Navigator>
+            </BottomSheetModalProvider>
+        </>
     );
 };
 

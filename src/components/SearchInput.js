@@ -32,8 +32,8 @@ const SearchInput = ({ placeholder, setState, state, color, setOnFocus, styleOve
         >
             <Icon name="search" size={28} color={color ? '#777777' : colors.grey1} />
             <TextInput
-                onBlur={() => setOnFocus(false)}
-                onFocus={() => setOnFocus()}
+                onBlur={setOnFocus ? () => setOnFocus(false) : null}
+                onFocus={setOnFocus ? () => setOnFocus() : null}
                 placeholder={t(placeholder)}
 
                 onChangeText={(e) => setState(e)}

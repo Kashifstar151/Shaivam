@@ -49,6 +49,8 @@ const Calender = ({ navigation }) => {
         { name: 'Events', selected: <ActiveCalender />, unSelected: <InActiveCalender /> },
     ];
     const [selectMonth, setSelectMonth] = useState(new Date().toISOString());
+    const [searchText, setSearchText] = useState(null)
+
     const [eventCaetgory, setEventCategory] = useState(null);
     const [todaysEvent, setTodaysEvent] = useState(null);
     const { data, isLoading, isFetching, isSuccess, refetch } = useGetListQuery(selectMonth);
@@ -128,10 +130,10 @@ const Calender = ({ navigation }) => {
         arr.forEach((date) => {
             markedDates[date] = {
                 marked: true,
-                dotColor: 'black',
+                dotColor: '#FCB300',
                 customStyles: {
                     container: {
-                        backgroundColor: '#FCB300',
+                        // backgroundColor: '#FCB300',
                         // height: 30,
                         borderRadius: 5,
                     },
@@ -196,6 +198,8 @@ const Calender = ({ navigation }) => {
                     style={{
                         marginTop: -100,
                         flex: 1,
+
+                        // backgroundColor: "red"
                     }}
                 >
                     {/* <CalendarProvider
@@ -460,6 +464,7 @@ export const styles = StyleSheet.create({
         marginHorizontal: 3,
         alignSelf: 'center',
         borderRadius: 10,
+        width: Dimensions.get('window').width - 20
         //  elevation: 2,
     },
     shadowProps: {
@@ -471,6 +476,9 @@ export const styles = StyleSheet.create({
     },
     calenderTheme: {
         borderRadius: 10,
+        height: 'auto', elevation: 4,
+        shadowColor: colors.grey8, shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.4, shadowRadius: 4, width: Dimensions.get('window').width - 20, alignSelf: 'center'
+
     },
     itemContainer: {
         height: 75,

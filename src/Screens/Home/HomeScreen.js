@@ -333,6 +333,7 @@ const HomeScreen = ({ navigation }) => {
                     </View>
                 </View>
             )}
+
             <View
                 style={{
                     height: 250,
@@ -459,6 +460,7 @@ const HomeScreen = ({ navigation }) => {
                     </View>
                 </View>
             </View>
+
             {/* upcoming events  */}
             <View>
                 <View style={{ paddingBottom: 15, paddingHorizontal: 15 }}>
@@ -466,7 +468,7 @@ const HomeScreen = ({ navigation }) => {
                         viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                         title={'Upcoming Festivals'}
                         theme={{ textColor: theme.textColor, colorscheme: theme.colorscheme }}
-                        onPress={() => {}}
+                        onPress={() => { }}
                     />
                 </View>
                 <FlatList
@@ -495,13 +497,14 @@ const HomeScreen = ({ navigation }) => {
             <View>
                 <OmChat navigation={navigation} onPress={() => RBSheetRef.current.open()} />
             </View>
+
             {/* last section */}
             <View>
                 <View style={{ padding: 15 }}>
                     <HeadingAndView
                         viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                         title={'Nearby Temples'}
-                        onPress={() => {}}
+                        onPress={() => { }}
                         theme={{
                             textColor: theme.textColor,
                             colorscheme: theme.colorscheme,
@@ -544,7 +547,7 @@ const HomeScreen = ({ navigation }) => {
                     viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                     title={'App Walkthrough Videos '}
                     // todos : add the fn that take it to the dedicated video page
-                    onPress={() => {}}
+                    onPress={() => { }}
                     theme={{
                         textColor: theme.textColor,
                         colorscheme: theme.colorscheme,
