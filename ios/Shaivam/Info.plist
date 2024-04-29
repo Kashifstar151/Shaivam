@@ -41,16 +41,6 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-  <key>UIFileSharingEnabled</key>
-      <true/>
-      <key>UISupportsDocumentBrowser</key>
-      <true/>
-  <key>NSDocumentDirectoryUsageDescription</key>
-  <string>Your message explaining why the app needs access to the document directory</string>
-  <key>NSAppleMusicUsageDescription</key>
-  <string>Describe why your app needs access to the user's media library</string>
-  <key>NSFileProviderDomainUsageDescription</key>
-  <string>Describe why your app needs access to the user's file system</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -60,6 +50,10 @@
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Play using while you are hiking</string>
+	<key>NSDocumentDirectoryUsageDescription</key>
+	<string>Your message explaining why the app needs access to the document directory</string>
+	<key>NSFileProviderDomainUsageDescription</key>
+	<string>Describe why your app needs access to the user's file system</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Program requires GPS to track cars and job orders</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -108,6 +102,8 @@
 		<string>Mulish-Regular.ttf</string>
 		<string>Mulish-SemiBold.ttf</string>
 	</array>
+	<key>UIFileSharingEnabled</key>
+	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -120,6 +116,8 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UISupportsDocumentBrowser</key>
+	<true/>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>
