@@ -79,14 +79,14 @@ const RenderItem = ({ blockRef, item, navigation, theme }) => {
                         onLayout={(event) => onLayout(event, _)}
                         onPress={
                             i?.navName == 'Thirumurais' ||
-                            i?.navName == 'Stotras' ||
-                            i?.navName == RouteTexts.TEMPLE_TABS_NAVIGATE ||
-                            i?.navName == RouteTexts.CALENDER ||
-                            i?.navName == RouteTexts.RADIO
+                                i?.navName == 'Stotras' ||
+                                i?.navName == RouteTexts.TEMPLE_TABS_NAVIGATE ||
+                                i?.navName == RouteTexts.CALENDER ||
+                                i?.navName == RouteTexts.RADIO
                                 ? () => navigation.navigate(i?.navName)
                                 : i?.navName == 'Website'
-                                ? () => Linking.openURL('https://shaivam.org/')
-                                : () => alert(`the ${i?.navName}`)
+                                    ? () => Linking.openURL('https://shaivam.org/')
+                                    : () => alert(`the ${i?.navName}`)
                         }
                         style={[
                             styles.subComp,

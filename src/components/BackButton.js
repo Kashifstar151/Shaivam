@@ -34,7 +34,7 @@ const BackButton = ({
                 minimumVersion: '18',
             },
             android: {
-                packageName: 'com.shaivam'
+                packageName: 'org.shaivam'
             }
             // optional setup which updates Firebase analytics campaign
             // "banner". This also needs setting up before hand

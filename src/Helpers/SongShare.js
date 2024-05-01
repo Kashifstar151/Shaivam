@@ -8,11 +8,11 @@ async function buildLink(item) {
             domainUriPrefix: 'https://shaivaam.page.link',
             ios: {
                 appStoreId: '123456',
-                bundleId: 'com.shaivam.app',
+                bundleId: 'com.Shaivam.shaivam',
                 minimumVersion: '18',
             },
             android: {
-                packageName: 'com.shaivam',
+                packageName: 'org.shaivam',
             },
             // optional setup which updates Firebase analytics campaign
             // "banner". This also needs setting up before hand

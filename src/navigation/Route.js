@@ -40,6 +40,7 @@ import Radios from '../Screens/Radio/Radios';
 import OmChanting from '../Screens/Home/OmChanting';
 import NavigationServices from './NavigationServices';
 import { RESULTS } from 'react-native-permissions';
+import { PlayerProvider } from '../Context/PlayerContext';
 // import { ThemeContextProvider } from '../Context/ThemeContext';
 
 const Route = () => {
@@ -210,7 +211,7 @@ const Route = () => {
                             headerShown: false,
                         }}
                     >
-                        <Stack.Screen name={RouteTexts.BOTTOM_TABS} component={BottomTabs} />
+                        <Stack.Screen name={RouteTexts.BOTTOM_TABS} component={BottomTa} />
                         <Stack.Screen name={RouteTexts.TEMPLE_Tabs} component={TempleTabs} />
                         <Stack.Screen name="Home" component={HomeScreen} />
                         <Stack.Screen name="Thirumurais" component={ThrimuraiList} />
@@ -290,5 +291,13 @@ const MusicComponent = (props) => (
         <ThrimuraiSong {...props} />
     </MusicContextProvider>
 );
+const BottomTa = (props) => {
+    console.log("🚀 ~ BottomTa ~ props:", JSON.stringify(props))
+    return (
+        <PlayerProvider>
+            <BottomTabs {...props} />
+        </PlayerProvider>
+    )
+}
 
 export default Route;
