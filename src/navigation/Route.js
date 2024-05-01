@@ -51,17 +51,16 @@ const Route = () => {
     const [isConnected, setIsConnected] = useState();
     // const database = SQLite.openDatabase({ name: databaseName, });
     useEffect(() => {
-        AsyncStorage.setItem(
-            '@database',
-            JSON.stringify({ name: 'songData.db', createFromLocation: 1 })
-        );
+        // AsyncStorage.setItem(
+        //     '@database',
+        //     JSON.stringify({ name: 'songData.db', createFromLocation: 1 })
+        // );
         LogBox.ignoreAllLogs();
         AppState.addEventListener('change', (nextAppState) => {
             if (nextAppState === 'background' || nextAppState === 'inactive') {
                 database.close();
             }
         });
-        requestFilePermissions();
         // offlineDataBAse()
         const unsubscribe = addEventListener((state) => {
             if (state.isConnected) {
@@ -115,7 +114,7 @@ const Route = () => {
                             },
                             {
                                 text: 'Ok',
-                                onPress: () => downloadDB(response?.data?.[0]?.attributes),
+                                onPress: () => checkFileExist(response?.data?.[0]?.attributes),
                             },
                         ]);
                     }
@@ -138,25 +137,25 @@ const Route = () => {
         // }, 2000)
     };
 
-    async function filePermissionProcess() {
-        try {
-            const granted = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-                // PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
-                {
-                    title: 'File Permission',
-                    message: 'App needs access to your storage to read and write files.',
-                    buttonNeutral: 'Ask Me Later',
-                    buttonNegative: 'Cancel',
-                    buttonPositive: 'OK',
-                }
-            );
-            return { permissionType: granted, status: 'SUCCESS', error: null };
-        } catch (err) {
-            console.warn(err);
-            return { permissionType: null, status: 'ERROR', error: err };
-        }
-    }
+    // async function filePermissionProcess() {
+    //     try {
+    //         const granted = await PermissionsAndroid.request(
+    //             PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+    //             // PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
+    //             {
+    //                 title: 'File Permission',
+    //                 message: 'App needs access to your storage to read and write files.',
+    //                 buttonNeutral: 'Ask Me Later',
+    //                 buttonNegative: 'Cancel',
+    //                 buttonPositive: 'OK',
+    //             }
+    //         );
+    //         return { permissionType: granted, status: 'SUCCESS', error: null };
+    //     } catch (err) {
+    //         console.warn(err);
+    //         return { permissionType: null, status: 'ERROR', error: err };
+    //     }
+    // }
 
     async function requestFilePermissions() {
         let fileAccessRequest = { permissionType: null, status: null, error: null };
@@ -182,19 +181,23 @@ const Route = () => {
     }
 
     const downloadDB = async (metaData) => {
-        const promise = attachDb(metaData);
+        setShowDownloading(true)
+        await requestFilePermissions();
+        const promise = await attachDb(metaData);
+        setShowDownloading(false);
         promise
             .then((res) => {
                 console.log('res', res);
                 setShowDownloading(false);
                 // setting the metaData once the update is done
                 AsyncStorage.setItem('DB_METADATA', JSON.stringify(metaData));
+                AsyncStorage.setItem('@database', JSON.stringify({ name: 'main.db' }));
             })
             .catch((error) => {
                 console.log('error', error);
                 setShowDownloading(false);
+                AsyncStorage.setItem('@database', JSON.stringify({ name: 'main.db' }));
             });
-        AsyncStorage.setItem('@database', JSON.stringify({ name: 'main.db' }));
     };
 
     const checkFileExist = async (metaData) => {
@@ -217,12 +220,14 @@ const Route = () => {
                         setShowDownloading(false);
                     }, 2000);
                 } else {
+                    requestFilePermissions();
                     setShowDownloading(true);
-                    alert(false);
-                    const promise = attachDb();
+                    // alert(false);
+                    const promise = attachDb(metaData);
                     promise
                         .then((res) => {
                             console.log('res', res);
+
                             setShowDownloading(false);
                         })
                         .catch((error) => {
@@ -235,6 +240,7 @@ const Route = () => {
             .catch((error) => {
                 console.log('🚀 ~ file: route.js:99 ~ RNFS.exists ~ error:', error);
             });
+        await AsyncStorage.setItem('DB_METADATA', JSON.stringify(metaData));
     };
 
     return (
