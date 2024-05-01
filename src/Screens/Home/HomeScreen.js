@@ -33,10 +33,12 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import OmChanting from './OmChanting';
 import { colors } from '../../Helpers';
 import ListAudios from '../Thrimurai/ThrimuraiList/ListAudios';
+import { usePlayer } from '../../Context/PlayerContext';
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation, setPaused }) => {
     const RBSheetRef = useRef(null);
     const { theme } = useContext(ThemeContext);
+    const { setShowPlayer } = usePlayer()
     const [compHeight, setCompHeight] = useState();
     const [textInsidePlaylistCard, setTextInsidePlaylistCard] = useState(0);
     const [playlistCardHeight, setPlaylistCardHeight] = useState(0);
@@ -560,9 +562,9 @@ const HomeScreen = ({ navigation }) => {
                 ref={RBSheetRef}
                 customStyles={{ container: { borderTopEndRadius: 15, borderTopLeftRadius: 15 } }}
             >
-                <OmChanting close={RBSheetRef} />
-            </RBSheet>
-        </ScrollView>
+                <OmChanting close={RBSheetRef} setPaused={setShowPlayer} />
+            </RBSheet >
+        </ScrollView >
     );
 };
 export const styles = StyleSheet.create({

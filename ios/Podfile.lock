@@ -1199,6 +1199,14 @@ PODS:
     - React-Core
   - RNShare (10.1.0):
     - React-Core
+<<<<<<< HEAD
+  - RNSound (0.11.2):
+    - React-Core
+    - RNSound/Core (= 0.11.2)
+  - RNSound/Core (0.11.2):
+    - React-Core
+=======
+>>>>>>> caa3a91729bb3330b855f5cefd0f1b7b45748db9
   - RNSVG (14.1.0):
     - React-Core
   - RNVectorIcons (10.0.3):
@@ -1297,6 +1305,10 @@ DEPENDENCIES:
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNShare (from `../node_modules/react-native-share`)
+<<<<<<< HEAD
+  - RNSound (from `../node_modules/react-native-sound`)
+=======
+>>>>>>> caa3a91729bb3330b855f5cefd0f1b7b45748db9
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - RNZipArchive (from `../node_modules/react-native-zip-archive`)
@@ -1473,6 +1485,11 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   RNShare:
     :path: "../node_modules/react-native-share"
+<<<<<<< HEAD
+  RNSound:
+    :path: "../node_modules/react-native-sound"
+=======
+>>>>>>> caa3a91729bb3330b855f5cefd0f1b7b45748db9
   RNSVG:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
@@ -1570,6 +1587,10 @@ SPEC CHECKSUMS:
   RNReanimated: 00ee495a70897aa9d541e76debec14253133b812
   RNScreens: 17e2f657f1b09a71ec3c821368a04acbb7ebcb46
   RNShare: b674d9f1cb0dc11116983bebd8712908a226a3ee
+<<<<<<< HEAD
+  RNSound: 6c156f925295bdc83e8e422e7d8b38d33bc71852
+=======
+>>>>>>> caa3a91729bb3330b855f5cefd0f1b7b45748db9
   RNSVG: ba3e7232f45e34b7b47e74472386cf4e1a676d0a
   RNVectorIcons: 73ab573085f65a572d3b6233e68996d4707fd505
   RNZipArchive: ef9451b849c45a29509bf44e65b788829ab07801

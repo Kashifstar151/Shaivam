@@ -7,7 +7,7 @@ import Calender from '../../Screens/Calender/Calender';
 import Fav from '../../Screens/Favourite/Fav';
 import MoreOption from '../../Screens/MoreOption/MoreOption';
 import IndicatorIcon from '../../assets/Images/Indicator.svg';
-import { useContext } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { ThemeContext } from '../../Context/ThemeContext';
 import HomeSVG from '../../components/SVGs/HomeSVG';
 import TempleSVG from '../../components/SVGs/TempleSVG';
@@ -16,12 +16,18 @@ import FavouriteSVG from '../../components/SVGs/FavouriteSVG';
 import MoreSVG from '../../components/SVGs/MoreSVG';
 import TempleTabsNavigate from '../../Screens/Temples/TempleTabsNavigate';
 import { colors } from '../../Helpers';
-import Icon from 'react-native-vector-icons/dist/AntDesign';
+// import Icon from 'react-native-vector-icons/dist/AntDesign';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import SelectedCalenderSVG from '../../components/SVGs/SelectedCalenderSVG';
+// import AudioIcon from "../../assets/Images/7703676 1.svg"
+// import TrackPlayer, { AppKilledPlaybackBehavior, usePlaybackState } from 'react-native-track-player';
+// import { addTracks, setupPlayer } from './OmChantPlayerTrack';
+import { usePlayer } from '../../Context/PlayerContext';
+import OmChantPlayer from '../../Screens/Player/OmChantPlayer';
 const Tab = createBottomTabNavigator();
 
 const MyTabBar = ({ state, descriptors, navigation, theme, ...restProps }) => {
+    const { showPlayer, setShowPlayer } = usePlayer()
     const SVGMap = {
         Home: {
             selected: <HomeSVG fill={theme?.bottomTabItemColor.selected} />,
@@ -151,27 +157,57 @@ const MyTabBar = ({ state, descriptors, navigation, theme, ...restProps }) => {
 };
 
 const BottomTab = ({ navigation }) => {
+    // const playbackState = usePlaybackState()
+    const { showPlayer, setShowPlayer } = usePlayer()
+    const [isPlayerReady, setIsPlayerReady] = useState(false);
+
     const { theme } = useContext(ThemeContext);
     return (
+
         <>
-            {/* <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', borderRadius: 15, alignSelf: 'center', zIndex: 100, height: 70, width: Dimensions.get('window').width - 20, backgroundColor: '#222222', position: 'absolute', top: Dimensions.get('window').height / 1.18 }}>
-                <Text></Text>
-                <TouchableOpacity
-                    style={{
-                        height: 40,
-                        width: 40,
-                        borderRadius: 20,
-                        // backgroundColor: '#FAF8FF',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginHorizontal: 30,
-                    }}
-                    onPress={() => handlePlay(playBackState)}
-                >
-                    <Icon name="play" size={40} color="white" />
-                </TouchableOpacity>
-            </View> */}
+            {
+                showPlayer && <OmChantPlayer />
+            }
             <BottomSheetModalProvider>
+                {/* {showPlayer &&
+                    <View style={{ paddingHorizontal: 15, justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', borderRadius: 15, alignSelf: 'center', zIndex: 100, height: 70, width: Dimensions.get('window').width - 20, backgroundColor: '#222222', position: 'absolute', bottom: 60 }}>
+                        <View style={{ height: 40, width: 40, backgroundColor: colors.grey7, borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
+                            <AudioIcon />
+                        </View>
+                        <View>
+                            <Text style={{ color: 'white', fontWeight: '700' }}>Om Namah Shivaya Chant (Loop)</Text>
+                            <Text style={{ color: 'white' }}>0:00 / 4:40</Text>
+                        </View>
+                        {
+                            paused ? <TouchableOpacity
+
+                                style={{
+                                    height: 40,
+                                    width: 40,
+                                    borderRadius: 20,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    // marginHorizontal: 30,
+                                }}
+                                onPress={() => pauseAudio()}
+                            >
+
+                                <Icon name="pause" size={40} color="white" />
+                            </TouchableOpacity> : <TouchableOpacity
+                                style={{
+                                    height: 40,
+                                    width: 40,
+                                    borderRadius: 20,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    // marginHorizontal: 30,
+                                }}
+                                onPress={() => playAudio()}
+                            >
+                                <Icon name="play" size={40} color="white" />
+                            </TouchableOpacity>
+                        }
+                    </View>} */}
                 <Tab.Navigator
                     screenOptions={{
                         tabBarStyle: [
@@ -197,7 +233,7 @@ const BottomTab = ({ navigation }) => {
                             svg: 'Home',
                         }}
                         name="Home"
-                        component={HomeScreen}
+                        component={() => <HomeScreen setPaused={setShowPlayer} navigation={navigation} />}
                     />
                     <Tab.Screen
                         options={{

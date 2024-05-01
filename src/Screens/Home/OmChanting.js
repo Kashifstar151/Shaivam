@@ -6,7 +6,8 @@ import Feather from 'react-native-vector-icons/dist/Feather';
 import OMIcon from '../../assets/Images/om 2.svg';
 import ButtonComp from '../Temples/Common/ButtonComp';
 
-const OmChanting = ({ close }) => {
+const OmChanting = ({ close, setPaused }) => {
+    console.log("🚀 ~ OmChanting ~ setPaused:", setPaused)
     const [showTimer, setShowTimer] = useState(false);
     return (
         <>
@@ -81,7 +82,7 @@ const OmChanting = ({ close }) => {
                         <ButtonComp
                             color={true}
                             text="Continue"
-                            navigation={() => setShowTimer(true)}
+                            navigation={() => setPaused(true)}
                         />
                     </View>
                 </View>

@@ -37,7 +37,9 @@ local.properties
 /android/app/src/main/assets/www/SongsData.db
 # node.js
 #
+git_backup/
 node_modules/
+git_backup/*
 npm-debug.log
 yarn-error.log
 .env
