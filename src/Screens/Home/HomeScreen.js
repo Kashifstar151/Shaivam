@@ -563,8 +563,8 @@ const HomeScreen = ({ navigation, setPaused }) => {
                 customStyles={{ container: { borderTopEndRadius: 15, borderTopLeftRadius: 15 } }}
             >
                 <OmChanting close={RBSheetRef} setPaused={setShowPlayer} />
-            </RBSheet>
-        </ScrollView>
+            </RBSheet >
+        </ScrollView >
     );
 };
 export const styles = StyleSheet.create({

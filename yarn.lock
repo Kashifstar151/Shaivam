@@ -6568,11 +6568,14 @@ react-native-skeleton-placeholder@^5.2.4:
   dependencies:
     prop-types "^15.5.6"
 
+<<<<<<< HEAD
 react-native-sound@^0.11.2:
   version "0.11.2"
   resolved "https://registry.npmjs.org/react-native-sound/-/react-native-sound-0.11.2.tgz#e542dc5b9e16ab4b3ac7e6eaddb1fc8d98da9038"
   integrity sha512-LmGc8lgOK3qecYMVQpyHvww/C+wgT6sWeMpVbOe4NCRGC2yKd4fo4U0KBUo9PO7AqKESO3I/2GZg1/C0+bwiiA==
 
+=======
+>>>>>>> caa3a91729bb3330b855f5cefd0f1b7b45748db9
 react-native-sqlite-storage@^6.0.1:
   version "6.0.1"
   resolved "https://registry.npmjs.org/react-native-sqlite-storage/-/react-native-sqlite-storage-6.0.1.tgz#ce6a6b852f07abbea68658d5363818c8bef45dfb"

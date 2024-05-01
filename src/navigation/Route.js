@@ -41,13 +41,14 @@ import OmChanting from '../Screens/Home/OmChanting';
 import NavigationServices from './NavigationServices';
 import { RESULTS } from 'react-native-permissions';
 import { PlayerProvider } from '../Context/PlayerContext';
+import DBInfo from '../../DBInfo';
 // import { ThemeContextProvider } from '../Context/ThemeContext';
 
 const Route = () => {
     const Stack = createNativeStackNavigator();
     const database = SQLite.openDatabase({ name: 'songData.db', createFromLocation: 1 });
     const [showDownloading, setShowDownloading] = useState(false);
-    const [isConnected, setIsConnected] = useState(false);
+    const [isConnected, setIsConnected] = useState();
     // const database = SQLite.openDatabase({ name: databaseName, });
     useEffect(() => {
         AsyncStorage.setItem(
@@ -63,33 +64,65 @@ const Route = () => {
         requestFilePermissions();
         // offlineDataBAse()
         const unsubscribe = addEventListener((state) => {
-            // console.log("Connection type", state.type);
-            // console.log("Is connected?", state.isConnected);
             if (state.isConnected) {
                 setIsConnected(true);
-                checkConnection(true);
-            } else {
-                checkConnection(false);
             }
         });
-        unsubscribe();
         // checkFileExist()
         // attachDb()
         // connectDataBaseToFolder()
+
+        return unsubscribe();
     }, []);
 
-    const checkConnection = (connected) => {
+    useEffect(() => {
+        if (isConnected) {
+            checkConnection(isConnected);
+        }
+    }, [isConnected]);
+
+    const checkConnection = async (connected) => {
+        let localDBMetaData = JSON.parse(await AsyncStorage.getItem('DB_METADATA'));
+        if (!localDBMetaData) {
+            AsyncStorage.setItem('DB_METADATA', JSON.stringify(DBInfo));
+            localDBMetaData = DBInfo;
+        }
         if (connected) {
-            Alert.alert('New Update Available', 'Click ok to sync latest data', [
-                {
-                    text: 'Cancel',
-                    onPress: () => onCancel(),
-                },
-                {
-                    text: 'Ok',
-                    onPress: () => checkFileExist(),
-                },
-            ]);
+            fetch(
+                'https://qa-admin.shaivam.in/api/app-dump-updates?pagination[pageSize]=1&sort[0]=Version:desc'
+            )
+                .then((result) => result.json())
+                .then((response) => {
+                    console.log('the api response is ===>', response?.data?.[0]?.attributes);
+                    if (
+                        localDBMetaData?.Version &&
+                        response?.data?.[0]?.attributes.Version !== localDBMetaData?.Version
+                    ) {
+                        /*
+                           *? response?.data?.[0]?.attributes ==> is our metaData whihc will contain  data like 
+                           {
+                                "DumpName": "thirumuraiSongs", 
+                                "FilePath": "https://shaivamfiles.fra1.cdn.digitaloceanspaces.com/sqlitedump/thirumuraiSongs_12.zip", 
+                                "Version": "12", 
+                                "createdAt": "2024-04-09T10:17:27.323Z", 
+                                "publishedAt": "2024-04-09T10:17:28.545Z", 
+                                "updatedAt": "2024-04-29T07:08:10.139Z"}
+                        */
+                        Alert.alert('New Update Available', 'Click ok to sync latest data', [
+                            {
+                                text: 'Cancel',
+                                onPress: () => onCancel(),
+                            },
+                            {
+                                text: 'Ok',
+                                onPress: () => downloadDB(response?.data?.[0]?.attributes),
+                            },
+                        ]);
+                    }
+                })
+                .catch((err) => {
+                    console.log('The error occured ==>', err);
+                });
         } else {
             Alert.alert('You are offline!');
         }
@@ -106,9 +139,6 @@ const Route = () => {
     };
 
     async function filePermissionProcess() {
-        console.log(
-            '🚀 ~ filePermissionProcess ~ filePermissionProcess:*********************************************************'
-        );
         try {
             const granted = await PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
@@ -151,12 +181,27 @@ const Route = () => {
         }
     }
 
-    const checkFileExist = async () => {
+    const downloadDB = async (metaData) => {
+        const promise = attachDb(metaData);
+        promise
+            .then((res) => {
+                console.log('res', res);
+                setShowDownloading(false);
+                // setting the metaData once the update is done
+                AsyncStorage.setItem('DB_METADATA', JSON.stringify(metaData));
+            })
+            .catch((error) => {
+                console.log('error', error);
+                setShowDownloading(false);
+            });
+        AsyncStorage.setItem('@database', JSON.stringify({ name: 'main.db' }));
+    };
+
+    const checkFileExist = async (metaData) => {
         let path =
             Platform.OS == 'android'
-                ? `${RNFS.ExternalDirectoryPath}/Thrimurai/thirumuraiSongs_10.db`
-                : `${RNFS.DocumentDirectoryPath}/Thrimurai/thirumuraiSongs_10.db`;
-        console.log('🚀 ~ checkFileExist ~ path:', path);
+                ? `${RNFS.ExternalDirectoryPath}/Thrimurai/${metaData.DumpName}_${metaData.Version}.db`
+                : `${RNFS.DocumentDirectoryPath}/Thrimurai/${metaData.DumpName}_${metaData.Version}.db`;
         RNFS.exists(path)
             .then(async (res) => {
                 if (res == true) {

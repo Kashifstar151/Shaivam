@@ -19,14 +19,15 @@ const offlineDatabase = SQLite.openDatabase({ name: 'SongsData.db', createFromLo
 //         );
 //     });
 // };
-export async function attachDb() {
+export async function attachDb(metaData) {
     return new Promise((resolve, reject) => {
         RNFetchBlob.config({
             fileCache: true,
         })
             .fetch(
                 'GET',
-                'https://shaivamfiles.fra1.cdn.digitaloceanspaces.com/sqlitedump/thirumuraiSong_12.zip'
+                metaData.FilePath
+                // 'https://shaivamfiles.fra1.cdn.digitaloceanspaces.com/sqlitedump/thirumuraiSong_12.zip'
             )
             .then((res) => {
                 // the temp file path
@@ -43,7 +44,9 @@ export async function attachDb() {
                                     async (tx) => {
                                         await tx.executeSql(
                                             'ATTACH DATABASE ? AS Updated_db',
-                                            [`${jsonFilePath}/thirumuraiSong_12.db`],
+                                            [
+                                                `${jsonFilePath}/${metaData.DumpName}_${metaData.Version}.db`,
+                                            ],
                                             async (tx, results) => {
                                                 console.log(
                                                     '🚀 ~ file: Database.js:49 ~ database.transaction ~ results:',

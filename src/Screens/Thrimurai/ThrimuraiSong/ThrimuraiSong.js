@@ -43,6 +43,7 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { listfavAudios } from '../../../Databases/AudioPlayerDatabase';
+import SettingsSVG from '../../../components/SVGs/SettingsSVG';
 
 const ThrimuraiSong = ({ route, navigation }) => {
     const isFocused = useIsFocused;
@@ -278,9 +279,8 @@ GROUP BY
                 payload: data.filter((i) => i.localBased !== null)[0].localeBased,
             });
             getSqlData(detailQuery, (details) => {
-                const query2 = `SELECT * FROM odhuvars WHERE title='${
-                    data.filter((i) => i.tamil !== null)[0]?.tamil
-                }'`;
+                const query2 = `SELECT * FROM odhuvars WHERE title='${data.filter((i) => i.tamil !== null)[0]?.tamil
+                    }'`;
                 getSqlData(query2, (callbacks) => {
                     // console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
                     dispatchMusic({ type: 'SONG_DETAILS', payload: details });
@@ -688,7 +688,7 @@ GROUP BY
                             width: '100%',
                             position: 'absolute',
                             right: -3,
-                            top: '20%',
+                            top: '40%',
                             zIndex: 10,
                         }}
                     >
@@ -899,8 +899,9 @@ GROUP BY
                                 ]}
                                 onPress={handlePress}
                             >
-                                <SettingIcon />
-                                <Text
+                                {/* <SettingIcon /> */}
+                                <SettingsSVG />
+                                {/* <Text
                                     style={[
                                         styles.settingText,
                                         {
@@ -909,7 +910,7 @@ GROUP BY
                                     ]}
                                 >
                                     Settings
-                                </Text>
+                                </Text> */}
                             </TouchableOpacity>
                         )}
                     </View>
@@ -955,9 +956,9 @@ GROUP BY
                                                 ? selectedLang !== 'Tamil'
                                                     ? item?.rawSong
                                                     : item?.tamilExplanation ||
-                                                      'Text currently not available'
+                                                    'Text currently not available'
                                                 : item?.tamilSplit ||
-                                                  'Text currently not available'}
+                                                'Text currently not available'}
                                         </Text>
                                     )}
                                     <Text
@@ -990,14 +991,14 @@ GROUP BY
 
                     orientation == 'LANDSCAPE'
                         ? {
-                              width: Dimensions.get('window').width / 2,
-                              position: 'absolute',
-                              bottom: 0,
-                          }
+                            width: Dimensions.get('window').width / 2,
+                            position: 'absolute',
+                            bottom: 0,
+                        }
                         : {
-                              position: 'relative',
-                              width: Dimensions.get('window').width,
-                          },
+                            position: 'relative',
+                            width: Dimensions.get('window').width,
+                        },
                 ]}
             >
                 {downloadingLoader && (
