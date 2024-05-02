@@ -54,7 +54,7 @@ export const Temples = ({ navigation, route }) => {
         locationName: '',
     });
     const { data, isSuccess } = useGetNearByTemplesQuery(regionCoordinate);
-    // console.log('🚀 ~ Temples ~ data:', JSON.stringify(data?.data, 0, 2));
+    console.log('🚀 ~ Temples ~ data:', JSON.stringify(data?.data, 0, 2));
 
     const [userLocation, setUserLocation] = useState({
         latitude: 28.500271,
@@ -330,7 +330,7 @@ export const Temples = ({ navigation, route }) => {
                             && data?.data?.map((item, index) => (
                                 <>
                                     {
-                                        item?.attributes?.temple?.lat && item?.attributes?.temple?.lng &&
+                                        item?.attributes?.temple?.lat && item?.attributes?.temple?.long &&
                                         <CustomMarker
                                             setPadState={setPadState}
                                             callback={() => {
@@ -338,10 +338,10 @@ export const Temples = ({ navigation, route }) => {
                                                 // callback function for naving to page which has the temple details
                                                 markerPressClbk(navigation, 7, item);
                                             }}
-                                            flag={index + 1}
+                                            flag={item?.attributes?.flag}
                                             coordinate={{
                                                 latitude: item?.attributes?.temple?.lat,
-                                                longitude: item?.attributes?.temple?.lng
+                                                longitude: item?.attributes?.temple?.long
                                             }}
                                             keyName={'COORDINATE'}
                                         />
