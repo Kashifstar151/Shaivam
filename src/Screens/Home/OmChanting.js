@@ -6,11 +6,13 @@ import OMIcon from '../../assets/Images/om 2.svg';
 import ButtonComp from '../Temples/Common/ButtonComp';
 import { usePlayer } from '../../Context/PlayerContext';
 
-const OmChanting = ({ close }) => {
-    // console.log('🚀 ~ OmChanting ~ setPaused:', setPaused);
+const OmChanting = ({ close, setOmPlayTiming }) => {
+    // console.log("🚀 ~ OmChanting ~ setPaused:", setPaused)
     const { showPlayer, setShowPlayer } = usePlayer();
     const [showTimer, setShowTimer] = useState(false);
-    const handleCloseBtn = () => {
+    const [timing, setTiming] = useState(15);
+    const onSubmit = () => {
+        setOmPlayTiming(timing * 60000);
         setShowPlayer(true);
         close.current.close();
     };
@@ -50,6 +52,7 @@ const OmChanting = ({ close }) => {
                         }}
                     >
                         <TouchableOpacity
+                            onPress={() => setTiming(timing - 1)}
                             style={{
                                 justifyContent: 'center',
                                 alignItems: 'center',
@@ -71,7 +74,7 @@ const OmChanting = ({ close }) => {
                                     color: '#222222',
                                 }}
                             >
-                                15
+                                {timing}
                             </Text>
                             <Text
                                 style={{
@@ -84,6 +87,7 @@ const OmChanting = ({ close }) => {
                             </Text>
                         </View>
                         <TouchableOpacity
+                            onPress={() => setTiming(timing + 1)}
                             style={{
                                 justifyContent: 'center',
                                 alignItems: 'center',
@@ -99,7 +103,7 @@ const OmChanting = ({ close }) => {
                         </TouchableOpacity>
                     </View>
                     <View style={{ position: 'absolute', bottom: 10, alignSelf: 'center' }}>
-                        <ButtonComp color={true} text="Continue" navigation={handleCloseBtn} />
+                        <ButtonComp color={true} text="Continue" navigation={() => onSubmit()} />
                     </View>
                 </View>
             ) : (

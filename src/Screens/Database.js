@@ -9,16 +9,6 @@ import { RESULTS } from 'react-native-permissions';
 // const database = SQLite.openDatabase({ name: databaseName, });
 const database = SQLite.openDatabase({ name: 'main.db' });
 const offlineDatabase = SQLite.openDatabase({ name: 'SongsData.db', createFromLocation: 1 });
-// export const initDatabase = () => {
-//     database.transaction((tx) => {
-//         tx.executeSql(
-//             // 'CREATE TABLE IF NOT EXISTS API_DATA (id INTEGER PRIMARY KEY AUTOINCREMENT, endpoint TEXT, data TEXT)',
-//             'CREATE TABLE IF NOT EXISTS Thrimurai_data (id INTEGER PRIMARY KEY,title TEXT,titleName TEXT , pann TEXT,audioUrl BLOB,thalam TEXT,country TEXT,author TEXT,url BLOB, rawSong BLOB,searchRawSong BLOB,locale TEXT)', [],
-//             () => console.log('Database and table created successfully'),
-//             (_, error) => console.error('Error creating table:', error)
-//         );
-//     });
-// };
 export async function attachDb(metaData) {
     return new Promise((resolve, reject) => {
         RNFetchBlob.config({
@@ -38,9 +28,6 @@ export async function attachDb(metaData) {
                     RNFS.readDir(jsonFilePath)
                         .then((files) => {
                             const fileNames = files.map((fileInfo) => fileInfo.name);
-                            // console.log('File names in the directory:', JSON.stringify(fileNames, 0, 2));
-                            // console.log('File names in the directory:1', JSON.stringify(metaData, 0, 2));
-
                             console.log(metaData, "metaData")
                             try {
                                 database.transaction(
@@ -51,23 +38,12 @@ export async function attachDb(metaData) {
                                                 `${jsonFilePath}/thirumuraiSong_${metaData.Version}.db`,
                                             ],
                                             async (tx, results) => {
-                                                console.log(
-                                                    '🚀 ~ file: Database.js:49 ~ database.transaction ~ results:',
-                                                    tx,
-                                                    results
-                                                );
                                                 resolve(tx);
-                                                // console.log("🚀 ~ file: Database.js:53 ~ async ~ data:", data)
                                             }
                                         );
                                     },
                                     async (error) => {
                                         const data = await AsyncStorage.getItem('@database');
-                                        // console.log("🚀 ~ file: Database.js:53 ~ async ~ data:", data)
-                                        console.log(
-                                            '🚀 ~ file: Database.js:56 ~ database.transaction ~ error:',
-                                            error
-                                        );
                                         reject(error);
                                     }
                                 );

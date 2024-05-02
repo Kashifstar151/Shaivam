@@ -6,6 +6,7 @@ import SearchTemple from './SearchTemple';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { ImageBackground } from 'react-native';
 import { ThemeContext } from '../../Context/ThemeContext';
+import { CustomMarker } from './CustomMarker';
 
 const BottomSheetTempleTemplate = ({
     navigation,
@@ -25,8 +26,10 @@ const BottomSheetTempleTemplate = ({
     routeName, //route.name
     valueToBePreFilled, //route.params?.data?.name ?? route.params?.searchText
     children,
+    data
 }) => {
     const bottomSheetRef = useRef(null);
+    const [padState, setPadState] = useState(null)
     const [snapIndex, setSnapIndex] = useState(0);
     const handleSheetChanges = useCallback((indx) => {
         console.log('handleSheetChanges', indx);
@@ -41,7 +44,22 @@ const BottomSheetTempleTemplate = ({
                 initialRegion={null}
                 style={styles.map}
                 region={regionCoordinate}
-            ></MapView>
+            >
+                <CustomMarker
+                    setPadState={setPadState}
+                    callback={() => {
+                        // setting the type of the marker you pressed
+                        // callback function for naving to page which has the temple details
+                        markerPressClbk(navigation, 7);
+                    }}
+                    flag={9}
+                    coordinate={{
+                        latitude: data?.attributes?.temple?.lat,
+                        longitude: data?.attributes?.temple?.long
+                    }}
+                    keyName={'COORDINATE'}
+                />
+            </MapView>
             <View
                 style={{
                     position: 'absolute',
