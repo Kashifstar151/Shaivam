@@ -420,7 +420,7 @@ export const Temples = ({ navigation, route }) => {
             </View> */}
 
                 <AnimatedRightSideView heading={'Map Legend'} RightIcon={<MapIconSVG />}>
-                    <InnerContextOfAnimatedSideBox />
+                    <InnerContextOfAnimatedSideBox navigation={navigation} />
                 </AnimatedRightSideView>
                 {permissionGranted === 'granted' ? (
                     <BottomSheet

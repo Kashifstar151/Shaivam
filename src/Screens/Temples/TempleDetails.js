@@ -167,10 +167,7 @@ const TempleDetails = ({ navigation }) => {
                         </View>
                     </View>
                     <ScrollView style={{ marginHorizontal: 0 }}>
-                        <RenderHTML
-                            contentWidth={Dimensions.get('window').width}
-                            source={{ html: data?.attributes?.Specialities_Description }}
-                        />
+
                         {/* <WebView
                             originWhitelist={['*']}
                             source={{ html: data?.attributes?.Specialities_Description }}
@@ -231,7 +228,7 @@ const TempleDetails = ({ navigation }) => {
                                     Temple Description
                                 </Text>
 
-                                <Text
+                                {/* <Text
                                     style={{
                                         color: 'black',
                                         fontFamily: 'Mulish-Regular',
@@ -239,13 +236,19 @@ const TempleDetails = ({ navigation }) => {
                                     }}
                                 >
                                     {details.description}
-                                </Text>
+                                </Text> */}
                             </View>
+                            <RenderHTML
+                                contentWidth={Dimensions.get('window').width - 20}
+                                source={{ html: data?.attributes?.Sthala_Puranam_Description }}
+                            />
                         </View>
-                    </ScrollView>
-
-                    <View style={{ backgroundColor: 'red', flexGrow: 1, marginHorizontal: 20 }}>
-                        <WebView
+                        <View style={{ marginHorizontal: 0 }}>
+                            {/* <RenderHTML
+                                contentWidth={Dimensions.get('window').width}
+                                source={{ html: data?.attributes?.Specialities_Description }}
+                            /> */}
+                            {/* <WebView
                             originWhitelist={['*']}
                             source={{ html: data?.attributes?.Specialities_Description }}
                             containerStyle={
@@ -261,8 +264,10 @@ const TempleDetails = ({ navigation }) => {
                                     // width: '100%',
                                 }
                             }
-                        />
-                    </View>
+                        /> */}
+                        </View>
+                    </ScrollView>
+
 
                     {/* <Toast /> */}
                     {fav && animateToast ? (
