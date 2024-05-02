@@ -38,10 +38,11 @@ import { usePlayer } from '../../Context/PlayerContext';
 const HomeScreen = ({ navigation, setPaused }) => {
     const RBSheetRef = useRef(null);
     const { theme } = useContext(ThemeContext);
-    const { setShowPlayer } = usePlayer()
+    const { showPlayer, setShowPlayer } = usePlayer()
     const [compHeight, setCompHeight] = useState();
     const [textInsidePlaylistCard, setTextInsidePlaylistCard] = useState(0);
     const [playlistCardHeight, setPlaylistCardHeight] = useState(0);
+    const [OmPlayTiming, setOmPlayTiming] = useState(0)
     const [dimentionsOfText1, setDimentionsOfText1] = useState({
         width: 0,
         height: 0,
@@ -134,6 +135,9 @@ const HomeScreen = ({ navigation, setPaused }) => {
             setFavList(callbacks);
         });
     }, [selectedPlaylistType, isFocused]);
+    useEffect(() => {
+
+    }, [])
 
     const checkIsFav = (item) => {
         let v = false;
@@ -562,7 +566,7 @@ const HomeScreen = ({ navigation, setPaused }) => {
                 ref={RBSheetRef}
                 customStyles={{ container: { borderTopEndRadius: 15, borderTopLeftRadius: 15 } }}
             >
-                <OmChanting close={RBSheetRef} setPaused={setShowPlayer} />
+                <OmChanting close={RBSheetRef} setPaused={setShowPlayer} setOmPlayTiming={setOmPlayTiming} />
             </RBSheet >
         </ScrollView >
     );

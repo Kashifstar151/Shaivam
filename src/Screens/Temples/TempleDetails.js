@@ -7,7 +7,6 @@ import {
     Image,
     ImageBackground,
     Pressable,
-    ScrollView,
     StyleSheet,
     Text,
     View,
@@ -28,6 +27,8 @@ import SearchContainerWithIcon from './SearchContainerWithIcon';
 import SearchTemple from './SearchTemple';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
 import BottomSheetTempleTemplate from './BottomSheetTempleTemplate';
+import RenderHTML from 'react-native-render-html';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const details = {
     basicDetails: {
@@ -76,9 +77,10 @@ const TempleDetails = ({ navigation }) => {
             <BottomSheetTempleTemplate
                 snapPoints={['50%', '95%']}
                 showSearchBarWhenFullSize={false}
+                data={data}
                 regionCoordinate={{
-                    latitude: 28.500271,
-                    longitude: 77.387901,
+                    latitude: data?.attributes?.temple?.lat,
+                    longitude: data?.attributes?.temple?.long,
                     latitudeDelta: 0.015,
                     longitudeDelta: 0.0121,
                     locationName: '',
@@ -88,7 +90,7 @@ const TempleDetails = ({ navigation }) => {
                 disappearsOnIndex={0}
                 isNavigable={true}
                 routeName={route.name}
-                valueToBePreFilled={route.params?.data?.name ?? route.params?.searchText}
+                valueToBePreFilled={data?.attributes?.Name_of_the_place}
             >
                 <View
                     style={[
@@ -164,65 +166,88 @@ const TempleDetails = ({ navigation }) => {
                             />
                         </View>
                     </View>
-                    <View>
-                        <TempleCard
-                            dataSet={{
-                                templeName: 'Brahmalingeshwara',
-                                flag: 1,
-                                templeType: 'Jyotirlingas/Thirumurai Temples',
-                                coordinate: {
-                                    latitude: '26.868851939300207',
-                                    longitude: '80.91296407698843',
-                                },
-                            }}
-                            showButton={false}
-                            showMargin={false}
+                    <ScrollView style={{ marginHorizontal: 0 }}>
+                        <RenderHTML
+                            contentWidth={Dimensions.get('window').width}
+                            source={{ html: data?.attributes?.Specialities_Description }}
                         />
-
-                        <View style={{ marginHorizontal: 20, marginVertical: 10, gap: 8 }}>
-                            <Text
-                                style={{
-                                    color: 'black',
-                                    fontFamily: 'Mulish-Bold',
-                                    fontSize: 18,
-                                    paddingVertical: 8,
+                        {/* <WebView
+                            originWhitelist={['*']}
+                            source={{ html: data?.attributes?.Specialities_Description }}
+                            containerStyle={
+                                {
+                                    // flex: 0,
+                                    // height: 200,
+                                }
+                            }
+                            style={
+                                {
+                                    // flex: 0,
+                                    // height: '100%',
+                                    // width: '100%',
+                                }
+                            }
+                        /> */}
+                        <View>
+                            <TempleCard
+                                dataSet={{
+                                    templeName: 'Brahmalingeshwara',
+                                    flag: 1,
+                                    templeType: 'Jyotirlingas/Thirumurai Temples',
+                                    coordinate: {
+                                        latitude: '26.868851939300207',
+                                        longitude: '80.91296407698843',
+                                    },
                                 }}
-                            >
-                                Basic Details
-                            </Text>
-                            {Object.entries(details.basicDetails).map(([key, value], index) => (
-                                <KeyValueComp key={index} keyVal={key} value={value} />
-                            ))}
+                                showButton={false}
+                                showMargin={false}
+                            />
+
+                            <View style={{ marginHorizontal: 20, marginVertical: 10, gap: 8 }}>
+                                <Text
+                                    style={{
+                                        color: 'black',
+                                        fontFamily: 'Mulish-Bold',
+                                        fontSize: 18,
+                                        paddingVertical: 8,
+                                    }}
+                                >
+                                    Basic Details
+                                </Text>
+                                {Object.entries(details.basicDetails).map(([key, value], index) => (
+                                    <KeyValueComp key={index} keyVal={key} value={value} />
+                                ))}
+                            </View>
+
+                            <View style={{ marginHorizontal: 20, gap: 8 }}>
+                                <Text
+                                    style={{
+                                        color: 'black',
+                                        fontFamily: 'Mulish-Bold',
+                                        fontSize: 18,
+                                        paddingVertical: 10,
+                                    }}
+                                >
+                                    Temple Description
+                                </Text>
+
+                                <Text
+                                    style={{
+                                        color: 'black',
+                                        fontFamily: 'Mulish-Regular',
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    {details.description}
+                                </Text>
+                            </View>
                         </View>
-
-                        <View style={{ marginHorizontal: 20, gap: 8 }}>
-                            <Text
-                                style={{
-                                    color: 'black',
-                                    fontFamily: 'Mulish-Bold',
-                                    fontSize: 18,
-                                    paddingVertical: 10,
-                                }}
-                            >
-                                Temple Description
-                            </Text>
-
-                            <Text
-                                style={{
-                                    color: 'black',
-                                    fontFamily: 'Mulish-Regular',
-                                    fontWeight: 600,
-                                }}
-                            >
-                                {details.description}
-                            </Text>
-                        </View>
-                    </View>
+                    </ScrollView>
 
                     <View style={{ backgroundColor: 'red', flexGrow: 1, marginHorizontal: 20 }}>
                         <WebView
                             originWhitelist={['*']}
-                            source={{ html: details.expandedDesc }}
+                            source={{ html: data?.attributes?.Specialities_Description }}
                             containerStyle={
                                 {
                                     // flex: 0,

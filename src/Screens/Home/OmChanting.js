@@ -6,9 +6,14 @@ import Feather from 'react-native-vector-icons/dist/Feather';
 import OMIcon from '../../assets/Images/om 2.svg';
 import ButtonComp from '../Temples/Common/ButtonComp';
 
-const OmChanting = ({ close, setPaused }) => {
-    console.log("🚀 ~ OmChanting ~ setPaused:", setPaused)
+const OmChanting = ({ close, setPaused, setOmPlayTiming }) => {
+    // console.log("🚀 ~ OmChanting ~ setPaused:", setPaused)
     const [showTimer, setShowTimer] = useState(false);
+    const [timing, setTiming] = useState(15)
+    const onSubmit = () => {
+        setOmPlayTiming(timing * 60000)
+        setPaused(true)
+    }
     return (
         <>
             {showTimer ? (
@@ -44,6 +49,7 @@ const OmChanting = ({ close, setPaused }) => {
                         }}
                     >
                         <TouchableOpacity
+                            onPress={() => setTiming(timing - 1)}
                             style={{
                                 justifyContent: 'center',
                                 alignItems: 'center',
@@ -58,12 +64,13 @@ const OmChanting = ({ close, setPaused }) => {
                             <AntDesign name="minus" size={25} />
                         </TouchableOpacity>
                         <View style={{ alignItems: 'center' }}>
-                            <Text style={{ fontSize: 32, fontFamily: 'Mulish-Bold' }}>15</Text>
+                            <Text style={{ fontSize: 32, fontFamily: 'Mulish-Bold' }}>{timing}</Text>
                             <Text style={{ fontSize: 16, fontFamily: 'Mulish-Regular' }}>
                                 Minutes
                             </Text>
                         </View>
                         <TouchableOpacity
+                            onPress={() => setTiming(timing + 1)}
                             style={{
                                 justifyContent: 'center',
                                 alignItems: 'center',
@@ -82,7 +89,7 @@ const OmChanting = ({ close, setPaused }) => {
                         <ButtonComp
                             color={true}
                             text="Continue"
-                            navigation={() => setPaused(true)}
+                            navigation={() => onSubmit()}
                         />
                     </View>
                 </View>

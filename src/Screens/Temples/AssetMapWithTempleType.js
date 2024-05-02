@@ -5,6 +5,7 @@ import PopularTemples from '../../../assets/Images/Temple/PopularTemples.svg';
 import Temples from '../../../assets/Images/Temple/Temples.svg';
 import UnknownTemple from '../../../assets/Images/Temple/UnknownTemple.svg';
 import UsersLocation from '../../../assets/Images/Temple/UsersLocation.svg';
+import LocationPointer from '../../../assets/Images/Temple/location9.svg';
 import VaippuSthalamTemple from '../../../assets/Images/Temple/VaippuSthalamTemple.svg';
 const assetMapWithTempleType = {
     1: {
@@ -101,6 +102,18 @@ const assetMapWithTempleType = {
         },
         path: require('./TempleAssets/UsersLocation.png'),
         Svg: <UsersLocation />,
+    },
+    9: {
+        fullName: 'User Location',
+        name: 'User Location',
+        content:
+            'Do cupidatat labore eiusmod ea amet ullamco laborum cupidatat nulla. Aliqua deserunt ad quis pariatur aliqua qui pariatur Lorem mollit. Veniam ut nulla sunt deserunt incididunt ea. Culpa consequat fugiat commodo quis Lorem id qui. Anim incididunt laboris consequat mollit exercitation esse reprehenderit nulla dolor aliqua irure consequat magna ut.',
+        metaData: {
+            color: '#f00',
+            letterAssociated: null,
+        },
+        path: require('./TempleAssets/LocationPointer.png'),
+        Svg: <LocationPointer />,
     },
 };
 
