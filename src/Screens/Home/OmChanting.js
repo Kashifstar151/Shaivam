@@ -12,7 +12,7 @@ const OmChanting = ({ close, setOmPlayTiming }) => {
     const [showTimer, setShowTimer] = useState(false);
     const [timing, setTiming] = useState(15);
     const onSubmit = () => {
-        setOmPlayTiming(timing * 60000);
+        setOmPlayTiming(timing * 60);
         setShowPlayer(true);
         close.current.close();
     };
@@ -52,7 +52,16 @@ const OmChanting = ({ close, setOmPlayTiming }) => {
                         }}
                     >
                         <TouchableOpacity
-                            onPress={() => setTiming(timing - 1)}
+                            onPress={() =>
+                                setTiming((prev) => {
+                                    if (prev > 1) {
+                                        return prev - 1;
+                                    } else {
+                                        alert("Can't set time less than Zero");
+                                        return prev;
+                                    }
+                                })
+                            }
                             style={{
                                 justifyContent: 'center',
                                 alignItems: 'center',

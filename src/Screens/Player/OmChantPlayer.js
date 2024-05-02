@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
-import TrackPlayer, { usePlaybackState } from 'react-native-track-player';
+import TrackPlayer, { usePlaybackState, useProgress } from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/dist/AntDesign';
 import AudioIcon from '../../assets/Images/7703676 1.svg';
 import { usePlayer } from '../../Context/PlayerContext';
@@ -10,7 +10,9 @@ import { addTracks, setupPlayer } from '../../navigation/BottomTab/OmChantPlayer
 const OmChantPlayer = () => {
     const playbackState = usePlaybackState();
     const [paused, setPaused] = useState(false);
-    const { showPlayer, setShowPlayer } = usePlayer();
+    const { showPlayer, setShowPlayer, OmPlayTiming } = usePlayer();
+    const { position, duration } = useProgress();
+
     useEffect(() => {
         async function removeTheTrackPlayer() {
             console.log('🚀 ~ removeTheTrackPlayer ~ removeTheTrackPlayer:');
@@ -36,6 +38,29 @@ const OmChantPlayer = () => {
         return () => removeTheTrackPlayer();
     }, [showPlayer]);
 
+    const timeRef = useRef();
+    // useEffect(() => {
+    //     // if (timeRef.current) {
+    //     //     clearInterval(timeRef.current);
+    //     // } else {
+    //     timeRef.current = setInterval(() => {
+    //         setTimeRemaining((prev) => {
+    //             if (prev >= OmPlayTiming) {
+    //                 setShowPlayer(false);
+    //                 return prev;
+    //             } else {
+    //                 return prev + 1;
+    //             }
+    //         });
+    //     }, 1000);
+    //     // }
+
+    //     return () => {
+    //         console.log('clearing the time interval ');
+    //         clearInterval(timeRef.current);
+    //     };
+    // }, [OmPlayTiming]);
+
     useEffect(() => {
         (async () => {
             if (playbackState.state !== 'playing') {
@@ -46,6 +71,7 @@ const OmChantPlayer = () => {
             // fetchAndDisplayDownloads();
         })();
     }, [playbackState]);
+
     const playAudio = async () => {
         console.log(playbackState, 'plauback');
         // TrackPlayer.getActiveTrack()
@@ -100,7 +126,10 @@ const OmChantPlayer = () => {
                 <Text style={{ color: 'white', fontWeight: '700' }}>
                     Om Namah Shivaya Chant (Loop)
                 </Text>
-                <Text style={{ color: 'white' }}>0:00 / 4:40</Text>
+                <Text style={{ color: 'white' }}>
+                    {new Date(position * 1000).toISOString().substring(14, 19)}/
+                    {new Date(duration * 1000).toISOString().substring(14, 19)}
+                </Text>
             </View>
             {paused ? (
                 <TouchableOpacity

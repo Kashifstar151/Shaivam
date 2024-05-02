@@ -37,12 +37,11 @@ import { usePlayer } from '../../Context/PlayerContext';
 
 const HomeScreen = ({ navigation }) => {
     const RBSheetRef = useRef(null);
-    const { showPlayer, setShowPlayer } = usePlayer();
+    const { showPlayer, setShowPlayer, OmPlayTiming, setOmPlayTiming } = usePlayer();
     const { theme } = useContext(ThemeContext);
     const [compHeight, setCompHeight] = useState();
     const [textInsidePlaylistCard, setTextInsidePlaylistCard] = useState(0);
     const [playlistCardHeight, setPlaylistCardHeight] = useState(0);
-    const [OmPlayTiming, setOmPlayTiming] = useState(0);
     const [dimentionsOfText1, setDimentionsOfText1] = useState({
         width: 0,
         height: 0,
@@ -572,7 +571,11 @@ const HomeScreen = ({ navigation }) => {
                 ref={RBSheetRef}
                 customStyles={{ container: { borderTopEndRadius: 15, borderTopLeftRadius: 15 } }}
             >
-                <OmChanting close={RBSheetRef} setOmPlayTiming={setOmPlayTiming} />
+                <OmChanting
+                    close={RBSheetRef}
+                    OmPlayTiming={OmPlayTiming}
+                    setOmPlayTiming={setOmPlayTiming}
+                />
             </RBSheet>
         </ScrollView>
     );
