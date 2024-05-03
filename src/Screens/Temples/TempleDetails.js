@@ -29,6 +29,7 @@ import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/botto
 import BottomSheetTempleTemplate from './BottomSheetTempleTemplate';
 import RenderHTML from 'react-native-render-html';
 import { ScrollView } from 'react-native-gesture-handler';
+import assetMapWithTempleType from './AssetMapWithTempleType';
 
 const TempleDetails = ({ navigation }) => {
     const route = useRoute();
@@ -36,8 +37,8 @@ const TempleDetails = ({ navigation }) => {
     const details = {
         basicDetails: {
             "Lord's name": data?.attributes?.Swamy_name,
-            'Divine name': 'Parvati',
-            'Head tree': 'N/A',
+            'Divine name': data?.attributes?.Ambal_Name,
+            'Head tree': data?.attributes?.Temple_tree ? data?.attributes?.Temple_tree : 'N/A',
             Theertam: data?.attributes?.Thirtham,
             Worshipped: data?.attributes?.Sages_who_worshiped,
             Location: data?.attributes?.Location,
@@ -188,9 +189,9 @@ const TempleDetails = ({ navigation }) => {
                         <View>
                             <TempleCard
                                 dataSet={{
-                                    templeName: 'Brahmalingeshwara',
-                                    flag: 1,
-                                    templeType: 'Jyotirlingas/Thirumurai Temples',
+                                    templeName: data?.attributes?.Name_of_the_place,
+                                    flag: 5,
+                                    templeType: assetMapWithTempleType[5].name,
                                     coordinate: {
                                         latitude: '26.868851939300207',
                                         longitude: '80.91296407698843',
@@ -357,13 +358,24 @@ const KeyValueComp = ({ keyVal, value }) => (
     <View
         style={{
             gap: 20,
+            width: '100%',
             flexDirection: 'row',
         }}
     >
-        <Text style={{ fontFamily: 'Mulish-Regular', color: '#777777' }}>{keyVal}</Text>
-        <Text style={{ color: 'black', fontFamily: 'Mulish-Regular', fontWeight: 600 }}>
-            {value}
-        </Text>
+        <View style={{ width: '25%' }}>
+
+            <Text style={{ fontFamily: 'Mulish-Regular', color: '#777777' }}>{keyVal}</Text>
+        </View>
+        <View style={{ width: '75%' }}>
+            {
+                keyVal == 'Head tree' ? <RenderHTML source={{ html: value }} contentWidth={Dimensions.get('window').width - 10} /> : <Text style={{ color: 'black', fontFamily: 'Mulish-Regular', fontWeight: 600 }}>
+                    {value}
+                </Text>
+            }
+
+        </View>
+
+
     </View>
 );
 const styles = StyleSheet.create({

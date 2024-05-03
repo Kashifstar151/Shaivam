@@ -35,14 +35,13 @@ import { colors } from '../../Helpers';
 import ListAudios from '../Thrimurai/ThrimuraiList/ListAudios';
 import { usePlayer } from '../../Context/PlayerContext';
 
-const HomeScreen = ({ navigation, setPaused }) => {
+const HomeScreen = ({ navigation }) => {
     const RBSheetRef = useRef(null);
+    const { showPlayer, setShowPlayer, OmPlayTiming, setOmPlayTiming } = usePlayer();
     const { theme } = useContext(ThemeContext);
-    const { showPlayer, setShowPlayer } = usePlayer()
     const [compHeight, setCompHeight] = useState();
     const [textInsidePlaylistCard, setTextInsidePlaylistCard] = useState(0);
     const [playlistCardHeight, setPlaylistCardHeight] = useState(0);
-    const [OmPlayTiming, setOmPlayTiming] = useState(0)
     const [dimentionsOfText1, setDimentionsOfText1] = useState({
         width: 0,
         height: 0,
@@ -135,9 +134,7 @@ const HomeScreen = ({ navigation, setPaused }) => {
             setFavList(callbacks);
         });
     }, [selectedPlaylistType, isFocused]);
-    useEffect(() => {
-
-    }, [])
+    useEffect(() => {}, []);
 
     const checkIsFav = (item) => {
         let v = false;
@@ -474,7 +471,7 @@ const HomeScreen = ({ navigation, setPaused }) => {
                         viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                         title={'Upcoming Festivals'}
                         theme={{ textColor: theme.textColor, colorscheme: theme.colorscheme }}
-                        onPress={() => { }}
+                        onPress={() => {}}
                     />
                 </View>
                 <FlatList
@@ -501,7 +498,15 @@ const HomeScreen = ({ navigation, setPaused }) => {
             </View>
             {/* om chant */}
             <View>
-                <OmChat navigation={navigation} onPress={() => RBSheetRef.current.open()} />
+                <OmChat
+                    navigation={navigation}
+                    onPress={() => {
+                        RBSheetRef.current.open();
+                        if (showPlayer) {
+                            setShowPlayer(false);
+                        }
+                    }}
+                />
             </View>
 
             {/* last section */}
@@ -510,7 +515,7 @@ const HomeScreen = ({ navigation, setPaused }) => {
                     <HeadingAndView
                         viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                         title={'Nearby Temples'}
-                        onPress={() => { }}
+                        onPress={() => {}}
                         theme={{
                             textColor: theme.textColor,
                             colorscheme: theme.colorscheme,
@@ -553,7 +558,7 @@ const HomeScreen = ({ navigation, setPaused }) => {
                     viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                     title={'App Walkthrough Videos '}
                     // todos : add the fn that take it to the dedicated video page
-                    onPress={() => { }}
+                    onPress={() => {}}
                     theme={{
                         textColor: theme.textColor,
                         colorscheme: theme.colorscheme,
@@ -566,9 +571,13 @@ const HomeScreen = ({ navigation, setPaused }) => {
                 ref={RBSheetRef}
                 customStyles={{ container: { borderTopEndRadius: 15, borderTopLeftRadius: 15 } }}
             >
-                <OmChanting close={RBSheetRef} setPaused={setShowPlayer} setOmPlayTiming={setOmPlayTiming} />
-            </RBSheet >
-        </ScrollView >
+                <OmChanting
+                    close={RBSheetRef}
+                    OmPlayTiming={OmPlayTiming}
+                    setOmPlayTiming={setOmPlayTiming}
+                />
+            </RBSheet>
+        </ScrollView>
     );
 };
 export const styles = StyleSheet.create({

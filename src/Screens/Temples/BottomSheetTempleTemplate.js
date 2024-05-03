@@ -46,20 +46,23 @@ const BottomSheetTempleTemplate = ({
                 style={styles.map}
                 region={regionCoordinate}
             >
-                <CustomMarker
-                    setPadState={setPadState}
-                    callback={() => {
-                        // setting the type of the marker you pressed
-                        // callback function for naving to page which has the temple details
-                        // markerPressClbk(navigation, 7);
-                    }}
-                    flag={9}
-                    coordinate={{
-                        latitude: data?.attributes?.temple?.lat,
-                        longitude: data?.attributes?.temple?.long
-                    }}
-                    keyName={'COORDINATE'}
-                />
+                {
+                    data?.attributes?.temple?.lat && data?.attributes?.temple?.long &&
+                    <CustomMarker
+                        setPadState={setPadState}
+                        callback={() => {
+                            // setting the type of the marker you pressed
+                            // callback function for naving to page which has the temple details
+                            // markerPressClbk(navigation, 7);
+                        }}
+                        flag={9}
+                        coordinate={{
+                            latitude: data?.attributes?.temple?.lat,
+                            longitude: data?.attributes?.temple?.long
+                        }}
+                        keyName={'COORDINATE'}
+                    />
+                }
             </MapView>
             <View
                 style={{

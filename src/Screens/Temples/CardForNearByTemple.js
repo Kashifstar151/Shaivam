@@ -14,13 +14,16 @@ const CardForNearByTemple = ({ item }) => {
                             {
                                 // backgroundColor: `${item?.metadata().color}`,
                                 backgroundColor: `red`,
-
                             },
                         ]}
                     ></View>
                     <View style={styles.textContainer}>
-                        <Text style={styles.textBold}>{item?.attributes?.Name_of_the_place}</Text>
-                        <Text style={{ color: 'black' }}>{item?.attributes?.Swamy_name}</Text>
+                        <Text numberOfLines={1} ellipsizeMode="tail" style={styles.textBold}>
+                            {item?.attributes?.Name_of_the_place}
+                        </Text>
+                        <Text numberOfLines={1} ellipsizeMode="tail" style={{ color: 'black' }}>
+                            {item?.attributes?.Swamy_name}
+                        </Text>
                     </View>
                 </View>
 
@@ -58,7 +61,12 @@ const styles = StyleSheet.create({
         width: 4,
         borderRadius: 5,
     },
-    textContainer: { marginLeft: 5, flex: 1, justifyContent: 'center' },
+    textContainer: {
+        marginHorizontal: 5,
+        // flex: 1,
+        width: '90%',
+        justifyContent: 'center',
+    },
     textBold: {
         color: 'black',
         fontFamily: 'Mulish-Bold',

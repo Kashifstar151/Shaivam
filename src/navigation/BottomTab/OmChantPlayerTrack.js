@@ -43,7 +43,7 @@ export async function addTracks() {
     await TrackPlayer.add([
         {
             id: 1,
-            url: require('../../assets/audio/OmChant.mp3'),
+            url: 'https://shaivamfiles.fra1.cdn.digitaloceanspaces.com/audios/OmChant.mp3',
             title: 'Fluidity',
             artist: 'tobylane',
             // duration: 60,

@@ -1,19 +1,21 @@
-import { BlurView } from '@react-native-community/blur';
 import React, { useState } from 'react';
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Feather from 'react-native-vector-icons/dist/Feather';
 import OMIcon from '../../assets/Images/om 2.svg';
 import ButtonComp from '../Temples/Common/ButtonComp';
+import { usePlayer } from '../../Context/PlayerContext';
 
-const OmChanting = ({ close, setPaused, setOmPlayTiming }) => {
+const OmChanting = ({ close, setOmPlayTiming }) => {
     // console.log("🚀 ~ OmChanting ~ setPaused:", setPaused)
+    const { showPlayer, setShowPlayer } = usePlayer();
     const [showTimer, setShowTimer] = useState(false);
-    const [timing, setTiming] = useState(15)
+    const [timing, setTiming] = useState(15);
     const onSubmit = () => {
-        setOmPlayTiming(timing * 60000)
-        setPaused(true)
-    }
+        setOmPlayTiming(timing * 60);
+        setShowPlayer(true);
+        close.current.close();
+    };
     return (
         <>
             {showTimer ? (
@@ -24,6 +26,7 @@ const OmChanting = ({ close, setPaused, setOmPlayTiming }) => {
                         borderTopRightRadius: 15,
                         borderTopLeftRadius: 15,
                         backgroundColor: '#fff',
+                        marginHorizontal: 10,
                     }}
                 >
                     <View style={styles.topConatiner}>
@@ -49,7 +52,16 @@ const OmChanting = ({ close, setPaused, setOmPlayTiming }) => {
                         }}
                     >
                         <TouchableOpacity
-                            onPress={() => setTiming(timing - 1)}
+                            onPress={() =>
+                                setTiming((prev) => {
+                                    if (prev > 1) {
+                                        return prev - 1;
+                                    } else {
+                                        alert("Can't set time less than Zero");
+                                        return prev;
+                                    }
+                                })
+                            }
                             style={{
                                 justifyContent: 'center',
                                 alignItems: 'center',
@@ -64,8 +76,22 @@ const OmChanting = ({ close, setPaused, setOmPlayTiming }) => {
                             <AntDesign name="minus" size={25} />
                         </TouchableOpacity>
                         <View style={{ alignItems: 'center' }}>
-                            <Text style={{ fontSize: 32, fontFamily: 'Mulish-Bold' }}>{timing}</Text>
-                            <Text style={{ fontSize: 16, fontFamily: 'Mulish-Regular' }}>
+                            <Text
+                                style={{
+                                    fontSize: 32,
+                                    fontFamily: 'Mulish-Bold',
+                                    color: '#222222',
+                                }}
+                            >
+                                {timing}
+                            </Text>
+                            <Text
+                                style={{
+                                    fontSize: 16,
+                                    fontFamily: 'Mulish-Regular',
+                                    color: '#222222',
+                                }}
+                            >
                                 Minutes
                             </Text>
                         </View>
@@ -86,11 +112,7 @@ const OmChanting = ({ close, setPaused, setOmPlayTiming }) => {
                         </TouchableOpacity>
                     </View>
                     <View style={{ position: 'absolute', bottom: 10, alignSelf: 'center' }}>
-                        <ButtonComp
-                            color={true}
-                            text="Continue"
-                            navigation={() => onSubmit()}
-                        />
+                        <ButtonComp color={true} text="Continue" navigation={() => onSubmit()} />
                     </View>
                 </View>
             ) : (

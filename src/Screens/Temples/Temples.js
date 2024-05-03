@@ -186,9 +186,12 @@ export const Temples = ({ navigation, route }) => {
         } else if (state === RESULTS.GRANTED) {
             getCurrentLocation((val) => {
                 setUserLocation((prev) => ({ ...prev, ...val }));
+                setRegionCoordinate((prev) => ({ ...prev, ...val }))
             });
+
             getCurrentLocationWatcher((val) => {
                 setUserLocation((prev) => ({ ...prev, ...val }));
+                // setRegionCoordinate((prev) => ({ ...prev, ...val }))
             });
         } else {
             setShowModal(true);
@@ -292,7 +295,12 @@ export const Temples = ({ navigation, route }) => {
                             }, 5000)
                         }
                         provider={PROVIDER_GOOGLE}
-                        initialRegion={null}
+                        initialRegion={{
+                            longitude: 77.40369287235171,
+                            latitude: 28.49488467262243,
+                            latitudeDelta: 0.015,
+                            longitudeDelta: 0.0121,
+                        }}
                         style={styles.map}
                         onRegionChangeComplete={(args, gesture) => {
                             if (gesture.isGesture) {
@@ -314,11 +322,6 @@ export const Temples = ({ navigation, route }) => {
                                 />
                                 <CustomMarker
                                     setPadState={setPadState}
-                                    callback={() => {
-                                        // setting the type of the marker you pressed
-                                        // callback function for naving to page which has the temple details
-                                        markerPressClbk(navigation, 7);
-                                    }}
                                     flag={7}
                                     coordinate={regionCoordinate}
                                     keyName={'COORDINATE'}

@@ -117,7 +117,7 @@ const Calender = ({ navigation }) => {
     //         timing: '8:00pm - 11:00pm',
     //     },
     // ];
-    const [selectedHeader, setSelectedheader] = useState();
+    const [selectedHeader, setSelectedheader] = useState(data1[0]?.name);
     // const [selected, setSelected] = useState('2024-04-13');
     const marked = useMemo(() => {
         console.log('daata'?.data?.data);

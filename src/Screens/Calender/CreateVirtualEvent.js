@@ -29,16 +29,14 @@ const CreateVirtualEvent = ({ navigation }) => {
     const RbSheetRef = useRef(null)
     const [selectedFrequecy, setSelectedFrequecy] = useState(null)
     const [selectedWeek, setSelectedWeek] = useState(null)
-    const [bottomCom, setBottomCom] = useState(null)
+    const [bottomCom, setBottomCom] = useState('')
     const [recurringEvent, setRecurringEvent] = useState(false)
     const [virtualEvent, setVirtualEvent] = useState(false)
     const [showDatePicker, setShowDatePicker] = useState(false)
     const [showEndDatePicker, setShowEndDatePicker] = useState(false)
     const selectionHandlerBottomShhet = (name) => {
         setBottomCom(name)
-        if (bottomCom !== null) {
-            RbSheetRef?.current?.open()
-        }
+        RbSheetRef?.current?.open()
     }
     const [images, setImage] = useState([])
     const openGallary = () => {
@@ -94,7 +92,7 @@ const CreateVirtualEvent = ({ navigation }) => {
     const onSubmit = () => {
         const formData = new FormData();
         AddRegularEvent({ data: inputValue, eventType: recurringEvent }).then((res) => {
-            // console.log("🚀 ~ AddRegularEvent ~ res:", JSON.stringify(res))
+            console.log("🚀 ~ AddRegularEvent ~ res:", JSON.stringify(res))
             // console.log("🚀 ~ AddRegularEvent ~ res:", JSON.stringify(images))
 
             if (res && images?.length > 0) {
@@ -104,11 +102,11 @@ const CreateVirtualEvent = ({ navigation }) => {
                     type: images[0]?.type,
                     uri: images[0]?.url?.replace('file://', ''),
                 });
-                formData.append("ref", "api::recurring-event.recurring-event");
+                formData.append("ref", "api::regular-event.regular-event");
                 formData.append("refId", id);
-                formData.append("field", "File");
+                formData.append("field", "Files");
                 console.log("🚀 ~ AddRegularEvent ~ formData:", JSON.stringify(formData))
-                navigation.navigation(RouteTexts.SUCCESS)
+                navigation.navigate(RouteTexts.SUCCESS)
                 AddImage(formData).then((res) => {
                     console.log("🚀 ~ AddImage ~ res:", res)
                 }).catch((error) => {
