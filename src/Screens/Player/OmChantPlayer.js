@@ -72,7 +72,6 @@ const OmChantPlayer = () => {
             // fetchAndDisplayDownloads();
         })();
     }, [playbackState]);
-
     const playAudio = async () => {
         // console.log(playbackState, 'plauback');
         // TrackPlayer.getActiveTrack()

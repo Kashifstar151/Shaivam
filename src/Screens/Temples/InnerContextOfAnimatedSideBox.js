@@ -1,14 +1,19 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import templeMetaData from './AssetMapWithTempleType';
+import { categoryBtnClbk } from './CallBacksForClick';
 
-const InnerContextOfAnimatedSideBox = () => {
+const InnerContextOfAnimatedSideBox = ({ navigation }) => {
     return (
         <View style={{}}>
-            {Object.entries(templeMetaData).map(([key, value], indx) => {
+            {Object?.entries(templeMetaData).map(([key, value], indx) => {
                 if (key !== '8') {
                     return (
-                        <View style={{ gap: 2, paddingBottom: 10 }} key={indx}>
+                        <Pressable onPress={() => {
+                            // adding callback on the category btn press and navigating to the filter page
+                            // alert(key)
+                            categoryBtnClbk(navigation, key);
+                        }} style={{ gap: 2, paddingBottom: 10 }} key={indx}>
                             <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
                                 <View
                                     style={[
@@ -29,7 +34,7 @@ const InnerContextOfAnimatedSideBox = () => {
                                 </Text>
                             </View>
                             <Text style={{ color: '#222222', fontSize: 10 }}>{value.content}</Text>
-                        </View>
+                        </Pressable>
                     );
                 } else {
                     return null;

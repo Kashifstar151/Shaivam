@@ -15,7 +15,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import BottomSheetTempleTemplate from './BottomSheetTempleTemplate';
 
 const FilteredTemplesPage = ({ navigation, route }) => {
-    console.log('🚀 ~ TempleDetails ~ route:', route.params?.data?.name);
+    console.log('🚀 ~ TempleDetails ~ route:', route?.params);
     const [regionCoordinate, setRegionCoordinate] = useState({
         latitude: 28.500271,
         longitude: 77.387901,
@@ -122,8 +122,8 @@ const FilteredTemplesPage = ({ navigation, route }) => {
             snapPoints={['10%', '50%', '95%']}
             showSearchBarWhenFullSize={true}
             regionCoordinate={{
-                latitude: 28.500271,
-                longitude: 77.387901,
+                latitude: 11.2002937,
+                longitude: 79.6203017,
                 latitudeDelta: 0.015,
                 longitudeDelta: 0.0121,
                 locationName: '',
@@ -132,8 +132,9 @@ const FilteredTemplesPage = ({ navigation, route }) => {
             disappearsOnIndex={1}
             appearsOnIndex={2}
             isNavigable={false}
-            routeName={route.name}
-            valueToBePreFilled={route.params?.data?.name ?? route.params?.searchText}
+            routeName={route?.name}
+            data={route?.params?.data}
+            valueToBePreFilled={route?.params?.data?.name ?? route?.params?.searchText}
         >
             <ScrollView nestedScrollEnabled>
                 {templesDetailsArray.map((item, index) => (

@@ -20,7 +20,7 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
             query: (data, eventType) => {
                 console.log('🚀 ~ data:', data?.eventType, eventType);
                 // console.log('date from calender');
-                const url = data?.eventType ? 'recurring-event' : `regular-events`;
+                const url = `regular-events`;
                 console.log('🚀 ~ url:', url);
                 return {
                     url: url,
@@ -47,14 +47,6 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
             },
             providesTags: ['Calender'],
         }),
-        // getList: builder.query({
-        //     query: ({ date }) => ({
-        //         url: `regular-events?filters[start_date][$lte]=${date}&filters[end_date][$gte]=${getLastDayOfMonth(date)}&populate[Files][fields][0]=url&filters[status][$eq]=Approved&pagination[pageSize]=200`,
-        //         method: 'GET',
-        //         // body: creds,
-        //     }),
-        //
-        // })
     }),
 });
 function getLastDayOfMonth(dateString) {
