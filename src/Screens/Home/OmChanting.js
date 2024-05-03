@@ -12,7 +12,7 @@ const OmChanting = ({ close, setOmPlayTiming }) => {
     const [showTimer, setShowTimer] = useState(false);
     const [timing, setTiming] = useState(15);
     const onSubmit = () => {
-        setOmPlayTiming(timing * 60);
+        setOmPlayTiming(timing * 60 * 1000);
         setShowPlayer(true);
         close.current.close();
     };

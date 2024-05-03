@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
-import TrackPlayer, { usePlaybackState, useProgress } from 'react-native-track-player';
+import TrackPlayer, { usePlaybackState } from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/dist/AntDesign';
 import AudioIcon from '../../assets/Images/7703676 1.svg';
 import { usePlayer } from '../../Context/PlayerContext';
@@ -11,24 +11,20 @@ const OmChantPlayer = () => {
     const playbackState = usePlaybackState();
     const [paused, setPaused] = useState(false);
     const { showPlayer, setShowPlayer, OmPlayTiming } = usePlayer();
-    const { position, duration } = useProgress();
-
+    const [timeRemaining, setTimeRemaining] = useState(0);
     useEffect(() => {
         async function removeTheTrackPlayer() {
-            console.log('🚀 ~ removeTheTrackPlayer ~ removeTheTrackPlayer:');
             await TrackPlayer.stop();
             await TrackPlayer.reset();
         }
         async function setup() {
             let isSetup = await setupPlayer();
-            console.log('🚀 ~ setup ~ isSetup:', isSetup);
-
+            await TrackPlayer.setRepeatMode(1);
+            await TrackPlayer.reset();
             const queue = await TrackPlayer.getQueue();
             if (isSetup && queue.length <= 0) {
                 await addTracks();
             }
-            console.log('🚀 ~ setup ~ addTracks:', addTracks);
-
             setIsPlayerReady(isSetup);
         }
         if (showPlayer) {
@@ -39,27 +35,31 @@ const OmChantPlayer = () => {
     }, [showPlayer]);
 
     const timeRef = useRef();
-    // useEffect(() => {
-    //     // if (timeRef.current) {
-    //     //     clearInterval(timeRef.current);
-    //     // } else {
-    //     timeRef.current = setInterval(() => {
-    //         setTimeRemaining((prev) => {
-    //             if (prev >= OmPlayTiming) {
-    //                 setShowPlayer(false);
-    //                 return prev;
-    //             } else {
-    //                 return prev + 1;
-    //             }
-    //         });
-    //     }, 1000);
-    //     // }
+    useEffect(() => {
+        return () => {
+            clearTheRef();
+        };
+    }, [OmPlayTiming]);
 
-    //     return () => {
-    //         console.log('clearing the time interval ');
-    //         clearInterval(timeRef.current);
-    //     };
-    // }, [OmPlayTiming]);
+    const setTheRef = () => {
+        if (timeRef.current) {
+            clearTheRef();
+        }
+        timeRef.current = setInterval(() => {
+            setTimeRemaining((prev) => {
+                if (prev >= OmPlayTiming) {
+                    setShowPlayer(false);
+                    return prev;
+                } else {
+                    return prev + 10;
+                }
+            });
+        }, 10);
+    };
+
+    const clearTheRef = () => {
+        clearInterval(timeRef.current);
+    };
 
     useEffect(() => {
         (async () => {
@@ -73,7 +73,7 @@ const OmChantPlayer = () => {
     }, [playbackState]);
 
     const playAudio = async () => {
-        console.log(playbackState, 'plauback');
+        // console.log(playbackState, 'plauback');
         // TrackPlayer.getActiveTrack()
         //     .then((res) => {
         //         console.log('res', res);
@@ -82,10 +82,19 @@ const OmChantPlayer = () => {
         //         console.log('🚀 ~ TrackPlayer.getActiveTrack ~ error:', error);
         //     });
         TrackPlayer.play();
+        setTheRef();
     };
+
+    function formatSeconds(seconds) {
+        const date = new Date(seconds * 1000);
+        const minutes = date.getUTCMinutes();
+        const formattedSeconds = ('0' + date.getUTCSeconds()).slice(-2);
+        return `${minutes}:${formattedSeconds}`;
+    }
     const pauseAudio = async () => {
         console.log(playbackState);
         TrackPlayer.pause();
+        clearTheRef();
     };
     return (
         <View
@@ -127,8 +136,7 @@ const OmChantPlayer = () => {
                     Om Namah Shivaya Chant (Loop)
                 </Text>
                 <Text style={{ color: 'white' }}>
-                    {new Date(position * 1000).toISOString().substring(14, 19)}/
-                    {new Date(duration * 1000).toISOString().substring(14, 19)}
+                    {formatSeconds(timeRemaining / 1000)}/{formatSeconds(OmPlayTiming / 1000)}
                 </Text>
             </View>
             {paused ? (
