@@ -98,10 +98,11 @@ import { useNavigation } from '@react-navigation/native';
 import DownArrowSVG from '../../components/SVGs/DownArrowSVG';
 import SearchContainerWithIcon from './SearchContainerWithIcon';
 import SearchTemple from './SearchTemple';
+import { useTranslation } from 'react-i18next';
 const NearByTemples = ({ close, data, locationName, snapIndex, navigation }) => {
     const { snapToIndex, snapToPosition } = useBottomSheet();
     const nav = useNavigation();
-
+    const { t } = useTranslation();
     return (
         <View
             style={{
@@ -165,7 +166,7 @@ const NearByTemples = ({ close, data, locationName, snapIndex, navigation }) => 
                             paddingHorizontal: 15,
                         }}
                     >
-                        {locationName ? `Nearby Temples in ${locationName}` : null}
+                        {locationName ? `${t('Nearby Temples in')} ${locationName}` : null}
                     </Text>
                 </View>
             </TouchableWithoutFeedback>

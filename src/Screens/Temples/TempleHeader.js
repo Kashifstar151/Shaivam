@@ -18,7 +18,7 @@ const TempleHeader = () => {
             >
                 <View>
                     <Text style={{ fontSize: 24, fontFamily: 'Lora-SemiBold', color: '#FFF' }}>
-                        My Trips
+                        {t('My Trips')}
                     </Text>
                     <Text style={{ fontSize: 14, fontFamily: 'Mulish-Regular', color: '#FFF' }}>
                         Plan your trips & save them for future

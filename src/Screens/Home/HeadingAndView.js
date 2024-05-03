@@ -2,8 +2,10 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import RightDirSVG from '../../components/SVGs/RightDirSVG';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { useTranslation } from 'react-i18next';
 
 const HeadingAndView = ({ title, onPress, viewBtnColor, theme }) => {
+    const { t } = useTranslation();
     return (
         <View
             style={{
@@ -31,7 +33,9 @@ const HeadingAndView = ({ title, onPress, viewBtnColor, theme }) => {
                 }}
                 onPress={onPress}
             >
-                <Text style={{ color: viewBtnColor, fontSize: RFValue(14, 800) }}>View All</Text>
+                <Text style={{ color: viewBtnColor, fontSize: RFValue(14, 800) }}>
+                    {t('View All')}
+                </Text>
                 <RightDirSVG viewBox="0 0 16 15" width={16} height={15} fill={viewBtnColor} />
             </Pressable>
         </View>

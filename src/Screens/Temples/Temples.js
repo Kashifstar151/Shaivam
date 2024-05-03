@@ -42,6 +42,7 @@ import { CustomLongBtn } from '../../components/Buttons.js';
 import AlertmapSVG from '../../../assets/Images/AlertmapSVG.svg';
 import getDimension from '../../Helpers/getDimension.js';
 import { useGetNearByTemplesQuery } from '../../store/features/Temple/TemplApiSlice';
+import { useTranslation } from 'react-i18next';
 
 export const Temples = ({ navigation, route }) => {
     const bottomSheetRef = useRef(null);
@@ -278,6 +279,8 @@ export const Temples = ({ navigation, route }) => {
         }
     }, [regionCoordinate]);
 
+    const { t } = useTranslation();
+
     return (
         <>
             <View
@@ -325,31 +328,28 @@ export const Temples = ({ navigation, route }) => {
                                 />
                             </View>
                         )}
-                        {
-                            data?.data?.length
-                            && data?.data?.map((item, index) => (
+                        {data?.data?.length &&
+                            data?.data?.map((item, index) => (
                                 <>
-                                    {
-                                        item?.attributes?.temple?.lat && item?.attributes?.temple?.long &&
-                                        <CustomMarker
-                                            setPadState={setPadState}
-                                            callback={() => {
-                                                // setting the type of the marker you pressed
-                                                // callback function for naving to page which has the temple details
-                                                markerPressClbk(navigation, 7, item);
-                                            }}
-                                            flag={item?.attributes?.flag}
-                                            coordinate={{
-                                                latitude: item?.attributes?.temple?.lat,
-                                                longitude: item?.attributes?.temple?.long
-                                            }}
-                                            keyName={'COORDINATE'}
-                                        />
-                                    }
-
+                                    {item?.attributes?.temple?.lat &&
+                                        item?.attributes?.temple?.long && (
+                                            <CustomMarker
+                                                setPadState={setPadState}
+                                                callback={() => {
+                                                    // setting the type of the marker you pressed
+                                                    // callback function for naving to page which has the temple details
+                                                    markerPressClbk(navigation, 7, item);
+                                                }}
+                                                flag={item?.attributes?.flag}
+                                                coordinate={{
+                                                    latitude: item?.attributes?.temple?.lat,
+                                                    longitude: item?.attributes?.temple?.long,
+                                                }}
+                                                keyName={'COORDINATE'}
+                                            />
+                                        )}
                                 </>
-                            ))
-                        }
+                            ))}
                     </MapView>
                 ) : null}
 
@@ -419,7 +419,7 @@ export const Temples = ({ navigation, route }) => {
                 <Text>{JSON.stringify(userLocation)}</Text>
             </View> */}
 
-                <AnimatedRightSideView heading={'Map Legend'} RightIcon={<MapIconSVG />}>
+                <AnimatedRightSideView heading={t('Map Legend')} RightIcon={<MapIconSVG />}>
                     <InnerContextOfAnimatedSideBox />
                 </AnimatedRightSideView>
                 {permissionGranted === 'granted' ? (

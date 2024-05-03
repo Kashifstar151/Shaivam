@@ -9,7 +9,7 @@ import LocationPointer from '../../../assets/Images/Temple/location9.svg';
 import VaippuSthalamTemple from '../../../assets/Images/Temple/VaippuSthalamTemple.svg';
 const assetMapWithTempleType = {
     1: {
-        fullName: 'Jyotirlingas/Thirumurai Temples',
+        fullName: 'Jyotirlinga/Thirumurai Temples',
         name: 'Thirumurai Temple',
         content:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magnam.',
@@ -121,7 +121,7 @@ export const templesDetailsArray = [
     {
         templeName: 'Brahmalingeshwara',
         flag: 1,
-        templeType: 'Jyotirlingas/Thirumurai Temples', //assume it exit else we will use the flag
+        templeType: 'Jyotirlinga/Thirumurai Temples', //assume it exit else we will use the flag
         coordinate: {
             latitude: '26.868851939300207',
             longitude: '80.91296407698843',
@@ -130,7 +130,7 @@ export const templesDetailsArray = [
     {
         templeName: 'ABC 2',
         flag: 1,
-        templeType: 'Jyotirlingas/Thirumurai Temples', //assume it exit else we will use the flag
+        templeType: 'Jyotirlinga/Thirumurai Temples', //assume it exit else we will use the flag
         coordinate: {
             latitude: '26.930425830077297',
             longitude: '75.83036421715398',
@@ -139,7 +139,7 @@ export const templesDetailsArray = [
     {
         templeName: 'ABC 3',
         flag: 1,
-        templeType: 'Jyotirlingas/Thirumurai Temples', //assume it exit else we will use the flag
+        templeType: 'Jyotirlinga/Thirumurai Temples', //assume it exit else we will use the flag
         coordinate: {
             latitude: '31.103203252213753',
             longitude: '77.18339602394508',
@@ -148,7 +148,7 @@ export const templesDetailsArray = [
     {
         templeName: 'ABC 4',
         flag: 1,
-        templeType: 'Jyotirlingas/Thirumurai Temples', //assume it exit else we will use the flag
+        templeType: 'Jyotirlinga/Thirumurai Temples', //assume it exit else we will use the flag
         coordinate: {
             latitude: '11.422450392586484',
             longitude: '76.711616397577347',

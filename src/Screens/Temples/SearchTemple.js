@@ -5,11 +5,12 @@ import SearchSVG from '../../components/SVGs/SearchSVG';
 import { useNavigation } from '@react-navigation/core';
 import BackBtnSvg from '../../components/SVGs/BackBtnSvg';
 import { StackActions } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 const SearchTemple = ({ route, value, isNavigable }) => {
     const [searchText, setSearchText] = useState('');
     const navigation = useNavigation();
-
+    const { t } = useTranslation();
     const navigator = (name, data) => {
         navigation.navigate(name, data);
     };
@@ -43,7 +44,7 @@ const SearchTemple = ({ route, value, isNavigable }) => {
                 </Pressable>
             )}
             <TextInput
-                placeholder="Search for any temple"
+                placeholder={t('Search for any temple')}
                 placeholderTextColor={'#777777'}
                 style={{ color: '#777777' }}
                 value={searchText}
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         elevation: 5,
         flex: 1,
-        height: 45
+        height: 45,
     },
 });
 

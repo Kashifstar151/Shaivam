@@ -193,7 +193,7 @@ const TempleDetails = ({ navigation }) => {
                                 dataSet={{
                                     templeName: 'Brahmalingeshwara',
                                     flag: 1,
-                                    templeType: 'Jyotirlingas/Thirumurai Temples',
+                                    templeType: 'Jyotirlinga/Thirumurai Temples',
                                     coordinate: {
                                         latitude: '26.868851939300207',
                                         longitude: '80.91296407698843',

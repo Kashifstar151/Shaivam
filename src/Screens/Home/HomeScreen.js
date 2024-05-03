@@ -34,6 +34,7 @@ import OmChanting from './OmChanting';
 import { colors } from '../../Helpers';
 import ListAudios from '../Thrimurai/ThrimuraiList/ListAudios';
 import { usePlayer } from '../../Context/PlayerContext';
+import { useTranslation } from 'react-i18next';
 
 const HomeScreen = ({ navigation }) => {
     const RBSheetRef = useRef(null);
@@ -177,6 +178,7 @@ const HomeScreen = ({ navigation }) => {
             address: 'Kanakapura road, Banglore',
         },
     ];
+    const { t } = useTranslation();
     const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
     const [screenHeight, setScreenheight] = useState(Dimensions.get('window').height);
     const [orientation, setOrientation] = useState('PORTRAIT');
@@ -246,7 +248,7 @@ const HomeScreen = ({ navigation }) => {
                             color: theme.textColor,
                         }}
                     >
-                        Songs & Audios
+                        {t('Songs & Audios')}
                     </Text>
                     <View>
                         <FlatList
@@ -293,7 +295,7 @@ const HomeScreen = ({ navigation }) => {
                                                 fontWeight: '700',
                                             }}
                                         >
-                                            {item}
+                                            {t(`${item}`)}
                                         </Text>
                                     </View>
                                     {selectedPlaylistType === item &&
@@ -402,7 +404,7 @@ const HomeScreen = ({ navigation }) => {
                                         color: '#fff',
                                     }}
                                 >
-                                    Shaivam Playlists
+                                    {t('Shaivam Playlists')}
                                 </Text>
                                 <Text
                                     style={{
@@ -412,7 +414,7 @@ const HomeScreen = ({ navigation }) => {
                                         color: '#fff',
                                     }}
                                 >
-                                    We have created playlists for you
+                                    {t('We have created playlists for you')}
                                 </Text>
                             </View>
                             <Pressable style={{ flexDirection: 'row' }}>
@@ -422,7 +424,7 @@ const HomeScreen = ({ navigation }) => {
                                         color: '#fff',
                                     }}
                                 >
-                                    View all
+                                    {t('View all')}
                                 </Text>
                                 <Icon name="arrow-right-alt" color={'#FFFFFF'} size={24} />
                             </Pressable>
@@ -469,7 +471,7 @@ const HomeScreen = ({ navigation }) => {
                 <View style={{ paddingBottom: 15, paddingHorizontal: 15 }}>
                     <HeadingAndView
                         viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
-                        title={'Upcoming Festivals'}
+                        title={t('Upcoming Festivals')}
                         theme={{ textColor: theme.textColor, colorscheme: theme.colorscheme }}
                         onPress={() => {}}
                     />
@@ -514,7 +516,7 @@ const HomeScreen = ({ navigation }) => {
                 <View style={{ padding: 15 }}>
                     <HeadingAndView
                         viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
-                        title={'Nearby Temples'}
+                        title={t('Nearby Temples')}
                         onPress={() => {}}
                         theme={{
                             textColor: theme.textColor,
@@ -556,7 +558,7 @@ const HomeScreen = ({ navigation }) => {
             >
                 <HeadingAndView
                     viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
-                    title={'App Walkthrough Videos '}
+                    title={t('App Walkthrough Videos')}
                     // todos : add the fn that take it to the dedicated video page
                     onPress={() => {}}
                     theme={{

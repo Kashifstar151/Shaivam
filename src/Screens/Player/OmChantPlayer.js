@@ -6,6 +6,7 @@ import AudioIcon from '../../assets/Images/7703676 1.svg';
 import { usePlayer } from '../../Context/PlayerContext';
 import { colors } from '../../Helpers';
 import { addTracks, setupPlayer } from '../../navigation/BottomTab/OmChantPlayerTrack';
+import { useTranslation } from 'react-i18next';
 
 const OmChantPlayer = () => {
     const playbackState = usePlaybackState();
@@ -96,6 +97,8 @@ const OmChantPlayer = () => {
         TrackPlayer.pause();
         clearTheRef();
     };
+
+    const { t } = useTranslation();
     return (
         <View
             style={{
@@ -133,7 +136,7 @@ const OmChantPlayer = () => {
             </View>
             <View>
                 <Text style={{ color: 'white', fontWeight: '700' }}>
-                    Om Namah Shivaya Chant (Loop)
+                    {t('Om Namah Shivaya Chant')} (Loop)
                 </Text>
                 <Text style={{ color: 'white' }}>
                     {formatSeconds(timeRemaining / 1000)}/{formatSeconds(OmPlayTiming / 1000)}

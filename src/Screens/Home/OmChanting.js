@@ -5,6 +5,7 @@ import Feather from 'react-native-vector-icons/dist/Feather';
 import OMIcon from '../../assets/Images/om 2.svg';
 import ButtonComp from '../Temples/Common/ButtonComp';
 import { usePlayer } from '../../Context/PlayerContext';
+import { useTranslation } from 'react-i18next';
 
 const OmChanting = ({ close, setOmPlayTiming }) => {
     // console.log("🚀 ~ OmChanting ~ setPaused:", setPaused)
@@ -16,6 +17,7 @@ const OmChanting = ({ close, setOmPlayTiming }) => {
         setShowPlayer(true);
         close.current.close();
     };
+    const { t } = useTranslation();
     return (
         <>
             {showTimer ? (
@@ -30,13 +32,13 @@ const OmChanting = ({ close, setOmPlayTiming }) => {
                     }}
                 >
                     <View style={styles.topConatiner}>
-                        <Text style={styles.title}>Om Namah Shivaya Chant</Text>
+                        <Text style={styles.title}>{t('Om Namah Shivaya Chant')}</Text>
                         <TouchableOpacity style={styles.iconContainer}>
                             <Feather name="x" size={26} />
                         </TouchableOpacity>
                     </View>
                     <View style={{ marginVertical: 20 }}>
-                        <Text style={styles.text}>Set Om Timer</Text>
+                        <Text style={styles.text}>{t('Set Om Timer')}</Text>
                         <Text
                             style={{ color: '#777777', fontSize: 12, fontFamily: 'Mulish-Regular' }}
                         >
@@ -92,7 +94,7 @@ const OmChanting = ({ close, setOmPlayTiming }) => {
                                     color: '#222222',
                                 }}
                             >
-                                Minutes
+                                {t('Minutes')}
                             </Text>
                         </View>
                         <TouchableOpacity
@@ -112,7 +114,11 @@ const OmChanting = ({ close, setOmPlayTiming }) => {
                         </TouchableOpacity>
                     </View>
                     <View style={{ position: 'absolute', bottom: 10, alignSelf: 'center' }}>
-                        <ButtonComp color={true} text="Continue" navigation={() => onSubmit()} />
+                        <ButtonComp
+                            color={true}
+                            text={t('Continue')}
+                            navigation={() => onSubmit()}
+                        />
                     </View>
                 </View>
             ) : (
@@ -136,7 +142,7 @@ const OmChanting = ({ close, setOmPlayTiming }) => {
                         <OMIcon />
                     </View>
                     <Text style={{ fontSize: 20, color: '#222222', fontFamily: 'Mulish-Bold' }}>
-                        Om Namah Shivaya Chant
+                        {t('Om Namah Shivaya Chant')}
                     </Text>
                     <Text
                         style={{
@@ -148,12 +154,13 @@ const OmChanting = ({ close, setOmPlayTiming }) => {
                             textAlign: 'center',
                         }}
                     >
-                        {`Here, you can set a timer for your Om meditation. \n This can be changed later in the More options`}
+                        {`${t('Here, you can set a timer for your Om meditation.')} \n 
+                        ${t('This can be changed later in the More options')}`}
                     </Text>
                     <View style={{ position: 'absolute', bottom: 10 }}>
                         <ButtonComp
                             color={true}
-                            text="Continue"
+                            text={t('Continue')}
                             navigation={() => setShowTimer(true)}
                         />
                     </View>
