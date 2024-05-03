@@ -34,7 +34,7 @@ import InnerContextOfAnimatedSideBox from './InnerContextOfAnimatedSideBox.js';
 import MapIconSVG from '../../components/SVGs/MapIconSVG.js';
 import { categoryBtnClbk, markerPressClbk } from './CallBacksForClick.js';
 import SearchTemple from './SearchTemple.js';
-import { CustomMarker } from './CustomMarker.js';
+import { CustomMarker, MarkerCallOut } from './CustomMarker.js';
 import { ThemeContext } from '../../Context/ThemeContext.js';
 import { openSettings, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { BlurView } from '@react-native-community/blur';
@@ -186,11 +186,13 @@ export const Temples = ({ navigation, route }) => {
             setShowModal(!showModal);
         } else if (state === RESULTS.GRANTED) {
             getCurrentLocation((val) => {
+                mapRef.current?.animateCamera({ center: val }, { duration: 1000 });
                 setUserLocation((prev) => ({ ...prev, ...val }));
                 setRegionCoordinate((prev) => ({ ...prev, ...val }));
             });
 
             getCurrentLocationWatcher((val) => {
+                mapRef.current?.animateCamera({ center: val }, { duration: 1000 });
                 setUserLocation((prev) => ({ ...prev, ...val }));
                 // setRegionCoordinate((prev) => ({ ...prev, ...val }))
             });
@@ -203,6 +205,7 @@ export const Temples = ({ navigation, route }) => {
         let theCurrentPermission = await checkPermissionAccess(permissionTypeRef.current);
         if (theCurrentPermission === RESULTS.GRANTED) {
             setPermissionGranted(() => RESULTS.GRANTED);
+            mapRef.current?.animateCamera({ center: userLocation }, { duration: 1000 });
             setRegionCoordinate((prev) => ({
                 ...prev,
                 // latitude: 28.5002,
@@ -283,6 +286,7 @@ export const Temples = ({ navigation, route }) => {
     }, [regionCoordinate]);
 
     const { t } = useTranslation();
+    const mapRef = useRef();
 
     return (
         <>
@@ -308,26 +312,34 @@ export const Temples = ({ navigation, route }) => {
                         onRegionChangeComplete={(args, gesture) => {
                             if (gesture.isGesture) {
                                 onRegionChangeCompleteCallback(args, (input) => {
+                                    console.log('the gesture is true');
+                                    mapRef.current?.animateCamera(
+                                        { center: input },
+                                        { duration: 1000 }
+                                    );
                                     setRegionCoordinate(input);
                                 });
                             }
                         }}
-                        region={regionCoordinate}
-                        zoomEnabled
+                        // region={regionCoordinate}
+                        // zoomEnabled
+                        ref={mapRef}
                     >
                         {permissionGranted === RESULTS.GRANTED && (
                             <View>
-                                <CustomMarker
+                                <MarkerCallOut
                                     setPadState={setPadState}
                                     flag={8}
                                     coordinate={userLocation}
                                     keyName={'USER_LOCATION_MARKER'}
+                                    description={"User's location"}
                                 />
-                                <CustomMarker
+                                <MarkerCallOut
                                     setPadState={setPadState}
                                     flag={7}
                                     coordinate={regionCoordinate}
                                     keyName={'COORDINATE'}
+                                    description={"Region's location"}
                                 />
                             </View>
                         )}
@@ -336,7 +348,7 @@ export const Temples = ({ navigation, route }) => {
                                 <>
                                     {item?.attributes?.temple?.lat &&
                                         item?.attributes?.temple?.long && (
-                                            <CustomMarker
+                                            <MarkerCallOut
                                                 setPadState={setPadState}
                                                 callback={() => {
                                                     // setting the type of the marker you pressed
