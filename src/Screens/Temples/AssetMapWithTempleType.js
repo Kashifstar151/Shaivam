@@ -68,7 +68,7 @@ const assetMapWithTempleType = {
         Svg: <MuktiSthalamTemple />,
     },
     6: {
-        fullName: 'Unclear Temples',
+        fullName: 'Uncertain Temples',
         name: 'Unknown Temple',
         content:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sm.  dolor sit amet, consectetur adipiscing elit, sm.',

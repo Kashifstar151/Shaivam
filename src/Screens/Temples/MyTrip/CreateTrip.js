@@ -17,6 +17,7 @@ import LocationIcon from '../../../assets/Images/Group 14100.svg';
 import Slider from '@kashifum8299/react-native-slider';
 import Button from '../Common/Button';
 import { RouteTexts } from '../../../navigation/RouteText';
+import { useTranslation } from 'react-i18next';
 // import { gStyles } from "../../../Helpers";
 
 const CreateTrip = ({ navigation }) => {
@@ -29,6 +30,7 @@ const CreateTrip = ({ navigation }) => {
         { name: 'Temples', color: '#6EDB00' },
         { name: 'Unclear Temples', color: '#A5A5A5' },
     ];
+    const { t } = useTranslation();
     return (
         <View style={{ flex: 1 }}>
             <ScrollView style={{ flex: 1 }}>
@@ -106,7 +108,7 @@ const CreateTrip = ({ navigation }) => {
                                         }}
                                     ></View>
                                     <Text style={{ color: '#222222', fontFamily: 'Mulish-Bold' }}>
-                                        {item.name}
+                                        {t(`${item.name}`)}
                                     </Text>
                                 </View>
                                 <View
