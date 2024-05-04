@@ -126,7 +126,7 @@ const NearByTemples = ({ close, data, locationName, snapIndex, navigation }) => 
                         </Pressable>
                         <View style={{ flex: 1 }}>
                             <SearchContainerWithIcon>
-                                <SearchTemple isNavigable={false} />
+                                <SearchTemple isNavigable={false} isDisable={false} />
                             </SearchContainerWithIcon>
                         </View>
                     </View>

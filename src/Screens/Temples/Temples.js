@@ -370,7 +370,13 @@ export const Temples = ({ navigation, route }) => {
 
                 <View style={styles.topBarWrapper}>
                     <SearchContainerWithIcon>
-                        <SearchTemple route={route.name} value={null} isNavigable={true} />
+                        <SearchTemple
+                            route={route.name}
+                            value={null}
+                            isNavigable={false}
+                            isDisable={false}
+                            isAutoComplete={true}
+                        />
                     </SearchContainerWithIcon>
 
                     <View style={styles.colorContWrapper}>

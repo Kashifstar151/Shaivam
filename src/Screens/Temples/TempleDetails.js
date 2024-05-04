@@ -92,6 +92,8 @@ const TempleDetails = ({ navigation }) => {
                 appearsOnIndex={1}
                 disappearsOnIndex={0}
                 isNavigable={true}
+                isSearchFieldDisabled={true}
+                isSearchFieldDisabledInFullScreenMode={false}
                 routeName={route.name}
                 valueToBePreFilled={data?.attributes?.Name_of_the_place}
             >

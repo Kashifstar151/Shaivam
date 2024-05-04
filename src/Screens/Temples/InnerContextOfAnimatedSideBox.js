@@ -2,8 +2,10 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import templeMetaData from './AssetMapWithTempleType';
 import { categoryBtnClbk } from './CallBacksForClick';
+import { useTranslation } from 'react-i18next';
 
 const InnerContextOfAnimatedSideBox = ({ navigation }) => {
+    const { t } = useTranslation();
     return (
         <View style={{}}>
             {Object?.entries(templeMetaData).map(([key, value], indx) => {

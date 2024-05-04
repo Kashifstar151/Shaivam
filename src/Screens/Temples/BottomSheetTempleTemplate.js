@@ -18,6 +18,7 @@ const BottomSheetTempleTemplate = ({
         longitudeDelta: 0.0121,
         locationName: '',
     },
+
     showSearchBarWhenFullSize,
     initialIndexOfSize,
     snapPoints = ['10%', '50%', '95%'],
@@ -27,10 +28,14 @@ const BottomSheetTempleTemplate = ({
     routeName, //route.name
     valueToBePreFilled, //route.params?.data?.name ?? route.params?.searchText
     children,
-    data
+    data,
+
+    // for search field disabled
+    isSearchFieldDisabled,
+    isSearchFieldDisabledInFullScreenMode,
 }) => {
     const bottomSheetRef = useRef(null);
-    const [padState, setPadState] = useState(null)
+    const [padState, setPadState] = useState(null);
     const [snapIndex, setSnapIndex] = useState(0);
     const handleSheetChanges = useCallback((indx) => {
         console.log('handleSheetChanges', indx);
@@ -46,8 +51,7 @@ const BottomSheetTempleTemplate = ({
                 style={styles.map}
                 region={regionCoordinate}
             >
-                {
-                    data?.attributes?.temple?.lat && data?.attributes?.temple?.long &&
+                {data?.attributes?.temple?.lat && data?.attributes?.temple?.long && (
                     <CustomMarker
                         setPadState={setPadState}
                         callback={() => {
@@ -58,11 +62,11 @@ const BottomSheetTempleTemplate = ({
                         flag={9}
                         coordinate={{
                             latitude: data?.attributes?.temple?.lat,
-                            longitude: data?.attributes?.temple?.long
+                            longitude: data?.attributes?.temple?.long,
                         }}
                         keyName={'COORDINATE'}
                     />
-                }
+                )}
             </MapView>
             <View
                 style={{
@@ -71,13 +75,14 @@ const BottomSheetTempleTemplate = ({
                     padding: 20,
                 }}
             >
-                <SearchContainerWithIcon>
-                    <SearchTemple
-                        route={routeName}
-                        value={valueToBePreFilled}
-                        isNavigable={isNavigable}
-                    />
-                </SearchContainerWithIcon>
+                <SearchContainerWithIcon
+                    searchTempleProps={{
+                        route: routeName,
+                        value: valueToBePreFilled,
+                        isNavigable: isNavigable,
+                        isDisable: isSearchFieldDisabled,
+                    }}
+                />
             </View>
             <BottomSheet
                 ref={bottomSheetRef}
@@ -119,6 +124,7 @@ const BottomSheetTempleTemplate = ({
                             <SearchTemple
                                 route={routeName}
                                 value={valueToBePreFilled}
+                                isDisable={isSearchFieldDisabledInFullScreenMode}
                                 isNavigable={isNavigable}
                             />
                         </SearchContainerWithIcon>
