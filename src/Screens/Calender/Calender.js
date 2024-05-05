@@ -53,8 +53,10 @@ const Calender = ({ navigation }) => {
 
     const [eventCaetgory, setEventCategory] = useState(null);
     const [todaysEvent, setTodaysEvent] = useState(null);
+    const [weekEvent, setWeekEvent] = useState([])
     const { data, isLoading, isFetching, isSuccess, refetch } = useGetListQuery(selectMonth);
     console.log('🚀 ~ Calender ~ isSuccess:', isSuccess, isLoading);
+
     // console.log("🚀 ~ Calender ~ authState:", JSON.stringify(data?.data, 0, 2))
     useEffect(() => {
         if (isSuccess) {
@@ -63,7 +65,14 @@ const Calender = ({ navigation }) => {
                     setTodaysEvent(item);
                     // alert(true)
                 }
+                if (moment(item?.attributes?.start_date).get('W') == moment().get('W')) {
+                    setWeekEvent((prev) => [...prev, item])
+                    // console.log(item, 'this week events')
+                    // alert(true)
+
+                }
             });
+            console.log('weekevent', weekEvent)
             // You can also set state here to trigger a re-render if necessary
         }
     }, [data, isSuccess]);
@@ -80,43 +89,7 @@ const Calender = ({ navigation }) => {
             return () => bottomSheetRef.current?.close();
         }, [])
     );
-    // const eventData = [
-    //     {
-    //         date: { day: 'THU', dateNo: '06' },
-    //         title: 'முதல்-திருமுறை - Pradhosham',
-    //         timing: '8:00pm - 11:00pm',
-    //     },
-    //     {
-    //         date: { day: 'THU', dateNo: '06' },
-    //         title: 'முதல்-திருமுறை - Pradhosham',
-    //         timing: '8:00pm - 11:00pm',
-    //     },
-    //     {
-    //         date: { day: 'THU', dateNo: '06' },
-    //         title: 'முதல்-திருமுறை - Pradhosham',
-    //         timing: '8:00pm - 11:00pm',
-    //     },
-    //     {
-    //         date: { day: 'THU', dateNo: '06' },
-    //         title: 'முதல்-திருமுறை - Pradhosham',
-    //         timing: '8:00pm - 11:00pm',
-    //     },
-    //     {
-    //         date: { day: 'THU', dateNo: '06' },
-    //         title: 'முதல்-திருமுறை - Pradhosham',
-    //         timing: '8:00pm - 11:00pm',
-    //     },
-    //     {
-    //         date: { day: 'THU', dateNo: '06' },
-    //         title: 'முதல்-திருமுறை - Pradhosham',
-    //         timing: '8:00pm - 11:00pm',
-    //     },
-    //     {
-    //         date: { day: 'THU', dateNo: '06' },
-    //         title: 'முதல்-திருமுறை - Pradhosham',
-    //         timing: '8:00pm - 11:00pm',
-    //     },
-    // ];
+
     const [selectedHeader, setSelectedheader] = useState(data1[0]?.name);
     // const [selected, setSelected] = useState('2024-04-13');
     const marked = useMemo(() => {
@@ -374,12 +347,48 @@ const Calender = ({ navigation }) => {
                             </ElevatedCard>
                         </View>
                     )}
-                    <View style={{ paddingHorizontal: 20, marginVertical: 15 }}>
+                    {
+                        weekEvent?.length > 0 &&
+                        <>
+                            <View style={{ paddingHorizontal: 20, marginVertical: 15 }}>
+                                <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold', color: '#222222' }}>
+                                    This Week
+                                </Text>
+                            </View>
+                            <FlatList
+                                data={weekEvent}
+                                contentContainerStyle={{ paddingBottom: 10, }}
+                                renderItem={({ item, index }) => (
+                                    <ElevatedCard
+                                        navigation={() =>
+                                            navigation.navigate(RouteTexts.EVENT_DETAILS, {
+                                                item: item,
+                                            })}
+                                        theme={{ colorscheme: theme.colorscheme }}>
+                                        <EventCard
+                                            date={moment(item?.start_date).get('D')}
+                                            timing={`${moment(item?.attributes?.start_date).format(
+                                                'MMMM DD YYYY'
+                                            )} -${moment(item?.attributes?.end_date).format(
+                                                'MMMM DD YYYY'
+                                            )} `}
+                                            title={item?.attributes?.title}
+                                            item={item}
+                                            theme={{
+                                                textColor: theme.textColor,
+                                                colorscheme: theme.colorscheme,
+                                            }}
+                                        />
+                                    </ElevatedCard>
+                                )}
+                            />
+                        </>
+                    }
+                    <View style={{ paddingHorizontal: 20, marginVertical: 0 }}>
                         <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold', color: '#222222' }}>
                             This Month
                         </Text>
                     </View>
-
                     <FlatList
                         data={data?.data}
                         contentContainerStyle={{ paddingBottom: 100 }}
@@ -439,7 +448,7 @@ const Calender = ({ navigation }) => {
                                 closeSheet={() => bottomSheetRef.current.close()}
                             />
                         ) : (
-                            <LocationSelection />
+                            <LocationSelection calender={true} />
                         )}
                     </RBSheet>
                 </View>

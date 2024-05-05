@@ -5,13 +5,13 @@ import MaterialIcons from "react-native-vector-icons/dist/MaterialIcons";
 import { CustomButton } from "../../components/Buttons";
 import ButtonComp from "../Temples/Common/ButtonComp";
 import TrackBackToLocSVG from '../../components/SVGs/TrackBackToLocSVG';
-import { getTheLocationName } from "../../Helpers/GeolocationFunc";
+import { getCurrentLocation, getTheLocationName } from "../../Helpers/GeolocationFunc";
 import TextInputCom from "../Temples/Common/TextInputCom";
 import { TextInput } from "react-native-gesture-handler";
 import SearchInput from "../../components/SearchInput";
 import { colors } from "../../Helpers";
 
-const LocationSelection = () => {
+const LocationSelection = ({ calender }) => {
     // const [selectedEvent, setSelectedEvent] = useState(null)
     const [regionCoordinate, setRegionCoordinate] = useState({
         latitude: 28.500271,
@@ -54,6 +54,15 @@ const LocationSelection = () => {
         },
         [dragCoor.current]
     );
+    const fetchMyLocation = () => {
+        getCurrentLocation((val) => {
+            console.log("🚀 ~ getCurrentLocation ~ val:", val)
+            // alert(true)
+            // mapRef.current?.animateCamera({ center: val }, { duration: 1000 });
+            setUserLocation((prev) => ({ ...prev, ...val }));
+            setRegionCoordinate((prev) => ({ ...prev, ...val }));
+        });
+    }
     const data = [
         { name: 'Jayanagar, Bangalore' },
         { name: 'Vijayanagar, Mysore' },
@@ -90,10 +99,14 @@ const LocationSelection = () => {
             <CustomButton
                 svg={<TrackBackToLocSVG width={16} height={16} fill={'#C1554E'} />}
                 onPress={() => {
+                    if (calender) {
+                        fetchMyLocation()
+                    } else {
+                        dragCoor.current = { ...userLocation };
+                        fetchTheName(dragCoor.current);
+                        setRegionCoordinate((prev) => ({ ...prev, ...userLocation }));
+                    }
                     // write the function that we have used in the temple module to get the current location and set the name of the location in the near by place name
-                    dragCoor.current = { ...userLocation };
-                    fetchTheName(dragCoor.current);
-                    setRegionCoordinate((prev) => ({ ...prev, ...userLocation }));
                 }}
                 style={{
                     margin: 10,

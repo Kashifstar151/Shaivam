@@ -40,7 +40,7 @@ const EventCard = ({ date, timing, title, theme, item }) => {
             </View>
             <View style={{ height: 30, borderRightWidth: 1, borderRightColor: '#EAEAEA' }}></View>
             <OpenBookSVG fill={theme.colorscheme === 'light' ? '#4C3600' : '#fff'} />
-            <View style={{ rowGap: 5, justifyContent: 'center', rowGap: 4 }}>
+            <View style={{ rowGap: 5, justifyContent: 'center', rowGap: 4, width: '75%' }}>
                 <Text
                     style={{
                         fontWeight: '600',
@@ -49,7 +49,7 @@ const EventCard = ({ date, timing, title, theme, item }) => {
                         fontSize: RFValue(12, 800),
                     }}
                 >
-                    {title?.substring(0, 30)}
+                    {title}
                 </Text>
                 <Text
                     style={{
