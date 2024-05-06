@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Dimensions, Pressable, StyleSheet } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Dimensions, Keyboard, Modal, Pressable, StyleSheet } from 'react-native';
 import { View, Text, TextInput } from 'react-native';
 import SearchSVG from '../../components/SVGs/SearchSVG';
 import { useNavigation } from '@react-navigation/core';
@@ -10,15 +10,24 @@ import { useDebouncer } from '../../Helpers/useDebouncer';
 import getDimension from '../../Helpers/getDimension';
 import { ScrollView } from 'react-native-gesture-handler';
 
-const SearchTemple = ({ isAutoComplete, isDisable, route, value, isNavigable }) => {
+const SearchTemple = ({
+    setRegionCoordinate,
+    setMapInteractivityState,
+    isAutoComplete,
+    isDisable,
+    route,
+    value,
+    isNavigable,
+}) => {
     const [searchText, setSearchText] = useState('');
+    const [showSuggestion, setShowSuggestion] = useState('');
+    const [msg, setMsg] = useState('Please search for location');
     const navigation = useNavigation();
     const { t } = useTranslation();
     const navigator = (name, data) => {
         navigation.navigate(name, data);
     };
     const { screenWidth, screenHeight, orientation } = getDimension();
-
     const popAction = StackActions.pop();
 
     useEffect(() => {
@@ -42,18 +51,61 @@ const SearchTemple = ({ isAutoComplete, isDisable, route, value, isNavigable }) 
 
     const [fetchedLocationsName, setFetchedLocationsName] = useState([]);
     useEffect(() => {
-        searchResultData().then((response) => {
-            console.log(
-                'the response for the search of the place name is ========================== ==>',
-                response
-            );
+        if (debounceVal && triggerCall.current) {
+            searchResultData()
+                .then((response) => {
+                    console.log(
+                        'the response for the search of the place name is ========================== ==>',
+                        JSON.stringify(response, null, 2)
+                    );
 
-            setFetchedLocationsName((prev) => response);
-        });
+                    setFetchedLocationsName(() => response);
+                    setShowSuggestion(true);
+                })
+                .catch((error) => {
+                    console.log('some error occured ==>', error);
+                    setMsg('Error Occurred');
+                });
+        }
     }, [debounceVal]);
+    const triggerCall = useRef(true);
+
+    useEffect(() => {
+        if (setMapInteractivityState !== undefined) {
+            if (showSuggestion) {
+                setMapInteractivityState(false);
+            } else {
+                setMapInteractivityState(true);
+            }
+        }
+    }, [showSuggestion, setMapInteractivityState]);
+
+    const textInputRef = useRef();
+    const handleFocus = () => {
+        setShowSuggestion(true);
+    };
+
+    const handleBlur = () => {
+        setShowSuggestion(false);
+        textInputRef.current.blur();
+    };
+
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+            triggerCall.current = true;
+        });
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+            triggerCall.current = false;
+        });
+
+        return () => {
+            keyboardDidHideListener.remove();
+            keyboardDidShowListener.remove();
+        };
+    }, []);
 
     return (
-        <View style={{ flexGrow: 1 }}>
+        <View style={{ flexGrow: 1, zIndex: 9999 }}>
             <View
                 style={[
                     styles.wrapper,
@@ -74,13 +126,15 @@ const SearchTemple = ({ isAutoComplete, isDisable, route, value, isNavigable }) 
                     </Pressable>
                 )}
                 <TextInput
+                    ref={textInputRef}
                     placeholder={t('Search for any temple')}
                     placeholderTextColor={'#777777'}
-                    style={{ color: '#777777' }}
+                    style={{ color: '#777777', flex: 1 }}
                     value={searchText}
                     onChangeText={(val) => {
                         setSearchText(val);
                     }}
+                    onFocus={handleFocus}
                     editable={!isDisable}
                     onSubmitEditing={() => {
                         if (isNavigable) {
@@ -93,40 +147,66 @@ const SearchTemple = ({ isAutoComplete, isDisable, route, value, isNavigable }) 
                 />
             </View>
 
-            {isAutoComplete && (
-                <ScrollView
-                    style={{
-                        maxHeight: screenHeight * 0.5,
-                        backgroundColor: '#F3F3F3',
-                        position: 'absolute',
-                        top: 60,
-                        zIndex: 100,
-                        width: screenWidth - 40,
-                        borderRadius: 8,
-                        padding: 10,
-                        borderWidth: 1,
-                    }}
-                >
-                    {fetchedLocationsName.map((item, ind) => {
-                        return (
-                            <Pressable
-                                style={{
-                                    paddingVertical: 10,
-                                    borderBottomWidth: fetchedLocationsName[ind + 1] ? 1 : 0,
-                                    borderColor: '#33333333',
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        color: '#000',
-                                    }}
-                                >
-                                    {item.display_name}
-                                </Text>
-                            </Pressable>
-                        );
-                    })}
-                </ScrollView>
+            {isAutoComplete && showSuggestion && (
+                <>
+                    <Pressable
+                        style={{
+                            position: 'absolute',
+                            top: 60,
+                            zIndex: 100,
+                            width: screenWidth,
+                            height: screenHeight,
+                            marginLeft: -20,
+                        }}
+                        onPress={handleBlur}
+                    ></Pressable>
+                    <ScrollView
+                        style={{
+                            position: 'absolute',
+                            top: 60,
+                            zIndex: 100,
+                            width: screenWidth - 40,
+                            backgroundColor: '#F3F3F3',
+                            borderRadius: 8,
+                            padding: 10,
+                            borderWidth: 1,
+                            maxHeight: screenHeight * 0.5,
+                        }}
+                        keyboardShouldPersistTaps="handled"
+                    >
+                        {fetchedLocationsName.length ? (
+                            fetchedLocationsName.map((item, ind) => {
+                                return (
+                                    <Pressable
+                                        style={{
+                                            paddingVertical: 10,
+                                            borderBottomWidth: fetchedLocationsName[ind + 1]
+                                                ? 1
+                                                : 0,
+                                            borderColor: '#33333333',
+                                        }}
+                                        onPress={() => {
+                                            handleBlur();
+                                            triggerCall.current = false;
+                                            setSearchText(() => item.display_name);
+                                            setRegionCoordinate(item);
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: '#000',
+                                            }}
+                                        >
+                                            {item.display_name}
+                                        </Text>
+                                    </Pressable>
+                                );
+                            })
+                        ) : (
+                            <Text style={{ color: 'red' }}>{msg}</Text>
+                        )}
+                    </ScrollView>
+                </>
             )}
         </View>
     );
@@ -146,67 +226,3 @@ const styles = StyleSheet.create({
 });
 
 export default SearchTemple;
-
-/*
-import React, { useContext } from 'react';
-import { Dimensions, StyleSheet, TextInput, View } from 'react-native';
-import { colors } from '../Helpers';
-import { ThemeContext } from '../Context/ThemeContext';
-import { useTranslation } from 'react-i18next';
-const SearchInput = ({ placeholder, setState, state, color, setOnFocus, styleOverwrite }) => {
-    const { theme } = useContext(ThemeContext);
-    const { t } = useTranslation();
-    return (
-        <View
-            style={
-                color
-                    ? [
-                        styles.inputcontainer,
-                        {
-                            backgroundColor: '#F3F3F3',
-                            marginHorizontal: styleOverwrite?.marginHorizontalUnset ? 0 : 15,
-                            marginTop: styleOverwrite.paddingTop,
-                        },
-                    ]
-                    : [
-                        styles.inputcontainer,
-                        {
-                            backgroundColor: theme.searchBox.bgColor,
-                            marginHorizontal: styleOverwrite?.marginHorizontalUnset ? 0 : 15,
-                            marginTop: styleOverwrite?.paddingTop,
-                        },
-                    ]
-            }
-        >
-            <Icon name="search" size={28} color={color ? '#777777' : colors.grey1} />
-            <TextInput
-                onBlur={() => setOnFocus(false)}
-                onFocus={() => setOnFocus()}
-                placeholder={t(placeholder)}
-                onChangeText={(e) => setState(e)}
-                placeholderTextColor={theme.searchBox.textColor}
-                value={state}
-                style={{
-                    fontSize: 12,
-                    paddingHorizontal: 5,
-                    color: '#FF9D9D',
-                }}
-            />
-        </View>
-    );
-};
-export const styles = StyleSheet.create({
-    inputcontainer: {
-        borderRadius: 10,
-        paddingHorizontal: 10,
-        overflow: 'hidden',
-        height: 55,
-        marginBottom: 10,
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-});
-export default SearchInput;
-
-
-*/

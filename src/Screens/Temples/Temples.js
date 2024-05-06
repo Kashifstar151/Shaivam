@@ -55,7 +55,7 @@ export const Temples = ({ navigation, route }) => {
         locationName: '',
     });
     const { data, isSuccess } = useGetNearByTemplesQuery(regionCoordinate);
-    console.log('🚀 ~ Temples ~ data:', JSON.stringify(data?.data, 0, 2));
+    // console.log('🚀 ~ Temples ~ data:', JSON.stringify(data?.data, 0, 2));
 
     const [userLocation, setUserLocation] = useState({
         latitude: 28.500271,
@@ -287,6 +287,7 @@ export const Temples = ({ navigation, route }) => {
 
     const { t } = useTranslation();
     const mapRef = useRef();
+    const [mapInteractivityState, setMapInteractivityState] = useState(true);
 
     return (
         <>
@@ -322,7 +323,8 @@ export const Temples = ({ navigation, route }) => {
                             }
                         }}
                         // region={regionCoordinate}
-                        // zoomEnabled
+                        zoomEnabled={mapInteractivityState}
+                        scrollEnabled={mapInteractivityState}
                         ref={mapRef}
                     >
                         {permissionGranted === RESULTS.GRANTED && (
@@ -376,6 +378,23 @@ export const Temples = ({ navigation, route }) => {
                             isNavigable={false}
                             isDisable={false}
                             isAutoComplete={true}
+                            setRegionCoordinate={(item) => {
+                                mapRef.current?.animateCamera(
+                                    {
+                                        center: {
+                                            latitude: parseFloat(item.lat),
+                                            longitude: parseFloat(item.lon),
+                                        },
+                                    },
+                                    { duration: 1000 }
+                                );
+                                setRegionCoordinate((prev) => ({
+                                    ...prev,
+                                    latitude: parseFloat(item.lat),
+                                    longitude: parseFloat(item.lon),
+                                }));
+                            }}
+                            setMapInteractivityState={setMapInteractivityState}
                         />
                     </SearchContainerWithIcon>
 
