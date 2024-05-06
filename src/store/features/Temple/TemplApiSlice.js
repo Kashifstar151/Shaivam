@@ -5,7 +5,7 @@ const CalenderApiSlice = TempleApiSlice.injectEndpoints({
         getNearByTemples: builder.query({
             query: (date) => {
                 console.log(date, 'date from calender');
-                const url = `temples?temple[coords]=${date?.longitude},${date?.latitude},150000`;
+                const url = `?temple_coordinates[coords]=${date?.longitude},${date?.latitude}&pagination[pageSize]=200`;
                 console.log('🚀 ~ url:', url);
                 return {
                     url: url,

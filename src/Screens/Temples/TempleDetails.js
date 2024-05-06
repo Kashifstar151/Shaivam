@@ -30,6 +30,7 @@ import BottomSheetTempleTemplate from './BottomSheetTempleTemplate';
 import RenderHTML from 'react-native-render-html';
 import { ScrollView } from 'react-native-gesture-handler';
 import assetMapWithTempleType from './AssetMapWithTempleType';
+import { useTranslation } from 'react-i18next';
 
 const TempleDetails = ({ navigation }) => {
     const route = useRoute();
@@ -57,6 +58,7 @@ const TempleDetails = ({ navigation }) => {
         setFav(!fav);
     };
 
+    const { t } = useTranslation();
     const bottomSheetRef = useRef(null);
     const [snapIndex, setSnapIndex] = useState(0);
     const [modalVisible, setModalVisible] = useState(true);
@@ -90,6 +92,8 @@ const TempleDetails = ({ navigation }) => {
                 appearsOnIndex={1}
                 disappearsOnIndex={0}
                 isNavigable={true}
+                isSearchFieldDisabled={true}
+                isSearchFieldDisabledInFullScreenMode={false}
                 routeName={route.name}
                 valueToBePreFilled={data?.attributes?.Name_of_the_place}
             >
@@ -209,7 +213,7 @@ const TempleDetails = ({ navigation }) => {
                                         paddingVertical: 8,
                                     }}
                                 >
-                                    Basic Details
+                                    {t('Basic Details')}
                                 </Text>
                                 {Object.entries(details.basicDetails).map(([key, value], index) => (
                                     <KeyValueComp key={index} keyVal={key} value={value} />

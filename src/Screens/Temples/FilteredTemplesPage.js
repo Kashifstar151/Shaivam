@@ -135,6 +135,8 @@ const FilteredTemplesPage = ({ navigation, route }) => {
             routeName={route?.name}
             data={route?.params?.data}
             valueToBePreFilled={route?.params?.data?.name ?? route?.params?.searchText}
+            isSearchFieldDisabled={false}
+            isSearchFieldDisabledInFullScreenMode={false}
         >
             <ScrollView nestedScrollEnabled>
                 {templesDetailsArray.map((item, index) => (

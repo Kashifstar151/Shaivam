@@ -39,6 +39,7 @@ import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { useGetListQuery } from '../../store/features/Calender/CalenderApiSlice';
 import DatePickerCalender from './DatePickerCalender';
+import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
 }
@@ -54,8 +55,9 @@ const Calender = ({ navigation }) => {
     const [eventCaetgory, setEventCategory] = useState(null);
     const [todaysEvent, setTodaysEvent] = useState(null);
     const [weekEvent, setWeekEvent] = useState([])
-    const { data, isLoading, isFetching, isSuccess, refetch } = useGetListQuery(selectMonth);
-    console.log('🚀 ~ Calender ~ isSuccess:', isSuccess, isLoading);
+    const [selectedLocation, setSelectedLocation] = useState(null)
+    const { data, isLoading, isFetching, isSuccess, refetch } = useGetListQuery({ selectMonth, selectedLocation });
+    console.log('🚀 ~ Calender ~ isSuccess:', JSON.stringify(data?.data), refetch);
 
     // console.log("🚀 ~ Calender ~ authState:", JSON.stringify(data?.data, 0, 2))
     useEffect(() => {
@@ -67,15 +69,13 @@ const Calender = ({ navigation }) => {
                 }
                 if (moment(item?.attributes?.start_date).get('W') == moment().get('W')) {
                     setWeekEvent((prev) => [...prev, item])
-                    // console.log(item, 'this week events')
-                    // alert(true)
-
+                    console.log('this week events')
                 }
             });
-            console.log('weekevent', weekEvent)
+            // console.log('weekevent', weekEvent)
             // You can also set state here to trigger a re-render if necessary
         }
-    }, [data, isSuccess]);
+    }, [isSuccess, selectedLocation]);
     const bottomSheetRef = useRef(null);
     const [selectedFilter, setSelectedFilter] = useState(null);
     const [selectedEvent, setSelectedEvent] = useState(null);
@@ -287,11 +287,11 @@ const Calender = ({ navigation }) => {
                                 />
                             </TouchableOpacity>
                             <TouchableOpacity
-                                onPress={() => selectFilter('Location')}
+                                onPress={() => selectedLocation !== null ? setSelectedLocation(null) : selectFilter('Location')}
                                 style={{
                                     marginHorizontal: 15,
                                     flexDirection: 'row',
-                                    borderColor: 'rgba(229, 229, 229, 1)',
+                                    borderColor: selectedLocation !== null ? '#C1554E' : 'rgba(229, 229, 229, 1)',
                                     borderWidth: 1,
                                     borderRadius: 20,
                                     height: 30,
@@ -300,12 +300,21 @@ const Calender = ({ navigation }) => {
                                     paddingHorizontal: 10,
                                 }}
                             >
-                                <Text style={styles.filtertext}>Location</Text>
-                                <MaterialIcons
+                                <Text style={styles.filtertext}>{selectedLocation !== null ? selectedLocation?.name : 'Location'}</Text>
+                                {
+                                    selectedLocation !== null ? <AntDesign name="close"
+                                        size={20}
+                                        color="rgba(119, 119, 119, 1)" /> : <MaterialIcons
+                                        name="keyboard-arrow-down"
+                                        size={20}
+                                        color="rgba(119, 119, 119, 1)"
+                                    />
+                                }
+                                {/* <MaterialIcons
                                     name="keyboard-arrow-down"
                                     size={20}
                                     color="rgba(119, 119, 119, 1)"
-                                />
+                                /> */}
                             </TouchableOpacity>
                         </View>
                     )}
@@ -448,7 +457,7 @@ const Calender = ({ navigation }) => {
                                 closeSheet={() => bottomSheetRef.current.close()}
                             />
                         ) : (
-                            <LocationSelection calender={true} />
+                            <LocationSelection calender={true} setSelected={setSelectedLocation} close={bottomSheetRef} />
                         )}
                     </RBSheet>
                 </View>

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/dist/SimpleLineIcons";
 import MaterialIcons from "react-native-vector-icons/dist/MaterialIcons";
@@ -10,9 +10,12 @@ import TextInputCom from "../Temples/Common/TextInputCom";
 import { TextInput } from "react-native-gesture-handler";
 import SearchInput from "../../components/SearchInput";
 import { colors } from "../../Helpers";
+import { useDebouncer } from "../../Helpers/useDebouncer";
+import { useGetListQuery } from "../../store/features/Calender/CalenderApiSlice";
 
-const LocationSelection = ({ calender }) => {
+const LocationSelection = ({ calender, setSelected, close }) => {
     // const [selectedEvent, setSelectedEvent] = useState(null)
+
     const [regionCoordinate, setRegionCoordinate] = useState({
         latitude: 28.500271,
         longitude: 77.387901,
@@ -36,6 +39,7 @@ const LocationSelection = ({ calender }) => {
         name: '',
         displayName: '',
     });
+    const [searchedText, setSearchText] = useState('')
     const fetchTheName = useCallback(
         async (coors) => {
             // console.log('the location fetch enters  ');
@@ -54,6 +58,27 @@ const LocationSelection = ({ calender }) => {
         },
         [dragCoor.current]
     );
+    const [fetchLocationName, setFetchedLocationsName] = useState(null)
+    const debounceVal = useDebouncer(searchedText, 500);
+    const searchResultData = async () =>
+        await fetch(
+            `https://nominatim.openstreetmap.org/search?format=json&q=${debounceVal}&accept-language=en`,
+            {
+                method: 'GET',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                }),
+            }
+        ).then((res) => res.json());
+    useEffect(() => {
+        searchResultData().then((response) => {
+            console.log(
+                'the response for the search of the place name is ========================== ==>',
+                response
+            );
+            setFetchedLocationsName((prev) => response);
+        });
+    }, [debounceVal]);
     const fetchMyLocation = () => {
         getCurrentLocation((val) => {
             console.log("🚀 ~ getCurrentLocation ~ val:", val)
@@ -71,28 +96,31 @@ const LocationSelection = ({ calender }) => {
         { name: 'Uzhavarappani' },
         { name: 'Location 5' },
     ]
+    const selectionHandler = (item) => {
+        console.log("🚀 ~ selectionHandler ~ item:", JSON.stringify(item, 0, 2))
+        setSelected(item)
+        close?.current?.close()
+    }
+
     const rednerItem = (item, index) => (
-        <View style={{ height: 40, flexDirection: 'row', alignItems: 'center' }}>
+        <TouchableOpacity style={{ height: 40, flexDirection: 'row', alignItems: 'center' }} activeOpacity={0.5} onPress={() => selectionHandler(item)}>
             <Icon name='location-pin' size={16} color={'rgba(34, 34, 34, 1)'} />
             <Text style={{ color: 'rgba(34, 34, 34, 1)', fontFamily: 'Mulish-Regular', marginHorizontal: 20 }}>{item?.name}</Text>
-            {/* <TouchableOpacity onPress={() => setSelectedEvent(item)} style={selectedEvent?.name == item?.name ? [styles.texIContContainer, { backgroundColor: '#C1554E' }] : styles.texIContContainer}> */}
-
-            {/* </TouchableOpacity> */}
-        </View>
+        </TouchableOpacity>
     )
     return (
         <View style={{ paddingHorizontal: 0, }}>
             <Text style={styles.headingText}>Search By Location</Text>
             <View style={{ paddingHorizontal: 20, flexDirection: "row", alignItems: 'center', borderRadius: 10, alignSelf: 'center', backgroundColor: '#F3F3F3', height: 55, width: Dimensions.get('window').width - 30 }}>
                 <MaterialIcons name="search" size={28} color={colors.grey4} />
-                <TextInput placeholder="Search for locations" placeholderTextColor={colors.grey5} />
+                <TextInput placeholder="Search for locations" placeholderTextColor={colors.grey5} onChangeText={(e) => setSearchText(e)} />
             </View>
             {/* <SearchInput color={true} styleOverwrite={{ marginHorizontalUnset: 20 }} /> */}
             <View style={{ paddingHorizontal: 20 }}>
                 <Text style={{ color: '#C1554E', fontSize: 16, fontFamily: 'Mulish-Bold' }}>Most Searched Location</Text>
                 <Text style={{ color: '#666666', fontFamily: 'Mulish-Regular', fontSize: 12 }}>Lorem ipsum dolor set</Text>
             </View>
-            <FlatList contentContainerStyle={{ paddingHorizontal: 20 }} data={data} renderItem={({ item, index }) => (
+            <FlatList contentContainerStyle={{ paddingHorizontal: 20 }} data={fetchLocationName} renderItem={({ item, index }) => (
                 rednerItem(item, index)
             )} />
             {/* <TouchableOpacity > */}

@@ -13,11 +13,13 @@ import Icon from 'react-native-vector-icons/dist/Feather';
 import { ThemeContext } from '../../../Context/ThemeContext';
 import { RouteTexts } from '../../../navigation/RouteText';
 import SelectErrorPage from './SelectErrorPage';
+import { useTranslation } from 'react-i18next';
 
 const SpottingErrorPage = ({ setModalVisible, navigation }) => {
     const [selectedMessage, setSelectedMessage] = useState(null);
     const theme = useColorScheme(ThemeContext);
     const [showSubmitPage, setShowSubmit] = useState(false);
+    const { t } = useTranslation();
     const errormessages = [
         { id: 1, name: 'Incorrect Temple Details' },
         { id: 2, name: 'Wrong temple locations' },
@@ -92,7 +94,7 @@ const SpottingErrorPage = ({ setModalVisible, navigation }) => {
                     </View>
                     <View style={{ paddingHorizontal: 20 }}>
                         <Text style={[styles.submitText, { color: theme.textColor }]}>
-                            Submit Images
+                            {t('Submit Images')}
                         </Text>
                         <Text style={[styles.descriptionText, { color: theme.textColor }]}>
                             You can submit images for this temple

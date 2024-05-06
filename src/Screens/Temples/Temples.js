@@ -55,7 +55,7 @@ export const Temples = ({ navigation, route }) => {
         locationName: '',
     });
     const { data, isSuccess } = useGetNearByTemplesQuery(regionCoordinate);
-    console.log('🚀 ~ Temples ~ data:', JSON.stringify(data?.data, 0, 2));
+    console.log('🚀 ~ Temples ~ data:', JSON.stringify(data?.data?.length, 0, 2));
 
     const [userLocation, setUserLocation] = useState({
         latitude: 28.500271,
@@ -302,25 +302,25 @@ export const Temples = ({ navigation, route }) => {
                             }, 5000)
                         }
                         provider={PROVIDER_GOOGLE}
-                        initialRegion={{
-                            longitude: 77.40369287235171,
-                            latitude: 28.49488467262243,
-                            latitudeDelta: 0.015,
-                            longitudeDelta: 0.0121,
-                        }}
+                        // initialRegion={{
+                        //     longitude: 77.40369287235171,
+                        //     latitude: 28.49488467262243,
+                        //     latitudeDelta: 0.015,
+                        //     longitudeDelta: 0.0121,
+                        // }}
                         style={styles.map}
-                        onRegionChangeComplete={(args, gesture) => {
-                            if (gesture.isGesture) {
-                                onRegionChangeCompleteCallback(args, (input) => {
-                                    console.log('the gesture is true');
-                                    mapRef.current?.animateCamera(
-                                        { center: input },
-                                        { duration: 1000 }
-                                    );
-                                    setRegionCoordinate(input);
-                                });
-                            }
-                        }}
+                        // onRegionChangeComplete={(args, gesture) => {
+                        //     if (gesture.isGesture) {
+                        //         onRegionChangeCompleteCallback(args, (input) => {
+                        //             console.log('the gesture is true');
+                        //             mapRef.current?.animateCamera(
+                        //                 { center: input },
+                        //                 { duration: 1000 }
+                        //             );
+                        //             setRegionCoordinate(input);
+                        //         });
+                        //     }
+                        // }}
                         // region={regionCoordinate}
                         // zoomEnabled
                         ref={mapRef}
@@ -334,20 +334,20 @@ export const Temples = ({ navigation, route }) => {
                                     keyName={'USER_LOCATION_MARKER'}
                                     description={"User's location"}
                                 />
-                                <MarkerCallOut
+                                {/* <MarkerCallOut
                                     setPadState={setPadState}
                                     flag={7}
                                     coordinate={regionCoordinate}
                                     keyName={'COORDINATE'}
                                     description={"Region's location"}
-                                />
+                                /> */}
                             </View>
                         )}
                         {data?.data?.length &&
                             data?.data?.map((item, index) => (
                                 <>
-                                    {item?.attributes?.temple?.lat &&
-                                        item?.attributes?.temple?.long && (
+                                    {item?.attributes?.temple_coordinates?.lat &&
+                                        item?.attributes?.temple_coordinates?.long && (
                                             <MarkerCallOut
                                                 setPadState={setPadState}
                                                 callback={() => {
@@ -355,10 +355,10 @@ export const Temples = ({ navigation, route }) => {
                                                     // callback function for naving to page which has the temple details
                                                     markerPressClbk(navigation, 7, item);
                                                 }}
-                                                flag={item?.attributes?.flag}
+                                                flag={item?.attributes?.Flag}
                                                 coordinate={{
-                                                    latitude: item?.attributes?.temple?.lat,
-                                                    longitude: item?.attributes?.temple?.long,
+                                                    latitude: item?.attributes?.temple_coordinates?.lat,
+                                                    longitude: item?.attributes?.temple_coordinates?.long,
                                                 }}
                                                 keyName={'COORDINATE'}
                                             />
@@ -370,7 +370,13 @@ export const Temples = ({ navigation, route }) => {
 
                 <View style={styles.topBarWrapper}>
                     <SearchContainerWithIcon>
-                        <SearchTemple route={route.name} value={null} isNavigable={true} />
+                        <SearchTemple
+                            route={route.name}
+                            value={null}
+                            isNavigable={false}
+                            isDisable={false}
+                            isAutoComplete={true}
+                        />
                     </SearchContainerWithIcon>
 
                     <View style={styles.colorContWrapper}>

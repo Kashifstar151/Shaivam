@@ -12,11 +12,9 @@ import {
     Platform,
 } from 'react-native';
 import Slider from '@kashifum8299/react-native-slider';
-import ShuffleIcon from '../../assets/Images/music (1).svg';
 import Icon from 'react-native-vector-icons/dist/AntDesign';
 import FavouriteIcon from '../../assets/Images/Vector (2).svg';
 import MusicIcon from '../../assets/Images/MusicPlayer.svg';
-// import RNFetchBlob from 'rn-fetch-blob';
 import * as RNFS from 'react-native-fs';
 import TrackPlayer, {
     AppKilledPlaybackBehavior,
@@ -29,8 +27,6 @@ import TrackPlayer, {
     useActiveTrack,
     useProgress,
 } from 'react-native-track-player';
-// import { getSqlData } from '../Database';
-import { useIsFocused } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
 import {
     AddMostPlayed,
@@ -46,6 +42,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import { colors } from '../../Helpers';
 import AlertScreen from '../../components/AlertScreen';
+import ShuffleSVG from '../../components/SVGs/ShuffleSVG';
 
 const RenderAudios = ({ item, index, clb, activeTrack, setSelectedOdhuvar }) => {
     const setItemForPlayer = (item) => {
@@ -555,11 +552,11 @@ const AudioPlayer = ({
                         >
                             {repeatMode == 1 ? (
                                 <TouchableOpacity onPress={() => getMode(0)}>
-                                    <MaterialIcons name="shuffle" size={24} />
+                                    <MaterialIcons name="shuffle" size={24} color={'#fff'} />
                                 </TouchableOpacity>
                             ) : (
                                 <TouchableOpacity onPress={() => getMode(2)}>
-                                    <ShuffleIcon />
+                                    <ShuffleSVG fill={'#fff'} />
                                 </TouchableOpacity>
                             )}
 
