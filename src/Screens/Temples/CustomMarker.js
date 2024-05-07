@@ -32,7 +32,7 @@ export const MarkerCallOut = ({ callback, flag, coordinate, description }) => {
                             color: 'white',
                         }}
                     >
-                        {description ?? 'Sorry no data available'}
+                        {description ? description : 'Sorry no data available'}
                     </Text>
                 </View>
                 <View

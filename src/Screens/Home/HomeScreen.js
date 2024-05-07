@@ -424,7 +424,7 @@ const HomeScreen = ({ navigation }) => {
                                         color: '#fff',
                                     }}
                                 >
-                                    {t('View all')}
+                                    {t('View All')}
                                 </Text>
                                 <Icon name="arrow-right-alt" color={'#FFFFFF'} size={24} />
                             </Pressable>
