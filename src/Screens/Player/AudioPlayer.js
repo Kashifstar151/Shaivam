@@ -186,7 +186,7 @@ const AudioPlayer = ({
     useEffect(() => {
         (async () => {
             if (playBackState.state === 'ready') {
-                await TrackPlayer.play();
+                // await TrackPlayer.play();
                 mostPlayed();
             } else if (playBackState.state !== 'playing') {
                 setPaused(false);
