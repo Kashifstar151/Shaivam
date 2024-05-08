@@ -101,16 +101,25 @@ const AudioPlayer = ({
     isFav,
     activeTrack,
 }) => {
-    // console.log('the render of page =>', repeatMode);
-
-    // const [oprateMostPlayed, setOprateMostPlayed] = useState(0)
     useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], async (event) => {
         if (event?.state == State?.nextTrack) {
             let index = await TrackPlayer.getActiveTrack();
-            // console.log("🚀 ~ useTrackPlayerEvents ~ index:", index)
+            // console.log('🚀 ~ useTrackPlayerEvents ~ index:', index);
             const newObj = { ...activeTrack, prevId: prevId };
             console.log('🚀 ~ useTrackPlayerEvents ~ newObj:', newObj);
             updateRecentlyPlayed(newObj);
+
+            // done the change when song completes the padikam gets changed (tricked)
+            const activeTrack = await TrackPlayer.getActiveTrack();
+
+            if (
+                activeTrack?.url &&
+                duration !== 0 &&
+                new Date(position * 1000).toISOString().substring(14, 19) ===
+                    new Date(duration * 1000).toISOString().substring(14, 19)
+            ) {
+                queryForNextPrevId();
+            }
         }
     });
     useEffect(() => {
