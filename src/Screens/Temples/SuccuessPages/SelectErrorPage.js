@@ -37,12 +37,12 @@ const SelectErrorPage = ({ setShowSubmit, selectedError, navigation, setModalVis
     //     }
     // }, [desciption, pinTheLocation]);
     const textRef = useRef();
-    const animationref = useRef(null)
+    const animationref = useRef(null);
     useEffect(() => {
         animationref.current?.play();
         // Or set a specific startFrame and endFrame with:
         animationref.current?.play(30, 120);
-    }, [submitted])
+    }, [submitted]);
 
     return (
         <>
@@ -78,7 +78,11 @@ const SelectErrorPage = ({ setShowSubmit, selectedError, navigation, setModalVis
                                 <Icon name="x" color="#222222" size={22} />
                             </TouchableOpacity>
                             <View style={{ backgroundColor: 'white' }}>
-                                <LottieView ref={animationref} style={{ height: 200, width: 200 }} source={require('../../../assets/JSON/ErrorGIF.json')} />
+                                <LottieView
+                                    ref={animationref}
+                                    style={{ height: 200, width: 200 }}
+                                    source={require('../../../assets/JSON/ErrorGIF.json')}
+                                />
                             </View>
                             <Text
                                 style={{
@@ -264,7 +268,6 @@ const SelectErrorPage = ({ setShowSubmit, selectedError, navigation, setModalVis
                                         <TextInput
                                             onChangeText={(e) => setDescription(e)}
                                             placeholderTextColor={colors.grey5}
-
                                             placeholder="Type your explaination here"
                                             style={{
                                                 color: 'black',
@@ -281,7 +284,6 @@ const SelectErrorPage = ({ setShowSubmit, selectedError, navigation, setModalVis
                                     <TextInput
                                         onChangeText={(e) => setphoneNumber(e)}
                                         placeholderTextColor={colors.grey5}
-
                                         placeholder="Type here"
                                         style={{
                                             color: 'black',
@@ -306,7 +308,7 @@ const SelectErrorPage = ({ setShowSubmit, selectedError, navigation, setModalVis
             ) : (
                 <View
                     style={{
-                        height: Dimensions.get('window').height,
+                        flex: 1,
                         width: Dimensions.get('window').width,
                     }}
                 >
