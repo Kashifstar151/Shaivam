@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { CustomMarker, DraggableMarker } from './CustomMarker';
 import {
@@ -13,8 +13,13 @@ import {
 import { CustomButton, CustomLongBtn } from '../../components/Buttons';
 import TrackBackToLocSVG from '../../components/SVGs/TrackBackToLocSVG';
 import LocationLogo from '../../components/SVGs/LocationLogo';
+import { ThemeContext } from '../../Context/ThemeContext';
+import BackIcon from '../../../src/assets/Images/BackIcon.svg';
+import WhiteBackButton from '../../../src/assets/Images/arrow (1) 1.svg';
+import SearchTemple from './SearchTemple';
+import getDimension from '../../Helpers/getDimension';
 
-const PinTheLocation = ({ setDescription, close }) => {
+const PinTheLocation = ({ setDescription, close, valueSetter }) => {
     const [regionCoordinate, setRegionCoordinate] = useState({
         latitude: 28.500271,
         longitude: 77.387901,
@@ -41,6 +46,8 @@ const PinTheLocation = ({ setDescription, close }) => {
         name: '',
         displayName: '',
     });
+
+    const { theme } = useContext(ThemeContext);
 
     const fetchTheName = useCallback(
         async (coors) => {
@@ -90,6 +97,8 @@ const PinTheLocation = ({ setDescription, close }) => {
         };
     }, []);
 
+    const { screenHeight, screenWidth } = getDimension();
+    const mapRef = useRef();
     return (
         <View style={styles.mainContainer}>
             <MapView
@@ -102,14 +111,15 @@ const PinTheLocation = ({ setDescription, close }) => {
                 provider={PROVIDER_GOOGLE}
                 initialRegion={regionCoordinate}
                 style={styles.map}
-                onRegionChangeComplete={(args, gesture) => {
-                    if (gesture.isGesture) {
-                        onRegionChangeCompleteCallback(args, (input) => {
-                            setRegionCoordinate(input);
-                        });
-                    }
-                }}
-                region={regionCoordinate}
+                // onRegionChangeComplete={(args, gesture) => {
+                //     if (gesture.isGesture) {
+                //         onRegionChangeCompleteCallback(args, (input) => {
+                //             setRegionCoordinate(input);
+                //         });
+                //     }
+                // }}
+                // region={regionCoordinate}
+                ref={mapRef}
             >
                 <CustomMarker
                     setPadState={setPadState}
@@ -128,6 +138,66 @@ const PinTheLocation = ({ setDescription, close }) => {
                     keyName={'COORDINATE2'}
                 />
             </MapView>
+            <View
+                style={{
+                    position: 'absolute',
+                    width: '100%',
+                    paddingVertical: 20,
+                    paddingHorizontal: 20,
+                    flexDirection: 'row',
+                    top: 10,
+                    gap: 15,
+                    alignItems: 'center',
+                }}
+            >
+                <Pressable
+                    style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: 40,
+                        backgroundColor: '#F3F3F3',
+                        elevation: 20,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                    onPress={close}
+                >
+                    {theme.colorscheme !== 'light' ? <WhiteBackButton /> : <BackIcon />}
+                </Pressable>
+                <SearchTemple
+                    isDisable={false}
+                    isAutoComplete={true}
+                    positionSuggestionBox={{
+                        position: 'absolute',
+                        top: 60,
+                        zIndex: 100,
+                        width: screenWidth - 30,
+                        marginLeft: -60,
+                    }}
+                    setRegionCoordinate={(item) => {
+                        mapRef.current?.animateCamera(
+                            {
+                                center: {
+                                    latitude: parseFloat(item.lat),
+                                    longitude: parseFloat(item.lon),
+                                },
+                            },
+                            { duration: 1000 }
+                        );
+
+                        dragCoor.current = {
+                            ...item,
+                            latitude: parseFloat(item.lat),
+                            longitude: parseFloat(item.lon),
+                        };
+                        setRegionCoordinate((prev) => ({
+                            ...prev,
+                            latitude: parseFloat(item.lat),
+                            longitude: parseFloat(item.lon),
+                        }));
+                    }}
+                />
+            </View>
 
             <View style={styles.overlayHeight}>
                 <View>
@@ -202,9 +272,14 @@ const PinTheLocation = ({ setDescription, close }) => {
     );
 };
 const styles = StyleSheet.create({
-    mainContainer: { flex: 1, ...StyleSheet.absoluteFillObject },
+    mainContainer: { flex: 1, position: 'relative' },
     map: {
-        ...StyleSheet.absoluteFillObject,
+        // bottom: 0,
+        justifyContent: 'center',
+        position: 'absolute',
+        flex: 1,
+        height: Dimensions.get('window').height,
+        width: Dimensions.get('window').width,
     },
     boldLocationNameConatiner: {
         flexDirection: 'row',
