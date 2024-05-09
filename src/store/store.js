@@ -3,6 +3,7 @@ import { ApiSlice, TempleApiSlice } from './apiSlice';
 import authReducer from './features/Auth/authSlice';
 import CalenderReducer from './features/Calender/CalenderSlice';
 import FormReducer from './features/Calender/FormSlice';
+import TempleReducer from './features/Temple/TempleSlice';
 
 const rootReducer = combineReducers({
     [ApiSlice.reducerPath]: ApiSlice.reducer,
@@ -12,14 +13,13 @@ const rootReducer = combineReducers({
     // auth: authReducer,
     calender: CalenderReducer,
     form: FormReducer,
+    temple: TempleReducer,
 });
 
 const store = configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) => {
-        return getDefaultMiddleware()
-            .concat(ApiSlice.middleware)
-            .concat(TempleApiSlice.middleware);
+        return getDefaultMiddleware().concat(ApiSlice.middleware).concat(TempleApiSlice.middleware);
     },
 });
 
