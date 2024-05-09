@@ -8,7 +8,8 @@ import { ThemeContext } from '../Context/ThemeContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { dark, light } from '../Helpers/GlobalStyles';
 import PushNotification, { Importance } from 'react-native-push-notification';
-const Header = () => {
+import { RouteTexts } from '../navigation/RouteText';
+const Header = ({ navigation }) => {
     const colorScheme = useColorScheme();
     const [isDark, setIsDark] = useState(colorScheme === 'dark' ? true : false);
     const { theme, setTheme } = useContext(ThemeContext);
@@ -43,12 +44,9 @@ const Header = () => {
         }
     }, [colorScheme]);
     const testNoti = () => {
-        PushNotification.localNotification({
-            title: 'Local Notification', // (optional)
-            message: 'My Notification Message',
-        });
+        // alert(true)
+        navigation.navigate(RouteTexts.NOTIFICATION)
     }
-
     // const changeTheme = async () => {
     //     await AsyncStorage.setItem('theme', JSON.stringify(isDark ? 'dark' : 'light'));
     // }

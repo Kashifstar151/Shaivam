@@ -27,7 +27,7 @@ import ElevatedCard from '../../components/ElevatedCard';
 import EventCard from '../../components/EventCard';
 import { ThemeContext } from '../../Context/ThemeContext';
 import EventSelectionType from './EventSelectionType';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import ButtonComp from '../Temples/Common/ButtonComp';
 import LocationSelection from './LocationSelection';
@@ -48,6 +48,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 }
 
 const Calender = ({ navigation }) => {
+    const isFocused = useIsFocused()
     const data1 = [
         { name: 'Festivals', selected: <ActiveStar />, unSelected: <InActiveStar /> },
         { name: 'Events', selected: <ActiveCalender />, unSelected: <InActiveCalender /> },
@@ -89,6 +90,7 @@ const Calender = ({ navigation }) => {
 
     } = useGetRecurringEventMonthlyQuery({ selectedLocation });
     const [weekly, setWeekly] = useState([]);
+
     const [regular, setRegular] = useState([]);
     const [monthly, setMonthly] = useState([]);
     const [mainData, setMainData] = useState([]);
@@ -135,7 +137,7 @@ const Calender = ({ navigation }) => {
     // }, [prevNext]);
     useEffect(() => {
         getScheduleNotification()
-    }, [])
+    }, [isFocused])
     const getScheduleNotification = () => {
         PushNotification.getScheduledLocalNotifications(callbacks => {
             console.log("🚀 ~ getScheduleNotification ~ callbacks:", callbacks)
@@ -478,6 +480,45 @@ const Calender = ({ navigation }) => {
                     </View>
                 )}
                 {
+                    notificationOnEvent?.length > 0 &&
+                    <>
+                        <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
+                            <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold', color: '#222222' }}>
+                                Notification Turned on
+                            </Text>
+                        </View>
+                        <FlatList
+                            data={notificationOnEvent}
+                            key={(item, index) => index}
+                            contentContainerStyle={{ paddingBottom: 10 }}
+                            renderItem={({ item, index }) => (
+                                <ElevatedCard
+                                    // navigation={() =>
+                                    //     navigation.navigate(RouteTexts.EVENT_DETAILS, {
+                                    //         item: item,
+                                    //     })
+                                    // }
+                                    theme={{ colorscheme: theme.colorscheme }}
+                                >
+                                    <EventCard
+                                        date={moment(item.date).get('D')}
+                                        dateNo={moment(item?.date).format('DD')}
+                                        day={moment(item?.date).format('ddd')}
+                                        timing={`${moment(item.date).format('MMMM DD YYYY')} - ${moment(item.date).format('MMMM DD YYYY')}`}
+                                        title={item?.message}
+                                        item={item}
+                                        theme={{
+                                            textColor: theme.textColor,
+                                            colorscheme: theme.colorscheme,
+                                        }}
+                                    />
+                                </ElevatedCard>
+                            )}
+                        />
+                    </>
+
+                }
+                {
                     todayEvent?.length > 0 && selectedHeader !== data1[0].name &&
                     <>
                         <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
@@ -500,6 +541,8 @@ const Calender = ({ navigation }) => {
                                 >
                                     <EventCard
                                         date={moment(item.start_date).get('D')}
+                                        dateNo={moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('DD')}
+                                        day={moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('ddd')}
                                         timing={`${moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('MMMM DD YYYY')} - ${moment(item.end_date ? item.end_date : item?.attributes?.end_date).format('MMMM DD YYYY')}`}
                                         title={selectedHeader == data1[0].name ? item?.attributes?.Calendar_title : item.attributes.title}
                                         item={item}
@@ -534,6 +577,8 @@ const Calender = ({ navigation }) => {
                         >
                             <EventCard
                                 date={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).get('D') : moment(item.start_date).get('D')}
+                                dateNo={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).format('DD') : moment(item.start_date).format('DD')}
+                                day={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).format('ddd') : moment(item.start_date).format('ddd')}
                                 timing={selectedHeader == data1[0].name ? '' : `${moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('MMMM DD YYYY')} - ${moment(item.end_date ? item.end_date : item?.attributes?.end_date).format('MMMM DD YYYY')}`}
                                 title={selectedHeader == data1[0].name ? item?.attributes?.Calendar_title : item.attributes.title}
                                 item={item}

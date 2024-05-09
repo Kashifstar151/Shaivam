@@ -24,5 +24,6 @@ export const RouteTexts = {
     SUCCESS: 'Success',
     RADIO: 'Radios',
     OM_CHANTING: 'OmChanting',
-    WEBSIRE_VIEW: 'WebsiteView'
+    WEBSIRE_VIEW: 'WebsiteView',
+    NOTIFICATION: 'Notification'
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, FlatList, Image, PermissionsAndroid, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, FlatList, Image, PermissionsAndroid, ScrollView, StyleSheet, Text, View } from 'react-native';
 import BackButton from '../../components/BackButton';
 import Background from '../../components/Background';
 import ShareIcon from '../../assets/Images/share-1.svg';
@@ -64,7 +64,7 @@ const EventDetails = ({ navigation, route }) => {
         PushNotification.localNotificationSchedule({
             channelId: 'Event',
             title: item?.title,
-            date: new Date(Date.now() + 10 * 1000),
+            date: new Date(item?.start_date ? item?.start_date : item?.attributes?.start_date + 120 * 1000),
             message: item?.attributes?.title,
             id: item?.id,
             allowWhileIdle: true
@@ -97,7 +97,7 @@ const EventDetails = ({ navigation, route }) => {
                     rightIcon={true}
                 />
             </Background>
-            <View style={styles.main}>
+            <ScrollView style={styles.main}>
                 <Text style={styles.headingText}>{item?.attributes?.title}</Text>
                 <Text
                     style={{ color: '#777777', fontFamily: 'Mulish-Regular', marginHorizontal: 10 }}
@@ -214,7 +214,7 @@ const EventDetails = ({ navigation, route }) => {
                         )}
                     />
                 </View>
-            </View>
+            </ScrollView>
             <View style={{ position: 'absolute', bottom: 30, paddingHorizontal: 20 }}>
                 <ReminderSnackBar setRecurringEvent={setNotification} recurringEvent={notificationOn} />
             </View>

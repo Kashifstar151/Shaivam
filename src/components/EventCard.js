@@ -5,14 +5,14 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import moment from 'moment';
 import { colors } from '../Helpers';
 
-const EventCard = ({ date, timing, title, theme, item, header }) => {
+const EventCard = ({ date, timing, title, theme, item, header, day, dateNo }) => {
     console.log("🚀 ~ EventCard ~ date:", header)
     let d = header == 'Festivals' ? moment(item?.attributes?.calendar_from_date) : moment(item?.attributes?.start_date);
     console.log("🚀 ~ EventCard ~ d:", d)
     let dayname = d.format('ddd');
     console.log("🚀 ~ EventCard ~ dayname:", dayname)
-    let day = d.format('DD');
-    console.log("🚀 ~ EventCard ~ day:", day)
+    // let day = d.format('DD');
+    // console.log("🚀 ~ EventCard ~ day:", day)
     return (
         <View
             style={[
@@ -30,7 +30,8 @@ const EventCard = ({ date, timing, title, theme, item, header }) => {
                         fontSize: RFValue(12, 800),
                     }}
                 >
-                    {header === 'Festivals' ? moment(item?.attributes?.calendar_from_date).format('ddd') : dayname ? dayname : date.day}
+                    {/* {header === 'Festivals' ? moment(item?.attributes?.calendar_from_date).format('ddd') : dayname ? dayname : date.day} */}
+                    {day}
                 </Text>
                 <Text
                     style={{
@@ -39,7 +40,8 @@ const EventCard = ({ date, timing, title, theme, item, header }) => {
                         fontWeight: '600',
                     }}
                 >
-                    {header === 'Festivals' ? moment(item?.attributes?.calendar_from_date).format('DD') : item?.start_date ? moment(item?.start_date).format('DD') : moment(item?.attributes?.start_date).format('DD')}
+                    {/* {header === 'Festivals' ? moment(item?.attributes?.calendar_from_date).format('DD') : item?.start_date ? moment(item?.start_date).format('DD') : moment(item?.attributes?.start_date).format('DD')} */}
+                    {dateNo}
                 </Text>
                 {/* <Text
                     style={{

@@ -225,7 +225,7 @@ const CardComponents = ({ navigation }) => {
     return (
         <View style={{ paddingLeft: 0 }}>
             <View style={{ marginTop: 24, paddingHorizontal: 15 }}>
-                <Header />
+                <Header navigation={navigation} />
                 <SearchInput
                     placeholder={t('Search for anything (Eg - தோடுடைய செவியன்) ')}
                     setState={setSearchText}
