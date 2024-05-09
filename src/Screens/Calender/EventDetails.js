@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Dimensions, FlatList, Image, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, FlatList, Image, PermissionsAndroid, StyleSheet, Text, View } from 'react-native';
 import BackButton from '../../components/BackButton';
 import Background from '../../components/Background';
 import ShareIcon from '../../assets/Images/share-1.svg';
@@ -12,18 +12,35 @@ import ReminderSnackBar from './ReminderSnackBar';
 import { RouteTexts } from '../../navigation/RouteText';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
+import PushNotification, { Importance } from 'react-native-push-notification';
+import { useIsFocused } from '@react-navigation/native';
+
 
 const EventDetails = ({ navigation, route }) => {
     const { item } = route?.params;
+    const isFocus = useIsFocused()
     console.log('🚀 ~ EventDetails ~ item:', JSON.stringify(item, 0, 2));
+    const [notificationOn, setNotification] = useState(false)
+    useEffect(() => {
+        checkPermissionAccess()
+        createChannel()
+    }, [isFocus])
+    useEffect(() => {
+        if (notificationOn) {
+            scheduleNotification()
+        }
+        getScheduleNotification()
+
+
+    }, [notificationOn])
     const keys = [
         {
             name: 'Start date',
-            value: moment(item?.attributes?.start_date).format('ddd,MMMM DD , YYYY'),
+            value: moment(item?.start_date ? item?.start_date : item?.attributes?.start_date).format('ddd,MMMM DD , YYYY'),
         },
         {
             name: 'End date',
-            value: moment(item?.attributes?.end_date).format('ddd,MMMM DD , YYYY'),
+            value: moment(item?.end_date ? item?.end_date : item?.attributes?.end_date).format('ddd,MMMM DD , YYYY'),
         },
         { name: 'Location', value: item?.attributes?.Location },
         { name: 'Presenter', value: item?.attributes?.name },
@@ -31,11 +48,44 @@ const EventDetails = ({ navigation, route }) => {
         { name: 'Url', value: item?.attributes?.Url },
     ];
     const [selectedHeader, setSelectedHeader] = useState('Direction');
-    const selectionHandler = (name) => {
-        if (name == 'Virtual event link') {
-            navigation.navigate(RouteTexts.VIRTUAL_EVENT_CREATE);
-        }
-    };
+    const checkPermissionAccess = async () => {
+        // alert(true)
+        const permission = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);;
+        console.log("🚀 ~ checkPermissionAccess ~ permission:", permission)
+    }
+    const createChannel = () => {
+        PushNotification.createChannel({
+            channelId: 'Event',
+            channelName: "Event_notification"
+        })
+    }
+    const scheduleNotification = () => {
+        // alert(item?.attributes?.start_date)
+        PushNotification.localNotificationSchedule({
+            channelId: 'Event',
+            title: item?.title,
+            date: new Date(Date.now() + 10 * 1000),
+            message: item?.attributes?.title,
+            id: item?.id,
+            allowWhileIdle: true
+        })
+    }
+    const getScheduleNotification = () => {
+        PushNotification.getScheduledLocalNotifications(callbacks => {
+            console.log("🚀 ~ getScheduleNotification ~ callbacks:", callbacks)
+            callbacks?.map((res) => {
+                if (res?.id == item?.id) {
+                    setNotification(true)
+                }
+            })
+        })
+    }
+
+    // const selectionHandler = (name) => {
+    //     if (name == 'Virtual event link') {
+    //         navigation.navigate(RouteTexts.VIRTUAL_EVENT_CREATE);
+    //     }
+    // };
     const { t } = useTranslation();
     return (
         <View style={{ flex: 1, backgroundColor: '#ffffff' }}>
@@ -128,17 +178,17 @@ const EventDetails = ({ navigation, route }) => {
                                         style={
                                             item?.name == 'Url'
                                                 ? {
-                                                      color: '#C1554E',
-                                                      fontFamily: 'Mulish-Regular',
-                                                      fontSize: 12,
-                                                      marginHorizontal: 10,
-                                                  }
+                                                    color: '#C1554E',
+                                                    fontFamily: 'Mulish-Regular',
+                                                    fontSize: 12,
+                                                    marginHorizontal: 10,
+                                                }
                                                 : {
-                                                      color: '#222222',
-                                                      fontFamily: 'Mulish-Regular',
-                                                      fontSize: 12,
-                                                      marginHorizontal: 20,
-                                                  }
+                                                    color: '#222222',
+                                                    fontFamily: 'Mulish-Regular',
+                                                    fontSize: 12,
+                                                    marginHorizontal: 20,
+                                                }
                                         }
                                     >
                                         {item?.value}
@@ -166,7 +216,7 @@ const EventDetails = ({ navigation, route }) => {
                 </View>
             </View>
             <View style={{ position: 'absolute', bottom: 30, paddingHorizontal: 20 }}>
-                <ReminderSnackBar />
+                <ReminderSnackBar setRecurringEvent={setNotification} recurringEvent={notificationOn} />
             </View>
         </View>
     );

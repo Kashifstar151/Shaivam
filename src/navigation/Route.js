@@ -42,6 +42,7 @@ import NavigationServices from './NavigationServices';
 import { RESULTS } from 'react-native-permissions';
 import { PlayerProvider } from '../Context/PlayerContext';
 import DBInfo from '../../DBInfo';
+import WebsiteView from '../Screens/Calender/WebsiteView';
 // import { ThemeContextProvider } from '../Context/ThemeContext';
 
 const Route = () => {
@@ -268,6 +269,7 @@ const Route = () => {
                         <Stack.Screen name="Thirumurais" component={ThrimuraiList} />
                         <Stack.Screen name={RouteTexts.SEARCH_SCREEN} component={SearchScreen} />
                         <Stack.Screen name={RouteTexts.ONBOARDING_SCREEN} component={Onboarding} />
+                        <Stack.Screen name={RouteTexts.WEBSIRE_VIEW} component={WebsiteView} />
                         <Stack.Screen
                             name={RouteTexts.VIRTUAL_EVENT_CREATE}
                             component={CreateVirtualEvent}

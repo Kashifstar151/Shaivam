@@ -135,7 +135,7 @@ const HomeScreen = ({ navigation }) => {
             setFavList(callbacks);
         });
     }, [selectedPlaylistType, isFocused]);
-    useEffect(() => {}, []);
+    useEffect(() => { }, []);
 
     const checkIsFav = (item) => {
         let v = false;
@@ -473,7 +473,7 @@ const HomeScreen = ({ navigation }) => {
                         viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                         title={t('Upcoming Festivals')}
                         theme={{ textColor: theme.textColor, colorscheme: theme.colorscheme }}
-                        onPress={() => {}}
+                        onPress={() => { }}
                     />
                 </View>
                 <FlatList
@@ -517,7 +517,7 @@ const HomeScreen = ({ navigation }) => {
                     <HeadingAndView
                         viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                         title={t('Nearby Temples')}
-                        onPress={() => {}}
+                        onPress={() => { }}
                         theme={{
                             textColor: theme.textColor,
                             colorscheme: theme.colorscheme,
@@ -560,7 +560,7 @@ const HomeScreen = ({ navigation }) => {
                     viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                     title={t('App Walkthrough Videos')}
                     // todos : add the fn that take it to the dedicated video page
-                    onPress={() => {}}
+                    onPress={() => { }}
                     theme={{
                         textColor: theme.textColor,
                         colorscheme: theme.colorscheme,

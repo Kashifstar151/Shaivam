@@ -55,7 +55,7 @@ export const Temples = ({ navigation, route }) => {
         locationName: '',
     });
     const { data, isSuccess } = useGetNearByTemplesQuery(regionCoordinate);
-    console.log('🚀 ~ Temples ~ data:', JSON.stringify(data?.data?.length, 0, 2));
+    console.log('🚀 ~ Temples ~ data:', JSON.stringify(data?.temples?.length, 0, 2));
 
     const [userLocation, setUserLocation] = useState({
         latitude: 28.500271,
@@ -287,6 +287,7 @@ export const Temples = ({ navigation, route }) => {
 
     const { t } = useTranslation();
     const mapRef = useRef();
+    const [mapInteractivityState, setMapInteractivityState] = useState(true);
 
     return (
         <>
@@ -309,19 +310,19 @@ export const Temples = ({ navigation, route }) => {
                         //     longitudeDelta: 0.0121,
                         // }}
                         style={styles.map}
-                        // onRegionChangeComplete={(args, gesture) => {
-                        //     if (gesture.isGesture) {
-                        //         onRegionChangeCompleteCallback(args, (input) => {
-                        //             console.log('the gesture is true');
-                        //             mapRef.current?.animateCamera(
-                        //                 { center: input },
-                        //                 { duration: 1000 }
-                        //             );
-                        //             setRegionCoordinate(input);
-                        //         });
-                        //     }
-                        // }}
-                        // region={regionCoordinate}
+                        onRegionChangeComplete={(args, gesture) => {
+                            if (gesture.isGesture) {
+                                onRegionChangeCompleteCallback(args, (input) => {
+                                    console.log('the gesture is true');
+                                    mapRef.current?.animateCamera(
+                                        { center: input },
+                                        { duration: 1000 }
+                                    );
+                                    setRegionCoordinate(input);
+                                });
+                            }
+                        }}
+                        region={regionCoordinate}
                         // zoomEnabled
                         ref={mapRef}
                     >
@@ -343,28 +344,41 @@ export const Temples = ({ navigation, route }) => {
                                 /> */}
                             </View>
                         )}
-                        {data?.data?.length &&
-                            data?.data?.map((item, index) => (
+                        {
+                            data?.temples?.map((item, index) => (
                                 <>
-                                    {item?.attributes?.temple_coordinates?.lat &&
-                                        item?.attributes?.temple_coordinates?.long && (
-                                            <MarkerCallOut
-                                                setPadState={setPadState}
-                                                callback={() => {
-                                                    // setting the type of the marker you pressed
-                                                    // callback function for naving to page which has the temple details
-                                                    markerPressClbk(navigation, 7, item);
-                                                }}
-                                                flag={item?.attributes?.Flag}
+                                    {item?.latitude &&
+                                        item?.longitude && (
+                                            <Marker
+                                                tracksViewChanges={false}
                                                 coordinate={{
-                                                    latitude: item?.attributes?.temple_coordinates?.lat,
-                                                    longitude: item?.attributes?.temple_coordinates?.long,
+                                                    longitude: item?.longitude, latitude: item?.latitude,
                                                 }}
-                                                keyName={'COORDINATE'}
-                                            />
+                                                description={item?.name}
+                                                // image={assetMapWithTempleType[item?.flag].path}
+                                                style={{
+                                                    width: '100%',
+                                                    alignItems: 'center',
+                                                }}
+                                            ></Marker>
+                                            // <MarkerCallOut
+                                            //     setPadState={setPadState}
+                                            //     callback={() => {
+                                            //         // setting the type of the marker you pressed
+                                            //         // callback function for naving to page which has the temple details
+                                            //         markerPressClbk(navigation, 7, item);
+                                            //     }}
+                                            //     flag={item?.flag}
+                                            //     coordinate={{
+                                            //         latitude: item?.latitude,
+                                            //         longitude: item?.longitude,
+                                            //     }}
+                                            //     keyName={'COORDINATE'}
+                                            // />
                                         )}
                                 </>
-                            ))}
+                            ))
+                        }
                     </MapView>
                 ) : null}
 
@@ -376,6 +390,23 @@ export const Temples = ({ navigation, route }) => {
                             isNavigable={false}
                             isDisable={false}
                             isAutoComplete={true}
+                            setRegionCoordinate={(item) => {
+                                mapRef.current?.animateCamera(
+                                    {
+                                        center: {
+                                            latitude: parseFloat(item.lat),
+                                            longitude: parseFloat(item.lon),
+                                        },
+                                    },
+                                    { duration: 1000 }
+                                );
+                                setRegionCoordinate((prev) => ({
+                                    ...prev,
+                                    latitude: parseFloat(item.lat),
+                                    longitude: parseFloat(item.lon),
+                                }));
+                            }}
+                            setMapInteractivityState={setMapInteractivityState}
                         />
                     </SearchContainerWithIcon>
 
@@ -392,8 +423,7 @@ export const Temples = ({ navigation, route }) => {
                                             setShowModal(!showModal);
                                         }
                                     }}
-                                    key={indx}
-                                >
+                                    key={indx}>
                                     <View
                                         style={[
                                             styles.textContWrapper,

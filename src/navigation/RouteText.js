@@ -23,5 +23,6 @@ export const RouteTexts = {
     VIRTUAL_EVENT_CREATE: 'CreateVirtualEvent',
     SUCCESS: 'Success',
     RADIO: 'Radios',
-    OM_CHANTING: 'OmChanting'
+    OM_CHANTING: 'OmChanting',
+    WEBSIRE_VIEW: 'WebsiteView'
 }
