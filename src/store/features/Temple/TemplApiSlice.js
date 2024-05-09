@@ -10,14 +10,11 @@ const CalenderApiSlice = TempleApiSlice.injectEndpoints({
                 return {
                     url: url,
                     method: 'GET',
-                }
+                };
             },
             providesTags: ['Temple'],
         }),
-
-    })
+    }),
 });
 
-export const {
-    useGetNearByTemplesQuery
-} = CalenderApiSlice;
+export const { useGetNearByTemplesQuery } = CalenderApiSlice;
