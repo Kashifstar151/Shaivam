@@ -1,8 +1,11 @@
 import React from 'react';
 import { Dimensions, Text, View } from 'react-native';
 import PinTheLocation from '../PinTheLocationPage';
+import { useDispatch } from 'react-redux';
+import { updateTheLocation } from '../../../store/features/Temple/TempleSlice';
 
-const SelectLocation = () => {
+const SelectLocation = ({ setStep, navigation }) => {
+    const dispatch = useDispatch();
     return (
         <View
             style={{
@@ -12,10 +15,21 @@ const SelectLocation = () => {
             // keyboardShouldPersistTaps
         >
             <PinTheLocation
-                close={() => {
-                    // setPinTheLocation(false);
+                close={(num) => {
+                    setStep(num);
                 }}
                 setDescription={() => {}}
+                valueSetter={(value) => {
+                    dispatch(
+                        updateTheLocation({
+                            coordinate: {
+                                latitude: value?.lat,
+                                longitude: value?.lon,
+                            },
+                            locationName: value?.display_name,
+                        })
+                    );
+                }}
             />
         </View>
     );
