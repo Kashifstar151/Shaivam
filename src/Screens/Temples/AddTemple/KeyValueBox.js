@@ -31,21 +31,9 @@ const KeyValueBox = ({ keyName, value }) => {
             {keyName !== 'Images' ? (
                 <Text style={style.value}>{value}</Text>
             ) : (
-                <View
-                    style={{
-                        justifyContent: 'center',
-                        paddingTop: 10,
-                    }}
-                >
+                <View style={style.imageRenderBoxCont}>
                     {value.length > 0 && (
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                flexWrap: 'wrap',
-                                alignItems: 'center',
-                                gap: 10,
-                            }}
-                        >
+                        <View style={style.imageRenderBox}>
                             {value.map((item, _) => RenderImage(item))}
                         </View>
                     )}
@@ -67,6 +55,17 @@ const style = StyleSheet.create({
         fontFamily: 'Mulish-SemiBold',
         fontSize: RFValue(16, 850),
         lineHeight: 21,
+    },
+    imageRenderBox: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        alignItems: 'center',
+        gap: 10,
+    },
+
+    imageRenderBoxCont: {
+        justifyContent: 'center',
+        paddingTop: 10,
     },
 });
 export default KeyValueBox;

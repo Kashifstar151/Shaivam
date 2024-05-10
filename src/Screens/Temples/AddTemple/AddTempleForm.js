@@ -72,31 +72,12 @@ const AddTempleForm = ({ navigation, setStep }) => {
     const RenderImage = (item) => {
         // console.log('🚀 ~ RenderImage ~ item:', item);
         return (
-            <View style={{ marginHorizontal: 10, alignItems: 'center' }}>
-                <TouchableOpacity
-                    style={{
-                        zIndex: 20,
-                        position: 'relative',
-                        top: 10,
-                        left: 50,
-                        height: 20,
-                        width: 20,
-                        borderRadius: 10,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        backgroundColor: '#C1554E',
-                    }}
-                    onPress={() => removeImage(item)}
-                >
+            <View style={styles.renderImageMasterContainer}>
+                <TouchableOpacity style={styles.removeImageBtn} onPress={() => removeImage(item)}>
                     <Feather name="x" color="white" />
                 </TouchableOpacity>
-                <Image
-                    source={{ uri: item?.uri }}
-                    style={{ height: 100, width: 100, borderRadius: 10 }}
-                />
-                <Text style={{ fontSize: 12, fontFamily: 'Mulish-Regular', color: '#777777' }}>
-                    {item?.fileName?.slice(-10)}
-                </Text>
+                <Image source={{ uri: item?.uri }} style={styles.imageBox} />
+                <Text style={styles.imageName}>{item?.fileName?.slice(-10)}</Text>
             </View>
         );
     };
@@ -107,7 +88,7 @@ const AddTempleForm = ({ navigation, setStep }) => {
                 <ImageBackground
                     source={theme.colorscheme === 'light' ? bgImg : bgImgDark}
                     resizeMode="cover"
-                    style={{ width: '100%', height: 70 }}
+                    style={styles.imageDimension}
                 />
 
                 <View
@@ -120,21 +101,8 @@ const AddTempleForm = ({ navigation, setStep }) => {
                     ]}
                 >
                     <View style={[styles.topBarWrapper]}>
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    color: 'black',
-                                    fontSize: RFValue(18, 850),
-                                    fontFamily: 'Lora-Bold',
-                                }}
-                            >
-                                Add a temple
-                            </Text>
+                        <View style={styles.topBarContainer}>
+                            <Text style={styles.mainHeader}>Add a temple</Text>
 
                             <Pressable
                                 style={{ justifyContent: 'center' }}
@@ -147,14 +115,7 @@ const AddTempleForm = ({ navigation, setStep }) => {
                             </Pressable>
                         </View>
 
-                        <Text
-                            style={{
-                                color: '#777777',
-                                fontSize: RFValue(14, 850),
-                                fontFamily: 'Mulish',
-                                lineHeight: 18,
-                            }}
-                        >
+                        <Text style={styles.subHeader}>
                             You can add Shiva temples in India, Nepal, Srilanka. Hindu temples in
                             the rest of the world.
                         </Text>
@@ -206,18 +167,7 @@ const AddTempleForm = ({ navigation, setStep }) => {
                                         setStep(2);
                                     }}
                                     value={templadata?.templeLocation?.locationName}
-                                    style={{
-                                        color: 'black',
-                                        backgroundColor: '#F3F3F3',
-                                        borderRadius: 10,
-                                        paddingLeft: 45,
-                                        paddingRight: 10,
-                                        paddingVertical: 15,
-                                        height: 50,
-                                        textAlign: 'left',
-                                        verticalAlign: 'top',
-                                        fontFamily: 'Mulish-Regular',
-                                    }}
+                                    style={[styles.textInputStyle, styles.selectLocationInput]}
                                 />
                             </View>
                         </View>
@@ -240,17 +190,7 @@ const AddTempleForm = ({ navigation, setStep }) => {
                                     placeholder="Type here"
                                     value={templadata.templeName}
                                     onChangeText={(text) => dispatch(updateTempleName(text))}
-                                    style={{
-                                        color: 'black',
-                                        backgroundColor: '#F3F3F3',
-                                        borderRadius: 10,
-                                        paddingLeft: 15,
-                                        paddingRight: 10,
-                                        paddingVertical: 15,
-                                        textAlign: 'left',
-                                        verticalAlign: 'top',
-                                        fontFamily: 'Mulish-Regular',
-                                    }}
+                                    style={styles.textInputStyle}
                                 />
                             </View>
                         </View>
@@ -281,17 +221,7 @@ const AddTempleForm = ({ navigation, setStep }) => {
                                     value={templadata.description}
                                     onChangeText={(text) => dispatch(updateDescription(text))}
                                     numberOfLines={4}
-                                    style={{
-                                        color: 'black',
-                                        backgroundColor: '#F3F3F3',
-                                        borderRadius: 10,
-                                        paddingLeft: 15,
-                                        paddingRight: 10,
-                                        paddingVertical: 15,
-                                        textAlign: 'left',
-                                        verticalAlign: 'top',
-                                        fontFamily: 'Mulish-Regular',
-                                    }}
+                                    style={{ ...styles.textInputStyle }}
                                 />
                             </View>
                         </View>
@@ -351,18 +281,7 @@ const AddTempleForm = ({ navigation, setStep }) => {
                     </View>
                 </View>
             </ScrollView>
-            <View
-                style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    width: '100%',
-                    padding: 20,
-                    elevation: 10,
-                    backgroundColor: 'white',
-
-                    // backgroundColor: 'green',
-                }}
-            >
+            <View style={styles.nextBtn}>
                 <CustomLongBtn
                     onPress={() => setStep(3)}
                     text={'Next'}
@@ -380,8 +299,59 @@ const AddTempleForm = ({ navigation, setStep }) => {
 };
 
 const styles = StyleSheet.create({
+    renderImageMasterContainer: { marginHorizontal: 10, alignItems: 'center' },
     descriptionText: { fontSize: 12, color: '#777777', fontFamily: 'Mulish-Regular' },
+    removeImageBtn: {
+        zIndex: 20,
+        position: 'relative',
+        top: 10,
+        left: 50,
+        height: 20,
+        width: 20,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#C1554E',
+    },
+    imageBox: { height: 100, width: 100, borderRadius: 10 },
+    imageName: { fontSize: 12, fontFamily: 'Mulish-Regular', color: '#777777' },
+    imageDimension: { width: '100%', height: 70 },
 
+    topBarContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+
+    mainHeader: {
+        color: 'black',
+        fontSize: RFValue(18, 850),
+        fontFamily: 'Lora-Bold',
+    },
+
+    subHeader: {
+        color: '#777777',
+        fontSize: RFValue(14, 850),
+        fontFamily: 'Mulish',
+        lineHeight: 18,
+    },
+
+    textInputStyle: {
+        color: 'black', // color: 'black',
+        backgroundColor: '#F3F3F3',
+        borderRadius: 10,
+        paddingLeft: 15,
+
+        paddingRight: 10,
+        paddingVertical: 15,
+        textAlign: 'left',
+        verticalAlign: 'top',
+        fontFamily: 'Mulish-Regular',
+    },
+
+    selectLocationInput: {
+        paddingLeft: 45,
+        height: 50,
+    },
     uploadContainer: {
         paddingHorizontal: 20,
         alignItems: 'center',
@@ -409,14 +379,6 @@ const styles = StyleSheet.create({
         flex: 1,
     },
 
-    colorContWrapper: {
-        flex: 1,
-        flexDirection: 'row',
-        gap: 8,
-        paddingTop: 10,
-        justifyContent: 'space-evenly',
-    },
-
     topBarWrapper: {
         width: '100%',
         paddingBottom: 30,
@@ -427,26 +389,16 @@ const styles = StyleSheet.create({
         gap: 16,
         justifyContent: 'space-between',
     },
-    contWrapper: {
-        paddingHorizontal: 10,
-        paddingVertical: 8,
-        borderRadius: 20,
-        backgroundColor: 'white',
-        elevation: 5,
-    },
-    textContWrapper: {
-        height: 14,
-        width: 14,
-        borderRadius: 2,
-        justifyContent: 'center',
-    },
 
-    textStyleForCont: {
-        alignSelf: 'center',
-        paddingVertical: 'auto',
-        fontWeight: 'bold',
-        color: 'white',
-        lineHeight: 16,
+    nextBtn: {
+        position: 'absolute',
+        bottom: 0,
+        width: '100%',
+        padding: 20,
+        elevation: 10,
+        backgroundColor: 'white',
+
+        // backgroundColor: 'green',
     },
 });
 

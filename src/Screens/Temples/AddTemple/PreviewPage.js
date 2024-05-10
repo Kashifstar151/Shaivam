@@ -1,65 +1,19 @@
-import React, { useContext, useState } from 'react';
-import {
-    FlatList,
-    Image,
-    ImageBackground,
-    Pressable,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-} from 'react-native';
-//
+import React, { useContext } from 'react';
+import { ImageBackground, Pressable, StyleSheet, Text, View } from 'react-native';
 import bgImg from '../../../../assets/Images/Background.png';
 import bgImgDark from '../../../../assets/Images/BackgroundCommon.png';
-import CloseBtn from '../../../../assets/Images/CloseBtnSVG.svg';
-import { ThemeContext } from '../../../Context/ThemeContext';
 import { RFValue } from 'react-native-responsive-fontsize';
-import LocationLogo from '../../../components/SVGs/LocationLogo';
-import { ScrollView, TextInput } from 'react-native-gesture-handler';
-import { colors } from '../../../Helpers';
-import StepTitleContainer from './StepTitleContainer';
-import Icon from 'react-native-vector-icons/dist/Feather';
+import { ScrollView } from 'react-native-gesture-handler';
 import { CustomLongBtn } from '../../../components/Buttons';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import Feather from 'react-native-vector-icons/dist/Feather';
-
 import BackIcon from '../../../../src/assets/Images/BackIcon.svg';
 import WhiteBackButton from '../../../../src/assets/Images/arrow (1) 1.svg';
 import KeyValueBox from './KeyValueBox';
 import { useSelector } from 'react-redux';
+import { ThemeContext } from '../../../Context/ThemeContext';
 
 const PreviewPage = ({ navigation, setStep }) => {
-    const { theme } = useContext(ThemeContext);
-    const [images, setImages] = useState([]);
-    const openGallary = () => {
-        const options = {
-            selectionLimit: 5,
-            title: 'Select Image',
-            customButtons: [{ name: 'customOptionKey', title: 'Choose Photo from Custom Option' }],
-            storageOptions: {
-                skipBackup: true,
-                path: 'images',
-            },
-        };
-        launchImageLibrary(options, (callback) => {
-            setImages(callback?.assets);
-        });
-
-        // launchCamera(
-        //     {
-        //         saveToPhotos: true,
-        //         cameraType: 'back',
-        //     },
-        //     (callback) => {
-        //         console.log('the calllback  ==>', callback);
-        //         setImages((prev) => [...prev, ...callback.assets]);
-        //     }
-        // );
-    };
-
     const templadata = useSelector((state) => state.temple);
-
+    const { theme } = useContext(ThemeContext);
     return (
         <View
             style={{
@@ -120,15 +74,15 @@ const PreviewPage = ({ navigation, setStep }) => {
                 >
                     <KeyValueBox
                         keyName={'Temple Name'}
-                        value={templadata?.templeName ?? 'kuch nhi hai abhi'}
+                        value={templadata?.templeName ?? 'Values not avaible'}
                     />
                     <KeyValueBox
                         keyName={'Location'}
-                        value={templadata?.templeLocation?.locationName ?? 'kuch nhi hai abhi'}
+                        value={templadata?.templeLocation?.locationName ?? 'Values not avaible'}
                     />
                     <KeyValueBox
                         keyName={'Description'}
-                        value={templadata?.description ?? 'abhi kuch dala nhi gya hai '}
+                        value={templadata?.description ?? 'Values not avaible'}
                     />
                     <KeyValueBox keyName={'Images'} value={templadata?.imageSrc} />
                 </View>

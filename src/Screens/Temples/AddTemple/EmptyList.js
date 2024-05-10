@@ -5,14 +5,7 @@ import { CustomLongBtn } from '../../../components/Buttons';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 export const EmptyList = ({ onPressOfBtn, navigation }) => (
-    <View
-        style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: -50,
-        }}
-    >
+    <View style={style.masterContainer}>
         <AddTempleHomePageLogo />
         <View
             style={{
@@ -65,5 +58,11 @@ const style = StyleSheet.create({
         textAlign: 'center',
         color: '#000',
         lineHeight: 18,
+    },
+    masterContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: -50,
     },
 });

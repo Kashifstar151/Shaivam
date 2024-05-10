@@ -12,6 +12,7 @@ import SelectLocation from './SelectLocation';
 import PreviewPage from './PreviewPage';
 import PromptToCancel from './PromptToCancel';
 import SuccessfullSubmission from './SuccessfullSubmission';
+import Icon from 'react-native-vector-icons/dist/Entypo';
 
 const initialStepVal = {
     first: false,
@@ -21,8 +22,8 @@ const initialStepVal = {
     failed: false,
 };
 const Addtemple = ({ navigation }) => {
-    // const data = [1, 2, 3, 4, 5, 6];
-    const data = [];
+    const data = [1, 2, 3, 4, 5, 6, 7];
+    // const data = [];
     // for stepper form
     const [step, setStep] = useState(initialStepVal);
 
@@ -94,12 +95,7 @@ const Addtemple = ({ navigation }) => {
                     />
                 </View>
             </Background>
-            <View
-                style={{
-                    flex: 1,
-                    paddingHorizontal: 20,
-                }}
-            >
+            <View style={style.flatListContainer}>
                 <FlatList
                     data={data}
                     style={
@@ -109,6 +105,8 @@ const Addtemple = ({ navigation }) => {
                     }
                     contentContainerStyle={{
                         flexGrow: 1,
+                        paddingVertical: 20,
+                        paddingBottom: 80,
                     }}
                     renderItem={({ item, index }) => <RenderCardForAddTemple item={item} />}
                     refreshControl={
@@ -127,6 +125,12 @@ const Addtemple = ({ navigation }) => {
                     )}
                 />
             </View>
+
+            {data.length > 0 && (
+                <View style={style.addBtn}>
+                    <Icon name="plus" size={25} color="#222222" />
+                </View>
+            )}
 
             <ModalComponent
                 isVisible={step.first}
@@ -188,6 +192,26 @@ const Addtemple = ({ navigation }) => {
     );
 };
 
-const style = StyleSheet.create({});
+const style = StyleSheet.create({
+    flatListContainer: {
+        flex: 1,
+        zIndex: -1,
+    },
+
+    addBtn: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 10,
+        width: 60,
+        height: 60,
+        backgroundColor: '#FCB300',
+        position: 'absolute',
+        bottom: 110,
+        right: 30,
+        borderRadius: 10,
+        borderWidth: 1,
+        elevation: 5,
+    },
+});
 
 export default Addtemple;

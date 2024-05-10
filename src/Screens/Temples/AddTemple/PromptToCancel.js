@@ -19,23 +19,11 @@ const PromptToCancel = ({ setStep, navigation }) => {
                 blurRadius={10}
                 style={styles.contentWrap}
             ></BlurView>
-            <View
-                style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    flex: 1,
-                }}
-            >
+            <View style={styles.topWrapper}>
                 <View
                     style={[
+                        styles.innerWrapper,
                         {
-                            backgroundColor: '#FFFFFF',
-                            overflow: 'hidden',
-                            borderRadius: 10,
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            padding: 20,
-                            paddingVertical: 50,
                             width: screenWidth * 0.85,
                             height: screenHeight * 0.35,
                         },
@@ -43,26 +31,10 @@ const PromptToCancel = ({ setStep, navigation }) => {
                 >
                     <AlertSVG />
                     <View>
-                        <Text
-                            style={{
-                                color: 'black',
-                                fontFamily: 'Mulish-Bold',
-                                fontSize: 18,
-                            }}
-                        >
+                        <Text style={styles.contentWrap.mainLine}>
                             Are you sure you want stop ?
                         </Text>
-                        <Text
-                            style={{
-                                color: '#777777',
-                                textAlign: 'center',
-                                fontFamily: 'Mulish-Regular',
-                                fontSize: 14,
-                                lineHeight: 18,
-                            }}
-                        >
-                            All your entered data will be lost
-                        </Text>
+                        <Text style={styles.subLine}>All your entered data will be lost</Text>
                     </View>
                     <View
                         style={{
@@ -128,6 +100,34 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
+    },
+
+    topWrapper: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex: 1,
+    },
+
+    innerWrapper: {
+        backgroundColor: '#FFFFFF',
+        overflow: 'hidden',
+        borderRadius: 10,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 20,
+        paddingVertical: 50,
+    },
+    mainLine: {
+        color: 'black',
+        fontFamily: 'Mulish-Bold',
+        fontSize: 18,
+    },
+    subLine: {
+        color: '#777777',
+        textAlign: 'center',
+        fontFamily: 'Mulish-Regular',
+        fontSize: 14,
+        lineHeight: 18,
     },
 });
 
