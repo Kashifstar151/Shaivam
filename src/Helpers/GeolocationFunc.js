@@ -138,7 +138,14 @@ export const getTheLocationName = async (coords) => {
                 'Content-Type': 'application/json',
             }),
         }
-    ).then((res) => res.json());
+    )
+        .then((res) => res.json())
+        .then((response) => {
+            return { data: response, status: 'SUCCESS' };
+        })
+        .catch((err) => {
+            return { status: 'FAILED', err };
+        });
     // console.log("the location info  data ==>", data)
     return data;
 };
