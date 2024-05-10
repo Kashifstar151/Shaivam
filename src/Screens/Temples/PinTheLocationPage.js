@@ -1,3 +1,8 @@
+/*
+ ? the value setter over here returns the value like :
+    * {"address": {"ISO3166-2-lvl4": "IN-UP", "country": "India", "country_code": "in", "county": "", "postcode": "", "state": "", "state_district": "", "village": ""}, "addresstype": "", "boundingbox": [num,num,num,num], "category": "", "display_name": "", "importance": "", "lat": "", "licence": "Data © OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright", "lon": "", "name": "", "osm_id": "", "osm_type":"", "place_id": , "place_rank": , "type": ""}
+*/
+
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
@@ -55,14 +60,20 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
             if (coors?.latitude && coors?.longitude) {
                 // console.log('the location is fetching  ');
                 const locationDetail = await getTheLocationName({ ...dragCoor.current });
-                // console.log('the location  fetching  is done', locationDetail);
-                setUserLocName((prev) => {
-                    return {
-                        ...prev,
-                        name: locationDetail?.address?.village || locationDetail?.name,
-                        displayName: locationDetail?.display_name,
-                    };
-                });
+                console.log('the location  fetching  is done', locationDetail);
+                if (locationDetail.status === 'SUCCESS') {
+                    setUserLocName((prev) => {
+                        return {
+                            ...prev,
+                            name: locationDetail?.data?.address?.village || locationDetail?.name,
+                            displayName: locationDetail?.data?.display_name,
+                        };
+                    });
+                    valueSetter(locationDetail?.data);
+                } else if (locationDetail.status === 'FAILED') {
+                    alert('erorr occured');
+                    console.log('The error is ==>', locationDetail?.err);
+                }
             }
         },
         [dragCoor.current]
@@ -97,7 +108,7 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
         };
     }, []);
 
-    const { screenHeight, screenWidth } = getDimension();
+    const { screenWidth } = getDimension();
     const mapRef = useRef();
     return (
         <View style={styles.mainContainer}>
@@ -133,7 +144,7 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
                         dragCoor.current = e;
                         fetchTheName(e);
                     }}
-                    flag={7}
+                    flag={1}
                     coordinate={dragCoor.current}
                     keyName={'COORDINATE2'}
                 />
@@ -160,7 +171,7 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
                         justifyContent: 'center',
                         alignItems: 'center',
                     }}
-                    onPress={close}
+                    onPress={() => close(1)}
                 >
                     {theme.colorscheme !== 'light' ? <WhiteBackButton /> : <BackIcon />}
                 </Pressable>
@@ -190,6 +201,7 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
                             latitude: parseFloat(item.lat),
                             longitude: parseFloat(item.lon),
                         };
+                        fetchTheName(dragCoor.current);
                         setRegionCoordinate((prev) => ({
                             ...prev,
                             latitude: parseFloat(item.lat),
@@ -252,10 +264,11 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
                     <CustomLongBtn
                         onPress={() => {
                             setBtnState(!btnState);
-                            setDescription((prev) => {
-                                return userLocName.displayName;
-                            });
-                            close();
+                            // setDescription((prev) => {
+                            //     return userLocName.displayName;
+                            // });
+                            // valueSetter(userLocName.displayName);
+                            close(1);
                         }}
                         text={'Pin Location'}
                         textStyle={{
