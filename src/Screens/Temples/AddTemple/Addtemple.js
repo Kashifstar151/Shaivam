@@ -128,32 +128,57 @@ const Addtemple = ({ navigation }) => {
                 />
             </View>
 
-            <ModalComponent isVisible={step.first}>
+            <ModalComponent
+                isVisible={step.first}
+                onRequestClose={() => {
+                    setTheFlagsForModal();
+                }}
+            >
                 <AddTempleForm
                     navigation={navigation}
                     setStep={(num) => setTheFlagsForModal(num)}
                 />
             </ModalComponent>
 
-            <ModalComponent isVisible={step.second}>
+            <ModalComponent
+                isVisible={step.second}
+                onRequestClose={() => {
+                    setTheFlagsForModal(1);
+                }}
+            >
                 <SelectLocation
                     navigation={navigation}
                     setStep={(num) => setTheFlagsForModal(num)}
                 />
             </ModalComponent>
 
-            <ModalComponent isVisible={step.third}>
+            <ModalComponent
+                isVisible={step.third}
+                onRequestClose={() => {
+                    setTheFlagsForModal(1);
+                }}
+            >
                 <PreviewPage navigation={navigation} setStep={(num) => setTheFlagsForModal(num)} />
             </ModalComponent>
 
-            <ModalComponent isVisible={step.success}>
+            <ModalComponent
+                isVisible={step.success}
+                onRequestClose={() => {
+                    setTheFlagsForModal();
+                }}
+            >
                 <SuccessfullSubmission
                     navigation={navigation}
                     setStep={(num) => setTheFlagsForModal(num)}
                 />
             </ModalComponent>
 
-            <ModalComponent isVisible={step.failed}>
+            <ModalComponent
+                isVisible={step.failed}
+                onRequestClose={() => {
+                    setTheFlagsForModal(1);
+                }}
+            >
                 <PromptToCancel
                     navigation={navigation}
                     setStep={(num) => setTheFlagsForModal(num)}
