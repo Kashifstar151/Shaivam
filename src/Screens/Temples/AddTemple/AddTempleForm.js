@@ -25,6 +25,7 @@ import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import Feather from 'react-native-vector-icons/dist/Feather';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+    resetTheState,
     updateDescription,
     updateTempleName,
     updateimageSrc,
@@ -139,6 +140,7 @@ const AddTempleForm = ({ navigation, setStep }) => {
                                 style={{ justifyContent: 'center' }}
                                 onPress={() => {
                                     setStep();
+                                    dispatch(resetTheState());
                                 }}
                             >
                                 <CloseBtn />
@@ -203,6 +205,7 @@ const AddTempleForm = ({ navigation, setStep }) => {
                                     onFocus={() => {
                                         setStep(2);
                                     }}
+                                    value={templadata?.templeLocation?.locationName}
                                     style={{
                                         color: 'black',
                                         backgroundColor: '#F3F3F3',
