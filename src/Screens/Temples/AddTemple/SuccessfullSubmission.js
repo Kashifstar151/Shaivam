@@ -2,8 +2,11 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { CustomLongBtn } from '../../../components/Buttons';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { useDispatch } from 'react-redux';
+import { resetTheState } from '../../../store/features/Temple/TempleSlice';
 
 const SuccessfullSubmission = ({ setStep, navigation }) => {
+    const dispatch = useDispatch();
     return (
         <View
             style={{
@@ -58,7 +61,10 @@ const SuccessfullSubmission = ({ setStep, navigation }) => {
                 }}
             >
                 <CustomLongBtn
-                    onPress={() => setStep()}
+                    onPress={() => {
+                        setStep();
+                        dispatch(resetTheState());
+                    }}
                     text={'Done'}
                     textStyle={{
                         color: '#4C3600',
