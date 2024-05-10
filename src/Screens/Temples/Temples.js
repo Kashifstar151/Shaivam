@@ -274,13 +274,17 @@ export const Temples = ({ navigation, route }) => {
             (async () => {
                 const locationDetail = await getTheLocationName({ ...regionCoordinate });
                 console.log('🚀 ~ locationDetail:', locationDetail);
-                setUserLocName((prev) => {
-                    return (
-                        locationDetail?.address?.village ||
-                        locationDetail?.name ||
-                        locationDetail?.display_name
-                    );
-                });
+                if (locationDetail?.status === 'SUCCESS') {
+                    setUserLocName((prev) => {
+                        return (
+                            locationDetail?.data?.address?.village ||
+                            locationDetail?.data?.name ||
+                            locationDetail?.data?.display_name
+                        );
+                    });
+                } else if (locationDetail.status === 'FAILED') {
+                    console.log('the error has occured ===>', locationDetail?.err);
+                }
             })();
         }
     }, [regionCoordinate]);
