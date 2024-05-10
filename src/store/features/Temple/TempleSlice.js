@@ -27,8 +27,14 @@ const templeReducer = {
     },
 
     updateimageSrc: (state, action) => {
-        console.log('🚀 ~ action:', action);
         state.imageSrc = action.payload;
+    },
+
+    resetTheState: () => {
+        // console.log('🚀 ~ action:', action);
+        // console.log('🚀 ~ state:', state);
+        // state = { ...initialTempleState };
+        return initialTempleState;
     },
 };
 
@@ -39,5 +45,10 @@ const templeSlice = createSlice({
 });
 
 export default templeSlice.reducer;
-export const { updateTheLocation, updateDescription, updateTempleName, updateimageSrc } =
-    templeSlice.actions;
+export const {
+    updateTheLocation,
+    updateDescription,
+    updateTempleName,
+    updateimageSrc,
+    resetTheState,
+} = templeSlice.actions;
