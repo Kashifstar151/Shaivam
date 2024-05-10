@@ -10,11 +10,15 @@ import ModalComponent from './ModalComponent';
 import AddTempleForm from './AddTempleForm';
 import SelectLocation from './SelectLocation';
 import PreviewPage from './PreviewPage';
+import PromptToCancel from './PromptToCancel';
+import SuccessfullSubmission from './SuccessfullSubmission';
 
 const initialStepVal = {
-    first: 'false',
-    second: 'false',
-    third: 'false',
+    first: false,
+    second: false,
+    third: false,
+    success: false,
+    failed: false,
 };
 const Addtemple = ({ navigation }) => {
     // const data = [1, 2, 3, 4, 5, 6];
@@ -53,6 +57,21 @@ const Addtemple = ({ navigation }) => {
                         third: true,
                     }));
                     break;
+
+                case 'SUCCESS':
+                    setStep(() => ({
+                        ...initialStepVal,
+                        success: true,
+                    }));
+                    break;
+
+                case 'FAILED':
+                    setStep(() => ({
+                        ...initialStepVal,
+                        failed: true,
+                    }));
+                    break;
+
                 default:
                     setStep(() => ({
                         ...initialStepVal,
@@ -125,6 +144,20 @@ const Addtemple = ({ navigation }) => {
 
             <ModalComponent isVisible={step.third}>
                 <PreviewPage navigation={navigation} setStep={(num) => setTheFlagsForModal(num)} />
+            </ModalComponent>
+
+            <ModalComponent isVisible={step.success}>
+                <SuccessfullSubmission
+                    navigation={navigation}
+                    setStep={(num) => setTheFlagsForModal(num)}
+                />
+            </ModalComponent>
+
+            <ModalComponent isVisible={step.failed}>
+                <PromptToCancel
+                    navigation={navigation}
+                    setStep={(num) => setTheFlagsForModal(num)}
+                />
             </ModalComponent>
         </View>
     );
