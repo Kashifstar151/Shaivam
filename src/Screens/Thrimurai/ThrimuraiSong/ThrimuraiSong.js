@@ -382,7 +382,7 @@ GROUP BY
     };
 
     const getItemLayOut = (item, index) => {
-        // console.log("🚀 ~ getItemLayOut ~ index:", index)
+        // console.log("🚀 ~ getItemLayOut ~ index: 222", index, JSON.stringify(item, 0, 2))
         return { length: 260, offset: 260 * index, index };
     };
     const setUpPlayer = useCallback(

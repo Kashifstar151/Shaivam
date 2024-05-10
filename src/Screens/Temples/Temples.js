@@ -55,7 +55,7 @@ export const Temples = ({ navigation, route }) => {
         locationName: '',
     });
     const { data, isSuccess } = useGetNearByTemplesQuery(regionCoordinate);
-    // console.log('🚀 ~ Temples ~ data:', JSON.stringify(data?.data, 0, 2));
+    console.log('🚀 ~ Temples ~ data:', JSON.stringify(data?.temples?.length, 0, 2));
 
     const [userLocation, setUserLocation] = useState({
         latitude: 28.500271,
@@ -303,12 +303,12 @@ export const Temples = ({ navigation, route }) => {
                             }, 5000)
                         }
                         provider={PROVIDER_GOOGLE}
-                        initialRegion={{
-                            longitude: 77.40369287235171,
-                            latitude: 28.49488467262243,
-                            latitudeDelta: 0.015,
-                            longitudeDelta: 0.0121,
-                        }}
+                        // initialRegion={{
+                        //     longitude: 77.40369287235171,
+                        //     latitude: 28.49488467262243,
+                        //     latitudeDelta: 0.015,
+                        //     longitudeDelta: 0.0121,
+                        // }}
                         style={styles.map}
                         onRegionChangeComplete={(args, gesture) => {
                             if (gesture.isGesture) {
@@ -323,6 +323,7 @@ export const Temples = ({ navigation, route }) => {
                             }
                         }}
                         // region={regionCoordinate}
+                        // zoomEnabled
                         zoomEnabled={mapInteractivityState}
                         scrollEnabled={mapInteractivityState}
                         ref={mapRef}
@@ -345,28 +346,42 @@ export const Temples = ({ navigation, route }) => {
                                 />
                             </View>
                         )}
-                        {data?.data?.length &&
-                            data?.data?.map((item, index) => (
-                                <>
-                                    {item?.attributes?.temple?.lat &&
-                                        item?.attributes?.temple?.long && (
-                                            <MarkerCallOut
-                                                setPadState={setPadState}
-                                                callback={() => {
-                                                    // setting the type of the marker you pressed
-                                                    // callback function for naving to page which has the temple details
-                                                    markerPressClbk(navigation, 7, item);
-                                                }}
-                                                flag={item?.attributes?.flag}
-                                                coordinate={{
-                                                    latitude: item?.attributes?.temple?.lat,
-                                                    longitude: item?.attributes?.temple?.long,
-                                                }}
-                                                keyName={'COORDINATE'}
-                                            />
-                                        )}
-                                </>
-                            ))}
+                        {data?.temples?.map((item, index) => (
+                            <>
+                                {item?.latitude && item?.longitude && (
+                                    <>
+                                        {/* <Marker
+                                        tracksViewChanges={false}
+                                        coordinate={{
+                                            longitude: item?.longitude,
+                                            latitude: item?.latitude,
+                                        }}
+                                        description={item?.name}
+                                        // image={assetMapWithTempleType[item?.flag].path}
+                                        style={{
+                                            width: '100%',
+                                            alignItems: 'center',
+                                        }}
+                                    ></Marker> */}
+                                        <MarkerCallOut
+                                            setPadState={setPadState}
+                                            callback={() => {
+                                                //   setting the type of the marker you pressed
+                                                //   callback function for naving to page which has the temple details
+                                                markerPressClbk(navigation, 7, item);
+                                            }}
+                                            flag={item?.flag}
+                                            coordinate={{
+                                                longitude: item?.longitude,
+                                                latitude: item?.latitude,
+                                            }}
+                                            keyName={'COORDINATE'}
+                                            description={item?.name}
+                                        />
+                                    </>
+                                )}
+                            </>
+                        ))}
                     </MapView>
                 ) : null}
 

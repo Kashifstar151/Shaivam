@@ -123,6 +123,7 @@ dependencies {
     implementation("com.facebook.react:flipper-integration")
     implementation 'com.google.firebase:firebase-dynamic-links'
     implementation 'com.google.firebase:firebase-analytics'
+    implementation project(':react-native-push-notification')
      
 
     

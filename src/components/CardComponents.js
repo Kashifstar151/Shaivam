@@ -79,14 +79,14 @@ const RenderItem = ({ blockRef, item, navigation, theme }) => {
                         onLayout={(event) => onLayout(event, _)}
                         onPress={
                             i?.navName == 'Thirumurais' ||
-                            i?.navName == 'Stotras' ||
-                            i?.navName == RouteTexts.TEMPLE_TABS_NAVIGATE ||
-                            i?.navName == RouteTexts.CALENDER ||
-                            i?.navName == RouteTexts.RADIO
+                                i?.navName == 'Stotras' ||
+                                i?.navName == RouteTexts.TEMPLE_TABS_NAVIGATE ||
+                                i?.navName == RouteTexts.CALENDER ||
+                                i?.navName == RouteTexts.RADIO
                                 ? () => navigation.navigate(i?.navName)
                                 : i?.navName == 'Website'
-                                ? () => Linking.openURL('https://shaivam.org/')
-                                : () => alert(`the ${i?.navName}`)
+                                    ? () => Linking.openURL('https://shaivam.org/')
+                                    : () => alert(`the ${i?.navName}`)
                         }
                         style={[
                             styles.subComp,
@@ -128,6 +128,7 @@ const CardComponents = ({ navigation }) => {
     const [onFocus, setOnFocus] = useState(false);
     const { theme } = useContext(ThemeContext);
     const { t } = useTranslation();
+
     const data = [
         {
             text: t('Sacred Texts'),
@@ -224,7 +225,7 @@ const CardComponents = ({ navigation }) => {
     return (
         <View style={{ paddingLeft: 0 }}>
             <View style={{ marginTop: 24, paddingHorizontal: 15 }}>
-                <Header />
+                <Header navigation={navigation} />
                 <SearchInput
                     placeholder={t('Search for anything (Eg - தோடுடைய செவியன்) ')}
                     setState={setSearchText}

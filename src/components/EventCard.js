@@ -5,10 +5,14 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import moment from 'moment';
 import { colors } from '../Helpers';
 
-const EventCard = ({ date, timing, title, theme, item }) => {
-    let d = moment(item?.attributes?.start_date);
+const EventCard = ({ date, timing, title, theme, item, header, day, dateNo }) => {
+    let d =
+        header == 'Festivals'
+            ? moment(item?.attributes?.calendar_from_date)
+            : moment(item?.attributes?.start_date);
     let dayname = d.format('ddd');
-    let day = d.format('DD');
+    // let day = d.format('DD');
+    // console.log("🚀 ~ EventCard ~ day:", day)
     return (
         <View
             style={[
@@ -26,7 +30,8 @@ const EventCard = ({ date, timing, title, theme, item }) => {
                         fontSize: RFValue(12, 800),
                     }}
                 >
-                    {dayname ? dayname : date.day}
+                    {/* {header === 'Festivals' ? moment(item?.attributes?.calendar_from_date).format('ddd') : dayname ? dayname : date.day} */}
+                    {day}
                 </Text>
                 <Text
                     style={{
@@ -35,12 +40,22 @@ const EventCard = ({ date, timing, title, theme, item }) => {
                         fontWeight: '600',
                     }}
                 >
-                    {day ? day : date.dateNo}
+                    {/* {header === 'Festivals' ? moment(item?.attributes?.calendar_from_date).format('DD') : item?.start_date ? moment(item?.start_date).format('DD') : moment(item?.attributes?.start_date).format('DD')} */}
+                    {dateNo}
                 </Text>
+                {/* <Text
+                    style={{
+                        color: theme.colorscheme === 'light' ? colors.mineGrey : theme.textColor,
+                        fontSize: RFValue(20, 800),
+                        fontWeight: '600',
+                    }}
+                >
+                    {item?.attributes?.SchedulaType ? item?.attributes?.SchedulaType : 'regular'}
+                </Text> */}
             </View>
             <View style={{ height: 30, borderRightWidth: 1, borderRightColor: '#EAEAEA' }}></View>
             <OpenBookSVG fill={theme.colorscheme === 'light' ? '#4C3600' : '#fff'} />
-            <View style={{ rowGap: 5, justifyContent: 'center', rowGap: 4 }}>
+            <View style={{ rowGap: 5, justifyContent: 'center', rowGap: 4, width: '75%' }}>
                 <Text
                     style={{
                         fontWeight: '600',
@@ -49,7 +64,7 @@ const EventCard = ({ date, timing, title, theme, item }) => {
                         fontSize: RFValue(12, 800),
                     }}
                 >
-                    {title?.substring(0, 30)}
+                    {title}
                 </Text>
                 <Text
                     style={{

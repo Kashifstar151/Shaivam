@@ -11,6 +11,7 @@ const ElevatedCard = ({ children, theme, navigation }) => {
                 marginHorizontal: 15,
                 marginBottom: 5,
                 backgroundColor: theme?.colorscheme === 'light' ? '#fff' : '#333333',
+                // backgroundColor: 'red',
                 overflow: 'visible',
                 borderRadius: 15,
             }}
