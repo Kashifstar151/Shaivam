@@ -146,8 +146,8 @@ const PreviewPage = ({ navigation, setStep }) => {
                 }}
             >
                 <CustomLongBtn
-                    onPress={() => setStep('next')}
-                    text={'Next'}
+                    onPress={() => setStep('SUCCESS')}
+                    text={'Submit'}
                     textStyle={{
                         color: '#4C3600',
                         fontFamily: 'Mulish-Bold',

@@ -139,7 +139,7 @@ const AddTempleForm = ({ navigation, setStep }) => {
                             <Pressable
                                 style={{ justifyContent: 'center' }}
                                 onPress={() => {
-                                    setStep();
+                                    setStep('FAILED');
                                     dispatch(resetTheState());
                                 }}
                             >
