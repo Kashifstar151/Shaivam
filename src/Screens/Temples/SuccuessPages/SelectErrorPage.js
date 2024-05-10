@@ -316,7 +316,8 @@ const SelectErrorPage = ({ setShowSubmit, selectedError, navigation, setModalVis
                         close={() => {
                             setPinTheLocation(false);
                         }}
-                        setDescription={setDescription}
+                        // setDescription={setDescription}
+                        valueSetter={(value) => setDescription(value?.display_name)}
                     />
                 </View>
             )}
