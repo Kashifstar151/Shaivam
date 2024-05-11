@@ -31,9 +31,7 @@ const PromptToCancel = ({ setStep, navigation }) => {
                 >
                     <AlertSVG />
                     <View>
-                        <Text style={styles.contentWrap.mainLine}>
-                            Are you sure you want stop ?
-                        </Text>
+                        <Text style={styles.mainLine}>Are you sure you want stop ?</Text>
                         <Text style={styles.subLine}>All your entered data will be lost</Text>
                     </View>
                     <View
