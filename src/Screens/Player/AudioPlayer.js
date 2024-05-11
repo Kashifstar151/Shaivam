@@ -115,7 +115,7 @@ const AudioPlayer = ({
             if (
                 activeTrack?.url &&
                 duration !== 0 &&
-                new Date(position * 1000).toISOString().substring(14, 19) ===
+                new Date(position * 1000).toISOString().substring(14, 19) >=
                     new Date(duration * 1000).toISOString().substring(14, 19)
             ) {
                 queryForNextPrevId();
