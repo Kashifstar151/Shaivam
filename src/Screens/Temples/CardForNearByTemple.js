@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import FavSVG from '../../components/SVGs/FavSVG';
-
+import templeMetaData from './AssetMapWithTempleType';
 const CardForNearByTemple = ({ item }) => {
     const [favState, setFavState] = useState(false);
     return (
@@ -12,17 +12,19 @@ const CardForNearByTemple = ({ item }) => {
                         style={[
                             styles.widthForColorBar,
                             {
-                                // backgroundColor: `${item?.metadata().color}`,
-                                backgroundColor: `red`,
+                                backgroundColor: `${
+                                    templeMetaData[item?.flag]?.metaData?.color ?? '#000'
+                                }`,
                             },
                         ]}
                     ></View>
                     <View style={styles.textContainer}>
                         <Text numberOfLines={1} ellipsizeMode="tail" style={styles.textBold}>
-                            {item?.attributes?.Name_of_the_place}
+                            {item?.name}
+                            {/* {item?.attributes?.Name_of_the_place} */}
                         </Text>
                         <Text numberOfLines={1} ellipsizeMode="tail" style={{ color: 'black' }}>
-                            {item?.attributes?.Swamy_name}
+                            {templeMetaData[item?.flag]?.fullName}
                         </Text>
                     </View>
                 </View>
