@@ -99,10 +99,20 @@ import DownArrowSVG from '../../components/SVGs/DownArrowSVG';
 import SearchContainerWithIcon from './SearchContainerWithIcon';
 import SearchTemple from './SearchTemple';
 import { useTranslation } from 'react-i18next';
-const NearByTemples = ({ close, data, locationName, snapIndex, navigation }) => {
+import getDimension from '../../Helpers/getDimension';
+const NearByTemples = ({
+    route,
+    setRegionCoordinate,
+    close,
+    data,
+    locationName,
+    snapIndex,
+    navigation,
+}) => {
     const { snapToIndex, snapToPosition } = useBottomSheet();
     const nav = useNavigation();
     const { t } = useTranslation();
+    const { screenWidth } = getDimension();
     return (
         <View
             style={{
@@ -126,7 +136,21 @@ const NearByTemples = ({ close, data, locationName, snapIndex, navigation }) => 
                         </Pressable>
                         <View style={{ flex: 1 }}>
                             <SearchContainerWithIcon>
-                                <SearchTemple isNavigable={false} isDisable={false} />
+                                <SearchTemple
+                                    route={route.name}
+                                    value={null}
+                                    isNavigable={false}
+                                    isDisable={false}
+                                    isAutoComplete={true}
+                                    setRegionCoordinate={(val) => setRegionCoordinate(val)}
+                                    positionSuggestionBox={{
+                                        position: 'absolute',
+                                        top: 60,
+                                        zIndex: 100,
+                                        width: screenWidth - 30,
+                                        marginLeft: -45,
+                                    }}
+                                />
                             </SearchContainerWithIcon>
                         </View>
                     </View>
@@ -219,6 +243,7 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingHorizontal: 20,
         paddingVertical: 10,
+        zIndex: 2000,
     },
     contWrapper: {
         paddingHorizontal: 10,
