@@ -2,7 +2,6 @@ import { Image, Text, View } from 'react-native';
 import { Callout, Marker } from 'react-native-maps';
 import assetMapWithTempleType from './AssetMapWithTempleType';
 export const MarkerCallOut = ({ callback, flag, coordinate, description }) => {
-    console.log('🚀 ~ MarkerCallOut ~ coordinate:', coordinate);
     return (
         <Marker
             tracksViewChanges={false}

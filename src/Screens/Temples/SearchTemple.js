@@ -106,7 +106,7 @@ const SearchTemple = ({
     }, []);
 
     return (
-        <View style={{ flexGrow: 1, zIndex: 100 }}>
+        <View style={{ flexGrow: 1 }}>
             <View
                 style={[
                     styles.wrapper,
@@ -154,7 +154,6 @@ const SearchTemple = ({
                         style={{
                             position: 'absolute',
                             top: 60,
-                            zIndex: 100,
                             width: screenWidth,
                             height: screenHeight,
                             marginLeft: -20,
@@ -166,7 +165,6 @@ const SearchTemple = ({
                             {
                                 position: 'absolute',
                                 top: 60,
-                                zIndex: 100,
                                 width: screenWidth - 40,
                                 backgroundColor: '#F3F3F3',
                                 borderRadius: 8,
