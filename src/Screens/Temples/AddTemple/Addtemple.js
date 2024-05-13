@@ -13,6 +13,7 @@ import PreviewPage from './PreviewPage';
 import PromptToCancel from './PromptToCancel';
 import SuccessfullSubmission from './SuccessfullSubmission';
 import Icon from 'react-native-vector-icons/dist/Entypo';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 
 const initialStepVal = {
     first: false,
@@ -127,9 +128,17 @@ const Addtemple = ({ navigation }) => {
             </View>
 
             {data.length > 0 && (
-                <View style={style.addBtn}>
+                <TouchableHighlight
+                    style={style.addBtn}
+                    onPress={() => {
+                        setStep((prev) => ({
+                            ...prev,
+                            first: true,
+                        }));
+                    }}
+                >
                     <Icon name="plus" size={25} color="#222222" />
-                </View>
+                </TouchableHighlight>
             )}
 
             <ModalComponent

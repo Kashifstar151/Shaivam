@@ -16,7 +16,48 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
             },
             providesTags: ['Temple'],
         }),
+
+        getTempleDetail: builder.query({
+            query: ({ id }) => {
+                const url = `api/maps/${id}?populate=temple`;
+                return {
+                    url: url,
+                    method: 'GET',
+                };
+            },
+            providesTags: ['TempleDetail'],
+            transformResponse: (response, meta, arg) => {
+                if (response?.data?.attributes?.temple?.data) {
+                    const {
+                        Swamy_name,
+                        Ambal_Name,
+                        Temple_tree,
+                        Thirtham,
+                        Sages_who_worshiped,
+                        Location,
+                        Specialities_Description,
+                        Sthala_Puranam_Description,
+                    } = response?.data?.attributes?.temple?.data?.attributes;
+                    return {
+                        basicDetails: {
+                            "Lord's name": Swamy_name,
+                            'Divine name': Ambal_Name,
+                            'Head tree': Temple_tree ?? 'N/A',
+                            Thirtham: Thirtham,
+                            Worshipped: Sages_who_worshiped,
+                            Location: Location,
+                        },
+
+                        Specialities_Description,
+                        Sthala_Puranam_Description,
+                    };
+                } else {
+                    return;
+                }
+            },
+        }),
     }),
 });
 
-export const { useGetNearByTemplesQuery } = TempleApiSliceCall;
+export const { useGetNearByTemplesQuery, useLazyGetNearByTemplesQuery, useGetTempleDetailQuery } =
+    TempleApiSliceCall;
