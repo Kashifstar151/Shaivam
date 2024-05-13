@@ -38,7 +38,7 @@ const TempleCard = ({ dataSet, children, showMargin, showButton }) => {
                 {dataSet?.templeName}
             </Text>
 
-            <Text style={{ color: 'black', fontFamily: 'Mulish-Regular' }}>
+            <Text style={{ color: 'black', fontFamily: 'Mulish-Regular', paddingTop: 10 }}>
                 {dataSet?.templeType}
             </Text>
             {showButton && (
@@ -95,7 +95,7 @@ const TempleCard = ({ dataSet, children, showMargin, showButton }) => {
                     />
                 </ScrollView>
             )}
-            <FlatList
+            {/* <FlatList
                 horizontal
                 contentContainerStyle={{ gap: 10, paddingVertical: 10 }}
                 data={Array.from({ length: 7 }, (_, i) => i)}
@@ -105,7 +105,7 @@ const TempleCard = ({ dataSet, children, showMargin, showButton }) => {
                         style={{ color: 'black', width: 200, height: 100, borderRadius: 8 }}
                     />
                 )}
-            />
+            /> */}
             {showMargin && (
                 <View
                     style={{
