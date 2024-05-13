@@ -6,7 +6,7 @@ import SearchTemple from './SearchTemple';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { ImageBackground } from 'react-native';
 import { ThemeContext } from '../../Context/ThemeContext';
-import { CustomMarker } from './CustomMarker';
+import { MarkerCallOut } from './CustomMarker';
 import { markerPressClbk } from './CallBacksForClick';
 
 const BottomSheetTempleTemplate = ({
@@ -34,6 +34,7 @@ const BottomSheetTempleTemplate = ({
     isSearchFieldDisabled,
     isSearchFieldDisabledInFullScreenMode,
 }) => {
+    console.log('🚀 ~ ---------data:', data);
     const bottomSheetRef = useRef(null);
     const [padState, setPadState] = useState(null);
     const [snapIndex, setSnapIndex] = useState(0);
@@ -51,8 +52,8 @@ const BottomSheetTempleTemplate = ({
                 style={styles.map}
                 region={regionCoordinate}
             >
-                {data?.attributes?.temple?.lat && data?.attributes?.temple?.long && (
-                    <CustomMarker
+                {data?.templeCoordinate?.latitude && data?.templeCoordinate?.longitude && (
+                    <MarkerCallOut
                         setPadState={setPadState}
                         callback={() => {
                             // setting the type of the marker you pressed
@@ -61,10 +62,11 @@ const BottomSheetTempleTemplate = ({
                         }}
                         flag={9}
                         coordinate={{
-                            latitude: data?.attributes?.temple?.lat,
-                            longitude: data?.attributes?.temple?.long,
+                            latitude: data?.templeCoordinate?.latitude,
+                            longitude: data?.templeCoordinate?.longitude,
                         }}
                         keyName={'COORDINATE'}
+                        description={data?.templeName}
                     />
                 )}
             </MapView>
@@ -75,14 +77,14 @@ const BottomSheetTempleTemplate = ({
                     padding: 20,
                 }}
             >
-                <SearchContainerWithIcon
-                    searchTempleProps={{
-                        route: routeName,
-                        value: valueToBePreFilled,
-                        isNavigable: isNavigable,
-                        isDisable: isSearchFieldDisabled,
-                    }}
-                />
+                <SearchContainerWithIcon>
+                    <SearchTemple
+                        route={routeName}
+                        value={valueToBePreFilled}
+                        isNavigable={isNavigable}
+                        isDisable={isSearchFieldDisabled}
+                    />
+                </SearchContainerWithIcon>
             </View>
             <BottomSheet
                 ref={bottomSheetRef}
