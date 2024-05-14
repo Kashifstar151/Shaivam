@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import Background from '../../../components/Background';
 import TempleHeader from '../TempleHeader';
@@ -14,8 +14,11 @@ import PromptToCancel from './PromptToCancel';
 import SuccessfullSubmission from './SuccessfullSubmission';
 import Icon from 'react-native-vector-icons/dist/Entypo';
 import { TouchableHighlight } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AddEmail from './AddEmail';
 
 const initialStepVal = {
+    email: 'false',
     first: false,
     second: false,
     third: false,
@@ -37,14 +40,42 @@ const Addtemple = ({ navigation }) => {
         }, 2000);
     }, []);
 
+    const [email, setEmail] = useState('');
+
+    const getTheEmail = async () => {
+        const fetchedEmail = await AsyncStorage.getItem('email');
+        console.log('🚀 ~ getTheEmail ~ fetchedEmail:', fetchedEmail);
+        if (!fetchedEmail) {
+            setTheFlagsForModal('EMAIL');
+        } else {
+            setEmail(() => fetchedEmail);
+        }
+    };
+    useEffect(() => {
+        getTheEmail();
+    }, []);
+
     const setTheFlagsForModal = (num) => {
         {
             switch (num) {
-                case 1:
+                case 'EMAIL':
                     setStep(() => ({
                         ...initialStepVal,
-                        first: true,
+                        email: true,
                     }));
+                    break;
+                case 1:
+                    if (email) {
+                        setStep(() => ({
+                            ...initialStepVal,
+                            first: true,
+                        }));
+                    } else {
+                        setStep(() => ({
+                            ...initialStepVal,
+                            email: true,
+                        }));
+                    }
                     break;
                 case 2:
                     setStep(() => ({
@@ -141,6 +172,14 @@ const Addtemple = ({ navigation }) => {
                 </TouchableHighlight>
             )}
 
+            <ModalComponent isVisible={step.email} onRequestClose={() => {}}>
+                <AddEmail
+                    setEmail={setEmail}
+                    navigation={navigation}
+                    setStep={(num) => setTheFlagsForModal(num)}
+                />
+            </ModalComponent>
+
             <ModalComponent
                 isVisible={step.first}
                 onRequestClose={() => {
@@ -171,7 +210,11 @@ const Addtemple = ({ navigation }) => {
                     setTheFlagsForModal(1);
                 }}
             >
-                <PreviewPage navigation={navigation} setStep={(num) => setTheFlagsForModal(num)} />
+                <PreviewPage
+                    email={email}
+                    navigation={navigation}
+                    setStep={(num) => setTheFlagsForModal(num)}
+                />
             </ModalComponent>
 
             <ModalComponent
