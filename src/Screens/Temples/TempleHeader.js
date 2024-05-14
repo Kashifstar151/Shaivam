@@ -3,8 +3,10 @@ import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import Background from '../../components/Background';
 import NandiLogo from '../../assets/Images/NandiLogo.svg';
 import HeadingComponent from './Common/HeadingComponent';
+import { useTranslation } from 'react-i18next';
 
 const TempleHeader = () => {
+    const { t } = useTranslation()
     return (
         <View>
             <View

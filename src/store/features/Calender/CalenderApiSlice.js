@@ -6,7 +6,12 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
         getList: builder.query({
             query: (date) => {
                 console.log(date, 'date from calender');
-                const url = date?.selectedLocation !== null ? `https://prod-admin.shaivam.in/api/regular-events?filters[start_date][$lte]=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&filters[end_date][$gte]=${date?.selectMonth}&populate[Files][fields][0]=url&filters[status][$eq]=Approved&pagination[pageSize]=200&filters[Location][$lte]=${date?.selectedLocation?.name}` : `regular-events?filters[start_date][$lte]=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&filters[end_date][$gte]=${date?.selectMonth}&populate[Files][fields][0]=url&filters[status][$eq]=Approved&pagination[pageSize]=200`;
+                let url = date?.selectedLocation !== null ?
+                    `regular-events?filters[start_date][$lte]=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&filters[end_date][$gte]=${moment(date?.selectMonth).startOf('month').format('YYYY-MM-DD')}&populate[Files][fields][0]=url&filters[status][$eq]=Approved&pagination[pageSize]=200&filters[Location][$lte]=${date?.selectedLocation?.name}` :
+                    date?.eventCategory !== null ? `regular-events?filters[start_date][$lte]=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&filters[end_date][$gte]=${date?.selectMonth}&populate[Files][fields][0]=url&filters[status][$eq]=Approved&pagination[pageSize]=200&filters[category][$lte]=${date?.eventCategory}` :
+                        date?.selectedLocation !== null && date?.eventCategory !== null ? `regular-events?filters[start_date][$lte]=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&filters[end_date][$gte]=${moment(date?.selectMonth).startOf('month').format('YYYY-MM-DD')}&populate[Files][fields][0]=url&filters[status][$eq]=Approved&pagination[pageSize]=200&filters[category][$lte]=${date?.eventCategory}&filters[Location][$lte]=${date?.selectedLocation?.name}` :
+                            `regular-events?filters[start_date][$lte]=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&filters[end_date][$gte]=${moment(date?.selectMonth).startOf('month').format('YYYY-MM-DD')}&populate[Files][fields][0]=url&filters[status][$eq]=Approved&pagination[pageSize]=200`;
+
                 console.log('🚀 ~ url:', url);
                 return {
                     url: url,
@@ -15,12 +20,14 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
             },
             providesTags: ['Calender'],
         }),
+
         getRecurringEventList: builder.query({
             query: (date) => {
-                // console.log(date, 'date from calender');
-                const url = date?.selectedLocation !== null ?
-                    `https://prod-admin.shaivam.in/api/recurring-events?filters[SchedulaType][$eq]=Weekly&filters[Status][$eq]=Approval&populate[File][fields][0]=url&pagination[pageSize]=200&filters[Location][$lte]=${date?.selectedLocation?.name}` :
-                    `https://prod-admin.shaivam.in/api/recurring-events?filters[SchedulaType][$eq]=Weekly&filters[Status][$eq]=Approval&populate[File][fields][0]=url&pagination[pageSize]=200`;
+                let url = date?.selectedLocation !== null ?
+                    `recurring-events?filters[SchedulaType][$eq]=Weekly&filters[Status][$eq]=Approval&populate[File][fields][0]=url&pagination[pageSize]=200&filters[Location][$lte]=${date?.selectedLocation?.name}` :
+                    date?.eventCategory !== null ? `recurring-events?filters[SchedulaType][$eq]=Weekly&filters[Status][$eq]=Approval&populate[File][fields][0]=url&pagination[pageSize]=200&filters[Location][$lte]=${date?.eventCategory}` :
+                        date?.selectedLocation !== null && date?.eventCategory !== null ? `recurring-events?filters[SchedulaType][$eq]=Weekly&filters[Status][$eq]=Approval&populate[File][fields][0]=url&pagination[pageSize]=200&filters[Location][$lte]=${date?.eventCategory}&filters[Location][$lte]=${date?.selectedLocation?.name}` :
+                            `recurring-events?filters[SchedulaType][$eq]=Weekly&filters[Status][$eq]=Approval&populate[File][fields][0]=url&pagination[pageSize]=200`;
                 // console.log('🚀 ~ url:', url);
                 return {
                     url: url,
@@ -32,9 +39,11 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
         getRecurringEventMonthly: builder.query({
             query: (date) => {
                 // console.log(date, 'date from calender');
-                const url = date?.selectedLocation !== null ?
-                    `https://prod-admin.shaivam.in/api/recurring-events?filters[SchedulaType][$eq]=Monthly&filters[Status][$eq]=Approval&populate[File][fields][0]=url&pagination[pageSize]=200&filters[Location][$lte]=${date?.selectedLocation?.name}` :
-                    `https://prod-admin.shaivam.in/api/recurring-events?filters[SchedulaType][$eq]=Monthly&filters[Status][$eq]=Approval&populate[File][fields][0]=url&pagination[pageSize]=200`;
+                let url = date?.selectedLocation !== null ?
+                    `recurring-events?filters[SchedulaType][$eq]=Monthly&filters[Status][$eq]=Approval&populate[File][fields][0]=url&pagination[pageSize]=200&filters[Location][$lte]=${date?.selectedLocation?.name}` :
+                    date?.eventCategory !== null ? `recurring-events?filters[SchedulaType][$eq]=Monthly&filters[Status][$eq]=Approval&populate[File][fields][0]=url&pagination[pageSize]=200&filters[Location][$lte]=${date?.eventCategory}` :
+                        date?.selectedLocation !== null && date?.eventCategory !== null ? `recurring-events?filters[SchedulaType][$eq]=Monthly&filters[Status][$eq]=Approval&populate[File][fields][0]=url&pagination[pageSize]=200&filters[Location][$lte]=${date?.eventCategory}&filters[Location][$lte]=${date?.selectedLocation?.name}` :
+                            `recurring-events?filters[SchedulaType][$eq]=Monthly&filters[Status][$eq]=Approval&populate[File][fields][0]=url&pagination[pageSize]=200`;
                 // console.log('🚀 ~ url:', url);
                 return {
                     url: url,
@@ -58,8 +67,8 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
         addRegularEvent: builder.mutation({
             query: (data, eventType) => {
                 console.log('🚀 ~ data:', data?.eventType, eventType);
-                // console.log('date from calender');
-                const url = `regular-events`;
+                console.log('date from Virtual event', data);
+                const url = `https://seashell-app-xzq8f.ondigitalocean.app/api/regular_events`;
                 console.log('🚀 ~ url:', url);
                 return {
                     url: url,

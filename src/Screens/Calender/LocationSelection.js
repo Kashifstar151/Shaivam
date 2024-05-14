@@ -13,7 +13,7 @@ import { colors } from "../../Helpers";
 import { useDebouncer } from "../../Helpers/useDebouncer";
 import { useGetListQuery } from "../../store/features/Calender/CalenderApiSlice";
 
-const LocationSelection = ({ calender, setSelected, close }) => {
+const LocationSelection = ({ calender, setSelected, close, selectedLocation }) => {
     // const [selectedEvent, setSelectedEvent] = useState(null)
 
     const [regionCoordinate, setRegionCoordinate] = useState({
@@ -76,16 +76,21 @@ const LocationSelection = ({ calender, setSelected, close }) => {
                 'the response for the search of the place name is ========================== ==>',
                 response
             );
-            setFetchedLocationsName((prev) => response);
+            setFetchedLocationsName((prev) => response)
         });
     }, [debounceVal]);
-    const fetchMyLocation = () => {
-        getCurrentLocation((val) => {
+    const fetchMyLocation = async () => {
+        // alert(true)
+        getCurrentLocation(async (val) => {
             console.log("🚀 ~ getCurrentLocation ~ val:", val)
+            const locationDetail = await getTheLocationName({ ...val });
+            console.log("🚀 ~ getCurrentLocation ~ locationDetail:", locationDetail)
             // alert(true)
             // mapRef.current?.animateCamera({ center: val }, { duration: 1000 });
             setUserLocation((prev) => ({ ...prev, ...val }));
             setRegionCoordinate((prev) => ({ ...prev, ...val }));
+            setSelected({ lat: locationDetail?.lat, long: locationDetail?.lon, name: locationDetail?.display_name })
+            close?.current?.close()
         });
     }
     const data = [
@@ -113,7 +118,7 @@ const LocationSelection = ({ calender, setSelected, close }) => {
             <Text style={styles.headingText}>Search By Location</Text>
             <View style={{ paddingHorizontal: 20, flexDirection: "row", alignItems: 'center', borderRadius: 10, alignSelf: 'center', backgroundColor: '#F3F3F3', height: 55, width: Dimensions.get('window').width - 30 }}>
                 <MaterialIcons name="search" size={28} color={colors.grey4} />
-                <TextInput placeholder="Search for locations" placeholderTextColor={colors.grey5} onChangeText={(e) => setSearchText(e)} />
+                <TextInput placeholder="Search for locations" placeholderTextColor={colors.grey5} onChangeText={(e) => setSearchText(e)} val={selectedLocation} />
             </View>
             {/* <SearchInput color={true} styleOverwrite={{ marginHorizontalUnset: 20 }} /> */}
             <View style={{ paddingHorizontal: 20 }}>
@@ -123,18 +128,20 @@ const LocationSelection = ({ calender, setSelected, close }) => {
             <FlatList contentContainerStyle={{ paddingHorizontal: 20 }} data={fetchLocationName} renderItem={({ item, index }) => (
                 rednerItem(item, index)
             )} />
-            {/* <TouchableOpacity > */}
             <CustomButton
                 svg={<TrackBackToLocSVG width={16} height={16} fill={'#C1554E'} />}
                 onPress={() => {
                     if (calender) {
                         fetchMyLocation()
+                        alert(true)
+                        // alert(true)
                     } else {
-                        dragCoor.current = { ...userLocation };
-                        fetchTheName(dragCoor.current);
-                        setRegionCoordinate((prev) => ({ ...prev, ...userLocation }));
+                        // alert(true)
+                        fetchMyLocation()
+                        // dragCoor.current = { ...userLocation };
+                        // fetchTheName(dragCoor.current);
+                        // setRegionCoordinate((prev) => ({ ...prev, ...userLocation }));
                     }
-                    // write the function that we have used in the temple module to get the current location and set the name of the location in the near by place name
                 }}
                 style={{
                     margin: 10,

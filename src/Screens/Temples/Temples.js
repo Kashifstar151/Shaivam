@@ -55,7 +55,7 @@ export const Temples = ({ navigation, route }) => {
         locationName: '',
     });
     const { data, isSuccess } = useGetNearByTemplesQuery(regionCoordinate);
-    console.log('🚀 ~ Temples ~ data:', JSON.stringify(data?.temples?.length, 0, 2));
+    console.log('🚀 ~ Temples ~ data:', JSON.stringify(data, 0, 2));
 
     const [userLocation, setUserLocation] = useState({
         latitude: 28.500271,
@@ -355,7 +355,7 @@ export const Temples = ({ navigation, route }) => {
                                                     longitude: item?.longitude, latitude: item?.latitude,
                                                 }}
                                                 description={item?.name}
-                                                // image={assetMapWithTempleType[item?.flag].path}
+                                                image={assetMapWithTempleType[item?.flag].path}
                                                 style={{
                                                     width: '100%',
                                                     alignItems: 'center',

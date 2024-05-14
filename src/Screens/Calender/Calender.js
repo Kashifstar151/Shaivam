@@ -10,6 +10,7 @@ import {
     Dimensions,
     Text,
     ScrollView,
+    ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/Entypo';
 import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
@@ -42,6 +43,7 @@ import {
     useGetRecurringEventMonthlyQuery
 } from '../../store/features/Calender/CalenderApiSlice';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import { useTranslation } from 'react-i18next';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -49,6 +51,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 
 const Calender = ({ navigation }) => {
     const isFocused = useIsFocused()
+    const { t } = useTranslation()
     const data1 = [
         { name: 'Festivals', selected: <ActiveStar />, unSelected: <InActiveStar /> },
         { name: 'Events', selected: <ActiveCalender />, unSelected: <InActiveCalender /> },
@@ -59,6 +62,7 @@ const Calender = ({ navigation }) => {
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [startDate, setStartDate] = useState('')
     const [todayEvent, setTodayEvent] = useState([])
+    const [showLoader, setShowLoader] = useState(false)
     const [endDate, setEndDate] = useState('')
     const flatListRef = useRef(null)
     const {
@@ -66,14 +70,14 @@ const Calender = ({ navigation }) => {
         isFetching: isFetchingRegular,
         refetch: refetchRegular,
         isSuccess: regularSuccess
-    } = useGetListQuery({ selectedLocation, selectMonth }, { skip: !selectMonth });
+    } = useGetListQuery({ selectedLocation, selectMonth, eventCategory }, { skip: !selectMonth });
     const {
         data: recurringEventList,
         isFetching: isFetchingRecurring,
         refetch: refetchRecurring,
         isSuccess: recurringSuccess
 
-    } = useGetRecurringEventListQuery({ selectedLocation });
+    } = useGetRecurringEventListQuery({ selectedLocation, eventCategory });
     const {
         data: festivalEvents,
         isFetching: isfestivaldataFetching,
@@ -81,20 +85,20 @@ const Calender = ({ navigation }) => {
         isSuccess: isFestivalSuccess
 
     } = useGetFestivalListQuery();
-    // console.log("🚀 ~ Calender ~ recurringEventList:", recurringEventList)
+    console.log("🚀 ~ Calender ~ recurringEventList:", JSON.stringify(regularEvent, 0, 2))
     const {
         data: monthRecurringEventList,
         isFetching: isFetchingMonthly,
         refetch: refetchMonthly,
         isSuccess: recurringMonthlySuccess
 
-    } = useGetRecurringEventMonthlyQuery({ selectedLocation });
+    } = useGetRecurringEventMonthlyQuery({ selectedLocation, eventCategory });
     const [weekly, setWeekly] = useState([]);
-
     const [regular, setRegular] = useState([]);
     const [monthly, setMonthly] = useState([]);
     const [mainData, setMainData] = useState([]);
     const [changed, setChanged] = useState(false);
+    const [selectedList, setSelecetedList] = useState([])
     const [prevNext, setPrevNext] = useState(0)
     const bottomSheetRef = useRef(null);
     const [selectedFilter, setSelectedFilter] = useState(null);
@@ -104,13 +108,19 @@ const Calender = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
     const [scrollIndex, setScrollIndex] = useState(0)
     const [trigger, setTrigger] = useState(false)
-    const clearStates = () => {
+    // const clearStates = () => {
+    //     setWeekly([]);
+    //     setRegular([]);
+    //     setMonthly([]);
+    //     setMainData([]);
+    //     // setTodayEvent([])
+    // };
+    useEffect(() => {
         setWeekly([]);
         setRegular([]);
         setMonthly([]);
         setMainData([]);
-        // setTodayEvent([])
-    };
+    }, [prevNext])
     useFocusEffect(
         useCallback(() => {
             return () => bottomSheetRef.current?.close();
@@ -118,11 +128,11 @@ const Calender = ({ navigation }) => {
     );
 
     // Refetch data when location changes
-    useEffect(() => {
-        refetchRegular();
-        refetchRecurring();
-        refetchMonthly();
-    }, [prevNext]);
+    // useEffect(() => {
+    //     refetchRegular();
+    //     refetchRecurring();
+    //     refetchMonthly();
+    // }, [prevNext]);
 
     // useEffect(() => {
     //     if (prevNext == 0) {
@@ -138,6 +148,7 @@ const Calender = ({ navigation }) => {
     useEffect(() => {
         getScheduleNotification()
     }, [isFocused])
+
     const getScheduleNotification = () => {
         PushNotification.getScheduledLocalNotifications(callbacks => {
             console.log("🚀 ~ getScheduleNotification ~ callbacks:", callbacks)
@@ -145,7 +156,11 @@ const Calender = ({ navigation }) => {
         })
     }
     useEffect(() => {
+        // clearStates()
         if (regularEvent && regularSuccess) {
+            setShowLoader(true)
+            console.log('recurringEventList?.meta?.pagination?.total regular', regularEvent?.meta?.pagination?.total)
+
             setRegular([]);
             const data = regularEvent.data.map(event => ({
                 ...event,
@@ -155,26 +170,28 @@ const Calender = ({ navigation }) => {
             setRegular(data);
             setChanged(!changed);
         }
-    }, [regularEvent, prevNext, selectedLocation, selectMonth]);
+    }, [regularEvent, prevNext, selectedLocation, eventCategory]);
 
     // Process recurring event list
     useEffect(() => {
         if (recurringEventList && recurringSuccess) {
-            setWeekly([]);
-            const data = [];
+            // console.log('recurringEventList?.meta?.pagination?.total week recurring', recurringEventList?.meta?.pagination?.total)
+            const data = []
             const cDate = moment().startOf("day");
-            // console.log("🚀 ~ useEffect ~ prevNext:", prevNext)
+            console.log("🚀 ~ file: events-important-events-of-this-year.jsx:111 ~ useEffect ~ cDate:", cDate)
             for (let event of recurringEventList?.data) {
-                // console.log(event.attributes.Day)
-                // console.log(event.attributes.Name)
-                // console.log("prevNext", prevNext)
-                // console.log("event is ==>", event);
+                //   console.log(event.attributes.Day)
+                //   console.log(event.attributes.Name)
+                //   console.log("prevNext",prevNext)
+                //   console.log("event is ==>",event);
                 const start = moment().add(prevNext, "months").startOf("month").format("YYYY-MM-DD")
                 let dateSplit = start.split("-")
-                // console.log("🚀 ~ file: events-important-events-of-this-year.jsx:119 ~ useEffect ~ dateSplit:", dateSplit)
+                console.log("🚀 ~ file: events-important-events-of-this-year.jsx:119 ~ useEffect ~ dateSplit:", dateSplit)
                 const days = getDaysInMonth(dateSplit[1], dateSplit[0], event.attributes.Day)
+                console.log("🚀 ~ useEffect ~ days:", days)
                 for (let day of days) {
                     if (day >= cDate) {
+                        console.log('running')
                         let out = JSON.parse(JSON.stringify(event))
                         // handling the first index ...
                         let finalizedDate = day
@@ -182,52 +199,114 @@ const Calender = ({ navigation }) => {
                         out.end_date = finalizedDate
                         out.attributes.images = event.attributes.File
                         data.push(out)
-
                     }
                 }
             }
-            // console.log("🚀 ~ useEffect ~ days:", data)
+            // console.log(JSON.stringify(data, 0, 2), 'Data for weekly events')
             setWeekly(data);
             setChanged(!changed);
         }
-    }, [recurringEventList, prevNext]);
+    }, [recurringEventList, prevNext, selectedLocation, eventCategory]);
 
     // Process regular events
 
 
     // Process monthly recurring events
     useEffect(() => {
+        // clearStates()
         if (monthRecurringEventList && recurringMonthlySuccess) {
+            console.log('recurringEventList?.meta?.pagination?.total month recurring', monthRecurringEventList?.meta?.pagination?.total)
+
             setMonthly([]);
             const cDate = moment().startOf("day");
             const data = [];
             const start = moment().add(prevNext, 'months').startOf("month").format("YYYY-MM-DD");
-            // console.log("🚀 ~ useEffect ~ start:", start)
-            const [year, month] = start.split("-");
-            monthRecurringEventList.data.forEach(event => {
-                const days = getDaysInMonth(month, year, event.attributes.Day);
-                const finalizedDate = findFinalizedDate(days, event.attributes.Days, cDate);
-                if (finalizedDate) {
-                    const eventCopy = {
-                        ...event,
-                        start_date: finalizedDate,
-                        end_date: finalizedDate
-                    };
-                    data.push(eventCopy);
+            // const [year, month] = start.split("-");
+            for (let event of monthRecurringEventList?.data) {
+                const start = moment().add(prevNext, "months").startOf("month").format("YYYY-MM-DD")
+                let dateSplit = start.split("-")
+                const days = getDaysInMonth(dateSplit[1], dateSplit[0], event.attributes.Day)
+                let finalizedDate = null
+                switch (event?.attributes?.Days) {
+                    case "one":
+                        if (days[0] && days[0] >= cDate) {
+                            // handling the first index ...
+                            finalizedDate = moment(days[0])
+                        }
+                        break
+                    case "two":
+                        // handling the 2nd Index ...
+                        if (days[1] && days[1] >= cDate) {
+                            finalizedDate = moment(days[1])
+                        }
+                        break
+                    case "three":
+                        // handling the 3rd index ...
+                        if (days[2] && days[2] >= cDate) {
+                            finalizedDate = moment(days[2])
+                        }
+                        break
+                    case "four":
+                        // handling the 4th index ...
+                        if (days[3] && days[3] >= cDate) {
+                            finalizedDate = moment(days[3])
+                        }
+                        break
+                    case "last":
+                        // handling the last index ....
+                        let trig = false
+                        if (days[4] && days[4] >= cDate) {
+                            trig = true
+                            finalizedDate = moment(days[4])
+                        }
+                        if (!trig) {
+                            let index = days.length - 1
+                            if (days[index] && days[index] >= cDate) {
+                                trig = true
+                                finalizedDate = moment(days[index])
+                            }
+                        }
+                        break
                 }
-            });
-            // console.log("🚀 ~ useEffect ~ data:", JSON.stringify(data, 0, 2))
+                if (finalizedDate) {
+                    let out = JSON.parse(JSON.stringify(event))
+                    out.start_date = finalizedDate
+                    out.end_date = finalizedDate
+                    out.attributes.images = event.attributes.File
+                    // data event push ...
+                    data.push(out)
+
+                }
+            }
             setMonthly(data);
             setChanged(!changed);
         }
-    }, [monthRecurringEventList, prevNext, selectedLocation]);
+    }, [monthRecurringEventList, prevNext, selectedLocation, eventCategory]);
 
     // Combine all events into a sorted list
     useEffect(() => {
+        // clearStates()
         setMainData([])
         let today = []
-        const allEvents = [...regular, ...monthly,];
-        const sortedEvents = allEvents.sort((a, b) => moment(a.start_date).diff(moment(b.start_date)));
+        const allEvents = []
+        if (weekly) {
+            for (let w of weekly) {
+                allEvents.push(w)
+            }
+        }
+        if (monthly) {
+            for (let m of monthly) {
+                allEvents.push(m)
+            }
+        }
+        if (regular) {
+            for (let r of regular) {
+                allEvents.push(r)
+            }
+        }
+        let sortedEvents = allEvents.sort((a, b) => moment(a.start_date) - moment(b.start_date));
+        setMainData(sortedEvents)
+        setShowLoader(false)
         sortedEvents?.map((item) => {
             if (moment(item?.start_date).format('YYYY-MM-DD') == moment().format('YYYY-MM-DD')) {
                 // setTodayEvent(prev => [...prev, item])
@@ -235,7 +314,7 @@ const Calender = ({ navigation }) => {
             }
         })
         setTodayEvent(today)
-        setMainData(sortedEvents);
+        // setMainData(sortedEvents);
     }, [changed]);
 
     const selectFilter = (item) => {
@@ -269,43 +348,47 @@ const Calender = ({ navigation }) => {
         return finalizedDate;
     };
 
-    const getDaysInMonth = (month, year, dayOfWeek) => {
+    function getDaysInMonth(month, year, dayOfWeek) {
+        console.log("🚀 ~ getDaysInMonth ~ month:", month, year)
         const daysInMonth = moment(`${year}-${month}-01`).daysInMonth();
+        //get the number of days in the month. ⤴️
         const firstDayOfMonth = moment(`${year}-${month}-01`);
+        // first day of the given month and year ⤴️
         const days = [];
+
         for (let i = 0; i < daysInMonth; i++) {
             const day = firstDayOfMonth.clone().add(i, "days");
+            // clone the first day of the month and add the number of days to it ⤴️
             const dayName = day.format("dddd");
+            console.log("dayName", dayName);
+            // get the day of the week based on the day of the month ⤴️
+
 
             if (dayName === dayOfWeek) {
                 days.push(day.toDate());
+                // push the day of the week to the days array ⤴️
             }
         }
 
         return days;
-    };
+    }
     const selectdateHandler = (res) => {
+        console.log("🚀 ~ selectdateHandler ~ res:", res)
         // mainData?.map((item, index) => {
-        const foundIndex = mainData.findIndex((item) =>
-            moment(item.start_date).isSame(res?.dateString, 'day')
-        );
-        console.log("🚀 ~ //mainData?.map ~ foundIndex:", foundIndex)
-        if (foundIndex !== -1 && foundIndex < mainData.length) {
-            setScrollIndex(foundIndex);
-            flatListRef.current?.scrollToIndex({
-                animated: true,
-                index: foundIndex
-            });
+        if (selectedHeader === data1[1].name) {
+            let arr = mainData?.filter((item) =>
+                moment(item?.start_date).format('YYYY-MM-DD') == res?.dateString
+            )
+            console.log(arr.length, 'onsole.log(arr.length)')
+            setSelecetedList(arr)
+        } else {
+            let arr = festivalEvents?.data?.filter((item) =>
+                moment(item?.attributes?.calendar_from_date).format('YYYY-MM-DD') == res?.dateString
+            )
+            setSelecetedList(arr)
+            console.log(arr.length, 'onsole.log(arr.length)')
+
         }
-        // if (moment(item.start_date).get('D') === moment(res?.dateString).get('D')) {
-        //     // alert(true)
-        //     setScrollIndex(index)
-        //     flatListRef?.current?.scrollToIndex({
-        //         animated: true,
-        //         index: index,
-        //     });
-        // }
-        // })
     }
     const EventNavigation = (item) => {
         if (selectedHeader == data1[0].name) {
@@ -319,28 +402,46 @@ const Calender = ({ navigation }) => {
         }
     }
     const getItemLayOut = (item, index) => {
-        // console.log("🚀 ~ getItemLayOut ~ index:", index, JSON.stringify(item, 0, 2))
         return { length: 100, offset: 100 * index, index };
     };
+
     const [selectedHeader, setSelectedHeader] = useState(data1[0].name);
     const marked = useMemo(() => {
         const markedDates = {};
-        regularEvent?.data?.forEach(item => {
-            const date = item.attributes.start_date;
-            markedDates[date] = {
-                marked: true,
-                dotColor: '#FCB300',
-                customStyles: {
-                    container: { borderRadius: 5 },
-                    text: { color: 'black', fontFamily: 'Mulish-Bold' }
-                }
-            };
-        });
-        return markedDates;
-    }, [regular]);
+        if (selectedHeader == data1[1].name) {
+            console.log(mainData, '================>')
+            mainData?.forEach(item => {
+                const date = moment(item?.start_date).format('YYYY-MM-DD');
+                // console.log("🚀 ~ marked ~ date: in evebt", date)
+                markedDates[date] = {
+                    marked: true,
+                    dotColor: '#FCB300',
+                    customStyles: {
+                        container: { borderRadius: 5 },
+                        text: { color: 'black', fontFamily: 'Mulish-Bold' }
+                    }
+                };
+            });
+            return markedDates;
+        } else {
+            festivalEvents?.data?.forEach(item => {
+                const date = item?.attributes?.calendar_from_date;
+                console.log("🚀 ~ marked ~ date:", date)
+                markedDates[date] = {
+                    marked: true,
+                    dotColor: '#FCB300',
+                    customStyles: {
+                        container: { borderRadius: 5 },
+                        text: { color: 'black', fontFamily: 'Mulish-Bold' }
+                    }
+                };
+            });
+            return markedDates;
+        }
+    }, [selectedHeader]);
 
     return (
-        <ScrollView nestedScrollEnabled style={{ backgroundColor: '#fff', flex: 1 }}>
+        <View style={{ backgroundColor: '#fff', flex: 1 }} >
             <Background>
                 <View
                     style={{
@@ -348,7 +449,7 @@ const Calender = ({ navigation }) => {
                     }}
                 >
                     <View style={styles.HeadeingContainer}>
-                        <HeadingText text={'Calender'} nandiLogo={true} />
+                        <HeadingText text={'Calendar'} nandiLogo={true} />
                     </View>
                     <View style={styles.SearchInputContainer}>
                         <View style={{ width: '84%' }}>
@@ -364,7 +465,7 @@ const Calender = ({ navigation }) => {
                     <FlatList
                         contentContainerStyle={{
                             paddingHorizontal: 15,
-                            marginVertical: 10,
+                            marginVertical: 5,
                         }}
                         horizontal
                         data={data1}
@@ -379,258 +480,321 @@ const Calender = ({ navigation }) => {
                     />
                 </View>
             </Background>
-            <View
-                style={{
-                    marginTop: 10,
-                    flex: 1,
-                }}>
-                <Calendar
-                    pinchGestureEnabled={false}
-                    disableMonthChange={isFetchingRegular}
-                    theme={{
-                        arrowColor: '#222222',
-                        dayTextColor: '#222222',
-                        textDayFontFamily: 'Mulish-Bold',
-                        textDisabledColor: 'grey',
-                        monthTextColor: '#222222',
-                        textDayFontWeight: '600',
-                        textMonthFontWeight: '600',
-                        calendarBackground: '#FFFFFF',
-                        todayBackgroundColor: 'white',
-                        selectedDayBackgroundColor: 'white',
-                        selectedDayTextColor: 'black',
-                        textDayFontSize: 11,
-                        textDayStyle: { fontsize: 11 },
-                    }}
-                    current={selectMonth}
-
-                    onDayPress={(item) => selectdateHandler(item)}
-                    key={selectMonth}
-                    enableSwipeMonths={false}
-                    disableArrowLeft={isFetchingRegular || disableMonthChangeVal}
-                    disableArrowRight={isFetchingRegular || disableMonthChangeVal}
-                    displayLoadingIndicator={isFetchingRegular || disableMonthChangeVal}
-                    onMonthChange={(month) => {
-                        setDisableMonthChangeVal(() => true);
-                        if (disableMonthChangeValRef.current) {
-                            clearTimeout(disableMonthChangeValRef.current);
-                        }
-                        disableMonthChangeValRef.current = setTimeout(() => {
-                            setDisableMonthChangeVal(() => false);
-                            setSelectMonth(new Date(month.dateString).toISOString());
-                            if (month?.month > selectMonth?.split('-')[1]) {
-                                setPrevNext(prev => prev + 1)
-                            } else {
-                                setPrevNext(prev => prev - 1)
-
+            <ScrollView>
+                <View
+                    style={{
+                        marginTop: 10,
+                        flex: 1,
+                    }}>
+                    <Calendar
+                        pinchGestureEnabled={false}
+                        disableMonthChange={isFetchingRegular}
+                        theme={{
+                            arrowColor: '#222222',
+                            dayTextColor: '#222222',
+                            textDayFontFamily: 'Mulish-Bold',
+                            textDisabledColor: 'grey',
+                            monthTextColor: '#222222',
+                            textDayFontWeight: '600',
+                            textMonthFontWeight: '600',
+                            calendarBackground: '#FFFFFF',
+                            todayBackgroundColor: 'white',
+                            selectedDayBackgroundColor: 'white',
+                            selectedDayTextColor: 'black',
+                            textDayFontSize: 11,
+                            textDayStyle: { fontsize: 11 },
+                        }}
+                        current={selectMonth}
+                        onDayPress={(item) => selectdateHandler(item)}
+                        key={selectMonth}
+                        enableSwipeMonths={false}
+                        disableArrowLeft={isFetchingRegular || disableMonthChangeVal}
+                        disableArrowRight={isFetchingRegular || disableMonthChangeVal}
+                        displayLoadingIndicator={isFetchingRegular || disableMonthChangeVal}
+                        onMonthChange={(month) => {
+                            // alert(month.month)
+                            setDisableMonthChangeVal(() => true);
+                            if (disableMonthChangeValRef.current) {
+                                clearTimeout(disableMonthChangeValRef.current);
                             }
-                        }, 1000);
-                    }}
-                    markingType="custom"
-                    markedDates={marked}
-                    style={styles.calenderTheme}
-                />
+                            disableMonthChangeValRef.current = setTimeout(() => {
+                                setDisableMonthChangeVal(() => false);
+                                // alert(selectMonth?.split('-')[1])
+                                setSelectMonth(new Date(month.dateString).toISOString());
+                                if (month?.month > selectMonth?.split('-')[1]) {
+                                    setPrevNext(prev => prev + 1)
+                                    alert(prevNext)
+                                    setShowLoader(true)
+                                } else {
+                                    setPrevNext(prev => prev - 1)
+                                    setShowLoader(true)
+                                    alert(prevNext)
+                                }
+                            }, 1000);
+                        }}
+                        // onPressArrowLeft={() => {
+                        //     setPrevNext(prev => prev - 1)
+                        // }}
+                        // onPressArrowRight={() => {
+                        //     setPrevNext(prev => prev + 1)
+                        // }}
+                        markingType="custom"
+                        markedDates={marked}
+                        style={styles.calenderTheme}
+                    />
 
-                {selectedHeader === 'Events' && (
-                    <View style={styles.filterContainer}>
-                        <TouchableOpacity
-                            onPress={() => selectFilter('Event')}
-                            style={
-                                eventCategory
-                                    ? [styles.filterButton, { borderColor: colors.commonColor }]
-                                    : styles.filterButton
-                            }
-                        >
-                            <Text
+                    {selectedHeader === 'Events' && (
+                        <View style={styles.filterContainer}>
+                            <TouchableOpacity
+                                onPress={() => (eventCategory !== null ? setEventCategory(null) : selectFilter('Event'))}
                                 style={
                                     eventCategory
-                                        ? [styles.filtertext, { color: colors.commonColor }]
-                                        : styles.filtertext
+                                        ? [styles.filterButton, { borderColor: colors.commonColor }]
+                                        : styles.filterButton
                                 }
                             >
-                                {eventCategory == null ? 'Event Category' : eventCategory.name}
-                            </Text>
-                            <MaterialIcons
-                                name="keyboard-arrow-down"
-                                size={20}
-                                color="rgba(119, 119, 119, 1)"
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => (selectedLocation !== null ? setSelectedLocation(null) : selectFilter('Location'))}
-                            style={{
-                                marginHorizontal: 15,
-                                flexDirection: 'row',
-                                borderColor: selectedLocation !== null ? '#C1554E' : 'rgba(229, 229, 229, 1)',
-                                borderWidth: 1,
-                                borderRadius: 20,
-                                height: 30,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                paddingHorizontal: 10,
-                            }}
-                        >
-                            <Text style={styles.filtertext}>{selectedLocation !== null ? selectedLocation.name : 'Location'}</Text>
-                            {selectedLocation !== null ? (
-                                <AntDesign name="close" size={20} color="rgba(119, 119, 119, 1)" />
-                            ) : (
-                                <MaterialIcons name="keyboard-arrow-down" size={20} color="rgba(119, 119, 119, 1)" />
-                            )}
-                        </TouchableOpacity>
-                    </View>
-                )}
-                {
-                    notificationOnEvent?.length > 0 &&
-                    <>
-                        <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
-                            <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold', color: '#222222' }}>
-                                Notification Turned on
-                            </Text>
-                        </View>
-                        <FlatList
-                            data={notificationOnEvent}
-                            key={(item, index) => index}
-                            contentContainerStyle={{ paddingBottom: 10 }}
-                            renderItem={({ item, index }) => (
-                                <ElevatedCard
-                                    // navigation={() =>
-                                    //     navigation.navigate(RouteTexts.EVENT_DETAILS, {
-                                    //         item: item,
-                                    //     })
-                                    // }
-                                    theme={{ colorscheme: theme.colorscheme }}
-                                >
-                                    <EventCard
-                                        date={moment(item.date).get('D')}
-                                        dateNo={moment(item?.date).format('DD')}
-                                        day={moment(item?.date).format('ddd')}
-                                        timing={`${moment(item.date).format('MMMM DD YYYY')} - ${moment(item.date).format('MMMM DD YYYY')}`}
-                                        title={item?.message}
-                                        item={item}
-                                        theme={{
-                                            textColor: theme.textColor,
-                                            colorscheme: theme.colorscheme,
-                                        }}
-                                    />
-                                </ElevatedCard>
-                            )}
-                        />
-                    </>
-
-                }
-                {
-                    todayEvent?.length > 0 && selectedHeader !== data1[0].name &&
-                    <>
-                        <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
-                            <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold', color: '#222222' }}>
-                                Today
-                            </Text>
-                        </View>
-                        <FlatList
-                            data={todayEvent}
-                            key={(item, index) => index}
-                            contentContainerStyle={{ paddingBottom: 10 }}
-                            renderItem={({ item, index }) => (
-                                <ElevatedCard
-                                    navigation={() =>
-                                        navigation.navigate(RouteTexts.EVENT_DETAILS, {
-                                            item: item,
-                                        })
+                                <Text
+                                    style={
+                                        eventCategory
+                                            ? [styles.filtertext, { color: colors.commonColor }]
+                                            : styles.filtertext
                                     }
-                                    theme={{ colorscheme: theme.colorscheme }}
                                 >
-                                    <EventCard
-                                        date={moment(item.start_date).get('D')}
-                                        dateNo={moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('DD')}
-                                        day={moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('ddd')}
-                                        timing={`${moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('MMMM DD YYYY')} - ${moment(item.end_date ? item.end_date : item?.attributes?.end_date).format('MMMM DD YYYY')}`}
-                                        title={selectedHeader == data1[0].name ? item?.attributes?.Calendar_title : item.attributes.title}
-                                        item={item}
-                                        theme={{
-                                            textColor: theme.textColor,
-                                            colorscheme: theme.colorscheme,
-                                        }}
+                                    {eventCategory == null ? t('Event Category') ? t('Event Category') : 'Event Category' : eventCategory}
+                                </Text>
+
+                                {eventCategory !== null ? (
+                                    <AntDesign name="close" size={20} color="rgba(119, 119, 119, 1)" />
+                                ) : (
+                                    <MaterialIcons
+                                        name="keyboard-arrow-down"
+                                        size={20}
+                                        color="rgba(119, 119, 119, 1)"
                                     />
-                                </ElevatedCard>
-                            )}
-                        />
-                    </>
-                }
-                <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
-                    <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold', color: '#222222' }}>
-                        This Month
-                    </Text>
-                </View>
-                <FlatList
-                    getItemLayout={getItemLayOut}
-                    initialScrollIndex={scrollIndex}
-                    data={selectedHeader == data1[0].name ? festivalEvents?.data : mainData}
-                    key={(item, index) => index}
-                    contentContainerStyle={{ paddingBottom: 100 }}
-                    scrollEnabled={false}
-                    renderItem={({ item, index }) => (
-                        <ElevatedCard
-                            navigation={() =>
-                                EventNavigation(item)
-                            }
-                            theme={{ colorscheme: theme.colorscheme }}
-                        >
-                            <EventCard
-                                date={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).get('D') : moment(item.start_date).get('D')}
-                                dateNo={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).format('DD') : moment(item.start_date).format('DD')}
-                                day={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).format('ddd') : moment(item.start_date).format('ddd')}
-                                timing={selectedHeader == data1[0].name ? '' : `${moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('MMMM DD YYYY')} - ${moment(item.end_date ? item.end_date : item?.attributes?.end_date).format('MMMM DD YYYY')}`}
-                                title={selectedHeader == data1[0].name ? item?.attributes?.Calendar_title : item.attributes.title}
-                                item={item}
-                                header={selectedHeader}
-                                theme={{
-                                    textColor: theme.textColor,
-                                    colorscheme: theme.colorscheme,
-                                }}
-                            />
-                        </ElevatedCard>
-                    )}
-                />
-                <RBSheet height={500} closeOnDragDown ref={bottomSheetRef}>
-                    {selectedFilter === 'Event' ? (
-                        <>
-                            <EventSelectionType
-                                setEventCategory={setEventCategory}
-                                eventCategory={eventCategory}
-                            />
-                            <View
+                                )}
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => (selectedLocation !== null ? setSelectedLocation(null) : selectFilter('Location'))}
                                 style={{
+                                    marginHorizontal: 15,
+                                    flexDirection: 'row',
+                                    borderColor: selectedLocation !== null ? '#C1554E' : 'rgba(229, 229, 229, 1)',
+                                    borderWidth: 1,
+                                    borderRadius: 20,
+                                    height: 30,
                                     justifyContent: 'center',
-                                    alignSelf: 'center',
-                                    position: 'absolute',
-                                    bottom: 10,
-                                }}
-                            >
-                                <ButtonComp
-                                    color={true}
-                                    text="Search"
-                                    navigation={() => alert(eventCategory)}
-                                />
-                            </View>
-                        </>
-                    ) : selectedFilter === 'Add Event' ? (
-                        <SubmitEnteries
-                            navigation={navigation}
-                            setSelectedEvent={setSelectedFilter}
-                            selectedEvent={selectedFilter}
-                            closeSheet={() => bottomSheetRef.current.close()}
-                        />
-                    ) : (
-                        <LocationSelection calendar={true} setSelected={setSelectedLocation} close={bottomSheetRef} />
+                                    alignItems: 'center',
+                                    paddingHorizontal: 10,
+                                }}>
+                                <Text style={styles.filtertext}>{selectedLocation !== null ? selectedLocation.name : t('Location') ? t('Location') : 'Location'}</Text>
+                                {selectedLocation !== null ? (
+                                    <AntDesign name="close" size={20} color="rgba(119, 119, 119, 1)" />
+                                ) : (
+                                    <MaterialIcons name="keyboard-arrow-down" size={20} color="rgba(119, 119, 119, 1)" />
+                                )}
+                            </TouchableOpacity>
+                        </View>
                     )}
-                </RBSheet>
-            </View>
-        </ScrollView>
+                    {
+                        selectedList?.length > 0 &&
+                        <>
+                            <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
+                                <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold', color: '#222222' }}>
+                                    Selected Events
+                                </Text>
+                            </View>
+                            <FlatList
+                                getItemLayout={getItemLayOut}
+                                ref={flatListRef}
+                                data={selectedList}
+                                key={(item, index) => index}
+                                contentContainerStyle={{ paddingBottom: 10 }}
+                                renderItem={({ item, index }) => (
+                                    <ElevatedCard
+                                        // navigation={() =>
+                                        //     EventNavigation(item)
+                                        // }
+                                        theme={{ colorscheme: theme.colorscheme }}
+                                    >
+                                        <EventCard
+                                            date={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).get('D') : moment(item.start_date).get('D')}
+                                            dateNo={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).format('DD') : moment(item.start_date).format('DD')}
+                                            day={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).format('ddd') : moment(item.start_date).format('ddd')}
+                                            timing={selectedHeader == data1[0].name ? null : `${moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('MMMM DD YYYY')} - ${moment(item.end_date ? item.end_date : item?.attributes?.end_date).format('MMMM DD YYYY')}`}
+                                            title={selectedHeader == data1[0].name ? item?.attributes?.Calendar_title : item.attributes.title}
+                                            item={item}
+                                            header={selectedHeader}
+                                            theme={{
+                                                textColor: theme.textColor,
+                                                colorscheme: theme.colorscheme,
+                                            }}
+                                        />
+                                    </ElevatedCard>
+                                )}
+                            />
+                        </>
+                    }
+                    {
+                        notificationOnEvent?.length > 0 && selectedHeader == data1[1].name &&
+                        <>
+                            <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
+                                <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold', color: '#222222' }}>
+                                    Notification Turned on
+                                </Text>
+                            </View>
+                            <FlatList
+                                data={notificationOnEvent}
+                                key={(item, index) => index}
+                                contentContainerStyle={{ paddingBottom: 10 }}
+                                renderItem={({ item, index }) => (
+                                    <ElevatedCard
+                                        // navigation={() =>
+                                        //     navigation.navigate(RouteTexts.EVENT_DETAILS, {
+                                        //         item: item,
+                                        //     })
+                                        // }
+                                        theme={{ colorscheme: theme.colorscheme }}
+                                    >
+                                        <EventCard
+                                            date={moment(item.date).get('D')}
+                                            dateNo={moment(item?.date).format('DD')}
+                                            day={moment(item?.date).format('ddd')}
+                                            timing={`${moment(item.date).format('MMMM DD YYYY')} - ${moment(item.date).format('MMMM DD YYYY')}`}
+                                            title={item?.message}
+                                            item={item}
+                                            theme={{
+                                                textColor: theme.textColor,
+                                                colorscheme: theme.colorscheme,
+                                            }}
+                                        />
+                                    </ElevatedCard>
+                                )}
+                            />
+                        </>
+                    }
+                    {
+                        todayEvent?.length > 0 && selectedHeader !== data1[0].name &&
+                        <>
+                            <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
+                                <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold', color: '#222222' }}>
+                                    Today
+                                </Text>
+                            </View>
+                            <FlatList
+                                data={todayEvent}
+                                key={(item, index) => index}
+                                contentContainerStyle={{ paddingBottom: 10 }}
+                                renderItem={({ item, index }) => (
+                                    <ElevatedCard
+                                        navigation={() =>
+                                            navigation.navigate(RouteTexts.EVENT_DETAILS, {
+                                                item: item,
+                                            })
+                                        }
+                                        theme={{ colorscheme: theme.colorscheme }}
+                                    >
+                                        <EventCard
+                                            date={moment(item.start_date).get('D')}
+                                            dateNo={moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('DD')}
+                                            day={moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('ddd')}
+                                            timing={`${moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('MMMM DD YYYY')} - ${moment(item.end_date ? item.end_date : item?.attributes?.end_date).format('MMMM DD YYYY')}`}
+                                            title={selectedHeader == data1[0].name ? item?.attributes?.Calendar_title : item.attributes.title}
+                                            item={item}
+                                            theme={{
+                                                textColor: theme.textColor,
+                                                colorscheme: theme.colorscheme,
+                                            }}
+                                        />
+                                    </ElevatedCard>
+                                )}
+                            />
+                        </>
+                    }
+                    {
+                        showLoader ? <View style={{ height: 200, width: 200, justifyContent: 'center', alignItems: 'center' }}>
+                            <ActivityIndicator size={'large'} />
+                        </View> :
+                            <>
+                                <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
+                                    <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold', color: '#222222' }}>
+                                        This Month
+                                    </Text>
+                                </View>
+                                <FlatList
+                                    getItemLayout={getItemLayOut}
+                                    // initialScrollIndex={scrollIndex}
+                                    ref={flatListRef}
+                                    data={selectedHeader == data1[0].name ? festivalEvents?.data : mainData}
+                                    key={(item, index) => index}
+                                    contentContainerStyle={{ paddingBottom: 100 }}
+                                    // scrollEnabled={false}
+                                    renderItem={({ item, index }) => (
+                                        <ElevatedCard
+                                            navigation={() =>
+                                                EventNavigation(item)
+                                            }
+                                            theme={{ colorscheme: theme.colorscheme }}
+                                        >
+                                            <EventCard
+                                                date={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).get('D') : moment(item.start_date).get('D')}
+                                                dateNo={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).format('DD') : moment(item.start_date).format('DD')}
+                                                day={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).format('ddd') : moment(item.start_date).format('ddd')}
+                                                timing={selectedHeader == data1[0].name ? null : `${moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('MMMM DD YYYY')} - ${moment(item.end_date ? item.end_date : item?.attributes?.end_date).format('MMMM DD YYYY')}`}
+                                                title={selectedHeader == data1[0].name ? item?.attributes?.Calendar_title : item.id}
+                                                item={item}
+                                                header={selectedHeader}
+                                                theme={{
+                                                    textColor: theme.textColor,
+                                                    colorscheme: theme.colorscheme,
+                                                }}
+                                            />
+                                        </ElevatedCard>
+                                    )}
+                                />
+                            </>
+                    }
+                    <RBSheet height={500} closeOnDragDown ref={bottomSheetRef}>
+                        {selectedFilter === 'Event' ? (
+                            <>
+                                <EventSelectionType
+                                    setCategory={setEventCategory}
+                                    category={eventCategory}
+                                    bottomSheetRef={bottomSheetRef}
+                                />
+                                {/* <View
+                                    style={{
+                                        justifyContent: 'center',
+                                        alignSelf: 'center',
+                                        position: 'absolute',
+                                        bottom: 10,
+                                    }}
+                                >
+                                    <ButtonComp
+                                        color={true}
+                                        text="Search"
+                                        navigation={() => bottomSheetRef?.current?.close()}
+                                    />
+                                </View> */}
+                            </>
+                        ) : selectedFilter === 'Add Event' ? (
+                            <SubmitEnteries
+                                navigation={navigation}
+                                setSelectedEvent={setSelectedFilter}
+                                selectedEvent={selectedFilter}
+                                closeSheet={() => bottomSheetRef.current.close()}
+                            />
+                        ) : (
+                            <LocationSelection selectedLocation={selectedLocation} calender={true} setSelected={setSelectedLocation} close={bottomSheetRef} />
+                        )}
+                    </RBSheet>
+                </View>
+            </ScrollView>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
-    HeadeingContainer: { paddingHorizontal: 15, justifyContent: 'center', marginVertical: 15 },
+    HeadeingContainer: { paddingHorizontal: 15, justifyContent: 'center', marginVertical: 10 },
     SearchInputContainer: { flexDirection: 'row' },
     AddBtnContainer: {
         backgroundColor: '#FCB300',
@@ -655,7 +819,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 20,
-        marginTop: 20,
+        marginVertical: 20,
     },
     filterButton: {
         flexDirection: 'row',

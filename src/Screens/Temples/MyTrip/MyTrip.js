@@ -7,10 +7,12 @@ import Temple1Svg from '../../../components/SVGs/Temple1Svg';
 import { ThemeContext } from '../../../Context/ThemeContext';
 import TripSvg from '../../../components/SVGs/TripSvg';
 import EmptyTrip from './EmptyTrip';
+import { useTranslation } from 'react-i18next';
 
 const MyTrip = ({ navigation }) => {
     const [selectedHeader, setSelectedHeader] = useState('My trips');
     const { theme } = useContext(ThemeContext);
+    const { t } = useTranslation()
     var header = [
         {
             name: 'My trips',

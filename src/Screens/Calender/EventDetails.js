@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, FlatList, Image, PermissionsAndroid, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, FlatList, Image, Linking, PermissionsAndroid, ScrollView, StyleSheet, Text, View } from 'react-native';
 import BackButton from '../../components/BackButton';
 import Background from '../../components/Background';
 import ShareIcon from '../../assets/Images/share-1.svg';
@@ -95,6 +95,7 @@ const EventDetails = ({ navigation, route }) => {
                     firstRightIcon={true}
                     middleText={'முதல்-திருமுறை - Pradhs...'}
                     rightIcon={true}
+                    color={true}
                 />
             </Background>
             <ScrollView style={styles.main}>
@@ -132,7 +133,7 @@ const EventDetails = ({ navigation, route }) => {
 
                     <CustomButton
                         svg={<LinkIcon fill={'#ffffff'} />}
-                        // onPress={() => selectionHandler('Virtual event link')}
+                        onPress={() => item?.attributes?.Url && Linking.openURL(item?.attributes?.Url)}
                         style={{
                             margin: 10,
                         }}
@@ -148,53 +149,58 @@ const EventDetails = ({ navigation, route }) => {
                         contentContainerStyle={{ marginTop: 10 }}
                         data={keys}
                         renderItem={({ item, index }) => (
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    marginVertical: 5,
-                                    justifyContent: 'space-between',
-                                    width: '70%',
-                                }}
-                            >
-                                <View style={{ width: '30%' }}>
-                                    <Text
+                            <>
+                                {
+                                    item?.value &&
+                                    <View
                                         style={{
-                                            color: '#777777',
-                                            fontFamily: 'Mulish-Regular',
-                                            fontSize: 12,
+                                            flexDirection: 'row',
+                                            marginVertical: 5,
+                                            justifyContent: 'space-between',
+                                            width: '70%',
                                         }}
                                     >
-                                        {item?.name}
-                                    </Text>
-                                </View>
-                                <View
-                                    style={{
-                                        width: '80%',
-                                        marginLeft: 20,
-                                        justifyContent: 'center',
-                                    }}
-                                >
-                                    <Text
-                                        style={
-                                            item?.name == 'Url'
-                                                ? {
-                                                    color: '#C1554E',
+                                        <View style={{ width: '30%' }}>
+                                            <Text
+                                                style={{
+                                                    color: '#777777',
                                                     fontFamily: 'Mulish-Regular',
                                                     fontSize: 12,
-                                                    marginHorizontal: 10,
+                                                }}
+                                            >
+                                                {item?.name}
+                                            </Text>
+                                        </View>
+                                        <View
+                                            style={{
+                                                width: '80%',
+                                                marginLeft: 20,
+                                                justifyContent: 'center',
+                                            }}
+                                        >
+                                            <Text
+                                                style={
+                                                    item?.name == 'Url'
+                                                        ? {
+                                                            color: '#C1554E',
+                                                            fontFamily: 'Mulish-Regular',
+                                                            fontSize: 12,
+                                                            marginHorizontal: 10,
+                                                        }
+                                                        : {
+                                                            color: '#222222',
+                                                            fontFamily: 'Mulish-Regular',
+                                                            fontSize: 12,
+                                                            marginHorizontal: 20,
+                                                        }
                                                 }
-                                                : {
-                                                    color: '#222222',
-                                                    fontFamily: 'Mulish-Regular',
-                                                    fontSize: 12,
-                                                    marginHorizontal: 20,
-                                                }
-                                        }
-                                    >
-                                        {item?.value}
-                                    </Text>
-                                </View>
-                            </View>
+                                            >
+                                                {item?.value}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                }
+                            </>
                         )}
                     />
                     <FlatList

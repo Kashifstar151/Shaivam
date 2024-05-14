@@ -79,13 +79,12 @@ const BackButton = ({
                     <View style={{ flexDirection: 'row', flex: 1 }}>
                         {buttonDisable ? null : (
                             <TouchableOpacity
-                                style={{ alignSelf: 'center' }}
+                                style={{ alignSelf: 'center', height: 30, width: 50 }}
                                 onPress={() => navigation.goBack()}
                             >
                                 {!color ? <WhiteBackButton /> : <BackIcon />}
                             </TouchableOpacity>
                         )}
-
                         <View>
                             {firstText && (
                                 <Text
@@ -95,10 +94,7 @@ const BackButton = ({
                                         fontSize: 24,
                                         fontWeight: '700',
                                         color: 'white',
-                                    }}
-                                >
-                                    {firstText}
-                                </Text>
+                                    }}>{firstText}</Text>
                             )}
                             {middleText && (
                                 <View style={{ paddingHorizontal: 10 }}>
