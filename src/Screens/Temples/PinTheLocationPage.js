@@ -1,5 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+/*
+ ? the value setter over here returns the value like :
+    * {"address": {"ISO3166-2-lvl4": "IN-UP", "country": "India", "country_code": "in", "county": "", "postcode": "", "state": "", "state_district": "", "village": ""}, "addresstype": "", "boundingbox": [num,num,num,num], "category": "", "display_name": "", "importance": "", "lat": "", "licence": "Data © OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright", "lon": "", "name": "", "osm_id": "", "osm_type":"", "place_id": , "place_rank": , "type": ""}
+*/
+
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { CustomMarker, DraggableMarker } from './CustomMarker';
 import {
@@ -13,8 +18,13 @@ import {
 import { CustomButton, CustomLongBtn } from '../../components/Buttons';
 import TrackBackToLocSVG from '../../components/SVGs/TrackBackToLocSVG';
 import LocationLogo from '../../components/SVGs/LocationLogo';
+import { ThemeContext } from '../../Context/ThemeContext';
+import BackIcon from '../../../src/assets/Images/BackIcon.svg';
+import WhiteBackButton from '../../../src/assets/Images/arrow (1) 1.svg';
+import SearchTemple from './SearchTemple';
+import getDimension from '../../Helpers/getDimension';
 
-const PinTheLocation = ({ setDescription, close }) => {
+const PinTheLocation = ({ setDescription, close, valueSetter }) => {
     const [regionCoordinate, setRegionCoordinate] = useState({
         latitude: 28.500271,
         longitude: 77.387901,
@@ -42,20 +52,28 @@ const PinTheLocation = ({ setDescription, close }) => {
         displayName: '',
     });
 
+    const { theme } = useContext(ThemeContext);
+
     const fetchTheName = useCallback(
         async (coors) => {
             // console.log('the location fetch enters  ');
             if (coors?.latitude && coors?.longitude) {
                 // console.log('the location is fetching  ');
                 const locationDetail = await getTheLocationName({ ...dragCoor.current });
-                // console.log('the location  fetching  is done', locationDetail);
-                setUserLocName((prev) => {
-                    return {
-                        ...prev,
-                        name: locationDetail?.address?.village || locationDetail?.name,
-                        displayName: locationDetail?.display_name,
-                    };
-                });
+                console.log('the location  fetching  is done', locationDetail);
+                if (locationDetail.status === 'SUCCESS') {
+                    setUserLocName((prev) => {
+                        return {
+                            ...prev,
+                            name: locationDetail?.data?.address?.village || locationDetail?.name,
+                            displayName: locationDetail?.data?.display_name,
+                        };
+                    });
+                    valueSetter(locationDetail?.data);
+                } else if (locationDetail.status === 'FAILED') {
+                    alert('erorr occured');
+                    console.log('The error is ==>', locationDetail?.err);
+                }
             }
         },
         [dragCoor.current]
@@ -90,6 +108,8 @@ const PinTheLocation = ({ setDescription, close }) => {
         };
     }, []);
 
+    const { screenWidth } = getDimension();
+    const mapRef = useRef();
     return (
         <View style={styles.mainContainer}>
             <MapView
@@ -102,14 +122,15 @@ const PinTheLocation = ({ setDescription, close }) => {
                 provider={PROVIDER_GOOGLE}
                 initialRegion={regionCoordinate}
                 style={styles.map}
-                onRegionChangeComplete={(args, gesture) => {
-                    if (gesture.isGesture) {
-                        onRegionChangeCompleteCallback(args, (input) => {
-                            setRegionCoordinate(input);
-                        });
-                    }
-                }}
-                region={regionCoordinate}
+                // onRegionChangeComplete={(args, gesture) => {
+                //     if (gesture.isGesture) {
+                //         onRegionChangeCompleteCallback(args, (input) => {
+                //             setRegionCoordinate(input);
+                //         });
+                //     }
+                // }}
+                // region={regionCoordinate}
+                ref={mapRef}
             >
                 <CustomMarker
                     setPadState={setPadState}
@@ -123,11 +144,72 @@ const PinTheLocation = ({ setDescription, close }) => {
                         dragCoor.current = e;
                         fetchTheName(e);
                     }}
-                    flag={7}
+                    flag={1}
                     coordinate={dragCoor.current}
                     keyName={'COORDINATE2'}
                 />
             </MapView>
+            <View
+                style={{
+                    position: 'absolute',
+                    width: '100%',
+                    paddingVertical: 20,
+                    paddingHorizontal: 20,
+                    flexDirection: 'row',
+                    top: 10,
+                    gap: 15,
+                    alignItems: 'center',
+                }}
+            >
+                <Pressable
+                    style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: 40,
+                        backgroundColor: '#F3F3F3',
+                        elevation: 20,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                    onPress={() => close(1)}
+                >
+                    {theme.colorscheme !== 'light' ? <WhiteBackButton /> : <BackIcon />}
+                </Pressable>
+                <SearchTemple
+                    isDisable={false}
+                    isAutoComplete={true}
+                    positionSuggestionBox={{
+                        position: 'absolute',
+                        top: 60,
+                        zIndex: 100,
+                        width: screenWidth - 30,
+                        marginLeft: -60,
+                    }}
+                    setRegionCoordinate={(item) => {
+                        mapRef.current?.animateCamera(
+                            {
+                                center: {
+                                    latitude: parseFloat(item.lat),
+                                    longitude: parseFloat(item.lon),
+                                },
+                            },
+                            { duration: 1000 }
+                        );
+
+                        dragCoor.current = {
+                            ...item,
+                            latitude: parseFloat(item.lat),
+                            longitude: parseFloat(item.lon),
+                        };
+                        fetchTheName(dragCoor.current);
+                        setRegionCoordinate((prev) => ({
+                            ...prev,
+                            latitude: parseFloat(item.lat),
+                            longitude: parseFloat(item.lon),
+                        }));
+                    }}
+                />
+            </View>
 
             <View style={styles.overlayHeight}>
                 <View>
@@ -182,10 +264,11 @@ const PinTheLocation = ({ setDescription, close }) => {
                     <CustomLongBtn
                         onPress={() => {
                             setBtnState(!btnState);
-                            setDescription((prev) => {
-                                return userLocName.displayName;
-                            });
-                            close();
+                            // setDescription((prev) => {
+                            //     return userLocName.displayName;
+                            // });
+                            // valueSetter(userLocName.displayName);
+                            close(1);
                         }}
                         text={'Pin Location'}
                         textStyle={{
@@ -202,9 +285,14 @@ const PinTheLocation = ({ setDescription, close }) => {
     );
 };
 const styles = StyleSheet.create({
-    mainContainer: { flex: 1, ...StyleSheet.absoluteFillObject },
+    mainContainer: { flex: 1, position: 'relative' },
     map: {
-        ...StyleSheet.absoluteFillObject,
+        // bottom: 0,
+        justifyContent: 'center',
+        position: 'absolute',
+        flex: 1,
+        height: Dimensions.get('window').height,
+        width: Dimensions.get('window').width,
     },
     boldLocationNameConatiner: {
         flexDirection: 'row',

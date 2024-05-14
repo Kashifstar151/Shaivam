@@ -92,21 +92,27 @@ import {
     TouchableWithoutFeedback,
     Pressable,
 } from 'react-native';
-import Slider from '@react-native-community/slider';
-import SearchInput from '../../components/SearchInput';
-import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import { ScrollView } from 'react-native-gesture-handler';
 import CardForNearByTemple from './CardForNearByTemple';
 import { useNavigation } from '@react-navigation/native';
-import { RouteTexts } from '../../navigation/RouteText';
 import DownArrowSVG from '../../components/SVGs/DownArrowSVG';
 import SearchContainerWithIcon from './SearchContainerWithIcon';
 import SearchTemple from './SearchTemple';
-const NearByTemples = ({ close, data, locationName, snapIndex, navigation }) => {
-    // console.log('🚀 ~ NearByTemples ~ data:', data);
+import { useTranslation } from 'react-i18next';
+import getDimension from '../../Helpers/getDimension';
+const NearByTemples = ({
+    route,
+    setRegionCoordinate,
+    close,
+    data,
+    locationName,
+    snapIndex,
+    navigation,
+}) => {
     const { snapToIndex, snapToPosition } = useBottomSheet();
     const nav = useNavigation();
-
+    const { t } = useTranslation();
+    const { screenWidth } = getDimension();
     return (
         <View
             style={{
@@ -130,7 +136,21 @@ const NearByTemples = ({ close, data, locationName, snapIndex, navigation }) => 
                         </Pressable>
                         <View style={{ flex: 1 }}>
                             <SearchContainerWithIcon>
-                                <SearchTemple isNavigable={false} />
+                                <SearchTemple
+                                    route={route.name}
+                                    value={null}
+                                    isNavigable={false}
+                                    isDisable={false}
+                                    isAutoComplete={true}
+                                    setRegionCoordinate={(val) => setRegionCoordinate(val)}
+                                    positionSuggestionBox={{
+                                        position: 'absolute',
+                                        top: 60,
+                                        zIndex: 100,
+                                        width: screenWidth - 30,
+                                        marginLeft: -45,
+                                    }}
+                                />
                             </SearchContainerWithIcon>
                         </View>
                     </View>
@@ -170,13 +190,13 @@ const NearByTemples = ({ close, data, locationName, snapIndex, navigation }) => 
                             paddingHorizontal: 15,
                         }}
                     >
-                        {locationName ? `Nearby Temples in ${locationName}` : null}
+                        {locationName ? `${t('Nearby Temples in')} ${locationName}` : null}
                     </Text>
                 </View>
             </TouchableWithoutFeedback>
 
             <ScrollView style={{ zIndex: -20 }}>
-                {data.map((item, indx) => (
+                {data?.map((item, indx) => (
                     <View key={indx}>
                         <CardForNearByTemple item={item} />
                     </View>
@@ -223,6 +243,7 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingHorizontal: 20,
         paddingVertical: 10,
+        zIndex: 2000,
     },
     contWrapper: {
         paddingHorizontal: 10,

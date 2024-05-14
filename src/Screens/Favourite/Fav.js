@@ -199,7 +199,7 @@ const Fav = ({ navigation }) => {
                     minimumVersion: '18',
                 },
                 android: {
-                    packageName: 'com.shaivam',
+                    packageName: 'org.shaivam',
                 },
                 // optional setup which updates Firebase analytics campaign
                 // "banner". This also needs setting up before hand
@@ -232,7 +232,7 @@ const Fav = ({ navigation }) => {
         >
             <View style={styles.listInnerContainer}>
                 <MusicContainer />
-                <View style={{ paddingHorizontal: 10 }}>
+                <View style={{ paddingHorizontal: 10, width: '73%' }}>
                     <Text
                         style={{
                             fontSize: RFValue(10),
@@ -255,7 +255,7 @@ const Fav = ({ navigation }) => {
                     </Text>
                 </View>
             </View>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <TouchableOpacity style={{ marginRight: 10 }} onPress={() => shareSong(item)}>
                     <ShareSVG fill={'#777777'} />
                 </TouchableOpacity>
@@ -294,16 +294,16 @@ const Fav = ({ navigation }) => {
                             style={
                                 selecetedHeader == item?.name
                                     ? [
-                                          styles.headerContainer,
-                                          { backgroundColor: theme.searchContext.selected.bgColor },
-                                      ]
+                                        styles.headerContainer,
+                                        { backgroundColor: theme.searchContext.selected.bgColor },
+                                    ]
                                     : [
-                                          styles.headerContainer,
-                                          {
-                                              backgroundColor:
-                                                  theme.searchContext.unSelected.bgColor,
-                                          },
-                                      ]
+                                        styles.headerContainer,
+                                        {
+                                            backgroundColor:
+                                                theme.searchContext.unSelected.bgColor,
+                                        },
+                                    ]
                             }
                         >
                             {item?.icon}
@@ -311,13 +311,13 @@ const Fav = ({ navigation }) => {
                                 style={
                                     selecetedHeader == item?.name
                                         ? [
-                                              styles.headingText,
-                                              { color: theme.searchContext.selected.textColor },
-                                          ]
+                                            styles.headingText,
+                                            { color: theme.searchContext.selected.textColor },
+                                        ]
                                         : [
-                                              styles.headingText,
-                                              { color: theme.searchContext.unSelected.textColor },
-                                          ]
+                                            styles.headingText,
+                                            { color: theme.searchContext.unSelected.textColor },
+                                        ]
                                 }
                             >
                                 {item?.name}

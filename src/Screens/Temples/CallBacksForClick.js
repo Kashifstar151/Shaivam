@@ -1,8 +1,17 @@
 import assetMapWithTempleType from './AssetMapWithTempleType';
-const markerPressClbk = (navigation, flag) => {
-    console.log('🚀 ~ markerPressClbk ~ agrs:', flag);
+const markerPressClbk = (navigation, flag, item) => {
+    console.log('🚀 ~ markerPressClbk ~ agrs:', flag, item);
     navigation.navigate('templeDetails', {
-        data: assetMapWithTempleType[flag],
+        temple: {
+            // metaDate: item ? item : assetMapWithTempleType[item?.flag],
+            templeFlag: item?.flag,
+            templeName: item?.name,
+            templeId: item?.id,
+            templeCoordinate: {
+                longitude: parseFloat(item?.longitude),
+                latitude: parseFloat(item?.latitude),
+            },
+        },
     });
 };
 

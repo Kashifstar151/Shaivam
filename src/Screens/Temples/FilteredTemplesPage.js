@@ -12,9 +12,10 @@ import SpottingErrorPage from './SuccuessPages/SpottingErrorPage';
 import TempleCard from './TempleCard';
 import { templesDetailsArray } from './AssetMapWithTempleType';
 import { ScrollView } from 'react-native-gesture-handler';
+import BottomSheetTempleTemplate from './BottomSheetTempleTemplate';
 
 const FilteredTemplesPage = ({ navigation, route }) => {
-    console.log('🚀 ~ TempleDetails ~ route:', route.params?.data?.name);
+    console.log('🚀 ~ TempleDetails ~ route:', route?.params);
     const [regionCoordinate, setRegionCoordinate] = useState({
         latitude: 28.500271,
         longitude: 77.387901,
@@ -24,7 +25,7 @@ const FilteredTemplesPage = ({ navigation, route }) => {
     });
     const bottomSheetRef = useRef(null);
     const [snapIndex, setSnapIndex] = useState(0);
-    const [modalVisible, setModalVisible] = useState(true)
+    // const [modalVisible, setModalVisible] = useState(true);
 
     const handleSheetChanges = useCallback((index) => {
         console.log('handleSheetChanges', index);
@@ -34,89 +35,115 @@ const FilteredTemplesPage = ({ navigation, route }) => {
     const { theme } = useContext(ThemeContext);
 
     return (
-        <View style={{ flex: 1, marginTop: Platform.OS == 'ios' ? 15 : 0 }}>
-            <MapView
-                provider={PROVIDER_GOOGLE}
-                initialRegion={null}
-                style={styles.map}
-                region={regionCoordinate}
-            ></MapView>
-            <View
-                style={{
-                    position: 'absolute',
-                    width: '100%',
-                    padding: 20,
+        // <View style={{ flex: 1, marginTop: Platform.OS == 'ios' ? 15 : 0 }}>
+        //     <MapView
+        //         provider={PROVIDER_GOOGLE}
+        //         initialRegion={null}
+        //         style={styles.map}
+        //         region={regionCoordinate}
+        //     ></MapView>
+        //     <View
+        //         style={{
+        //             position: 'absolute',
+        //             width: '100%',
+        //             padding: 20,
+        //         }}
+        //     >
+        //         <SearchContainerWithIcon>
+        //             <SearchTemple
+        //                 route={route.name}
+        //                 value={route.params?.data?.name ?? route.params?.searchText}
+        //                 isNavigable={false}
+        //             />
+        //         </SearchContainerWithIcon>
+        //     </View>
+        //     <BottomSheet
+        //         ref={bottomSheetRef}
+        //         onChange={handleSheetChanges}
+        //         snapPoints={['10%', '50%', '95%']}
+        //         index={1}
+        //         backdropComponent={(props) => (
+        //             <BottomSheetBackdrop
+        //                 opacity={1}
+        //                 appearsOnIndex={2}
+        //                 disappearsOnIndex={1}
+        //                 pressBehavior={'collapse'}
+        //                 {...props}
+        //             >
+        //                 <ImageBackground
+        //                     source={
+        //                         theme.colorscheme === 'light'
+        //                             ? require('../../../assets/Images/Background.png')
+        //                             : require('../../../assets/Images/BackgroundCommon.png')
+        //                     }
+        //                     style={{
+        //                         paddingVertical: 0,
+        //                         borderRadius: 10,
+        //                         width: '100%',
+        //                         height: '40%',
+        //                     }}
+        //                 ></ImageBackground>
+        //             </BottomSheetBackdrop>
+        //         )}
+        //     >
+        //         {/* <Text style={{ color: 'black' }}>dhshdjksk</Text> */}
+        //         {/* {
+        //             modalVisible &&
+        //             <Modal transparent> */}
+        //         {/* <FileUplaoder setModalVisible={setModalVisible} /> */}
+        //         {/* <SpottingErrorPage setModalVisible={setModalVisible} navigation={nav}/>
+        //             </Modal>
+        //         } */}
+        //         {snapIndex === 2 ? (
+        //             <View
+        //                 style={{
+        //                     width: '100%',
+        //                     padding: 20,
+        //                 }}
+        //             >
+        //                 <SearchContainerWithIcon>
+        //                     <SearchTemple
+        //                         route={route.name}
+        //                         value={route.params?.data?.name ?? route.params?.searchText}
+        //                         isNavigable={false}
+        //                     />
+        //                 </SearchContainerWithIcon>
+        //             </View>
+        //         ) : null}
+        //         <ScrollView nestedScrollEnabled>
+        //             {templesDetailsArray.map((item, index) => (
+        //                 <TempleCard dataSet={item} showButton={true} showMargin={true} />
+        //             ))}
+        //         </ScrollView>
+        //     </BottomSheet>
+        // </View>
 
-                }}
-            >
-                <SearchContainerWithIcon>
-                    <SearchTemple
-                        route={route.name}
-                        value={route.params?.data?.name ?? route.params?.searchText}
-                        isNavigable={false}
-                    />
-                </SearchContainerWithIcon>
-            </View>
-            <BottomSheet
-                ref={bottomSheetRef}
-                onChange={handleSheetChanges}
-                snapPoints={['10%', '50%', '95%']}
-                index={1}
-                backdropComponent={(props) => (
-                    <BottomSheetBackdrop
-                        opacity={1}
-                        appearsOnIndex={2}
-                        disappearsOnIndex={1}
-                        pressBehavior={'collapse'}
-                        {...props}
-                    >
-                        <ImageBackground
-                            source={
-                                theme.colorscheme === 'light'
-                                    ? require('../../../assets/Images/Background.png')
-                                    : require('../../../assets/Images/BackgroundCommon.png')
-                            }
-                            style={{
-                                paddingVertical: 0,
-                                borderRadius: 10,
-                                width: '100%',
-                                height: '40%',
-                            }}
-                        ></ImageBackground>
-                    </BottomSheetBackdrop>
-                )}
-            >
-                {/* <Text style={{ color: 'black' }}>dhshdjksk</Text> */}
-                {/* {
-                    modalVisible &&
-                    <Modal transparent> */}
-                {/* <FileUplaoder setModalVisible={setModalVisible} /> */}
-                {/* <SpottingErrorPage setModalVisible={setModalVisible} navigation={nav}/>
-                    </Modal>
-                } */}
-                {snapIndex === 2 ? (
-                    <View
-                        style={{
-                            width: '100%',
-                            padding: 20,
-                        }}
-                    >
-                        <SearchContainerWithIcon>
-                            <SearchTemple
-                                route={route.name}
-                                value={route.params?.data?.name ?? route.params?.searchText}
-                                isNavigable={false}
-                            />
-                        </SearchContainerWithIcon>
-                    </View>
-                ) : null}
-                <ScrollView nestedScrollEnabled>
-                    {templesDetailsArray.map((item, index) => (
-                        <TempleCard dataSet={item} showButton={true} showMargin={true} />
-                    ))}
-                </ScrollView>
-            </BottomSheet>
-        </View>
+        <BottomSheetTempleTemplate
+            snapPoints={['10%', '50%', '95%']}
+            showSearchBarWhenFullSize={true}
+            regionCoordinate={{
+                latitude: 11.2002937,
+                longitude: 79.6203017,
+                latitudeDelta: 0.015,
+                longitudeDelta: 0.0121,
+                locationName: '',
+            }}
+            initialIndexOfSize={1}
+            disappearsOnIndex={1}
+            appearsOnIndex={2}
+            isNavigable={false}
+            routeName={route?.name}
+            data={route?.params?.data}
+            valueToBePreFilled={route?.params?.data?.name ?? route?.params?.searchText}
+            isSearchFieldDisabled={false}
+            isSearchFieldDisabledInFullScreenMode={false}
+        >
+            <ScrollView nestedScrollEnabled>
+                {templesDetailsArray.map((item, index) => (
+                    <TempleCard dataSet={item} showButton={true} showMargin={true} />
+                ))}
+            </ScrollView>
+        </BottomSheetTempleTemplate>
     );
 };
 

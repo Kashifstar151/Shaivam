@@ -78,25 +78,27 @@ android {
 
     namespace "com.shaivam"
     defaultConfig {
-        applicationId "com.shaivam"
+        applicationId "org.shaivam"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 33
+        versionName "3.24"
     }
     signingConfigs {
+        release {
+            if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
+                storeFile file(MYAPP_UPLOAD_STORE_FILE)
+                storePassword MYAPP_UPLOAD_STORE_PASSWORD
+                keyAlias MYAPP_UPLOAD_KEY_ALIAS
+                keyPassword MYAPP_UPLOAD_KEY_PASSWORD
+            }
+        }
         debug {
             storeFile file('debug.keystore')
             storePassword 'android'
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
-        release {
-        storeFile file('shaivam.keystore')
-         storePassword '123456'
-      keyAlias 'your_key_alias'
-      keyPassword 'your_key_file_alias_password'
-    }
     }
     buildTypes {
         debug {
@@ -105,11 +107,12 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
-            //  signingConfig signingConfigs.release
+            // signingConfig signingConfigs.debug
+             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
+
     }
 }
 
@@ -120,6 +123,7 @@ dependencies {
     implementation("com.facebook.react:flipper-integration")
     implementation 'com.google.firebase:firebase-dynamic-links'
     implementation 'com.google.firebase:firebase-analytics'
+    implementation project(':react-native-push-notification')
      
 
     

@@ -34,13 +34,19 @@ import InnerContextOfAnimatedSideBox from './InnerContextOfAnimatedSideBox.js';
 import MapIconSVG from '../../components/SVGs/MapIconSVG.js';
 import { categoryBtnClbk, markerPressClbk } from './CallBacksForClick.js';
 import SearchTemple from './SearchTemple.js';
-import { CustomMarker } from './CustomMarker.js';
+import { CustomMarker, MarkerCallOut } from './CustomMarker.js';
 import { ThemeContext } from '../../Context/ThemeContext.js';
 import { openSettings, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { BlurView } from '@react-native-community/blur';
 import { CustomLongBtn } from '../../components/Buttons.js';
 import AlertmapSVG from '../../../assets/Images/AlertmapSVG.svg';
 import getDimension from '../../Helpers/getDimension.js';
+import {
+    // useGetNearByTemplesQuery,
+    useLazyGetNearByTemplesQuery,
+} from '../../store/features/Temple/TemplApiSlice';
+import { useTranslation } from 'react-i18next';
+import RefreshSVG from '../../components/SVGs/RefreshSVG.js';
 
 export const Temples = ({ navigation, route }) => {
     const bottomSheetRef = useRef(null);
@@ -53,6 +59,58 @@ export const Temples = ({ navigation, route }) => {
         locationName: '',
     });
 
+    // const [skip, setSkip] = useState(false); //  on refetch btn click set it to true
+    // const { data, isSuccess, refetch, isFetching, isError, isUninitialized, error, status } =
+    //     useGetNearByTemplesQuery(regionCoordinate, {
+    //         skip: skip ? true : false,
+    //     });
+    const [
+        getNearByTemples,
+        { data, isSuccess, isFetching, isError, isUninitialized, error, status },
+        lastPromiseInfo,
+    ] = useLazyGetNearByTemplesQuery();
+    console.log('🚀 ~ Temples ~ data:', JSON.stringify(data, null, 2));
+    // useEffect(() => {
+    //     if (skip === false && !isUninitialized) {
+    //         console.log(
+    //             '🚀 ~ useEffect~ 1============================================================================================================================================================~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ~ skip.current:',
+    //             skip,
+    //             !isUninitialized,
+    //             'status=============>',
+    //             status
+    //         );
+
+    //         // refetch(regionCoordinate, { force: true });
+    //         // store.dispatch(
+    //         //     // TempleApiSlice.endpoints.getNearByTemples.initiate(regionCoordinate, {
+    //         //     //     track: false,
+    //         //     // })
+    //         //     TempleApiSlice.util.invalidateTags(['Temple'])
+    //         // );
+    //         // store.dispatch(
+    //         //     TempleApiSlice.endpoints.getNearByTemples.initiate(regionCoordinate, {
+    //         //         // track: false,
+    //         //         forceRefetch: true,
+    //         //     })
+    //         // );
+    //         // TempleApiSlice.util.invalidateTags(['Temple'])
+    //     }
+    // }, [skip, isUninitialized]);
+
+    // useEffect(() => {
+    //     if (isSuccess || isError) {
+    //         setSkip(() => true);
+    //         console.log(
+    //             '🚀 ~ useEffect  2~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ~ skip.current:',
+    //             isSuccess,
+    //             skip,
+    //             'isUninitialized===============>',
+    //             isUninitialized,
+    //             data?.temples.length
+    //         );
+    //     }
+    // }, [isSuccess, isError, data, error]);
+
     const [userLocation, setUserLocation] = useState({
         latitude: 28.500271,
         longitude: 77.387901,
@@ -64,90 +122,10 @@ export const Temples = ({ navigation, route }) => {
 
     // callbacks
     const handleSheetChanges = useCallback((index) => {
-        console.log('handleSheetChanges', index);
+        // console.log('handleSheetChanges', index);
         setSnapIndex(index);
     }, []);
 
-    const [nearByTempleList, setNearByTempleList] = useState([
-        {
-            name: 'Vaippu Sthalam Temple',
-            flag: 8,
-            metadata: function () {
-                return assetMapWithTempleType[this.flag]?.metaData;
-            },
-        },
-
-        {
-            name: 'Thirumurai Temple',
-            flag: 1,
-            metadata: function () {
-                return assetMapWithTempleType[this.flag]?.metaData;
-            },
-        },
-        {
-            name: 'Temples',
-            flag: 2,
-            metadata: function () {
-                return assetMapWithTempleType[this.flag]?.metaData;
-            },
-        },
-        {
-            name: 'Popular Temple',
-            flag: 3,
-            metadata: function () {
-                return assetMapWithTempleType[this.flag]?.metaData;
-            },
-        },
-        {
-            name: 'Parashurama Temple',
-            flag: 4,
-            metadata: function () {
-                return assetMapWithTempleType[this.flag]?.metaData;
-            },
-        },
-        {
-            name: 'Mukti Sthalam Temple',
-            flag: 5,
-            metadata: function () {
-                return assetMapWithTempleType[this.flag]?.metaData;
-            },
-        },
-        {
-            name: 'Unknown Temple',
-            flag: 6,
-            metadata: function () {
-                return assetMapWithTempleType[this.flag]?.metaData;
-            },
-        },
-        {
-            name: 'Unknown Temple',
-            flag: 6,
-            metadata: function () {
-                return assetMapWithTempleType[this.flag]?.metaData;
-            },
-        },
-        {
-            name: 'Unknown Temple',
-            flag: 6,
-            metadata: function () {
-                return assetMapWithTempleType[this.flag]?.metaData;
-            },
-        },
-        {
-            name: 'Unknown Temple',
-            flag: 6,
-            metadata: function () {
-                return assetMapWithTempleType[this.flag]?.metaData;
-            },
-        },
-        {
-            name: 'Unknown Temple',
-            flag: 6,
-            metadata: function () {
-                return assetMapWithTempleType[this.flag]?.metaData;
-            },
-        },
-    ]);
     const { theme } = useContext(ThemeContext);
     const { screenHeight, screenWidth } = getDimension();
     const [showModal, setShowModal] = useState(false);
@@ -165,44 +143,44 @@ export const Temples = ({ navigation, route }) => {
     // Alert.alert('the render');
 
     const onMapReadyCallback = async () => {
-        // Alert.alert('on Entry');
         let state = await checkPermissionAccess(permissionTypeRef.current);
-
         let isPermissionExist = await getTheLocationPermissionToStorage();
-        console.log('🚀 ~ onMapReadyCallback ~ isPermissionExist:', isPermissionExist);
-        setPermissionGranted((prev) => state);
+        setPermissionGranted(() => state);
 
         if (
             state !== RESULTS.GRANTED &&
             (isPermissionExist === 'undefined' || isPermissionExist === null)
         ) {
-            // Alert.alert('requesting permission');
             let requestedVal = await requestThePermission(permissionTypeRef.current);
-            // state = requestedVal.permissionType;
-            // Alert.alert(`${requestedVal.permissionType}`);
             setPermissionGranted(() => requestedVal.permissionType);
+        } else if (state === RESULTS.DENIED) {
+            let requestedVal = await requestThePermission(permissionTypeRef.current);
+            setPermissionGranted(() => requestedVal.permissionType);
+        } else if (state === RESULTS.BLOCKED) {
+            setShowModal(!showModal);
         } else if (state === RESULTS.GRANTED) {
-            console.log('🚀 ~ onMapReadyCallback ~ state when true :', state);
-            // Alert.alert('setting location ');
             getCurrentLocation((val) => {
+                mapRef.current?.animateCamera({ center: val }, { duration: 1000 });
                 setUserLocation((prev) => ({ ...prev, ...val }));
+                setRegionCoordinate((prev) => ({ ...prev, ...val }));
+                getNearByTemples({ ...regionCoordinate, ...val });
             });
+
             getCurrentLocationWatcher((val) => {
+                mapRef.current?.animateCamera({ center: val }, { duration: 1000 });
                 setUserLocation((prev) => ({ ...prev, ...val }));
+                // setRegionCoordinate((prev) => ({ ...prev, ...val }))
             });
         } else {
-            console.log('🚀 ~ onMapReadyCallback ~ state when false :', state);
-            // Alert.alert('opening modal ');
             setShowModal(true);
         }
-        // Alert.alert('Completed Execution');
     };
 
     const handleTrackBack = async () => {
-        const state = await checkPermissionAccess(permissionTypeRef.current);
-        console.log('🚀 ~ handleTrackBack ~ state:', state);
-        if (permissionGranted === RESULTS.GRANTED) {
-            console.log('the uuiuui');
+        let theCurrentPermission = await checkPermissionAccess(permissionTypeRef.current);
+        if (theCurrentPermission === RESULTS.GRANTED) {
+            setPermissionGranted(() => RESULTS.GRANTED);
+            mapRef.current?.animateCamera({ center: userLocation }, { duration: 1000 });
             setRegionCoordinate((prev) => ({
                 ...prev,
                 // latitude: 28.5002,
@@ -210,68 +188,101 @@ export const Temples = ({ navigation, route }) => {
                 ...userLocation,
             }));
         } else {
-            setShowModal(!showModal);
+            requestThePermission(permissionTypeRef.current).then((finalState) => {
+                grantState = finalState.permissionType;
+                setPermissionGranted(() => grantState);
+                if (finalState.permissionType === RESULTS.BLOCKED) {
+                    setShowModal(!showModal);
+                }
+            });
         }
     };
 
+    // extra code
     const subcriptionEventListner = useRef();
-    const handleFocusEvent = () => {
-        let grantState = '';
-        checkPermissionAccess(permissionTypeRef.current).then((state) => {
-            grantState = state;
-            if (state !== RESULTS.GRANTED) {
-                requestThePermission(permissionTypeRef.current).then((finalState) => {
-                    grantState = finalState;
-                });
-            }
-            requestThePermission(permissionTypeRef.current).then((finalState) => {
-                grantState = finalState;
-            });
-            setPermissionGranted(() => grantState);
-        });
+
+    const unmountTheListner = () => {
+        if (subcriptionEventListner.current) {
+            subcriptionEventListner.current.remove();
+        }
     };
+    const handleFocusEvent = async () => {
+        // console.log('the mounting of the listner confirmed ');
+        let grantState = '';
+        let theCurrentPermission = await checkPermissionAccess(permissionTypeRef.current);
+        if (theCurrentPermission !== RESULTS.GRANTED) {
+            requestThePermission(permissionTypeRef.current).then((finalState) => {
+                grantState = finalState.permissionType;
+                setPermissionGranted(() => finalState.permissionType);
+                if (finalState.permissionType === RESULTS.BLOCKED) {
+                    setShowModal(!showModal);
+                }
+            });
+        } else {
+            setPermissionGranted(() => RESULTS.GRANTED);
+        }
+        // // todos: we have commented THE above code because its breaking in  condition when the permission is removed
+        // if (theCurrentPermission === RESULTS.GRANTED) {
+        //     setPermissionGranted(() => RESULTS.GRANTED);
+        // }
+        unmountTheListner();
+        return;
+    };
+    // end
 
     const handleModalAction = async () => {
         subcriptionEventListner.current = AppState.addEventListener('focus', handleFocusEvent);
-        // });
         openSettings();
         setShowModal(!showModal);
     };
 
-    // check on active and background state
-
-    useEffect(() => {
-        return () => {
-            if (subcriptionEventListner.current) {
-                subcriptionEventListner.current.remove();
-            }
-        };
-    }, []);
-
-    // ---------------------------------------
-
     useEffect(() => {
         onMapReadyCallback();
-
         return () => {
             clearGetCurrentLocationWatcher();
         };
     }, []);
 
-    useEffect(() => {
-        if (regionCoordinate?.latitude && regionCoordinate?.longitude) {
-            (async () => {
-                const locationDetail = await getTheLocationName({ ...regionCoordinate });
-                setUserLocName((prev) => {
-                    return (
-                        locationDetail?.address?.village ||
-                        locationDetail?.name ||
-                        locationDetail?.display_name
-                    );
-                });
-            })();
+    const fetchTheLocationName = useCallback(async () => {
+        const locationDetail = await getTheLocationName({ ...regionCoordinate });
+        if (locationDetail?.status === 'SUCCESS') {
+            setUserLocName((prev) => {
+                return (
+                    locationDetail?.data?.address?.village ||
+                    locationDetail?.data?.name ||
+                    locationDetail?.data?.display_name
+                );
+            });
+        } else if (locationDetail.status === 'FAILED') {
+            console.log('the error has occured ===>', locationDetail?.err);
         }
     }, [regionCoordinate]);
+
+    useEffect(() => {
+        if (regionCoordinate?.latitude && regionCoordinate?.longitude) {
+            fetchTheLocationName();
+        }
+    }, [regionCoordinate]);
+
+    const { t } = useTranslation();
+    const mapRef = useRef();
+    const [mapInteractivityState, setMapInteractivityState] = useState(true);
+    const setSearchParams = (item) => {
+        mapRef.current?.animateCamera(
+            {
+                center: {
+                    latitude: parseFloat(item.lat),
+                    longitude: parseFloat(item.lon),
+                },
+            },
+            { duration: 1000 }
+        );
+        setRegionCoordinate((prev) => ({
+            ...prev,
+            latitude: parseFloat(item.lat),
+            longitude: parseFloat(item.lon),
+        }));
+    };
 
     return (
         <>
@@ -287,47 +298,90 @@ export const Temples = ({ navigation, route }) => {
                             }, 5000)
                         }
                         provider={PROVIDER_GOOGLE}
-                        initialRegion={null}
+                        // initialRegion={{
+                        //     longitude: 77.40369287235171,
+                        //     latitude: 28.49488467262243,
+                        //     latitudeDelta: 0.015,
+                        //     longitudeDelta: 0.0121,
+                        // }}
                         style={styles.map}
                         onRegionChangeComplete={(args, gesture) => {
                             if (gesture.isGesture) {
                                 onRegionChangeCompleteCallback(args, (input) => {
+                                    console.log('the gesture is true');
+                                    mapRef.current?.animateCamera(
+                                        { center: input },
+                                        { duration: 1000 }
+                                    );
                                     setRegionCoordinate(input);
                                 });
                             }
                         }}
-                        region={regionCoordinate}
-                        zoomEnabled
+                        // region={regionCoordinate}
+                        // zoomEnabled
+                        zoomEnabled={mapInteractivityState}
+                        scrollEnabled={mapInteractivityState}
+                        ref={mapRef}
                     >
                         {permissionGranted === RESULTS.GRANTED && (
-                            <>
-                                <CustomMarker
+                            <View>
+                                <MarkerCallOut
                                     setPadState={setPadState}
                                     flag={8}
                                     coordinate={userLocation}
                                     keyName={'USER_LOCATION_MARKER'}
+                                    description={"User's location"}
                                 />
-                                <CustomMarker
+                                <MarkerCallOut
                                     setPadState={setPadState}
-                                    callback={() => {
-                                        // setting the type of the marker you pressed
-                                        // callback function for naving to page which has the temple details
-                                        markerPressClbk(navigation, 7);
-                                    }}
                                     flag={7}
                                     coordinate={regionCoordinate}
                                     keyName={'COORDINATE'}
+                                    description={"Region's location"}
                                 />
-                            </>
+                            </View>
                         )}
+                        {data?.temples?.map((item, index) => (
+                            <>
+                                {item?.latitude && item?.longitude && (
+                                    <>
+                                        {/* <Marker
+                                        tracksViewChanges={false}
+                                        coordinate={{
+                                            longitude: item?.longitude,
+                                            latitude: item?.latitude,
+                                        }}
+                                        description={item?.name}
+                                        // image={assetMapWithTempleType[item?.flag].path}
+                                        style={{
+                                            width: '100%',
+                                            alignItems: 'center',
+                                        }}
+                                    ></Marker> */}
+                                        <MarkerCallOut
+                                            setPadState={setPadState}
+                                            callback={() => {
+                                                //   setting the type of the marker you pressed
+                                                //   callback function for naving to page which has the temple details
+                                                markerPressClbk(navigation, item?.flag, item);
+                                            }}
+                                            flag={item?.flag}
+                                            templeId={item?.id}
+                                            coordinate={{
+                                                longitude: item?.longitude,
+                                                latitude: item?.latitude,
+                                            }}
+                                            keyName={'COORDINATE'}
+                                            description={item?.name}
+                                        />
+                                    </>
+                                )}
+                            </>
+                        ))}
                     </MapView>
                 ) : null}
 
                 <View style={styles.topBarWrapper}>
-                    <SearchContainerWithIcon>
-                        <SearchTemple route={route.name} value={null} isNavigable={true} />
-                    </SearchContainerWithIcon>
-
                     <View style={styles.colorContWrapper}>
                         {Object.entries(assetMapWithTempleType).map(([key, value], indx) =>
                             key !== '8' ? (
@@ -361,23 +415,50 @@ export const Temples = ({ navigation, route }) => {
                             ) : null
                         )}
                     </View>
+
+                    <SearchContainerWithIcon>
+                        <SearchTemple
+                            route={route.name}
+                            value={null}
+                            isNavigable={false}
+                            isDisable={false}
+                            isAutoComplete={true}
+                            setRegionCoordinate={(val) => setSearchParams(val)}
+                            setMapInteractivityState={setMapInteractivityState}
+                        />
+                    </SearchContainerWithIcon>
                 </View>
+
+                <Pressable
+                    style={[
+                        styles.floatingBtn,
+                        {
+                            bottom: Dimensions.get('window').height * 0.275,
+                        },
+                    ]}
+                    onPress={() => {
+                        // setSkip(() => false);
+                        getNearByTemples(regionCoordinate);
+                    }}
+                    disabled={isFetching}
+                >
+                    {/* bring user's location into view */}
+                    <RefreshSVG
+                        width={28}
+                        height={28}
+                        viewBox="0 0 24 24"
+                        fill={!isFetching ? '#777' : '#bababa'}
+                    />
+                </Pressable>
 
                 {/* floating side btn */}
                 <Pressable
-                    style={{
-                        position: 'absolute',
-                        backgroundColor: 'white',
-                        right: 20,
-                        bottom: Dimensions.get('window').height * 0.2,
-                        borderRadius: 100,
-                        padding: 10,
-                        elevation: 2,
-                        shadowOffset: {
-                            width: 10,
-                            height: 8,
+                    style={[
+                        styles.floatingBtn,
+                        {
+                            bottom: Dimensions.get('window').height * 0.2,
                         },
-                    }}
+                    ]}
                     onPress={handleTrackBack}
                 >
                     {/* bring user's location into view */}
@@ -389,9 +470,10 @@ export const Temples = ({ navigation, route }) => {
                 <Text>{JSON.stringify(userLocation)}</Text>
             </View> */}
 
-                <AnimatedRightSideView heading={'Map Legend'} RightIcon={<MapIconSVG />}>
-                    <InnerContextOfAnimatedSideBox />
+                <AnimatedRightSideView heading={t('Map Legend')} RightIcon={<MapIconSVG />}>
+                    <InnerContextOfAnimatedSideBox navigation={navigation} />
                 </AnimatedRightSideView>
+
                 {permissionGranted === 'granted' ? (
                     <BottomSheet
                         ref={bottomSheetRef}
@@ -423,8 +505,10 @@ export const Temples = ({ navigation, route }) => {
                         )}
                     >
                         <NearByTemples
+                            route={route}
+                            setRegionCoordinate={(val) => setSearchParams(val)}
                             locationName={userLocName}
-                            data={nearByTempleList}
+                            data={data?.temples}
                             snapIndex={snapIndex}
                             navigation={navigation}
                             close={() => bottomSheetRef.current.snapToIndex(0)}
@@ -506,7 +590,6 @@ export const Temples = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
     map: {
-        flex: 1,
         justifyContent: 'center',
         position: 'absolute',
         flex: 1,
@@ -521,6 +604,18 @@ const styles = StyleSheet.create({
         right: 0,
     },
 
+    floatingBtn: {
+        position: 'absolute',
+        backgroundColor: 'white',
+        right: 20,
+        borderRadius: 100,
+        padding: 10,
+        elevation: 2,
+        shadowOffset: {
+            width: 10,
+            height: 8,
+        },
+    },
     svgWrapper: {
         position: 'absolute',
         top: 0,
@@ -545,6 +640,7 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingHorizontal: 20,
         paddingVertical: 20,
+        flexDirection: 'column-reverse',
     },
     contWrapper: {
         paddingHorizontal: 10,

@@ -50,6 +50,8 @@ export default {
     grey9: '#2C2C2C',
     black: '#121212',
     maroon: '#C1554E',
+    mineGrey: '#222222',
+    nobalGrey: '#B6B6B6',
 
     //dynamic color schema based on theme
 

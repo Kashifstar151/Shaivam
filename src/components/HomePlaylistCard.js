@@ -1,11 +1,12 @@
 import React from 'react';
-import { Dimensions, FlatList, Text, View, Pressable } from 'react-native';
+import { Text, View, Pressable } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import EllispseSVGLeft from './SVGs/EllispseSVGLeft';
 import EllipseSVGRight from './SVGs/EllipseSVGRight';
 import MusiclistSVG from './SVGs/MusiclistSVG';
 import PlayBtnSVG from './SVGs/PlayBtnSVG';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { useTranslation } from 'react-i18next';
 
 const HomePlaylistCard = ({
     colors,
@@ -17,6 +18,7 @@ const HomePlaylistCard = ({
     navDetail,
     theme,
 }) => {
+    const { t } = useTranslation();
     return (
         <LinearGradient
             colors={colors}
@@ -50,7 +52,7 @@ const HomePlaylistCard = ({
             <View style={{ flexDirection: 'row', columnGap: 5, alignItems: 'center' }}>
                 <MusiclistSVG fill={theme.colorScheme === 'light' ? '#4C3600' : '#fff'} />
                 <Text style={{ color: theme.textColor, fontSize: RFValue(12, 800) }}>
-                    {heading}
+                    {t(`${heading}`)}
                 </Text>
             </View>
 
@@ -83,7 +85,21 @@ const HomePlaylistCard = ({
                 >
                     {songCount} songs
                 </Text>
-                <Pressable>
+                <Pressable style={{ position: 'relative' }}>
+                    {theme.colorScheme === 'light' && (
+                        <View
+                            style={{
+                                width: 33,
+                                height: 33,
+                                position: 'absolute',
+                                top: 1,
+                                left: 1,
+                                backgroundColor: 'black',
+                                opacity: 0.2,
+                                borderRadius: 36,
+                            }}
+                        ></View>
+                    )}
                     <PlayBtnSVG fill={'#4C3600'} />
                 </Pressable>
             </View>

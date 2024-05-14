@@ -8,37 +8,37 @@ import CameraSVG from '../../components/SVGs/CameraSVG';
 import ErrorSpotSVG from '../../components/SVGs/ErrorSpotSVG';
 import FileUplaoder from './FileUplaoder';
 import SpottingErrorPage from './SuccuessPages/SpottingErrorPage';
+import { useTranslation } from 'react-i18next';
 
 const TempleCard = ({ dataSet, children, showMargin, showButton }) => {
     const nav = useNavigation();
-    const [modalVisible, setModalVisible] = useState(false)
-    const [selectedHeader, setSelectedHeader] = useState('direction')
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedHeader, setSelectedHeader] = useState('direction');
     const navigator = (name, data) => {
         nav.navigate('');
     };
     const selectionHandler = (item) => {
-        setSelectedHeader(item)
-        setModalVisible(true)
-    }
+        setSelectedHeader(item);
+        setModalVisible(true);
+    };
+    const { t } = useTranslation();
 
     return (
         <View style={{ paddingHorizontal: 20 }}>
-            {
-                modalVisible &&
+            {modalVisible && (
                 <Modal transparent>
-                    {
-                        selectedHeader == 'Submit Images' ?
-                            <FileUplaoder setModalVisible={setModalVisible} /> :
-                            selectedHeader == 'Spot an error? Send Corrections' ?
-                                <SpottingErrorPage setModalVisible={setModalVisible} navigation={nav} /> : null
-                    }
+                    {selectedHeader == 'Submit Images' ? (
+                        <FileUplaoder setModalVisible={setModalVisible} />
+                    ) : selectedHeader == 'Spot an error? Send Corrections' ? (
+                        <SpottingErrorPage setModalVisible={setModalVisible} navigation={nav} />
+                    ) : null}
                 </Modal>
-            }
+            )}
             <Text style={{ color: 'black', fontFamily: 'Lora-Bold', fontSize: 18 }}>
                 {dataSet?.templeName}
             </Text>
 
-            <Text style={{ color: 'black', fontFamily: 'Mulish-Regular' }}>
+            <Text style={{ color: 'black', fontFamily: 'Mulish-Regular', paddingTop: 10 }}>
                 {dataSet?.templeType}
             </Text>
             {showButton && (
@@ -67,7 +67,7 @@ const TempleCard = ({ dataSet, children, showMargin, showButton }) => {
                             elevation: 3,
                             shadowColor: 'black',
                         }}
-                        text={'Direction'}
+                        text={t('Directions')}
                         backgroundColor={'#C1554E'}
                         textColor={'#fff'}
                     />
@@ -79,7 +79,6 @@ const TempleCard = ({ dataSet, children, showMargin, showButton }) => {
                             margin: 10,
                         }}
                         text={'Submit Images'}
-
                         backgroundColor={'#EDEDED'}
                         textColor={'#777777'}
                     />
@@ -96,7 +95,7 @@ const TempleCard = ({ dataSet, children, showMargin, showButton }) => {
                     />
                 </ScrollView>
             )}
-            <FlatList
+            {/* <FlatList
                 horizontal
                 contentContainerStyle={{ gap: 10, paddingVertical: 10 }}
                 data={Array.from({ length: 7 }, (_, i) => i)}
@@ -106,7 +105,7 @@ const TempleCard = ({ dataSet, children, showMargin, showButton }) => {
                         style={{ color: 'black', width: 200, height: 100, borderRadius: 8 }}
                     />
                 )}
-            />
+            /> */}
             {showMargin && (
                 <View
                     style={{

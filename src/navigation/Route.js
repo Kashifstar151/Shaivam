@@ -39,57 +39,91 @@ import Success from '../Screens/Success/Success';
 import Radios from '../Screens/Radio/Radios';
 import OmChanting from '../Screens/Home/OmChanting';
 import NavigationServices from './NavigationServices';
+import { RESULTS } from 'react-native-permissions';
+import { PlayerProvider } from '../Context/PlayerContext';
+import DBInfo from '../../DBInfo';
+import WebsiteView from '../Screens/Calender/WebsiteView';
+import Notification from '../Screens/Notifications/Notification';
 // import { ThemeContextProvider } from '../Context/ThemeContext';
 
 const Route = () => {
     const Stack = createNativeStackNavigator();
     const database = SQLite.openDatabase({ name: 'songData.db', createFromLocation: 1 });
     const [showDownloading, setShowDownloading] = useState(false);
-    const [isConnected, setIsConnected] = useState(false);
+    const [isConnected, setIsConnected] = useState();
     // const database = SQLite.openDatabase({ name: databaseName, });
     useEffect(() => {
-        AsyncStorage.setItem(
-            '@database',
-            JSON.stringify({ name: 'songData.db', createFromLocation: 1 })
-        );
+        // AsyncStorage.setItem(
+        //     '@database',
+        //     JSON.stringify({ name: 'songData.db', createFromLocation: 1 })
+        // );
         LogBox.ignoreAllLogs();
         AppState.addEventListener('change', (nextAppState) => {
             if (nextAppState === 'background' || nextAppState === 'inactive') {
                 database.close();
             }
         });
-        requestFilePermissions();
         // offlineDataBAse()
         const unsubscribe = addEventListener((state) => {
-            // console.log("Connection type", state.type);
-            // console.log("Is connected?", state.isConnected);
             if (state.isConnected) {
                 setIsConnected(true);
-                checkConnection(true);
-            } else {
-                checkConnection(false);
             }
         });
-        unsubscribe();
         // checkFileExist()
         // attachDb()
         // connectDataBaseToFolder()
+
+        return unsubscribe();
     }, []);
 
+    useEffect(() => {
+        if (isConnected) {
+            checkConnection(isConnected);
+        }
+    }, [isConnected]);
 
-
-    const checkConnection = (connected) => {
-        if (connected && !__DEV__) {
-            Alert.alert('New Update Available', 'Click ok to sync latest data', [
-                {
-                    text: 'Cancel',
-                    onPress: () => onCancel(),
-                },
-                {
-                    text: 'Ok',
-                    onPress: () => checkFileExist(),
-                },
-            ]);
+    const checkConnection = async (connected) => {
+        let localDBMetaData = JSON.parse(await AsyncStorage.getItem('DB_METADATA'));
+        if (!localDBMetaData) {
+            AsyncStorage.setItem('DB_METADATA', JSON.stringify(DBInfo));
+            localDBMetaData = DBInfo;
+        }
+        if (connected) {
+            fetch(
+                'https://qa-admin.shaivam.in/api/app-dump-updates?pagination[pageSize]=1&sort[0]=Version:desc'
+            )
+                .then((result) => result.json())
+                .then((response) => {
+                    console.log('the api response is ===>', response?.data?.[0]?.attributes);
+                    if (
+                        localDBMetaData?.Version &&
+                        response?.data?.[0]?.attributes.Version !== localDBMetaData?.Version
+                    ) {
+                        /*
+                           *? response?.data?.[0]?.attributes ==> is our metaData whihc will contain  data like 
+                           {
+                                "DumpName": "thirumuraiSongs", 
+                                "FilePath": "https://shaivamfiles.fra1.cdn.digitaloceanspaces.com/sqlitedump/thirumuraiSongs_12.zip", 
+                                "Version": "12", 
+                                "createdAt": "2024-04-09T10:17:27.323Z", 
+                                "publishedAt": "2024-04-09T10:17:28.545Z", 
+                                "updatedAt": "2024-04-29T07:08:10.139Z"}
+                        */
+                        Alert.alert('New Update Available', 'Click ok to sync latest data', [
+                            {
+                                text: 'Cancel',
+                                onPress: () => onCancel(),
+                            },
+                            {
+                                text: 'Ok',
+                                onPress: () => checkFileExist(response?.data?.[0]?.attributes),
+                            },
+                        ]);
+                    }
+                })
+                .catch((err) => {
+                    console.log('The error occured ==>', err);
+                });
         } else {
             Alert.alert('You are offline!');
         }
@@ -104,31 +138,76 @@ const Route = () => {
         //     setShowDownloading(false)
         // }, 2000)
     };
+
+    // async function filePermissionProcess() {
+    //     try {
+    //         const granted = await PermissionsAndroid.request(
+    //             PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+    //             // PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
+    //             {
+    //                 title: 'File Permission',
+    //                 message: 'App needs access to your storage to read and write files.',
+    //                 buttonNeutral: 'Ask Me Later',
+    //                 buttonNegative: 'Cancel',
+    //                 buttonPositive: 'OK',
+    //             }
+    //         );
+    //         return { permissionType: granted, status: 'SUCCESS', error: null };
+    //     } catch (err) {
+    //         console.warn(err);
+    //         return { permissionType: null, status: 'ERROR', error: err };
+    //     }
+    // }
+
     async function requestFilePermissions() {
-        try {
-            const granted = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-                // PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
-                {
-                    title: 'File Permission',
-                    message: 'App needs access to your storage to read and write files.',
-                    buttonNeutral: 'Ask Me Later',
-                    buttonNegative: 'Cancel',
-                    buttonPositive: 'OK',
-                }
-            )
-            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                console.log('File permissions granted');
-            } else {
-                console.log('File permissions denied');
-            }
-        } catch (err) {
-            console.warn(err);
+        let fileAccessRequest = { permissionType: null, status: null, error: null };
+        if (
+            (!(Platform.constants['Release'] >= 13) && Platform.OS === 'android') ||
+            Platform.OS === 'ios'
+        ) {
+            fileAccessRequest = await filePermissionProcess();
+        } else {
+            fileAccessRequest = {
+                permissionType: RESULTS.GRANTED,
+                status: 'SUCCESS',
+            };
+        }
+        if (
+            fileAccessRequest?.status === 'SUCCESS' &&
+            fileAccessRequest.permissionType === PermissionsAndroid.RESULTS.GRANTED
+        ) {
+            console.log('File permissions granted');
+        } else {
+            console.log('File permissions denied', fileAccessRequest);
         }
     }
 
-    const checkFileExist = async () => {
-        RNFS.exists(`${RNFS.ExternalDirectoryPath}/Thrimurai/thirumuraiSongs_10.db`)
+    const downloadDB = async (metaData) => {
+        setShowDownloading(true)
+        await requestFilePermissions();
+        const promise = await attachDb(metaData);
+        setShowDownloading(false);
+        promise
+            .then((res) => {
+                console.log('res', res);
+                setShowDownloading(false);
+                // setting the metaData once the update is done
+                AsyncStorage.setItem('DB_METADATA', JSON.stringify(metaData));
+                AsyncStorage.setItem('@database', JSON.stringify({ name: 'main.db' }));
+            })
+            .catch((error) => {
+                console.log('error', error);
+                setShowDownloading(false);
+                AsyncStorage.setItem('@database', JSON.stringify({ name: 'main.db' }));
+            });
+    };
+
+    const checkFileExist = async (metaData) => {
+        let path =
+            Platform.OS == 'android'
+                ? `${RNFS.ExternalDirectoryPath}/Thrimurai/${metaData.DumpName}_${metaData.Version}.db`
+                : `${RNFS.DocumentDirectoryPath}/Thrimurai/${metaData.DumpName}_${metaData.Version}.db`;
+        RNFS.exists(path)
             .then(async (res) => {
                 if (res == true) {
                     // InitializeDatabase()
@@ -137,17 +216,20 @@ const Route = () => {
                         '@database',
                         JSON.stringify({ name: 'songData.db', createFromLocation: 1 })
                     );
+                    alert(true);
                     setShowDownloading(true);
                     setTimeout(() => {
                         setShowDownloading(false);
                     }, 2000);
                 } else {
+                    requestFilePermissions();
                     setShowDownloading(true);
-                    console.log(false);
-                    const promise = attachDb();
+                    // alert(false);
+                    const promise = attachDb(metaData);
                     promise
                         .then((res) => {
                             console.log('res', res);
+
                             setShowDownloading(false);
                         })
                         .catch((error) => {
@@ -160,6 +242,7 @@ const Route = () => {
             .catch((error) => {
                 console.log('🚀 ~ file: route.js:99 ~ RNFS.exists ~ error:', error);
             });
+        await AsyncStorage.setItem('DB_METADATA', JSON.stringify(metaData));
     };
 
     return (
@@ -174,20 +257,25 @@ const Route = () => {
                     />
                 </View>
             ) : (
-                <NavigationContainer ref={ref => NavigationServices.setTopLevelNavigator(ref)}>
+                <NavigationContainer ref={(ref) => NavigationServices.setTopLevelNavigator(ref)}>
                     <Stack.Navigator
                         initialRouteName={RouteTexts.ONBOARDING_SCREEN}
                         screenOptions={{
                             headerShown: false,
                         }}
                     >
-                        <Stack.Screen name={RouteTexts.BOTTOM_TABS} component={BottomTabs} />
+                        <Stack.Screen name={RouteTexts.BOTTOM_TABS} component={BottomTa} />
                         <Stack.Screen name={RouteTexts.TEMPLE_Tabs} component={TempleTabs} />
                         <Stack.Screen name="Home" component={HomeScreen} />
                         <Stack.Screen name="Thirumurais" component={ThrimuraiList} />
                         <Stack.Screen name={RouteTexts.SEARCH_SCREEN} component={SearchScreen} />
                         <Stack.Screen name={RouteTexts.ONBOARDING_SCREEN} component={Onboarding} />
-                        <Stack.Screen name={RouteTexts.VIRTUAL_EVENT_CREATE} component={CreateVirtualEvent} />
+                        <Stack.Screen name={RouteTexts.WEBSIRE_VIEW} component={WebsiteView} />
+                        <Stack.Screen name={RouteTexts.NOTIFICATION} component={Notification} />
+                        <Stack.Screen
+                            name={RouteTexts.VIRTUAL_EVENT_CREATE}
+                            component={CreateVirtualEvent}
+                        />
                         <Stack.Screen
                             name={RouteTexts.TEMPLE_SELECTION}
                             component={TempleSelection}
@@ -228,7 +316,6 @@ const Route = () => {
                         <Stack.Screen name={RouteTexts.THRIMURAI_SONG} component={MusicComponent} />
                         <Stack.Screen name={'Stotras'} component={Strotras} />
                         <Stack.Screen name={RouteTexts.SUCCESS} component={Success} />
-
                         <Stack.Screen
                             name={RouteTexts.ERROR_SELECTION_PAGE}
                             component={SelectErrorPage}
@@ -239,21 +326,12 @@ const Route = () => {
                             options={{
                                 headerShown: false,
                                 cardStyleInterpolator: CardStyleInterpolators.forBottomSheetAndroid,
-                                //  CardStyleInterpolators.forHorizontalIOS,
-                                // transitionSpec: {
-                                //   open: config,
-                                //   close: config,
-                                // },
-                                // gestureDirection: 'horizontal-inverted',
                                 gestureEnabled: true,
                             }}
                         />
-
                         <Stack.Screen name={'filteredTemples'} component={FilteredTemplesPage} />
                         <Stack.Screen name={RouteTexts.RADIO} component={Radios} />
                         <Stack.Screen name={RouteTexts.OM_CHANTING} component={OmChanting} />
-
-
                         {/* <Stack.Screen name={'PinTheLocation'} component={PinTheLocation} /> */}
                         {/* <Stack.Screen name={'templeDetails'} component={TempleDetails} /> */}
                     </Stack.Navigator>
@@ -268,5 +346,13 @@ const MusicComponent = (props) => (
         <ThrimuraiSong {...props} />
     </MusicContextProvider>
 );
+const BottomTa = (props) => {
+    console.log("🚀 ~ BottomTa ~ props:", JSON.stringify(props))
+    return (
+        <PlayerProvider>
+            <BottomTabs {...props} />
+        </PlayerProvider>
+    )
+}
 
 export default Route;

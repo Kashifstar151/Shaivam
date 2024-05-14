@@ -12,7 +12,6 @@
 		0175CAE2F07144479545ABEE /* Lora-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DDB0769F44B04FBCA67698E1 /* Lora-Italic.ttf */; };
 		0BF8CADCE7CD46F2AB07B4F2 /* Mulish-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E3BE0031D1CD41988541662F /* Mulish-Black.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
-		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		25B7B3F7906741D298A7EC3F /* Mulish-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F1A20BCF2F67440C925A1511 /* Mulish-Regular.ttf */; };
 		3719B7F3BD89423E9C12B78F /* Lora-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F3009DBF2EC34647B26036B3 /* Lora-BoldItalic.ttf */; };
@@ -21,9 +20,10 @@
 		4EAA3571B4CD4B3FB0C2CE33 /* Mulish-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 47C8045DACF44F8FA039F444 /* Mulish-ExtraBold.ttf */; };
 		580D44C25E804201B7C8E7C3 /* AnekTamil-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 89FA4CB5789D48868C8CEE73 /* AnekTamil-Bold.ttf */; };
 		71732D8506AC48FC9651E627 /* Mulish-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D4C60108C4964BB3BB43F8B6 /* Mulish-Bold.ttf */; };
+		7D28D5DC2BE3B698003CAF18 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D28D5DB2BE3B698003CAF18 /* Images.xcassets */; };
 		7D6680B92BC56187002E7CB0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D6680B82BC56187002E7CB0 /* GoogleService-Info.plist */; };
+		7D6EF6902BD29C8B006FCD92 /* www in Resources */ = {isa = PBXBuildFile; fileRef = 7D6EF68F2BD29C8B006FCD92 /* www */; };
 		7DD68B7C2AFB7FA200E64A9F /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 7DD68B7B2AFB7FA200E64A9F /* Fonts */; };
-		7DFCCB622BA826C90090A24C /* www in Resources */ = {isa = PBXBuildFile; fileRef = 7DFCCB612BA826C90090A24C /* www */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		81B727FFD18D424BB7A9B09D /* Lora-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D836E47207064FACB034FA05 /* Lora-Bold.ttf */; };
 		8716E52A0D7E4DB7844FF018 /* AnekTamil-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 807D8AB9E1EC48C3AAD3F5AE /* AnekTamil-Regular.ttf */; };
@@ -53,7 +53,6 @@
 		13B07F961A680F5B00A75B9A /* Shaivam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shaivam.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Shaivam/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = Shaivam/AppDelegate.mm; sourceTree = "<group>"; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Shaivam/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Shaivam/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Shaivam/main.m; sourceTree = "<group>"; };
 		1B071FCF6E9785F4EAC6E71F /* Pods-Shaivam.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shaivam.debug.xcconfig"; path = "Target Support Files/Pods-Shaivam/Pods-Shaivam.debug.xcconfig"; sourceTree = "<group>"; };
@@ -62,10 +61,11 @@
 		498158AB7AE94BAFAD7C62CF /* Lora-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lora-MediumItalic.ttf"; path = "../src/assets/fonts/Lora-MediumItalic.ttf"; sourceTree = "<group>"; };
 		6A77EEC69F9959E1451BFBFC /* Pods-Shaivam-ShaivamTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shaivam-ShaivamTests.release.xcconfig"; path = "Target Support Files/Pods-Shaivam-ShaivamTests/Pods-Shaivam-ShaivamTests.release.xcconfig"; sourceTree = "<group>"; };
 		7D094CB72B06A8E300B20CA3 /* Shaivam-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Shaivam-Bridging-Header.h"; sourceTree = "<group>"; };
+		7D28D5DB2BE3B698003CAF18 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		7D6680B82BC56187002E7CB0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Desktop/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		7D6EF68F2BD29C8B006FCD92 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; path = www; sourceTree = "<group>"; };
 		7DD68B7B2AFB7FA200E64A9F /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fonts; path = "../node_modules/react-native-vector-icons/Fonts"; sourceTree = "<group>"; };
 		7DF41AC32BC3E02300278ABE /* Shaivam.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Shaivam.entitlements; path = Shaivam/Shaivam.entitlements; sourceTree = "<group>"; };
-		7DFCCB612BA826C90090A24C /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; name = www; path = ../../../Shaivam/Shaivam/ios/Shaivam/www; sourceTree = "<group>"; };
 		807D8AB9E1EC48C3AAD3F5AE /* AnekTamil-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "AnekTamil-Regular.ttf"; path = "../src/assets/fonts/AnekTamil-Regular.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Shaivam/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89FA4CB5789D48868C8CEE73 /* AnekTamil-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "AnekTamil-Bold.ttf"; path = "../src/assets/fonts/AnekTamil-Bold.ttf"; sourceTree = "<group>"; };
@@ -125,13 +125,13 @@
 		13B07FAE1A68108700A75B9A /* Shaivam */ = {
 			isa = PBXGroup;
 			children = (
+				7D28D5DB2BE3B698003CAF18 /* Images.xcassets */,
+				7D6EF68F2BD29C8B006FCD92 /* www */,
 				7D6680B82BC56187002E7CB0 /* GoogleService-Info.plist */,
 				7DF41AC32BC3E02300278ABE /* Shaivam.entitlements */,
-				7DFCCB612BA826C90090A24C /* www */,
 				7DD68B7B2AFB7FA200E64A9F /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
-				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
@@ -310,15 +310,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7DFCCB622BA826C90090A24C /* www in Resources */,
 				7DD68B7C2AFB7FA200E64A9F /* Fonts in Resources */,
+				7D28D5DC2BE3B698003CAF18 /* Images.xcassets in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
-				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				580D44C25E804201B7C8E7C3 /* AnekTamil-Bold.ttf in Resources */,
 				8716E52A0D7E4DB7844FF018 /* AnekTamil-Regular.ttf in Resources */,
 				81B727FFD18D424BB7A9B09D /* Lora-Bold.ttf in Resources */,
 				3719B7F3BD89423E9C12B78F /* Lora-BoldItalic.ttf in Resources */,
 				0175CAE2F07144479545ABEE /* Lora-Italic.ttf in Resources */,
+				7D6EF6902BD29C8B006FCD92 /* www in Resources */,
 				3DDA75ACAC7347E9BC80065E /* Lora-Medium.ttf in Resources */,
 				39A577FD368E4C38B2C25753 /* Lora-MediumItalic.ttf in Resources */,
 				00C38C2E142A4D07A5C3EAD2 /* Lora-Regular.ttf in Resources */,
@@ -569,7 +569,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
-				DEVELOPMENT_TEAM = 28UGW8QWJ6;
+				DEVELOPMENT_TEAM = Z9RKGAY2T4;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Shaivam/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -582,13 +582,14 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.shaivam.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Shaivam.shaivam;
 				PRODUCT_MODULE_NAME = Shaivam;
 				PRODUCT_NAME = Shaivam;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Shaivam-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -603,7 +604,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
-				DEVELOPMENT_TEAM = 28UGW8QWJ6;
+				DEVELOPMENT_TEAM = Z9RKGAY2T4;
 				INFOPLIST_FILE = Shaivam/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -615,12 +616,13 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.shaivam.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Shaivam.shaivam;
 				PRODUCT_MODULE_NAME = Shaivam;
 				PRODUCT_NAME = Shaivam;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Shaivam-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

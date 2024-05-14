@@ -1,4 +1,5 @@
-import React, { useContext, useState } from "react";
+import { useIsFocused } from "@react-navigation/native";
+import React, { useContext, useEffect, useState } from "react";
 import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Feather from "react-native-vector-icons/dist/Feather";
 import { useDispatch } from "react-redux";
@@ -6,14 +7,18 @@ import { ThemeContext } from "../../Context/ThemeContext";
 import { colors } from "../../Helpers";
 import { setInputValue } from "../../store/features/Calender/FormSlice";
 
-const SelectFrequency = ({ selectedFrequecy, setSelectedFrequecy, closeBottomSheet, showCategory }) => {
+const SelectFrequency = ({ selectedFrequecy, setSelectedFrequecy, closeBottomSheet, showCategory, comp }) => {
+    console.log("🚀 ~ SelectFrequency ~ comp:", comp)
     const theme = useContext(ThemeContext)
+    const isFocueseed = useIsFocused()
     const dispatch = useDispatch()
+    const [data, setData] = useState([])
+    // const [inputKey, setInputValue] = useState(null)
     const type = [
         { name: 'Weekly', id: 1 },
         { name: 'Monthly', id: 2 }
     ]
-    let inputKey = showCategory ? 'category' : 'frequency'
+    let inputKey = showCategory ? 'category' : 'Frequency'
     const category = [
         { name: 'Festival', id: 1 },
         { name: 'Concert', id: 2 },
@@ -23,8 +28,34 @@ const SelectFrequency = ({ selectedFrequecy, setSelectedFrequecy, closeBottomShe
         { name: 'Others', id: 6 }
 
     ]
+    const weekData = [
+        { name: 'One', id: 1 },
+        { name: 'Two', id: 2 },
+        { name: 'Three', id: 3 },
+        { name: 'Four', id: 4 },
+        { name: 'Last', id: 5 },
+        // { name: 'Sat', id: 6 },
+        // { name: 'Sun', id: 7 },
+
+    ]
+    // useEffect(() => {
+    //     // alert(comp)
+    //     if (comp == 'Event category') {
+    //         setData(category)
+    //         // alert(true)
+    //         setInputValue(JSON.stringify('category'))
+    //     } else if (comp == 'Frequency') {
+    //         setData(type)
+    //         setInputValue('frequency')
+    //     } else {
+    //         setData(weekData)
+    //         setInputValue('Days')
+    //     }
+
+    // }, [isFocueseed])
     const selectionHandler = (item) => {
         setSelectedFrequecy(item)
+        console.log(`${inputKey}`, 'imputKey====>')
         dispatch(setInputValue({ inputKey, inputValue: item?.name }))
         closeBottomSheet
     }

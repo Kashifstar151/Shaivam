@@ -4,12 +4,14 @@ import bgImg from '../../../assets/Images/Background.png';
 import getDimension from '../../Helpers/getDimension';
 import PlayBtnSVG from '../../components/SVGs/PlayBtnSVG';
 import { CustomButton } from '../../components/Buttons';
+import { useTranslation } from 'react-i18next';
 
 const Quiz = () => {
     const [dimension, setDimension] = useState({
         width: 0,
         height: 0,
     });
+    const { t } = useTranslation();
 
     const { screenWidth } = getDimension();
     return (
@@ -62,10 +64,10 @@ const Quiz = () => {
                 >
                     <View style={{ gap: 3, paddingLeft: 10 }}>
                         <Text style={{ fontSize: 18, fontFamily: 'Lora-Bold', color: 'white' }}>
-                            Take the Shaivam Quiz
+                            {t('Take the Shaivam Quiz')}
                         </Text>
                         <Text style={{ fontSize: 12, color: 'white' }}>
-                            Test your knowledge on Shiva
+                            {t('Test your knowledge on Shiva')}
                         </Text>
                     </View>
                     <CustomButton
@@ -80,7 +82,7 @@ const Quiz = () => {
                             borderColor: '#C1554E',
                             borderWidth: 1,
                         }}
-                        text={'Take Quiz'}
+                        text={t('Take Quiz')}
                         backgroundColor={'#FCB300'}
                         textColor={'#4C3600'}
                     />

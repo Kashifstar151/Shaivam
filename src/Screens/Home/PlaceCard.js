@@ -3,18 +3,25 @@ import { Image, Pressable, Text, View } from 'react-native';
 import ShareSVG from '../../components/SVGs/ShareSVG';
 import LocationSVG from '../../components/SVGs/LocationSVG';
 import { RFValue } from 'react-native-responsive-fontsize';
-import dynamicLinks from '@react-native-firebase/dynamic-links';
-import Share from 'react-native-share'
+import { colors } from '../../Helpers';
 
-const PlaceCard = ({ img, templeName, address, theme, prevId }) => {
-
+const PlaceCard = ({ img, templeName, address, theme }) => {
     return (
         <View
             style={{
-                padding: 16,
+                padding: 12,
                 flexDirection: 'row',
                 columnGap: 16,
                 alignItems: 'center',
+                backgroundColor: theme.colorscheme === 'light' ? '#fff' : '#333333',
+                // backgroundColor: 'red',
+                borderRadius: 10,
+                // borderColor: 'black', borderWidth: 1,
+                shadowColor: '#171717',
+                shadowOffset: { width: -2, height: 4 },
+                shadowOpacity: 0.2,
+                shadowRadius: 3,
+                elevation: 15,
             }}
         >
             <View>
@@ -56,10 +63,14 @@ const PlaceCard = ({ img, templeName, address, theme, prevId }) => {
 
                 <View style={{ columnGap: 24, flexDirection: 'row' }}>
                     <Pressable>
-                        <ShareSVG fill={theme.textColor} />
+                        <ShareSVG
+                            fill={theme.colorscheme === 'light' ? colors.grey6 : theme.textColor}
+                        />
                     </Pressable>
                     <Pressable>
-                        <LocationSVG fill={theme.textColor} />
+                        <LocationSVG
+                            fill={theme.colorscheme === 'light' ? colors.grey6 : theme.textColor}
+                        />
                     </Pressable>
                 </View>
             </View>

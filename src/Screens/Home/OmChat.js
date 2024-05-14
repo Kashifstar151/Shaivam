@@ -1,8 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Dimensions, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+    Dimensions,
+    ImageBackground,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native';
 import bgImg from '../../../assets/Images/Background.png';
 import PlayBtnSVG from '../../components/SVGs/PlayBtnSVG';
 import { RouteTexts } from '../../navigation/RouteText';
+import { useTranslation } from 'react-i18next';
 
 const OmChat = ({ navigation, onPress }) => {
     const [dimension, setDimension] = useState({
@@ -11,7 +19,7 @@ const OmChat = ({ navigation, onPress }) => {
     });
 
     const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
-
+    const { t } = useTranslation();
     useEffect(() => {
         const updateItemWidth = () => {
             setScreenWidth(Dimensions.get('window').width);
@@ -50,10 +58,10 @@ const OmChat = ({ navigation, onPress }) => {
                 >
                     <View>
                         <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white' }}>
-                            Om Namah Shivaya
+                            {t('Om Namah Shivaya')}
                         </Text>
                         <Text style={{ fontSize: 12, color: 'white' }}>
-                            Chat along with our endless Om Player
+                            {t('Chat along with our endless Om Player')}
                         </Text>
                     </View>
                     <TouchableOpacity onPress={onPress}>

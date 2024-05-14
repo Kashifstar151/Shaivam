@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import FavSVG from '../../components/SVGs/FavSVG';
-
+import templeMetaData from './AssetMapWithTempleType';
 const CardForNearByTemple = ({ item }) => {
     const [favState, setFavState] = useState(false);
     return (
@@ -12,13 +12,20 @@ const CardForNearByTemple = ({ item }) => {
                         style={[
                             styles.widthForColorBar,
                             {
-                                backgroundColor: `${item?.metadata().color}`,
+                                backgroundColor: `${
+                                    templeMetaData[item?.flag]?.metaData?.color ?? '#000'
+                                }`,
                             },
                         ]}
                     ></View>
                     <View style={styles.textContainer}>
-                        <Text style={styles.textBold}>SHIvam</Text>
-                        <Text style={{ color: 'black' }}>Sharma</Text>
+                        <Text numberOfLines={1} ellipsizeMode="tail" style={styles.textBold}>
+                            {item?.name}
+                            {/* {item?.attributes?.Name_of_the_place} */}
+                        </Text>
+                        <Text numberOfLines={1} ellipsizeMode="tail" style={{ color: 'black' }}>
+                            {templeMetaData[item?.flag]?.fullName}
+                        </Text>
                     </View>
                 </View>
 
@@ -56,7 +63,12 @@ const styles = StyleSheet.create({
         width: 4,
         borderRadius: 5,
     },
-    textContainer: { marginLeft: 5, flex: 1, justifyContent: 'center' },
+    textContainer: {
+        marginHorizontal: 5,
+        // flex: 1,
+        width: '90%',
+        justifyContent: 'center',
+    },
     textBold: {
         color: 'black',
         fontFamily: 'Mulish-Bold',

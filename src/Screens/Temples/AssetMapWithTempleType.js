@@ -5,15 +5,16 @@ import PopularTemples from '../../../assets/Images/Temple/PopularTemples.svg';
 import Temples from '../../../assets/Images/Temple/Temples.svg';
 import UnknownTemple from '../../../assets/Images/Temple/UnknownTemple.svg';
 import UsersLocation from '../../../assets/Images/Temple/UsersLocation.svg';
+import LocationPointer from '../../../assets/Images/Temple/location9.svg';
 import VaippuSthalamTemple from '../../../assets/Images/Temple/VaippuSthalamTemple.svg';
 const assetMapWithTempleType = {
     1: {
-        fullName: 'Jyotirlingas/Thirumurai Temples',
+        fullName: 'Jyotirlinga/Thirumurai Temples',
         name: 'Thirumurai Temple',
         content:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magnam.',
         path: require('./TempleAssets/ThirumuraiTemple.png'),
-        svg: ThrimuraiTemple,
+        Svg: <ThrimuraiTemple />,
         metaData: {
             color: '#E62828',
             letterAssociated: null,
@@ -28,7 +29,7 @@ const assetMapWithTempleType = {
             letterAssociated: null,
         },
         path: require('./TempleAssets/Temples.png'),
-        svg: <Temples />,
+        Svg: <Temples />,
     },
     3: {
         fullName: 'Popular Temples',
@@ -39,7 +40,7 @@ const assetMapWithTempleType = {
             letterAssociated: null,
         },
         path: require('./TempleAssets/PopularTemples.png'),
-        svg: <PopularTemples />,
+        Svg: <PopularTemples />,
     },
 
     4: {
@@ -52,7 +53,7 @@ const assetMapWithTempleType = {
             letterAssociated: 'C',
         },
         path: require('./TempleAssets/ParashuramaTemple.png'),
-        svg: <ParashuramaTemple />,
+        Svg: <ParashuramaTemple />,
     },
     5: {
         fullName: 'Nayanmar birth/mukti sthalam',
@@ -64,10 +65,10 @@ const assetMapWithTempleType = {
             letterAssociated: 'B',
         },
         path: require('./TempleAssets/MuktiSthalamTemple.png'),
-        svg: <MuktiSthalamTemple />,
+        Svg: <MuktiSthalamTemple />,
     },
     6: {
-        fullName: 'Unclear Temples',
+        fullName: 'Uncertain Temples',
         name: 'Unknown Temple',
         content:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sm.  dolor sit amet, consectetur adipiscing elit, sm.',
@@ -76,7 +77,7 @@ const assetMapWithTempleType = {
             letterAssociated: null,
         },
         path: require('./TempleAssets/UnknownTemple.png'),
-        svg: <UnknownTemple />,
+        Svg: <UnknownTemple />,
     },
 
     7: {
@@ -88,7 +89,7 @@ const assetMapWithTempleType = {
             letterAssociated: 'A',
         },
         path: require('./TempleAssets/VaippuSthalamTemple.png'),
-        svg: <VaippuSthalamTemple />,
+        Svg: <VaippuSthalamTemple />,
     },
     8: {
         fullName: 'User Location',
@@ -100,7 +101,19 @@ const assetMapWithTempleType = {
             letterAssociated: null,
         },
         path: require('./TempleAssets/UsersLocation.png'),
-        svg: <UsersLocation />,
+        Svg: <UsersLocation />,
+    },
+    9: {
+        fullName: 'User Location',
+        name: 'User Location',
+        content:
+            'Do cupidatat labore eiusmod ea amet ullamco laborum cupidatat nulla. Aliqua deserunt ad quis pariatur aliqua qui pariatur Lorem mollit. Veniam ut nulla sunt deserunt incididunt ea. Culpa consequat fugiat commodo quis Lorem id qui. Anim incididunt laboris consequat mollit exercitation esse reprehenderit nulla dolor aliqua irure consequat magna ut.',
+        metaData: {
+            color: '#f00',
+            letterAssociated: null,
+        },
+        path: require('./TempleAssets/LocationPointer.png'),
+        Svg: <LocationPointer />,
     },
 };
 
@@ -108,7 +121,7 @@ export const templesDetailsArray = [
     {
         templeName: 'Brahmalingeshwara',
         flag: 1,
-        templeType: 'Jyotirlingas/Thirumurai Temples', //assume it exit else we will use the flag
+        templeType: 'Jyotirlinga/Thirumurai Temples', //assume it exit else we will use the flag
         coordinate: {
             latitude: '26.868851939300207',
             longitude: '80.91296407698843',
@@ -117,7 +130,7 @@ export const templesDetailsArray = [
     {
         templeName: 'ABC 2',
         flag: 1,
-        templeType: 'Jyotirlingas/Thirumurai Temples', //assume it exit else we will use the flag
+        templeType: 'Jyotirlinga/Thirumurai Temples', //assume it exit else we will use the flag
         coordinate: {
             latitude: '26.930425830077297',
             longitude: '75.83036421715398',
@@ -126,7 +139,7 @@ export const templesDetailsArray = [
     {
         templeName: 'ABC 3',
         flag: 1,
-        templeType: 'Jyotirlingas/Thirumurai Temples', //assume it exit else we will use the flag
+        templeType: 'Jyotirlinga/Thirumurai Temples', //assume it exit else we will use the flag
         coordinate: {
             latitude: '31.103203252213753',
             longitude: '77.18339602394508',
@@ -135,7 +148,7 @@ export const templesDetailsArray = [
     {
         templeName: 'ABC 4',
         flag: 1,
-        templeType: 'Jyotirlingas/Thirumurai Temples', //assume it exit else we will use the flag
+        templeType: 'Jyotirlinga/Thirumurai Temples', //assume it exit else we will use the flag
         coordinate: {
             latitude: '11.422450392586484',
             longitude: '76.711616397577347',

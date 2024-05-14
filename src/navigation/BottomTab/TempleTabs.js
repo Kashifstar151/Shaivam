@@ -18,6 +18,7 @@ import MyTrip from '../../Screens/Temples/MyTrip/MyTrip';
 import Addtemple from '../../Screens/Temples/AddTemple/Addtemple';
 import { createStackNavigator } from '@react-navigation/stack';
 import NearByPage from '../../Screens/Temples/NearByPage';
+import { useTranslation } from 'react-i18next';
 
 const NullComponent = () => <></>;
 
@@ -45,8 +46,9 @@ const NullComponent = () => <></>;
 //     );
 // };
 const Tab = createBottomTabNavigator();
-export default TempleTab = ({ navigation }) => {
+const TempleTab = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
+    const { t } = useTranslation();
     return (
         <Tab.Navigator
             initialRouteName="Temples"
@@ -141,14 +143,14 @@ export default TempleTab = ({ navigation }) => {
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                     {/* <ActiveTeample /> */}
                                     <ActiveLocation />
-                                    <Text style={[styles.tabBarLable]}>Explore</Text>
+                                    <Text style={[styles.tabBarLable]}>{t('Explore')}</Text>
                                 </View>
                             ) : (
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                     {/* <ActiveTeample /> */}
                                     <InActiveLocation />
 
-                                    <Text style={[styles.tabBarLable]}>Explore</Text>
+                                    <Text style={[styles.tabBarLable]}>{t('Explore')}</Text>
                                 </View>
                             )}
                             <View style={{ marginTop: 6 }}>
@@ -222,12 +224,12 @@ export default TempleTab = ({ navigation }) => {
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                     <InActiveAddTrip />
 
-                                    <Text style={[styles.tabBarLable]}>Add Temple</Text>
+                                    <Text style={[styles.tabBarLable]}>{t('Add Temple')}</Text>
                                 </View>
                             ) : (
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                     <ActiveAddTrip />
-                                    <Text style={[styles.tabBarLable]}>Add Temple</Text>
+                                    <Text style={[styles.tabBarLable]}>{t('Add Temple')}</Text>
                                 </View>
                             )}
                             <View style={{ marginTop: 6 }}>
@@ -251,6 +253,8 @@ export default TempleTab = ({ navigation }) => {
         </Tab.Navigator>
     );
 };
+
+export default TempleTab;
 export const styles = StyleSheet.create({
     tabContainer: {
         paddingTop: 5,

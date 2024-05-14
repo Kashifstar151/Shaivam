@@ -23,6 +23,7 @@ import HeartSVG from './SVGs/HeartSVG';
 import Logo from '../../src/assets/Images/Logo.svg';
 import { RouteTexts } from '../navigation/RouteText';
 import { Linking } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 const RenderItem = ({ blockRef, item, navigation, theme }) => {
     const [blockWidth, setBlockWidth] = useState(0);
@@ -51,13 +52,14 @@ const RenderItem = ({ blockRef, item, navigation, theme }) => {
                     paddingBottom: 11,
                 }}
             >
-                <View style={{ justifyContent: 'center' }}>
+                <View style={{ justifyContent: 'center', paddingHorizontal: 5 }}>
                     <Text
                         style={{
                             // fontSize: responsiveFontSize(12),
-                            fontSize: RFValue(16),
-                            fontWeight: '600',
-                            paddingBottom: 5,
+                            fontSize: 16,
+                            // fontWeight: '600',
+                            paddingVertical: 3,
+                            fontFamily: 'Lora-SemiBold',
                             color: item.textColor,
                         }}
                     >
@@ -77,14 +79,14 @@ const RenderItem = ({ blockRef, item, navigation, theme }) => {
                         onLayout={(event) => onLayout(event, _)}
                         onPress={
                             i?.navName == 'Thirumurais' ||
-                            i?.navName == 'Stotras' ||
-                            i?.navName == RouteTexts.TEMPLE_TABS_NAVIGATE ||
-                            i?.navName == RouteTexts.CALENDER ||
-                            i?.navName == RouteTexts.RADIO
+                                i?.navName == 'Stotras' ||
+                                i?.navName == RouteTexts.TEMPLE_TABS_NAVIGATE ||
+                                i?.navName == RouteTexts.CALENDER ||
+                                i?.navName == RouteTexts.RADIO
                                 ? () => navigation.navigate(i?.navName)
                                 : i?.navName == 'Website'
-                                ? () => Linking.openURL('https://shaivam.org/')
-                                : () => alert(`the ${i?.navName}`)
+                                    ? () => Linking.openURL('https://shaivam.org/')
+                                    : () => alert(`the ${i?.navName}`)
                         }
                         style={[
                             styles.subComp,
@@ -125,10 +127,12 @@ const CardComponents = ({ navigation }) => {
     const [searchText, setSearchText] = useState(null);
     const [onFocus, setOnFocus] = useState(false);
     const { theme } = useContext(ThemeContext);
+    const { t } = useTranslation();
+
     const data = [
         {
-            text: 'Sacred Texts',
-            description: 'Listen to all shiva related audios here',
+            text: t('Sacred Texts'),
+            description: t('Listen to all shiva related audios here'),
             id: 1,
             gradient: theme.gradientHomeCardYellow,
             textColor: theme.textColorHomeCardYellow,
@@ -136,57 +140,57 @@ const CardComponents = ({ navigation }) => {
             subComp: [
                 {
                     icon: <BookIcon fill={theme.textColorHomeCardYellow} />,
-                    title: 'Thirumurais',
+                    title: t('Thirumurais'),
                     navName: 'Thirumurais',
                 },
                 {
                     icon: <OmLetterSvg fill={theme.textColorHomeCardYellow} />,
-                    title: 'Vedas',
+                    title: t('Vedas'),
                     navName: 'Vedas',
                 },
                 {
                     icon: <StrotasSVG fill={theme.textColorHomeCardYellow} />,
-                    title: 'Stotras',
+                    title: t('Stotras'),
                     navName: 'Stotras',
                 },
                 {
                     icon: <ShaivaSVG fill={theme.textColorHomeCardYellow} />,
-                    title: 'S Siddanta',
+                    title: t('Shaiva Siddanta'),
                     navName: 'S Siddanta',
                 },
             ],
         },
         {
-            text: 'Shaivam media',
-            description: 'Listed to all shiva related audios here',
+            text: t('Shaivam Media'),
+            description: t('Check out shaivam media features'),
             id: 2,
             gradient: theme.gradientHomeCardGreen,
             textColor: theme.textColor,
             subComp: [
                 {
                     icon: <ShaivamTVSVG fill={theme.textColor} />,
-                    title: 'Shaivam TV',
+                    title: t('Shaivam TV'),
                     navName: 'Shaivam TV',
                 },
                 {
                     icon: <RadioSVG fill={theme.textColor} />,
-                    title: 'Radio',
+                    title: t('Radio'),
                     navName: RouteTexts.RADIO,
                 },
                 {
                     icon: <Temple1Svg fill={theme.textColor} />,
-                    title: 'Temples',
+                    title: t('Temples'),
                     navName: RouteTexts.TEMPLE_TABS_NAVIGATE,
                 },
                 {
                     icon: <CalendarSVG fill={theme.textColor} />,
-                    title: 'Calendar',
+                    title: t('Calendar'),
                     navName: 'Calender',
                 },
             ],
         },
         {
-            text: 'More Features',
+            text: t('More Features'),
             description: 'Listed to all shiva related audios here',
             id: 3,
             gradient: theme.gradientHomeCardYellow,
@@ -195,18 +199,18 @@ const CardComponents = ({ navigation }) => {
             subComp: [
                 {
                     icon: <KalaPujaSVG fill={theme.textColorHomeCardYellow} />,
-                    title: 'Kaala Puja',
+                    title: t('Kaala Puja'),
                     navName: 'Kaala Puja',
                 },
 
                 {
                     icon: <HeartSVG fill={theme.textColorHomeCardYellow} />,
-                    title: 'Favourites',
+                    title: t('Favourites'),
                     navName: 'Favourites',
                 },
                 {
                     icon: <QuizSVG fill={theme.textColorHomeCardYellow} />,
-                    title: 'Quiz',
+                    title: t('Quiz'),
                     navName: 'Quiz',
                 },
                 {
@@ -221,7 +225,7 @@ const CardComponents = ({ navigation }) => {
     return (
         <View style={{ paddingLeft: 0 }}>
             <View style={{ marginTop: 24, paddingHorizontal: 15 }}>
-                <Header />
+                <Header navigation={navigation} />
                 <SearchInput
                     placeholder={t('Search for anything (Eg - தோடுடைய செவியன்) ')}
                     setState={setSearchText}
@@ -230,7 +234,7 @@ const CardComponents = ({ navigation }) => {
                     extraPad={false}
                     styleOverwrite={{ marginHorizontalUnset: true, paddingTop: 24 }}
                 />
-                <HeadingText text={'Shaivam Exclusives'} />
+                <HeadingText text={t('Shaivam Exclusives')} />
                 <Text
                     style={{
                         color: '#FFFFFF',
@@ -239,7 +243,7 @@ const CardComponents = ({ navigation }) => {
                         fontWeight: '400',
                     }}
                 >
-                    Scroll through & check out what Shaivam offers
+                    {t('Scroll through & check out what Shaivam offers')}
                 </Text>
             </View>
             <View

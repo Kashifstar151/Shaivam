@@ -1,23 +1,30 @@
 import React, { useContext } from "react";
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Feather from "react-native-vector-icons/dist/Feather";
+import { useDispatch } from "react-redux";
 import { ThemeContext } from "../../Context/ThemeContext";
 import { colors } from "../../Helpers";
+import { setInputValue } from "../../store/features/Calender/FormSlice";
 
 const SelectWeek = ({ setSelectedWeek, selectedWeek, closeBottomSheet }) => {
     const theme = useContext(ThemeContext)
+    const dispatch = useDispatch()
+    const inputKey = 'Days'
     const weekData = [
-        { name: 'Mon', id: 1 },
-        { name: 'Tue', id: 2 },
-        { name: 'Wed', id: 3 },
-        { name: 'Thu', id: 4 },
-        { name: 'Fri', id: 5 },
-        { name: 'Sat', id: 6 },
-        { name: 'Sun', id: 7 },
+        { name: 'one', id: 1 },
+        { name: 'two', id: 2 },
+        { name: 'three', id: 3 },
+        { name: 'four', id: 4 },
+        { name: 'Last', id: 5 },
+        { name: 'None', id: 5 },
+
+        // { name: 'Sat', id: 6 },
+        // { name: 'Sun', id: 7 },
 
     ]
     const selectionHandler = (item) => {
         setSelectedWeek(item)
+        dispatch(setInputValue({ inputKey, inputValue: item?.name }))
         closeBottomSheet
     }
     return (

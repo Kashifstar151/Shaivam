@@ -1,20 +1,17 @@
 import React, { useCallback, useContext, useEffect, useState, useRef } from 'react';
 import {
     Dimensions,
-    Image,
     Pressable,
     StatusBar,
     StyleSheet,
     Text,
     View,
-    TouchableOpacity,
     ImageBackground,
     ScrollView,
     FlatList,
     Platform,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
-import MusicContainer from '../../../assets/Images/Frame 83.svg';
 import CardComponents from '../../components/CardComponents';
 import '../../../localization';
 import { ThemeContext } from '../../Context/ThemeContext';
@@ -28,118 +25,20 @@ import HeadingAndView from './HeadingAndView';
 import PlaceCard from './PlaceCard';
 import { RFValue } from 'react-native-responsive-fontsize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import Feather from 'react-native-vector-icons/dist/Feather';
-import { AddSongToDatabase, MostPlayedList } from '../../Databases/AudioPlayerDatabase';
+import { listfavAudios, MostPlayedList } from '../../Databases/AudioPlayerDatabase';
 import { useIsFocused } from '@react-navigation/native';
 import Quiz from './Quiz';
 import VideosList from './VideosList';
-import { useSelector } from 'react-redux';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import OmChanting from './OmChanting';
-import ShareSVG from '../../components/SVGs/ShareSVG';
 import { colors } from '../../Helpers';
-import { RouteTexts } from '../../navigation/RouteText';
-import { shareSong } from '../../Helpers/SongShare';
+import ListAudios from '../Thrimurai/ThrimuraiList/ListAudios';
+import { usePlayer } from '../../Context/PlayerContext';
+import { useTranslation } from 'react-i18next';
 
-const SongAndAudio = ({ item, index, theme, navigation }) => {
-    const [fav, setFav] = useState(false);
-
-    const FavouriteAudios = (res) => {
-        // TrackPlayer.getActiveTrack()
-        //     .then((res) => {
-        AddSongToDatabase(
-            'sf',
-            [
-                res?.id,
-                res?.url,
-                res?.title,
-                res?.artist,
-                res?.thalamOdhuvarTamilname,
-                res?.categoryName,
-                res?.thirumariasiriyar,
-                res?.serialNo,
-                res.prevId,
-            ],
-            (callbacks) => {
-                if (callbacks?.message == 'Success' && callbacks.operationType === 'CREATION') {
-                    setFav(true);
-                } else if (
-                    callbacks?.message == 'Success' &&
-                    callbacks.operationType === 'DELETION'
-                ) {
-                    setFav(false);
-                }
-            }
-        );
-        // })
-        // .catch((err) => {
-        // });
-    };
-    return (
-        <Pressable
-            style={{
-                flexDirection: 'row',
-                margin: 10,
-                alignItems: 'center',
-                justifyContent: 'space-between',
-            }}
-            onPress={() =>
-                navigation.navigate(RouteTexts.THRIMURAI_SONG, {
-                    data: item,
-                })
-            }
-        >
-            <View
-                style={{
-                    paddingHorizontal: 0,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                }}
-            >
-                <MusicContainer />
-                <View style={{ paddingHorizontal: 10 }}>
-                    <Text
-                        style={{
-                            fontSize: RFValue(14, 800),
-                            // fontWeight: '600',
-                            fontFamily: 'Mulish-Regular',
-                            color: theme.textColor,
-                        }}
-                    >
-                        {item.thalamOdhuvarTamilname}
-                    </Text>
-                    <Text
-                        style={{
-                            fontSize: RFValue(12, 800),
-                            // fontWeight: '400',
-                            fontFamily: 'Mulish-Regular',
-                            color: theme.textColor,
-                        }}
-                    >
-                        {item.title}
-                    </Text>
-                </View>
-            </View>
-            <View style={{ flexDirection: 'row', gap: 25 }}>
-                <TouchableOpacity onPress={() => shareSong(item)}>
-                    {/* <Icon name="share" size={22}  /> */}
-                    <ShareSVG fill={theme.textColor} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => FavouriteAudios(item)}>
-                    {fav ? (
-                        <AntDesign name="heart" size={22} color={'#C1554E'} />
-                    ) : (
-                        <Feather name="heart" size={22} color={theme.textColor} />
-                    )}
-                </TouchableOpacity>
-            </View>
-        </Pressable>
-    );
-    // return<Text>dhjkshajk</Text>;
-};
 const HomeScreen = ({ navigation }) => {
     const RBSheetRef = useRef(null);
+    const { showPlayer, setShowPlayer, OmPlayTiming, setOmPlayTiming } = usePlayer();
     const { theme } = useContext(ThemeContext);
     const [compHeight, setCompHeight] = useState();
     const [textInsidePlaylistCard, setTextInsidePlaylistCard] = useState(0);
@@ -227,16 +126,36 @@ const HomeScreen = ({ navigation }) => {
     ];
     const [selectedPlaylistType, setSelectedPlaylistType] = useState('Recently Played');
     const [playlistSong, setPlaylistSong] = useState([]);
+    const [favList, setFavList] = useState([]);
     const playlisType = ['Recently Played', 'Most Played'];
     useEffect(() => {
         getPlaylistSong();
+        listfavAudios((callbacks) => {
+            console.log('🚀 ~ listfavAudios ~ callbacks:', callbacks);
+            setFavList(callbacks);
+        });
     }, [selectedPlaylistType, isFocused]);
+    useEffect(() => { }, []);
+
+    const checkIsFav = (item) => {
+        let v = false;
+        if (favList?.length) {
+            favList?.map((res) => {
+                if (item?.id == res?.id) {
+                    v = true;
+                }
+            });
+            return v;
+        }
+    };
     const getPlaylistSong = async () => {
         if (selectedPlaylistType == 'Recently Played') {
             const data = await AsyncStorage.getItem('recentTrack');
+            console.log('🚀 ~ getPlaylistSong ~ data:', data);
             setPlaylistSong(JSON.parse(data));
         } else {
             MostPlayedList('d', (callbacks) => {
+                console.log('🚀 ~ MostPlayedList ~ callbacks:', callbacks);
                 setPlaylistSong(callbacks.slice(0, 4));
             });
         }
@@ -259,6 +178,7 @@ const HomeScreen = ({ navigation }) => {
             address: 'Kanakapura road, Banglore',
         },
     ];
+    const { t } = useTranslation();
     const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
     const [screenHeight, setScreenheight] = useState(Dimensions.get('window').height);
     const [orientation, setOrientation] = useState('PORTRAIT');
@@ -282,6 +202,7 @@ const HomeScreen = ({ navigation }) => {
 
     return (
         <ScrollView
+            bounces={false}
             style={{
                 flex: 1,
                 overflow: 'visible',
@@ -317,76 +238,111 @@ const HomeScreen = ({ navigation }) => {
             >
                 <CardComponents navigation={navigation} />
             </View>
-            <View style={{ paddingHorizontal: 10 }}>
-                <Text
-                    style={{
-                        fontSize: RFValue(18, 800),
-                        fontFamily: 'Lora-Bold',
-                        color: theme.textColor,
-                        paddingTop: 10,
-                    }}
-                >
-                    Songs & Audios
-                </Text>
-                <View>
-                    <FlatList
-                        contentContainerStyle={{
-                            marginVertical: 10,
-                            paddingHorizontal: 10,
-                        }}
-                        horizontal
+            {playlistSong?.length > 0 && (
+                <View style={{ paddingVertical: 10, paddingHorizontal: 15 }}>
+                    <Text
                         style={{
-                            alignSelf: 'flex-start',
+                            fontSize: RFValue(18, 800),
+                            // fontWeight: '700',
+                            fontFamily: 'Lora-Bold',
+                            color: theme.textColor,
                         }}
-                        data={playlisType}
-                        renderItem={({ item }) => (
-                            <Pressable
-                                style={{
-                                    marginRight: 8,
-                                    elevation: 5,
-                                    backgroundColor:
-                                        selectedPlaylistType == item
-                                            ? '#C1554E'
-                                            : theme.unSelectedBox.bgColor,
-
-                                    borderRadius: 20,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    paddingHorizontal: 15,
-                                    paddingVertical: 10,
-                                }}
-                                onPress={() => {
-                                    setSelectedPlaylistType(item);
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        color:
-                                            selectedPlaylistType == item ? colors.white : '#777777',
-                                        fontFamily: 'Mulish-Bold',
-                                        fontWeight: '700',
+                    >
+                        {t('Songs & Audios')}
+                    </Text>
+                    <View>
+                        <FlatList
+                            contentContainerStyle={{
+                                marginVertical: 10,
+                                paddingBottom: 10,
+                                gap: 10,
+                            }}
+                            horizontal
+                            style={{
+                                alignSelf: 'flex-start',
+                            }}
+                            data={playlisType}
+                            renderItem={({ item }) => (
+                                <Pressable
+                                    onPress={() => {
+                                        setSelectedPlaylistType(item);
                                     }}
                                 >
-                                    {item}
-                                </Text>
-                            </Pressable>
-                        )}
-                    />
-                </View>
+                                    <View
+                                        style={{
+                                            // marginRight: 8,
+                                            // elevation: 5,
+                                            backgroundColor:
+                                                selectedPlaylistType == item
+                                                    ? '#C1554E'
+                                                    : theme?.unSelectedBox?.bgColor,
 
-                <View style={styles.boxCommon}>
-                    <FlatList
-                        key={(item) => item?.id}
-                        data={playlistSong}
-                        renderItem={({ item, index }) => (
-                            <SongAndAudio item={item} theme={theme} navigation={navigation} />
-                        )}
-                    />
+                                            borderRadius: 20,
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            paddingHorizontal: 15,
+                                            paddingVertical: 10,
+                                            zIndex: 19,
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color:
+                                                    selectedPlaylistType == item
+                                                        ? colors?.white
+                                                        : '#777777',
+                                                fontFamily: 'Mulish-Bold',
+                                                fontWeight: '700',
+                                            }}
+                                        >
+                                            {t(`${item}`)}
+                                        </Text>
+                                    </View>
+                                    {selectedPlaylistType === item &&
+                                        theme.colorScheme === 'light' && (
+                                            <View
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: 4,
+                                                    backgroundColor: 'black',
+                                                    width: '100%',
+                                                    height: 40,
+                                                    paddingHorizontal: 15,
+                                                    paddingVertical: 8,
+                                                    borderRadius: 40,
+                                                    opacity: 0.2,
+                                                }}
+                                            ></View>
+                                        )}
+                                </Pressable>
+                            )}
+                        />
+                    </View>
+
+                    <View style={styles.boxCommon}>
+                        <FlatList
+                            key={(item) => item?.id}
+                            data={playlistSong}
+                            renderItem={({ item, index }) => (
+                                <ListAudios
+                                    listFav={favList}
+                                    colorSet={{
+                                        textColor: theme.textColor,
+                                    }}
+                                    item={item}
+                                    navigation={navigation}
+                                    isFav={() => checkIsFav(item)}
+                                />
+                            )}
+                        />
+                    </View>
                 </View>
-            </View>
+            )}
+
             <View
                 style={{
                     height: 250,
+                    marginVertical: 20,
                 }}
             >
                 <Text
@@ -448,7 +404,7 @@ const HomeScreen = ({ navigation }) => {
                                         color: '#fff',
                                     }}
                                 >
-                                    Shaivam Playlists
+                                    {t('Shaivam Playlists')}
                                 </Text>
                                 <Text
                                     style={{
@@ -458,7 +414,7 @@ const HomeScreen = ({ navigation }) => {
                                         color: '#fff',
                                     }}
                                 >
-                                    We have created playlists for you
+                                    {t('We have created playlists for you')}
                                 </Text>
                             </View>
                             <Pressable style={{ flexDirection: 'row' }}>
@@ -468,7 +424,7 @@ const HomeScreen = ({ navigation }) => {
                                         color: '#fff',
                                     }}
                                 >
-                                    View all
+                                    {t('View All')}
                                 </Text>
                                 <Icon name="arrow-right-alt" color={'#FFFFFF'} size={24} />
                             </Pressable>
@@ -509,14 +465,15 @@ const HomeScreen = ({ navigation }) => {
                     </View>
                 </View>
             </View>
+
             {/* upcoming events  */}
             <View>
                 <View style={{ paddingBottom: 15, paddingHorizontal: 15 }}>
                     <HeadingAndView
                         viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
-                        title={'Upcoming Festivals'}
+                        title={t('Upcoming Festivals')}
                         theme={{ textColor: theme.textColor, colorscheme: theme.colorscheme }}
-                        onPress={() => {}}
+                        onPress={() => { }}
                     />
                 </View>
                 <FlatList
@@ -543,15 +500,24 @@ const HomeScreen = ({ navigation }) => {
             </View>
             {/* om chant */}
             <View>
-                <OmChat navigation={navigation} onPress={() => RBSheetRef.current.open()} />
+                <OmChat
+                    navigation={navigation}
+                    onPress={() => {
+                        RBSheetRef.current.open();
+                        if (showPlayer) {
+                            setShowPlayer(false);
+                        }
+                    }}
+                />
             </View>
+
             {/* last section */}
             <View>
                 <View style={{ padding: 15 }}>
                     <HeadingAndView
                         viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
-                        title={'Nearby Temples'}
-                        onPress={() => {}}
+                        title={t('Nearby Temples')}
+                        onPress={() => { }}
                         theme={{
                             textColor: theme.textColor,
                             colorscheme: theme.colorscheme,
@@ -561,7 +527,8 @@ const HomeScreen = ({ navigation }) => {
                 <FlatList
                     contentContainerStyle={{
                         rowGap: 4,
-                        paddingBottom: 15,
+                        paddingTop: 15,
+                        paddingBottom: 30,
                     }}
                     key={(item) => item?.id}
                     data={nearByTempleData}
@@ -591,9 +558,9 @@ const HomeScreen = ({ navigation }) => {
             >
                 <HeadingAndView
                     viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
-                    title={'App Walkthrough Videos '}
+                    title={t('App Walkthrough Videos')}
                     // todos : add the fn that take it to the dedicated video page
-                    onPress={() => {}}
+                    onPress={() => { }}
                     theme={{
                         textColor: theme.textColor,
                         colorscheme: theme.colorscheme,
@@ -606,7 +573,11 @@ const HomeScreen = ({ navigation }) => {
                 ref={RBSheetRef}
                 customStyles={{ container: { borderTopEndRadius: 15, borderTopLeftRadius: 15 } }}
             >
-                <OmChanting />
+                <OmChanting
+                    close={RBSheetRef}
+                    OmPlayTiming={OmPlayTiming}
+                    setOmPlayTiming={setOmPlayTiming}
+                />
             </RBSheet>
         </ScrollView>
     );
@@ -616,7 +587,6 @@ export const styles = StyleSheet.create({
     firstContainer: {
         height: Dimensions.get('window').height / 2.5,
     },
-    secondContainer: { backgroundColor: 'white' },
     headerContainer: {
         paddingTop: StatusBar.currentHeight + 50,
         justifyContent: 'space-between',

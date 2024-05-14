@@ -17,6 +17,7 @@ import { ThemeContext } from '../../Context/ThemeContext';
 import SearchContainerWithIcon from './SearchContainerWithIcon';
 import DownArrowSVG from '../../components/SVGs/DownArrowSVG';
 import SearchTemple from './SearchTemple';
+import { useTranslation } from 'react-i18next';
 
 const NearByPage = ({ navigation }) => {
     const route = useRoute();
@@ -24,6 +25,7 @@ const NearByPage = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
     console.log('🚀 ~ NearByPage ~ state:', data);
     const popAction = StackActions.pop(1);
+    const { t } = useTranslation();
     return (
         <View style={{ flex: 1 }}>
             <ImageBackground
@@ -73,7 +75,7 @@ const NearByPage = ({ navigation }) => {
                             paddingHorizontal: 15,
                         }}
                     >
-                        {locationName ? `Nearby Temples in ${locationName}` : null}
+                        {locationName ? `${t('Nearby Temples in')} ${locationName}` : null}
                     </Text>
                 </View>
                 <ScrollView style={{ zIndex: -20 }}>

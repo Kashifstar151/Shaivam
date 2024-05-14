@@ -7,8 +7,9 @@ import HalfMoonSVG from './SVGs/HalfMoonSVG';
 import { ThemeContext } from '../Context/ThemeContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { dark, light } from '../Helpers/GlobalStyles';
-
-const Header = () => {
+import PushNotification, { Importance } from 'react-native-push-notification';
+import { RouteTexts } from '../navigation/RouteText';
+const Header = ({ navigation }) => {
     const colorScheme = useColorScheme();
     const [isDark, setIsDark] = useState(colorScheme === 'dark' ? true : false);
     const { theme, setTheme } = useContext(ThemeContext);
@@ -42,7 +43,10 @@ const Header = () => {
             setTheme(light);
         }
     }, [colorScheme]);
-
+    const testNoti = () => {
+        // alert(true)
+        navigation.navigate(RouteTexts.NOTIFICATION)
+    }
     // const changeTheme = async () => {
     //     await AsyncStorage.setItem('theme', JSON.stringify(isDark ? 'dark' : 'light'));
     // }
@@ -102,7 +106,7 @@ const Header = () => {
                     </View>
                     {/* <Icon name="notifications" size={24} color='white' /> */}
                 </Pressable>
-                <Pressable style={styles.notificationContainer}>
+                <Pressable style={styles.notificationContainer} onPress={testNoti}>
                     <NotificationIcon />
                     {/* <Icon name="notifications" size={24} color='white' /> */}
                 </Pressable>

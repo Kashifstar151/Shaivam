@@ -22,14 +22,12 @@ import SettingIcon from '../../../assets/Images/Settings (1) 1.svg';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { getSqlData } from '../../Database';
 import { useIsFocused } from '@react-navigation/native';
-// import TrackPlayer from 'react-native-track-player';
 import { ThemeContext } from '../../../Context/ThemeContext';
 import { colors } from '../../../Helpers';
 import { useTranslation } from 'react-i18next';
 import '../../../../localization';
 import AruliyavarSVG from '../../../components/SVGs/AruliyavarSVG';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { dark, light } from '../../../Helpers/GlobalStyles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MusicContext } from '../../../components/Playbacks/TrackPlayerContext';
 import NaduSVG from '../../../components/SVGs/NaduSVG';
@@ -40,24 +38,14 @@ import HighlightText from '@sanar/react-native-highlight-text';
 import TrackPlayer, {
     AppKilledPlaybackBehavior,
     Capability,
-    RepeatMode,
-    usePlaybackState,
     Event,
-    State,
     useTrackPlayerEvents,
-    useActiveTrack,
-    useProgress,
 } from 'react-native-track-player';
 import Clipboard from '@react-native-clipboard/clipboard';
-import BottomSheet from '@gorhom/bottom-sheet';
 import { listfavAudios } from '../../../Databases/AudioPlayerDatabase';
+import SettingsSVG from '../../../components/SVGs/SettingsSVG';
 
 const ThrimuraiSong = ({ route, navigation }) => {
-    // let key = true;
-    // const database = SQLite.openDatabase({
-    //     name: key ? 'SongsData.db' : 'main.db',
-    //     createFromLocation: 1,
-    // });
     const isFocused = useIsFocused;
     const { data, downloaded, searchedword, searchScreen, songNo } = route.params || {};
     const translateX = useSharedValue(0);
@@ -291,9 +279,8 @@ GROUP BY
                 payload: data.filter((i) => i.localBased !== null)[0].localeBased,
             });
             getSqlData(detailQuery, (details) => {
-                const query2 = `SELECT * FROM odhuvars WHERE title='${
-                    data.filter((i) => i.tamil !== null)[0]?.tamil
-                }'`;
+                const query2 = `SELECT * FROM odhuvars WHERE title='${data.filter((i) => i.tamil !== null)[0]?.tamil
+                    }'`;
                 getSqlData(query2, (callbacks) => {
                     // console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
                     dispatchMusic({ type: 'SONG_DETAILS', payload: details });
@@ -328,6 +315,7 @@ GROUP BY
     };
     useEffect(() => {
         dispatchMusic({ type: 'PREV_ID', payload: data?.prevId });
+
         if (downloaded) {
             setUpPlayer(data);
         }
@@ -394,7 +382,7 @@ GROUP BY
     };
 
     const getItemLayOut = (item, index) => {
-        // console.log("🚀 ~ getItemLayOut ~ index:", index)
+        // console.log("🚀 ~ getItemLayOut ~ index: 222", index, JSON.stringify(item, 0, 2))
         return { length: 260, offset: 260 * index, index };
     };
     const setUpPlayer = useCallback(
@@ -417,6 +405,7 @@ GROUP BY
                     ],
                     compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
                     progressUpdateEventInterval: 2,
+                    icon: require('../../../assets/Images/Component.png'),
                 });
                 await TrackPlayer.reset();
                 await TrackPlayer.add(song);
@@ -435,6 +424,7 @@ GROUP BY
                     ],
                     compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext],
                     progressUpdateEventInterval: 2,
+                    icon: require('../../../assets/Images/Component.png'),
                 });
                 await TrackPlayer.reset();
                 await TrackPlayer.add(song);
@@ -698,7 +688,7 @@ GROUP BY
                             width: '100%',
                             position: 'absolute',
                             right: -3,
-                            top: '20%',
+                            top: '40%',
                             zIndex: 10,
                         }}
                     >
@@ -909,8 +899,9 @@ GROUP BY
                                 ]}
                                 onPress={handlePress}
                             >
-                                <SettingIcon />
-                                <Text
+                                {/* <SettingIcon /> */}
+                                <SettingsSVG />
+                                {/* <Text
                                     style={[
                                         styles.settingText,
                                         {
@@ -919,7 +910,7 @@ GROUP BY
                                     ]}
                                 >
                                     Settings
-                                </Text>
+                                </Text> */}
                             </TouchableOpacity>
                         )}
                     </View>
@@ -965,9 +956,9 @@ GROUP BY
                                                 ? selectedLang !== 'Tamil'
                                                     ? item?.rawSong
                                                     : item?.tamilExplanation ||
-                                                      'Text currently not available'
+                                                    'Text currently not available'
                                                 : item?.tamilSplit ||
-                                                  'Text currently not available'}
+                                                'Text currently not available'}
                                         </Text>
                                     )}
                                     <Text
@@ -1000,14 +991,14 @@ GROUP BY
 
                     orientation == 'LANDSCAPE'
                         ? {
-                              width: Dimensions.get('window').width / 2,
-                              position: 'absolute',
-                              bottom: 0,
-                          }
+                            width: Dimensions.get('window').width / 2,
+                            position: 'absolute',
+                            bottom: 0,
+                        }
                         : {
-                              position: 'relative',
-                              width: Dimensions.get('window').width,
-                          },
+                            position: 'relative',
+                            width: Dimensions.get('window').width,
+                        },
                 ]}
             >
                 {downloadingLoader && (
