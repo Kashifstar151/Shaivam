@@ -56,8 +56,87 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
                 }
             },
         }),
+
+        addTemple: builder.mutation({
+            // add email field
+            query: ({ Name, Description, Longitude, Latitude }) => {
+                console.log('🚀 ~ Name, Description, Longitude, Latitude :', {
+                    Name,
+                    Description,
+                    Longitude,
+                    Latitude,
+                });
+                const url = `api/maps`;
+                return {
+                    url: url,
+                    method: 'POST',
+                    body: {
+                        data: {
+                            Name,
+                            Description,
+                            Longitude,
+                            Latitude,
+                        },
+                    },
+                    headers: { 'Content-Type': 'application/json' },
+                };
+            },
+            transformResponse: (response, meta, arg) => {
+                return {
+                    data: response?.data,
+                    status: 'SUCCESS',
+                };
+            },
+            transformErrorResponse: (response, meta, arg) => {
+                return {
+                    status: 'FAILED',
+                    error: response?.data?.error,
+                };
+            },
+            invalidatesTags: ['Add_Temple_Records'],
+        }),
+
+        addTempleImages: builder.mutation({
+            // add email field
+            query: (data) => {
+                return {
+                    url: `/api/upload`,
+                    method: 'POST',
+                    body: data,
+                    headers: {
+                        accept: 'application/json',
+                        'Content-Type': 'multipart/form-data',
+                    },
+                };
+            },
+            invalidatesTags: ['Add_Temple_Records'],
+        }),
+
+        getAllTemplesAddRequest: builder.query({
+            // add email field
+            query: ({ email }) => {
+                const url = `api/maps/${id}?filters[email][$eq]=${email}?populate=temple`;
+                return {
+                    url: url,
+                    method: 'GET',
+                    body: {
+                        Name,
+                        Description,
+                        Longitude,
+                        Latitude,
+                        temple_images,
+                    },
+                };
+            },
+            invalidatesTags: ['Add_Temple_Records'],
+        }),
     }),
 });
 
-export const { useGetNearByTemplesQuery, useLazyGetNearByTemplesQuery, useGetTempleDetailQuery } =
-    TempleApiSliceCall;
+export const {
+    useGetNearByTemplesQuery,
+    useLazyGetNearByTemplesQuery,
+    useGetTempleDetailQuery,
+    useAddTempleMutation,
+    useAddTempleImagesMutation,
+} = TempleApiSliceCall;
