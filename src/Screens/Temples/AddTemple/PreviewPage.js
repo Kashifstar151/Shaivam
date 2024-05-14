@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { ImageBackground, Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { Alert, ImageBackground, Pressable, StyleSheet, Text, View } from 'react-native';
 import bgImg from '../../../../assets/Images/Background.png';
 import bgImgDark from '../../../../assets/Images/BackgroundCommon.png';
 import { RFValue } from 'react-native-responsive-fontsize';
@@ -10,10 +10,79 @@ import WhiteBackButton from '../../../../src/assets/Images/arrow (1) 1.svg';
 import KeyValueBox from './KeyValueBox';
 import { useSelector } from 'react-redux';
 import { ThemeContext } from '../../../Context/ThemeContext';
+import {
+    useAddTempleImagesMutation,
+    useAddTempleMutation,
+} from '../../../store/features/Temple/TemplApiSlice';
 
-const PreviewPage = ({ navigation, setStep }) => {
+const PreviewPage = ({ navigation, setStep, email }) => {
     const templadata = useSelector((state) => state.temple);
+    const [addTemple, { data: addTempleResponse, isSuccess, isError, error }] =
+        useAddTempleMutation();
+
+    const [
+        addTempleImages,
+        {
+            data: addTempleImageResponse,
+            isSuccess: imageUploadSuccess,
+            isError: errorImageUpload,
+            error: errorLogImage,
+        },
+    ] = useAddTempleImagesMutation();
+
     const { theme } = useContext(ThemeContext);
+    const handleOnSubmit = () => {
+        addTemple({
+            Name: templadata?.templeName,
+            Description: templadata.description,
+            Longitude: templadata.templeLocation.coordinate.longitude,
+            Latitude: templadata.templeLocation.coordinate.latitude,
+            email,
+            // temple_images: templadata.templeLocation.coordinate.imageSrc,
+        })
+            .unwrap()
+            .then((response) => {
+                console.log('temple added ==>', response?.data?.id);
+                if (response.status === 'SUCCESS') {
+                    const id = response?.data?.id;
+                    const formData = new FormData();
+                    console.log(
+                        'templadata.templeLocation.coordinate.imageSrc.length====>',
+                        templadata.imageSrc
+                    );
+
+                    for (let i = 0; i < templadata.imageSrc.length; i++) {
+                        formData.append('files', {
+                            name: templadata.imageSrc[i]?.fileName,
+                            type: templadata.imageSrc[i]?.type,
+                            uri: templadata.imageSrc[i]?.uri,
+                        });
+                    }
+                    formData.append('ref', 'api::map.map');
+                    formData.append('refId', id);
+                    formData.append('field', 'temple_images');
+
+                    console.log('The formdata ==>', formData);
+                    addTempleImages(formData)
+                        .unwrap()
+                        .then((response) => {
+                            console.log(
+                                'the images are uploaded successFully ',
+                                JSON.stringify(response)
+                            );
+                        })
+                        .catch((err) => {
+                            console.log('the images are uploaded error ', JSON.stringify(err));
+                        });
+                    setStep('SUCCESS');
+                }
+            })
+            .catch((err) => {
+                // setStep('REQUEST_FAILED');
+                console.log('the error is -=====>', err);
+                Alert.alert(`Some error occured , Try again `);
+            });
+    };
     return (
         <View
             style={{
@@ -100,7 +169,7 @@ const PreviewPage = ({ navigation, setStep }) => {
                 }}
             >
                 <CustomLongBtn
-                    onPress={() => setStep('SUCCESS')}
+                    onPress={handleOnSubmit}
                     text={'Submit'}
                     textStyle={{
                         color: '#4C3600',
