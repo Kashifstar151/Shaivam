@@ -33,7 +33,6 @@ import {
 
 const AddTempleForm = ({ navigation, setStep }) => {
     const { theme } = useContext(ThemeContext);
-    const [images, setImages] = useState([]);
     const dispatch = useDispatch();
     const templadata = useSelector((state) => state.temple);
     const openGallary = () => {
@@ -63,11 +62,11 @@ const AddTempleForm = ({ navigation, setStep }) => {
     };
 
     const removeImage = (res) => {
-        let arr = images.filter((item) => {
+        let arr = templadata?.imageSrc.filter((item) => {
             return item.fileName !== res.fileName;
         });
-        console.log('🚀 ~ arr ~ arr:', arr);
-        setImages(arr);
+
+        dispatch(updateimageSrc(arr));
     };
     const RenderImage = (item) => {
         // console.log('🚀 ~ RenderImage ~ item:', item);
@@ -86,7 +85,8 @@ const AddTempleForm = ({ navigation, setStep }) => {
         <View>
             <ScrollView>
                 <ImageBackground
-                    source={theme.colorscheme === 'light' ? bgImg : bgImgDark}
+                    // source={theme.colorscheme === 'light' ? bgImg : bgImgDark}
+                    source={bgImg}
                     resizeMode="cover"
                     style={styles.imageDimension}
                 />
@@ -183,7 +183,7 @@ const AddTempleForm = ({ navigation, setStep }) => {
                                 subtitle={'Town/Village name followed by Swamy/Temple name'}
                             />
 
-                            <Text style={styles.descriptionText}>Temple name**</Text>
+                            <Text style={styles.descriptionText}>Temple name*</Text>
                             <View>
                                 <TextInput
                                     placeholderTextColor={colors.grey5}
@@ -283,14 +283,24 @@ const AddTempleForm = ({ navigation, setStep }) => {
             </ScrollView>
             <View style={styles.nextBtn}>
                 <CustomLongBtn
-                    onPress={() => setStep(3)}
+                    onPress={() => {
+                        if (templadata.templeLocation.locationName && templadata.templeName) {
+                            setStep(3);
+                        }
+                    }}
                     text={'Next'}
                     textStyle={{
-                        color: '#4C3600',
+                        color:
+                            templadata.templeLocation.locationName && templadata.templeName
+                                ? '#4C3600'
+                                : '#fff',
                         fontFamily: 'Mulish-Bold',
                     }}
                     containerStyle={{
-                        backgroundColor: '#FCB300',
+                        backgroundColor:
+                            templadata.templeLocation.locationName && templadata.templeName
+                                ? '#FCB300'
+                                : '#777777',
                     }}
                 />
             </View>
