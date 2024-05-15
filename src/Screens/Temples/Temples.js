@@ -9,8 +9,6 @@ import {
     ImageBackground,
     Platform,
     Modal,
-    PermissionsAndroid,
-    Alert,
     AppState,
 } from 'react-native';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
@@ -70,46 +68,6 @@ export const Temples = ({ navigation, route }) => {
         lastPromiseInfo,
     ] = useLazyGetNearByTemplesQuery();
     console.log('🚀 ~ Temples ~ data:', JSON.stringify(data, null, 2));
-    // useEffect(() => {
-    //     if (skip === false && !isUninitialized) {
-    //         console.log(
-    //             '🚀 ~ useEffect~ 1============================================================================================================================================================~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ~ skip.current:',
-    //             skip,
-    //             !isUninitialized,
-    //             'status=============>',
-    //             status
-    //         );
-
-    //         // refetch(regionCoordinate, { force: true });
-    //         // store.dispatch(
-    //         //     // TempleApiSlice.endpoints.getNearByTemples.initiate(regionCoordinate, {
-    //         //     //     track: false,
-    //         //     // })
-    //         //     TempleApiSlice.util.invalidateTags(['Temple'])
-    //         // );
-    //         // store.dispatch(
-    //         //     TempleApiSlice.endpoints.getNearByTemples.initiate(regionCoordinate, {
-    //         //         // track: false,
-    //         //         forceRefetch: true,
-    //         //     })
-    //         // );
-    //         // TempleApiSlice.util.invalidateTags(['Temple'])
-    //     }
-    // }, [skip, isUninitialized]);
-
-    // useEffect(() => {
-    //     if (isSuccess || isError) {
-    //         setSkip(() => true);
-    //         console.log(
-    //             '🚀 ~ useEffect  2~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ~ skip.current:',
-    //             isSuccess,
-    //             skip,
-    //             'isUninitialized===============>',
-    //             isUninitialized,
-    //             data?.temples.length
-    //         );
-    //     }
-    // }, [isSuccess, isError, data, error]);
 
     const [userLocation, setUserLocation] = useState({
         latitude: 28.500271,
@@ -390,7 +348,7 @@ export const Temples = ({ navigation, route }) => {
                                     onPress={() => {
                                         // adding callback on the category btn press and navigating to the filter page
                                         if (permissionGranted === RESULTS.GRANTED) {
-                                            categoryBtnClbk(navigation, key);
+                                            categoryBtnClbk(navigation, key, regionCoordinate);
                                         } else {
                                             setShowModal(!showModal);
                                         }
