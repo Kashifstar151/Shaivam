@@ -38,6 +38,7 @@ const PreviewPage = ({ navigation, setStep, email }) => {
             Longitude: templadata.templeLocation.coordinate.longitude,
             Latitude: templadata.templeLocation.coordinate.latitude,
             email,
+            location_name: templadata?.templeLocation?.locationName,
             // temple_images: templadata.templeLocation.coordinate.imageSrc,
         })
             .unwrap()
@@ -46,10 +47,6 @@ const PreviewPage = ({ navigation, setStep, email }) => {
                 if (response.status === 'SUCCESS') {
                     const id = response?.data?.id;
                     const formData = new FormData();
-                    console.log(
-                        'templadata.templeLocation.coordinate.imageSrc.length====>',
-                        templadata.imageSrc
-                    );
 
                     for (let i = 0; i < templadata.imageSrc.length; i++) {
                         formData.append('files', {
