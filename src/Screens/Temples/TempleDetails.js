@@ -23,7 +23,7 @@ import { RFValue } from 'react-native-responsive-fontsize';
 const TempleDetails = ({ navigation }) => {
     const route = useRoute();
     const { temple, locationName } = route?.params;
-    // console.log('🚀 ~ TempleDetails ~ data:', temple);
+    console.log('🚀 ~ TempleDetails ~ data:', temple);
     const {
         data: templeDetail,
         isSuccess,
@@ -32,16 +32,16 @@ const TempleDetails = ({ navigation }) => {
         error,
     } = useGetTempleDetailQuery({ id: temple?.templeId });
 
-    useEffect(() => {
-        if (isSuccess || isError) {
-            console.log(
-                'templeDetail=================>',
-                templeDetail,
-                'error============<',
-                error
-            );
-        }
-    }, [isSuccess, templeDetail, isError, error]);
+    // useEffect(() => {
+    //     if (isSuccess || isError) {
+    //         console.log(
+    //             'templeDetail=================>',
+    //             templeDetail,
+    //             'error============<',
+    //             error
+    //         );
+    //     }
+    // }, [isSuccess, templeDetail, isError, error]);
     // console.log('🚀 ~ TempleDetail ~ templeDetail:', templeDetail);
 
     const popAction = StackActions.pop(1);
@@ -51,6 +51,7 @@ const TempleDetails = ({ navigation }) => {
         setAnimateToast(!fav);
         setFav(!fav);
     };
+    const [snapIndex, setSnapIndex] = useState(0);
     const { t } = useTranslation();
 
     return (
@@ -65,6 +66,8 @@ const TempleDetails = ({ navigation }) => {
                     longitudeDelta: 0.0121,
                     locationName: '',
                 }}
+                snapIndex={snapIndex}
+                setSnapIndex={setSnapIndex}
                 initialIndexOfSize={0}
                 appearsOnIndex={1}
                 disappearsOnIndex={0}

@@ -1,125 +1,33 @@
 // filter page on the temple category
-import React, { useCallback, useContext, useRef, useState } from 'react';
-import { Dimensions, Platform, StyleSheet, View } from 'react-native';
-import SearchContainerWithIcon from './SearchContainerWithIcon';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import SearchTemple from './SearchTemple';
-import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
-import { ImageBackground } from 'react-native';
-import { ThemeContext } from '../../Context/ThemeContext';
-import FileUplaoder from './FileUplaoder';
-import SpottingErrorPage from './SuccuessPages/SpottingErrorPage';
+import React, { useState } from 'react';
+import { Image, Text, View } from 'react-native';
 import TempleCard from './TempleCard';
-import { templesDetailsArray } from './AssetMapWithTempleType';
 import { ScrollView } from 'react-native-gesture-handler';
 import BottomSheetTempleTemplate from './BottomSheetTempleTemplate';
+import templeData from './AssetMapWithTempleType';
+import { useGetNearByTemplesQuery } from '../../store/features/Temple/TemplApiSlice';
+import { RFValue } from 'react-native-responsive-fontsize';
+import getDimension from '../../Helpers/getDimension';
 
+const snapPointsArray = ['10%', '50%', '95%'];
+const snapMap = {
+    0: 0.1,
+    1: 0.5,
+    2: 0.95,
+};
 const FilteredTemplesPage = ({ navigation, route }) => {
-    console.log('🚀 ~ TempleDetails ~ route:', route?.params);
-    const [regionCoordinate, setRegionCoordinate] = useState({
-        latitude: 28.500271,
-        longitude: 77.387901,
-        latitudeDelta: 0.015,
-        longitudeDelta: 0.0121,
-        locationName: '',
+    const { data, isSuccess, isLoading, isFetching, isError, error } = useGetNearByTemplesQuery({
+        flag: route?.params?.data?.flag,
+        ...route?.params?.data?.regionCoordinate,
     });
-    const bottomSheetRef = useRef(null);
     const [snapIndex, setSnapIndex] = useState(0);
-    // const [modalVisible, setModalVisible] = useState(true);
-
-    const handleSheetChanges = useCallback((index) => {
-        console.log('handleSheetChanges', index);
-        setSnapIndex(index);
-    }, []);
-
-    const { theme } = useContext(ThemeContext);
+    const { screenHeight } = getDimension();
 
     return (
-        // <View style={{ flex: 1, marginTop: Platform.OS == 'ios' ? 15 : 0 }}>
-        //     <MapView
-        //         provider={PROVIDER_GOOGLE}
-        //         initialRegion={null}
-        //         style={styles.map}
-        //         region={regionCoordinate}
-        //     ></MapView>
-        //     <View
-        //         style={{
-        //             position: 'absolute',
-        //             width: '100%',
-        //             padding: 20,
-        //         }}
-        //     >
-        //         <SearchContainerWithIcon>
-        //             <SearchTemple
-        //                 route={route.name}
-        //                 value={route.params?.data?.name ?? route.params?.searchText}
-        //                 isNavigable={false}
-        //             />
-        //         </SearchContainerWithIcon>
-        //     </View>
-        //     <BottomSheet
-        //         ref={bottomSheetRef}
-        //         onChange={handleSheetChanges}
-        //         snapPoints={['10%', '50%', '95%']}
-        //         index={1}
-        //         backdropComponent={(props) => (
-        //             <BottomSheetBackdrop
-        //                 opacity={1}
-        //                 appearsOnIndex={2}
-        //                 disappearsOnIndex={1}
-        //                 pressBehavior={'collapse'}
-        //                 {...props}
-        //             >
-        //                 <ImageBackground
-        //                     source={
-        //                         theme.colorscheme === 'light'
-        //                             ? require('../../../assets/Images/Background.png')
-        //                             : require('../../../assets/Images/BackgroundCommon.png')
-        //                     }
-        //                     style={{
-        //                         paddingVertical: 0,
-        //                         borderRadius: 10,
-        //                         width: '100%',
-        //                         height: '40%',
-        //                     }}
-        //                 ></ImageBackground>
-        //             </BottomSheetBackdrop>
-        //         )}
-        //     >
-        //         {/* <Text style={{ color: 'black' }}>dhshdjksk</Text> */}
-        //         {/* {
-        //             modalVisible &&
-        //             <Modal transparent> */}
-        //         {/* <FileUplaoder setModalVisible={setModalVisible} /> */}
-        //         {/* <SpottingErrorPage setModalVisible={setModalVisible} navigation={nav}/>
-        //             </Modal>
-        //         } */}
-        //         {snapIndex === 2 ? (
-        //             <View
-        //                 style={{
-        //                     width: '100%',
-        //                     padding: 20,
-        //                 }}
-        //             >
-        //                 <SearchContainerWithIcon>
-        //                     <SearchTemple
-        //                         route={route.name}
-        //                         value={route.params?.data?.name ?? route.params?.searchText}
-        //                         isNavigable={false}
-        //                     />
-        //                 </SearchContainerWithIcon>
-        //             </View>
-        //         ) : null}
-        //         <ScrollView nestedScrollEnabled>
-        //             {templesDetailsArray.map((item, index) => (
-        //                 <TempleCard dataSet={item} showButton={true} showMargin={true} />
-        //             ))}
-        //         </ScrollView>
-        //     </BottomSheet>
-        // </View>
-
         <BottomSheetTempleTemplate
-            snapPoints={['10%', '50%', '95%']}
+            snapIndex={snapIndex}
+            setSnapIndex={setSnapIndex}
+            snapPoints={snapPointsArray}
             showSearchBarWhenFullSize={true}
             regionCoordinate={{
                 latitude: 11.2002937,
@@ -133,28 +41,78 @@ const FilteredTemplesPage = ({ navigation, route }) => {
             appearsOnIndex={2}
             isNavigable={false}
             routeName={route?.name}
-            data={route?.params?.data}
-            valueToBePreFilled={route?.params?.data?.name ?? route?.params?.searchText}
-            isSearchFieldDisabled={false}
-            isSearchFieldDisabledInFullScreenMode={false}
+            data={templeData[route?.params?.data?.flag]}
+            valueToBePreFilled={templeData[route?.params?.data?.flag]?.name}
+            isSearchFieldDisabled={true}
+            isSearchFieldDisabledInFullScreenMode={true}
         >
-            <ScrollView nestedScrollEnabled>
-                {templesDetailsArray.map((item, index) => (
-                    <TempleCard dataSet={item} showButton={true} showMargin={true} />
-                ))}
-            </ScrollView>
+            {!(isLoading || isFetching) ? (
+                data?.temples.length ? (
+                    <ScrollView
+                    // nestedScrollEnabled
+                    >
+                        {data?.temples.map((item, index) => (
+                            <TempleCard
+                                dataSet={{
+                                    ...item,
+                                    templeName: item.name,
+                                }}
+                                regionCoordinate={route?.params?.data?.regionCoordinate}
+                                showButton={true}
+                                showMargin={true}
+                            />
+                        ))}
+                    </ScrollView>
+                ) : (
+                    <View
+                        style={{
+                            alignItems: 'center',
+                            height: snapIndex !== 0 ? screenHeight * snapMap[snapIndex] : 'auto',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        {snapIndex !== 0 && (
+                            <Image
+                                source={require('../../../assets/Images/no-data.png')}
+                                style={{
+                                    width: 100,
+                                    height: 100,
+                                }}
+                            />
+                        )}
+                        <Text
+                            style={{
+                                color: '#000',
+                                textAlign: 'center',
+                                fontFamily: 'Mulish-Bold',
+                                fontSize: RFValue(16, 850),
+                                paddingTop: 10,
+                            }}
+                        >
+                            No data available
+                        </Text>
+                    </View>
+                )
+            ) : (
+                <View
+                    style={{
+                        marginVertical: 20,
+                    }}
+                >
+                    <Text
+                        style={{
+                            color: '#000',
+                            paddingHorizontal: 20,
+                            fontFamily: 'Mulish-Bold',
+                            fontSize: RFValue(16, 850),
+                        }}
+                    >
+                        Loading...
+                    </Text>
+                </View>
+            )}
         </BottomSheetTempleTemplate>
     );
 };
-
-const styles = StyleSheet.create({
-    map: {
-        flex: 1,
-        justifyContent: 'center',
-        position: 'absolute',
-        height: Dimensions.get('window').height,
-        width: Dimensions.get('window').width,
-    },
-});
 
 export default FilteredTemplesPage;

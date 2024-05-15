@@ -9,8 +9,10 @@ import ErrorSpotSVG from '../../components/SVGs/ErrorSpotSVG';
 import FileUplaoder from './FileUplaoder';
 import SpottingErrorPage from './SuccuessPages/SpottingErrorPage';
 import { useTranslation } from 'react-i18next';
+import templeMetaData from './AssetMapWithTempleType';
 
-const TempleCard = ({ dataSet, children, showMargin, showButton }) => {
+//
+const TempleCard = ({ dataSet, children, regionCoordinate, showMargin, showButton }) => {
     const nav = useNavigation();
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedHeader, setSelectedHeader] = useState('direction');
@@ -28,7 +30,7 @@ const TempleCard = ({ dataSet, children, showMargin, showButton }) => {
             {modalVisible && (
                 <Modal transparent>
                     {selectedHeader == 'Submit Images' ? (
-                        <FileUplaoder setModalVisible={setModalVisible} />
+                        <FileUplaoder setModalVisible={setModalVisible} id={dataSet?.id} />
                     ) : selectedHeader == 'Spot an error? Send Corrections' ? (
                         <SpottingErrorPage setModalVisible={setModalVisible} navigation={nav} />
                     ) : null}
@@ -39,7 +41,7 @@ const TempleCard = ({ dataSet, children, showMargin, showButton }) => {
             </Text>
 
             <Text style={{ color: 'black', fontFamily: 'Mulish-Regular', paddingTop: 10 }}>
-                {dataSet?.templeType}
+                {templeMetaData[dataSet.flag]?.name}
             </Text>
             {showButton && (
                 <ScrollView
@@ -51,10 +53,17 @@ const TempleCard = ({ dataSet, children, showMargin, showButton }) => {
                     <CustomButton
                         svg={<DirectionSVG fill={'#fff'} />}
                         onPress={() => {
-                            const sourceLatitude = 37.7749; // Example source latitude
-                            const sourceLongitude = -122.4194; // Example source longitude
-                            const destinationLatitude = 34.0522; // Example destination latitude
-                            const destinationLongitude = -118.2437; // Example destination longitude
+                            const sourceLatitude = parseFloat(regionCoordinate?.latitude); // Example source latitude
+                            const sourceLongitude = parseFloat(regionCoordinate?.longitude); // Example source longitude
+                            const destinationLatitude = parseFloat(dataSet?.latitude); // Example destination latitude
+                            const destinationLongitude = parseFloat(dataSet?.longitude); // Example destination longitude
+
+                            console.log('the coordinates of the ===>', {
+                                sourceLatitude,
+                                sourceLongitude,
+                                destinationLatitude,
+                                destinationLongitude,
+                            });
                             const googleMapsUrl = `geo:${sourceLatitude},${sourceLongitude}?q=${destinationLatitude},${destinationLongitude}`;
                             Linking.openURL(googleMapsUrl).catch((err) => {
                                 console.log('the map is not avialable');

@@ -3,11 +3,14 @@ import { TempleApiSlice } from '../../apiSlice';
 const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getNearByTemples: builder.query({
-            query: (date) => {
-                console.log(date, 'date from calender');
-                // const url = `?temple_coordinates[coords]=${date?.longitude},${date?.latitude}&pagination[pageSize]=200`;
+            query: (data) => {
+                console.log(data, 'data from calender');
+                // const url = `?temple_coordinates[coords]=${data?.longitude},${data?.latitude}&pagination[pageSize]=200`;
                 // https://lobster-app-gpfv5.ondigitalocean.app/api/nearby-temples?long=77.391029&lat=28.535517&radius=15000
-                const url = `api/nearby-temples?long=${date?.longitude}&lat=${date?.latitude}&radius=15000`;
+                // const url = `api/nearby-temples?long=${data?.longitude}&lat=${data?.latitude}&radius=15000`;
+                const url = `api/nearby-temples?long=${data?.longitude}&lat=${
+                    data?.latitude
+                }&radius=15000${data.flag ? `&flag=${data.flag}` : ''}`;
                 console.log('🚀 ~ url:', url);
                 return {
                     url: url,
@@ -15,6 +18,9 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
                 };
             },
             providesTags: ['Temple'],
+            transformResponse: (response, meta, arg) => {
+                return response;
+            },
         }),
 
         getTempleDetail: builder.query({
@@ -59,7 +65,7 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
 
         addTemple: builder.mutation({
             // add email field
-            query: ({ Name, Description, Longitude, Latitude }) => {
+            query: ({ Name, Description, Longitude, Latitude, email }) => {
                 console.log('🚀 ~ Name, Description, Longitude, Latitude :', {
                     Name,
                     Description,
@@ -76,6 +82,7 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
                             Description,
                             Longitude,
                             Latitude,
+                            email,
                         },
                     },
                     headers: { 'Content-Type': 'application/json' },
@@ -112,23 +119,25 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
             invalidatesTags: ['Add_Temple_Records'],
         }),
 
-        getAllTemplesAddRequest: builder.query({
-            // add email field
+        getAddedTempleOnEmail: builder.query({
             query: ({ email }) => {
-                const url = `api/maps/${id}?filters[email][$eq]=${email}?populate=temple`;
+                console.log('🚀 ~ email:', email);
+                // https://lobster-app-gpfv5.ondigitalocean.app/api/maps?filters[email][$eq]=adsfa@gmail.com
+
                 return {
-                    url: url,
+                    url: `api/maps?filters[email][$eq]=${email}`,
                     method: 'GET',
-                    body: {
-                        Name,
-                        Description,
-                        Longitude,
-                        Latitude,
-                        temple_images,
-                    },
                 };
             },
-            invalidatesTags: ['Add_Temple_Records'],
+
+            transformResponse: (response, meta, arg) => {
+                console.log('🚀 ~ response:', response);
+                return response?.data;
+                // return {
+                //     data: response?.data,
+                //     status: 'SUCCESS',
+                // };
+            },
         }),
     }),
 });
@@ -139,4 +148,5 @@ export const {
     useGetTempleDetailQuery,
     useAddTempleMutation,
     useAddTempleImagesMutation,
+    useLazyGetAddedTempleOnEmailQuery,
 } = TempleApiSliceCall;

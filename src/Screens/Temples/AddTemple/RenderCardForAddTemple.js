@@ -9,6 +9,15 @@ import { RFValue } from 'react-native-responsive-fontsize';
         submittedDate:""
     }
 */
+
+function formatDate(timestamp) {
+    const date = new Date(timestamp);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+}
 export const RenderCardForAddTemple = ({ item }) => {
     return (
         <View style={style.mainBox}>
@@ -20,16 +29,22 @@ export const RenderCardForAddTemple = ({ item }) => {
                 }}
             >
                 <View>
-                    <Text style={style.heading}>RenderCardForAddTemple {item}</Text>
-                    <Text style={style.subHeading}>Dinesh nagar {item}</Text>
+                    <Text style={style.heading}>{item?.attributes?.Name}</Text>
+                    {item?.attributes?.location_name && (
+                        <Text style={style.subHeading}>{item?.attributes?.location_name}</Text>
+                    )}
                 </View>
                 {/* {
                     title && <StatusLabel title={'dhajkh'} />
                 } */}
 
-                <StatusLabel title={'approved'} />
+                <StatusLabel
+                    title={item?.attributes?.status ? item?.attributes?.status : 'pending'}
+                />
             </View>
-            <Text style={style.dateOfCreation}>Submitted on: {`12/12/2023`}</Text>
+            <Text style={style.dateOfCreation}>
+                Submitted on: {formatDate(item?.attributes?.createdAt)}
+            </Text>
         </View>
     );
 };
