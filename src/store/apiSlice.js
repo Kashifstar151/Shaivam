@@ -9,7 +9,7 @@ export const ApiSlice = createApi({
 export const TempleApiSlice = createApi({
     reducerPath: 'templeSlice',
     baseQuery: fetchBaseQuery({ baseUrl: 'https://lobster-app-gpfv5.ondigitalocean.app/' }), // ! add the base query of server if not auth else use baseQueryWithReAuth
-    tagTypes: ['Temple'],
+    tagTypes: ['Temple', 'TempleDetail', 'Add_Temple_Records'],
     endpoints: (builder) => ({}),
 });
 

@@ -6,14 +6,13 @@ const ElevatedCard = ({ children, theme, navigation }) => {
         <Pressable
             onPress={navigation}
             style={{
-
                 elevation: theme?.colorscheme === 'light' ? 10 : 0,
                 shadowColor: '#a0a0a0',
                 marginHorizontal: 15,
                 marginBottom: 5,
-                // backgroundColor: theme?.colorscheme === 'light' ? '#fff' : '#333333',
-                backgroundColor: 'red',
-                // overflow: 'visible',
+                backgroundColor: theme?.colorscheme === 'light' ? '#fff' : '#333333',
+                // backgroundColor: 'red',
+                overflow: 'visible',
                 borderRadius: 15,
             }}
         >

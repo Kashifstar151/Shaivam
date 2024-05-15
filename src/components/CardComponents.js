@@ -161,7 +161,7 @@ const CardComponents = ({ navigation }) => {
             ],
         },
         {
-            text: t('Shaivam media'),
+            text: t('Shaivam Media'),
             description: t('Check out shaivam media features'),
             id: 2,
             gradient: theme.gradientHomeCardGreen,
@@ -234,7 +234,7 @@ const CardComponents = ({ navigation }) => {
                     extraPad={false}
                     styleOverwrite={{ marginHorizontalUnset: true, paddingTop: 24 }}
                 />
-                <HeadingText text={'Shaivam Exclusives'} />
+                <HeadingText text={t('Shaivam Exclusives')} />
                 <Text
                     style={{
                         color: '#FFFFFF',
@@ -243,7 +243,7 @@ const CardComponents = ({ navigation }) => {
                         fontWeight: '400',
                     }}
                 >
-                    Scroll through & check out what Shaivam offers
+                    {t('Scroll through & check out what Shaivam offers')}
                 </Text>
             </View>
             <View

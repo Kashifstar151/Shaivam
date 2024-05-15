@@ -20,10 +20,14 @@ const TempleHeader = () => {
             >
                 <View>
                     <Text style={{ fontSize: 24, fontFamily: 'Lora-SemiBold', color: '#FFF' }}>
-                        {t('My Trips')}
+                        {t(title)}
                     </Text>
-                    <Text style={{ fontSize: 14, fontFamily: 'Mulish-Regular', color: '#FFF' }}>
-                        Plan your trips & save them for future
+                    <Text
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                        style={{ fontSize: 14, fontFamily: 'Mulish-Regular', color: '#FFF' }}
+                    >
+                        {t(subTitle)}
                     </Text>
                 </View>
                 <NandiLogo />

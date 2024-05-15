@@ -106,8 +106,8 @@ const Calender = ({ navigation }) => {
     const [disableMonthChangeVal, setDisableMonthChangeVal] = useState(false);
     const [notificationOnEvent, setNotificationEvents] = useState([])
     const { theme } = useContext(ThemeContext);
-    const [scrollIndex, setScrollIndex] = useState(0)
-    const [trigger, setTrigger] = useState(false)
+    // const [scrollIndex, setScrollIndex] = useState(0)
+    // const [trigger, setTrigger] = useState(false)
     // const clearStates = () => {
     //     setWeekly([]);
     //     setRegular([]);
@@ -126,25 +126,6 @@ const Calender = ({ navigation }) => {
             return () => bottomSheetRef.current?.close();
         }, [])
     );
-
-    // Refetch data when location changes
-    // useEffect(() => {
-    //     refetchRegular();
-    //     refetchRecurring();
-    //     refetchMonthly();
-    // }, [prevNext]);
-
-    // useEffect(() => {
-    //     if (prevNext == 0) {
-    //         setEndDate(String(moment().add(prevNext, "months").endOf("month")));
-    //         setStartDate(String(moment(new Date()).format("YYYY-MM-DD")));
-    //         return;
-    //     }
-    //     console.log("prevNext is", prevNext);
-    //     setEndDate(String(moment().add(prevNext, "months").endOf("month")));
-    //     setStartDate(String(moment().add(prevNext, "months").startOf("month").format("YYYY-MM-DD")));
-    //     setTrigger(!trigger)
-    // }, [prevNext]);
     useEffect(() => {
         getScheduleNotification()
     }, [isFocused])
@@ -175,18 +156,11 @@ const Calender = ({ navigation }) => {
     // Process recurring event list
     useEffect(() => {
         if (recurringEventList && recurringSuccess) {
-            // console.log('recurringEventList?.meta?.pagination?.total week recurring', recurringEventList?.meta?.pagination?.total)
             const data = []
             const cDate = moment().startOf("day");
-            console.log("🚀 ~ file: events-important-events-of-this-year.jsx:111 ~ useEffect ~ cDate:", cDate)
             for (let event of recurringEventList?.data) {
-                //   console.log(event.attributes.Day)
-                //   console.log(event.attributes.Name)
-                //   console.log("prevNext",prevNext)
-                //   console.log("event is ==>",event);
                 const start = moment().add(prevNext, "months").startOf("month").format("YYYY-MM-DD")
                 let dateSplit = start.split("-")
-                console.log("🚀 ~ file: events-important-events-of-this-year.jsx:119 ~ useEffect ~ dateSplit:", dateSplit)
                 const days = getDaysInMonth(dateSplit[1], dateSplit[0], event.attributes.Day)
                 console.log("🚀 ~ useEffect ~ days:", days)
                 for (let day of days) {
@@ -202,7 +176,6 @@ const Calender = ({ navigation }) => {
                     }
                 }
             }
-            // console.log(JSON.stringify(data, 0, 2), 'Data for weekly events')
             setWeekly(data);
             setChanged(!changed);
         }
@@ -523,11 +496,11 @@ const Calender = ({ navigation }) => {
                                 setSelectMonth(new Date(month.dateString).toISOString());
                                 if (month?.month > selectMonth?.split('-')[1]) {
                                     setPrevNext(prev => prev + 1)
-                                    alert(prevNext)
+                                    // alert(prevNext)
                                     setShowLoader(true)
                                 } else {
                                     setPrevNext(prev => prev - 1)
-                                    setShowLoader(true)
+                                    // setShowLoader(true)
                                     alert(prevNext)
                                 }
                             }, 1000);
@@ -586,7 +559,7 @@ const Calender = ({ navigation }) => {
                                     alignItems: 'center',
                                     paddingHorizontal: 10,
                                 }}>
-                                <Text style={styles.filtertext}>{selectedLocation !== null ? selectedLocation.name : t('Location') ? t('Location') : 'Location'}</Text>
+                                <Text style={styles.filtertext}>{selectedLocation !== null ? selectedLocation?.name?.substring(0, 25) : t('Location') ? t('Location') : 'Location'}</Text>
                                 {selectedLocation !== null ? (
                                     <AntDesign name="close" size={20} color="rgba(119, 119, 119, 1)" />
                                 ) : (
@@ -611,9 +584,6 @@ const Calender = ({ navigation }) => {
                                 contentContainerStyle={{ paddingBottom: 10 }}
                                 renderItem={({ item, index }) => (
                                     <ElevatedCard
-                                        // navigation={() =>
-                                        //     EventNavigation(item)
-                                        // }
                                         theme={{ colorscheme: theme.colorscheme }}
                                     >
                                         <EventCard
@@ -740,7 +710,7 @@ const Calender = ({ navigation }) => {
                                                 dateNo={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).format('DD') : moment(item.start_date).format('DD')}
                                                 day={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).format('ddd') : moment(item.start_date).format('ddd')}
                                                 timing={selectedHeader == data1[0].name ? null : `${moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('MMMM DD YYYY')} - ${moment(item.end_date ? item.end_date : item?.attributes?.end_date).format('MMMM DD YYYY')}`}
-                                                title={selectedHeader == data1[0].name ? item?.attributes?.Calendar_title : item.id}
+                                                title={selectedHeader == data1[0].name ? item?.attributes?.Calendar_title : item.attributes.title}
                                                 item={item}
                                                 header={selectedHeader}
                                                 theme={{

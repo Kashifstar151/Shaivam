@@ -101,16 +101,25 @@ const AudioPlayer = ({
     isFav,
     activeTrack,
 }) => {
-    // console.log('the render of page =>', repeatMode);
-
-    // const [oprateMostPlayed, setOprateMostPlayed] = useState(0)
     useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], async (event) => {
         if (event?.state == State?.nextTrack) {
             let index = await TrackPlayer.getActiveTrack();
-            // console.log("🚀 ~ useTrackPlayerEvents ~ index:", index)
+            // console.log('🚀 ~ useTrackPlayerEvents ~ index:', index);
             const newObj = { ...activeTrack, prevId: prevId };
             console.log('🚀 ~ useTrackPlayerEvents ~ newObj:', newObj);
             updateRecentlyPlayed(newObj);
+
+            // done the change when song completes the padikam gets changed (tricked)
+            const activeTrack = await TrackPlayer.getActiveTrack();
+
+            if (
+                activeTrack?.url &&
+                duration !== 0 &&
+                new Date(position * 1000).toISOString().substring(14, 19) >=
+                new Date(duration * 1000).toISOString().substring(14, 19)
+            ) {
+                queryForNextPrevId();
+            }
         }
     });
     useEffect(() => {
@@ -173,7 +182,7 @@ const AudioPlayer = ({
                         }
                     );
                 })
-                .catch((err) => {});
+                .catch((err) => { });
         });
     };
     const { position, duration } = useProgress();
@@ -186,7 +195,7 @@ const AudioPlayer = ({
     useEffect(() => {
         (async () => {
             if (playBackState.state === 'ready') {
-                await TrackPlayer.play();
+                // await TrackPlayer.play();
                 mostPlayed();
             } else if (playBackState.state !== 'playing') {
                 setPaused(false);
@@ -377,13 +386,13 @@ const AudioPlayer = ({
                 style={
                     orientation == 'LANDSCAPE' || !visibleStatusBar
                         ? {
-                              width: !(orientation == 'LANDSCAPE')
-                                  ? Dimensions.get('window').width
-                                  : Dimensions.get('window').width / 2,
-                              backgroundColor: '#222222',
-                              height: 70,
-                              alignItems: 'center',
-                          }
+                            width: !(orientation == 'LANDSCAPE')
+                                ? Dimensions.get('window').width
+                                : Dimensions.get('window').width / 2,
+                            backgroundColor: '#222222',
+                            height: 70,
+                            alignItems: 'center',
+                        }
                         : { backgroundColor: '#222222', height: 200 }
                 }
             >

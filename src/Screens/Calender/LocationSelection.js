@@ -1,17 +1,17 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import Icon from "react-native-vector-icons/dist/SimpleLineIcons";
-import MaterialIcons from "react-native-vector-icons/dist/MaterialIcons";
-import { CustomButton } from "../../components/Buttons";
-import ButtonComp from "../Temples/Common/ButtonComp";
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Icon from 'react-native-vector-icons/dist/SimpleLineIcons';
+import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
+import { CustomButton } from '../../components/Buttons';
+import ButtonComp from '../Temples/Common/ButtonComp';
 import TrackBackToLocSVG from '../../components/SVGs/TrackBackToLocSVG';
-import { getCurrentLocation, getTheLocationName } from "../../Helpers/GeolocationFunc";
-import TextInputCom from "../Temples/Common/TextInputCom";
-import { TextInput } from "react-native-gesture-handler";
-import SearchInput from "../../components/SearchInput";
-import { colors } from "../../Helpers";
-import { useDebouncer } from "../../Helpers/useDebouncer";
-import { useGetListQuery } from "../../store/features/Calender/CalenderApiSlice";
+import { getCurrentLocation, getTheLocationName } from '../../Helpers/GeolocationFunc';
+import TextInputCom from '../Temples/Common/TextInputCom';
+import { TextInput } from 'react-native-gesture-handler';
+import SearchInput from '../../components/SearchInput';
+import { colors } from '../../Helpers';
+import { useDebouncer } from '../../Helpers/useDebouncer';
+import { useGetListQuery } from '../../store/features/Calender/CalenderApiSlice';
 
 const LocationSelection = ({ calender, setSelected, close, selectedLocation }) => {
     // const [selectedEvent, setSelectedEvent] = useState(null)
@@ -39,7 +39,7 @@ const LocationSelection = ({ calender, setSelected, close, selectedLocation }) =
         name: '',
         displayName: '',
     });
-    const [searchedText, setSearchText] = useState('')
+    const [searchedText, setSearchText] = useState('');
     const fetchTheName = useCallback(
         async (coors) => {
             // console.log('the location fetch enters  ');
@@ -47,18 +47,23 @@ const LocationSelection = ({ calender, setSelected, close, selectedLocation }) =
                 // console.log('the location is fetching  ');
                 const locationDetail = await getTheLocationName({ ...dragCoor.current });
                 console.log('the location  fetching  is done', locationDetail);
-                setUserLocName((prev) => {
-                    return {
-                        ...prev,
-                        name: locationDetail?.address?.village || locationDetail?.name,
-                        displayName: locationDetail?.display_name,
-                    };
-                });
+                if (locationDetail.status === 'SUCCESS') {
+                    setUserLocName((prev) => {
+                        return {
+                            ...prev,
+                            name: locationDetail?.data?.address?.village || locationDetail?.name,
+                            displayName: locationDetail?.data?.display_name,
+                        };
+                    });
+                } else if (locationDetail.status === 'FAILED') {
+                    alert('erorr occured');
+                    console.log('The error is ==>', locationDetail?.err);
+                }
             }
         },
         [dragCoor.current]
     );
-    const [fetchLocationName, setFetchedLocationsName] = useState(null)
+    const [fetchLocationName, setFetchedLocationsName] = useState(null);
     const debounceVal = useDebouncer(searchedText, 500);
     const searchResultData = async () =>
         await fetch(
@@ -89,10 +94,10 @@ const LocationSelection = ({ calender, setSelected, close, selectedLocation }) =
             // mapRef.current?.animateCamera({ center: val }, { duration: 1000 });
             setUserLocation((prev) => ({ ...prev, ...val }));
             setRegionCoordinate((prev) => ({ ...prev, ...val }));
-            setSelected({ lat: locationDetail?.lat, long: locationDetail?.lon, name: locationDetail?.display_name })
+            setSelected({ lat: locationDetail?.data?.lat, long: locationDetail?.data?.lon, name: locationDetail?.data?.display_name })
             close?.current?.close()
         });
-    }
+    };
     const data = [
         { name: 'Jayanagar, Bangalore' },
         { name: 'Vijayanagar, Mysore' },
@@ -100,30 +105,57 @@ const LocationSelection = ({ calender, setSelected, close, selectedLocation }) =
         { name: 'Shimoga' },
         { name: 'Uzhavarappani' },
         { name: 'Location 5' },
-    ]
+    ];
     const selectionHandler = (item) => {
-        console.log("🚀 ~ selectionHandler ~ item:", JSON.stringify(item, 0, 2))
-        setSelected(item)
-        close?.current?.close()
-    }
+        console.log('🚀 ~ selectionHandler ~ item:', JSON.stringify(item, 0, 2));
+        setSelected({ lat: item?.lat, long: item.lon, name: item?.name });
+        close?.current?.close();
+    };
 
     const rednerItem = (item, index) => (
-        <TouchableOpacity style={{ height: 40, flexDirection: 'row', alignItems: 'center' }} activeOpacity={0.5} onPress={() => selectionHandler(item)}>
-            <Icon name='location-pin' size={16} color={'rgba(34, 34, 34, 1)'} />
-            <Text style={{ color: 'rgba(34, 34, 34, 1)', fontFamily: 'Mulish-Regular', marginHorizontal: 20 }}>{item?.name}</Text>
+        <TouchableOpacity
+            style={{ height: 40, flexDirection: 'row', alignItems: 'center' }}
+            activeOpacity={0.5}
+            onPress={() => selectionHandler(item)}
+        >
+            <Icon name="location-pin" size={16} color={'rgba(34, 34, 34, 1)'} />
+            <Text
+                style={{
+                    color: 'rgba(34, 34, 34, 1)',
+                    fontFamily: 'Mulish-Regular',
+                    marginHorizontal: 20,
+                }}
+            >
+                {item?.name}
+            </Text>
         </TouchableOpacity>
-    )
+    );
     return (
-        <View style={{ paddingHorizontal: 0, }}>
+        <View style={{ paddingHorizontal: 0 }}>
             <Text style={styles.headingText}>Search By Location</Text>
-            <View style={{ paddingHorizontal: 20, flexDirection: "row", alignItems: 'center', borderRadius: 10, alignSelf: 'center', backgroundColor: '#F3F3F3', height: 55, width: Dimensions.get('window').width - 30 }}>
+            <View
+                style={{
+                    paddingHorizontal: 20,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    borderRadius: 10,
+                    alignSelf: 'center',
+                    backgroundColor: '#F3F3F3',
+                    height: 55,
+                    width: Dimensions.get('window').width - 30,
+                }}
+            >
                 <MaterialIcons name="search" size={28} color={colors.grey4} />
                 <TextInput placeholder="Search for locations" placeholderTextColor={colors.grey5} onChangeText={(e) => setSearchText(e)} val={selectedLocation} />
             </View>
             {/* <SearchInput color={true} styleOverwrite={{ marginHorizontalUnset: 20 }} /> */}
             <View style={{ paddingHorizontal: 20 }}>
-                <Text style={{ color: '#C1554E', fontSize: 16, fontFamily: 'Mulish-Bold' }}>Most Searched Location</Text>
-                <Text style={{ color: '#666666', fontFamily: 'Mulish-Regular', fontSize: 12 }}>Lorem ipsum dolor set</Text>
+                <Text style={{ color: '#C1554E', fontSize: 16, fontFamily: 'Mulish-Bold' }}>
+                    Most Searched Location
+                </Text>
+                <Text style={{ color: '#666666', fontFamily: 'Mulish-Regular', fontSize: 12 }}>
+                    Lorem ipsum dolor set
+                </Text>
             </View>
             <FlatList contentContainerStyle={{ paddingHorizontal: 20 }} data={fetchLocationName} renderItem={({ item, index }) => (
                 rednerItem(item, index)
@@ -150,7 +182,7 @@ const LocationSelection = ({ calender, setSelected, close, selectedLocation }) =
                     alignSelf: 'center',
                     borderRadius: 20,
                     borderColor: '#C1554E',
-                    borderWidth: 1
+                    borderWidth: 1,
                 }}
                 text={'Use my current location'}
                 backgroundColor={'#ffffff'}
@@ -161,8 +193,21 @@ const LocationSelection = ({ calender, setSelected, close, selectedLocation }) =
     );
 };
 export const styles = StyleSheet.create({
-    texIContContainer: { justifyContent: 'center', alignItems: 'center', height: 24, width: 24, borderColor: 'rgba(119, 119, 119, 1)', borderWidth: 1 },
-    headingText: { marginHorizontal: 20, fontFamily: 'Lora-Bold', color: 'rgba(34, 34, 34, 1)', marginVertical: 15, fontSize: 16 }
-})
+    texIContContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 24,
+        width: 24,
+        borderColor: 'rgba(119, 119, 119, 1)',
+        borderWidth: 1,
+    },
+    headingText: {
+        marginHorizontal: 20,
+        fontFamily: 'Lora-Bold',
+        color: 'rgba(34, 34, 34, 1)',
+        marginVertical: 15,
+        fontSize: 16,
+    },
+});
 
 export default LocationSelection;

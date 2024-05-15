@@ -6,6 +6,7 @@ import EllipseSVGRight from './SVGs/EllipseSVGRight';
 import MusiclistSVG from './SVGs/MusiclistSVG';
 import PlayBtnSVG from './SVGs/PlayBtnSVG';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { useTranslation } from 'react-i18next';
 
 const HomePlaylistCard = ({
     colors,
@@ -17,6 +18,7 @@ const HomePlaylistCard = ({
     navDetail,
     theme,
 }) => {
+    const { t } = useTranslation();
     return (
         <LinearGradient
             colors={colors}
@@ -50,7 +52,7 @@ const HomePlaylistCard = ({
             <View style={{ flexDirection: 'row', columnGap: 5, alignItems: 'center' }}>
                 <MusiclistSVG fill={theme.colorScheme === 'light' ? '#4C3600' : '#fff'} />
                 <Text style={{ color: theme.textColor, fontSize: RFValue(12, 800) }}>
-                    {heading}
+                    {t(`${heading}`)}
                 </Text>
             </View>
 

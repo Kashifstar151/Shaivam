@@ -6,11 +6,11 @@ import moment from 'moment';
 import { colors } from '../Helpers';
 
 const EventCard = ({ date, timing, title, theme, item, header, day, dateNo }) => {
-    console.log("🚀 ~ EventCard ~ date:", header)
-    let d = header == 'Festivals' ? moment(item?.attributes?.calendar_from_date) : moment(item?.attributes?.start_date);
-    console.log("🚀 ~ EventCard ~ d:", d)
+    let d =
+        header == 'Festivals'
+            ? moment(item?.attributes?.calendar_from_date)
+            : moment(item?.attributes?.start_date);
     let dayname = d.format('ddd');
-    console.log("🚀 ~ EventCard ~ dayname:", dayname)
     // let day = d.format('DD');
     // console.log("🚀 ~ EventCard ~ day:", day)
     return (

@@ -1,6 +1,6 @@
-import { useFocusEffect } from "@react-navigation/native";
-import React from "react";
-import { RouteTexts } from "../../navigation/RouteText";
+import { useFocusEffect } from '@react-navigation/native';
+import React from 'react';
+import { RouteTexts } from '../../navigation/RouteText';
 
 const TempleTabsNavigate = ({ navigation }) => {
     //   return (
@@ -11,7 +11,7 @@ const TempleTabsNavigate = ({ navigation }) => {
             }); // Navigate to SecondaryTabs
             return () => unsubscribe;
         }, [navigation])
-    )
+    );
 
     return null;
     //   );

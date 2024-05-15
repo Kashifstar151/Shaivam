@@ -2,7 +2,6 @@ import { Image, Text, View } from 'react-native';
 import { Callout, Marker } from 'react-native-maps';
 import assetMapWithTempleType from './AssetMapWithTempleType';
 export const MarkerCallOut = ({ callback, flag, coordinate, description }) => {
-    console.log("🚀 ~ MarkerCallOut ~ coordinate:", coordinate)
     return (
         <Marker
             tracksViewChanges={false}
@@ -34,7 +33,7 @@ export const MarkerCallOut = ({ callback, flag, coordinate, description }) => {
                             color: 'white',
                         }}
                     >
-                        {description ?? 'Sorry no data available'}
+                        {description ? description : 'Sorry no data available'}
                     </Text>
                 </View>
                 <View
@@ -54,7 +53,7 @@ export const MarkerCallOut = ({ callback, flag, coordinate, description }) => {
     );
 };
 
-export const DraggableMarker = ({ callback, flag, coordinate, keyName, children }) => {
+export const DraggableMarker = ({ callback, flag, coordinate, keyName, children, description }) => {
     return (
         <Marker
             draggable
@@ -66,24 +65,22 @@ export const DraggableMarker = ({ callback, flag, coordinate, keyName, children 
                 callback(e.nativeEvent.coordinate);
             }}
         >
-            <Image
-                source={assetMapWithTempleType[1].path}
-                resizeMode="contain"
-                key={`${keyName}-${flag}`}
-            />
-            <Callout>
-                <Text
-                    style={{
-                        width: 200,
-                        color: 'white',
-                        paddingHorizontal: 10,
-                        paddingVertical: 5,
-                        backgroundColor: 'black',
-                    }}
-                >
-                    This is the your starting location
-                </Text>
-            </Callout>
+            <View>{assetMapWithTempleType[flag]?.Svg}</View>
+            {description && (
+                <Callout>
+                    <Text
+                        style={{
+                            width: 200,
+                            color: 'white',
+                            paddingHorizontal: 10,
+                            paddingVertical: 5,
+                            backgroundColor: 'black',
+                        }}
+                    >
+                        {description}
+                    </Text>
+                </Callout>
+            )}
         </Marker>
     );
 };
@@ -95,7 +92,7 @@ export const CustomMarker = ({ setPadState, callback, flag, coordinate, keyName,
             coordinate={coordinate}
             description={'This is a marker in React Natve'}
             onPress={callback ? callback : null}
-        // image={assetMapWithTempleType[1].path}
+            // image={assetMapWithTempleType[1].path}
         >
             {assetMapWithTempleType[flag]?.Svg}
             {/* <Image

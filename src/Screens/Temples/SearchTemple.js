@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Dimensions, Keyboard, Modal, Pressable, StyleSheet } from 'react-native';
+import { Keyboard, Pressable, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { View, Text, TextInput } from 'react-native';
 import SearchSVG from '../../components/SVGs/SearchSVG';
 import { useNavigation } from '@react-navigation/core';
@@ -18,6 +18,7 @@ const SearchTemple = ({
     route,
     value,
     isNavigable,
+    positionSuggestionBox,
 }) => {
     const [searchText, setSearchText] = useState('');
     const [showSuggestion, setShowSuggestion] = useState('');
@@ -105,7 +106,7 @@ const SearchTemple = ({
     }, []);
 
     return (
-        <View style={{ flexGrow: 1, zIndex: 9999 }}>
+        <View style={{ flexGrow: 1 }}>
             <View
                 style={[
                     styles.wrapper,
@@ -153,7 +154,6 @@ const SearchTemple = ({
                         style={{
                             position: 'absolute',
                             top: 60,
-                            zIndex: 100,
                             width: screenWidth,
                             height: screenHeight,
                             marginLeft: -20,
@@ -161,30 +161,25 @@ const SearchTemple = ({
                         onPress={handleBlur}
                     ></Pressable>
                     <ScrollView
-                        style={{
-                            position: 'absolute',
-                            top: 60,
-                            zIndex: 100,
-                            width: screenWidth - 40,
-                            backgroundColor: '#F3F3F3',
-                            borderRadius: 8,
-                            padding: 10,
-                            borderWidth: 1,
-                            maxHeight: screenHeight * 0.5,
-                        }}
+                        style={[
+                            {
+                                position: 'absolute',
+                                top: 60,
+                                width: screenWidth - 40,
+                                backgroundColor: '#F3F3F3',
+                                borderRadius: 8,
+                                padding: 10,
+                                borderWidth: 1,
+                                maxHeight: screenHeight * 0.5,
+                            },
+                            positionSuggestionBox,
+                        ]}
                         keyboardShouldPersistTaps="handled"
                     >
                         {fetchedLocationsName.length ? (
                             fetchedLocationsName.map((item, ind) => {
                                 return (
-                                    <Pressable
-                                        style={{
-                                            paddingVertical: 10,
-                                            borderBottomWidth: fetchedLocationsName[ind + 1]
-                                                ? 1
-                                                : 0,
-                                            borderColor: '#33333333',
-                                        }}
+                                    <TouchableWithoutFeedback
                                         onPress={() => {
                                             handleBlur();
                                             triggerCall.current = false;
@@ -195,11 +190,16 @@ const SearchTemple = ({
                                         <Text
                                             style={{
                                                 color: '#000',
+                                                paddingVertical: 10,
+                                                borderBottomWidth: fetchedLocationsName[ind + 1]
+                                                    ? 1
+                                                    : 0,
+                                                borderColor: '#33333333',
                                             }}
                                         >
                                             {item.display_name}
                                         </Text>
-                                    </Pressable>
+                                    </TouchableWithoutFeedback>
                                 );
                             })
                         ) : (
