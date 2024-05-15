@@ -18,6 +18,8 @@ const BottomSheetTempleTemplate = ({
         longitudeDelta: 0.0121,
         locationName: '',
     },
+    snapIndex,
+    setSnapIndex,
 
     showSearchBarWhenFullSize,
     initialIndexOfSize,
@@ -37,11 +39,13 @@ const BottomSheetTempleTemplate = ({
     console.log('🚀 ~ ---------data:', data);
     const bottomSheetRef = useRef(null);
     const [padState, setPadState] = useState(null);
-    const [snapIndex, setSnapIndex] = useState(0);
-    const handleSheetChanges = useCallback((indx) => {
-        console.log('handleSheetChanges', indx);
-        setSnapIndex(indx);
-    }, []);
+    const handleSheetChanges = useCallback(
+        (indx) => {
+            console.log('handleSheetChanges', indx);
+            setSnapIndex(indx);
+        },
+        [setSnapIndex]
+    );
 
     const { theme } = useContext(ThemeContext);
     return (
