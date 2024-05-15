@@ -301,7 +301,7 @@ const CreateVirtualEvent = ({ navigation }) => {
                         //     </View> :
                         <View>
                             {virtualEvent &&
-                                <TextInputCom insiderText={'Virtual event url'} headinText={'Virtual event url'} width={Dimensions.get('window').width - 40} />
+                                <TextInputCom insiderText={'Virtual event url'} headinText={t('Virtual event link')} width={Dimensions.get('window').width - 40} />
 
                             }
                             <TextInputCom value={inputValue['title']} inputKey={'title'} insiderText={'Enter event title'} headinText={t('Event title*') ? t('Event title*') : 'Event title*'} width={Dimensions.get('window').width - 40} />
@@ -320,12 +320,12 @@ const CreateVirtualEvent = ({ navigation }) => {
                                         styles.descriptionText,
                                         { fontSize: 14, marginHorizontal: 10 },
                                     ]}>
-                                        {selectedFrequecy == null ? 'Select Category' : selectedFrequecy?.name}
+                                        {selectedFrequecy == null ? t('Select event category') : selectedFrequecy?.name}
                                     </Text>
                                     <MaterialIcons name="keyboard-arrow-down" size={24} color="#777777" />
                                 </TouchableOpacity>
                             </View>
-                            <TextInputCom returnType='done' value={inputValue['description']} inputKey={'description'} insiderText={'Enter description here'} headinText={t('Brief Description of the Event') ? t('Brief Description of the Event') : 'Brief Description of the Event'} width={Dimensions.get('window').width - 40} height={110} multiLine={true} />
+                            <TextInputCom returnType='done' value={inputValue['description']} inputKey={'description'} insiderText={t('Enter description here')} headinText={t('Brief Description of the Event') ? t('Brief Description of the Event') : 'Brief Description of the Event'} width={Dimensions.get('window').width - 40} height={110} multiLine={true} />
                             {!virtualEvent &&
                                 <>
                                     <Text style={{ color: '#777777' }}>{t('Location') ? t('Location') : 'Location'}</Text>
@@ -366,7 +366,7 @@ const CreateVirtualEvent = ({ navigation }) => {
                                 </View>
                             )}
                             <View style={{ marginVertical: 0 }}>
-                                <ReminderSnackBar hidebell={true} text={t('Recurring event')} descriptionText={true} setRecurringEvent={setRecurringEvent} recurringEvent={recurringEvent} />
+                                <ReminderSnackBar hidebell={true} text={t('Recurring event')} description={' '} setRecurringEvent={setRecurringEvent} recurringEvent={recurringEvent} />
                             </View>
                             {
                                 recurringEvent &&
@@ -412,7 +412,7 @@ const CreateVirtualEvent = ({ navigation }) => {
                                 recurringEvent ? <></> :
                                     <>
                                         <View style={{ marginVertical: 10 }}>
-                                            <Text>{'Start date'}</Text>
+                                            <Text>{t('Start date')}</Text>
                                             <TouchableOpacity style={styles.startDateContainer} onPress={() => setShowDatePicker(true)}>
                                                 {/* <Icon name="calender" size={24} color="#777777" /> */}
                                                 <CalendarSVG fill={'#777777'} />
@@ -425,7 +425,7 @@ const CreateVirtualEvent = ({ navigation }) => {
                                             </TouchableOpacity>
                                         </View>
                                         <View style={{ marginVertical: 10 }}>
-                                            <Text>{'End date'}</Text>
+                                            <Text>{t('End date')}</Text>
                                             <TouchableOpacity style={styles.startDateContainer} onPress={() => setShowEndDatePicker(true)}>
                                                 <CalendarSVG fill={'#777777'} />
                                                 <Text style={[
@@ -438,8 +438,8 @@ const CreateVirtualEvent = ({ navigation }) => {
                                         </View>
                                     </>
                             }
-                            <TextInputCom value={inputValue['name'] || inputValue['Name']} inputKey={recurringEvent ? 'Name' : 'name'} insiderText={'Enter your name'} headinText={'Name'} width={Dimensions.get('window').width - 40} />
-                            <TextInputCom reg={emailReg} value={inputValue['email'] || inputValue['Email']} inputKey={recurringEvent ? 'Email' : 'email'} insiderText={'Enter your email'} headinText={'Email'} width={Dimensions.get('window').width - 40} />
+                            <TextInputCom value={inputValue['name'] || inputValue['Name']} inputKey={recurringEvent ? 'Name' : 'name'} insiderText={t('Enter your name')} headinText={t('Name')} width={Dimensions.get('window').width - 40} />
+                            <TextInputCom reg={emailReg} value={inputValue['email'] || inputValue['Email']} inputKey={recurringEvent ? 'Email' : 'email'} insiderText={t('Enter your email')} headinText={t('Email')} width={Dimensions.get('window').width - 40} />
                             {
                                 errorMsg !== null && errorMsg.hasOwnProperty("email") && <Text style={{
                                     fontWeight: '300',

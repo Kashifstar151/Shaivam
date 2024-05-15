@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Feather from "react-native-vector-icons/dist/Feather";
 import { ThemeContext } from "../../Context/ThemeContext";
@@ -7,9 +8,10 @@ import { RouteTexts } from "../../navigation/RouteText";
 
 const SubmitEnteries = ({ setSelectedEvent, selectedEvent, closeSheet, navigation }) => {
     const theme = useContext(ThemeContext)
+    const { t } = useTranslation()
     const type = [
         { name: 'Add an event', id: 1 },
-        { name: 'Sends a Festival video', id: 2 }
+        { name: 'Send a festival video', id: 2 }
     ]
     const selectionHandler = (item) => {
         setSelectedEvent(item)
@@ -21,14 +23,14 @@ const SubmitEnteries = ({ setSelectedEvent, selectedEvent, closeSheet, navigatio
 
     return (
         <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
-            <Text style={{ fontFamily: 'Lora-Bold', fontSize: 16, color: 'black', marginVertical: 10 }}>Select freuency of event</Text>
+            <Text style={{ fontFamily: 'Lora-Bold', fontSize: 16, color: 'black', marginVertical: 10 }}>{t('Select one of the following')}</Text>
             <FlatList data={type} renderItem={({ item, index }) => (
                 <TouchableOpacity
                     onPress={() => selectionHandler(item)}
                     style={styles.dropDown}
                 >
                     <Text style={{ fontFamily: 'Mulish-Regular', color: theme.textColor }}>
-                        {item?.name}
+                        {t(item?.name)}
                     </Text>
                     <View
                         style={selectedEvent?.name == item?.name ? [styles.iconContainer, { backgroundColor: colors.commonColor }] : styles.iconContainer}

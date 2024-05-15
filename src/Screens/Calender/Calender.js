@@ -396,22 +396,7 @@ const Calender = ({ navigation }) => {
     const [selectedHeader, setSelectedHeader] = useState(data1[0].name);
     const marked = useMemo(() => {
         const markedDates = {};
-        if (selectedHeader == data1[1].name) {
-            // console.log(mainData, '================>')
-            mainData?.forEach(item => {
-                const date = moment(item?.start_date).format('YYYY-MM-DD');
-                // console.log("🚀 ~ marked ~ date: in evebt", date)
-                markedDates[date] = {
-                    marked: true,
-                    dotColor: '#FCB300',
-                    customStyles: {
-                        container: { borderRadius: 5 },
-                        text: { color: 'black', fontFamily: 'Mulish-Bold' }
-                    }
-                };
-            });
-            return markedDates;
-        } else {
+        if (selectedHeader == data1[0].name) {
             festivalEvents?.data?.forEach(item => {
                 const date = moment(item?.attributes?.calendar_from_date).format('YYYY-MM-DD');
                 console.log("🚀 ~ marked ~ date:", date)
@@ -425,8 +410,24 @@ const Calender = ({ navigation }) => {
                 };
             });
             return markedDates;
+            // console.log(mainData, '================>')
+        } else {
+            mainData?.forEach(item => {
+                const date = moment(item?.start_date).format('YYYY-MM-DD');
+                // console.log("🚀 ~ marked ~ date: in evebt", date)
+                markedDates[date] = {
+                    marked: true,
+                    dotColor: '#FCB300',
+                    customStyles: {
+                        container: { borderRadius: 5 },
+                        text: { color: 'black', fontFamily: 'Mulish-Bold' }
+                    }
+                };
+            });
+            return markedDates;
+
         }
-    }, [selectedHeader]);
+    }, [selectedHeader, festivalEvents]);
 
 
 
@@ -439,11 +440,11 @@ const Calender = ({ navigation }) => {
                     }}
                 >
                     <View style={styles.HeadeingContainer}>
-                        <HeadingText text={'Calendar'} nandiLogo={true} />
+                        <HeadingText text={t('Calendar')} nandiLogo={true} />
                     </View>
                     <View style={styles.SearchInputContainer}>
                         <View style={{ width: '84%' }}>
-                            <SearchInput placeholder={'Search for Festivals/events'} setState={setSearchText} />
+                            <SearchInput placeholder={t('Search for Festivals/events')} setState={setSearchText} />
                         </View>
                         <TouchableOpacity
                             style={styles.AddBtnContainer}
@@ -626,7 +627,7 @@ const Calender = ({ navigation }) => {
                         <>
                             <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
                                 <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold', color: '#222222' }}>
-                                    Notification Turned on
+                                    {t('Notification Turned on')}
                                 </Text>
                             </View>
                             <FlatList
@@ -664,7 +665,7 @@ const Calender = ({ navigation }) => {
                         <>
                             <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
                                 <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold', color: '#222222' }}>
-                                    Today
+                                    {t('Today')}
                                 </Text>
                             </View>
                             <FlatList
@@ -704,7 +705,7 @@ const Calender = ({ navigation }) => {
                             <>
                                 <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
                                     <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold', color: '#222222' }}>
-                                        This Month
+                                        {t('This Month')}
                                     </Text>
                                 </View>
                                 <FlatList

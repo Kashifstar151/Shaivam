@@ -5,9 +5,9 @@ import BackButton from "../../components/BackButton";
 import Background from "../../components/Background";
 import RadioSVG from "../../components/SVGs/RadioSVG";
 import { ThemeContext } from "../../Context/ThemeContext";
-import CenterIcon from '../../assets/Images/Vector (3).svg'
-import Feather from "react-native-vector-icons/dist/Feather";
-import ToggleSwitch from "toggle-switch-react-native";
+// import CenterIcon from '../../assets/Images/Vector (3).svg'
+// import Feather from "react-native-vector-icons/dist/Feather";
+// import ToggleSwitch from "toggle-switch-react-native";
 import { colors } from "../../Helpers";
 import { useGetRadioListQuery } from "../../store/features/Calender/CalenderApiSlice";
 import TrackPlayer, { AppKilledPlaybackBehavior, Capability, usePlaybackState } from "react-native-track-player";
