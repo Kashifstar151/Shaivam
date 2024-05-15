@@ -46,16 +46,10 @@ import {
 import { useTranslation } from 'react-i18next';
 import RefreshSVG from '../../components/SVGs/RefreshSVG.js';
 
+// setting the delta
+
 export const Temples = ({ navigation, route }) => {
     const bottomSheetRef = useRef(null);
-
-    const [regionCoordinate, setRegionCoordinate] = useState({
-        latitude: 28.500271,
-        longitude: 77.387901,
-        latitudeDelta: 0.015,
-        longitudeDelta: 0.0121,
-        locationName: '',
-    });
 
     // const [skip, setSkip] = useState(false); //  on refetch btn click set it to true
     // const { data, isSuccess, refetch, isFetching, isError, isUninitialized, error, status } =
@@ -67,13 +61,26 @@ export const Temples = ({ navigation, route }) => {
         { data, isSuccess, isFetching, isError, isUninitialized, error, status },
         lastPromiseInfo,
     ] = useLazyGetNearByTemplesQuery();
-    console.log('🚀 ~ Temples ~ data:', JSON.stringify(data, null, 2));
+    // console.log('🚀 ~ Temples ~ data:', JSON.stringify(data, null, 2));
+
+    const { screenHeight, screenWidth } = getDimension();
+
+    const LATITUDE_DELTA = 0.18;
+    const LONGITUDE_DELTA = LATITUDE_DELTA * (screenWidth / screenHeight);
 
     const [userLocation, setUserLocation] = useState({
         latitude: 28.500271,
         longitude: 77.387901,
-        latitudeDelta: 0.015,
-        longitudeDelta: 0.0121,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
+    });
+
+    const [regionCoordinate, setRegionCoordinate] = useState({
+        latitude: 28.500271,
+        longitude: 77.387901,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
+        locationName: '',
     });
 
     const [snapIndex, setSnapIndex] = useState(0);
@@ -85,7 +92,7 @@ export const Temples = ({ navigation, route }) => {
     }, []);
 
     const { theme } = useContext(ThemeContext);
-    const { screenHeight, screenWidth } = getDimension();
+
     const [showModal, setShowModal] = useState(false);
     const [padState, setPadState] = useState(1);
     const [permissionGranted, setPermissionGranted] = useState(null);
@@ -256,12 +263,12 @@ export const Temples = ({ navigation, route }) => {
                             }, 5000)
                         }
                         provider={PROVIDER_GOOGLE}
-                        // initialRegion={{
-                        //     longitude: 77.40369287235171,
-                        //     latitude: 28.49488467262243,
-                        //     latitudeDelta: 0.015,
-                        //     longitudeDelta: 0.0121,
-                        // }}
+                        initialRegion={{
+                            longitude: 77.40369287235171,
+                            latitude: 28.49488467262243,
+                            latitudeDelta: LATITUDE_DELTA,
+                            longitudeDelta: LONGITUDE_DELTA,
+                        }}
                         style={styles.map}
                         onRegionChangeComplete={(args, gesture) => {
                             if (gesture.isGesture) {
@@ -290,13 +297,13 @@ export const Temples = ({ navigation, route }) => {
                                     keyName={'USER_LOCATION_MARKER'}
                                     description={"User's location"}
                                 />
-                                <MarkerCallOut
+                                {/* <MarkerCallOut
                                     setPadState={setPadState}
                                     flag={7}
                                     coordinate={regionCoordinate}
                                     keyName={'COORDINATE'}
                                     description={"Region's location"}
-                                />
+                                /> */}
                             </View>
                         )}
                         {data?.temples?.map((item, index) => (
@@ -348,7 +355,7 @@ export const Temples = ({ navigation, route }) => {
                                     onPress={() => {
                                         // adding callback on the category btn press and navigating to the filter page
                                         if (permissionGranted === RESULTS.GRANTED) {
-                                            categoryBtnClbk(navigation, key, regionCoordinate);
+                                            categoryBtnClbk(navigation, key, userLocation);
                                         } else {
                                             setShowModal(!showModal);
                                         }
