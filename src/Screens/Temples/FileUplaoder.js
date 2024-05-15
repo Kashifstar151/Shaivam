@@ -12,19 +12,46 @@ import {
 } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/dist/Feather';
-import Button from './Common/Button';
+import { useAddTempleImagesMutation } from '../../store/features/Temple/TemplApiSlice';
 import ButtonComp from './Common/ButtonComp';
 
-const FileUplaoder = ({ setModalVisible }) => {
+const FileUplaoder = ({ setModalVisible, id }) => {
     const [images, setImages] = useState([]);
     const [submitted, setSubmitted] = useState(false);
-    const animationref = useRef(null)
+    const [addTempleImages] = useAddTempleImagesMutation();
+    const animationref = useRef(null);
     useEffect(() => {
         animationref.current?.play();
-
         // Or set a specific startFrame and endFrame with:
         animationref.current?.play(30, 120);
-    }, [submitted])
+    }, [submitted]);
+
+    const handleSubmit = () => {
+        const formData = new FormData();
+
+        for (let i = 0; i < images.length; i++) {
+            formData.append('files', {
+                name: images[i]?.fileName,
+                type: images[i]?.type,
+                uri: images[i]?.uri,
+            });
+        }
+        formData.append('ref', 'api::map.map');
+        formData.append('refId', id);
+        formData.append('field', 'temple_images');
+
+        addTempleImages(formData)
+            .unwrap()
+            .then((response) => {
+                console.log('the images are uploaded successFully ', JSON.stringify(response));
+                setSubmitted(true);
+            })
+            .catch((err) => {
+                console.log('the images are uploaded error ', JSON.stringify(err));
+            });
+
+        // add on success
+    };
     const openGallary = () => {
         const options = {
             selectionLimit: 5,
@@ -97,7 +124,6 @@ const FileUplaoder = ({ setModalVisible }) => {
                         },
                     ]}
                 >
-
                     <TouchableOpacity
                         onPress={() => setModalVisible(false)}
                         style={{ position: 'absolute', top: 10, right: 10 }}
@@ -105,7 +131,11 @@ const FileUplaoder = ({ setModalVisible }) => {
                         <Icon name="x" color="#222222" size={22} />
                     </TouchableOpacity>
                     <View style={{ backgroundColor: 'white' }}>
-                        <LottieView ref={animationref} style={{ height: 200, width: 200 }} source={require('../../assets/JSON/SuccessGIF.json')} />
+                        <LottieView
+                            ref={animationref}
+                            style={{ height: 200, width: 200 }}
+                            source={require('../../assets/JSON/SuccessGIF.json')}
+                        />
                     </View>
                     <Text style={{ fontSize: 20, fontFamily: 'Mulish-Bold', color: '#222222' }}>
                         Images submitted!
@@ -158,11 +188,18 @@ const FileUplaoder = ({ setModalVisible }) => {
                     ) : (
                         <View style={{ height: 100 }}></View>
                     )}
-                    {/* <ButtonComp
-                            navigation={() => setSubmitted(true)}
+                    <View
+                        style={{
+                            alignItems: 'center',
+                        }}
+                    >
+                        <ButtonComp
+                            navigation={handleSubmit}
                             text={'Submit'}
                             color={images?.length > 0 ? true : false}
-                        /> */}
+                        />
+                    </View>
+
                     {/* </View> */}
                 </View>
             )}
