@@ -44,6 +44,7 @@ import {
 } from '../../store/features/Calender/CalenderApiSlice';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { useTranslation } from 'react-i18next';
+import { useDebouncer } from '../../Helpers/useDebouncer';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -57,7 +58,7 @@ const Calender = ({ navigation }) => {
         { name: 'Events', selected: <ActiveCalender />, unSelected: <InActiveCalender /> },
     ];
     const [selectMonth, setSelectMonth] = useState(new Date().toISOString());
-    const [searchText, setSearchText] = useState(null);
+    const [searchText, setSearchText] = useState('');
     const [eventCategory, setEventCategory] = useState(null);
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [startDate, setStartDate] = useState('')
@@ -106,6 +107,8 @@ const Calender = ({ navigation }) => {
     const [disableMonthChangeVal, setDisableMonthChangeVal] = useState(false);
     const [notificationOnEvent, setNotificationEvents] = useState([])
     const { theme } = useContext(ThemeContext);
+    const [filteredData, setFilteredData] = useState([])
+    const debounceVal = useDebouncer(searchText, 500);
     // const [scrollIndex, setScrollIndex] = useState(0)
     // const [trigger, setTrigger] = useState(false)
     // const clearStates = () => {
@@ -188,7 +191,7 @@ const Calender = ({ navigation }) => {
     useEffect(() => {
         // clearStates()
         if (monthRecurringEventList && recurringMonthlySuccess) {
-            console.log('recurringEventList?.meta?.pagination?.total month recurring', monthRecurringEventList?.meta?.pagination?.total)
+            // console.log('recurringEventList?.meta?.pagination?.total month recurring', monthRecurringEventList?.meta?.pagination?.total)
 
             setMonthly([]);
             const cDate = moment().startOf("day");
@@ -290,6 +293,18 @@ const Calender = ({ navigation }) => {
         // setMainData(sortedEvents);
     }, [changed]);
 
+    useEffect(() => {
+        let data = []
+        if (selectedHeader == data1[1].name) {
+            data = mainData.filter((item) => item?.attributes?.title?.includes(searchText))
+            console.log("🚀 ~ useEffect ~ data:", data)
+            setFilteredData(data)
+        }
+    }, [debounceVal])
+    useEffect(() => {
+        // console.log('setFilteredData', searchText)
+    }, [searchText])
+
     const selectFilter = (item) => {
         setSelectedFilter(item);
         bottomSheetRef.current.open();
@@ -382,7 +397,7 @@ const Calender = ({ navigation }) => {
     const marked = useMemo(() => {
         const markedDates = {};
         if (selectedHeader == data1[1].name) {
-            console.log(mainData, '================>')
+            // console.log(mainData, '================>')
             mainData?.forEach(item => {
                 const date = moment(item?.start_date).format('YYYY-MM-DD');
                 // console.log("🚀 ~ marked ~ date: in evebt", date)
@@ -398,7 +413,7 @@ const Calender = ({ navigation }) => {
             return markedDates;
         } else {
             festivalEvents?.data?.forEach(item => {
-                const date = item?.attributes?.calendar_from_date;
+                const date = moment(item?.attributes?.calendar_from_date).format('YYYY-MM-DD');
                 console.log("🚀 ~ marked ~ date:", date)
                 markedDates[date] = {
                     marked: true,
@@ -412,6 +427,8 @@ const Calender = ({ navigation }) => {
             return markedDates;
         }
     }, [selectedHeader]);
+
+
 
     return (
         <View style={{ backgroundColor: '#fff', flex: 1 }} >
@@ -694,7 +711,7 @@ const Calender = ({ navigation }) => {
                                     getItemLayout={getItemLayOut}
                                     // initialScrollIndex={scrollIndex}
                                     ref={flatListRef}
-                                    data={selectedHeader == data1[0].name ? festivalEvents?.data : mainData}
+                                    data={selectedHeader == data1[0].name ? festivalEvents?.data : searchText == '' ? mainData : filteredData}
                                     key={(item, index) => index}
                                     contentContainerStyle={{ paddingBottom: 100 }}
                                     // scrollEnabled={false}

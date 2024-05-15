@@ -235,9 +235,9 @@ const CreateVirtualEvent = ({ navigation }) => {
         <ScrollView style={{ backgroundColor: '#fff', flex: 1 }} bounces={false} nestedScrollEnabled>
             <Background>
                 <View style={styles.mainCom}>
-                    <View>
-                        <Text style={styles.mainHeading}>Add events</Text>
-                        <Text style={styles.subHeadingText}>You can add events items directly to the Shaivam.org News listing now. (They will be published after moderation.)</Text>
+                    <View style={{ width: '95%' }}>
+                        <Text style={styles.mainHeading}>{t('Add events') ? t('Add events') : 'Add events'}</Text>
+                        <Text style={styles.subHeadingText}>{t('You can add events items directly to the Shaivam.org News listing now. (They will be published after moderation.)')}</Text>
                     </View>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Icon name='x' color='black' size={24} />
@@ -248,7 +248,7 @@ const CreateVirtualEvent = ({ navigation }) => {
             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
 
                 <View style={{ flex: 1, alignItems: 'center', paddingBottom: 250 }}>
-                    <ReminderSnackBar hidebell={true} text={'Virtual Event'} description={'Turn this on if the event takes place online'} setRecurringEvent={setVirtualEvent} recurringEvent={virtualEvent} />
+                    <ReminderSnackBar hidebell={true} text={t('Virtual Event') ? t('Virtual Event') : 'Virtual Event'} description={t('Turn this on if the event takes place online') ? t('Turn this on if the event takes place online') : 'Turn this on if the event takes place online'} setRecurringEvent={setVirtualEvent} recurringEvent={virtualEvent} />
                     {
                         // virtualEvent ?
                         //     <View>
@@ -304,7 +304,7 @@ const CreateVirtualEvent = ({ navigation }) => {
                                 <TextInputCom insiderText={'Virtual event url'} headinText={'Virtual event url'} width={Dimensions.get('window').width - 40} />
 
                             }
-                            <TextInputCom value={inputValue['title']} inputKey={'title'} insiderText={'Enter event title'} headinText={t('title') ? t('title') : 'Event title*'} width={Dimensions.get('window').width - 40} />
+                            <TextInputCom value={inputValue['title']} inputKey={'title'} insiderText={'Enter event title'} headinText={t('Event title*') ? t('Event title*') : 'Event title*'} width={Dimensions.get('window').width - 40} />
                             {
                                 errorMsg !== null && errorMsg.hasOwnProperty("title") && <Text style={{
                                     fontWeight: '300',
@@ -314,7 +314,7 @@ const CreateVirtualEvent = ({ navigation }) => {
                                 }}>{errorMsg.title}</Text>
                             }
                             <View style={{ marginVertical: 10 }}>
-                                <Text style={{ color: '#777777' }}>{'Event category'}</Text>
+                                <Text style={{ color: '#777777' }}>{t('Event category*') ? t('Event category*') : 'Event category'}</Text>
                                 <TouchableOpacity onPress={() => RbSheetRef?.current?.open()} style={styles.dropdownContainer}>
                                     <Text style={[
                                         styles.descriptionText,
@@ -325,10 +325,10 @@ const CreateVirtualEvent = ({ navigation }) => {
                                     <MaterialIcons name="keyboard-arrow-down" size={24} color="#777777" />
                                 </TouchableOpacity>
                             </View>
-                            <TextInputCom returnType='done' value={inputValue['description']} inputKey={'description'} insiderText={'Enter the event description'} headinText={'Brief Description of the Event'} width={Dimensions.get('window').width - 40} height={110} multiLine={true} />
+                            <TextInputCom returnType='done' value={inputValue['description']} inputKey={'description'} insiderText={'Enter description here'} headinText={t('Brief Description of the Event') ? t('Brief Description of the Event') : 'Brief Description of the Event'} width={Dimensions.get('window').width - 40} height={110} multiLine={true} />
                             {!virtualEvent &&
                                 <>
-                                    <Text style={{ color: '#777777' }}>{'Enter Location'}</Text>
+                                    <Text style={{ color: '#777777' }}>{t('Location') ? t('Location') : 'Location'}</Text>
                                     <TextInput style={{ backgroundColor: '#F3F3F3', width: Dimensions.get('window').width - 30, borderRadius: 10, paddingHorizontal: 20, height: 50 }} onChangeText={(e) => setSearchedText(e)} value={location?.name} placeholder={'Type Location here'} />
                                 </>
                             }
@@ -340,9 +340,9 @@ const CreateVirtualEvent = ({ navigation }) => {
                                     )} />
                                 </View>
                             }
-                            <TextInputCom value={inputValue['url'] || inputValue['URL']} inputKey={recurringEvent ? 'URL' : 'url'} insiderText={'Enter event Url'} headinText={'URL'} width={Dimensions.get('window').width - 40} />
+                            <TextInputCom value={inputValue['url'] || inputValue['URL']} inputKey={recurringEvent ? 'URL' : 'url'} insiderText={'Enter event Url'} headinText={t('URL') ? t('URL') : 'URL'} width={Dimensions.get('window').width - 40} />
                             <View style={{ marginVertical: 10 }}>
-                                <Text style={{ color: '#777777' }}>{'Upload Images (You can upload multiple images)'}</Text>
+                                <Text style={{ color: '#777777' }}>{t('Upload Images (You can upload multiple images)') ? t('Upload Images (You can upload multiple images)') : 'Upload Images (You can upload multiple images)'}</Text>
                                 <TouchableOpacity onPress={openGallary} style={styles.uploadContainer}>
                                     <Icon name="image" size={24} color="#777777" />
                                     <Text
@@ -351,7 +351,7 @@ const CreateVirtualEvent = ({ navigation }) => {
                                             { fontSize: 14, marginHorizontal: 10 },
                                         ]}
                                     >
-                                        Click here to upload photo
+                                        {t('Click here to upload photo') ? t('Click here to upload photo') : 'Click here to upload photo'}
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -366,13 +366,13 @@ const CreateVirtualEvent = ({ navigation }) => {
                                 </View>
                             )}
                             <View style={{ marginVertical: 0 }}>
-                                <ReminderSnackBar hidebell={true} text='Recurring Event' descriptionText={true} setRecurringEvent={setRecurringEvent} recurringEvent={recurringEvent} />
+                                <ReminderSnackBar hidebell={true} text={t('Recurring event')} descriptionText={true} setRecurringEvent={setRecurringEvent} recurringEvent={recurringEvent} />
                             </View>
                             {
                                 recurringEvent &&
                                 <>
                                     <View style={{ marginVertical: 10 }}>
-                                        <Text style={{ color: '#777777' }}>{'Frequency of the event'}</Text>
+                                        <Text style={{ color: '#777777' }}>{t('Frequency of the event') ? t('Frequency of the event') : 'Frequency of the event'}</Text>
                                         <TouchableOpacity onPress={() => categorySheet?.current?.open()} style={styles.dropdownContainer}>
                                             <Text style={[
                                                 styles.descriptionText,
@@ -384,7 +384,7 @@ const CreateVirtualEvent = ({ navigation }) => {
                                         </TouchableOpacity>
                                     </View>
                                     <View style={{ marginVertical: 10 }}>
-                                        <Text style={{ color: '#777777' }}>{'Week'}</Text>
+                                        <Text style={{ color: '#777777' }}>{t('Week') ? t('Week') : 'Week'}</Text>
                                         <TouchableOpacity onPress={() => WeekRBSheet.current.open()} style={styles.dropdownContainer}>
                                             <Text style={[
                                                 styles.descriptionText,
@@ -396,18 +396,18 @@ const CreateVirtualEvent = ({ navigation }) => {
                                         </TouchableOpacity>
                                     </View>
                                     <View style={{ marginVertical: 0, height: 80 }}>
-                                        <Text style={{ color: '#777777' }}>{'Select day'}</Text>
+                                        <Text style={{ color: '#777777' }}>{t('Select day') ? t('Select day') : 'Select day'}</Text>
                                         <FlatList contentContainerStyle={{ marginVertical: 15, height: 'auto' }} horizontal data={weekDays} renderItem={({ item, index }) => (
                                             <DateSelection item={item} inputKey={'day'} value={inputValue['day']} style={styles.weekDaysContainer} />
                                         )} />
                                     </View>
                                 </>
                             }
-                            <TextInputCom value={inputValue['Country']} inputKey={'Country'} insiderText={'Enter country name'} headinText='Country' width={Dimensions.get('window').width - 40} />
-                            <TextInputCom value={inputValue['City']} inputKey={'City'} insiderText={'Enter city name'} headinText='City' width={Dimensions.get('window').width - 40} />
-                            <TextInputCom value={inputValue['state'] || inputValue['State']} inputKey={recurringEvent ? 'State' : 'state'} insiderText={'Enter state name'} headinText='State' width={Dimensions.get('window').width - 40} />
-                            <TextInputCom value={inputValue['District']} inputKey={'District'} insiderText={'Enter district name'} headinText='District' width={Dimensions.get('window').width - 40} />
-                            <TextInputCom value={inputValue['Pin']} inputKey={'Pin'} insiderText={'Enter Pincode name'} headinText='Pincode' width={Dimensions.get('window').width - 40} />
+                            <TextInputCom value={inputValue['Country']} inputKey={'Country'} insiderText={t('Enter country name')} headinText={t('Country')} width={Dimensions.get('window').width - 40} />
+                            <TextInputCom value={inputValue['City']} inputKey={'City'} insiderText={t('Enter city name')} headinText={t('City')} width={Dimensions.get('window').width - 40} />
+                            <TextInputCom value={inputValue['state'] || inputValue['State']} inputKey={recurringEvent ? 'State' : 'state'} insiderText={t('Enter state name')} headinText={t('State')} width={Dimensions.get('window').width - 40} />
+                            <TextInputCom value={inputValue['District']} inputKey={'District'} insiderText={t('Enter district name')} headinText={t('District')} width={Dimensions.get('window').width - 40} />
+                            <TextInputCom value={inputValue['Pin']} inputKey={'Pin'} insiderText={t('Enter Pincode name')} headinText={t('Pincode')} width={Dimensions.get('window').width - 40} />
                             {
                                 recurringEvent ? <></> :
                                     <>

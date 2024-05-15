@@ -7,7 +7,7 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
             query: (date) => {
                 console.log(date, 'date from calender');
                 let url = date?.selectedLocation !== null ?
-                    `https://seashell-app-vsnmp.ondigitalocean.app/api/nearby-events?long=${date?.selectedLocation?.long}&lat=${date?.selectedLocation?.lat}&radius=230000000&start_date=${moment(date?.selectMonth).startOf('month').format('YYYY-MM-DD')}&end_date=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}` :
+                    `https://seashell-app-vsnmp.ondigitalocean.app/api/nearby-events?long=${date?.selectedLocation?.long}&lat=${date?.selectedLocation?.lat}&radius=1500000&start_date=${moment(date?.selectMonth).startOf('month').format('YYYY-MM-DD')}&end_date=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}` :
                     date?.eventCategory !== null ? `https://seashell-app-vsnmp.ondigitalocean.app/api/nearby-events?start_date=${moment(date?.selectMonth).startOf('month').format('YYYY-MM-DD')}&end_date=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&category=${date.eventCategory}` :
                         date?.selectedLocation !== null && date?.eventCategory !== null ? `http://localhost:1337/api/nearby-events?long=78.6801553&lat=10.8118335&radius=230000000&start_date=${moment(date?.selectMonth).startOf('month').format('YYYY-MM-DD')}&end_date=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&category=${date.eventCategory}` :
                             `regular-events?filters[start_date][$lte]=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&filters[end_date][$gte]=${moment(date?.selectMonth).startOf('month').format('YYYY-MM-DD')}&populate[Files][fields][0]=url&filters[status][$eq]=Approved&pagination[pageSize]=200`;
@@ -24,11 +24,12 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
         getRecurringEventList: builder.query({
             query: (date) => {
                 let url = date?.selectedLocation !== null ?
-                    `recurring-events?filters[SchedulaType][$eq]=Weekly&filters[Status][$eq]=Approval&populate[File][fields][0]=url&pagination[pageSize]=200&filters[Location][$lte]=${date?.selectedLocation?.name}` :
-                    date?.eventCategory !== null ? `recurring-events?filters[SchedulaType][$eq]=Weekly&filters[Status][$eq]=Approval&populate[File][fields][0]=url&pagination[pageSize]=200&filters[Location][$lte]=${date?.eventCategory}` :
-                        date?.selectedLocation !== null && date?.eventCategory !== null ? `recurring-events?filters[SchedulaType][$eq]=Weekly&filters[Status][$eq]=Approval&populate[File][fields][0]=url&pagination[pageSize]=200&filters[Location][$lte]=${date?.eventCategory}&filters[Location][$lte]=${date?.selectedLocation?.name}` :
+                    `https://seashell-app-vsnmp.ondigitalocean.app/api/nearby-recurring-events?schedulerType=Weekly&long=${date?.selectedLocation?.lat}&lat=${date?.selectedLocation?.lat}&radius=5000000` :
+                    date?.eventCategory !== null ? `https://seashell-app-vsnmp.ondigitalocean.app/api/nearby-recurring-events?schedulerType=Weekly&category=${date?.eventCategory}` :
+                        date?.selectedLocation !== null && date?.eventCategory !== null ? `https://seashell-app-vsnmp.ondigitalocean.app/api/nearby-recurring-events?schedulerType=Weekly&long=${date?.selectedLocation?.long}&lat=${date?.selectedLocation?.lat}&radius=50000&category=${date?.eventCategory}` :
                             `recurring-events?filters[SchedulaType][$eq]=Weekly&filters[Status][$eq]=Approval&populate[File][fields][0]=url&pagination[pageSize]=200`;
                 // console.log('🚀 ~ url:', url);
+                console.log('🚀 ~ url: recurring week', url);
                 return {
                     url: url,
                     method: 'GET',
@@ -38,13 +39,13 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
         }),
         getRecurringEventMonthly: builder.query({
             query: (date) => {
-                // console.log(date, 'date from calender');
+                console.log("🚀 ~ date:", date)
                 let url = date?.selectedLocation !== null ?
-                    `https://seashell-app-vsnmp.ondigitalocean.app/api/nearby-recurring-events?long=78.77899&lat=10.83924&radius=50000&category=Discourse` :
-                    date?.eventCategory !== null ? `https://seashell-app-vsnmp.ondigitalocean.app/api/nearby-recurring-events?category=${date?.eventCategory}` :
-                        date?.selectedLocation !== null && date?.eventCategory !== null ? `rhttp://localhost:1337/api/nearby-recurring-events?long=${date?.selectedLocation?.long}&lat=${date?.selectedLocation?.lat}&radius=50000&category=${date?.eventCategory}` :
+                    `https://seashell-app-vsnmp.ondigitalocean.app/api/nearby-recurring-events?long=${date?.selectedLocation?.long}&lat=${date?.selectedLocation?.lat}&radius=50000&schedulerType=Monthly` :
+                    date?.eventCategory !== null ? `https://seashell-app-vsnmp.ondigitalocean.app/api/nearby-recurring-events?schedulerType=Monthly&category=${date?.eventCategory}` :
+                        date?.selectedLocation !== null && date?.eventCategory !== null ? `https://seashell-app-vsnmp.ondigitalocean.app/api/nearby-recurring-events?schedulerType=Monthly&long=${date?.selectedLocation?.long}&lat=${date?.selectedLocation?.lat}&radius=50000&category=${date?.eventCategory}` :
                             `recurring-events?filters[SchedulaType][$eq]=Monthly&filters[Status][$eq]=Approval&populate[File][fields][0]=url&pagination[pageSize]=200`;
-                // console.log('🚀 ~ url:', url);
+                console.log('🚀 ~ url: recurring month', url);
                 return {
                     url: url,
                     method: 'GET',
@@ -54,9 +55,8 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
         }),
         getFestivalList: builder.query({
             query: (date) => {
-                // console.log(date, 'date from calender');
                 const url = `https://prod-admin.shaivam.in/api/calendars?populate=*&filters[calendar_from_date][$gte]=${moment(date?.selectMonth).startOf('month').format('YYYY-MM-DD')}&filters[calendar_from_date][$lte]=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&sort=calendar_from_date:ASC`;
-                console.log('🚀 ~ url:', url);
+                console.log('🚀 ~ url: recuriing month', url);
                 return {
                     url: url,
                     method: 'GET',
@@ -66,8 +66,6 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
         }),
         addRegularEvent: builder.mutation({
             query: (data) => {
-                console.log('🚀 ~ data:');
-                console.log('date from Virtual event', data);
                 const url = `https://seashell-app-vsnmp.ondigitalocean.app/api/regular-events`;
                 console.log('🚀 ~ url:', url);
                 return {
@@ -82,8 +80,6 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
         }),
         addRecurringEvent: builder.mutation({
             query: (data, eventType) => {
-                // console.log('🚀 ~ data:', data?.eventType, eventType);
-                // console.log('date from calender');
                 const url = `https://seashell-app-vsnmp.ondigitalocean.app/api/recurring-events`;
                 // console.log('🚀 ~ url:', url);
                 return {

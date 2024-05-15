@@ -15,7 +15,7 @@ import Icon from 'react-native-vector-icons/dist/AntDesign';
 import AudioIcon from "../../assets/Images/7703676 1.svg"
 const Radios = ({ navigation }) => {
     const { data: radioData } = useGetRadioListQuery()
-    // console.log("🚀 ~ Radios ~ radioData:", JSON.stringify(radioData, 0, 2))
+    console.log("🚀 ~ Radios ~ radioData:", JSON.stringify(radioData, 0, 2))
     const theme = useContext(ThemeContext)
     const [toggleOn, setToggleOn] = useState(false)
     const [selectedMusic, setSelectedMusic] = useState(false)
@@ -34,6 +34,7 @@ const Radios = ({ navigation }) => {
     ]
     const [paused, setPaused] = useState(false)
     const [playerState, setPlayerState] = useState()
+    const [renderUi, setRenderUi] = useState(false)
     useEffect(() => {
         setPlayerState(playBackState)
         console.log('playBackState', playBackState)
@@ -54,14 +55,18 @@ const Radios = ({ navigation }) => {
             }
             songs?.push(data)
         })
-        console.log("🚀 ~ useEffect ~ songs:", songs)
+        // if (songs?.length > 0) {
         setUpPlayer(songs)
-    }, [])
+        // }
+        console.log("🚀 ~ useEffect ~ songs:", songs)
+    }, [radioData])
     const setUpPlayer = async (song) => {
+        // console.log("🚀 ~ setUpPlayer ~ song:", song)
         try {
-            if (!TrackPlayer._initialized) {
-                await TrackPlayer.setupPlayer();
-            }
+            // if (!TrackPlayer._initialized) {
+            //     alert(false)
+            // }
+            await TrackPlayer.setupPlayer();
             await TrackPlayer.updateOptions({
                 android: {
                     appKilledPlaybackBehavior:
@@ -100,6 +105,7 @@ const Radios = ({ navigation }) => {
             });
             await TrackPlayer.reset();
             await TrackPlayer.add(song);
+            setRenderUi(true)
         }
     }
 
@@ -150,6 +156,7 @@ const Radios = ({ navigation }) => {
     // [song]'
     const handleSong = async (item, id) => {
         // TrackPlayer.play()
+        alert(true)
         // const track = await TrackPlayer.getActiveTrack()
         setSelectedMusic(item)
         await TrackPlayer.skip(id);
@@ -170,28 +177,31 @@ const Radios = ({ navigation }) => {
             </Background>
             <View style={{ zIndex: 50, position: 'absolute', top: '12%', alignSelf: 'center', }}>
                 <Text style={{ fontFamily: 'Lora-Bold', fontSize: 16, color: 'white', }}>Stations</Text>
-                <FlatList bounces={false} data={radioData?.data} renderItem={({ item, index }) => (
-                    <Pressable style={{ paddingHorizontal: 10, flexDirection: 'row', alignItems: 'center', borderRadius: 10, elevation: 10, shadowColor: 'black', shadowOffset: { height: 2, width: 1 }, shadowOpacity: 0.2, shadowRadius: 1, marginVertical: 10, backgroundColor: '#FEF0CC', height: 80, width: Dimensions.get('window').width - 30 }}>
-                        <RadioSVG fill={'#4C3600'} />
-                        <View style={{ paddingHorizontal: 10, width: Dimensions.get('window').width / 1.5 }}>
-                            <Text style={{ color: '#4C3600', fontFamily: 'Mulish-Regular' }}>{item?.attributes?.Title}</Text>
-                            <Text style={{ color: '#4C3600', fontFamily: 'Mulish-Regular', fontSize: 12 }}>{item?.attributes?.description}</Text>
-                        </View>
-                        {
-                            selectedMusic?.id == item?.id && playBackState?.state == 'playing' ?
-                                <Pressable onPress={() => PauseAudio()} style={{ alignItems: 'center', justifyContent: 'center', height: 40, width: 40, backgroundColor: 'white', borderRadius: 20, shadowColor: 'black', shadowOffset: { height: 2, width: 1 }, shadowOpacity: 0.2, shadowRadius: 1, }}>
-                                    <MaterialIcons name='square' size={19} />
-                                </Pressable> :
-                                <Pressable onPress={() => handleSong(item, index)} style={{ alignItems: 'center', justifyContent: 'center', height: 40, width: 40, backgroundColor: 'white', borderRadius: 20, shadowColor: 'black', shadowOffset: { height: 2, width: 1 }, shadowOpacity: 0.2, shadowRadius: 1, }}>
-                                    {<MaterialIcons name='play-arrow' size={24} />}
-                                </Pressable>
-                        }
-                        {/* <Pressable onPress={() => handleSong(item, index)} style={{ alignItems: 'center', justifyContent: 'center', height: 40, width: 40, backgroundColor: 'white', borderRadius: 20, shadowColor: 'black', shadowOffset: { height: 2, width: 1 }, shadowOpacity: 0.2, shadowRadius: 1, }}>
+                {
+                    renderUi &&
+                    <FlatList bounces={false} data={radioData?.data} renderItem={({ item, index }) => (
+                        <Pressable style={{ paddingHorizontal: 10, flexDirection: 'row', alignItems: 'center', borderRadius: 10, elevation: 10, shadowColor: 'black', shadowOffset: { height: 2, width: 1 }, shadowOpacity: 0.2, shadowRadius: 1, marginVertical: 10, backgroundColor: '#FEF0CC', height: 80, width: Dimensions.get('window').width - 30 }}>
+                            <RadioSVG fill={'#4C3600'} />
+                            <View style={{ paddingHorizontal: 10, width: Dimensions.get('window').width / 1.5 }}>
+                                <Text style={{ color: '#4C3600', fontFamily: 'Mulish-Regular' }}>{item?.attributes?.Title}</Text>
+                                <Text style={{ color: '#4C3600', fontFamily: 'Mulish-Regular', fontSize: 12 }}>{item?.attributes?.description}</Text>
+                            </View>
+                            {
+                                selectedMusic?.id == item?.id && playBackState?.state == 'playing' ?
+                                    <Pressable onPress={() => PauseAudio()} style={{ alignItems: 'center', justifyContent: 'center', height: 40, width: 40, backgroundColor: 'white', borderRadius: 20, shadowColor: 'black', shadowOffset: { height: 2, width: 1 }, shadowOpacity: 0.2, shadowRadius: 1, }}>
+                                        <MaterialIcons name='square' size={19} />
+                                    </Pressable> :
+                                    <Pressable onPress={() => handleSong(item, index)} style={{ alignItems: 'center', justifyContent: 'center', height: 40, width: 40, backgroundColor: 'white', borderRadius: 20, shadowColor: 'black', shadowOffset: { height: 2, width: 1 }, shadowOpacity: 0.2, shadowRadius: 1, }}>
+                                        {<MaterialIcons name='play-arrow' size={24} />}
+                                    </Pressable>
+                            }
+                            {/* <Pressable onPress={() => handleSong(item, index)} style={{ alignItems: 'center', justifyContent: 'center', height: 40, width: 40, backgroundColor: 'white', borderRadius: 20, shadowColor: 'black', shadowOffset: { height: 2, width: 1 }, shadowOpacity: 0.2, shadowRadius: 1, }}>
                             {selectedMusic?.id == item?.id && playBackState?.state == 'playing' ? <MaterialIcons name='square' size={19} /> : <MaterialIcons name='play-arrow' size={24} />}
                         </Pressable> */}
-                    </Pressable>
-                )} />
-                <View style={{ paddingHorizontal: 10, }}>
+                        </Pressable>
+                    )} />
+                }
+                {/* <View style={{ paddingHorizontal: 10, }}>
                     <Text style={{ fontFamily: 'Lora-Bold', fontSize: 16, color: 'black', }}>Program List</Text>
                     <Text style={{ fontFamily: 'Mulish-Regular', color: '#777777' }}>You can set reminders to each program</Text>
                     <FlatList contentContainerStyle={{ marginTop: 10 }} bounces={false} data={programList} renderItem={({ item, index }) => (
@@ -216,7 +226,7 @@ const Radios = ({ navigation }) => {
                             </View>
                         </View>
                     )} />
-                </View>
+                </View> */}
             </View>
             {/* <View> */}
             <View
@@ -265,7 +275,10 @@ const Radios = ({ navigation }) => {
                     </View>
                 </View>
                 {/* {paused ? ( */}
-                <View>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <TouchableOpacity >
+                        <Icon name="stepbackward" size={20} color="white" />
+                    </TouchableOpacity>
                     <TouchableOpacity
                         style={{
                             height: 40,
@@ -277,7 +290,10 @@ const Radios = ({ navigation }) => {
                         }}
                     // onPress={() => TrackPlayer.pause()}
                     >
-                        <Icon name="pause" size={40} color="white" />
+                        {playBackState?.state == 'playing' ? <Icon name="pause" size={30} color="white" /> : <Icon name="play" size={30} color="white" />}
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleNext()}>
+                        <Icon name="stepforward" size={20} color="white" />
                     </TouchableOpacity>
                 </View>
                 {/* ) : (

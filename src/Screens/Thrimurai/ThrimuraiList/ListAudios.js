@@ -9,7 +9,7 @@ import { AddSongToDatabase, listfavAudios } from '../../../Databases/AudioPlayer
 import { shareSong } from '../../../Helpers/SongShare';
 import { useIsFocused } from '@react-navigation/native';
 const ListAudios = ({ item, navigation, listFav, colorSet, isFav }) => {
-    console.log("🚀 ~ ListAudios ~ listFav:", isFav)
+    console.log("🚀 ~ ListAudios ~ listFav:", item)
     const [favrted, setFavrted] = useState(false);
     const isFocused = useIsFocused()
     useEffect(() => {
