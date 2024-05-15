@@ -122,6 +122,7 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
 
         getAddedTempleOnEmail: builder.query({
             query: ({ email }) => {
+                // console.log('🚀 ~ email:', email);
                 // https://lobster-app-gpfv5.ondigitalocean.app/api/maps?filters[email][$eq]=adsfa@gmail.com
 
                 return {

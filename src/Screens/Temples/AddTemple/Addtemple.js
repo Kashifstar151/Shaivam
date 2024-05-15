@@ -18,6 +18,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AddEmail from './AddEmail';
 import { useLazyGetAddedTempleOnEmailQuery } from '../../../store/features/Temple/TemplApiSlice';
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
+import { useIsFocused } from '@react-navigation/native';
 
 const initialStepVal = {
     email: 'false',
@@ -32,11 +33,15 @@ const Addtemple = ({ navigation }) => {
 
     const [getAllTemplesAddRequest, { data: getAllAddedTempleData }] =
         useLazyGetAddedTempleOnEmailQuery();
+    console.log('🚀 ~ Addtemple ~ getAllAddedTempleData:', getAllAddedTempleData);
 
     // for refresh
     const [refreshing, setRefreshing] = React.useState(false);
+    const [email, setEmail] = useState('');
+
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
+
         getAllTemplesAddRequest({ email })
             .then((res) => {
                 setRefreshing(false);
@@ -48,8 +53,6 @@ const Addtemple = ({ navigation }) => {
         // }, 2000);
     }, []);
 
-    const [email, setEmail] = useState('');
-
     const getTheEmail = async () => {
         const fetchedEmail = await AsyncStorage.getItem('email');
         if (!fetchedEmail) {
@@ -58,9 +61,11 @@ const Addtemple = ({ navigation }) => {
             setEmail(() => fetchedEmail);
         }
     };
+
+    const isFocused = useIsFocused();
     useEffect(() => {
         getTheEmail();
-    }, []);
+    }, [isFocused]);
 
     useEffect(() => {
         if (email) {

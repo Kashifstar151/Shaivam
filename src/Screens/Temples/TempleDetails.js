@@ -51,6 +51,7 @@ const TempleDetails = ({ navigation }) => {
         setAnimateToast(!fav);
         setFav(!fav);
     };
+    const [snapIndex, setSnapIndex] = useState(0);
     const { t } = useTranslation();
 
     return (
@@ -65,6 +66,8 @@ const TempleDetails = ({ navigation }) => {
                     longitudeDelta: 0.0121,
                     locationName: '',
                 }}
+                snapIndex={snapIndex}
+                setSnapIndex={setSnapIndex}
                 initialIndexOfSize={0}
                 appearsOnIndex={1}
                 disappearsOnIndex={0}
