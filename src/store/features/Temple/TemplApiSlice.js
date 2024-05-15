@@ -19,7 +19,6 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
             },
             providesTags: ['Temple'],
             transformResponse: (response, meta, arg) => {
-                console.log('the response for the getting the temple ==>', response);
                 return response;
             },
         }),
@@ -122,7 +121,7 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
 
         getAddedTempleOnEmail: builder.query({
             query: ({ email }) => {
-                // console.log('🚀 ~ email:', email);
+                console.log('🚀 ~ email:', email);
                 // https://lobster-app-gpfv5.ondigitalocean.app/api/maps?filters[email][$eq]=adsfa@gmail.com
 
                 return {
@@ -139,25 +138,6 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
                 //     status: 'SUCCESS',
                 // };
             },
-        }),
-
-        getAllTemplesAddRequest: builder.query({
-            // add email field
-            query: ({ email }) => {
-                const url = `api/maps/${id}?filters[email][$eq]=${email}?populate=temple`;
-                return {
-                    url: url,
-                    method: 'GET',
-                    body: {
-                        Name,
-                        Description,
-                        Longitude,
-                        Latitude,
-                        temple_images,
-                    },
-                };
-            },
-            invalidatesTags: ['Add_Temple_Records'],
         }),
     }),
 });

@@ -33,15 +33,16 @@ const Addtemple = ({ navigation }) => {
 
     const [getAllTemplesAddRequest, { data: getAllAddedTempleData }] =
         useLazyGetAddedTempleOnEmailQuery();
-    console.log('🚀 ~ Addtemple ~ getAllAddedTempleData:', getAllAddedTempleData);
+    // console.log('🚀 ~ Addtemple ~ getAllAddedTempleData:', getAllAddedTempleData);
 
     // for refresh
     const [refreshing, setRefreshing] = React.useState(false);
     const [email, setEmail] = useState('');
+    // console.log('🚀 ~ Addtemple ~ email:', email);
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-
+        getTheEmail();
         getAllTemplesAddRequest({ email })
             .then((res) => {
                 setRefreshing(false);
@@ -49,9 +50,7 @@ const Addtemple = ({ navigation }) => {
             .catch((err) => {
                 setRefreshing(false);
             });
-        // setTimeout(() => {
-        // }, 2000);
-    }, []);
+    }, [email]);
 
     const getTheEmail = async () => {
         const fetchedEmail = await AsyncStorage.getItem('email');
@@ -62,10 +61,10 @@ const Addtemple = ({ navigation }) => {
         }
     };
 
-    const isFocused = useIsFocused();
+    // const isFocused = useIsFocused();
     useEffect(() => {
         getTheEmail();
-    }, [isFocused]);
+    }, []);
 
     useEffect(() => {
         if (email) {

@@ -19,7 +19,6 @@ function formatDate(timestamp) {
     return `${day}/${month}/${year}`;
 }
 export const RenderCardForAddTemple = ({ item }) => {
-    console.log('🚀 ~ RenderCardForAddTemple ~ item:', item);
     return (
         <View style={style.mainBox}>
             <View
