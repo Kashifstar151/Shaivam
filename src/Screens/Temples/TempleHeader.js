@@ -6,7 +6,7 @@ import HeadingComponent from './Common/HeadingComponent';
 import { useTranslation } from 'react-i18next';
 
 const TempleHeader = ({ title, subTitle }) => {
-    const { t } = useTranslation()
+    const { t } = useTranslation();
     return (
         <View>
             <View
@@ -18,7 +18,11 @@ const TempleHeader = ({ title, subTitle }) => {
                     alignItems: 'center',
                 }}
             >
-                <View>
+                <View
+                    style={{
+                        width: '80%',
+                    }}
+                >
                     <Text style={{ fontSize: 24, fontFamily: 'Lora-SemiBold', color: '#FFF' }}>
                         {t(title) ? t(title) : title}
                     </Text>
