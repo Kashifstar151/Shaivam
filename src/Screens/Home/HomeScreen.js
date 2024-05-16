@@ -20,7 +20,7 @@ import bgImgDark from '../../../assets/Images/BackgroundCommon.png';
 import HomePlaylistCard from '../../components/HomePlaylistCard';
 import ElevatedCard from '../../components/ElevatedCard';
 import EventCard from '../../components/EventCard';
-import OmChat from './OmChat';
+import OmChant from './OmChat';
 import HeadingAndView from './HeadingAndView';
 import PlaceCard from './PlaceCard';
 import { RFValue } from 'react-native-responsive-fontsize';
@@ -35,11 +35,22 @@ import { colors } from '../../Helpers';
 import ListAudios from '../Thrimurai/ThrimuraiList/ListAudios';
 import { usePlayer } from '../../Context/PlayerContext';
 import { useTranslation } from 'react-i18next';
+import { useGetFestivalListQuery } from '../../store/features/Calender/CalenderApiSlice';
+import moment from 'moment';
 
 const HomeScreen = ({ navigation }) => {
     const RBSheetRef = useRef(null);
-    const { showPlayer, setShowPlayer, OmPlayTiming, setOmPlayTiming } = usePlayer();
+    const { showPlayer, setShowPlayer, OmPlayTiming, setOmPlayTiming, isPlaying, setIsPlaying } =
+        usePlayer();
     const { theme } = useContext(ThemeContext);
+    const {
+        data: festivalEvents,
+        isFetching: isfestivaldataFetching,
+        refetch: refetchFestival,
+        isSuccess: isFestivalSuccess
+
+    } = useGetFestivalListQuery();
+    const [festivalEvent, setFestivalEvent] = useState([])
     const [compHeight, setCompHeight] = useState();
     const [textInsidePlaylistCard, setTextInsidePlaylistCard] = useState(0);
     const [playlistCardHeight, setPlaylistCardHeight] = useState(0);
@@ -48,6 +59,13 @@ const HomeScreen = ({ navigation }) => {
         height: 0,
     });
     const isFocused = useIsFocused();
+    useEffect(() => {
+        let arr = festivalEvents?.data?.filter((item) => {
+            return moment(item?.attributes?.calendar_from_date) > moment()
+        })
+        // console.log(arr, 'upacoming festivals')
+        setFestivalEvent(arr?.slice(0, 5))
+    }, [])
     const handleLayout = useCallback(
         (event) => {
             const { height } = event.nativeEvent.layout;
@@ -135,7 +153,9 @@ const HomeScreen = ({ navigation }) => {
             setFavList(callbacks);
         });
     }, [selectedPlaylistType, isFocused]);
-    useEffect(() => { }, []);
+    useEffect(() => {
+
+    }, []);
 
     const checkIsFav = (item) => {
         let v = false;
@@ -488,13 +508,15 @@ const HomeScreen = ({ navigation }) => {
                         paddingBottom: 15,
                     }}
                     key={(item) => item?.id}
-                    data={eventData}
+                    data={festivalEvent}
                     renderItem={({ item, index }) => (
                         <ElevatedCard theme={{ colorscheme: theme.colorscheme }}>
                             <EventCard
-                                date={item.date}
-                                timing={item.timing}
-                                title={item.title}
+                                date={moment(item?.attributes?.calendar_from_date).get('D')}
+                                timing={null}
+                                dateNo={moment(item?.attributes?.calendar_from_date).format('DD')}
+                                title={item?.attributes?.Calendar_title}
+                                item={item}
                                 theme={{
                                     textColor: theme.textColor,
                                     colorscheme: theme.colorscheme,
@@ -506,7 +528,7 @@ const HomeScreen = ({ navigation }) => {
             </View>
             {/* om chant */}
             <View>
-                <OmChat
+                <OmChant
                     navigation={navigation}
                     onPress={() => {
                         RBSheetRef.current.open();
@@ -514,6 +536,7 @@ const HomeScreen = ({ navigation }) => {
                             setShowPlayer(false);
                         }
                     }}
+                    isPlaying={isPlaying}
                 />
             </View>
 

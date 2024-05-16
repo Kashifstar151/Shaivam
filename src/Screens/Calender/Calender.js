@@ -85,8 +85,8 @@ const Calender = ({ navigation }) => {
         refetch: refetchFestival,
         isSuccess: isFestivalSuccess
 
-    } = useGetFestivalListQuery();
-    console.log("🚀 ~ Calender ~ recurringEventList:", JSON.stringify(regularEvent, 0, 2))
+    } = useGetFestivalListQuery({ selectMonth });
+    // console.log("🚀 ~ Calender ~ recurringEventList:", JSON.stringify(regularEvent, 0, 2))
     const {
         data: monthRecurringEventList,
         isFetching: isFetchingMonthly,
@@ -299,6 +299,9 @@ const Calender = ({ navigation }) => {
             data = mainData.filter((item) => item?.attributes?.title?.includes(searchText))
             console.log("🚀 ~ useEffect ~ data:", data)
             setFilteredData(data)
+        } else {
+            data = festivalEvents?.data?.filter((item) => item?.attributes?.Calendar_title?.includes(searchText))
+            setFilteredData(data)
         }
     }, [debounceVal])
     useEffect(() => {
@@ -437,8 +440,7 @@ const Calender = ({ navigation }) => {
                 <View
                     style={{
                         paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 20 : 0,
-                    }}
-                >
+                    }}>
                     <View style={styles.HeadeingContainer}>
                         <HeadingText text={t('Calendar')} nandiLogo={true} />
                     </View>
@@ -710,12 +712,10 @@ const Calender = ({ navigation }) => {
                                 </View>
                                 <FlatList
                                     getItemLayout={getItemLayOut}
-                                    // initialScrollIndex={scrollIndex}
                                     ref={flatListRef}
-                                    data={selectedHeader == data1[0].name ? festivalEvents?.data : searchText == '' ? mainData : filteredData}
+                                    data={selectedHeader == data1[0].name ? searchText == '' ? festivalEvents?.data : filteredData : searchText == '' ? mainData : filteredData}
                                     key={(item, index) => index}
                                     contentContainerStyle={{ paddingBottom: 100 }}
-                                    // scrollEnabled={false}
                                     renderItem={({ item, index }) => (
                                         <ElevatedCard
                                             navigation={() =>

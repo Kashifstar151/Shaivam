@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 const OmChantPlayer = () => {
     const playbackState = usePlaybackState();
     const [paused, setPaused] = useState(false);
-    const { showPlayer, setShowPlayer, OmPlayTiming } = usePlayer();
+    const { showPlayer, setShowPlayer, OmPlayTiming, isPlaying, setIsPlaying } = usePlayer();
     const [timeRemaining, setTimeRemaining] = useState(0);
     useEffect(() => {
         async function removeTheTrackPlayer() {
@@ -83,6 +83,7 @@ const OmChantPlayer = () => {
         //     });
         TrackPlayer.play();
         setTheRef();
+        setIsPlaying(true);
     };
 
     function formatSeconds(seconds) {
@@ -95,6 +96,7 @@ const OmChantPlayer = () => {
         console.log(playbackState);
         TrackPlayer.pause();
         clearTheRef();
+        setIsPlaying(false);
     };
 
     const { t } = useTranslation();
