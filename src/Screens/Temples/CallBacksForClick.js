@@ -1,5 +1,5 @@
 import assetMapWithTempleType from './AssetMapWithTempleType';
-const markerPressClbk = (navigation, flag, item) => {
+const markerPressClbk = (navigation, flag, item, userLocation) => {
     console.log('🚀 ~ markerPressClbk ~ agrs:', flag, item);
     if (flag) {
         navigation.navigate('templeDetails', {
@@ -13,11 +13,13 @@ const markerPressClbk = (navigation, flag, item) => {
                     latitude: parseFloat(item?.latitude),
                 },
             },
+            userLocation,
         });
     }
 };
 
 const categoryBtnClbk = (navigation, flag, regionCoordinate) => {
+    console.log('🚀 ~ categoryBtnClbk ~ flag:', flag);
     navigation.navigate('filteredTemples', {
         data: {
             flag,

@@ -6,7 +6,7 @@ import SearchTemple from './SearchTemple';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { ImageBackground } from 'react-native';
 import { ThemeContext } from '../../Context/ThemeContext';
-import { MarkerCallOut } from './CustomMarker';
+import { CustomMarker, MarkerCallOut } from './CustomMarker';
 import { markerPressClbk } from './CallBacksForClick';
 
 const BottomSheetTempleTemplate = ({
@@ -56,23 +56,26 @@ const BottomSheetTempleTemplate = ({
                 style={styles.map}
                 region={regionCoordinate}
             >
-                {data?.templeCoordinate?.latitude && data?.templeCoordinate?.longitude && (
-                    <MarkerCallOut
-                        setPadState={setPadState}
-                        callback={() => {
-                            // setting the type of the marker you pressed
-                            // callback function for naving to page which has the temple details
-                            // markerPressClbk(navigation, 7);
-                        }}
-                        flag={9}
-                        coordinate={{
-                            latitude: data?.templeCoordinate?.latitude,
-                            longitude: data?.templeCoordinate?.longitude,
-                        }}
-                        keyName={'COORDINATE'}
-                        description={data?.templeName}
-                    />
-                )}
+                {data?.length > 0 &&
+                    data.map((item) => {
+                        return (
+                            <CustomMarker
+                                setPadState={setPadState}
+                                callback={() => {
+                                    // setting the type of the marker you pressed
+                                    // callback function for naving to page which has the temple details
+                                    // markerPressClbk(navigation, 7);
+                                }}
+                                flag={item?.flag || item?.Flag}
+                                coordinate={{
+                                    latitude: parseFloat(item?.latitude),
+                                    longitude: parseFloat(item?.longitude),
+                                }}
+                                keyName={'COORDINATE'}
+                                description={data?.templeName}
+                            />
+                        );
+                    })}
             </MapView>
             <View
                 style={{

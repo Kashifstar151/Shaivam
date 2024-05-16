@@ -58,12 +58,6 @@ const TempleCard = ({ dataSet, children, regionCoordinate, showMargin, showButto
                             const destinationLatitude = parseFloat(dataSet?.latitude); // Example destination latitude
                             const destinationLongitude = parseFloat(dataSet?.longitude); // Example destination longitude
 
-                            console.log('the coordinates of the ===>', {
-                                sourceLatitude,
-                                sourceLongitude,
-                                destinationLatitude,
-                                destinationLongitude,
-                            });
                             const googleMapsUrl = `geo:${sourceLatitude},${sourceLongitude}?q=${destinationLatitude},${destinationLongitude}`;
                             Linking.openURL(googleMapsUrl).catch((err) => {
                                 console.log('the map is not avialable');

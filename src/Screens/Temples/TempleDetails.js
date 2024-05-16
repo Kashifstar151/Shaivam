@@ -2,7 +2,7 @@
 // callback function for naving to page which has the temple details
 import { StackActions, useRoute } from '@react-navigation/native';
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Image, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import DownArrowSVG from '../../components/SVGs/DownArrowSVG';
 import FavSVG from '../../components/SVGs/FavSVG';
 import SearchSVG from '../../components/SVGs/SearchSVG';
@@ -10,19 +10,19 @@ import ShareSVG from '../../components/SVGs/ShareSVG';
 import TempleCard from './TempleCard';
 import { CustomButton } from '../../components/Buttons';
 import { AnimatedToast } from '../../components/Toast';
-
 import BottomSheetTempleTemplate from './BottomSheetTempleTemplate';
 import RenderHTML from 'react-native-render-html';
 import { ScrollView } from 'react-native-gesture-handler';
 import assetMapWithTempleType from './AssetMapWithTempleType';
 import { useTranslation } from 'react-i18next';
 import { useGetTempleDetailQuery } from '../../store/features/Temple/TemplApiSlice';
-import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { RFValue } from 'react-native-responsive-fontsize';
+import DirectionSVG from '../../components/SVGs/DirectionSVG';
+import { TouchableHighlight } from '@gorhom/bottom-sheet';
 
 const TempleDetails = ({ navigation }) => {
     const route = useRoute();
-    const { temple, locationName } = route?.params;
+    const { temple, userLocation } = route?.params;
     console.log('🚀 ~ TempleDetails ~ data:', temple);
     const {
         data: templeDetail,
@@ -31,18 +31,6 @@ const TempleDetails = ({ navigation }) => {
         isError,
         error,
     } = useGetTempleDetailQuery({ id: temple?.templeId });
-
-    // useEffect(() => {
-    //     if (isSuccess || isError) {
-    //         console.log(
-    //             'templeDetail=================>',
-    //             templeDetail,
-    //             'error============<',
-    //             error
-    //         );
-    //     }
-    // }, [isSuccess, templeDetail, isError, error]);
-    // console.log('🚀 ~ TempleDetail ~ templeDetail:', templeDetail);
 
     const popAction = StackActions.pop(1);
     const [fav, setFav] = useState(true);
@@ -53,13 +41,32 @@ const TempleDetails = ({ navigation }) => {
     };
     const [snapIndex, setSnapIndex] = useState(0);
     const { t } = useTranslation();
+    const onPress = () => {
+        const sourceLatitude = parseFloat(userLocation?.latitude); // Example source latitude
+        const sourceLongitude = parseFloat(userLocation?.longitude); // Example source longitude
+        const destinationLatitude = parseFloat(temple?.templeCoordinate?.latitude); // Example destination latitude
+        const destinationLongitude = parseFloat(temple?.templeCoordinate?.longitude); // Example destination longitude
 
+        const googleMapsUrl = `geo:${sourceLatitude},${sourceLongitude}?q=${destinationLatitude},${destinationLongitude}`;
+        Linking.openURL(googleMapsUrl).catch((err) => {
+            console.log('the map is not avialable');
+            const googleMapsUrlFallBack = `https://www.google.com/maps/dir/?api=1&origin=${sourceLatitude},${sourceLongitude}&destination=${destinationLatitude},${destinationLongitude}`;
+            Linking.openURL(googleMapsUrlFallBack);
+        });
+    };
     return (
         <>
             <BottomSheetTempleTemplate
+                showMultipleMarker={false}
                 snapPoints={['50%', '95%']}
                 showSearchBarWhenFullSize={false}
-                data={temple}
+                data={[
+                    {
+                        latitude: temple?.templeCoordinate?.latitude,
+                        longitude: temple?.templeCoordinate?.longitude,
+                        flag: 9,
+                    },
+                ]}
                 regionCoordinate={{
                     ...temple?.templeCoordinate,
                     latitudeDelta: 0.015,
@@ -177,13 +184,47 @@ const TempleDetails = ({ navigation }) => {
                                     flag: temple?.templeFlag,
                                     templeType: assetMapWithTempleType[temple?.templeFlag].name,
                                     coordinate: {
-                                        latitude: '26.868851939300207',
-                                        longitude: '80.91296407698843',
+                                        latitude: temple?.templeCoordinate?.longitude,
+                                        longitude: temple?.templeCoordinate?.latitude,
                                     },
                                 }}
                                 showButton={false}
                                 showMargin={false}
                             />
+
+                            <View
+                                style={{
+                                    flex: 1,
+                                    flexDirection: 'row',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <Pressable
+                                    style={{
+                                        margin: 10,
+                                        elevation: 3,
+                                        shadowColor: 'black',
+                                        backgroundColor: '#C1554E',
+                                        paddingHorizontal: 15,
+                                        paddingVertical: 10,
+                                        flexDirection: 'row',
+                                        gap: 10,
+                                        alignItems: 'center',
+                                        alignSelf: 'left',
+                                        borderRadius: 10,
+                                    }}
+                                    onPress={onPress}
+                                >
+                                    <DirectionSVG fill={'#fff'} />
+                                    <Text
+                                        style={{
+                                            color: '#fff',
+                                        }}
+                                    >
+                                        {t('Directions')}
+                                    </Text>
+                                </Pressable>
+                            </View>
 
                             {templeDetail ? (
                                 <View style={{ marginHorizontal: 20, marginVertical: 10, gap: 8 }}>

@@ -17,7 +17,6 @@ import '../../../localization';
 import { ThemeContext } from '../../Context/ThemeContext';
 import bgImg from '../../../assets/Images/Background.png';
 import bgImgDark from '../../../assets/Images/BackgroundCommon.png';
-import HomePlaylistCard from '../../components/HomePlaylistCard';
 import ElevatedCard from '../../components/ElevatedCard';
 import EventCard from '../../components/EventCard';
 import OmChant from './OmChat';
@@ -26,7 +25,7 @@ import PlaceCard from './PlaceCard';
 import { RFValue } from 'react-native-responsive-fontsize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { listfavAudios, MostPlayedList } from '../../Databases/AudioPlayerDatabase';
-import { useIsFocused } from '@react-navigation/native';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import Quiz from './Quiz';
 import VideosList from './VideosList';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -37,6 +36,14 @@ import { usePlayer } from '../../Context/PlayerContext';
 import { useTranslation } from 'react-i18next';
 import { useGetFestivalListQuery } from '../../store/features/Calender/CalenderApiSlice';
 import moment from 'moment';
+import {
+    checkPermissionAccess,
+    clearGetCurrentLocationWatcher,
+    getCurrentLocation,
+    getCurrentLocationWatcher,
+} from '../../Helpers/GeolocationFunc';
+import { PERMISSIONS, RESULTS } from 'react-native-permissions';
+import { useLazyGetNearByTemplesQuery } from '../../store/features/Temple/TemplApiSlice';
 
 const HomeScreen = ({ navigation }) => {
     const RBSheetRef = useRef(null);
@@ -96,35 +103,98 @@ const HomeScreen = ({ navigation }) => {
         },
     ];
 
-    const PlayList = [
+    const permissionTypeRef = useRef(
+        Platform.select({
+            ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+            android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+        })
+    );
+
+    const [userLocation, setUserLocation] = useState(null);
+
+    useEffect(() => {
+        onMapReadyCallback();
+
+        return clearGetCurrentLocationWatcher();
+    }, []);
+
+    const [
+        getNearByTemples,
         {
-            id: 1,
-            heading: 'Thirumurais',
-            info: 'Attaveerattam and Saptavidanga Thevaram - Audi...',
-            subInfo: 'Thiruthani Swaminathan Odhuvar',
-            songCount: 46,
-            colors: theme.colorscheme === 'light' ? ['#FEE8B3', '#FDD166'] : ['#3A3A3A', '#3A3A3A'],
-            navDetail: '',
+            data: nearByTempleDataAfterFetch,
+            isSuccess,
+            isFetching,
+            isError,
+            isUninitialized,
+            error,
+            status,
         },
-        {
-            id: 2,
-            heading: 'Thirumurais',
-            info: 'Attaveerattam and Saptavidanga Thevaram - Audi...',
-            subInfo: 'Thiruthani Swaminathan Odhuvar',
-            songCount: 40,
-            colors: theme.colorscheme === 'light' ? ['#AFD9BB', '#60B278'] : ['#3A3A3A', '#3A3A3A'],
-            navDetail: '',
-        },
-        {
-            id: 3,
-            heading: 'Thirumurais',
-            info: 'Attaveerattam and Saptavidanga Thevaram - Audi...',
-            subInfo: 'Thiruthani Swaminathan Odhuvar',
-            songCount: 45,
-            colors: theme.colorscheme === 'light' ? ['#FEE8B3', '#FDD166'] : ['#3A3A3A', '#3A3A3A'],
-            navDetail: '',
-        },
-    ];
+    ] = useLazyGetNearByTemplesQuery();
+    // console.log('🚀 ~ HomeScreen ~ nearByTempleDataAfterFetch:', nearByTempleDataAfterFetch);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            // onMapReadyCallback();
+            if (userLocation?.latitude && userLocation?.longitude) {
+                getNearByTemples({
+                    latitude: userLocation?.latitude,
+                    longitude: userLocation?.longitude,
+                    limit: 5,
+                });
+            }
+        }, [userLocation?.latitude, userLocation?.longitude])
+    );
+    const onMapReadyCallback = async () => {
+        let state = await checkPermissionAccess(permissionTypeRef.current);
+
+        if (state === RESULTS.GRANTED) {
+            // console.log(
+            //     '🚀 ~ getCurrentLocation ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=============:'
+            // );
+            getCurrentLocation((val) => {
+                // console.log(
+                //     '🚀 ~ getCurrentLocation ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=============:',
+                //     val
+                // );
+                setUserLocation(() => ({ ...val }));
+            });
+
+            getCurrentLocationWatcher((val) => {
+                // console.log('🚀 ~ getCurrentLocationWatcher ~ val:', val);
+                setUserLocation(() => ({ ...val }));
+            });
+        }
+    };
+
+    // const PlayList = [
+    //     {
+    //         id: 1,
+    //         heading: 'Thirumurais',
+    //         info: 'Attaveerattam and Saptavidanga Thevaram - Audi...',
+    //         subInfo: 'Thiruthani Swaminathan Odhuvar',
+    //         songCount: 46,
+    //         colors: theme.colorscheme === 'light' ? ['#FEE8B3', '#FDD166'] : ['#3A3A3A', '#3A3A3A'],
+    //         navDetail: '',
+    //     },
+    //     {
+    //         id: 2,
+    //         heading: 'Thirumurais',
+    //         info: 'Attaveerattam and Saptavidanga Thevaram - Audi...',
+    //         subInfo: 'Thiruthani Swaminathan Odhuvar',
+    //         songCount: 40,
+    //         colors: theme.colorscheme === 'light' ? ['#AFD9BB', '#60B278'] : ['#3A3A3A', '#3A3A3A'],
+    //         navDetail: '',
+    //     },
+    //     {
+    //         id: 3,
+    //         heading: 'Thirumurais',
+    //         info: 'Attaveerattam and Saptavidanga Thevaram - Audi...',
+    //         subInfo: 'Thiruthani Swaminathan Odhuvar',
+    //         songCount: 45,
+    //         colors: theme.colorscheme === 'light' ? ['#FEE8B3', '#FDD166'] : ['#3A3A3A', '#3A3A3A'],
+    //         navDetail: '',
+    //     },
+    // ];
     const eventData = [
         {
             date: { day: 'THU', dateNo: '06' },
@@ -233,6 +303,9 @@ const HomeScreen = ({ navigation }) => {
                 overflow: 'visible',
                 backgroundColor: theme.backgroundColor,
                 paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight : 0,
+            }}
+            contentContainerStyle={{
+                paddingBottom: 100,
             }}
         >
             <View
@@ -350,8 +423,7 @@ const HomeScreen = ({ navigation }) => {
                             data={playlistSong}
                             renderItem={({ item, index }) => (
                                 <>
-                                    {
-                                        item?.thalamOdhuvarTamilname && item?.id &&
+                                    {item?.thalamOdhuvarTamilname && item?.id && (
                                         <ListAudios
                                             listFav={favList}
                                             colorSet={{
@@ -361,8 +433,7 @@ const HomeScreen = ({ navigation }) => {
                                             navigation={navigation}
                                             isFav={() => checkIsFav(item)}
                                         />
-                                    }
-
+                                    )}
                                 </>
                             )}
                         />
@@ -370,7 +441,7 @@ const HomeScreen = ({ navigation }) => {
                 </View>
             )}
 
-            <View
+            {/* <View
                 style={{
                     height: 250,
                     marginVertical: 20,
@@ -495,7 +566,7 @@ const HomeScreen = ({ navigation }) => {
                         />
                     </View>
                 </View>
-            </View>
+            </View> */}
 
             {/* upcoming events  */}
             {
@@ -545,6 +616,7 @@ const HomeScreen = ({ navigation }) => {
                         RBSheetRef.current.open();
                         if (showPlayer) {
                             setShowPlayer(false);
+                            setIsPlaying(false);
                         }
                     }}
                     isPlaying={isPlaying}
@@ -552,7 +624,7 @@ const HomeScreen = ({ navigation }) => {
             </View>
 
             {/* last section */}
-            <View>
+            {/* <View>
                 <View style={{ padding: 15 }}>
                     <HeadingAndView
                         viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}

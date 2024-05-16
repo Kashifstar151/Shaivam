@@ -8,15 +8,28 @@ import EmailSVG from '../../../components/SVGs/EmailSVG';
 import { TextInput } from 'react-native-gesture-handler';
 import { colors } from '../../../Helpers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { RFValue } from 'react-native-responsive-fontsize';
 
+const emailReg = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
 const AddEmail = ({ setStep, setEmail, navigation }) => {
     const { screenHeight, screenWidth } = getDimension();
     const [localEmail, setLocalEmail] = useState('');
+    const [error, setError] = useState({
+        state: false,
+        msg: '',
+    });
     const submitHandler = () => {
-        if (localEmail.length > 10) {
+        if (emailReg.test(localEmail)) {
             setEmail(() => localEmail);
             AsyncStorage.setItem('email', localEmail);
             setStep();
+        } else {
+            setError(() => {
+                return {
+                    state: true,
+                    msg: 'Please enter valid email',
+                };
+            });
         }
     };
     return (
@@ -59,7 +72,15 @@ const AddEmail = ({ setStep, setEmail, navigation }) => {
 
                     <TextInput
                         value={localEmail}
-                        onChangeText={(val) => setLocalEmail(val)}
+                        onChangeText={(val) => {
+                            setLocalEmail(val);
+                            if (error.state) {
+                                setError(() => ({
+                                    state: false,
+                                    msg: '',
+                                }));
+                            }
+                        }}
                         placeholder="Enter the email"
                         style={{
                             backgroundColor: 'red',
@@ -71,6 +92,8 @@ const AddEmail = ({ setStep, setEmail, navigation }) => {
                         }}
                         placeholderTextColor={colors.grey5}
                     />
+
+                    {error?.state && <Text style={styles.errorText}>{error.msg}</Text>}
 
                     <CustomLongBtn
                         // onPress={handleModalAction}
@@ -94,6 +117,16 @@ const AddEmail = ({ setStep, setEmail, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+    errorText: {
+        fontFamily: 'Mulish',
+        fontSize: RFValue(12, 850),
+        lineHeight: 18,
+        color: 'red',
+        textAlign: 'left',
+        width: '100%',
+        marginTop: -10,
+        paddingLeft: 5,
+    },
     contentWrap: {
         position: 'absolute',
         top: 0,

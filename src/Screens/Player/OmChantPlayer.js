@@ -50,6 +50,7 @@ const OmChantPlayer = () => {
             setTimeRemaining((prev) => {
                 if (prev >= OmPlayTiming) {
                     setShowPlayer(false);
+                    setIsPlaying(false);
                     return prev;
                 } else {
                     return prev + 10;
@@ -119,7 +120,10 @@ const OmChantPlayer = () => {
         >
             <TouchableOpacity
                 style={{ position: 'absolute', top: -10, right: -5 }}
-                onPress={() => setShowPlayer(false)}
+                onPress={() => {
+                    setShowPlayer(false);
+                    setIsPlaying(false);
+                }}
             >
                 <Icon name="closecircle" color={colors.grey7} size={23} />
             </TouchableOpacity>
