@@ -301,7 +301,7 @@ const CreateVirtualEvent = ({ navigation }) => {
                         //     </View> :
                         <View>
                             {virtualEvent &&
-                                <TextInputCom insiderText={'Virtual event url'} headinText={t('Virtual event link')} width={Dimensions.get('window').width - 40} />
+                                <TextInputCom value={inputValue['virtual_event_link']} insiderText={'Virtual event url'} headinText={t('Virtual event link')} width={Dimensions.get('window').width - 40} inputKey={'virtual_event_link'} />
                             }
                             <TextInputCom value={inputValue['title']} inputKey={'title'} insiderText={'Enter event title'} headinText={t('Event title*') ? t('Event title*') : 'Event title*'} width={Dimensions.get('window').width - 40} />
                             {

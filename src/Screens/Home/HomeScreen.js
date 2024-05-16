@@ -568,7 +568,7 @@ const HomeScreen = ({ navigation }) => {
                     contentContainerStyle={{
                         rowGap: 4,
                         paddingTop: 15,
-                        paddingBottom: 30,
+                        paddingBottom: 100,
                     }}
                     key={(item) => item?.id}
                     data={nearByTempleData}

@@ -531,8 +531,8 @@ const Calender = ({ navigation }) => {
                                     setShowLoader(true)
                                 } else {
                                     setPrevNext(prev => prev - 1)
-                                    // setShowLoader(true)
-                                    alert(prevNext)
+                                    setShowLoader(true)
+                                    // alert(prevNext)
                                 }
                             }, 1000);
                         }}
