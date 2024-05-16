@@ -183,7 +183,7 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
                                 dragCoor.current = e;
                                 fetchTheName(e);
                             }}
-                            flag={1}
+                            flag={9}
                             coordinate={dragCoor.current}
                             keyName={'COORDINATE2'}
                         />
