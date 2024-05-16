@@ -169,6 +169,7 @@ const Addtemple = ({ navigation, route }) => {
                     refreshControl={
                         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                     }
+                    keyExtractor={(item, key) => `item=${item?.id}and${key}`}
                     ListEmptyComponent={() => (
                         <EmptyList
                             onPressOfBtn={() => {

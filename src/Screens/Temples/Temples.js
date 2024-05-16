@@ -441,7 +441,10 @@ export const Temples = ({ navigation, route }) => {
             </View> */}
 
                 <AnimatedRightSideView heading={t('Map Legend')} RightIcon={<MapIconSVG />}>
-                    <InnerContextOfAnimatedSideBox navigation={navigation} />
+                    <InnerContextOfAnimatedSideBox
+                        navigation={navigation}
+                        regionCoordinate={regionCoordinate}
+                    />
                 </AnimatedRightSideView>
 
                 {permissionGranted === 'granted' ? (
