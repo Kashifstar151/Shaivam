@@ -5,7 +5,7 @@ import NandiLogo from '../../assets/Images/NandiLogo.svg';
 import HeadingComponent from './Common/HeadingComponent';
 import { useTranslation } from 'react-i18next';
 
-const TempleHeader = () => {
+const TempleHeader = ({ title, subTitle }) => {
     const { t } = useTranslation()
     return (
         <View>
@@ -20,14 +20,14 @@ const TempleHeader = () => {
             >
                 <View>
                     <Text style={{ fontSize: 24, fontFamily: 'Lora-SemiBold', color: '#FFF' }}>
-                        {t(title)}
+                        {t(title) ? t(title) : title}
                     </Text>
                     <Text
                         numberOfLines={1}
                         ellipsizeMode="tail"
                         style={{ fontSize: 14, fontFamily: 'Mulish-Regular', color: '#FFF' }}
                     >
-                        {t(subTitle)}
+                        {t(subTitle) ? t(subTitle) : subTitle}
                     </Text>
                 </View>
                 <NandiLogo />

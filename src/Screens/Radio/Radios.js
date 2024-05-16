@@ -156,7 +156,7 @@ const Radios = ({ navigation }) => {
     // [song]'
     const handleSong = async (item, id) => {
         // TrackPlayer.play()
-        alert(true)
+        // alert(true)
         // const track = await TrackPlayer.getActiveTrack()
         setSelectedMusic(item)
         await TrackPlayer.skip(id);
@@ -276,7 +276,7 @@ const Radios = ({ navigation }) => {
                 </View>
                 {/* {paused ? ( */}
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <TouchableOpacity >
+                    <TouchableOpacity onPress={() => TrackPlayer.skipToPrevious()}>
                         <Icon name="stepbackward" size={20} color="white" />
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -292,7 +292,7 @@ const Radios = ({ navigation }) => {
                     >
                         {playBackState?.state == 'playing' ? <Icon name="pause" size={30} color="white" /> : <Icon name="play" size={30} color="white" />}
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleNext()}>
+                    <TouchableOpacity onPress={() => TrackPlayer.skipToNext()}>
                         <Icon name="stepforward" size={20} color="white" />
                     </TouchableOpacity>
                 </View>
