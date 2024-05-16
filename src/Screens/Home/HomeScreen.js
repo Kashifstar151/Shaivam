@@ -17,7 +17,6 @@ import '../../../localization';
 import { ThemeContext } from '../../Context/ThemeContext';
 import bgImg from '../../../assets/Images/Background.png';
 import bgImgDark from '../../../assets/Images/BackgroundCommon.png';
-import HomePlaylistCard from '../../components/HomePlaylistCard';
 import ElevatedCard from '../../components/ElevatedCard';
 import EventCard from '../../components/EventCard';
 import OmChant from './OmChat';
@@ -26,7 +25,7 @@ import PlaceCard from './PlaceCard';
 import { RFValue } from 'react-native-responsive-fontsize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { listfavAudios, MostPlayedList } from '../../Databases/AudioPlayerDatabase';
-import { useIsFocused } from '@react-navigation/native';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import Quiz from './Quiz';
 import VideosList from './VideosList';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -35,6 +34,14 @@ import { colors } from '../../Helpers';
 import ListAudios from '../Thrimurai/ThrimuraiList/ListAudios';
 import { usePlayer } from '../../Context/PlayerContext';
 import { useTranslation } from 'react-i18next';
+import {
+    checkPermissionAccess,
+    clearGetCurrentLocationWatcher,
+    getCurrentLocation,
+    getCurrentLocationWatcher,
+} from '../../Helpers/GeolocationFunc';
+import { PERMISSIONS, RESULTS } from 'react-native-permissions';
+import { useLazyGetNearByTemplesQuery } from '../../store/features/Temple/TemplApiSlice';
 
 const HomeScreen = ({ navigation }) => {
     const RBSheetRef = useRef(null);
@@ -73,6 +80,69 @@ const HomeScreen = ({ navigation }) => {
             description: 'सम्पूर्ण ऋग्वेद पाराणम् Complete ...',
         },
     ];
+
+    const permissionTypeRef = useRef(
+        Platform.select({
+            ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+            android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+        })
+    );
+
+    const [userLocation, setUserLocation] = useState(null);
+
+    useEffect(() => {
+        onMapReadyCallback();
+
+        return clearGetCurrentLocationWatcher();
+    }, []);
+
+    const [
+        getNearByTemples,
+        {
+            data: nearByTempleDataAfterFetch,
+            isSuccess,
+            isFetching,
+            isError,
+            isUninitialized,
+            error,
+            status,
+        },
+    ] = useLazyGetNearByTemplesQuery();
+    // console.log('🚀 ~ HomeScreen ~ nearByTempleDataAfterFetch:', nearByTempleDataAfterFetch);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            // onMapReadyCallback();
+            if (userLocation?.latitude && userLocation?.longitude) {
+                getNearByTemples({
+                    latitude: userLocation?.latitude,
+                    longitude: userLocation?.longitude,
+                    limit: 5,
+                });
+            }
+        }, [userLocation?.latitude, userLocation?.longitude])
+    );
+    const onMapReadyCallback = async () => {
+        let state = await checkPermissionAccess(permissionTypeRef.current);
+
+        if (state === RESULTS.GRANTED) {
+            // console.log(
+            //     '🚀 ~ getCurrentLocation ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=============:'
+            // );
+            getCurrentLocation((val) => {
+                // console.log(
+                //     '🚀 ~ getCurrentLocation ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=============:',
+                //     val
+                // );
+                setUserLocation(() => ({ ...val }));
+            });
+
+            getCurrentLocationWatcher((val) => {
+                // console.log('🚀 ~ getCurrentLocationWatcher ~ val:', val);
+                setUserLocation(() => ({ ...val }));
+            });
+        }
+    };
 
     // const PlayList = [
     //     {
@@ -136,7 +206,6 @@ const HomeScreen = ({ navigation }) => {
             setFavList(callbacks);
         });
     }, [selectedPlaylistType, isFocused]);
-    useEffect(() => {}, []);
 
     const checkIsFav = (item) => {
         let v = false;
