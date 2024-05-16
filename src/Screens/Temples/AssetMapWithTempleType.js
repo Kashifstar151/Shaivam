@@ -8,7 +8,7 @@ import UsersLocation from '../../../assets/Images/Temple/UsersLocation.svg';
 import LocationPointer from '../../../assets/Images/Temple/location9.svg';
 import VaippuSthalamTemple from '../../../assets/Images/Temple/VaippuSthalamTemple.svg';
 const assetMapWithTempleType = {
-    1: {
+    5: {
         fullName: 'Jyotirlinga/Thirumurai Temples',
         name: 'Thirumurai Temple',
         content:
@@ -20,16 +20,17 @@ const assetMapWithTempleType = {
             letterAssociated: null,
         },
     },
-    2: {
-        fullName: 'Temples',
-        name: 'Temples',
+
+    4: {
+        fullName: 'Vaippu Sthalam/Nayanmar Temples',
+        name: 'Vaippu Sthalam Temple',
         content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sm.',
         metaData: {
-            color: '#6EDB00',
-            letterAssociated: null,
+            color: '#D700C1',
+            letterAssociated: 'A',
         },
-        path: require('./TempleAssets/Temples.png'),
-        Svg: <Temples />,
+        path: require('./TempleAssets/VaippuSthalamTemple.png'),
+        Svg: <VaippuSthalamTemple />,
     },
     3: {
         fullName: 'Popular Temples',
@@ -42,32 +43,18 @@ const assetMapWithTempleType = {
         path: require('./TempleAssets/PopularTemples.png'),
         Svg: <PopularTemples />,
     },
-
-    4: {
-        fullName: '108 Parashurama Temples',
-        name: 'Parashurama Temple',
-        content:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sm.  dolor sit amet, consectetur adipiscing elit, sm.',
+    2: {
+        fullName: 'Temples',
+        name: 'Temples',
+        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sm.',
         metaData: {
-            color: '#D700C1',
-            letterAssociated: 'C',
+            color: '#6EDB00',
+            letterAssociated: null,
         },
-        path: require('./TempleAssets/ParashuramaTemple.png'),
-        Svg: <ParashuramaTemple />,
+        path: require('./TempleAssets/Temples.png'),
+        Svg: <Temples />,
     },
-    5: {
-        fullName: 'Nayanmar birth/mukti sthalam',
-        name: 'Mukti Sthalam Temple',
-        content:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sm.  dolor sit amet, consectetur adipiscing elit, sm.',
-        metaData: {
-            color: '#D700C1',
-            letterAssociated: 'B',
-        },
-        path: require('./TempleAssets/MuktiSthalamTemple.png'),
-        Svg: <MuktiSthalamTemple />,
-    },
-    6: {
+    1: {
         fullName: 'Uncertain Temples',
         name: 'Unknown Temple',
         content:
@@ -80,17 +67,31 @@ const assetMapWithTempleType = {
         Svg: <UnknownTemple />,
     },
 
-    7: {
-        fullName: 'Vaippu Sthalam',
-        name: 'Vaippu Sthalam Temple',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sm.',
-        metaData: {
-            color: '#D700C1',
-            letterAssociated: 'A',
-        },
-        path: require('./TempleAssets/VaippuSthalamTemple.png'),
-        Svg: <VaippuSthalamTemple />,
-    },
+    // 4: {
+    //     fullName: '108 Parashurama Temples',
+    //     name: 'Parashurama Temple',
+    //     content:
+    //         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sm.  dolor sit amet, consectetur adipiscing elit, sm.',
+    //     metaData: {
+    //         color: '#D700C1',
+    //         letterAssociated: 'C',
+    //     },
+    //     path: require('./TempleAssets/ParashuramaTemple.png'),
+    //     Svg: <ParashuramaTemple />,
+    // },
+    // 5: {
+    //     fullName: 'Nayanmar birth/mukti sthalam',
+    //     name: 'Mukti Sthalam Temple',
+    //     content:
+    //         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sm.  dolor sit amet, consectetur adipiscing elit, sm.',
+    //     metaData: {
+    //         color: '#D700C1',
+    //         letterAssociated: 'B',
+    //     },
+    //     path: require('./TempleAssets/MuktiSthalamTemple.png'),
+    //     Svg: <MuktiSthalamTemple />,
+    // },
+
     8: {
         fullName: 'User Location',
         name: 'User Location',

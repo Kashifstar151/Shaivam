@@ -16,10 +16,16 @@ const snapMap = {
     2: 0.95,
 };
 const FilteredTemplesPage = ({ navigation, route }) => {
-    const { data, isSuccess, isLoading, isFetching, isError, error } = useGetNearByTemplesQuery({
-        flag: route?.params?.data?.flag,
-        ...route?.params?.data?.regionCoordinate,
-    });
+    const { data, isSuccess, isLoading, isFetching, isError, error } = useGetNearByTemplesQuery(
+        {
+            flag: route?.params?.data?.flag,
+            ...route?.params?.data?.regionCoordinate,
+        },
+        {
+            refetchOnMountOrArgChange: true,
+        }
+    );
+
     const [snapIndex, setSnapIndex] = useState(0);
     const { screenHeight } = getDimension();
 
@@ -30,8 +36,7 @@ const FilteredTemplesPage = ({ navigation, route }) => {
             snapPoints={snapPointsArray}
             showSearchBarWhenFullSize={true}
             regionCoordinate={{
-                latitude: 11.2002937,
-                longitude: 79.6203017,
+                ...route?.params?.data?.regionCoordinate,
                 latitudeDelta: 0.015,
                 longitudeDelta: 0.0121,
                 locationName: '',
@@ -41,7 +46,7 @@ const FilteredTemplesPage = ({ navigation, route }) => {
             appearsOnIndex={2}
             isNavigable={false}
             routeName={route?.name}
-            data={templeData[route?.params?.data?.flag]}
+            data={data?.temples}
             valueToBePreFilled={templeData[route?.params?.data?.flag]?.name}
             isSearchFieldDisabled={true}
             isSearchFieldDisabledInFullScreenMode={true}

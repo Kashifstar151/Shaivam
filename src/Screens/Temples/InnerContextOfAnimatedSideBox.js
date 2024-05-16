@@ -9,7 +9,7 @@ const InnerContextOfAnimatedSideBox = ({ navigation }) => {
     return (
         <View style={{}}>
             {Object?.entries(templeMetaData).map(([key, value], indx) => {
-                if (key !== '8') {
+                if (key !== '8' && key !== '9') {
                     return (
                         <Pressable
                             onPress={() => {
@@ -39,7 +39,7 @@ const InnerContextOfAnimatedSideBox = ({ navigation }) => {
                                     {t(`${value.fullName}`)}
                                 </Text>
                             </View>
-                            <Text style={{ color: '#222222', fontSize: 10 }}>{value.content}</Text>
+                            {/* <Text style={{ color: '#222222', fontSize: 10 }}>{value.content}</Text> */}
                         </Pressable>
                     );
                 } else {

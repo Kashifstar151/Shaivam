@@ -328,7 +328,12 @@ export const Temples = ({ navigation, route }) => {
                                             callback={() => {
                                                 //   setting the type of the marker you pressed
                                                 //   callback function for naving to page which has the temple details
-                                                markerPressClbk(navigation, item?.flag, item);
+                                                markerPressClbk(
+                                                    navigation,
+                                                    item?.flag,
+                                                    item,
+                                                    userLocation
+                                                );
                                             }}
                                             flag={item?.flag}
                                             templeId={item?.id}
@@ -349,13 +354,13 @@ export const Temples = ({ navigation, route }) => {
                 <View style={styles.topBarWrapper}>
                     <View style={styles.colorContWrapper}>
                         {Object.entries(assetMapWithTempleType).map(([key, value], indx) =>
-                            key !== '8' ? (
+                            !(key == 8 || key == 9) ? (
                                 <Pressable
                                     style={styles.contWrapper}
                                     onPress={() => {
                                         // adding callback on the category btn press and navigating to the filter page
                                         if (permissionGranted === RESULTS.GRANTED) {
-                                            categoryBtnClbk(navigation, key, userLocation);
+                                            categoryBtnClbk(navigation, key, regionCoordinate);
                                         } else {
                                             setShowModal(!showModal);
                                         }

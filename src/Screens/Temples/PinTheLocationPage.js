@@ -23,7 +23,7 @@ import BackIcon from '../../../src/assets/Images/BackIcon.svg';
 import WhiteBackButton from '../../../src/assets/Images/arrow (1) 1.svg';
 import SearchTemple from './SearchTemple';
 import getDimension from '../../Helpers/getDimension';
-import { PERMISSIONS } from 'react-native-permissions';
+import { PERMISSIONS, RESULTS } from 'react-native-permissions';
 
 const PinTheLocation = ({ setDescription, close, valueSetter }) => {
     // const [regionCoordinate, setRegionCoordinate] = useState({
@@ -34,19 +34,24 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
     //     // locationName: '',
     // });
 
+    const { screenWidth, screenHeight } = getDimension();
+
+    const LATITUDE_DELTA = 0.18;
+    const LONGITUDE_DELTA = LATITUDE_DELTA * (screenWidth / screenHeight);
+
     const [userLocation, setUserLocation] = useState({
         latitude: 28.500271,
         longitude: 77.387901,
-        latitudeDelta: 0.015,
-        longitudeDelta: 0.0121,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
     });
 
     const [padState, setPadState] = useState(1);
     const dragCoor = useRef({
         latitude: 28.500271,
         longitude: 77.387901,
-        latitudeDelta: 0.015,
-        longitudeDelta: 0.0121,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
     });
     const [userLocName, setUserLocName] = useState({
         name: '',
@@ -91,25 +96,11 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
         console.log('🚀 ~ onMapReadyCallback ~ state:');
 
         const state = await checkPermissionAccess(permissionTypeRef.current);
-        console.log('🚀 ~ onMapReadyCallback ~ state:', state);
 
-        if (state) {
+        if (state === RESULTS.GRANTED) {
             // console.log("the fetch of the user's location");
             getCurrentLocation((val) => {
                 fetchTheName(val);
-                mapRef.current?.animateCamera(
-                    {
-                        center: {
-                            latitude: parseFloat(val?.latitude),
-                            longitude: parseFloat(val?.longitude),
-                        },
-                    },
-                    { duration: 1000 }
-                );
-                setUserLocation((prev) => ({ ...prev, ...val }));
-            });
-            getCurrentLocationWatcher((val) => {
-                fetchTheName(val);
 
                 mapRef.current?.animateCamera(
                     {
@@ -120,7 +111,26 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
                     },
                     { duration: 1000 }
                 );
-                setUserLocation((prev) => ({ ...prev, ...val }));
+                setUserLocation((prev) => {
+                    dragCoor.current = { ...prev, ...val };
+                    return dragCoor.current;
+                });
+            });
+            getCurrentLocationWatcher((val) => {
+                fetchTheName(val);
+                mapRef.current?.animateCamera(
+                    {
+                        center: {
+                            latitude: parseFloat(val?.latitude),
+                            longitude: parseFloat(val?.longitude),
+                        },
+                    },
+                    { duration: 1000 }
+                );
+                setUserLocation((prev) => {
+                    dragCoor.current = { ...prev, ...val };
+                    return dragCoor.current;
+                });
             });
         }
     };
@@ -136,7 +146,6 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
         };
     }, []);
 
-    const { screenWidth } = getDimension();
     const mapRef = useRef();
     return (
         <View style={styles.mainContainer}>
@@ -250,7 +259,6 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
                         onPress={() => {
                             // write the function that we have used in the temple module to get the current location and set the name of the location in the near by place name
                             dragCoor.current = { ...userLocation };
-                            mapRef;
                             fetchTheName(dragCoor.current);
                             mapRef.current?.animateCamera(
                                 {
