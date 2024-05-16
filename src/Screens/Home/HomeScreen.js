@@ -74,35 +74,35 @@ const HomeScreen = ({ navigation }) => {
         },
     ];
 
-    const PlayList = [
-        {
-            id: 1,
-            heading: 'Thirumurais',
-            info: 'Attaveerattam and Saptavidanga Thevaram - Audi...',
-            subInfo: 'Thiruthani Swaminathan Odhuvar',
-            songCount: 46,
-            colors: theme.colorscheme === 'light' ? ['#FEE8B3', '#FDD166'] : ['#3A3A3A', '#3A3A3A'],
-            navDetail: '',
-        },
-        {
-            id: 2,
-            heading: 'Thirumurais',
-            info: 'Attaveerattam and Saptavidanga Thevaram - Audi...',
-            subInfo: 'Thiruthani Swaminathan Odhuvar',
-            songCount: 40,
-            colors: theme.colorscheme === 'light' ? ['#AFD9BB', '#60B278'] : ['#3A3A3A', '#3A3A3A'],
-            navDetail: '',
-        },
-        {
-            id: 3,
-            heading: 'Thirumurais',
-            info: 'Attaveerattam and Saptavidanga Thevaram - Audi...',
-            subInfo: 'Thiruthani Swaminathan Odhuvar',
-            songCount: 45,
-            colors: theme.colorscheme === 'light' ? ['#FEE8B3', '#FDD166'] : ['#3A3A3A', '#3A3A3A'],
-            navDetail: '',
-        },
-    ];
+    // const PlayList = [
+    //     {
+    //         id: 1,
+    //         heading: 'Thirumurais',
+    //         info: 'Attaveerattam and Saptavidanga Thevaram - Audi...',
+    //         subInfo: 'Thiruthani Swaminathan Odhuvar',
+    //         songCount: 46,
+    //         colors: theme.colorscheme === 'light' ? ['#FEE8B3', '#FDD166'] : ['#3A3A3A', '#3A3A3A'],
+    //         navDetail: '',
+    //     },
+    //     {
+    //         id: 2,
+    //         heading: 'Thirumurais',
+    //         info: 'Attaveerattam and Saptavidanga Thevaram - Audi...',
+    //         subInfo: 'Thiruthani Swaminathan Odhuvar',
+    //         songCount: 40,
+    //         colors: theme.colorscheme === 'light' ? ['#AFD9BB', '#60B278'] : ['#3A3A3A', '#3A3A3A'],
+    //         navDetail: '',
+    //     },
+    //     {
+    //         id: 3,
+    //         heading: 'Thirumurais',
+    //         info: 'Attaveerattam and Saptavidanga Thevaram - Audi...',
+    //         subInfo: 'Thiruthani Swaminathan Odhuvar',
+    //         songCount: 45,
+    //         colors: theme.colorscheme === 'light' ? ['#FEE8B3', '#FDD166'] : ['#3A3A3A', '#3A3A3A'],
+    //         navDetail: '',
+    //     },
+    // ];
     const eventData = [
         {
             date: { day: 'THU', dateNo: '06' },
@@ -209,6 +209,9 @@ const HomeScreen = ({ navigation }) => {
                 overflow: 'visible',
                 backgroundColor: theme.backgroundColor,
                 paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight : 0,
+            }}
+            contentContainerStyle={{
+                paddingBottom: 100,
             }}
         >
             <View
@@ -344,7 +347,7 @@ const HomeScreen = ({ navigation }) => {
                 </View>
             )}
 
-            <View
+            {/* <View
                 style={{
                     height: 250,
                     marginVertical: 20,
@@ -469,10 +472,14 @@ const HomeScreen = ({ navigation }) => {
                         />
                     </View>
                 </View>
-            </View>
+            </View> */}
 
             {/* upcoming events  */}
-            <View>
+            <View
+                style={{
+                    paddingTop: 20,
+                }}
+            >
                 <View style={{ paddingBottom: 15, paddingHorizontal: 15 }}>
                     <HeadingAndView
                         viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
@@ -519,7 +526,7 @@ const HomeScreen = ({ navigation }) => {
             </View>
 
             {/* last section */}
-            <View>
+            {/* <View>
                 <View style={{ padding: 15 }}>
                     <HeadingAndView
                         viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
@@ -553,11 +560,11 @@ const HomeScreen = ({ navigation }) => {
                         </ElevatedCard>
                     )}
                 />
-            </View>
+            </View> */}
             {/* Quiz */}
-            <Quiz />
+            {/* <Quiz /> */}
             {/* video list */}
-            <View
+            {/* <View
                 style={{
                     paddingBottom: 60,
                     paddingHorizontal: 15,
@@ -574,7 +581,7 @@ const HomeScreen = ({ navigation }) => {
                     }}
                 />
                 <VideosList screenDimension={{ screenHeight, screenWidth }} />
-            </View>
+            </View> */}
             <RBSheet
                 height={340}
                 ref={RBSheetRef}
