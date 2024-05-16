@@ -42,14 +42,16 @@ const HomeScreen = ({ navigation }) => {
     const RBSheetRef = useRef(null);
     const { showPlayer, setShowPlayer, OmPlayTiming, setOmPlayTiming, isPlaying, setIsPlaying } =
         usePlayer();
-    const { theme } = useContext(ThemeContext);
+    const { theme } = useContext(ThemeContext)
+    const { selectMonth, setSelectedMonth } = useState(moment().format('YYYY-MM-DD'))
     const {
         data: festivalEvents,
         isFetching: isfestivaldataFetching,
         refetch: refetchFestival,
         isSuccess: isFestivalSuccess
 
-    } = useGetFestivalListQuery();
+    } = useGetFestivalListQuery({ selectMonth });
+    console.log("🚀 ~ HomeScreen ~ festivalEvents:", festivalEvents)
     const [festivalEvent, setFestivalEvent] = useState([])
     const [compHeight, setCompHeight] = useState();
     const [textInsidePlaylistCard, setTextInsidePlaylistCard] = useState(0);
@@ -60,12 +62,15 @@ const HomeScreen = ({ navigation }) => {
     });
     const isFocused = useIsFocused();
     useEffect(() => {
-        let arr = festivalEvents?.data?.filter((item) => {
-            return moment(item?.attributes?.calendar_from_date) > moment()
-        })
-        // console.log(arr, 'upacoming festivals')
-        setFestivalEvent(arr?.slice(0, 5))
-    }, [])
+        if (festivalEvents?.data && isFestivalSuccess) {
+            let arr = festivalEvents?.data?.filter((item) => {
+                return moment(item?.attributes?.calendar_from_date) > moment()
+            })
+            // console.log(arr, 'upacoming festivals')
+            setFestivalEvent(arr?.slice(0, 5))
+        }
+    }, [selectMonth, isFocused, isFestivalSuccess])
+
     const handleLayout = useCallback(
         (event) => {
             const { height } = event.nativeEvent.layout;
@@ -493,39 +498,45 @@ const HomeScreen = ({ navigation }) => {
             </View>
 
             {/* upcoming events  */}
-            <View>
-                <View style={{ paddingBottom: 15, paddingHorizontal: 15 }}>
-                    <HeadingAndView
-                        viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
-                        title={t('Upcoming Festivals')}
-                        theme={{ textColor: theme.textColor, colorscheme: theme.colorscheme }}
-                        onPress={() => { }}
+            {
+                isFestivalSuccess &&
+                < View >
+                    <View style={{ paddingBottom: 15, paddingHorizontal: 15 }}>
+                        <HeadingAndView
+                            viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
+                            title={t('Upcoming Festivals')}
+                            theme={{ textColor: theme.textColor, colorscheme: theme.colorscheme }}
+                            onPress={() => { }}
+                        />
+                    </View>
+                    <FlatList
+                        contentContainerStyle={{
+                            rowGap: 4,
+                            paddingBottom: 15,
+                        }}
+                        key={(item) => item?.id}
+                        data={festivalEvent}
+                        renderItem={({ item, index }) => (
+                            <ElevatedCard theme={{ colorscheme: theme.colorscheme }}>
+                                <EventCard
+                                    date={moment(item?.attributes?.calendar_from_date).get('D')}
+                                    timing={null}
+                                    day={moment(item?.attributes?.calendar_from_date).format('ddd')}
+                                    dateNo={moment(item?.attributes?.calendar_from_date).format('DD')}
+                                    title={item?.attributes?.Calendar_title}
+                                    item={item}
+                                    theme={{
+                                        textColor: theme.textColor,
+                                        colorscheme: theme.colorscheme,
+                                    }}
+                                />
+                            </ElevatedCard>
+                        )}
                     />
                 </View>
-                <FlatList
-                    contentContainerStyle={{
-                        rowGap: 4,
-                        paddingBottom: 15,
-                    }}
-                    key={(item) => item?.id}
-                    data={festivalEvent}
-                    renderItem={({ item, index }) => (
-                        <ElevatedCard theme={{ colorscheme: theme.colorscheme }}>
-                            <EventCard
-                                date={moment(item?.attributes?.calendar_from_date).get('D')}
-                                timing={null}
-                                dateNo={moment(item?.attributes?.calendar_from_date).format('DD')}
-                                title={item?.attributes?.Calendar_title}
-                                item={item}
-                                theme={{
-                                    textColor: theme.textColor,
-                                    colorscheme: theme.colorscheme,
-                                }}
-                            />
-                        </ElevatedCard>
-                    )}
-                />
-            </View>
+
+            }
+
             {/* om chant */}
             <View>
                 <OmChant
@@ -576,10 +587,8 @@ const HomeScreen = ({ navigation }) => {
                     )}
                 />
             </View>
-            {/* Quiz */}
-            <Quiz />
-            {/* video list */}
-            <View
+            {/* <Quiz /> */}
+            {/* <View
                 style={{
                     paddingBottom: 60,
                     paddingHorizontal: 15,
@@ -596,7 +605,7 @@ const HomeScreen = ({ navigation }) => {
                     }}
                 />
                 <VideosList screenDimension={{ screenHeight, screenWidth }} />
-            </View>
+            </View> */}
             <RBSheet
                 height={340}
                 ref={RBSheetRef}
@@ -608,7 +617,7 @@ const HomeScreen = ({ navigation }) => {
                     setOmPlayTiming={setOmPlayTiming}
                 />
             </RBSheet>
-        </ScrollView>
+        </ScrollView >
     );
 };
 export const styles = StyleSheet.create({

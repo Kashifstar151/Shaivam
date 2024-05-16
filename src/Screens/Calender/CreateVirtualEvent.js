@@ -70,11 +70,9 @@ const CreateVirtualEvent = ({ navigation }) => {
         let arr = images.filter((item) => {
             return item.fileName !== res.fileName;
         });
-        console.log('🚀 ~ arr ~ arr:', arr);
         setImage(arr);
     };
     const RenderImage = (item) => {
-        // console.log('🚀 ~ RenderImage ~ item:', JSON.stringify(images, 0, 2));
         return (
             <View style={{ marginHorizontal: 10, alignItems: 'center' }}>
                 <TouchableOpacity
@@ -109,12 +107,14 @@ const CreateVirtualEvent = ({ navigation }) => {
     const onSubmit = () => {
         if (!emailReg.test(inputValue['email'])) {
             setErrorMsg({ email: 'Please enter valid email' })
-            console.log('fbsbfjdfbjsdbfbdb')
+            // console.log('fbsbfjdfbjsdbfbdb')
         } else if (!inputValue['title']) {
             setErrorMsg({ title: 'Title is require ' })
-            console.log('fbsbfjdfbjsdbfbdb title')
+            // console.log('fbsbfjdfbjsdbfbdb title')
         } else if (recurringEvent && !inputValue['Day']) {
             setErrorMsg({ day: "Please select day" })
+        } else if (moment(inputValue['end_date'] > moment(inputValue['start_date']))) {
+            setErrorMsg({ date: "Enter valid date" })
         } else {
             const formData = new FormData();
             if (recurringEvent) {
@@ -302,7 +302,6 @@ const CreateVirtualEvent = ({ navigation }) => {
                         <View>
                             {virtualEvent &&
                                 <TextInputCom insiderText={'Virtual event url'} headinText={t('Virtual event link')} width={Dimensions.get('window').width - 40} />
-
                             }
                             <TextInputCom value={inputValue['title']} inputKey={'title'} insiderText={'Enter event title'} headinText={t('Event title*') ? t('Event title*') : 'Event title*'} width={Dimensions.get('window').width - 40} />
                             {
@@ -423,6 +422,14 @@ const CreateVirtualEvent = ({ navigation }) => {
                                                     {inputValue['start_date'] ? moment(inputValue['start_date']).format('YYYY-MM-DD') : 'DD/MM/YY'}
                                                 </Text>
                                             </TouchableOpacity>
+                                            {
+                                                errorMsg !== null && errorMsg.hasOwnProperty("date") && <Text style={{
+                                                    fontWeight: '300',
+                                                    color: '#EB0D0D',
+                                                    fontSize: 10,
+                                                    marginLeft: 16,
+                                                }}>{errorMsg.date}</Text>
+                                            }
                                         </View>
                                         <View style={{ marginVertical: 10 }}>
                                             <Text>{t('End date')}</Text>
@@ -435,6 +442,14 @@ const CreateVirtualEvent = ({ navigation }) => {
                                                     {inputValue['end_date'] ? moment(inputValue['end_date']).format('YYYY-MM-DD') : 'DD/MM/YY'}
                                                 </Text>
                                             </TouchableOpacity>
+                                            {
+                                                errorMsg !== null && errorMsg.hasOwnProperty("date") && <Text style={{
+                                                    fontWeight: '300',
+                                                    color: '#EB0D0D',
+                                                    fontSize: 10,
+                                                    marginLeft: 16,
+                                                }}>{errorMsg.date}</Text>
+                                            }
                                         </View>
                                     </>
                             }
