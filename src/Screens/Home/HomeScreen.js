@@ -326,8 +326,7 @@ const HomeScreen = ({ navigation }) => {
                             data={playlistSong}
                             renderItem={({ item, index }) => (
                                 <>
-                                    {
-                                        item?.thalamOdhuvarTamilname && item?.id &&
+                                    {item?.thalamOdhuvarTamilname && item?.id && (
                                         <ListAudios
                                             listFav={favList}
                                             colorSet={{
@@ -337,8 +336,7 @@ const HomeScreen = ({ navigation }) => {
                                             navigation={navigation}
                                             isFav={() => checkIsFav(item)}
                                         />
-                                    }
-
+                                    )}
                                 </>
                             )}
                         />
@@ -513,6 +511,7 @@ const HomeScreen = ({ navigation }) => {
                         RBSheetRef.current.open();
                         if (showPlayer) {
                             setShowPlayer(false);
+                            setIsPlaying(false);
                         }
                     }}
                     isPlaying={isPlaying}
