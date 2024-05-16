@@ -3,8 +3,9 @@ import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from "
 import Icon from "react-native-vector-icons/dist/Feather";
 import ButtonComp from "../Temples/Common/ButtonComp";
 
-const EventSelectionType = ({ setEventCategory, eventCaetgory }) => {
-    console.log("🚀 ~ EventSelectionType ~ eventCaetgory:", eventCaetgory)
+const EventSelectionType = ({ category, setCategory, bottomSheetRef }) => {
+    console.log("🚀 ~ EventSelectionType ~ eventCaetgory:", category)
+    const [eventCaetgory, setEventCategory] = useState(null)
     const data = [
         { name: 'Festival' },
         { name: 'Concert' },
@@ -16,7 +17,13 @@ const EventSelectionType = ({ setEventCategory, eventCaetgory }) => {
     const rednerItem = (item, index) => (
         <View style={{ height: 40, flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={{ color: 'rgba(34, 34, 34, 1)', fontFamily: 'Mulish-Regular' }}>{item?.name}</Text>
-            <TouchableOpacity onPress={() => setEventCategory(item)} style={eventCaetgory?.name == item?.name ? [styles.texIContContainer, { backgroundColor: '#C1554E' }] : styles.texIContContainer}>
+
+            <TouchableOpacity onPress={() => {
+                setEventCategory(item?.name)
+                setCategory(item?.name)
+                bottomSheetRef?.current?.close()
+            }}
+                style={eventCaetgory == item?.name ? [styles.texIContContainer, { backgroundColor: '#C1554E' }] : styles.texIContContainer}>
                 <Icon name='check' size={16} color={'#FFFFFF'} />
             </TouchableOpacity>
         </View>
@@ -32,7 +39,7 @@ const EventSelectionType = ({ setEventCategory, eventCaetgory }) => {
     );
 };
 export const styles = StyleSheet.create({
-    texIContContainer: { justifyContent: 'center', alignItems: 'center', height: 24, width: 24, borderColor: 'rgba(119, 119, 119, 1)', borderWidth: 1 },
+    texIContContainer: { justifyContent: 'center', alignItems: 'center', height: 24, width: 24, borderColor: 'rgba(119, 119, 119, 1)', borderWidth: 1, borderRadius: 12 },
     headingText: { marginHorizontal: 20, fontFamily: 'Lora-Bold', color: 'rgba(34, 34, 34, 1)', marginVertical: 15, fontSize: 16 }
 })
 

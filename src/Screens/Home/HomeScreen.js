@@ -325,15 +325,21 @@ const HomeScreen = ({ navigation }) => {
                             key={(item) => item?.id}
                             data={playlistSong}
                             renderItem={({ item, index }) => (
-                                <ListAudios
-                                    listFav={favList}
-                                    colorSet={{
-                                        textColor: theme.textColor,
-                                    }}
-                                    item={item}
-                                    navigation={navigation}
-                                    isFav={() => checkIsFav(item)}
-                                />
+                                <>
+                                    {
+                                        item?.thalamOdhuvarTamilname && item?.id &&
+                                        <ListAudios
+                                            listFav={favList}
+                                            colorSet={{
+                                                textColor: theme.textColor,
+                                            }}
+                                            item={item}
+                                            navigation={navigation}
+                                            isFav={() => checkIsFav(item)}
+                                        />
+                                    }
+
+                                </>
                             )}
                         />
                     </View>

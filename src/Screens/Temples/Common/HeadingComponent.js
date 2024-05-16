@@ -1,10 +1,12 @@
 import React, { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import { Dimensions, Pressable, Text } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
 import { ThemeContext } from "../../../Context/ThemeContext";
 
 const HeadingComponent = ({ item, index, setHeader, selectedHeader }) => {
     const { theme } = useContext(ThemeContext)
+    const { t } = useTranslation()
     return (
         <Pressable
             style={{
@@ -36,7 +38,9 @@ const HeadingComponent = ({ item, index, setHeader, selectedHeader }) => {
                     // fontWeight: '600'
 
                 }}
-            >{item.name}</Text>
+            >
+                {t(item.name)}
+            </Text>
         </Pressable>
     )
 };

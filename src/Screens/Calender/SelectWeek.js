@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Feather from "react-native-vector-icons/dist/Feather";
 import { useDispatch } from "react-redux";
@@ -9,6 +10,7 @@ import { setInputValue } from "../../store/features/Calender/FormSlice";
 const SelectWeek = ({ setSelectedWeek, selectedWeek, closeBottomSheet }) => {
     const theme = useContext(ThemeContext)
     const dispatch = useDispatch()
+    const { t } = useTranslation()
     const inputKey = 'Days'
     const weekData = [
         { name: 'one', id: 1 },
@@ -29,14 +31,14 @@ const SelectWeek = ({ setSelectedWeek, selectedWeek, closeBottomSheet }) => {
     }
     return (
         <View style={{ paddingHorizontal: 20, marginTop: 20, paddingBottom: 50 }}>
-            <Text style={{ fontFamily: 'Lora-Bold', fontSize: 16, color: 'black', marginVertical: 10 }}>Select freuency of event</Text>
+            <Text style={{ fontFamily: 'Lora-Bold', fontSize: 16, color: 'black', marginVertical: 10 }}>  {t('Select event week') ? t('Select event week') : 'Select event week'}</Text>
             <FlatList data={weekData} renderItem={({ item, index }) => (
                 <TouchableOpacity
                     onPress={() => selectionHandler(item)}
                     style={styles.dropDown}
                 >
                     <Text style={{ fontFamily: 'Mulish-Regular', color: theme.textColor }}>
-                        {item?.name}
+                        {t(item?.name) ? t(item?.name) : item?.name}
                     </Text>
                     <View
                         style={selectedWeek?.name == item?.name ? [styles.iconContainer, { backgroundColor: colors.commonColor }] : styles.iconContainer}

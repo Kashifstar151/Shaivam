@@ -66,15 +66,19 @@ const EventCard = ({ date, timing, title, theme, item, header, day, dateNo }) =>
                 >
                     {title}
                 </Text>
-                <Text
-                    style={{
-                        fontWeight: '600',
-                        color: theme.colorscheme === 'light' ? '#4C3600' : '#fff',
-                        fontSize: RFValue(12, 800),
-                    }}
-                >
-                    {timing}
-                </Text>
+                {
+                    timing == null ? <></> :
+                        <Text
+                            style={{
+                                fontWeight: '600',
+                                color: theme.colorscheme === 'light' ? '#4C3600' : '#fff',
+                                fontSize: RFValue(12, 800),
+                            }}
+                        >
+                            {timing}
+                        </Text>
+                }
+
             </View>
         </View>
     );
@@ -82,7 +86,7 @@ const EventCard = ({ date, timing, title, theme, item, header, day, dateNo }) =>
 
 const styles = StyleSheet.create({
     topContainer: {
-        padding: 18,
+        padding: 15,
         flexDirection: 'row',
         columnGap: 16,
         alignItems: 'center',

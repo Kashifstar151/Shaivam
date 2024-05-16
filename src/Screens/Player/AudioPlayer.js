@@ -116,7 +116,7 @@ const AudioPlayer = ({
                 activeTrack?.url &&
                 duration !== 0 &&
                 new Date(position * 1000).toISOString().substring(14, 19) >=
-                    new Date(duration * 1000).toISOString().substring(14, 19)
+                new Date(duration * 1000).toISOString().substring(14, 19)
             ) {
                 queryForNextPrevId();
             }
@@ -182,7 +182,7 @@ const AudioPlayer = ({
                         }
                     );
                 })
-                .catch((err) => {});
+                .catch((err) => { });
         });
     };
     const { position, duration } = useProgress();
@@ -386,13 +386,13 @@ const AudioPlayer = ({
                 style={
                     orientation == 'LANDSCAPE' || !visibleStatusBar
                         ? {
-                              width: !(orientation == 'LANDSCAPE')
-                                  ? Dimensions.get('window').width
-                                  : Dimensions.get('window').width / 2,
-                              backgroundColor: '#222222',
-                              height: 70,
-                              alignItems: 'center',
-                          }
+                            width: !(orientation == 'LANDSCAPE')
+                                ? Dimensions.get('window').width
+                                : Dimensions.get('window').width / 2,
+                            backgroundColor: '#222222',
+                            height: 70,
+                            alignItems: 'center',
+                        }
                         : { backgroundColor: '#222222', height: 200 }
                 }
             >
