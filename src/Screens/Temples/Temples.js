@@ -128,7 +128,7 @@ export const Temples = ({ navigation, route }) => {
                 mapRef.current?.animateCamera({ center: val }, { duration: 1000 });
                 setUserLocation((prev) => ({ ...prev, ...val }));
                 setRegionCoordinate((prev) => ({ ...prev, ...val }));
-                getNearByTemples({ ...regionCoordinate, ...val, limit: 100 });
+                getNearByTemples({ ...regionCoordinate, ...val });
             });
 
             getCurrentLocationWatcher((val) => {
@@ -408,7 +408,7 @@ export const Temples = ({ navigation, route }) => {
                     ]}
                     onPress={() => {
                         // setSkip(() => false);
-                        getNearByTemples({ ...regionCoordinate, limit: 100 });
+                        getNearByTemples(regionCoordinate);
                     }}
                     disabled={isFetching}
                 >
