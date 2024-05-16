@@ -10,7 +10,9 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
                 // const url = `api/nearby-temples?long=${data?.longitude}&lat=${data?.latitude}&radius=15000`;
                 const url = `api/nearby-temples?long=${data?.longitude}&lat=${
                     data?.latitude
-                }&radius=15000${data.flag ? `&flag=${data.flag}` : ''}`;
+                }&radius=15000${data.flag ? `&flag=${data.flag}` : ''}${
+                    data?.limit ? `&limit=${data.limit}` : '&limit=100}'
+                }`;
                 console.log('🚀 ~ url:', url);
                 return {
                     url: url,
