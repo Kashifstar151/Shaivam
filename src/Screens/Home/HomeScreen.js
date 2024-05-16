@@ -20,7 +20,7 @@ import bgImgDark from '../../../assets/Images/BackgroundCommon.png';
 import HomePlaylistCard from '../../components/HomePlaylistCard';
 import ElevatedCard from '../../components/ElevatedCard';
 import EventCard from '../../components/EventCard';
-import OmChat from './OmChat';
+import OmChant from './OmChat';
 import HeadingAndView from './HeadingAndView';
 import PlaceCard from './PlaceCard';
 import { RFValue } from 'react-native-responsive-fontsize';
@@ -38,7 +38,8 @@ import { useTranslation } from 'react-i18next';
 
 const HomeScreen = ({ navigation }) => {
     const RBSheetRef = useRef(null);
-    const { showPlayer, setShowPlayer, OmPlayTiming, setOmPlayTiming } = usePlayer();
+    const { showPlayer, setShowPlayer, OmPlayTiming, setOmPlayTiming, isPlaying, setIsPlaying } =
+        usePlayer();
     const { theme } = useContext(ThemeContext);
     const [compHeight, setCompHeight] = useState();
     const [textInsidePlaylistCard, setTextInsidePlaylistCard] = useState(0);
@@ -135,7 +136,7 @@ const HomeScreen = ({ navigation }) => {
             setFavList(callbacks);
         });
     }, [selectedPlaylistType, isFocused]);
-    useEffect(() => { }, []);
+    useEffect(() => {}, []);
 
     const checkIsFav = (item) => {
         let v = false;
@@ -473,7 +474,7 @@ const HomeScreen = ({ navigation }) => {
                         viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                         title={t('Upcoming Festivals')}
                         theme={{ textColor: theme.textColor, colorscheme: theme.colorscheme }}
-                        onPress={() => { }}
+                        onPress={() => {}}
                     />
                 </View>
                 <FlatList
@@ -500,7 +501,7 @@ const HomeScreen = ({ navigation }) => {
             </View>
             {/* om chant */}
             <View>
-                <OmChat
+                <OmChant
                     navigation={navigation}
                     onPress={() => {
                         RBSheetRef.current.open();
@@ -508,6 +509,7 @@ const HomeScreen = ({ navigation }) => {
                             setShowPlayer(false);
                         }
                     }}
+                    isPlaying={isPlaying}
                 />
             </View>
 
@@ -517,7 +519,7 @@ const HomeScreen = ({ navigation }) => {
                     <HeadingAndView
                         viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                         title={t('Nearby Temples')}
-                        onPress={() => { }}
+                        onPress={() => {}}
                         theme={{
                             textColor: theme.textColor,
                             colorscheme: theme.colorscheme,
@@ -560,7 +562,7 @@ const HomeScreen = ({ navigation }) => {
                     viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
                     title={t('App Walkthrough Videos')}
                     // todos : add the fn that take it to the dedicated video page
-                    onPress={() => { }}
+                    onPress={() => {}}
                     theme={{
                         textColor: theme.textColor,
                         colorscheme: theme.colorscheme,
