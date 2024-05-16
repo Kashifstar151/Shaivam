@@ -72,6 +72,7 @@ const Calender = ({ navigation }) => {
         refetch: refetchRegular,
         isSuccess: regularSuccess
     } = useGetListQuery({ selectedLocation, selectMonth, eventCategory }, { skip: !selectMonth });
+    // console.log("🚀 ~ regularEvent:", regularEvent)
     const {
         data: recurringEventList,
         isFetching: isFetchingRecurring,
@@ -79,14 +80,15 @@ const Calender = ({ navigation }) => {
         isSuccess: recurringSuccess
 
     } = useGetRecurringEventListQuery({ selectedLocation, eventCategory });
+    // console.log("🚀 ~ recurringEventList:", recurringEventList)
     const {
         data: festivalEvents,
         isFetching: isfestivaldataFetching,
         refetch: refetchFestival,
         isSuccess: isFestivalSuccess
 
-    } = useGetFestivalListQuery();
-    console.log("🚀 ~ Calender ~ recurringEventList:", JSON.stringify(regularEvent, 0, 2))
+    } = useGetFestivalListQuery({ selectMonth });
+    // console.log("🚀 ~ Calender ~ recurringEventList:", JSON.stringify(regularEvent, 0, 2))
     const {
         data: monthRecurringEventList,
         isFetching: isFetchingMonthly,
@@ -94,6 +96,7 @@ const Calender = ({ navigation }) => {
         isSuccess: recurringMonthlySuccess
 
     } = useGetRecurringEventMonthlyQuery({ selectedLocation, eventCategory });
+    // console.log("🚀 ~ monthRecurringEventList:", monthRecurringEventList)
     const [weekly, setWeekly] = useState([]);
     const [regular, setRegular] = useState([]);
     const [monthly, setMonthly] = useState([]);
@@ -140,10 +143,12 @@ const Calender = ({ navigation }) => {
         })
     }
     useEffect(() => {
-        // clearStates()
+
+        // console.log("🚀 ~ useEffect ~ regularEvent:", regularEvent)
         if (regularEvent && regularSuccess) {
             setShowLoader(true)
-            console.log('recurringEventList?.meta?.pagination?.total regular', regularEvent?.meta?.pagination?.total)
+            // alert('regular event')
+            // console.log('recurringEventList?.meta?.pagination?.total regular', regularEvent?.meta?.pagination?.total)
 
             setRegular([]);
             const data = regularEvent.data.map(event => ({
@@ -154,17 +159,19 @@ const Calender = ({ navigation }) => {
             setRegular(data);
             setChanged(!changed);
         }
-    }, [regularEvent, prevNext, selectedLocation, eventCategory]);
+    }, [regularEvent, prevNext, selectedLocation, eventCategory, regularSuccess]);
 
     // Process recurring event list
     useEffect(() => {
+        // console.log("🚀 ~ useEffect ~ recurringEventList:", recurringEventList)
         if (recurringEventList && recurringSuccess) {
             const data = []
+            // alert('recurring event weekly')
             const cDate = moment().startOf("day");
             for (let event of recurringEventList?.data) {
                 const start = moment().add(prevNext, "months").startOf("month").format("YYYY-MM-DD")
                 let dateSplit = start.split("-")
-                const days = getDaysInMonth(dateSplit[1], dateSplit[0], event.attributes.Day)
+                const days = getDaysInMonth(dateSplit[1], dateSplit[0], event.attributes.day)
                 console.log("🚀 ~ useEffect ~ days:", days)
                 for (let day of days) {
                     if (day >= cDate) {
@@ -182,7 +189,7 @@ const Calender = ({ navigation }) => {
             setWeekly(data);
             setChanged(!changed);
         }
-    }, [recurringEventList, prevNext, selectedLocation, eventCategory]);
+    }, [recurringEventList, prevNext, selectedLocation, eventCategory, recurringSuccess]);
 
     // Process regular events
 
@@ -190,7 +197,10 @@ const Calender = ({ navigation }) => {
     // Process monthly recurring events
     useEffect(() => {
         // clearStates()
+        // console.log("🚀 ~ useEffect ~ monthRecurringEventList:", monthRecurringEventList)
         if (monthRecurringEventList && recurringMonthlySuccess) {
+            // alert('recurring event monthly')
+
             // console.log('recurringEventList?.meta?.pagination?.total month recurring', monthRecurringEventList?.meta?.pagination?.total)
 
             setMonthly([]);
@@ -201,9 +211,9 @@ const Calender = ({ navigation }) => {
             for (let event of monthRecurringEventList?.data) {
                 const start = moment().add(prevNext, "months").startOf("month").format("YYYY-MM-DD")
                 let dateSplit = start.split("-")
-                const days = getDaysInMonth(dateSplit[1], dateSplit[0], event.attributes.Day)
+                const days = getDaysInMonth(dateSplit[1], dateSplit[0], event.attributes.day)
                 let finalizedDate = null
-                switch (event?.attributes?.Days) {
+                switch (event?.attributes?.days) {
                     case "one":
                         if (days[0] && days[0] >= cDate) {
                             // handling the first index ...
@@ -257,12 +267,13 @@ const Calender = ({ navigation }) => {
             setMonthly(data);
             setChanged(!changed);
         }
-    }, [monthRecurringEventList, prevNext, selectedLocation, eventCategory]);
+    }, [monthRecurringEventList, prevNext, selectedLocation, eventCategory, recurringMonthlySuccess]);
 
     // Combine all events into a sorted list
     useEffect(() => {
         // clearStates()
         setMainData([])
+        // alert('main data')
         let today = []
         const allEvents = []
         if (weekly) {
@@ -297,7 +308,10 @@ const Calender = ({ navigation }) => {
         let data = []
         if (selectedHeader == data1[1].name) {
             data = mainData.filter((item) => item?.attributes?.title?.includes(searchText))
-            console.log("🚀 ~ useEffect ~ data:", data)
+            // console.log("🚀 ~ useEffect ~ data:", data)
+            setFilteredData(data)
+        } else {
+            data = festivalEvents?.data?.filter((item) => item?.attributes?.Calendar_title?.includes(searchText))
             setFilteredData(data)
         }
     }, [debounceVal])
@@ -437,14 +451,13 @@ const Calender = ({ navigation }) => {
                 <View
                     style={{
                         paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 20 : 0,
-                    }}
-                >
+                    }}>
                     <View style={styles.HeadeingContainer}>
                         <HeadingText text={t('Calendar')} nandiLogo={true} />
                     </View>
                     <View style={styles.SearchInputContainer}>
                         <View style={{ width: '84%' }}>
-                            <SearchInput placeholder={t('Search for Festivals/events')} setState={setSearchText} />
+                            <SearchInput placeholder={t('Search for Festivals/Events')} setState={setSearchText} />
                         </View>
                         <TouchableOpacity
                             style={styles.AddBtnContainer}
@@ -518,8 +531,8 @@ const Calender = ({ navigation }) => {
                                     setShowLoader(true)
                                 } else {
                                     setPrevNext(prev => prev - 1)
-                                    // setShowLoader(true)
-                                    alert(prevNext)
+                                    setShowLoader(true)
+                                    // alert(prevNext)
                                 }
                             }, 1000);
                         }}
@@ -710,12 +723,10 @@ const Calender = ({ navigation }) => {
                                 </View>
                                 <FlatList
                                     getItemLayout={getItemLayOut}
-                                    // initialScrollIndex={scrollIndex}
                                     ref={flatListRef}
-                                    data={selectedHeader == data1[0].name ? festivalEvents?.data : searchText == '' ? mainData : filteredData}
+                                    data={selectedHeader == data1[0].name ? searchText == '' ? festivalEvents?.data : filteredData : searchText == '' ? mainData : filteredData}
                                     key={(item, index) => index}
                                     contentContainerStyle={{ paddingBottom: 100 }}
-                                    // scrollEnabled={false}
                                     renderItem={({ item, index }) => (
                                         <ElevatedCard
                                             navigation={() =>

@@ -190,7 +190,7 @@ const NearByTemples = ({
                             paddingHorizontal: 15,
                         }}
                     >
-                        {locationName ? `${t('Nearby Temples in')} ${locationName}` : null}
+                        {locationName ? `${t('Nearby Temples in -')} ${locationName}` : null}
                     </Text>
                 </View>
             </TouchableWithoutFeedback>

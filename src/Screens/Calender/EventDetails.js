@@ -13,7 +13,8 @@ import { RouteTexts } from '../../navigation/RouteText';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import PushNotification, { Importance } from 'react-native-push-notification';
-import { useIsFocused } from '@react-navigation/native';
+import { StackActions, useIsFocused } from '@react-navigation/native';
+import { getCurrentLocation } from '../../Helpers/GeolocationFunc';
 
 
 const EventDetails = ({ navigation, route }) => {
@@ -21,7 +22,13 @@ const EventDetails = ({ navigation, route }) => {
     const isFocus = useIsFocused()
     console.log('🚀 ~ EventDetails ~ item:', JSON.stringify(item, 0, 2));
     const [notificationOn, setNotification] = useState(false)
+    const [regionCoordinate, setRegionCoordinate] = useState(null)
+    const popAction = StackActions.pop(1);
     useEffect(() => {
+        getCurrentLocation(callbacks => {
+            console.log("🚀 ~ useEffect ~ callbacks:", callbacks)
+            setRegionCoordinate(callbacks)
+        })
         checkPermissionAccess()
         createChannel()
     }, [isFocus])
@@ -60,7 +67,6 @@ const EventDetails = ({ navigation, route }) => {
         })
     }
     const scheduleNotification = () => {
-        // alert(item?.attributes?.start_date)
         PushNotification.localNotificationSchedule({
             channelId: 'Event',
             title: item?.title,
@@ -106,30 +112,35 @@ const EventDetails = ({ navigation, route }) => {
                     {item?.attributes?.category}
                 </Text>
                 <View style={{ flexDirection: 'row', marginVertical: 5 }}>
-                    <CustomButton
-                        svg={<DirectionSVG fill={'#fff'} />}
-                        onPress={() => {
-                            const sourceLatitude = 37.7749; // Example source latitude
-                            const sourceLongitude = -122.4194; // Example source longitude
-                            const destinationLatitude = 34.0522; // Example destination latitude
-                            const destinationLongitude = -118.2437; // Example destination longitude
-                            // const googleMapsUrl = `geo:${sourceLatitude},${sourceLongitude}?q=${destinationLatitude},${destinationLongitude}`;
-                            // Linking.openURL(googleMapsUrl).catch((err) => {
-                            //     console.log('the map is not avialable');
-                            //     const googleMapsUrlFallBack = `https://www.google.com/maps/dir/?api=1&origin=${sourceLatitude},${sourceLongitude}&destination=${destinationLatitude},${destinationLongitude}`;
-                            //     Linking.openURL(googleMapsUrlFallBack);
-                            // });
-                        }}
-                        style={{
-                            margin: 10,
-                            elevation: 3,
-                            shadowColor: 'black',
-                            width: Dimensions.get('window').width / 2.4,
-                        }}
-                        text={t('Directions')}
-                        backgroundColor={'#C1554E'}
-                        textColor={'#fff'}
-                    />
+                    {
+                        item?.attributes?.Latitude && item?.attributes?.Longitude &&
+                        <CustomButton
+                            svg={<DirectionSVG fill={'#fff'} />}
+                            onPress={() => {
+                                const sourceLatitude = parseFloat(regionCoordinate?.latitude); // Example source latitude
+                                const sourceLongitude = parseFloat(regionCoordinate?.longitude); // Example source longitude
+                                const destinationLatitude = parseFloat(item?.attributes?.Latitude); // Example destination latitude
+                                const destinationLongitude = parseFloat(item?.attributes?.Longitude); // Example destination longitude
+                                const googleMapsUrl = `geo:${sourceLatitude},${sourceLongitude}?q=${destinationLatitude},${destinationLongitude}`;
+                                Linking.openURL(googleMapsUrl).catch((err) => {
+                                    console.log('the map is not avialable');
+                                    const googleMapsUrlFallBack = `https://www.google.com/maps/dir/?api=1&origin=${sourceLatitude},${sourceLongitude}&destination=${destinationLatitude},${destinationLongitude}`;
+                                    Linking.openURL(googleMapsUrlFallBack);
+                                });
+
+                            }}
+                            style={{
+                                margin: 10,
+                                elevation: 3,
+                                shadowColor: 'black',
+                                width: Dimensions.get('window').width / 2.4,
+                            }}
+                            text={t('Directions')}
+                            backgroundColor={'#C1554E'}
+                            textColor={'#fff'}
+                        />
+                    }
+
 
                     <CustomButton
                         svg={<LinkIcon fill={'#ffffff'} />}
