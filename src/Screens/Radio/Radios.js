@@ -5,9 +5,6 @@ import BackButton from "../../components/BackButton";
 import Background from "../../components/Background";
 import RadioSVG from "../../components/SVGs/RadioSVG";
 import { ThemeContext } from "../../Context/ThemeContext";
-// import CenterIcon from '../../assets/Images/Vector (3).svg'
-// import Feather from "react-native-vector-icons/dist/Feather";
-// import ToggleSwitch from "toggle-switch-react-native";
 import { colors } from "../../Helpers";
 import { useGetRadioListQuery } from "../../store/features/Calender/CalenderApiSlice";
 import TrackPlayer, { AppKilledPlaybackBehavior, Capability, usePlaybackState } from "react-native-track-player";
@@ -163,10 +160,21 @@ const Radios = ({ navigation }) => {
         await TrackPlayer.play();
 
     }
+
     const PauseAudio = async () => {
         // setSelectedMusic(item)
         // await TrackPlayer.skip(id);
         await TrackPlayer.pause();
+    }
+    const skipToNext = async () => {
+        await TrackPlayer.skipToNext()
+        const track = await TrackPlayer.getActiveTrack()
+        setSelectedMusic(track)
+    }
+    const skipToPrevious = async () => {
+        await TrackPlayer.skipToPrevious()
+        const track = await TrackPlayer.getActiveTrack()
+        setSelectedMusic(track)
     }
     return (
         <View style={{ height: Dimensions.get('window').height }}>
@@ -195,9 +203,6 @@ const Radios = ({ navigation }) => {
                                         {<MaterialIcons name='play-arrow' size={24} />}
                                     </Pressable>
                             }
-                            {/* <Pressable onPress={() => handleSong(item, index)} style={{ alignItems: 'center', justifyContent: 'center', height: 40, width: 40, backgroundColor: 'white', borderRadius: 20, shadowColor: 'black', shadowOffset: { height: 2, width: 1 }, shadowOpacity: 0.2, shadowRadius: 1, }}>
-                            {selectedMusic?.id == item?.id && playBackState?.state == 'playing' ? <MaterialIcons name='square' size={19} /> : <MaterialIcons name='play-arrow' size={24} />}
-                        </Pressable> */}
                         </Pressable>
                     )} />
                 }
@@ -228,7 +233,6 @@ const Radios = ({ navigation }) => {
                     )} />
                 </View> */}
             </View>
-            {/* <View> */}
             <View
                 style={{
                     paddingHorizontal: 15,
@@ -245,12 +249,6 @@ const Radios = ({ navigation }) => {
                     bottom: 30,
                 }}
             >
-                {/* <TouchableOpacity
-                        style={{ position: 'absolute', top: -10, right: -5 }}
-                    // onPress={() => setShowPlayer(false)}
-                    >
-                        <Icon name="closecircle" color={colors.grey7} size={23} />
-                    </TouchableOpacity> */}
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <View
                         style={{
@@ -266,55 +264,37 @@ const Radios = ({ navigation }) => {
                     </View>
                     <View style={{ paddingHorizontal: 10 }}>
                         <Text style={{ color: 'white', fontWeight: '700' }}>
-                            {selectedMusic?.attributes?.Title}
+                            {selectedMusic?.attributes?.Title ? selectedMusic?.attributes?.Title : selectedMusic?.title}
                         </Text>
                         <Text style={{ color: colors.grey6 }}>
-                            {/* {formatSeconds(timeRemaining / 1000)}/{formatSeconds(OmPlayTiming / 1000)} */}
                             Now Playing
                         </Text>
                     </View>
                 </View>
-                {/* {paused ? ( */}
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <TouchableOpacity onPress={() => TrackPlayer.skipToPrevious()}>
+                    <TouchableOpacity onPress={() => skipToPrevious()}>
                         <Icon name="stepbackward" size={20} color="white" />
                     </TouchableOpacity>
                     <TouchableOpacity
+                        onPress={() => {
+                            playBackState?.state == 'playing' ? TrackPlayer.pause() : TrackPlayer.play()
+                        }}
                         style={{
                             height: 40,
                             width: 40,
                             borderRadius: 20,
                             justifyContent: 'center',
                             alignItems: 'center',
-                            // marginHorizontal: 30,
                         }}
-                    // onPress={() => TrackPlayer.pause()}
                     >
                         {playBackState?.state == 'playing' ? <Icon name="pause" size={30} color="white" /> : <Icon name="play" size={30} color="white" />}
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => TrackPlayer.skipToNext()}>
+                    <TouchableOpacity onPress={() => skipToNext()}>
                         <Icon name="stepforward" size={20} color="white" />
                     </TouchableOpacity>
                 </View>
-                {/* ) : (
-                    <TouchableOpacity
-                        style={{
-                            height: 40,
-                            width: 40,
-                            borderRadius: 20,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            // marginHorizontal: 30,
-                        }}
-                        onPress={() => TrackPlayer.play()}
-                    >
-                        <Icon name="play" size={40} color="white" />
-                    </TouchableOpacity>
-                )} */}
             </View>
-            {/* </View> */}
         </View >
     );
 };
-
 export default Radios;
