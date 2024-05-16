@@ -20,6 +20,7 @@ const FilteredTemplesPage = ({ navigation, route }) => {
         {
             flag: route?.params?.data?.flag,
             ...route?.params?.data?.regionCoordinate,
+            limit: 100,
         },
         {
             refetchOnMountOrArgChange: true,
