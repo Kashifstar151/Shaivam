@@ -157,7 +157,7 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
                     }, 5000)
                 }
                 provider={PROVIDER_GOOGLE}
-                // initialRegion={regionCoordinate}
+                initialRegion={userLocation}
                 style={styles.map}
                 // onRegionChangeComplete={(args, gesture) => {
                 //     if (gesture.isGesture) {
