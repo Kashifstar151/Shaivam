@@ -6,7 +6,7 @@ import BackBtnSvg from '../../components/SVGs/BackBtnSvg';
 import { useTranslation } from 'react-i18next';
 import { useDebouncer } from '../../Helpers/useDebouncer';
 
-const FilterTheTempleFromList = ({ route, data, setDataToRender }) => {
+const FilterTheTempleFromList = ({ route, data = [], setDataToRender }) => {
     const [searchText, setSearchText] = useState('');
     const { t } = useTranslation();
     const debounceVal = useDebouncer(searchText, 500);
