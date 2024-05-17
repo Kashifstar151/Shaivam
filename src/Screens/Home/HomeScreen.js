@@ -34,6 +34,8 @@ import { colors } from '../../Helpers';
 import ListAudios from '../Thrimurai/ThrimuraiList/ListAudios';
 import { usePlayer } from '../../Context/PlayerContext';
 import { useTranslation } from 'react-i18next';
+import { useGetFestivalListQuery } from '../../store/features/Calender/CalenderApiSlice';
+import moment from 'moment';
 import {
     checkPermissionAccess,
     clearGetCurrentLocationWatcher,
@@ -42,8 +44,7 @@ import {
 } from '../../Helpers/GeolocationFunc';
 import { PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { useLazyGetNearByTemplesQuery } from '../../store/features/Temple/TemplApiSlice';
-import { useGetFestivalListQuery } from '../../store/features/Calender/CalenderApiSlice';
-import moment from 'moment';
+import { RouteTexts } from '../../navigation/RouteText';
 
 const HomeScreen = ({ navigation }) => {
     const RBSheetRef = useRef(null);
@@ -227,6 +228,9 @@ const HomeScreen = ({ navigation }) => {
             setFavList(callbacks);
         });
     }, [selectedPlaylistType, isFocused]);
+    useEffect(() => {
+
+    }, []);
 
     const checkIsFav = (item) => {
         let v = false;
@@ -565,7 +569,8 @@ const HomeScreen = ({ navigation }) => {
             </View> */}
 
             {/* upcoming events  */}
-            {isFestivalSuccess && (
+            {
+                isFestivalSuccess &&
                 <View>
                     <View style={{ paddingBottom: 15, paddingHorizontal: 15 }}>
                         <HeadingAndView
@@ -574,7 +579,7 @@ const HomeScreen = ({ navigation }) => {
                             }
                             title={t('Upcoming Festivals')}
                             theme={{ textColor: theme.textColor, colorscheme: theme.colorscheme }}
-                            onPress={() => {}}
+                            onPress={() => navigation.navigate(RouteTexts.BOTTOM_TABS, { screen: RouteTexts.CALENDER })}
                         />
                     </View>
                     <FlatList
@@ -585,7 +590,10 @@ const HomeScreen = ({ navigation }) => {
                         key={(item) => item?.id}
                         data={festivalEvent}
                         renderItem={({ item, index }) => (
-                            <ElevatedCard theme={{ colorscheme: theme.colorscheme }}>
+                            <ElevatedCard theme={{ colorscheme: theme.colorscheme }}
+                                navigation={() => navigation.navigate(RouteTexts.WEBSIRE_VIEW, {
+                                    item: item
+                                })}>
                                 <EventCard
                                     date={moment(item?.attributes?.calendar_from_date).get('D')}
                                     timing={null}
@@ -604,7 +612,7 @@ const HomeScreen = ({ navigation }) => {
                         )}
                     />
                 </View>
-            )}
+            }
 
             {/* om chant */}
             <View>
@@ -656,10 +664,8 @@ const HomeScreen = ({ navigation }) => {
                         </ElevatedCard>
                     )}
                 />
-            </View> */}
-            {/* Quiz */}
+            </View>
             {/* <Quiz /> */}
-            {/* video list */}
             {/* <View
                 style={{
                     paddingBottom: 60,

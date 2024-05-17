@@ -98,7 +98,7 @@ const EventDetails = ({ navigation, route }) => {
             <Background>
                 <BackButton
                     navigation={navigation}
-                    firstRightIcon={true}
+                    // firstRightIcon={true}
                     middleText={'முதல்-திருமுறை - Pradhs...'}
                     rightIcon={true}
                     color={true}
@@ -142,16 +142,16 @@ const EventDetails = ({ navigation, route }) => {
                     }
 
 
-                    <CustomButton
+                    {/* <CustomButton
                         svg={<LinkIcon fill={'#ffffff'} />}
                         onPress={() => item?.attributes?.Url && Linking.openURL(item?.attributes?.Url)}
                         style={{
                             margin: 10,
                         }}
-                        text={'Virtual event link'}
+                        text={t('Virtual event link')}
                         backgroundColor={'#C1554E'}
                         textColor={'#ffffff'}
-                    />
+                    /> */}
                 </View>
                 <View style={{ paddingHorizontal: 10 }}>
                     <Text style={styles.descriptionText}>{item?.attributes?.description}</Text>
@@ -179,7 +179,7 @@ const EventDetails = ({ navigation, route }) => {
                                                     fontSize: 12,
                                                 }}
                                             >
-                                                {item?.name}
+                                                {t(item?.name)}
                                             </Text>
                                         </View>
                                         <View

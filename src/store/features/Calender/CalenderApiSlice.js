@@ -116,23 +116,23 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
         }),
     }),
 });
-function getLastDayOfMonth(dateString) {
-    console.log('🚀 ~ getLastDayOfMonth ~ dateString:', dateString);
-    // Parse the start date
-    const startDate = new Date(dateString);
-    // Create a new Date object from the start date
-    const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
-    // Format the end date as a string in 'YYYY-MM-DD' format
-    const endDateString = endDate.toISOString().split('T')[0];
-    console.log('🚀 ~ getLastDayOfMonth ~ endDateString:', endDateString);
-    return endDateString;
-}
-function getStartDate(dateString) {
-    console.log('🚀 ~ getLastDayOfMonth ~ dateString:', dateString);
-    let d = dateString?.splite('-')
-    d = `${d[0]}-${d[1]}-01`
-    return d;
-}
+// function getLastDayOfMonth(dateString) {
+//     console.log('🚀 ~ getLastDayOfMonth ~ dateString:', dateString);
+//     // Parse the start date
+//     const startDate = new Date(dateString);
+//     // Create a new Date object from the start date
+//     const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
+//     // Format the end date as a string in 'YYYY-MM-DD' format
+//     const endDateString = endDate.toISOString().split('T')[0];
+//     console.log('🚀 ~ getLastDayOfMonth ~ endDateString:', endDateString);
+//     return endDateString;
+// }
+// function getStartDate(dateString) {
+//     console.log('🚀 ~ getLastDayOfMonth ~ dateString:', dateString);
+//     let d = dateString?.splite('-')
+//     d = `${d[0]}-${d[1]}-01`
+//     return d;
+// }
 
 export const { useGetListQuery, useAddRegularEventMutation, useAddImageForEventMutation, useGetRecurringEventListQuery, useGetRecurringEventMonthlyQuery, useGetFestivalListQuery, useAddRecurringEventMutation, useGetRadioListQuery } =
     CalenderApiSlice;
