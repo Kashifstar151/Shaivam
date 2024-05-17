@@ -63,12 +63,7 @@ export const Temples = ({ navigation, route }) => {
     const LATITUDE_DELTA = 0.18;
     const LONGITUDE_DELTA = LATITUDE_DELTA * (screenWidth / screenHeight);
 
-    const [userLocation, setUserLocation] = useState({
-        latitude: 28.500271,
-        longitude: 77.387901,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA,
-    });
+    const [userLocation, setUserLocation] = useState({});
 
     const [regionCoordinate, setRegionCoordinate] = useState({});
 
@@ -118,10 +113,20 @@ export const Temples = ({ navigation, route }) => {
         } else if (state === RESULTS.GRANTED) {
             getCurrentLocation((val) => {
                 mapRef.current?.animateCamera({ center: val }, { duration: 1000 });
-                setUserLocation((prev) => ({ ...prev, ...val }));
+                setUserLocation((prev) => ({
+                    ...prev,
+                    ...val,
+                    latitudeDelta: LATITUDE_DELTA,
+                    longitudeDelta: LONGITUDE_DELTA,
+                }));
                 setRegionCoordinate((prev) => {
                     getNearByTemples({ ...prev, ...val });
-                    return { ...prev, ...val };
+                    return {
+                        ...prev,
+                        ...val,
+                        latitudeDelta: LATITUDE_DELTA,
+                        longitudeDelta: LONGITUDE_DELTA,
+                    };
                 });
             });
 
@@ -285,7 +290,7 @@ export const Temples = ({ navigation, route }) => {
                     >
                         {permissionGranted === RESULTS.GRANTED && (
                             <View>
-                                {userLocName?.showName && (
+                                {userLocation?.latitude && userLocation?.longitude && (
                                     <MarkerCallOut
                                         setPadState={setPadState}
                                         flag={8}
@@ -395,6 +400,54 @@ export const Temples = ({ navigation, route }) => {
                         regionCoordinate={regionCoordinate}
                     />
                 </AnimatedRightSideView>
+
+                <View style={styles.topBarWrapper}>
+                    <View style={styles.colorContWrapper}>
+                        {Object.entries(assetMapWithTempleType).map(([key, value], indx) =>
+                            !(key == 8 || key == 9) ? (
+                                <Pressable
+                                    style={styles.contWrapper}
+                                    onPress={() => {
+                                        // adding callback on the category btn press and navigating to the filter page
+                                        if (permissionGranted === RESULTS.GRANTED) {
+                                            categoryBtnClbk(navigation, key, regionCoordinate);
+                                        } else {
+                                            setShowModal(!showModal);
+                                        }
+                                    }}
+                                    key={indx}
+                                >
+                                    <View
+                                        style={[
+                                            styles.textContWrapper,
+                                            {
+                                                backgroundColor: value.metaData.color,
+                                            },
+                                        ]}
+                                    >
+                                        {value.metaData.letterAssociated && (
+                                            <Text style={styles.textStyleForCont}>
+                                                {value.metaData.letterAssociated}
+                                            </Text>
+                                        )}
+                                    </View>
+                                </Pressable>
+                            ) : null
+                        )}
+                    </View>
+
+                    <SearchContainerWithIcon>
+                        <SearchTemple
+                            route={route.name}
+                            value={null}
+                            isNavigable={false}
+                            isDisable={false}
+                            isAutoComplete={true}
+                            setRegionCoordinate={(val) => setSearchParams(val)}
+                            setMapInteractivityState={setMapInteractivityState}
+                        />
+                    </SearchContainerWithIcon>
+                </View>
 
                 {permissionGranted === 'granted' ? (
                     <BottomSheet
@@ -509,54 +562,6 @@ export const Temples = ({ navigation, route }) => {
                         </View>
                     </View>
                 </Modal>
-
-                <View style={styles.topBarWrapper}>
-                    <View style={styles.colorContWrapper}>
-                        {Object.entries(assetMapWithTempleType).map(([key, value], indx) =>
-                            !(key == 8 || key == 9) ? (
-                                <Pressable
-                                    style={styles.contWrapper}
-                                    onPress={() => {
-                                        // adding callback on the category btn press and navigating to the filter page
-                                        if (permissionGranted === RESULTS.GRANTED) {
-                                            categoryBtnClbk(navigation, key, regionCoordinate);
-                                        } else {
-                                            setShowModal(!showModal);
-                                        }
-                                    }}
-                                    key={indx}
-                                >
-                                    <View
-                                        style={[
-                                            styles.textContWrapper,
-                                            {
-                                                backgroundColor: value.metaData.color,
-                                            },
-                                        ]}
-                                    >
-                                        {value.metaData.letterAssociated && (
-                                            <Text style={styles.textStyleForCont}>
-                                                {value.metaData.letterAssociated}
-                                            </Text>
-                                        )}
-                                    </View>
-                                </Pressable>
-                            ) : null
-                        )}
-                    </View>
-
-                    <SearchContainerWithIcon>
-                        <SearchTemple
-                            route={route.name}
-                            value={null}
-                            isNavigable={false}
-                            isDisable={false}
-                            isAutoComplete={true}
-                            setRegionCoordinate={(val) => setSearchParams(val)}
-                            setMapInteractivityState={setMapInteractivityState}
-                        />
-                    </SearchContainerWithIcon>
-                </View>
             </View>
         </>
     );
