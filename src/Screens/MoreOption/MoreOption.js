@@ -35,6 +35,7 @@ import RateTheAppSVG from '../../components/SVGs/RateTheAppSVG';
 import AboutSVG from '../../components/SVGs/AboutSVG';
 import { useFocusEffect } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MoreOption = () => {
     const { theme } = useContext(ThemeContext);
@@ -135,8 +136,9 @@ const MoreOption = () => {
         { name: 'اُردُو', lngCode: 'ur' },
     ];
 
-    const handleLanguageClick = (item) => {
+    const handleLanguageClick = async (item) => {
         i18n.changeLanguage(item.lngCode); // 12
+        await AsyncStorage.setItem('language', JSON.stringify(item));
         setSelectedLanguage(item);
     };
 

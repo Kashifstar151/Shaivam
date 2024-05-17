@@ -44,22 +44,22 @@ import {
 } from '../../Helpers/GeolocationFunc';
 import { PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { useLazyGetNearByTemplesQuery } from '../../store/features/Temple/TemplApiSlice';
+import { RouteTexts } from '../../navigation/RouteText';
 
 const HomeScreen = ({ navigation }) => {
     const RBSheetRef = useRef(null);
     const { showPlayer, setShowPlayer, OmPlayTiming, setOmPlayTiming, isPlaying, setIsPlaying } =
         usePlayer();
-    const { theme } = useContext(ThemeContext)
-    const { selectMonth, setSelectedMonth } = useState(moment().format('YYYY-MM-DD'))
+    const { theme } = useContext(ThemeContext);
+    const { selectMonth, setSelectedMonth } = useState(moment().format('YYYY-MM-DD'));
     const {
         data: festivalEvents,
         isFetching: isfestivaldataFetching,
         refetch: refetchFestival,
-        isSuccess: isFestivalSuccess
-
+        isSuccess: isFestivalSuccess,
     } = useGetFestivalListQuery({ selectMonth });
-    console.log("🚀 ~ HomeScreen ~ festivalEvents:", festivalEvents)
-    const [festivalEvent, setFestivalEvent] = useState([])
+    console.log('🚀 ~ HomeScreen ~ festivalEvents:', festivalEvents);
+    const [festivalEvent, setFestivalEvent] = useState([]);
     const [compHeight, setCompHeight] = useState();
     const [textInsidePlaylistCard, setTextInsidePlaylistCard] = useState(0);
     const [playlistCardHeight, setPlaylistCardHeight] = useState(0);
@@ -71,12 +71,12 @@ const HomeScreen = ({ navigation }) => {
     useEffect(() => {
         if (festivalEvents?.data && isFestivalSuccess) {
             let arr = festivalEvents?.data?.filter((item) => {
-                return moment(item?.attributes?.calendar_from_date) > moment()
-            })
+                return moment(item?.attributes?.calendar_from_date) > moment();
+            });
             // console.log(arr, 'upacoming festivals')
-            setFestivalEvent(arr?.slice(0, 5))
+            setFestivalEvent(arr?.slice(0, 5));
         }
-    }, [selectMonth, isFocused, isFestivalSuccess])
+    }, [selectMonth, isFocused, isFestivalSuccess]);
 
     const handleLayout = useCallback(
         (event) => {
@@ -571,13 +571,15 @@ const HomeScreen = ({ navigation }) => {
             {/* upcoming events  */}
             {
                 isFestivalSuccess &&
-                < View >
+                <View>
                     <View style={{ paddingBottom: 15, paddingHorizontal: 15 }}>
                         <HeadingAndView
-                            viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
+                            viewBtnColor={
+                                theme.colorscheme === 'light' ? colors.maroon : colors.white
+                            }
                             title={t('Upcoming Festivals')}
                             theme={{ textColor: theme.textColor, colorscheme: theme.colorscheme }}
-                            onPress={() => { }}
+                            onPress={() => navigation.navigate(RouteTexts.BOTTOM_TABS, { screen: RouteTexts.CALENDER })}
                         />
                     </View>
                     <FlatList
@@ -588,12 +590,17 @@ const HomeScreen = ({ navigation }) => {
                         key={(item) => item?.id}
                         data={festivalEvent}
                         renderItem={({ item, index }) => (
-                            <ElevatedCard theme={{ colorscheme: theme.colorscheme }}>
+                            <ElevatedCard theme={{ colorscheme: theme.colorscheme }}
+                                navigation={() => navigation.navigate(RouteTexts.WEBSIRE_VIEW, {
+                                    item: item
+                                })}>
                                 <EventCard
                                     date={moment(item?.attributes?.calendar_from_date).get('D')}
                                     timing={null}
                                     day={moment(item?.attributes?.calendar_from_date).format('ddd')}
-                                    dateNo={moment(item?.attributes?.calendar_from_date).format('DD')}
+                                    dateNo={moment(item?.attributes?.calendar_from_date).format(
+                                        'DD'
+                                    )}
                                     title={item?.attributes?.Calendar_title}
                                     item={item}
                                     theme={{
@@ -605,7 +612,6 @@ const HomeScreen = ({ navigation }) => {
                         )}
                     />
                 </View>
-
             }
 
             {/* om chant */}
@@ -689,7 +695,7 @@ const HomeScreen = ({ navigation }) => {
                     setOmPlayTiming={setOmPlayTiming}
                 />
             </RBSheet>
-        </ScrollView >
+        </ScrollView>
     );
 };
 export const styles = StyleSheet.create({

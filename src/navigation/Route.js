@@ -51,25 +51,33 @@ const Route = () => {
     const database = SQLite.openDatabase({ name: 'songData.db', createFromLocation: 1 });
     const [showDownloading, setShowDownloading] = useState(false);
     const [isConnected, setIsConnected] = useState();
+    const offlineDatabase = SQLite.openDatabase({ name: 'SongsData.db', createFromLocation: '~SongsData.db', location: 'Library' });
+
     // const database = SQLite.openDatabase({ name: databaseName, });
     useEffect(() => {
         // AsyncStorage.setItem(
         //     '@database',
         //     JSON.stringify({ name: 'songData.db', createFromLocation: 1 })
         // );
+
         LogBox.ignoreAllLogs();
-        AppState.addEventListener('change', (nextAppState) => {
-            if (nextAppState === 'background' || nextAppState === 'inactive') {
-                database.close();
-            }
-        });
+        // AppState.addEventListener('change', (nextAppState) => {
+        //     if (nextAppState === 'background' || nextAppState === 'inactive') {
+        //         // database.close();
+        //     }
+        // });
         // offlineDataBAse()
         const unsubscribe = addEventListener((state) => {
             if (state.isConnected) {
                 setIsConnected(true);
             }
         });
-        // checkFileExist()
+        RNFS.unlink(`${RNFS.DocumentDirectoryPath}`).then((res) => {
+            RNFS.scanFile(`${RNFS.DocumentDirectoryPath}`);
+            console.log("🚀 ~ RNFS.unlink ~ res:", res)
+        }).catch((error) => {
+            console.log("🚀 ~ RNFS.unlink ~ error:", error)
+        })
         // attachDb()
         // connectDataBaseToFolder()
 
@@ -119,6 +127,28 @@ const Route = () => {
                                 onPress: () => checkFileExist(response?.data?.[0]?.attributes),
                             },
                         ]);
+                    } else {
+                        console.log('fsjdh')
+                        offlineDatabase.transaction(
+                            async (tx) => {
+                                await tx.executeSql(
+                                    'ATTACH DATABASE ? AS Updated_db',
+                                    [
+                                        `SongsData.db`,
+                                    ],
+                                    async (tx, results) => {
+                                        console.log("🚀 ~ results:", results)
+                                        resolve(tx);
+
+                                    }
+                                );
+                            },
+                            async (error) => {
+                                console.log("🚀 ~ error:", error)
+                                // const data = await AsyncStorage.getItem('@database');
+                                reject(error);
+                            }
+                        );
                     }
                 })
                 .catch((err) => {
@@ -216,30 +246,31 @@ const Route = () => {
                         '@database',
                         JSON.stringify({ name: 'songData.db', createFromLocation: 1 })
                     );
-                    alert(true);
+                    // alert(true);
                     setShowDownloading(true);
+                    console.log('downloading exist', path)
                     setTimeout(() => {
                         setShowDownloading(false);
                     }, 2000);
                 } else {
                     requestFilePermissions();
-                    setShowDownloading(true);
-                    // alert(false);
-                    const promise = attachDb(metaData);
-                    promise
-                        .then((res) => {
-                            console.log('res', res);
 
-                            setShowDownloading(false);
-                        })
-                        .catch((error) => {
-                            console.log('error', error);
-                            setShowDownloading(false);
-                        });
-                    AsyncStorage.setItem('@database', JSON.stringify({ name: 'main.db' }));
+                    // alert(false);
+                    setShowDownloading(true);
+                    const promise = await attachDb(metaData);
+                    setShowDownloading(false);
+                    // promise
+                    //     .then((res) => {
+                    //         console.log('res', res);
+                    //         setShowDownloading(false);
+                    //     })
+                    //     .catch((error) => {
+                    //         console.log('error', error);
+                    //     });
                 }
             })
             .catch((error) => {
+                setShowDownloading(false);
                 console.log('🚀 ~ file: route.js:99 ~ RNFS.exists ~ error:', error);
             });
         await AsyncStorage.setItem('DB_METADATA', JSON.stringify(metaData));

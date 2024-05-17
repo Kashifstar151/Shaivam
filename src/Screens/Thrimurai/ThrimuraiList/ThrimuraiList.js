@@ -122,6 +122,7 @@ const ThrimuraiList = ({ navigation }) => {
     }, []);
     const retrieveData = async () => {
         getSqlData('SELECT * FROM category', (callbacks) => {
+            console.log("🚀 ~ getSqlData ~ callbacks:", callbacks)
             setThrimurais(callbacks);
         });
     };

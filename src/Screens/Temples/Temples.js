@@ -270,18 +270,18 @@ export const Temples = ({ navigation, route }) => {
                             longitudeDelta: LONGITUDE_DELTA,
                         }}
                         style={styles.map}
-                        onRegionChangeComplete={(args, gesture) => {
-                            if (gesture.isGesture) {
-                                onRegionChangeCompleteCallback(args, (input) => {
-                                    console.log('the gesture is true');
-                                    mapRef.current?.animateCamera(
-                                        { center: input },
-                                        { duration: 1000 }
-                                    );
-                                    setRegionCoordinate(input);
-                                });
-                            }
-                        }}
+                        // onRegionChangeComplete={(args, gesture) => {
+                        //     if (gesture.isGesture) {
+                        //         onRegionChangeCompleteCallback(args, (input) => {
+                        //             console.log('the gesture is true');
+                        //             mapRef.current?.animateCamera(
+                        //                 { center: input },
+                        //                 { duration: 1000 }
+                        //             );
+                        //             setRegionCoordinate(input);
+                        //         });
+                        //     }
+                        // }}
                         // region={regionCoordinate}
                         // zoomEnabled
                         zoomEnabled={mapInteractivityState}

@@ -82,6 +82,7 @@ const RenderItem = ({ blockRef, item, navigation, theme }) => {
                                 i?.navName == 'Stotras' ||
                                 i?.navName == RouteTexts.TEMPLE_TABS_NAVIGATE ||
                                 i?.navName == RouteTexts.CALENDER ||
+                                i?.navName == RouteTexts.FAVOURITE ||
                                 i?.navName == RouteTexts.RADIO
                                 ? () => navigation.navigate(i?.navName)
                                 : i?.navName == 'Website'
@@ -190,7 +191,7 @@ const CardComponents = ({ navigation }) => {
                 {
                     icon: <HeartSVG fill={theme.textColorHomeCardYellow} />,
                     title: t('Favourites'),
-                    navName: 'Favourites',
+                    navName: RouteTexts.FAVOURITE,
                 },
                 {
                     icon: <RadioSVG fill={theme.textColor} />,
@@ -256,14 +257,14 @@ const CardComponents = ({ navigation }) => {
         <View style={{ paddingLeft: 0 }}>
             <View style={{ marginTop: 24, paddingHorizontal: 15 }}>
                 <Header navigation={navigation} />
-                <SearchInput
+                {/* <SearchInput
                     placeholder={t('Search for anything (Eg - தோடுடைய செவியன்) ')}
                     setState={setSearchText}
                     state={searchText}
                     setOnFocus={setOnFocus}
                     extraPad={false}
                     styleOverwrite={{ marginHorizontalUnset: true, paddingTop: 24 }}
-                />
+                /> */}
                 <HeadingText text={t('Shaivam Exclusives')} />
                 <Text
                     style={{
