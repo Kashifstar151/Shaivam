@@ -105,38 +105,43 @@ export const Temples = ({ navigation, route }) => {
         ) {
             let requestedVal = await requestThePermission(permissionTypeRef.current);
             setPermissionGranted(() => requestedVal.permissionType);
+            if (requestedVal.permissionType === RESULTS.GRANTED) {
+                fetchTheCurrentLocation();
+            }
         } else if (state === RESULTS.DENIED) {
             let requestedVal = await requestThePermission(permissionTypeRef.current);
             setPermissionGranted(() => requestedVal.permissionType);
         } else if (state === RESULTS.BLOCKED) {
             setShowModal(!showModal);
         } else if (state === RESULTS.GRANTED) {
-            getCurrentLocation((val) => {
-                mapRef.current?.animateCamera({ center: val }, { duration: 1000 });
-                setUserLocation((prev) => ({
-                    ...prev,
-                    ...val,
-                    latitudeDelta: LATITUDE_DELTA,
-                    longitudeDelta: LONGITUDE_DELTA,
-                }));
-                setRegionCoordinate((prev) => {
-                    getNearByTemples({ ...prev, ...val });
-                    return {
-                        ...prev,
-                        ...val,
-                        latitudeDelta: LATITUDE_DELTA,
-                        longitudeDelta: LONGITUDE_DELTA,
-                    };
-                });
-            });
+            fetchTheCurrentLocation();
 
             getCurrentLocationWatcher((val) => {
                 setUserLocation((prev) => ({ ...prev, ...val }));
-                // setRegionCoordinate((prev) => ({ ...prev, ...val }))
             });
         } else {
             setShowModal(true);
         }
+    };
+    const fetchTheCurrentLocation = () => {
+        getCurrentLocation((val) => {
+            mapRef.current?.animateCamera({ center: val }, { duration: 1000 });
+            setUserLocation((prev) => ({
+                ...prev,
+                ...val,
+                latitudeDelta: LATITUDE_DELTA,
+                longitudeDelta: LONGITUDE_DELTA,
+            }));
+            setRegionCoordinate((prev) => {
+                getNearByTemples({ ...prev, ...val });
+                return {
+                    ...prev,
+                    ...val,
+                    latitudeDelta: LATITUDE_DELTA,
+                    longitudeDelta: LONGITUDE_DELTA,
+                };
+            });
+        });
     };
 
     const handleTrackBack = async () => {
@@ -254,65 +259,62 @@ export const Temples = ({ navigation, route }) => {
             <View
                 style={{ flex: 1, position: 'relative', marginTop: Platform.OS == 'ios' ? 15 : 0 }}
             >
-                {userLocation?.latitude ? (
-                    <MapView
-                        onMapReady={() =>
-                            setTimeout(() => {
-                                console.log('setting the pad');
-                                setPadState(!padState);
-                            }, 5000)
+                {/* {userLocation?.latitude ? ( */}
+                <MapView
+                    onMapReady={() =>
+                        setTimeout(() => {
+                            console.log('setting the pad');
+                            setPadState(!padState);
+                        }, 5000)
+                    }
+                    provider={PROVIDER_GOOGLE}
+                    initialRegion={{
+                        longitude: 77.40369287235171,
+                        latitude: 28.49488467262243,
+                        latitudeDelta: LATITUDE_DELTA,
+                        longitudeDelta: LONGITUDE_DELTA,
+                    }}
+                    style={styles.map}
+                    onRegionChangeComplete={(args, gesture) => {
+                        if (gesture.isGesture) {
+                            onRegionChangeCompleteCallback(args, (input) => {
+                                console.log('the gesture is true');
+                                mapRef.current?.animateCamera({ center: input }, { duration: 500 });
+                                setRegionCoordinate(() => input);
+                            });
                         }
-                        provider={PROVIDER_GOOGLE}
-                        initialRegion={{
-                            longitude: 77.40369287235171,
-                            latitude: 28.49488467262243,
-                            latitudeDelta: LATITUDE_DELTA,
-                            longitudeDelta: LONGITUDE_DELTA,
-                        }}
-                        style={styles.map}
-                        onRegionChangeComplete={(args, gesture) => {
-                            if (gesture.isGesture) {
-                                onRegionChangeCompleteCallback(args, (input) => {
-                                    console.log('the gesture is true');
-                                    mapRef.current?.animateCamera(
-                                        { center: input },
-                                        { duration: 500 }
-                                    );
-                                    setRegionCoordinate(() => input);
-                                });
-                            }
-                        }}
-                        // region={regionCoordinate}
-                        // zoomEnabled
-                        zoomEnabled={mapInteractivityState}
-                        scrollEnabled={mapInteractivityState}
-                        ref={mapRef}
-                    >
-                        {permissionGranted === RESULTS.GRANTED && (
-                            <View>
-                                {userLocation?.latitude && userLocation?.longitude && (
-                                    <MarkerCallOut
-                                        setPadState={setPadState}
-                                        flag={8}
-                                        coordinate={userLocation}
-                                        keyName={'USER_LOCATION_MARKER'}
-                                        description={"User's location"}
-                                    />
-                                )}
-                                {/* <MarkerCallOut
+                    }}
+                    // region={regionCoordinate}
+                    // zoomEnabled
+                    zoomEnabled={mapInteractivityState}
+                    scrollEnabled={mapInteractivityState}
+                    ref={mapRef}
+                >
+                    {permissionGranted === RESULTS.GRANTED && (
+                        <View>
+                            {userLocation?.latitude && userLocation?.longitude && (
+                                <MarkerCallOut
+                                    setPadState={setPadState}
+                                    flag={8}
+                                    coordinate={userLocation}
+                                    keyName={'USER_LOCATION_MARKER'}
+                                    description={"User's location"}
+                                />
+                            )}
+                            {/* <MarkerCallOut
                                     setPadState={setPadState}
                                     flag={7}
                                     coordinate={regionCoordinate}
                                     keyName={'COORDINATE'}
                                     description={"Region's location"}
                                 /> */}
-                            </View>
-                        )}
-                        {data?.temples?.map((item, index) => (
-                            <>
-                                {item?.latitude && item?.longitude && (
-                                    <>
-                                        {/* <Marker
+                        </View>
+                    )}
+                    {data?.temples?.map((item, index) => (
+                        <>
+                            {item?.latitude && item?.longitude && (
+                                <>
+                                    {/* <Marker
                                         tracksViewChanges={false}
                                         coordinate={{
                                             longitude: item?.longitude,
@@ -325,33 +327,33 @@ export const Temples = ({ navigation, route }) => {
                                             alignItems: 'center',
                                         }}
                                     ></Marker> */}
-                                        <MarkerCallOut
-                                            setPadState={setPadState}
-                                            callback={() => {
-                                                //   setting the type of the marker you pressed
-                                                //   callback function for naving to page which has the temple details
-                                                markerPressClbk(
-                                                    navigation,
-                                                    item?.flag,
-                                                    item,
-                                                    userLocation
-                                                );
-                                            }}
-                                            flag={item?.flag}
-                                            templeId={item?.id}
-                                            coordinate={{
-                                                longitude: item?.longitude,
-                                                latitude: item?.latitude,
-                                            }}
-                                            keyName={'COORDINATE'}
-                                            description={item?.name}
-                                        />
-                                    </>
-                                )}
-                            </>
-                        ))}
-                    </MapView>
-                ) : null}
+                                    <MarkerCallOut
+                                        setPadState={setPadState}
+                                        callback={() => {
+                                            //   setting the type of the marker you pressed
+                                            //   callback function for naving to page which has the temple details
+                                            markerPressClbk(
+                                                navigation,
+                                                item?.flag,
+                                                item,
+                                                userLocation
+                                            );
+                                        }}
+                                        flag={item?.flag}
+                                        templeId={item?.id}
+                                        coordinate={{
+                                            longitude: item?.longitude,
+                                            latitude: item?.latitude,
+                                        }}
+                                        keyName={'COORDINATE'}
+                                        description={item?.name}
+                                    />
+                                </>
+                            )}
+                        </>
+                    ))}
+                </MapView>
+                {/* ) : null} */}
 
                 <Pressable
                     style={[
