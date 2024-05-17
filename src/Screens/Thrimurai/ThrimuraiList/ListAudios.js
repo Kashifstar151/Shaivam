@@ -9,12 +9,11 @@ import { AddSongToDatabase, listfavAudios } from '../../../Databases/AudioPlayer
 import { shareSong } from '../../../Helpers/SongShare';
 import { useIsFocused } from '@react-navigation/native';
 const ListAudios = ({ item, navigation, listFav, colorSet, isFav }) => {
-    console.log("🚀 ~ ListAudios ~ listFav:", item)
     const [favrted, setFavrted] = useState(false);
-    const isFocused = useIsFocused()
+    const isFocused = useIsFocused();
     useEffect(() => {
         // if (listFav) {
-        setFavrted(isFav)
+        setFavrted(isFav);
         // }
     }, [isFav, isFocused]);
 
@@ -72,7 +71,7 @@ const ListAudios = ({ item, navigation, listFav, colorSet, isFav }) => {
                 }}
             >
                 <MusicContainer />
-                <View style={{ paddingHorizontal: 10, width: '70%', }}>
+                <View style={{ paddingHorizontal: 10, width: '70%' }}>
                     <Text
                         style={{
                             fontSize: 14,

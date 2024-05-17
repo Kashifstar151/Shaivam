@@ -44,10 +44,12 @@ import { colors } from '../../Helpers';
 import AlertScreen from '../../components/AlertScreen';
 import ShuffleSVG from '../../components/SVGs/ShuffleSVG';
 
-const RenderAudios = ({ item, index, clb, activeTrack, setSelectedOdhuvar }) => {
-    console.log("🚀 ~ RenderAudios ~ item:", item)
+const RenderAudios = ({ item, index, clb, activeTrack, setSelectedOdhuvar, downloaded }) => {
     const setItemForPlayer = (item) => {
+        // console.log("shjdvhvsjkdbvs", downloaded, downloadAudioIndex)
+        //  else {
         clb(index);
+        // }
     };
 
     return (
@@ -102,7 +104,7 @@ const AudioPlayer = ({
     setDownloadingLoader,
     isFav,
     activeTrack,
-    downloadSong
+    downloadSong,
 }) => {
     useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], async (event) => {
         if (event?.state == State?.nextTrack) {
@@ -119,12 +121,19 @@ const AudioPlayer = ({
                 activeTrack?.url &&
                 duration !== 0 &&
                 new Date(position * 1000).toISOString().substring(14, 19) >=
-                new Date(duration * 1000).toISOString().substring(14, 19)
+                    new Date(duration * 1000).toISOString().substring(14, 19)
             ) {
                 queryForNextPrevId();
             }
         }
     });
+    useEffect(() => {
+        songsData?.map((i, ind) => {
+            if (i?.id == downloadSong?.id) {
+                playById(ind);
+            }
+        });
+    }, [songsData]);
     useEffect(() => {
         Icon.getImageSource('circle', 18, '#C1554E').then((source) => {
             return setThumbImage({ thumbIcon: source });
@@ -136,15 +145,6 @@ const AudioPlayer = ({
             getFavAudios(),
             updateRecentlyPlayed({ ...activeTrack, prevId }),
         ]);
-        console.log('downloaded', downloadSong, downloaded)
-        if (downloaded) {
-            songsData?.map((res, index) => {
-                if (res?.id == downloadSong?.id) {
-                    console.log("🚀 ~ songsData?.map ~ index:", index)
-                    playById(index)
-                }
-            })
-        }
     }, []);
     const updateRecentlyPlayed = async (newTrack) => {
         const maxRecentTracks = 4;
@@ -159,7 +159,6 @@ const AudioPlayer = ({
         await AsyncStorage.setItem(`recentTrack`, JSON.stringify(updatedTracks));
     };
     const [fav, setFav] = useState(false);
-
     const downloadAudios = () => {
         listfavAudios((calbacks) => {
             let lenght = calbacks?.length;
@@ -194,7 +193,7 @@ const AudioPlayer = ({
                         }
                     );
                 })
-                .catch((err) => { });
+                .catch((err) => {});
         });
     };
     const { position, duration } = useProgress();
@@ -398,13 +397,13 @@ const AudioPlayer = ({
                 style={
                     orientation == 'LANDSCAPE' || !visibleStatusBar
                         ? {
-                            width: !(orientation == 'LANDSCAPE')
-                                ? Dimensions.get('window').width
-                                : Dimensions.get('window').width / 2,
-                            backgroundColor: '#222222',
-                            height: 70,
-                            alignItems: 'center',
-                        }
+                              width: !(orientation == 'LANDSCAPE')
+                                  ? Dimensions.get('window').width
+                                  : Dimensions.get('window').width / 2,
+                              backgroundColor: '#222222',
+                              height: 70,
+                              alignItems: 'center',
+                          }
                         : { backgroundColor: '#222222', height: 200 }
                 }
             >
@@ -425,10 +424,13 @@ const AudioPlayer = ({
                                 data={songsData}
                                 renderItem={({ item, index }) => (
                                     <RenderAudios
+                                        downloaded={downloaded}
+                                        downloadSong={downloadSong}
                                         item={item}
                                         index={index}
                                         clb={playById}
-                                        activeTrack={activeTrack}
+                                        activeTrack={downloaded ? downloadSong : activeTrack}
+                                        // downloadAudioIndex={downloadSongIndex}
                                     />
                                 )}
                             />

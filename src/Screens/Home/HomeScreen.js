@@ -58,7 +58,7 @@ const HomeScreen = ({ navigation }) => {
         refetch: refetchFestival,
         isSuccess: isFestivalSuccess,
     } = useGetFestivalListQuery({ selectMonth });
-    console.log('🚀 ~ HomeScreen ~ festivalEvents:', festivalEvents);
+    // console.log('🚀 ~ HomeScreen ~ festivalEvents:', festivalEvents);
     const [festivalEvent, setFestivalEvent] = useState([]);
     const [compHeight, setCompHeight] = useState();
     const [textInsidePlaylistCard, setTextInsidePlaylistCard] = useState(0);
@@ -159,10 +159,10 @@ const HomeScreen = ({ navigation }) => {
                 setUserLocation(() => ({ ...val }));
             });
 
-            getCurrentLocationWatcher((val) => {
-                // console.log('🚀 ~ getCurrentLocationWatcher ~ val:', val);
-                setUserLocation(() => ({ ...val }));
-            });
+            // getCurrentLocationWatcher((val) => {
+            //     // console.log('🚀 ~ getCurrentLocationWatcher ~ val:', val);
+            //     setUserLocation(() => ({ ...val }));
+            // });
         }
     };
 
@@ -228,9 +228,6 @@ const HomeScreen = ({ navigation }) => {
             setFavList(callbacks);
         });
     }, [selectedPlaylistType, isFocused]);
-    useEffect(() => {
-
-    }, []);
 
     const checkIsFav = (item) => {
         let v = false;
@@ -569,8 +566,7 @@ const HomeScreen = ({ navigation }) => {
             </View> */}
 
             {/* upcoming events  */}
-            {
-                isFestivalSuccess &&
+            {isFestivalSuccess && (
                 <View>
                     <View style={{ paddingBottom: 15, paddingHorizontal: 15 }}>
                         <HeadingAndView
@@ -579,7 +575,11 @@ const HomeScreen = ({ navigation }) => {
                             }
                             title={t('Upcoming Festivals')}
                             theme={{ textColor: theme.textColor, colorscheme: theme.colorscheme }}
-                            onPress={() => navigation.navigate(RouteTexts.BOTTOM_TABS, { screen: RouteTexts.CALENDER })}
+                            onPress={() =>
+                                navigation.navigate(RouteTexts.BOTTOM_TABS, {
+                                    screen: RouteTexts.CALENDER,
+                                })
+                            }
                         />
                     </View>
                     <FlatList
@@ -590,10 +590,14 @@ const HomeScreen = ({ navigation }) => {
                         key={(item) => item?.id}
                         data={festivalEvent}
                         renderItem={({ item, index }) => (
-                            <ElevatedCard theme={{ colorscheme: theme.colorscheme }}
-                                navigation={() => navigation.navigate(RouteTexts.WEBSIRE_VIEW, {
-                                    item: item
-                                })}>
+                            <ElevatedCard
+                                theme={{ colorscheme: theme.colorscheme }}
+                                navigation={() =>
+                                    navigation.navigate(RouteTexts.WEBSIRE_VIEW, {
+                                        item: item,
+                                    })
+                                }
+                            >
                                 <EventCard
                                     date={moment(item?.attributes?.calendar_from_date).get('D')}
                                     timing={null}
@@ -612,7 +616,7 @@ const HomeScreen = ({ navigation }) => {
                         )}
                     />
                 </View>
-            }
+            )}
 
             {/* om chant */}
             <View>
