@@ -47,7 +47,7 @@ import SettingsSVG from '../../../components/SVGs/SettingsSVG';
 
 const ThrimuraiSong = ({ route, navigation }) => {
     const isFocused = useIsFocused;
-    const { data, downloaded, searchedword, searchScreen, songNo, downloadSong } = route.params || {};
+    const { data, downloaded, searchedword, downloadSong, searchScreen, songNo } = route.params || {};
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
@@ -315,21 +315,23 @@ GROUP BY
     };
     useEffect(() => {
         dispatchMusic({ type: 'PREV_ID', payload: data?.prevId });
+
         if (downloaded) {
-            setUpPlayer(data);
+            checkDownloaded(musicState.song);
         }
-    }, [data]);
+    }, [data, downloadList, musicState?.song]);
 
     const toggleSwitch = (value, callbacks) => {
         callbacks(!value);
     };
     const checkDownloaded = (songList) => {
+        console.log('downloadList downloadList downloadList', downloadList?.length, songList?.length)
         if (downloadList?.length > 0) {
             const updatedArray2 = songList?.map((item2) => {
-                const match = downloadList.find((item1) => item1.id === item2.id);
+                const match = downloadList?.find((item1) => item1.id === item2.id);
                 return match ? { ...match, isLocal: true } : item2; // Replace with the object from array1 if there's a match
             });
-            console.log('🚀 ~ updatedArray2 ~ updatedArray2:', updatedArray2);
+            console.log('🚀 ~ updatedArray2 ~ updatedArray2:', JSON.stringify(updatedArray2, 0, 2));
             setUpPlayer(updatedArray2);
         } else {
             setUpPlayer(songList);
@@ -337,7 +339,7 @@ GROUP BY
     };
 
     useEffect(() => {
-        if (musicState.song.length) {
+        if (musicState.song.length && !downloaded) {
             checkDownloaded(musicState.song);
             getFavAudios(musicState.song);
         }
@@ -648,6 +650,7 @@ GROUP BY
                                         </View>
                                     </View>
                                 )}
+
                                 {musicState?.metaData?.thalam && (
                                     <View style={styles.container}>
                                         <View
@@ -1051,12 +1054,12 @@ GROUP BY
                         title={musicState?.title}
                         orientation={orientation}
                         downloaded={downloaded}
-                        downloadSong={downloadSong}
                         data={data}
                         repeatMode={repeatMode}
                         setRepeatMode={setRepeatMode}
                         queryForNextPrevId={queryForNextPrevId}
                         queryForPreviousPrevId={queryForPreviousPrevId}
+                        downloadSong={downloadSong}
                     />
                 )}
             </Animated.View>

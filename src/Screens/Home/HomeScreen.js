@@ -58,7 +58,7 @@ const HomeScreen = ({ navigation }) => {
         refetch: refetchFestival,
         isSuccess: isFestivalSuccess,
     } = useGetFestivalListQuery({ selectMonth });
-    console.log('🚀 ~ HomeScreen ~ festivalEvents:', festivalEvents);
+    // console.log('🚀 ~ HomeScreen ~ festivalEvents:', festivalEvents);
     const [festivalEvent, setFestivalEvent] = useState([]);
     const [compHeight, setCompHeight] = useState();
     const [textInsidePlaylistCard, setTextInsidePlaylistCard] = useState(0);
@@ -69,6 +69,7 @@ const HomeScreen = ({ navigation }) => {
     });
     const isFocused = useIsFocused();
     useEffect(() => {
+        console.log('running ====>')
         if (festivalEvents?.data && isFestivalSuccess) {
             let arr = festivalEvents?.data?.filter((item) => {
                 return moment(item?.attributes?.calendar_from_date) > moment();
@@ -76,7 +77,7 @@ const HomeScreen = ({ navigation }) => {
             // console.log(arr, 'upacoming festivals')
             setFestivalEvent(arr?.slice(0, 5));
         }
-    }, [selectMonth, isFocused, isFestivalSuccess]);
+    }, [isFocused, isFestivalSuccess]);
 
     const handleLayout = useCallback(
         (event) => {
@@ -159,10 +160,10 @@ const HomeScreen = ({ navigation }) => {
                 setUserLocation(() => ({ ...val }));
             });
 
-            getCurrentLocationWatcher((val) => {
-                // console.log('🚀 ~ getCurrentLocationWatcher ~ val:', val);
-                setUserLocation(() => ({ ...val }));
-            });
+            // getCurrentLocationWatcher((val) => {
+            //     // console.log('🚀 ~ getCurrentLocationWatcher ~ val:', val);
+            //     setUserLocation(() => ({ ...val }));
+            // });
         }
     };
 

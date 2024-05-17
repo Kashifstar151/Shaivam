@@ -44,10 +44,13 @@ import { colors } from '../../Helpers';
 import AlertScreen from '../../components/AlertScreen';
 import ShuffleSVG from '../../components/SVGs/ShuffleSVG';
 
-const RenderAudios = ({ item, index, clb, activeTrack, setSelectedOdhuvar }) => {
-    console.log("🚀 ~ RenderAudios ~ item:", item)
+const RenderAudios = ({ item, index, clb, activeTrack, setSelectedOdhuvar, downloaded }) => {
+    // console.log("🚀 ~ RenderAudios ~ item:", downloaded, downloadAudioIndex)
     const setItemForPlayer = (item) => {
+        // console.log("shjdvhvsjkdbvs", downloaded, downloadAudioIndex)
+        //  else {
         clb(index);
+        // }
     };
 
     return (
@@ -104,6 +107,7 @@ const AudioPlayer = ({
     activeTrack,
     downloadSong
 }) => {
+    console.log("🚀 ~ downloadSong:", downloadSong)
     useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], async (event) => {
         if (event?.state == State?.nextTrack) {
             let index = await TrackPlayer.getActiveTrack();
@@ -125,6 +129,16 @@ const AudioPlayer = ({
             }
         }
     });
+    // const [downloadSongIndex, setdownloadSongIndex] = useState(0)
+    useEffect(() => {
+        // console.log("songsdata==========>", JSON.stringify(songsData, 0, 2))
+        songsData?.map((i, ind) => {
+            if (i?.id == downloadSong?.id) {
+                playById(ind)
+            }
+        })
+
+    }, [songsData])
     useEffect(() => {
         Icon.getImageSource('circle', 18, '#C1554E').then((source) => {
             return setThumbImage({ thumbIcon: source });
@@ -136,15 +150,7 @@ const AudioPlayer = ({
             getFavAudios(),
             updateRecentlyPlayed({ ...activeTrack, prevId }),
         ]);
-        console.log('downloaded', downloadSong, downloaded)
-        if (downloaded) {
-            songsData?.map((res, index) => {
-                if (res?.id == downloadSong?.id) {
-                    console.log("🚀 ~ songsData?.map ~ index:", index)
-                    playById(index)
-                }
-            })
-        }
+
     }, []);
     const updateRecentlyPlayed = async (newTrack) => {
         const maxRecentTracks = 4;
@@ -159,7 +165,6 @@ const AudioPlayer = ({
         await AsyncStorage.setItem(`recentTrack`, JSON.stringify(updatedTracks));
     };
     const [fav, setFav] = useState(false);
-
     const downloadAudios = () => {
         listfavAudios((calbacks) => {
             let lenght = calbacks?.length;
@@ -387,6 +392,7 @@ const AudioPlayer = ({
         });
     };
     const playById = async (id) => {
+        // alert(id)
         await TrackPlayer.skip(id);
         await TrackPlayer.play();
         setPaused(true);
@@ -425,10 +431,13 @@ const AudioPlayer = ({
                                 data={songsData}
                                 renderItem={({ item, index }) => (
                                     <RenderAudios
+                                        downloaded={downloaded}
+                                        downloadSong={downloadSong}
                                         item={item}
                                         index={index}
                                         clb={playById}
-                                        activeTrack={activeTrack}
+                                        activeTrack={downloaded ? downloadSong : activeTrack}
+                                    // downloadAudioIndex={downloadSongIndex}
                                     />
                                 )}
                             />
