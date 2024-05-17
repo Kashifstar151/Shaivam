@@ -45,6 +45,7 @@ import AlertScreen from '../../components/AlertScreen';
 import ShuffleSVG from '../../components/SVGs/ShuffleSVG';
 
 const RenderAudios = ({ item, index, clb, activeTrack, setSelectedOdhuvar }) => {
+    console.log("🚀 ~ RenderAudios ~ item:", item)
     const setItemForPlayer = (item) => {
         clb(index);
     };
@@ -90,6 +91,7 @@ const RenderAudios = ({ item, index, clb, activeTrack, setSelectedOdhuvar }) => 
 
 const AudioPlayer = ({
     orientation,
+    downloaded,
     songsData,
     prevId,
     repeatMode,
@@ -100,6 +102,7 @@ const AudioPlayer = ({
     setDownloadingLoader,
     isFav,
     activeTrack,
+    downloadSong
 }) => {
     useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], async (event) => {
         if (event?.state == State?.nextTrack) {
@@ -133,6 +136,15 @@ const AudioPlayer = ({
             getFavAudios(),
             updateRecentlyPlayed({ ...activeTrack, prevId }),
         ]);
+        console.log('downloaded', downloadSong, downloaded)
+        if (downloaded) {
+            songsData?.map((res, index) => {
+                if (res?.id == downloadSong?.id) {
+                    console.log("🚀 ~ songsData?.map ~ index:", index)
+                    playById(index)
+                }
+            })
+        }
     }, []);
     const updateRecentlyPlayed = async (newTrack) => {
         const maxRecentTracks = 4;
@@ -322,10 +334,10 @@ const AudioPlayer = ({
             setShowModal(true);
         });
     };
-    const downloadAudio = () => {
+    const downloadAudio = async () => {
         // let dirs = RNFetchBlob.fs.dirs;
         setDownloadingLoader(true);
-        TrackPlayer.getActiveTrack().then(async (item) => {
+        await TrackPlayer.getActiveTrack().then(async (item) => {
             const path =
                 Platform.OS == 'android'
                     ? `${RNFS.ExternalDirectoryPath}/${item?.thalamOdhuvarTamilname}`

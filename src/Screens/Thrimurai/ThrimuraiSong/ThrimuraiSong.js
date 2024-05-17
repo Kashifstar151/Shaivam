@@ -47,7 +47,7 @@ import SettingsSVG from '../../../components/SVGs/SettingsSVG';
 
 const ThrimuraiSong = ({ route, navigation }) => {
     const isFocused = useIsFocused;
-    const { data, downloaded, searchedword, searchScreen, songNo } = route.params || {};
+    const { data, downloaded, searchedword, searchScreen, songNo, downloadSong } = route.params || {};
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
@@ -315,7 +315,6 @@ GROUP BY
     };
     useEffect(() => {
         dispatchMusic({ type: 'PREV_ID', payload: data?.prevId });
-
         if (downloaded) {
             setUpPlayer(data);
         }
@@ -649,7 +648,6 @@ GROUP BY
                                         </View>
                                     </View>
                                 )}
-
                                 {musicState?.metaData?.thalam && (
                                     <View style={styles.container}>
                                         <View
@@ -1053,6 +1051,7 @@ GROUP BY
                         title={musicState?.title}
                         orientation={orientation}
                         downloaded={downloaded}
+                        downloadSong={downloadSong}
                         data={data}
                         repeatMode={repeatMode}
                         setRepeatMode={setRepeatMode}

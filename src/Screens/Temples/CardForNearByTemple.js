@@ -29,7 +29,7 @@ const CardForNearByTemple = ({ item }) => {
                     </View>
                 </View>
 
-                <View style={styles.btnWrapper}>
+                {/* <View style={styles.btnWrapper}>
                     <Pressable
                         onPress={() => {
                             setFavState(!favState);
@@ -37,7 +37,7 @@ const CardForNearByTemple = ({ item }) => {
                     >
                         <FavSVG fill={'#000'} />
                     </Pressable>
-                </View>
+                </View> */}
             </View>
         </View>
     );

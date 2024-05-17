@@ -19,6 +19,7 @@ import AddEmail from './AddEmail';
 import { useLazyGetAddedTempleOnEmailQuery } from '../../../store/features/Temple/TemplApiSlice';
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import { useIsFocused } from '@react-navigation/native';
+import { RouteTexts } from '../../../navigation/RouteText';
 
 const initialStepVal = {
     email: 'false',
@@ -28,7 +29,7 @@ const initialStepVal = {
     success: false,
     failed: false,
 };
-const Addtemple = ({ navigation }) => {
+const Addtemple = ({ navigation, route }) => {
     const [step, setStep] = useState(initialStepVal);
 
     const [getAllTemplesAddRequest, { data: getAllAddedTempleData }] =
@@ -168,6 +169,7 @@ const Addtemple = ({ navigation }) => {
                     refreshControl={
                         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                     }
+                    keyExtractor={(item, key) => `item=${item?.id}and${key}`}
                     ListEmptyComponent={() => (
                         <EmptyList
                             onPressOfBtn={() => {
@@ -196,7 +198,12 @@ const Addtemple = ({ navigation }) => {
                 </TouchableOpacity>
             )}
 
-            <ModalComponent isVisible={step.email} onRequestClose={() => {}}>
+            <ModalComponent
+                isVisible={step.email}
+                onRequestClose={() => {
+                    navigation.navigate(RouteTexts.TEMPLE_TABS_NAVIGATE);
+                }}
+            >
                 <AddEmail
                     setEmail={setEmail}
                     navigation={navigation}

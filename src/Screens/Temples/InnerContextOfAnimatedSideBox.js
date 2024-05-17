@@ -4,7 +4,7 @@ import templeMetaData from './AssetMapWithTempleType';
 import { categoryBtnClbk } from './CallBacksForClick';
 import { useTranslation } from 'react-i18next';
 
-const InnerContextOfAnimatedSideBox = ({ navigation }) => {
+const InnerContextOfAnimatedSideBox = ({ navigation, regionCoordinate }) => {
     const { t } = useTranslation();
     return (
         <View style={{}}>
@@ -15,7 +15,7 @@ const InnerContextOfAnimatedSideBox = ({ navigation }) => {
                             onPress={() => {
                                 // adding callback on the category btn press and navigating to the filter page
                                 // alert(key)
-                                categoryBtnClbk(navigation, key);
+                                categoryBtnClbk(navigation, key, regionCoordinate);
                             }}
                             style={{ gap: 2, paddingBottom: 10 }}
                             key={indx}

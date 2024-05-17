@@ -59,6 +59,7 @@ const FilteredTemplesPage = ({ navigation, route }) => {
                     >
                         {data?.temples.map((item, index) => (
                             <TempleCard
+                                key={index}
                                 dataSet={{
                                     ...item,
                                     templeName: item.name,

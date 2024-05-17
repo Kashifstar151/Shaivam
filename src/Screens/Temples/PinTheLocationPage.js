@@ -118,15 +118,6 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
             });
             getCurrentLocationWatcher((val) => {
                 fetchTheName(val);
-                mapRef.current?.animateCamera(
-                    {
-                        center: {
-                            latitude: parseFloat(val?.latitude),
-                            longitude: parseFloat(val?.longitude),
-                        },
-                    },
-                    { duration: 1000 }
-                );
                 setUserLocation((prev) => {
                     dragCoor.current = { ...prev, ...val };
                     return dragCoor.current;

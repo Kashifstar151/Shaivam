@@ -227,6 +227,7 @@ const Fav = ({ navigation }) => {
                 navigation.navigate(RouteTexts.THRIMURAI_SONG, {
                     data: item,
                     downloaded: true,
+                    downloadSong: item
                 });
             }}
         >
