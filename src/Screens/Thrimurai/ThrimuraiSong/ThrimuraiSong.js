@@ -157,8 +157,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const [downloadList, setDownloadList] = useState([]);
     const langMap = {
         'en-IN': 'RoI',
-        English: 'en-IN',
-        Hindi: 'hi-t',
+        English: 'en',
+        Hindi: 'en',
         Tamil: 'en',
         ar: 'ar',
         as: 'as',
@@ -263,7 +263,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
 
     const getSOngData = (from) => {
         TrackPlayer.reset();
-        const detailQuery = `SELECT rawSong, tamilExplanation, tamilSplit , songNo , title from thirumurai_songs where prevId=${musicState?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
+        const detailQuery = `SELECT rawSong, tamilExplanation, englishTranslation,hindiTranslation, tamilSplit , songNo , title from thirumurai_songs where prevId=${musicState?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
         const titleQuery = `SELECT
         MAX(CASE WHEN locale = 'en' THEN titleS END) AS tamil,
     MAX(CASE WHEN locale = '${langMap[selectedLngCode]}' THEN titleS END) AS localeBased FROM thirumurais WHERE prevId =${musicState?.prevId}
@@ -279,8 +279,9 @@ GROUP BY
                 payload: data.filter((i) => i.localBased !== null)[0].localeBased,
             });
             getSqlData(detailQuery, (details) => {
-                const query2 = `SELECT * FROM odhuvars WHERE title='${data.filter((i) => i.tamil !== null)[0]?.tamil
-                    }'`;
+                const query2 = `SELECT * FROM odhuvars WHERE title='${
+                    data.filter((i) => i.tamil !== null)[0]?.tamil
+                }'`;
                 getSqlData(query2, (callbacks) => {
                     // console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
                     dispatchMusic({ type: 'SONG_DETAILS', payload: details });
@@ -474,6 +475,7 @@ GROUP BY
             }
         }
     );
+
     const [activeTrackState, setActiveTrackState] = useState({});
 
     useEffect(() => {
@@ -535,6 +537,20 @@ GROUP BY
             });
         }
     }, [clipBoardString]);
+
+    const renderText = (item) => {
+        if (tamilSplit && i18n.language === 'en') {
+            return item?.tamilSplit || 'Text currently not available';
+        } else if (selectedLang === 'Tamil') {
+            return item?.tamilExplanation || 'Text currently not available';
+        } else if (selectedLang === 'English') {
+            return item?.englishTranslation || 'Text currently not available';
+        } else if (selectedLang === 'Hindi') {
+            return item?.hindiTranslation || 'Text currently not available';
+        } else {
+            return item?.rawSong;
+        }
+    };
 
     return (
         <View style={{ flex: 1, backgroundColor: colorSet?.backgroundColor }}>
@@ -952,13 +968,15 @@ GROUP BY
                                                 },
                                             ]}
                                         >
-                                            {!(tamilSplit && i18n.language === 'en')
+                                            {/* {!(tamilSplit && i18n.language === 'en')
                                                 ? selectedLang !== 'Tamil'
                                                     ? item?.rawSong
                                                     : item?.tamilExplanation ||
-                                                    'Text currently not available'
+                                                      'Text currently not available'
                                                 : item?.tamilSplit ||
-                                                'Text currently not available'}
+                                                  'Text currently not available'} */}
+
+                                            {renderText(item)}
                                         </Text>
                                     )}
                                     <Text
@@ -991,14 +1009,14 @@ GROUP BY
 
                     orientation == 'LANDSCAPE'
                         ? {
-                            width: Dimensions.get('window').width / 2,
-                            position: 'absolute',
-                            bottom: 0,
-                        }
+                              width: Dimensions.get('window').width / 2,
+                              position: 'absolute',
+                              bottom: 0,
+                          }
                         : {
-                            position: 'relative',
-                            width: Dimensions.get('window').width,
-                        },
+                              position: 'relative',
+                              width: Dimensions.get('window').width,
+                          },
                 ]}
             >
                 {downloadingLoader && (
