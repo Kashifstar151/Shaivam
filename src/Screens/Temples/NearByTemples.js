@@ -82,7 +82,7 @@
 
 // new code for page nav
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BottomSheetView, useBottomSheet } from '@gorhom/bottom-sheet';
 import {
     View,
@@ -100,6 +100,7 @@ import SearchContainerWithIcon from './SearchContainerWithIcon';
 import SearchTemple from './SearchTemple';
 import { useTranslation } from 'react-i18next';
 import getDimension from '../../Helpers/getDimension';
+import FilterTheTempleFromList from './FilterTheTempleFromList';
 const NearByTemples = ({
     route,
     setRegionCoordinate,
@@ -113,6 +114,11 @@ const NearByTemples = ({
     const nav = useNavigation();
     const { t } = useTranslation();
     const { screenWidth } = getDimension();
+
+    const [dataToRender, setDataToRender] = useState([]);
+    useEffect(() => {
+        setDataToRender(data);
+    }, [data]);
     return (
         <View
             style={{
@@ -136,20 +142,10 @@ const NearByTemples = ({
                         </Pressable>
                         <View style={{ flex: 1 }}>
                             <SearchContainerWithIcon>
-                                <SearchTemple
-                                    route={route.name}
-                                    value={null}
-                                    isNavigable={false}
-                                    isDisable={false}
-                                    isAutoComplete={true}
-                                    setRegionCoordinate={(val) => setRegionCoordinate(val)}
-                                    positionSuggestionBox={{
-                                        position: 'absolute',
-                                        top: 60,
-                                        zIndex: 100,
-                                        width: screenWidth - 30,
-                                        marginLeft: -45,
-                                    }}
+                                <FilterTheTempleFromList
+                                    setDataToRender={setDataToRender}
+                                    data={data}
+                                    route={route?.name}
                                 />
                             </SearchContainerWithIcon>
                         </View>
@@ -195,8 +191,13 @@ const NearByTemples = ({
                 </View>
             </TouchableWithoutFeedback>
 
-            <ScrollView style={{ zIndex: -20 }}>
-                {data?.map((item, indx) => (
+            <ScrollView
+                style={{ zIndex: -20 }}
+                contentContainerStyle={{
+                    paddingBottom: 100,
+                }}
+            >
+                {dataToRender?.map((item, indx) => (
                     <View key={indx}>
                         <CardForNearByTemple item={item} />
                     </View>
