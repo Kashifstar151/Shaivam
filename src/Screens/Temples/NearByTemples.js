@@ -109,6 +109,7 @@ const NearByTemples = ({
     locationName,
     snapIndex,
     navigation,
+    userLocation,
 }) => {
     const { snapToIndex, snapToPosition } = useBottomSheet();
     const nav = useNavigation();
@@ -199,7 +200,7 @@ const NearByTemples = ({
             >
                 {dataToRender?.map((item, indx) => (
                     <View key={indx}>
-                        <CardForNearByTemple item={item} />
+                        <CardForNearByTemple userLocation={userLocation} item={item} />
                     </View>
                 ))}
             </ScrollView>

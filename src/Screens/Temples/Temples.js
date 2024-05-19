@@ -247,11 +247,18 @@ export const Temples = ({ navigation, route }) => {
             },
             { duration: 1000 }
         );
-        setRegionCoordinate((prev) => ({
-            ...prev,
-            latitude: parseFloat(item.lat),
-            longitude: parseFloat(item.lon),
-        }));
+        setRegionCoordinate((prev) => {
+            getNearByTemples({
+                ...prev,
+                latitude: parseFloat(item.lat),
+                longitude: parseFloat(item.lon),
+            });
+            return {
+                ...prev,
+                latitude: parseFloat(item.lat),
+                longitude: parseFloat(item.lon),
+            };
+        });
     };
 
     return (
@@ -483,6 +490,7 @@ export const Temples = ({ navigation, route }) => {
                     >
                         {userLocName?.showName ? (
                             <NearByTemples
+                                userLocation={userLocation}
                                 route={route}
                                 setRegionCoordinate={(val) => setSearchParams(val)}
                                 locationName={userLocName?.name}
