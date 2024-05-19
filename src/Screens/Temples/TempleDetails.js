@@ -3,6 +3,7 @@
 import { StackActions, useRoute } from '@react-navigation/native';
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Dimensions, Image, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
+import Share from 'react-native-share';
 import DownArrowSVG from '../../components/SVGs/DownArrowSVG';
 import FavSVG from '../../components/SVGs/FavSVG';
 import SearchSVG from '../../components/SVGs/SearchSVG';
@@ -114,7 +115,7 @@ const TempleDetails = ({ navigation }) => {
                             type="TouchableOpacity"
                         />
                         <View style={{ flexDirection: 'row', gap: 20, alignItems: 'center' }}>
-                            <CustomButton
+                            {/* <CustomButton
                                 svg={<SearchSVG fill={'#777777'} width={17} height={17} />}
                                 style={{
                                     paddingVertical: 0,
@@ -125,8 +126,8 @@ const TempleDetails = ({ navigation }) => {
                                     navigation.dispatch(popAction);
                                 }}
                                 type="TouchableOpacity"
-                            />
-                            <CustomButton
+                            /> */}
+                            {/* <CustomButton
                                 svg={
                                     <FavSVG
                                         outerfill={fav ? '#C1554E' : '#777777'}
@@ -143,7 +144,7 @@ const TempleDetails = ({ navigation }) => {
                                 }}
                                 onPress={onFavBtnClick}
                                 type="TouchableOpacity"
-                            />
+                            /> */}
                             <CustomButton
                                 svg={<ShareSVG fill={'#777777'} width={18} height={18} />}
                                 style={{
@@ -152,7 +153,10 @@ const TempleDetails = ({ navigation }) => {
                                     borderRadius: 0,
                                 }}
                                 onPress={() => {
-                                    navigation.dispatch(popAction);
+                                    // navigation.dispatch(popAction);
+                                    Share.open({
+                                        message: `https://www.google.com/maps/dir/?api=1&destination=${temple?.templeCoordinate?.latitude},${temple?.templeCoordinate?.longitude}`,
+                                    });
                                 }}
                                 type="TouchableOpacity"
                             />
