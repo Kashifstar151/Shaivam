@@ -51,7 +51,7 @@ const Route = () => {
     const database = SQLite.openDatabase({ name: 'songData.db', createFromLocation: 1 });
     const [showDownloading, setShowDownloading] = useState(false);
     const [isConnected, setIsConnected] = useState();
-    const offlineDatabase = SQLite.openDatabase({ name: 'SongsData.db', createFromLocation: '~SongsData.db', location: 'Library' });
+    const offlineDatabase = SQLite.openDatabase({ name: 'SongsData.db', createFromLocation: 1 });
 
     // const database = SQLite.openDatabase({ name: databaseName, });
     useEffect(() => {
@@ -72,12 +72,12 @@ const Route = () => {
                 setIsConnected(true);
             }
         });
-        RNFS.unlink(`${RNFS.DocumentDirectoryPath}`).then((res) => {
-            RNFS.scanFile(`${RNFS.DocumentDirectoryPath}`);
-            console.log("🚀 ~ RNFS.unlink ~ res:", res)
-        }).catch((error) => {
-            console.log("🚀 ~ RNFS.unlink ~ error:", error)
-        })
+        // RNFS.unlink(`${RNFS.DocumentDirectoryPath}`).then((res) => {
+        //     RNFS.scanFile(`${RNFS.DocumentDirectoryPath}`);
+        //     console.log("🚀 ~ RNFS.unlink ~ res:", res)
+        // }).catch((error) => {
+        //     console.log("🚀 ~ RNFS.unlink ~ error:", error)
+        // })
         // attachDb()
         // connectDataBaseToFolder()
 
@@ -129,26 +129,26 @@ const Route = () => {
                         ]);
                     } else {
                         console.log('fsjdh')
-                        offlineDatabase.transaction(
-                            async (tx) => {
-                                await tx.executeSql(
-                                    'ATTACH DATABASE ? AS Updated_db',
-                                    [
-                                        `SongsData.db`,
-                                    ],
-                                    async (tx, results) => {
-                                        console.log("🚀 ~ results:", results)
-                                        resolve(tx);
+                        // offlineDatabase.transaction(
+                        //     async (tx) => {
+                        //         await tx.executeSql(
+                        //             'ATTACH DATABASE ? AS Updated_db',
+                        //             [
+                        //                 `SongsData.db`,
+                        //             ],
+                        //             async (tx, results) => {
+                        //                 console.log("🚀 ~ results:", results)
+                        //                 resolve(tx);
 
-                                    }
-                                );
-                            },
-                            async (error) => {
-                                console.log("🚀 ~ error:", error)
-                                // const data = await AsyncStorage.getItem('@database');
-                                reject(error);
-                            }
-                        );
+                        //             }
+                        //         );
+                        //     },
+                        //     async (error) => {
+                        //         console.log("🚀 ~ error:", error)
+                        //         // const data = await AsyncStorage.getItem('@database');
+                        //         reject(error);
+                        //     }
+                        // );
                     }
                 })
                 .catch((err) => {

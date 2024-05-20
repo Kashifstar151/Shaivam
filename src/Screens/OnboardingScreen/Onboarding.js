@@ -34,14 +34,14 @@ const Onboarding = ({ navigation }) => {
         // { name: 'Hindi', lngCode: 'hi' },
         // { name: 'Kannada', lngCode: 'kn' },
 
-        { name: 'العربية', lngCode: 'ar' },
+        // { name: 'العربية', lngCode: 'ar' },
         { name: ' অসমীয়া', lngCode: 'as' },
         { name: 'বাংলা', lngCode: 'bn' },
         { name: 'English', lngCode: 'en-IN' },
         { name: 'ગુજરાતી', lngCode: 'gu' },
-        { name: 'עברית', lngCode: 'he' },
+        // { name: 'עברית', lngCode: 'he' },
         { name: 'हिन्दी', lngCode: 'DV' },
-        { name: '日本語', lngCode: 'ja' },
+        // { name: '日本語', lngCode: 'ja' },
         { name: 'ಕನ್ನಡ', lngCode: 'kn-IN' },
         { name: 'മലയാളം', lngCode: 'ml' },
         { name: 'ଓଡ଼ିଆ', lngCode: 'od' },
@@ -49,7 +49,7 @@ const Onboarding = ({ navigation }) => {
         { name: 'सिन्धी', lngCode: 'si' },
         { name: 'தமிழ்', lngCode: 'en' },
         { name: 'తెలుగు', lngCode: 'te' },
-        { name: 'اُردُو', lngCode: 'ur' },
+        // { name: 'اُردُو', lngCode: 'ur' },
     ];
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const handleClick = (item) => {
@@ -150,9 +150,9 @@ const Onboarding = ({ navigation }) => {
                                             style={
                                                 selectedLang?.name == item?.name
                                                     ? [
-                                                          styles.iconContainer,
-                                                          { backgroundColor: '#FCB300' },
-                                                      ]
+                                                        styles.iconContainer,
+                                                        { backgroundColor: '#FCB300' },
+                                                    ]
                                                     : styles.iconContainer
                                             }
                                         >

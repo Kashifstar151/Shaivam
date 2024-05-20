@@ -45,6 +45,7 @@ import AlertScreen from '../../components/AlertScreen';
 import ShuffleSVG from '../../components/SVGs/ShuffleSVG';
 
 const RenderAudios = ({ item, index, clb, activeTrack, setSelectedOdhuvar, downloaded }) => {
+    // console.log("🚀 ~ RenderAudios ~ item:", downloaded, downloadAudioIndex)
     const setItemForPlayer = (item) => {
         // console.log("shjdvhvsjkdbvs", downloaded, downloadAudioIndex)
         //  else {
@@ -104,8 +105,9 @@ const AudioPlayer = ({
     setDownloadingLoader,
     isFav,
     activeTrack,
-    downloadSong,
+    downloadSong
 }) => {
+    // console.log("🚀 ~ downloadSong:", downloadSong)
     useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], async (event) => {
         if (event?.state == State?.nextTrack) {
             let index = await TrackPlayer.getActiveTrack();
@@ -121,19 +123,21 @@ const AudioPlayer = ({
                 activeTrack?.url &&
                 duration !== 0 &&
                 new Date(position * 1000).toISOString().substring(14, 19) >=
-                    new Date(duration * 1000).toISOString().substring(14, 19)
+                new Date(duration * 1000).toISOString().substring(14, 19)
             ) {
                 queryForNextPrevId();
             }
         }
     });
+    // const [downloadSongIndex, setdownloadSongIndex] = useState(0)
     useEffect(() => {
         songsData?.map((i, ind) => {
             if (i?.id == downloadSong?.id) {
-                playById(ind);
+                playById(ind)
             }
-        });
-    }, [songsData]);
+        })
+
+    }, [songsData])
     useEffect(() => {
         Icon.getImageSource('circle', 18, '#C1554E').then((source) => {
             return setThumbImage({ thumbIcon: source });
@@ -145,6 +149,7 @@ const AudioPlayer = ({
             getFavAudios(),
             updateRecentlyPlayed({ ...activeTrack, prevId }),
         ]);
+
     }, []);
     const updateRecentlyPlayed = async (newTrack) => {
         const maxRecentTracks = 4;
@@ -193,7 +198,7 @@ const AudioPlayer = ({
                         }
                     );
                 })
-                .catch((err) => {});
+                .catch((err) => { });
         });
     };
     const { position, duration } = useProgress();
@@ -339,10 +344,9 @@ const AudioPlayer = ({
         await TrackPlayer.getActiveTrack().then(async (item) => {
             const path =
                 Platform.OS == 'android'
-                    ? `${RNFS.ExternalDirectoryPath}/${item?.thalamOdhuvarTamilname}`
+                    ? `${RNFS.ExternalDirectoryPath}/${item?.title}`
                     : `${RNFS.DocumentDirectoryPath}/${item?.id}/audio.mp3`;
             const pathIOS =
-                // console.log("🚀 ~ TrackPlayer.getActiveTrack ~ pathIOS:", pathIOS, path)
                 RNFetchBlob.config({
                     path: path,
                     fileCache: true,
@@ -386,6 +390,7 @@ const AudioPlayer = ({
         });
     };
     const playById = async (id) => {
+        // alert(id)
         await TrackPlayer.skip(id);
         await TrackPlayer.play();
         setPaused(true);
@@ -397,13 +402,13 @@ const AudioPlayer = ({
                 style={
                     orientation == 'LANDSCAPE' || !visibleStatusBar
                         ? {
-                              width: !(orientation == 'LANDSCAPE')
-                                  ? Dimensions.get('window').width
-                                  : Dimensions.get('window').width / 2,
-                              backgroundColor: '#222222',
-                              height: 70,
-                              alignItems: 'center',
-                          }
+                            width: !(orientation == 'LANDSCAPE')
+                                ? Dimensions.get('window').width
+                                : Dimensions.get('window').width / 2,
+                            backgroundColor: '#222222',
+                            height: 70,
+                            alignItems: 'center',
+                        }
                         : { backgroundColor: '#222222', height: 200 }
                 }
             >
@@ -430,7 +435,7 @@ const AudioPlayer = ({
                                         index={index}
                                         clb={playById}
                                         activeTrack={downloaded ? downloadSong : activeTrack}
-                                        // downloadAudioIndex={downloadSongIndex}
+                                    // downloadAudioIndex={downloadSongIndex}
                                     />
                                 )}
                             />

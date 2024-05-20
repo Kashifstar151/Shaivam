@@ -19,18 +19,21 @@ const BackButton = ({
     buttonDisable,
     nandiLogo,
     firstRightIcon,
-    prevId
+    prevId,
+    eventShare,
+    item
 }) => {
+    console.log("🚀 ~ item:", item)
     const { musicState, dispatchMusic } = useContext(MusicContext);
     // console.log("🚀 ~ musicState:", musicState)
     async function buildLink() {
         // alert(true)
         const link = await dynamicLinks().buildShortLink({
-            link: `https://shaivaam.page.link/org?prevId=${musicState?.prevId}`,
+            link: eventShare ? `https://shaivaam.page.link/org?eventId=${item?.attributes?.schedula_type ? 'recurring_' + item?.attributes?.id : 'regular_' + item?.attributes?.id}` : `https://shaivaam.page.link/org?prevId=${musicState?.prevId}`,
             domainUriPrefix: 'https://shaivaam.page.link',
             ios: {
                 appStoreId: '123456',
-                bundleId: 'com.shaivam.app',
+                bundleId: 'com.Shaivam.shaivam',
                 minimumVersion: '18',
             },
             android: {
@@ -41,15 +44,14 @@ const BackButton = ({
         },
             dynamicLinks.ShortLinkType.DEFAULT,
         );
-
-        console.log("🚀 ~ link ~ link:", link)
+        console.log("🚀 ~ link ~ link:", `https://shaivaam.page.link/org?eventId=${item?.attributes?.schedula_type ? 'recurring_' + item?.attributes?.id : 'regular_' + item?.attributes?.id}`)
         return link;
     }
     const shareSong = async () => {
         const link = await buildLink()
         Share.open({
-            message: `${secondMiddleText}I want to share this Thirumurai with you.
-            இந்தத் திருமுறையை Shaivam.org Mobile செயலியில் படித்தேன். மிகவும் பிடித்திருந்தது. பகிர்கின்றேன். படித்து மகிழவும் ${link}`
+            message: eventShare ? `I found this event in the Shaivam.org Mobile App.Liked it a lot.I am sharing.Enjoy reading ${link} ` : `${secondMiddleText}I want to share this Thirumurai with you.
+            இந்தத் திருமுறையை Shaivam.org Mobile செயலியில் படித்தேன்.மிகவும் பிடித்திருந்தது.பகிர்கின்றேன்.படித்து மகிழவும் ${link} `
 
         })
     }

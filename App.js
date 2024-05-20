@@ -23,26 +23,47 @@ const App = () => {
             .then(link => {
                 console.log("🚀 ~ useEffect ~ link:", link)
                 const getId = link?.url?.split('=').pop()
-                // console.log("🚀 ~ useEffect ~ getId:", getId)
+                console.log("🚀 ~ useEffect ~ getId:", getId)
                 if (link !== null) {
-                    NavigationServices.navigate(RouteTexts.THRIMURAI_SONG, {
-                        data: {
-                            prevId: getId
-                        }
-                    });
+                    if (link?.url == `https://shaivaam.page.link/org?eventId=${getId}`) {
+                        NavigationServices.navigate(RouteTexts.EVENT_DETAILS, {
+                            item: getId,
+                            external: true
+                        });
+                    } else {
+                        NavigationServices.navigate(RouteTexts.THRIMURAI_SONG, {
+                            data: {
+                                prevId: getId
+                            }
+                        });
+                    }
                 }
             });
     }, []);
     const HandleDynamicLink = link => {
         console.log("🚀 ~ HandleDynamicLink ~ link:", link)
         const getId = link?.url?.split('=').pop()
-        if (link) {
+        console.log("🚀 ~ HandleDynamicLink ~ getId:", getId)
+        if (link?.url == `https://shaivaam.page.link/org?eventId=${getId}`) {
+            NavigationServices.navigate(RouteTexts.EVENT_DETAILS, {
+                data: {
+                    prevId: getId
+                }
+            });
+        } else {
             NavigationServices.navigate(RouteTexts.THRIMURAI_SONG, {
                 data: {
                     prevId: getId
                 }
             });
         }
+        // if (link) {
+        //     NavigationServices.navigate(RouteTexts.THRIMURAI_SONG, {
+        //         data: {
+        //             prevId: getId
+        //         }
+        //     });
+        // }
         // Handle dynamic link inside your own application
 
     };

@@ -49,6 +49,28 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
             },
             providesTags: ['Calender'],
         }),
+        getRecurringById: builder.query({
+            query: (date) => {
+                const url = `recurring-events/${date?.id}?populate[File][fields][0]=url`;
+                console.log('🚀 ~ url: recuriing month', url);
+                return {
+                    url: url,
+                    method: 'GET',
+                };
+            },
+            providesTags: ['Calender'],
+        }),
+        getRegularById: builder.query({
+            query: (date) => {
+                const url = `regular-events/${date?.id}?populate[File][fields][0]=url`;
+                console.log('🚀 ~ url: recuriing month', url);
+                return {
+                    url: url,
+                    method: 'GET',
+                };
+            },
+            providesTags: ['Calender'],
+        }),
         getFestivalList: builder.query({
             query: (date) => {
                 const url = `calendars?populate=*&filters[calendar_from_date][$gte]=${moment(date?.selectMonth).startOf('month').format('YYYY-MM-DD')}&filters[calendar_from_date][$lte]=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&sort=calendar_from_date:ASC`;
@@ -62,7 +84,7 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
         }),
         addRegularEvent: builder.mutation({
             query: (data) => {
-                const url = `https://seashell-app-vsnmp.ondigitalocean.app/api/regular-events`;
+                const url = `regular-events`;
                 console.log('🚀 ~ url:', url);
                 return {
                     url: url,
@@ -76,7 +98,7 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
         }),
         addRecurringEvent: builder.mutation({
             query: (data, eventType) => {
-                const url = `https://seashell-app-vsnmp.ondigitalocean.app/api/recurring-events`;
+                const url = `recurring-events`;
                 // console.log('🚀 ~ url:', url);
                 return {
                     url: url,
@@ -134,5 +156,8 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
 //     return d;
 // }
 
-export const { useGetListQuery, useAddRegularEventMutation, useAddImageForEventMutation, useGetRecurringEventListQuery, useGetRecurringEventMonthlyQuery, useGetFestivalListQuery, useAddRecurringEventMutation, useGetRadioListQuery } =
+export const { useGetListQuery, useAddRegularEventMutation, useAddImageForEventMutation,
+    useGetRecurringEventListQuery, useGetRecurringEventMonthlyQuery,
+    useGetFestivalListQuery, useAddRecurringEventMutation,
+    useGetRadioListQuery, useGetRecurringByIdQuery, useGetRegularByIdQuery } =
     CalenderApiSlice;

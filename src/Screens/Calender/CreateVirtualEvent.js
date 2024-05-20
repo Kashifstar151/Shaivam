@@ -113,14 +113,11 @@ const CreateVirtualEvent = ({ navigation }) => {
             // console.log('fbsbfjdfbjsdbfbdb title')
         } else if (recurringEvent && !inputValue['Day']) {
             setErrorMsg({ day: "Please select day" })
-        } else if (moment(inputValue['end_date'] > moment(inputValue['start_date']))) {
-            setErrorMsg({ date: "Enter valid date" })
         } else {
             const formData = new FormData();
             if (recurringEvent) {
                 console.log(inputValue, 'recurringEvent')
                 AddRecurringEvent({ data: inputValue }).then((res) => {
-                    console.log("🚀 ~ AddRecurringEvent ~ res:", JSON.stringify(res))
                     if (res && images?.length > 0) {
                         let id = res?.data?.data?.id;
 
@@ -139,7 +136,6 @@ const CreateVirtualEvent = ({ navigation }) => {
                         formData.append("ref", "api::recurring-event.recurring-event");
                         formData.append("refId", id);
                         formData.append("field", "Files");
-                        // console.log("🚀 ~ AddRegularEvent ~ formData:", JSON.stringify(formData))
                         AddImage(formData).then((res) => {
                             console.log("🚀 ~ AddImage ~ res:", JSON.stringify(res))
                         }).catch((error) => {
@@ -218,7 +214,7 @@ const CreateVirtualEvent = ({ navigation }) => {
         });
     }, [debounceVal]);
     const selectionHandler = (item) => {
-        alert(JSON.stringify(item))
+        // alert(JSON.stringify(item))
         setLocation(item)
         // dispatch(setInputValue({ inputKey: 'Location', inputValue: item?.name }))
         dispatch(setInputValue({ inputKey: 'Longitude', inputValue: item?.lon }))
@@ -377,26 +373,30 @@ const CreateVirtualEvent = ({ navigation }) => {
                                                 styles.descriptionText,
                                                 { fontSize: 14, marginHorizontal: 10 },
                                             ]}>
-                                                {inputValue['Frequency'] ? inputValue['Frequency'] : 'Select Frquency'}
+                                                {inputValue['Frequency'] ? inputValue['Frequency'] : 'Select Frequency'}
                                             </Text>
                                             <MaterialIcons name="keyboard-arrow-down" size={24} color="#777777" />
                                         </TouchableOpacity>
                                     </View>
-                                    <View style={{ marginVertical: 10 }}>
-                                        <Text style={{ color: '#777777' }}>{t('Week') ? t('Week') : 'Week'}</Text>
-                                        <TouchableOpacity onPress={() => WeekRBSheet.current.open()} style={styles.dropdownContainer}>
-                                            <Text style={[
-                                                styles.descriptionText,
-                                                { fontSize: 14, marginHorizontal: 10 },
-                                            ]}>
-                                                {inputValue['Days'] ? inputValue['Days'] : 'Select Option'}
-                                            </Text>
-                                            <MaterialIcons name="keyboard-arrow-down" size={24} color="#777777" />
-                                        </TouchableOpacity>
-                                    </View>
+                                    {
+                                        inputValue['Frequency'] == 'Monthly' &&
+                                        <View style={{ marginVertical: 10 }}>
+                                            <Text style={{ color: '#777777' }}>{t('Week') ? t('Week') : 'Week'}</Text>
+                                            <TouchableOpacity onPress={() => WeekRBSheet.current.open()} style={styles.dropdownContainer}>
+                                                <Text style={[
+                                                    styles.descriptionText,
+                                                    { fontSize: 14, marginHorizontal: 10 },
+                                                ]}>
+                                                    {inputValue['Days'] ? inputValue['Days'] : 'Select Option'}
+                                                </Text>
+                                                <MaterialIcons name="keyboard-arrow-down" size={24} color="#777777" />
+                                            </TouchableOpacity>
+                                        </View>
+                                    }
+
                                     <View style={{ marginVertical: 0, height: 80 }}>
                                         <Text style={{ color: '#777777' }}>{t('Select day') ? t('Select day') : 'Select day'}</Text>
-                                        <FlatList contentContainerStyle={{ marginVertical: 15, height: 'auto' }} horizontal data={weekDays} renderItem={({ item, index }) => (
+                                        <FlatList contentContainerStyle={{ marginTop: 5, height: 'auto' }} horizontal data={weekDays} renderItem={({ item, index }) => (
                                             <DateSelection item={item} inputKey={'day'} value={inputValue['day']} style={styles.weekDaysContainer} />
                                         )} />
                                     </View>

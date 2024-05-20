@@ -2,6 +2,7 @@ import React, { useCallback, useContext, useEffect, useRef, useState } from 'rea
 import {
     Dimensions,
     FlatList,
+    Linking,
     Platform,
     Pressable,
     ScrollView,
@@ -46,24 +47,24 @@ const MoreOption = () => {
             Description: 'Your Selection',
             icon: <LanguageSVG fill={'#333333'} />,
         },
-        {
-            title: 'Favourite Odhuvar',
-            Description: 'Your Selection',
-            icon: <FavOdhuvarSVG fill={'#333333'} />,
-        },
+        // {
+        //     title: 'Favourite Odhuvar',
+        //     Description: 'Your Selection',
+        //     icon: <FavOdhuvarSVG fill={'#333333'} />,
+        // },
         {
             title: 'Go to website',
             Description: 'Your Selection',
             icon: <GoToWebSVG fill={'#333333'} />,
         },
-        {
-            title: 'Website search',
-            Description: 'Your Selection',
-            icon: <WebSearchSVG fill={'#333333'} />,
-        },
+        // {
+        //     title: 'Website search',
+        //     Description: 'Your Selection',
+        //     icon: <WebSearchSVG fill={'#333333'} />,
+        // },
         {
             title: 'Contact',
-            Description: 'Your Selection',
+            Description: '+919999999999',
             icon: <ContactSVG fill={'#333333'} />,
         },
         {
@@ -112,20 +113,22 @@ const MoreOption = () => {
         if (item.title == 'Language') {
             bottomSheetRef.current?.present();
             firstTime.current = false;
+        } else if (item?.title == 'Go to website') {
+            Linking.openURL('https://shaivam.org/#gsc.tab=0')
         }
     };
 
     const { i18n } = useTranslation();
 
     const language = [
-        { name: 'العربية', lngCode: 'ar' },
+        // { name: 'العربية', lngCode: 'ar' },
         { name: ' অসমীয়া', lngCode: 'as' },
         { name: 'বাংলা', lngCode: 'bn' },
         { name: 'English', lngCode: 'en-IN' },
         { name: 'ગુજરાતી', lngCode: 'gu' },
-        { name: 'עברית', lngCode: 'he' },
+        // { name: 'עברית', lngCode: 'he' },
         { name: 'हिन्दी', lngCode: 'DV' },
-        { name: '日本語', lngCode: 'ja' },
+        // { name: '日本語', lngCode: 'ja' },
         { name: 'ಕನ್ನಡ', lngCode: 'kn-IN' },
         { name: 'മലയാളം', lngCode: 'ml' },
         { name: 'ଓଡ଼ିଆ', lngCode: 'od' },
@@ -133,7 +136,7 @@ const MoreOption = () => {
         { name: 'सिन्धी', lngCode: 'si' },
         { name: 'தமிழ்', lngCode: 'en' },
         { name: 'తెలుగు', lngCode: 'te' },
-        { name: 'اُردُو', lngCode: 'ur' },
+        // { name: 'اُردُو', lngCode: 'ur' },
     ];
 
     const handleLanguageClick = async (item) => {

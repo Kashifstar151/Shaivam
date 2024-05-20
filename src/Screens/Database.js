@@ -8,7 +8,7 @@ import { RESULTS } from 'react-native-permissions';
 // const databaseName = 'main.db';
 // const database = SQLite.openDatabase({ name: databaseName, });
 const database = SQLite.openDatabase({ name: 'main.db' });
-const offlineDatabase = SQLite.openDatabase({ name: 'SongsData.db', createFromLocation: '~SongsData.db', location: 'Library' });
+const offlineDatabase = SQLite.openDatabase({ name: 'SongsData.db', createFromLocation: 1 });
 export async function attachDb(metaData) {
     return new Promise((resolve, reject) => {
         RNFetchBlob.config({

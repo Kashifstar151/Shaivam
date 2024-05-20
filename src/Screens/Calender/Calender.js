@@ -295,7 +295,7 @@ const Calender = ({ navigation }) => {
         setMainData(sortedEvents)
         setShowLoader(false)
         sortedEvents?.map((item) => {
-            if (moment() >= moment(item?.start_date) && moment() <= moment(item?.emd_date)) {
+            if (moment() >= moment(item?.start_date) && moment() <= moment(item?.end_date)) {
                 // setTodayEvent(prev => [...prev, item])
                 today.push(item)
             }

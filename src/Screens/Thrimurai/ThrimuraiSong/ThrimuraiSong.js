@@ -49,6 +49,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const isFocused = useIsFocused;
     const { data, downloaded, searchedword, downloadSong, searchScreen, songNo } =
         route.params || {};
+    console.log("🚀 ~ ThrimuraiSong ~ route.params:", JSON.stringify(route.params, 0, 2))
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
@@ -219,7 +220,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
             const parsedMetadata = await AsyncStorage.getItem('downloaded');
             console.log(
                 '🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:',
-                JSON.stringify(parsedMetadata, 0, 2)
+                JSON.stringify(JSON.parse(parsedMetadata), 0, 2)
             );
             // const metadataKeys = keys.filter(key => key.startsWith('downloaded:'));
             // const metadata = await AsyncStorage.multiGet(metadataKeys);
@@ -280,9 +281,8 @@ GROUP BY
                 payload: data.filter((i) => i.localBased !== null)[0].localeBased,
             });
             getSqlData(detailQuery, (details) => {
-                const query2 = `SELECT * FROM odhuvars WHERE title='${
-                    data.filter((i) => i.tamil !== null)[0]?.tamil
-                }'`;
+                const query2 = `SELECT * FROM odhuvars WHERE title='${data.filter((i) => i.tamil !== null)[0]?.tamil
+                    }'`;
                 getSqlData(query2, (callbacks) => {
                     // console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
                     dispatchMusic({ type: 'SONG_DETAILS', payload: details });
@@ -1009,14 +1009,14 @@ GROUP BY
 
                     orientation == 'LANDSCAPE'
                         ? {
-                              width: Dimensions.get('window').width / 2,
-                              position: 'absolute',
-                              bottom: 0,
-                          }
+                            width: Dimensions.get('window').width / 2,
+                            position: 'absolute',
+                            bottom: 0,
+                        }
                         : {
-                              position: 'relative',
-                              width: Dimensions.get('window').width,
-                          },
+                            position: 'relative',
+                            width: Dimensions.get('window').width,
+                        },
                 ]}
             >
                 {downloadingLoader && (

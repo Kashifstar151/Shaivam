@@ -15,18 +15,50 @@ import { useTranslation } from 'react-i18next';
 import PushNotification, { Importance } from 'react-native-push-notification';
 import { StackActions, useIsFocused } from '@react-navigation/native';
 import { getCurrentLocation } from '../../Helpers/GeolocationFunc';
+import { useGetRecurringByIdQuery, useGetRegularByIdQuery } from '../../store/features/Calender/CalenderApiSlice';
 
 
 const EventDetails = ({ navigation, route }) => {
-    const { item } = route?.params;
+    const { item, external } = route?.params;
     const isFocus = useIsFocused()
+    // const [GetReccuringById] = useGetRecurringByIdQuery()
+    // const [GetRegularById] = useGetRegularByIdQuery()
+
+
     console.log('🚀 ~ EventDetails ~ item:', JSON.stringify(item, 0, 2));
     const [notificationOn, setNotification] = useState(false)
     const [regionCoordinate, setRegionCoordinate] = useState(null)
+    useEffect(() => {
+        if (external) {
+            callApi()
+        }
+    }, [])
+    const callApi = () => {
+        let check = item?.split('_').pop()
+        console.log("🚀 ~ callApi ~ check:", item?.split('_'))
+        if (item?.split('_')[0] == 'recurring') {
+
+            // getReccuringById({ data: check }).then((result) => {
+            //     console.log("🚀 ~ getReccuringById ~ result:", result)
+
+            // }).catch((err) => {
+            //     console.log("🚀 ~ getReccuringById ~ err:", err)
+
+            // });
+        } else {
+            // getRegularById({ data: check }).then((result) => {
+            //     console.log("🚀 ~ getRegularById ~ result:", result)
+
+            // }).catch((err) => {
+            //     console.log("🚀 ~ getRegularById ~ err:", err)
+
+            // });
+        }
+    }
     const popAction = StackActions.pop(1);
     useEffect(() => {
         getCurrentLocation(callbacks => {
-            console.log("🚀 ~ useEffect ~ callbacks:", callbacks)
+            // console.log("🚀 ~ useEffect ~ callbacks:", callbacks)
             setRegionCoordinate(callbacks)
         })
         checkPermissionAccess()
@@ -99,9 +131,11 @@ const EventDetails = ({ navigation, route }) => {
                 <BackButton
                     navigation={navigation}
                     // firstRightIcon={true}
-                    middleText={'முதல்-திருமுறை - Pradhs...'}
+                    middleText={item?.attributes?.name}
                     rightIcon={true}
                     color={true}
+                    eventShare={true}
+                    item={item}
                 />
             </Background>
             <ScrollView style={styles.main}>

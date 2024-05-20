@@ -15,10 +15,10 @@ const SubmitEnteries = ({ setSelectedEvent, selectedEvent, closeSheet, navigatio
     ]
     const selectionHandler = (item) => {
         setSelectedEvent(item)
+        closeSheet
         if (item?.name == 'Add an event') {
             navigation.navigate(RouteTexts.VIRTUAL_EVENT_CREATE)
         }
-        closeSheet
     }
 
     return (
@@ -26,7 +26,7 @@ const SubmitEnteries = ({ setSelectedEvent, selectedEvent, closeSheet, navigatio
             <Text style={{ fontFamily: 'Lora-Bold', fontSize: 16, color: 'black', marginVertical: 10 }}>{t('Select one of the following')}</Text>
             <FlatList data={type} renderItem={({ item, index }) => (
                 <TouchableOpacity
-                    onPress={() => selectionHandler(item)}
+                    onPress={() => index == 0 && selectionHandler(item)}
                     style={styles.dropDown}
                 >
                     <Text style={{ fontFamily: 'Mulish-Regular', color: theme.textColor }}>
