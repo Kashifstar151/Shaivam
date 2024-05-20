@@ -7,6 +7,7 @@ import NandiLogo from '../../src/assets/Images/NandiLogo.svg';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import Share from 'react-native-share';
 import { MusicContext } from './Playbacks/TrackPlayerContext';
+import { useTranslation } from 'react-i18next';
 
 const BackButton = ({
     secondText,
@@ -25,6 +26,7 @@ const BackButton = ({
 }) => {
     console.log("🚀 ~ item:", item)
     const { musicState, dispatchMusic } = useContext(MusicContext);
+    const { t } = useTranslation()
     // console.log("🚀 ~ musicState:", musicState)
     async function buildLink() {
         // alert(true)
@@ -50,7 +52,7 @@ const BackButton = ({
     const shareSong = async () => {
         const link = await buildLink()
         Share.open({
-            message: eventShare ? `I found this event in the Shaivam.org Mobile App.Liked it a lot.I am sharing.Enjoy reading ${link} ` : `${secondMiddleText}I want to share this Thirumurai with you.
+            message: eventShare ? `${t('EventShare')}${link}` : `${secondMiddleText}I want to share this Thirumurai with you.
             இந்தத் திருமுறையை Shaivam.org Mobile செயலியில் படித்தேன்.மிகவும் பிடித்திருந்தது.பகிர்கின்றேன்.படித்து மகிழவும் ${link} `
 
         })

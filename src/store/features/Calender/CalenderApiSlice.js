@@ -50,19 +50,27 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
             providesTags: ['Calender'],
         }),
         getRecurringById: builder.query({
-            query: (date) => {
-                const url = `recurring-events/${date?.id}?populate[File][fields][0]=url`;
-                console.log('🚀 ~ url: recuriing month', url);
+            query: (data) => {
+                console.log("🚀 ~ data:", data)
+                // const url = `?temple_coordinates[coords]=${data?.longitude},${data?.latitude}&pagination[pageSize]=200`;
+                // https://lobster-app-gpfv5.ondigitalocean.app/api/nearby-temples?long=77.391029&lat=28.535517&radius=15000
+                // const url = `api/nearby-temples?long=${data?.longitude}&lat=${data?.latitude}&radius=15000`;
+                const url = `recurring-events/${data?.id}?populate[File][fields][0]=url`;
+                console.log('🚀 ~ url:', url);
                 return {
                     url: url,
                     method: 'GET',
                 };
             },
             providesTags: ['Calender'],
+            transformResponse: (response, meta, arg) => {
+                return response;
+            },
         }),
         getRegularById: builder.query({
             query: (date) => {
-                const url = `regular-events/${date?.id}?populate[File][fields][0]=url`;
+                console.log("🚀 ~ date:", date)
+                const url = `regular-events/${date?.data}?populate[File][fields][0]=url`;
                 console.log('🚀 ~ url: recuriing month', url);
                 return {
                     url: url,
@@ -70,6 +78,9 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
                 };
             },
             providesTags: ['Calender'],
+            transformResponse: (response, meta, arg) => {
+                return response;
+            },
         }),
         getFestivalList: builder.query({
             query: (date) => {
@@ -159,5 +170,5 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
 export const { useGetListQuery, useAddRegularEventMutation, useAddImageForEventMutation,
     useGetRecurringEventListQuery, useGetRecurringEventMonthlyQuery,
     useGetFestivalListQuery, useAddRecurringEventMutation,
-    useGetRadioListQuery, useGetRecurringByIdQuery, useGetRegularByIdQuery } =
+    useGetRadioListQuery, useLazyGetRecurringByIdQuery, useLazyGetRegularByIdQuery } =
     CalenderApiSlice;

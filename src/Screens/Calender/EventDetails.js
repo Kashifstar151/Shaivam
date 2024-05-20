@@ -15,19 +15,20 @@ import { useTranslation } from 'react-i18next';
 import PushNotification, { Importance } from 'react-native-push-notification';
 import { StackActions, useIsFocused } from '@react-navigation/native';
 import { getCurrentLocation } from '../../Helpers/GeolocationFunc';
-import { useGetRecurringByIdQuery, useGetRegularByIdQuery } from '../../store/features/Calender/CalenderApiSlice';
+import { useLazyGetRecurringByIdQuery, useLazyGetRegularByIdQuery } from '../../store/features/Calender/CalenderApiSlice';
 
 
 const EventDetails = ({ navigation, route }) => {
     const { item, external } = route?.params;
     const isFocus = useIsFocused()
-    // const [GetReccuringById] = useGetRecurringByIdQuery()
-    // const [GetRegularById] = useGetRegularByIdQuery()
+    const [GetReccuringById, { isSuccess: recurringSuccess }] = useLazyGetRecurringByIdQuery();
+    const [GetRegularById, { isSuccess: regularSuccess }] = useLazyGetRegularByIdQuery()
 
 
-    console.log('🚀 ~ EventDetails ~ item:', JSON.stringify(item, 0, 2));
+    // console.log('🚀 ~ EventDetails ~ item:', JSON.stringify(item, 0, 2));
     const [notificationOn, setNotification] = useState(false)
     const [regionCoordinate, setRegionCoordinate] = useState(null)
+    const [eventData, setEventData] = useState(item)
     useEffect(() => {
         if (external) {
             callApi()
@@ -35,24 +36,23 @@ const EventDetails = ({ navigation, route }) => {
     }, [])
     const callApi = () => {
         let check = item?.split('_').pop()
-        console.log("🚀 ~ callApi ~ check:", item?.split('_'))
+        console.log("🚀 ~ callApi ~ check:", item?.split('_')[1])
         if (item?.split('_')[0] == 'recurring') {
-
-            // getReccuringById({ data: check }).then((result) => {
-            //     console.log("🚀 ~ getReccuringById ~ result:", result)
-
-            // }).catch((err) => {
-            //     console.log("🚀 ~ getReccuringById ~ err:", err)
-
-            // });
+            GetReccuringById({ data: item?.split('_')[1] }).then((result) => {
+                console.log("🚀 ~ getReccuringById ~ result:", result)
+                setEventData(result?.data?.data)
+            }).catch((err) => {
+                console.log("🚀 ~ getReccuringById ~ err:", err)
+                setEventData(result?.data?.data)
+            });
         } else {
-            // getRegularById({ data: check }).then((result) => {
-            //     console.log("🚀 ~ getRegularById ~ result:", result)
+            GetRegularById({ data: item?.split('_')[1] }).then((result) => {
+                console.log("🚀 ~ getRegularById ~ result:", result)
 
-            // }).catch((err) => {
-            //     console.log("🚀 ~ getRegularById ~ err:", err)
+            }).catch((err) => {
+                console.log("🚀 ~ getRegularById ~ err:", err)
 
-            // });
+            });
         }
     }
     const popAction = StackActions.pop(1);
@@ -153,8 +153,8 @@ const EventDetails = ({ navigation, route }) => {
                             onPress={() => {
                                 const sourceLatitude = parseFloat(regionCoordinate?.latitude); // Example source latitude
                                 const sourceLongitude = parseFloat(regionCoordinate?.longitude); // Example source longitude
-                                const destinationLatitude = parseFloat(item?.attributes?.Latitude); // Example destination latitude
-                                const destinationLongitude = parseFloat(item?.attributes?.Longitude); // Example destination longitude
+                                const destinationLatitude = parseFloat(eventData?.attributes?.Latitude); // Example destination latitude
+                                const destinationLongitude = parseFloat(eventData?.attributes?.Longitude); // Example destination longitude
                                 const googleMapsUrl = `geo:${sourceLatitude},${sourceLongitude}?q=${destinationLatitude},${destinationLongitude}`;
                                 Linking.openURL(googleMapsUrl).catch((err) => {
                                     console.log('the map is not avialable');
