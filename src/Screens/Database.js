@@ -173,12 +173,12 @@ async function requestFilePermissions() {
 }
 
 function unzipDownloadFile(target, cb) {
-
+    requestFilePermissions()
     const sourcePath = target;
     // console.log("🚀 ~ file: Database.js:72 ~ unzipDownloadFile ~ targetPath:", sourcePath)
     const targetPath = Platform.OS == 'ios' ? `${RNFS.DocumentDirectoryPath}/Thrimurai` : `${RNFS.ExternalDirectoryPath}/Thrimurai`;
     // const filePath = RNFS.DocumentDirectoryPath + '/myData.db';
-    console.log("🚀 ~ unzipDownloadFile ~ targetPath:", targetPath)
+    console.log("🚀 ~ unzipDownloadFile ~ targetPath:", targetPath, `${RNFS.DocumentDirectoryPath}/Thrimurai`)
     const charset = 'UTF-8';
     RNFS.mkdir(targetPath)
         .then(() => {
@@ -201,13 +201,13 @@ function unzipDownloadFile(target, cb) {
 }
 
 export async function getSqlData(query, callbacks) {
-    console.log('🚀 ~ file: Database.js:146 ~ getSqlData ~ query:', `${RNFS.DocumentDirectoryPath}/Thrimurai`);
+    // console.log('🚀 ~ file: Database.js:146 ~ getSqlData ~ query:', `${RNFS.DocumentDirectoryPath}/Thrimurai`);
     const data = await AsyncStorage.getItem('@database');
-    console.log("🚀 ~ getSqlData ~ data:", data)
+    // console.log("🚀 ~ getSqlData ~ data:", data)
     const databasename = JSON.parse(data);
-    // console.log('🚀 ~ file: Database.js:142 ~ getSqlData ~ data:', databasename);
+    console.log('🚀 ~ file: Database.js:142 ~ getSqlData ~ data:', databasename);
     if (databasename?.name == 'songData.db' || databasename == null) {
-        console.log('offline database')
+        console.log('offline database========>')
         await offlineDatabase.transaction(
             (tx) => {
                 tx.executeSql(query, [], (_, results) => {
@@ -232,6 +232,8 @@ export async function getSqlData(query, callbacks) {
             }
         );
     } else {
+        console.log('online database===>')
+
         await database.transaction(
             (tx) => {
                 tx.executeSql(query, [], (_, results) => {

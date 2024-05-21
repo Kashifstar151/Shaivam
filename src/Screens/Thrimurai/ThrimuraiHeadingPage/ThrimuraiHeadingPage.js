@@ -172,6 +172,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const retrieveData = async () => {
         setShowLoading(true);
         const query = `SELECT name ,prevId FROM  category WHERE prevId${prevId}`;
+        // alert(true)
         getSqlData(query, (callbacks) => {
             setShowLoading(false);
             setThrimurais(callbacks);

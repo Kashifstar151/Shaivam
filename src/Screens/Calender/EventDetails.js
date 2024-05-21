@@ -25,7 +25,7 @@ const EventDetails = ({ navigation, route }) => {
     const [GetRegularById, { isSuccess: regularSuccess }] = useLazyGetRegularByIdQuery()
 
 
-    // console.log('🚀 ~ EventDetails ~ item:', JSON.stringify(item, 0, 2));
+    console.log('🚀 ~ EventDetails ~ item:', JSON.stringify(item, 0, 2));
     const [notificationOn, setNotification] = useState(false)
     const [regionCoordinate, setRegionCoordinate] = useState(null)
     const [eventData, setEventData] = useState(item)
@@ -174,18 +174,6 @@ const EventDetails = ({ navigation, route }) => {
                             textColor={'#fff'}
                         />
                     }
-
-
-                    {/* <CustomButton
-                        svg={<LinkIcon fill={'#ffffff'} />}
-                        onPress={() => item?.attributes?.Url && Linking.openURL(item?.attributes?.Url)}
-                        style={{
-                            margin: 10,
-                        }}
-                        text={t('Virtual event link')}
-                        backgroundColor={'#C1554E'}
-                        textColor={'#ffffff'}
-                    /> */}
                 </View>
                 <View style={{ paddingHorizontal: 10 }}>
                     <Text style={styles.descriptionText}>{item?.attributes?.description}</Text>
@@ -252,12 +240,12 @@ const EventDetails = ({ navigation, route }) => {
                         horizontal
                         contentContainerStyle={{ gap: 10, paddingVertical: 10, marginTop: 10 }}
                         // data={Array.from({ length: 7 }, (_, i) => i)}
-                        data={item?.attributes?.Files?.data}
+                        data={item?.attributes?.File}
                         renderItem={({ item, index }) => (
                             <Image
                                 source={
-                                    item?.attributes?.url
-                                        ? { url: item?.attributes?.url }
+                                    item?.url
+                                        ? { url: item?.url }
                                         : require('../../assets/Images/Background.png')
                                 }
                                 style={{ color: 'black', width: 200, height: 130, borderRadius: 8 }}

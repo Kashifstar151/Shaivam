@@ -7,10 +7,11 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
             query: (date) => {
                 let startDate = moment(date?.selectMonth).get('m') == moment().get('m') ? moment(date?.selectMonth).format('YYYY-MM-DD') : moment(date?.selectMonth).startOf('month').format('YYYY-MM-DD')
                 let url = date?.selectedLocation !== null ?
-                    `nearby-events?long=${date?.selectedLocation?.long}&lat=${date?.selectedLocation?.lat}&radius=1500000&start_date=${startDate}}&end_date=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}` :
-                    date?.eventCategory !== null ? `nearby-events?start_date=${startDate}&end_date=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&category=${date.eventCategory}` :
-                        date?.selectedLocation !== null && date?.eventCategory !== null ? `nearby-events?long=78.6801553&lat=10.8118335&radius=230000000&start_date=${startDate}&end_date=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&category=${date.eventCategory}` :
-                            `nearby-events?start_date=${startDate}&end_date=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}`;
+                    `nearby-events?long=${date?.selectedLocation?.long}&lat=${date?.selectedLocation?.lat}&radius=1500000&start_date=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}}&end_date=${startDate}` :
+                    date?.eventCategory !== null ? `nearby-events?start_date=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&end_date=${startDate}&category=${date.eventCategory}` :
+                        date?.selectedLocation !== null && date?.eventCategory !== null ? `nearby-events?long=78.6801553&lat=10.8118335&radius=230000000&start_date=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&end_date=${startDate}&category=${date.eventCategory}` :
+                            `nearby-events?start_date=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&end_date=${startDate}`;
+                console.log("🚀 ~ url:", url)
                 return {
                     url: url,
                     method: 'GET',
@@ -35,13 +36,11 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
         }),
         getRecurringEventMonthly: builder.query({
             query: (date) => {
-                // console.log("🚀 ~ date:", date)
                 let url = date?.selectedLocation !== null ?
                     `nearby-recurring-events?long=${date?.selectedLocation?.long}&lat=${date?.selectedLocation?.lat}&radius=50000&schedulerType=Monthly` :
                     date?.eventCategory !== null ? `nearby-recurring-events?schedulerType=Monthly&category=${date?.eventCategory}` :
                         date?.selectedLocation !== null && date?.eventCategory !== null ? `nearby-recurring-events?schedulerType=Monthly&long=${date?.selectedLocation?.long}&lat=${date?.selectedLocation?.lat}&radius=50000&category=${date?.eventCategory}` :
                             `nearby-recurring-events?schedulerType=Monthly`;
-                // console.log('🚀 ~ url: recurring month', url);
                 return {
                     url: url,
                     method: 'GET',

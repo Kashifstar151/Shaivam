@@ -112,15 +112,6 @@ const Calender = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
     const [filteredData, setFilteredData] = useState([])
     const debounceVal = useDebouncer(searchText, 500);
-    // const [scrollIndex, setScrollIndex] = useState(0)
-    // const [trigger, setTrigger] = useState(false)
-    // const clearStates = () => {
-    //     setWeekly([]);
-    //     setRegular([]);
-    //     setMonthly([]);
-    //     setMainData([]);
-    //     // setTodayEvent([])
-    // };
     useEffect(() => {
         setWeekly([]);
         setRegular([]);
@@ -138,7 +129,7 @@ const Calender = ({ navigation }) => {
 
     const getScheduleNotification = () => {
         PushNotification.getScheduledLocalNotifications(callbacks => {
-            console.log("🚀 ~ getScheduleNotification ~ callbacks:", callbacks)
+            // console.log("🚀 ~ getScheduleNotification ~ callbacks:", callbacks)
             setNotificationEvents(callbacks)
         })
     }
@@ -616,6 +607,9 @@ const Calender = ({ navigation }) => {
                                 renderItem={({ item, index }) => (
                                     <ElevatedCard
                                         theme={{ colorscheme: theme.colorscheme }}
+                                        navigation={() =>
+                                            EventNavigation(item)
+                                        }
                                     >
                                         <EventCard
                                             date={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).get('D') : moment(item.start_date).get('D')}
