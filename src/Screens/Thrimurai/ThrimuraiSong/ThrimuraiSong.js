@@ -150,7 +150,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     }, []);
     const [repeatMode, setRepeatMode] = useState();
     const { musicState, dispatchMusic } = useContext(MusicContext);
-    // console.log("🚀 ~ ThrimuraiSong ~ musicState:", musicState)
+    console.log("🚀 ~ ThrimuraiSong ~ musicState:", JSON.stringify(musicState, 0, 2))
     const [darkMode, setDarkMode] = useState();
     const [tamilSplit, setTamilSplit] = useState(false);
     const { theme, setTheme } = useContext(ThemeContext);
@@ -190,6 +190,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
         }
     }, [darkMode]);
 
+
     // const activeTrack = useActiveTrack();
     // console.log(
     //     '🚀 ~ ``````````~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~:',
@@ -199,7 +200,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const getFavAudios = (songList) => {
         // const activeTrack = useActiveTrack();
         listfavAudios((callbacks) => {
-            console.log('🚀 ~ useEffect ~ callbacks:', JSON.stringify(callbacks, 0, 2));
+            // console.log('🚀 ~ useEffect ~ callbacks:', JSON.stringify(callbacks, 0, 2));
             // setFavList(callbacks)
             const updatedArray2 = songList?.map((item2) => {
                 const match = callbacks.find((item1) => item1.id === item2.id);
@@ -218,10 +219,10 @@ const ThrimuraiSong = ({ route, navigation }) => {
         try {
             // const keys = await AsyncStorage.getAllKeys();
             const parsedMetadata = await AsyncStorage.getItem('downloaded');
-            console.log(
-                '🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:',
-                JSON.stringify(JSON.parse(parsedMetadata), 0, 2)
-            );
+            // console.log(
+            //     '🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:',
+            //     JSON.stringify(JSON.parse(parsedMetadata), 0, 2)
+            // );
             // const metadataKeys = keys.filter(key => key.startsWith('downloaded:'));
             // const metadata = await AsyncStorage.multiGet(metadataKeys);
             // const parsedMetadata = metadata.map(([key, value]) => JSON.parse(value));
@@ -265,7 +266,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
 
     const getSOngData = (from) => {
         TrackPlayer.reset();
-        const detailQuery = `SELECT rawSong, tamilExplanation, englishTranslation,hindiTranslation, tamilSplit , songNo , title from thirumurai_songs where prevId=${musicState?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
+        const detailQuery = `SELECT * from thirumurai_songs where prevId=${musicState?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
         const titleQuery = `SELECT
         MAX(CASE WHEN locale = 'en' THEN titleS END) AS tamil,
     MAX(CASE WHEN locale = '${langMap[selectedLngCode]}' THEN titleS END) AS localeBased FROM thirumurais WHERE prevId =${musicState?.prevId}
@@ -281,6 +282,8 @@ GROUP BY
                 payload: data.filter((i) => i.localBased !== null)[0].localeBased,
             });
             getSqlData(detailQuery, (details) => {
+                console.log("🚀 ~ getSqlData ~ data:", JSON.stringify(details, 0, 2))
+
                 const query2 = `SELECT * FROM odhuvars WHERE title='${data.filter((i) => i.tamil !== null)[0]?.tamil
                     }'`;
                 getSqlData(query2, (callbacks) => {
@@ -317,11 +320,12 @@ GROUP BY
     };
     useEffect(() => {
         dispatchMusic({ type: 'PREV_ID', payload: data?.prevId });
-
+    }, [data, downloadList]);
+    useEffect(() => {
         if (downloaded) {
             checkDownloaded(musicState.song);
         }
-    }, [data, downloadList, musicState?.song]);
+    }, [data, downloadList, musicState?.song])
 
     const toggleSwitch = (value, callbacks) => {
         callbacks(!value);
@@ -332,7 +336,7 @@ GROUP BY
                 const match = downloadList?.find((item1) => item1.id === item2.id);
                 return match ? { ...match, isLocal: true } : item2; // Replace with the object from array1 if there's a match
             });
-            console.log('🚀 ~ updatedArray2 ~ updatedArray2:', JSON.stringify(updatedArray2, 0, 2));
+            // console.log('🚀 ~ updatedArray2 ~ updatedArray2:', JSON.stringify(updatedArray2, 0, 2));
             setUpPlayer(updatedArray2);
         } else {
             setUpPlayer(songList);
@@ -343,10 +347,13 @@ GROUP BY
         if (musicState.song.length && !downloaded) {
             checkDownloaded(musicState.song);
             getFavAudios(musicState.song);
+
         }
     }, [musicState.song, downloadList]);
 
     const renderResult = (item) => {
+        // console.log("🚀 ~ renderResult ~ item:", item)
+        // console.log("🚀 ~ renderResult ~ item:", item)
         // const parts = item?.rawSong.split('\r\n');
         // const data = parts?.split(' ')
         return (
@@ -376,7 +383,6 @@ GROUP BY
     };
 
     const scrollToIndex = () => {
-        // console.log("songnonsjc", typeof songNo)
         flatListRef?.current?.scrollToIndex({
             animated: true,
             index: songNo - 1,
@@ -389,6 +395,7 @@ GROUP BY
     };
     const setUpPlayer = useCallback(
         async (song, from) => {
+            console.log('songs data setup players', JSON.stringify(song, 0, 2))
             try {
                 if (!TrackPlayer._initialized) {
                     await TrackPlayer.setupPlayer();
@@ -443,6 +450,7 @@ GROUP BY
         await TrackPlayer.reset();
 
         getSqlData(query, (clb) => {
+            console.log("🚀 ~ getSqlData ~ clb:", clb)
             if (clb[0].nextPrevId) {
                 dispatchMusic({ type: 'RESET' });
                 dispatchMusic({ type: 'PREV_ID', payload: clb[0].nextPrevId });
@@ -482,12 +490,13 @@ GROUP BY
     useEffect(() => {
         if (musicState.prevId && selectedLang) {
             getSqlData(
-                `SELECT author,thalam,country,pann from thirumurais WHERE prevId=${musicState?.prevId}`,
+                `SELECT addon,author,thalam,country,pann from thirumurais WHERE prevId=${musicState?.prevId}`,
                 (cb) => {
-                    const { author, country, thalam, pann } = cb[0];
+                    const { author, country, thalam, pann, addon } = cb[0];
+                    // console.log("🚀 ~ useEffect ~  cb[0]:", cb[0])
                     dispatchMusic({
                         type: 'META_DATA',
-                        payload: { author, country, thalam, pann },
+                        payload: { author, country, thalam, pann, addon },
                     });
                 }
             );
@@ -540,6 +549,7 @@ GROUP BY
     }, [clipBoardString]);
 
     const renderText = (item) => {
+        console.log("🚀 ~ renderText ~ item:", JSON.stringify(item, 0, 2))
         if (tamilSplit && i18n.language === 'en') {
             return item?.tamilSplit || 'Text currently not available';
         } else if (selectedLang === 'Tamil') {
@@ -690,6 +700,13 @@ GROUP BY
                                         </View>
                                     </View>
                                 )}
+                                {
+                                    musicState?.songDetails[0]?.addon &&
+                                    <View>
+                                        <Text style={styles.valueDropDown}>{t(musicState?.songDetails[0]?.addon)}</Text>
+                                    </View>
+                                }
+
                             </>
                         </View>
                         <TouchableOpacity style={styles.textContainer} onPress={makeTheViewVisible}>
@@ -913,27 +930,13 @@ GROUP BY
                                     styles.settingButton,
                                     { backgroundColor: colorSet?.settingBtn.backgroundColor },
                                 ]}
-                                onPress={handlePress}
-                            >
-                                {/* <SettingIcon /> */}
+                                onPress={handlePress}>
                                 <SettingsSVG />
-                                {/* <Text
-                                    style={[
-                                        styles.settingText,
-                                        {
-                                            color: colorSet?.textColor,
-                                        },
-                                    ]}
-                                >
-                                    Settings
-                                </Text> */}
                             </TouchableOpacity>
                         )}
                     </View>
                 </>
             )}
-
-            {/* lyrics part */}
             <View style={styles.lyricsContainer}>
                 <View style={{ paddingHorizontal: 20 }}>
                     {musicState?.songDetails?.length > 0 && (
@@ -950,35 +953,30 @@ GROUP BY
                                         borderBottomWidth: 1,
                                         paddingBottom: 7,
                                         flexDirection: 'row',
-                                    }}
-                                >
-                                    {searchScreen ? (
-                                        renderResult(item)
-                                    ) : (
-                                        <Text
-                                            key={Math.random()}
-                                            selectable={true}
-                                            selectionColor="orange"
-                                            style={[
-                                                styles.lyricsText,
-                                                {
-                                                    fontSize: fontSizeCount,
-                                                    alignSelf: 'flex-end',
-                                                    color: !darkMode ? colors.grey6 : colors.white,
-                                                },
-                                            ]}
-                                        >
-                                            {/* {!(tamilSplit && i18n.language === 'en')
-                                                ? selectedLang !== 'Tamil'
-                                                    ? item?.rawSong
-                                                    : item?.tamilExplanation ||
-                                                      'Text currently not available'
-                                                : item?.tamilSplit ||
-                                                  'Text currently not available'} */}
-
-                                            {renderText(item)}
-                                        </Text>
-                                    )}
+                                    }}>
+                                    <View>
+                                        {item?.type !== null &&
+                                            <Text style={{ color: colors.commonColor, fontFamily: 'Mulish-Regular' }}>{item?.type}</Text>
+                                        }
+                                        {searchScreen ? (
+                                            renderResult(item)
+                                        ) : (
+                                            <Text
+                                                key={Math.random()}
+                                                selectable={true}
+                                                selectionColor="orange"
+                                                style={[
+                                                    styles.lyricsText,
+                                                    {
+                                                        fontSize: fontSizeCount,
+                                                        alignSelf: 'flex-end',
+                                                        color: !darkMode ? colors.grey6 : colors.white,
+                                                    },
+                                                ]}>
+                                                {renderText(item)}
+                                            </Text>
+                                        )}
+                                    </View>
                                     <Text
                                         style={[
                                             styles.lyricsText,

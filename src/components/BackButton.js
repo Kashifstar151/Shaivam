@@ -34,9 +34,9 @@ const BackButton = ({
             link: eventShare ? `https://shaivaam.page.link/org?eventId=${item?.attributes?.schedula_type ? 'recurring_' + item?.attributes?.id : 'regular_' + item?.attributes?.id}` : `https://shaivaam.page.link/org?prevId=${musicState?.prevId}`,
             domainUriPrefix: 'https://shaivaam.page.link',
             ios: {
-                appStoreId: '123456',
+                appStoreId: '1575138510',
                 bundleId: 'com.Shaivam.shaivam',
-                minimumVersion: '18',
+                // minimumVersion: '18',
             },
             android: {
                 packageName: 'org.shaivam'
@@ -46,7 +46,7 @@ const BackButton = ({
         },
             dynamicLinks.ShortLinkType.DEFAULT,
         );
-        console.log("🚀 ~ link ~ link:", `https://shaivaam.page.link/org?eventId=${item?.attributes?.schedula_type ? 'recurring_' + item?.attributes?.id : 'regular_' + item?.attributes?.id}`)
+        // console.log("🚀 ~ link ~ link:", `https://shaivaam.page.link/org?eventId=${item?.attributes?.schedula_type ? 'recurring_' + item?.attributes?.id : 'regular_' + item?.attributes?.id}`)
         return link;
     }
     const shareSong = async () => {

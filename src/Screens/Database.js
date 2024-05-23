@@ -201,7 +201,7 @@ function unzipDownloadFile(target, cb) {
 }
 
 export async function getSqlData(query, callbacks) {
-    // console.log('🚀 ~ file: Database.js:146 ~ getSqlData ~ query:', `${RNFS.DocumentDirectoryPath}/Thrimurai`);
+    console.log('🚀 ~ file: Database.js:146 ~ getSqlData ~ query:', query);
     const data = await AsyncStorage.getItem('@database');
     // console.log("🚀 ~ getSqlData ~ data:", data)
     const databasename = JSON.parse(data);
@@ -233,7 +233,6 @@ export async function getSqlData(query, callbacks) {
         );
     } else {
         console.log('online database===>')
-
         await database.transaction(
             (tx) => {
                 tx.executeSql(query, [], (_, results) => {

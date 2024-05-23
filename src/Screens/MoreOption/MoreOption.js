@@ -37,10 +37,18 @@ import AboutSVG from '../../components/SVGs/AboutSVG';
 import { useFocusEffect } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AboutUs from './AboutUs';
+import RBSheet from 'react-native-raw-bottom-sheet';
+import ShareApp from './ShareApp';
+import Share from 'react-native-share';
+import AcknowladgeMent from './AcknowladgeMent';
 
 const MoreOption = () => {
     const { theme } = useContext(ThemeContext);
     const SheetRef = useRef(null);
+    const shareSheetRef = useRef(null)
+    const aboutSheetRef = useRef(null)
+    const acknowladgeRef = useRef(null)
     const option = [
         {
             title: 'Language',
@@ -64,7 +72,7 @@ const MoreOption = () => {
         // },
         {
             title: 'Contact',
-            Description: '+919999999999',
+            Description: 'shaivam@shaivam.org',
             icon: <ContactSVG fill={'#333333'} />,
         },
         {
@@ -80,6 +88,11 @@ const MoreOption = () => {
         {
             title: 'About',
             Description: 'Your Selection',
+            icon: <AboutSVG fill={'#333333'} />,
+        },
+        {
+            title: 'Acknowledgement',
+            Description: '',
             icon: <AboutSVG fill={'#333333'} />,
         },
     ];
@@ -115,6 +128,14 @@ const MoreOption = () => {
             firstTime.current = false;
         } else if (item?.title == 'Go to website') {
             Linking.openURL('https://shaivam.org/#gsc.tab=0')
+        } else if (item?.title == 'About') {
+            aboutSheetRef?.current?.open()
+        } else if (item?.title == 'Contact') {
+            shareSheetRef.current?.open()
+        } else if (item?.title == 'Share the app') {
+            Shareapp()
+        } else if (item?.title == 'Acknowledgement') {
+            acknowladgeRef.current.open()
         }
     };
 
@@ -148,6 +169,14 @@ const MoreOption = () => {
     useEffect(() => {
         handleLanguageClick(language.find((i) => i.lngCode === i18n.language));
     }, []);
+
+    const Shareapp = async () => {
+        await Share.open({
+            title: `Download this app from playstore and appstore`,
+            message: `Download this app from playstore and appstore`,
+            urls: ['https://play.google.com/store/apps/details?id=org.shaivam , http://itunes.apple.com/in/app/shaivam-org-mobile/id1363893783?mt8']
+        })
+    }
 
     const rednderItem = (item, index) => {
         // console.log("🚀 ~ file: MoreOption.js:19 ~ rednderItem ~ item:", item)
@@ -189,7 +218,6 @@ const MoreOption = () => {
             </View>
             <BottomSheetModal
                 ref={bottomSheetRef}
-                onChange={handleSheetChanges}
                 snapPoints={['50%']}
                 backdropComponent={(props) => (
                     <BottomSheetBackdrop
@@ -222,6 +250,26 @@ const MoreOption = () => {
                     handleClick={handleLanguageClick}
                 />
             </BottomSheetModal>
+            <RBSheet
+                ref={aboutSheetRef}
+                closeOnDragDown
+                height={600}
+            >
+                <AboutUs />
+            </RBSheet>
+            <RBSheet
+                ref={acknowladgeRef}
+                closeOnDragDown
+                height={600}
+            >
+                <AcknowladgeMent />
+            </RBSheet>
+            <RBSheet
+                ref={shareSheetRef}
+                closeOnDragDown
+                height={300} >
+                <ShareApp />
+            </RBSheet>
         </View>
     );
 };
@@ -248,6 +296,13 @@ export const styles = StyleSheet.create({
         borderRadius: 5,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    bottomSheetStyle: {
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+
+
+        borderBottomWidth: 0.5,
     },
 });
 export default MoreOption;

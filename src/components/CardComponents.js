@@ -30,7 +30,7 @@ const RenderItem = ({ blockRef, item, navigation, theme }) => {
 
     const onLayout = (event, index) => {
         const { x, y, width, height } = event.nativeEvent.layout;
-        console.log('🚀 ~ RenderItem ~ index:', index);
+        // console.log('🚀 ~ RenderItem ~ index:', index);
         if (index == 0) {
             console.log('🚀 ~ onLayout ~ width:', width);
             setBlockWidth(width);
@@ -149,11 +149,11 @@ const CardComponents = ({ navigation }) => {
                 //     title: t('Vedas'),
                 //     navName: 'Vedas',
                 // },
-                {
-                    icon: <RadioSVG fill={theme.textColor} />,
-                    title: t('Radio'),
-                    navName: RouteTexts.RADIO,
-                },
+                // {
+                //     icon: <RadioSVG fill={theme.textColor} />,
+                //     title: t('Radio'),
+                //     navName: RouteTexts.RADIO,
+                // },
                 // {
                 //     icon: <StrotasSVG fill={theme.textColorHomeCardYellow} />,
                 //     title: t('Stotras'),

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import { Modal, RefreshControl, StatusBar, StyleSheet, Text, View } from 'react-native';
 import Background from '../../../components/Background';
 import TempleHeader from '../TempleHeader';
 import { FlatList } from 'react-native';

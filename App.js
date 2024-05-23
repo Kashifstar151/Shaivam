@@ -18,45 +18,41 @@ import PushNotification, { Importance } from "react-native-push-notification";
 const App = () => {
     useEffect(() => {
         enableLatestRenderer();
-        dynamicLinks()
+        initialUrl()
+    }, []);
+    const initialUrl = async () => {
+        await dynamicLinks()
             .getInitialLink()
             .then(link => {
-                console.log("🚀 ~ useEffect ~ link:", link)
-                const getId = link?.url?.split('=').pop()
-                console.log("🚀 ~ useEffect ~ getId:", getId)
-                if (link !== null) {
-                    if (link?.url == `https://shaivaam.page.link/org?eventId=${getId}`) {
-                        NavigationServices.navigate(RouteTexts.EVENT_DETAILS, {
-                            item: getId,
-                            external: true
-                        });
-                    } else {
-                        NavigationServices.navigate(RouteTexts.THRIMURAI_SONG, {
-                            data: {
-                                prevId: getId
-                            }
-                        });
-                    }
-                }
+                HandleDynamicLink(link);
             });
-    }, []);
+        const linkingListener = dynamicLinks().onLink(HandleDynamicLink);
+        return () => {
+            linkingListener();
+        };
+    };
     const HandleDynamicLink = link => {
         console.log("🚀 ~ HandleDynamicLink ~ link:", link)
         const getId = link?.url?.split('=').pop()
         console.log("🚀 ~ HandleDynamicLink ~ getId:", getId)
+        // if (link !== null) {
         if (link?.url == `https://shaivaam.page.link/org?eventId=${getId}`) {
-            NavigationServices.navigate(RouteTexts.EVENT_DETAILS, {
-                data: {
-                    prevId: getId
-                }
-            });
-        } else {
-            NavigationServices.navigate(RouteTexts.THRIMURAI_SONG, {
-                data: {
-                    prevId: getId
-                }
-            });
+            setTimeout(() => {
+                NavigationServices.navigate(RouteTexts.EVENT_DETAILS, {
+                    item: getId,
+                    external: true
+                });
+            }, 1000)
+        } else if (link?.url == `https://shaivaam.page.link/org?prevId=${getId}`) {
+            setTimeout(() => {
+                NavigationServices.navigate(RouteTexts.THRIMURAI_SONG, {
+                    data: {
+                        prevId: getId
+                    }
+                });
+            }, 1000)
         }
+        // }
         // if (link) {
         //     NavigationServices.navigate(RouteTexts.THRIMURAI_SONG, {
         //         data: {

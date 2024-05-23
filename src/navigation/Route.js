@@ -102,7 +102,7 @@ const Route = () => {
                 'https://qa-admin.shaivam.in/api/app-dump-updates?pagination[pageSize]=1&sort[0]=Version:desc'
             )
                 .then((result) => result.json())
-                .then((response) => {
+                .then(async (response) => {
                     console.log('the api response is ===>', response?.data?.[0]?.attributes);
                     if (
                         localDBMetaData?.Version &&
@@ -130,7 +130,31 @@ const Route = () => {
                         ]);
                     } else {
                         console.log('fsjdh')
-                        checkFileExist(localDBMetaData)
+                        let data = await AsyncStorage.getItem('@databse')
+                        data = JSON.parse(data)
+                        if (data?.name == 'main.db') {
+                            offlineDatabase.transaction(
+                                async (tx) => {
+                                    await tx.executeSql(
+                                        'ATTACH DATABASE ? AS Updated_db',
+                                        [
+                                            `${RNFS.ExternalDirectoryPath}/Thrimurai/thirumuraiSong_${response?.data?.[0]?.attributes.Version}.db`,
+                                        ],
+                                        async (tx, results) => {
+                                            console.log("🚀 ~ results:", results)
+                                            resolve(tx);
+
+                                        }
+                                    );
+                                },
+                                async (error) => {
+                                    const data = await AsyncStorage.getItem('@database');
+                                    reject(error);
+                                }
+                            )
+                        }
+
+                        // checkFileExist(localDBMetaData) 
 
                     }
                 })

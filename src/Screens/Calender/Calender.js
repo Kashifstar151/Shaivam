@@ -45,6 +45,7 @@ import {
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { useTranslation } from 'react-i18next';
 import { useDebouncer } from '../../Helpers/useDebouncer';
+import CategoryAssets from './CategoryAssets';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -88,7 +89,7 @@ const Calender = ({ navigation }) => {
         isSuccess: isFestivalSuccess
 
     } = useGetFestivalListQuery({ selectMonth });
-    // console.log("🚀 ~ Calender ~ recurringEventList:", JSON.stringify(regularEvent, 0, 2))
+    console.log("🚀 ~ Calender ~ recurringEventList:", JSON.stringify(festivalEvents, 0, 2))
     const {
         data: monthRecurringEventList,
         isFetching: isFetchingMonthly,
@@ -283,6 +284,7 @@ const Calender = ({ navigation }) => {
             }
         }
         let sortedEvents = allEvents.sort((a, b) => moment(a.start_date) - moment(b.start_date));
+        console.log("🚀 ~ useEffect ~ sortedEvents:", JSON.stringify(sortedEvents, 0, 2))
         setMainData(sortedEvents)
         setShowLoader(false)
         sortedEvents?.map((item) => {
@@ -337,7 +339,7 @@ const Calender = ({ navigation }) => {
                 finalizedDate = lastDay && lastDay >= cDate ? lastDay : null;
                 break;
         }
-        console.log('finalizedDate', finalizedDate)
+        // console.log('finalizedDate', finalizedDate)
         return finalizedDate;
     };
 
@@ -729,6 +731,7 @@ const Calender = ({ navigation }) => {
                                             theme={{ colorscheme: theme.colorscheme }}
                                         >
                                             <EventCard
+                                                Icon={CategoryAssets[item?.attributes?.logo_flag]?.Svg}
                                                 date={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).get('D') : moment(item.start_date).get('D')}
                                                 dateNo={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).format('DD') : moment(item.start_date).format('DD')}
                                                 day={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).format('ddd') : moment(item.start_date).format('ddd')}
