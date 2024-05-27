@@ -89,7 +89,7 @@ const Calender = ({ navigation }) => {
         isSuccess: isFestivalSuccess
 
     } = useGetFestivalListQuery({ selectMonth });
-    console.log("🚀 ~ Calender ~ recurringEventList:", JSON.stringify(festivalEvents, 0, 2))
+    // console.log("🚀 ~ Calender ~ recurringEventList:", JSON.stringify(festivalEvents, 0, 2))
     const {
         data: monthRecurringEventList,
         isFetching: isFetchingMonthly,
@@ -158,11 +158,11 @@ const Calender = ({ navigation }) => {
         // console.log("🚀 ~ useEffect ~ recurringEventList:", recurringEventList)
         if (recurringEventList && recurringSuccess) {
             const data = []
-            // alert('recurring event weekly')
             const cDate = moment().startOf("day");
             for (let event of recurringEventList?.data) {
                 const start = moment().add(prevNext, "months").startOf("month").format("YYYY-MM-DD")
                 let dateSplit = start.split("-")
+                console.log("🚀 ~ useEffect ~ dateSplit:", dateSplit, prevNext)
                 const days = getDaysInMonth(dateSplit[1], dateSplit[0], event.attributes.day)
                 console.log("🚀 ~ useEffect ~ days:", days)
                 for (let day of days) {
@@ -509,7 +509,7 @@ const Calender = ({ navigation }) => {
                         disableArrowRight={isFetchingRegular || disableMonthChangeVal}
                         displayLoadingIndicator={isFetchingRegular || disableMonthChangeVal}
                         onMonthChange={(month) => {
-                            // alert(month.month)
+                            // alert(prevNext)
                             setDisableMonthChangeVal(() => true);
                             if (disableMonthChangeValRef.current) {
                                 clearTimeout(disableMonthChangeValRef.current);
@@ -517,16 +517,18 @@ const Calender = ({ navigation }) => {
                             disableMonthChangeValRef.current = setTimeout(() => {
                                 setDisableMonthChangeVal(() => false);
                                 // alert(selectMonth?.split('-')[1])
-                                setSelectMonth(new Date(month.dateString).toISOString());
-                                if (month?.month > selectMonth?.split('-')[1]) {
-                                    setPrevNext(prev => prev + 1)
-                                    // alert(prevNext)
-                                    setShowLoader(true)
+                                const newMonth = moment(month.dateString);
+                                const currentMonth = moment(selectMonth);
+
+                                // Check year and month using moment
+                                if (newMonth.isAfter(currentMonth, 'month')) {
+                                    setPrevNext(prev => prev + 1);
+                                    setShowLoader(true);
                                 } else {
-                                    setPrevNext(prev => prev - 1)
-                                    setShowLoader(true)
-                                    // alert(prevNext)
+                                    setPrevNext(prev => prev - 1);
+                                    setShowLoader(true);
                                 }
+                                setSelectMonth(newMonth.toISOString());
                             }, 1000);
                         }}
                         // onPressArrowLeft={() => {
@@ -653,6 +655,7 @@ const Calender = ({ navigation }) => {
                                         theme={{ colorscheme: theme.colorscheme }}
                                     >
                                         <EventCard
+                                            Icon={CategoryAssets[item?.attributes?.logo_flag]?.Svg}
                                             date={moment(item.date).get('D')}
                                             dateNo={moment(item?.date).format('DD')}
                                             day={moment(item?.date).format('ddd')}
@@ -692,6 +695,7 @@ const Calender = ({ navigation }) => {
                                     >
                                         <EventCard
                                             date={moment(item.start_date).get('D')}
+                                            Icon={CategoryAssets[item?.attributes?.logo_flag]?.Svg}
                                             dateNo={moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('DD')}
                                             day={moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('ddd')}
                                             timing={`${moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('MMMM DD YYYY')} - ${moment(item.end_date ? item.end_date : item?.attributes?.end_date).format('MMMM DD YYYY')}`}

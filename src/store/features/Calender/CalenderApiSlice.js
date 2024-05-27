@@ -2,6 +2,7 @@ import moment from 'moment';
 import { ApiSlice } from '../../apiSlice';
 
 const CalenderApiSlice = ApiSlice.injectEndpoints({
+
     endpoints: (builder) => ({
         getList: builder.query({
             query: (date) => {
@@ -138,7 +139,9 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
         }),
         getRadioList: builder.query({
             query: (data) => {
-                let url = `https://prod-admin.shaivam.in/api/radios?pagination%5BpageSize%5D=3&pagination%5Bpage%5D=1&sort=language:ASC`
+                // console.log("🚀 ~ data:", data)
+                let url = `https://prod-admin.shaivam.in/api/radios?pagination%5BpageSize%5D=3&pagination%5Bpage%5D=1&sort=${data}:ASC`
+                console.log("🚀 ~ url:", url)
                 return {
                     url: url,
                     method: 'GET',

@@ -20,6 +20,7 @@ import { RouteTexts } from '../../../navigation/RouteText';
 import { useTranslation } from 'react-i18next';
 import HighlightText from '@sanar/react-native-highlight-text';
 import getDimension from '../../../Helpers/getDimension';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SearchScreen = ({ navigation, route }) => {
     const { i18n } = useTranslation();
@@ -30,25 +31,32 @@ const SearchScreen = ({ navigation, route }) => {
     const [onFocus, setOnFocus] = useState(false);
     const [rawSongs, setRawSongs] = useState(null);
     const { theme } = useContext(ThemeContext);
-
+    const [recentKeyword, setRecentKeywords] = useState([])
     const [fktrimuria, setFkTrimuria] = useState(new Set([0]));
     const [isSearched, setIsSearched] = useState(false);
     const { screenHeight } = getDimension();
 
     useEffect(() => {
-        getDataFromSql();
+        getDataFromSql(searchText);
 
         return () => {
             setIsSearched(false);
         };
     }, [fktrimuria]);
+    useEffect(() => {
+        getSearchedTexxs()
+    }, [])
+    const getSearchedTexxs = async () => {
+        const data = await AsyncStorage.getItem('recentKeyword')
+        // console.log("🚀 ~ getSearchedTexxs ~ data:", data)
+        setRecentKeywords(JSON.parse(data))
+    }
     const normalizeString = (str) => {
         setSearchText(str.normalize('NFD').replace(/[\u0300-\u036f]/g, ''));
         return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     };
-    const getDataFromSql = (e) => {
+    const getDataFromSql = (searchText) => {
         setIsSearched(false);
-
         if (searchText && searchText.length >= 3) {
             getSqlData(
                 `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${normalizeString(
@@ -59,6 +67,10 @@ const SearchScreen = ({ navigation, route }) => {
                 } GROUP BY titleS;`,
                 (callbacks) => {
                     setSearchedResult(callbacks);
+                    const keys = recentKeyword ? recentKeyword : []
+                    const s = keys?.filter((keys) => keys !== searchText)
+                    const updated = [...s, searchText].slice(0, 6)
+                    AsyncStorage.setItem("recentKeyword", JSON.stringify(updated))
                 }
             );
             getSqlData(
@@ -155,6 +167,20 @@ const SearchScreen = ({ navigation, route }) => {
             </View>
         );
     };
+    const renderRecentSearch = (item) => {
+        console.log("🚀 ~ renderRecentSearch ~ item:", item)
+        return (
+            <TouchableOpacity style={{ borderWidth: 1, borderColor: '#777777', width: 'auto', height: 35, borderRadius: 16, paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center', marginLeft: 10 }} onPress={() => {
+                setSearchText(item)
+                setTimeout(() => {
+                    getDataFromSql(item)
+                }, 1000)
+                // getDataFromSql()
+            }}>
+                <Text style={{ fontSize: 12, fontFamily: 'Mulish-Regular' }}>{item}</Text>
+            </TouchableOpacity>
+        )
+    }
     function minTwoDigits(n) {
         return (n < 10 ? '0' : '') + n;
     }
@@ -234,7 +260,7 @@ const SearchScreen = ({ navigation, route }) => {
                     }}
                 >
                     <HeaderWithTextInput
-                        onSubmitEditing={getDataFromSql}
+                        onSubmitEditing={() => getDataFromSql(searchText)}
                         placeholder={`${t('Search for any')} ( முதல்-திருமுறை )`}
                         navigation={navigation}
                         setState={(e) => setSearchText(e)}
@@ -330,11 +356,15 @@ const SearchScreen = ({ navigation, route }) => {
                     </View>
                 )
             ) : (
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <CenterIcon />
-                    <Text style={{ color: '#777777', fontFamily: 'Mulish-Regular' }}>
-                        Search for any Thirumurai here
-                    </Text>
+                <View style={{ flex: 1, }}>
+                    <Text style={{ fontSize: 18, fontFamily: 'Lora-SemiBold', margin: 5 }}>Recent Searches</Text>
+                    <FlatList data={recentKeyword} contentContainerStyle={{ marginTop: 5 }} renderItem={({ item, index }) => renderRecentSearch(item)} horizontal />
+                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
+                        <CenterIcon />
+                        <Text style={{ color: '#777777', fontFamily: 'Mulish-Regular' }}>
+                            Search for any Thirumurai here
+                        </Text>
+                    </View>
                 </View>
             )}
         </View>

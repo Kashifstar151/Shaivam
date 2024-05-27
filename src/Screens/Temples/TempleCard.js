@@ -30,7 +30,7 @@ const TempleCard = ({ dataSet, children, regionCoordinate, showMargin, showButto
             {modalVisible && (
                 <Modal transparent>
                     {selectedHeader == 'Submit Images' ? (
-                        <FileUplaoder setModalVisible={setModalVisible} id={dataSet?.id} />
+                        <FileUplaoder setModalVisible={setModalVisible} id={dataSet?.id} dataSet={dataSet} />
                     ) : selectedHeader == 'Spot an error? Send Corrections' ? (
                         <SpottingErrorPage setModalVisible={setModalVisible} navigation={nav} />
                     ) : null}

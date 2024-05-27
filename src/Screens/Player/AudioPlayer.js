@@ -113,7 +113,7 @@ const AudioPlayer = ({
             let index = await TrackPlayer.getActiveTrack();
             // console.log('🚀 ~ useTrackPlayerEvents ~ index:', index);
             const newObj = { ...activeTrack, prevId: prevId };
-            console.log('🚀 ~ useTrackPlayerEvents ~ newObj:', newObj);
+            // console.log('🚀 ~ useTrackPlayerEvents ~ newObj:', newObj);
             updateRecentlyPlayed(newObj);
 
             // done the change when song completes the padikam gets changed (tricked)
@@ -142,13 +142,13 @@ const AudioPlayer = ({
         Icon.getImageSource('circle', 18, '#C1554E').then((source) => {
             return setThumbImage({ thumbIcon: source });
         });
-        Promise.allSettled([
-            createUserTable(),
-            MostPlayedSongList(),
-            getMostPlayedSong(),
-            getFavAudios(),
-            updateRecentlyPlayed({ ...activeTrack, prevId }),
-        ]);
+        // Promise.allSettled([
+        //     createUserTable(),
+        //     MostPlayedSongList(),
+        //     getMostPlayedSong(),
+        //     getFavAudios(),
+        //     updateRecentlyPlayed({ ...activeTrack, prevId }),
+        // ]);
 
     }, []);
     const updateRecentlyPlayed = async (newTrack) => {
@@ -221,6 +221,17 @@ const AudioPlayer = ({
             // fetchAndDisplayDownloads();
         })();
     }, [playBackState]);
+    useEffect(() => {
+        if (playBackState.state !== 'playing' && position >= 3) {
+            Promise.allSettled([
+                createUserTable(),
+                MostPlayedSongList(),
+                getMostPlayedSong(),
+                getFavAudios(),
+                updateRecentlyPlayed({ ...activeTrack, prevId }),
+            ]);
+        }
+    }, [playBackState])
 
     const getFavAudios = () => {
         listfavAudios((callbacks) => {

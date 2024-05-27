@@ -10,6 +10,9 @@ import {
     Animated as AnimatedRN,
     Platform,
     StatusBar,
+    TouchableWithoutFeedback,
+    Keyboard,
+    ScrollView,
 } from 'react-native';
 import BackButton from '../../../components/BackButton';
 import ShareIcon from '../../../assets/Images/share-1.svg';
@@ -58,7 +61,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const [downloadingLoader, setDownloadingLoader] = useState(false);
     // const snapPoints = useMemo(() => ['25%', '25%'], []);
     const [showSetting, setShowSetting] = useState(false);
-    const language = ['Original', 'Tamil', 'English', 'Hindi'];
+    // const language = ['Original', 'Tamil', 'English', 'Hindi'];
+    const [language, setLang] = useState(['Original', 'Tamil', 'English', 'Hindi'])
     const [selectedLang, setSelectedLang] = useState('Original');
     const [fontSizeCount, setFontSizeCount] = useState(null);
     // const [refFlatList, setRefFlatList] = useState(null);
@@ -308,7 +312,6 @@ GROUP BY
                     // } else {
                     // }
                     dispatchMusic({ type: 'SET_SONG', payload: callbacks });
-
                     // scrollToIndex();
                 });
             });
@@ -395,7 +398,7 @@ GROUP BY
     };
     const setUpPlayer = useCallback(
         async (song, from) => {
-            console.log('songs data setup players', JSON.stringify(song, 0, 2))
+            // console.log('songs data setup players', JSON.stringify(song, 0, 2))
             try {
                 if (!TrackPlayer._initialized) {
                     await TrackPlayer.setupPlayer();
@@ -937,8 +940,9 @@ GROUP BY
                     </View>
                 </>
             )}
+            {/* <TouchableWithoutFeedback onPress={() => setShowSetting(false)}> */}
             <View style={styles.lyricsContainer}>
-                <View style={{ paddingHorizontal: 20 }}>
+                <ScrollView style={{ paddingHorizontal: 20 }}>
                     {musicState?.songDetails?.length > 0 && (
                         <FlatList
                             keyExtractor={(item) => item?.id}
@@ -947,54 +951,57 @@ GROUP BY
                             data={musicState?.songDetails}
                             initialScrollIndex={songNo ? songNo - 1 : 0}
                             renderItem={({ item, index }) => (
-                                <View
-                                    style={{
-                                        borderBottomColor: colors.grey3,
-                                        borderBottomWidth: 1,
-                                        paddingBottom: 7,
-                                        flexDirection: 'row',
-                                    }}>
-                                    <View>
-                                        {item?.type !== null &&
-                                            <Text style={{ color: colors.commonColor, fontFamily: 'Mulish-Regular' }}>{item?.type}</Text>
-                                        }
-                                        {searchScreen ? (
-                                            renderResult(item)
-                                        ) : (
-                                            <Text
-                                                key={Math.random()}
-                                                selectable={true}
-                                                selectionColor="orange"
-                                                style={[
-                                                    styles.lyricsText,
-                                                    {
-                                                        fontSize: fontSizeCount,
-                                                        alignSelf: 'flex-end',
-                                                        color: !darkMode ? colors.grey6 : colors.white,
-                                                    },
-                                                ]}>
-                                                {renderText(item)}
-                                            </Text>
-                                        )}
+                                <TouchableWithoutFeedback onPress={() => setShowSetting(false)}>
+                                    <View
+                                        style={{
+                                            borderBottomColor: colors.grey3,
+                                            borderBottomWidth: 1,
+                                            paddingBottom: 7,
+                                            flexDirection: 'row',
+                                        }}>
+                                        <View>
+                                            {item?.type !== null &&
+                                                <Text style={{ color: colors.commonColor, fontFamily: 'Mulish-Regular' }}>{item?.type}</Text>
+                                            }
+                                            {searchScreen ? (
+                                                renderResult(item)
+                                            ) : (
+                                                <Text
+                                                    key={Math.random()}
+                                                    selectable={true}
+                                                    selectionColor="orange"
+                                                    style={[
+                                                        styles.lyricsText,
+                                                        {
+                                                            fontSize: fontSizeCount,
+                                                            alignSelf: 'flex-end',
+                                                            color: !darkMode ? colors.grey6 : colors.white,
+                                                        },
+                                                    ]}>
+                                                    {renderText(item)}
+                                                </Text>
+                                            )}
+                                        </View>
+                                        <Text
+                                            style={[
+                                                styles.lyricsText,
+                                                {
+                                                    fontSize: fontSizeCount,
+                                                    alignSelf: 'flex-end',
+                                                    color: !darkMode ? colors.grey6 : colors.white,
+                                                },
+                                            ]}
+                                        >
+                                            {item?.songNo}
+                                        </Text>
                                     </View>
-                                    <Text
-                                        style={[
-                                            styles.lyricsText,
-                                            {
-                                                fontSize: fontSizeCount,
-                                                alignSelf: 'flex-end',
-                                                color: !darkMode ? colors.grey6 : colors.white,
-                                            },
-                                        ]}
-                                    >
-                                        {item?.songNo}
-                                    </Text>
-                                </View>
+                                </TouchableWithoutFeedback>
                             )}
                         />
                     )}
-                </View>
+                </ScrollView>
             </View>
+            {/* </TouchableWithoutFeedback> */}
 
             <Animated.View
                 style={[

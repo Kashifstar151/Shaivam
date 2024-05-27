@@ -8,6 +8,7 @@ import dynamicLinks from '@react-native-firebase/dynamic-links';
 import Share from 'react-native-share';
 import { MusicContext } from './Playbacks/TrackPlayerContext';
 import { useTranslation } from 'react-i18next';
+import { RouteTexts } from '../navigation/RouteText';
 
 const BackButton = ({
     secondText,
@@ -89,7 +90,7 @@ const BackButton = ({
                                 {!color ? <WhiteBackButton /> : <BackIcon />}
                             </TouchableOpacity>
                         )}
-                        <View>
+                        <View style={{ width: '85%' }}>
                             {firstText && (
                                 <Text
                                     style={{
@@ -159,7 +160,9 @@ const BackButton = ({
                                 <Icon name="sharealt" size={24} color="white" />
                             </TouchableOpacity>
                         )}
-                        {nandiLogo == false ? null : <NandiLogo />}
+                        <TouchableOpacity onPress={() => navigation.navigate(RouteTexts.BOTTOM_TABS)}>
+                            {nandiLogo == false ? null : <NandiLogo />}
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>

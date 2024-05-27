@@ -15,7 +15,7 @@ import Icon from 'react-native-vector-icons/dist/Feather';
 import { useAddTempleImagesMutation } from '../../store/features/Temple/TemplApiSlice';
 import ButtonComp from './Common/ButtonComp';
 
-const FileUplaoder = ({ setModalVisible, id }) => {
+const FileUplaoder = ({ setModalVisible, id, dataSet }) => {
     const [images, setImages] = useState([]);
     const [submitted, setSubmitted] = useState(false);
     const [addTempleImages] = useAddTempleImagesMutation();
@@ -149,7 +149,7 @@ const FileUplaoder = ({ setModalVisible, id }) => {
                 <View style={styles.mainContainer}>
                     <View style={styles.topContainer}>
                         <Text style={{ fontFamily: 'Mulish-Regular', color: '#777777' }}>
-                            Bramhalingeshwara
+                            {dataSet?.templeName}
                         </Text>
                         <TouchableOpacity onPress={() => setModalVisible(false)}>
                             <Icon name="x" color="#222222" size={22} />

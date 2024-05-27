@@ -91,6 +91,7 @@ const OmChantPlayer = () => {
         const date = new Date(seconds * 1000);
         const minutes = date.getUTCMinutes();
         const formattedSeconds = ('0' + date.getUTCSeconds()).slice(-2);
+        console.log('date ,minutes ', date.getUTCSeconds(), seconds)
         return `${minutes}:${formattedSeconds}`;
     }
     const pauseAudio = async () => {

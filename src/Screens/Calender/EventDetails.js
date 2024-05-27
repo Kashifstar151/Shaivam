@@ -81,10 +81,10 @@ const EventDetails = ({ navigation, route }) => {
             name: 'End date',
             value: moment(item?.end_date ? item?.end_date : item?.attributes?.end_date).format('ddd,MMMM DD , YYYY'),
         },
-        { name: 'Location', value: item?.attributes?.Location },
-        { name: 'Presenter', value: item?.attributes?.name },
+        { name: 'Location', value: item?.attributes?.location },
         { name: 'Contact No', value: '+91-9876710234' },
         { name: 'Url', value: item?.attributes?.Url },
+        { name: 'Presenter', value: item?.attributes?.name },
     ];
     const [selectedHeader, setSelectedHeader] = useState('Direction');
     const checkPermissionAccess = async () => {
@@ -131,7 +131,7 @@ const EventDetails = ({ navigation, route }) => {
                 <BackButton
                     navigation={navigation}
                     // firstRightIcon={true}
-                    middleText={item?.attributes?.name}
+                    middleText={item?.attributes?.title}
                     rightIcon={true}
                     color={true}
                     eventShare={true}

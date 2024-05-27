@@ -1,7 +1,7 @@
 import { useIsFocused } from "@react-navigation/native";
 import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Feather from "react-native-vector-icons/dist/Feather";
 import { useDispatch } from "react-redux";
 import { ThemeContext } from "../../Context/ThemeContext";
@@ -24,7 +24,7 @@ const SelectFrequency = ({ selectedFrequecy, setSelectedFrequecy, closeBottomShe
     const category = [
         { name: 'Festival', id: 1 },
         { name: 'Concert', id: 2 },
-        { name: 'Discource', id: 3 },
+        { name: 'Discourse', id: 3 },
         { name: 'Pranayam / Recitation', id: 4 },
         { name: 'Uzhavarappani', id: 5 },
         { name: 'Others', id: 6 }
