@@ -7,7 +7,7 @@ import { ThemeContext } from '../../Context/ThemeContext';
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 
 const ChooseLanguage = ({ selected, setSelected, language, handleClick }) => {
-    const { i18n } = useTranslation();
+    const { i18n, t } = useTranslation();
     useEffect(() => {
         handleClick(language.find((i) => i.lngCode === i18n.language));
     }, []);
@@ -17,7 +17,7 @@ const ChooseLanguage = ({ selected, setSelected, language, handleClick }) => {
         <View style={{ flex: 1 }}>
             <View style={{ padding: 10 }}>
                 <Text style={[styles.headingText, { color: theme.textColor }]}>
-                    Select Your Language
+                    {t('Select Your Language')}
                 </Text>
                 <Text
                     style={[
@@ -27,7 +27,7 @@ const ChooseLanguage = ({ selected, setSelected, language, handleClick }) => {
                         },
                     ]}
                 >
-                    Changes will be made across the app
+                    {t('Changes will be made across the app')}
                 </Text>
             </View>
             <BottomSheetFlatList

@@ -1,22 +1,27 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/dist/Feather";
 import ButtonComp from "../Temples/Common/ButtonComp";
 
 const EventSelectionType = ({ category, setCategory, bottomSheetRef }) => {
     console.log("🚀 ~ EventSelectionType ~ eventCaetgory:", category)
+    const { t } = useTranslation()
     const [eventCaetgory, setEventCategory] = useState(null)
     const data = [
         { name: 'Festival' },
         { name: 'Concert' },
-        { name: 'Discource' },
-        { name: 'Pranayam / Recitation' },
-        { name: 'Uzhavarappani' },
+        { name: 'Discourse' },
+        { name: 'Concert' },
+        { name: 'Parayanam/Recitation' },
+        { name: 'Uzhavarapani' },
+        { name: 'Gurupujai' },
+        { name: 'Puja' },
         { name: 'Others' },
     ]
     const rednerItem = (item, index) => (
         <View style={{ height: 40, flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={{ color: 'rgba(34, 34, 34, 1)', fontFamily: 'Mulish-Regular' }}>{item?.name}</Text>
+            <Text style={{ color: 'rgba(34, 34, 34, 1)', fontFamily: 'Mulish-Regular' }}>{t(item?.name)}</Text>
 
             <TouchableOpacity onPress={() => {
                 setEventCategory(item?.name)
@@ -30,7 +35,7 @@ const EventSelectionType = ({ category, setCategory, bottomSheetRef }) => {
     )
     return (
         <View style={{ paddingHorizontal: 0 }}>
-            <Text style={styles.headingText}>Select Event Category</Text>
+            <Text style={styles.headingText}>{t('Select event category')}</Text>
             <FlatList contentContainerStyle={{ paddingHorizontal: 20 }} data={data} renderItem={({ item, index }) => (
                 rednerItem(item, index)
             )} />

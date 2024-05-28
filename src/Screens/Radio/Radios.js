@@ -34,11 +34,21 @@ const Radios = ({ navigation }) => {
     const [paused, setPaused] = useState(false)
     const [playerState, setPlayerState] = useState()
     const [renderUi, setRenderUi] = useState(false)
+    const [orientation, setOrientation] = useState('PORTRAIT')
     // console.log("🚀 ~ Radios ~ i18n:", JSON.stringify(i18n, 0, 2))
     useEffect(() => {
         setPlayerState(playBackState)
         console.log('playBackState', playBackState)
     }, [playBackState])
+    useEffect(() => {
+        Dimensions.addEventListener('change', ({ window: { width, height } }) => {
+            if (width < height) {
+                setOrientation('PORTRAIT');
+            } else {
+                setOrientation('LANDSCAPE');
+            }
+        });
+    }, [])
     useEffect(() => {
         let songs = []
         //     url: require('./coelacanth.ogg'), // Load media from the app bundle
@@ -184,14 +194,14 @@ const Radios = ({ navigation }) => {
                 <View style={{ height: '55%' }}>
                 </View>
             </Background>
-            <ScrollView style={{ zIndex: 50, position: 'absolute', top: '12%', alignSelf: 'center', }}>
+            <ScrollView style={{ zIndex: 50, position: 'absolute', top: orientation == 'PORTRAIT' ? '12%' : '20%', alignSelf: 'center', }}>
                 <Text style={{ fontFamily: 'Lora-Bold', fontSize: 16, color: 'white', }}>Stations</Text>
                 {
                     renderUi &&
                     <FlatList bounces={false} data={radioData?.data} renderItem={({ item, index }) => (
-                        <Pressable style={{ paddingHorizontal: 10, flexDirection: 'row', alignItems: 'center', borderRadius: 10, elevation: 10, shadowColor: 'black', shadowOffset: { height: 2, width: 1 }, shadowOpacity: 0.2, shadowRadius: 1, marginVertical: 10, backgroundColor: '#FEF0CC', height: 80, width: Dimensions.get('window').width - 30 }}>
+                        <Pressable style={{ paddingHorizontal: 10, flexDirection: 'row', alignItems: 'center', borderRadius: 10, elevation: 10, shadowColor: 'black', shadowOffset: { height: 2, width: 1 }, shadowOpacity: 0.2, shadowRadius: 1, marginVertical: 10, backgroundColor: '#FEF0CC', height: 80, width: orientation == 'LANDSCAPE' ? Dimensions.get('window').height - 30 : Dimensions.get('window').width - 30 }}>
                             <RadioSVG fill={'#4C3600'} />
-                            <View style={{ paddingHorizontal: 10, width: Dimensions.get('window').width / 1.5 }}>
+                            <View style={{ paddingHorizontal: 10, width: orientation == 'LANDSCAPE' ? Dimensions.get('window').height / 1.5 : Dimensions.get('window').width / 1.5 }}>
                                 <Text style={{ color: '#4C3600', fontFamily: 'Mulish-Regular' }}>{item?.attributes?.Title}</Text>
                                 <Text style={{ color: '#4C3600', fontFamily: 'Mulish-Regular', fontSize: 12 }}>{item?.attributes?.description}</Text>
                             </View>

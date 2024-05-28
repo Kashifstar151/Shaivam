@@ -10,8 +10,8 @@
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
   <uses-permission android:name="android.permission.VIBRATE" />
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-  <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
+  <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" android:maxSdkVersion="32" />
+  <uses-permission android:name="android.permission.USE_EXACT_ALARM" android:minSdkVersion="33" />
   <application
     android:name=".MainApplication"
     android:extractNativeLibs="true"
@@ -32,15 +32,14 @@
       android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher" />
     <receiver
       android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationBootEventReceiver"
-      android:enabled="true"
-      android:exported="false"
-    >
+      android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED" />
         <action android:name="android.intent.action.QUICKBOOT_POWERON" />
         <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
       </intent-filter>
     </receiver>
+
     <service
       android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService"
       android:exported="false">
@@ -62,9 +61,6 @@
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
-        <!-- <data
-        android:host="shaivaam.page.link"
-        android:scheme="https"/> -->
       </intent-filter>
     </activity>
     <service android:name="com.voximplant.foregroundservice.VIForegroundService"> </service>

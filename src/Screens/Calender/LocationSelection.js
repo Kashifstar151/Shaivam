@@ -12,10 +12,11 @@ import SearchInput from '../../components/SearchInput';
 import { colors } from '../../Helpers';
 import { useDebouncer } from '../../Helpers/useDebouncer';
 import { useGetListQuery } from '../../store/features/Calender/CalenderApiSlice';
+import { useTranslation } from 'react-i18next';
 
 const LocationSelection = ({ calender, setSelected, close, selectedLocation }) => {
     // const [selectedEvent, setSelectedEvent] = useState(null)
-
+    const { t } = useTranslation()
     const [regionCoordinate, setRegionCoordinate] = useState({
         latitude: 28.500271,
         longitude: 77.387901,
@@ -132,7 +133,7 @@ const LocationSelection = ({ calender, setSelected, close, selectedLocation }) =
     );
     return (
         <View style={{ paddingHorizontal: 0 }}>
-            <Text style={styles.headingText}>Search By Location</Text>
+            <Text style={styles.headingText}>{t('Search by location')}</Text>
             <View
                 style={{
                     paddingHorizontal: 20,
@@ -151,10 +152,10 @@ const LocationSelection = ({ calender, setSelected, close, selectedLocation }) =
             {/* <SearchInput color={true} styleOverwrite={{ marginHorizontalUnset: 20 }} /> */}
             <View style={{ paddingHorizontal: 20 }}>
                 <Text style={{ color: '#C1554E', fontSize: 16, fontFamily: 'Mulish-Bold' }}>
-                    Most Searched Location
+                    {t('Most searched locations')}
                 </Text>
                 <Text style={{ color: '#666666', fontFamily: 'Mulish-Regular', fontSize: 12 }}>
-                    Lorem ipsum dolor set
+                    {t('Lorem ipsum dolor set')}
                 </Text>
             </View>
             <FlatList contentContainerStyle={{ paddingHorizontal: 20 }} data={fetchLocationName} renderItem={({ item, index }) => (
@@ -184,7 +185,7 @@ const LocationSelection = ({ calender, setSelected, close, selectedLocation }) =
                     borderColor: '#C1554E',
                     borderWidth: 1,
                 }}
-                text={'Use my current location'}
+                text={t('Use my current location')}
                 backgroundColor={'#ffffff'}
                 textColor={'#C1554E'}
             />

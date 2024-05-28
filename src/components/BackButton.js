@@ -37,7 +37,7 @@ const BackButton = ({
             ios: {
                 appStoreId: '1575138510',
                 bundleId: 'com.Shaivam.shaivam',
-                // minimumVersion: '18',
+                minimumVersion: '18',
             },
             android: {
                 packageName: 'org.shaivam'

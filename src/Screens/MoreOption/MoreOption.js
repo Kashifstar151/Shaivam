@@ -27,7 +27,7 @@ import { colors } from '../../Helpers';
 import ChooseLanguage from './ChooseLanguage';
 import { ThemeContext } from '../../Context/ThemeContext';
 import LanguageSVG from '../../components/SVGs/LanguageSVG';
-import FavOdhuvarSVG from '../../components/SVGs/FavOdhuvarSVG';
+// import FavOdhuvarSVG from '../../components/SVGs/FavOdhuvarSVG';
 import GoToWebSVG from '../../components/SVGs/GoToWebSVG';
 import WebSearchSVG from '../../components/SVGs/WebSearchSVG';
 import ContactSVG from '../../components/SVGs/ContactSVG';
@@ -139,7 +139,7 @@ const MoreOption = () => {
         }
     };
 
-    const { i18n } = useTranslation();
+    const { i18n, t } = useTranslation();
 
     const language = [
         // { name: 'العربية', lngCode: 'ar' },
@@ -186,7 +186,7 @@ const MoreOption = () => {
                     <View style={styles.imageContainer}>{item.icon}</View>
                     <View style={{ paddingHorizontal: 10 }}>
                         <Text style={[styles.titleText, { color: theme.textColor }]}>
-                            {item.title}
+                            {t(item.title)}
                         </Text>
                         <Text style={{ color: colors.grey6 }}>
                             {item.title === 'Language' ? selectedLanguage.name : item.Description}

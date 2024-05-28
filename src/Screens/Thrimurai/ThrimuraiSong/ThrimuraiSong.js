@@ -958,6 +958,7 @@ GROUP BY
                                             borderBottomWidth: 1,
                                             paddingBottom: 7,
                                             flexDirection: 'row',
+                                            width: Dimensions.get('window').width - 60
                                         }}>
                                         <View>
                                             {item?.type !== null &&
