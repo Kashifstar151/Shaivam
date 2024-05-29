@@ -52,7 +52,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const isFocused = useIsFocused;
     const { data, downloaded, searchedword, downloadSong, searchScreen, songNo } =
         route.params || {};
-    console.log("🚀 ~ ThrimuraiSong ~ route.params:", JSON.stringify(route.params, 0, 2))
+    console.log('🚀 ~ ThrimuraiSong ~ route.params:', JSON.stringify(route.params, 0, 2));
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
@@ -62,7 +62,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     // const snapPoints = useMemo(() => ['25%', '25%'], []);
     const [showSetting, setShowSetting] = useState(false);
     // const language = ['Original', 'Tamil', 'English', 'Hindi'];
-    const [language, setLang] = useState(['Original', 'Tamil', 'English', 'Hindi'])
+    const [language, setLang] = useState(['Original', 'Tamil', 'English', 'Hindi']);
     const [selectedLang, setSelectedLang] = useState('Original');
     const [fontSizeCount, setFontSizeCount] = useState(null);
     // const [refFlatList, setRefFlatList] = useState(null);
@@ -154,7 +154,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     }, []);
     const [repeatMode, setRepeatMode] = useState();
     const { musicState, dispatchMusic } = useContext(MusicContext);
-    console.log("🚀 ~ ThrimuraiSong ~ musicState:", JSON.stringify(musicState, 0, 2))
+    console.log('🚀 ~ ThrimuraiSong ~ musicState:', JSON.stringify(musicState, 0, 2));
     const [darkMode, setDarkMode] = useState();
     const [tamilSplit, setTamilSplit] = useState(false);
     const { theme, setTheme } = useContext(ThemeContext);
@@ -193,7 +193,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
             setColorSet((prev) => colors.light);
         }
     }, [darkMode]);
-
 
     // const activeTrack = useActiveTrack();
     // console.log(
@@ -286,10 +285,11 @@ GROUP BY
                 payload: data.filter((i) => i.localBased !== null)[0].localeBased,
             });
             getSqlData(detailQuery, (details) => {
-                console.log("🚀 ~ getSqlData ~ data:", JSON.stringify(details, 0, 2))
+                console.log('🚀 ~ getSqlData ~ data:', JSON.stringify(details, 0, 2));
 
-                const query2 = `SELECT * FROM odhuvars WHERE title='${data.filter((i) => i.tamil !== null)[0]?.tamil
-                    }'`;
+                const query2 = `SELECT * FROM odhuvars WHERE title='${
+                    data.filter((i) => i.tamil !== null)[0]?.tamil
+                }'`;
                 getSqlData(query2, (callbacks) => {
                     // console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
                     dispatchMusic({ type: 'SONG_DETAILS', payload: details });
@@ -328,7 +328,7 @@ GROUP BY
         if (downloaded) {
             checkDownloaded(musicState.song);
         }
-    }, [data, downloadList, musicState?.song])
+    }, [data, downloadList, musicState?.song]);
 
     const toggleSwitch = (value, callbacks) => {
         callbacks(!value);
@@ -350,7 +350,6 @@ GROUP BY
         if (musicState.song.length && !downloaded) {
             checkDownloaded(musicState.song);
             getFavAudios(musicState.song);
-
         }
     }, [musicState.song, downloadList]);
 
@@ -453,7 +452,7 @@ GROUP BY
         await TrackPlayer.reset();
 
         getSqlData(query, (clb) => {
-            console.log("🚀 ~ getSqlData ~ clb:", clb)
+            console.log('🚀 ~ getSqlData ~ clb:', clb);
             if (clb[0].nextPrevId) {
                 dispatchMusic({ type: 'RESET' });
                 dispatchMusic({ type: 'PREV_ID', payload: clb[0].nextPrevId });
@@ -552,8 +551,8 @@ GROUP BY
     }, [clipBoardString]);
 
     const renderText = (item) => {
-        console.log("🚀 ~ renderText ~ item:", JSON.stringify(item, 0, 2))
-        if (tamilSplit && i18n.language === 'en') {
+        console.log('🚀 ~ renderText ~ item:', JSON.stringify(item, 0, 2));
+        if (tamilSplit && i18n.language === 'en' && selectedLang === 'Original') {
             return item?.tamilSplit || 'Text currently not available';
         } else if (selectedLang === 'Tamil') {
             return item?.tamilExplanation || 'Text currently not available';
@@ -703,13 +702,13 @@ GROUP BY
                                         </View>
                                     </View>
                                 )}
-                                {
-                                    musicState?.songDetails[0]?.addon &&
+                                {musicState?.songDetails[0]?.addon && (
                                     <View>
-                                        <Text style={styles.valueDropDown}>{t(musicState?.songDetails[0]?.addon)}</Text>
+                                        <Text style={styles.valueDropDown}>
+                                            {t(musicState?.songDetails[0]?.addon)}
+                                        </Text>
                                     </View>
-                                }
-
+                                )}
                             </>
                         </View>
                         <TouchableOpacity style={styles.textContainer} onPress={makeTheViewVisible}>
@@ -933,7 +932,8 @@ GROUP BY
                                     styles.settingButton,
                                     { backgroundColor: colorSet?.settingBtn.backgroundColor },
                                 ]}
-                                onPress={handlePress}>
+                                onPress={handlePress}
+                            >
                                 <SettingsSVG />
                             </TouchableOpacity>
                         )}
@@ -958,12 +958,20 @@ GROUP BY
                                             borderBottomWidth: 1,
                                             paddingBottom: 7,
                                             flexDirection: 'row',
-                                            width: Dimensions.get('window').width - 60
-                                        }}>
+                                            width: Dimensions.get('window').width - 60,
+                                        }}
+                                    >
                                         <View>
-                                            {item?.type !== null &&
-                                                <Text style={{ color: colors.commonColor, fontFamily: 'Mulish-Regular' }}>{item?.type}</Text>
-                                            }
+                                            {item?.type !== null && (
+                                                <Text
+                                                    style={{
+                                                        color: colors.commonColor,
+                                                        fontFamily: 'Mulish-Regular',
+                                                    }}
+                                                >
+                                                    {item?.type}
+                                                </Text>
+                                            )}
                                             {searchScreen ? (
                                                 renderResult(item)
                                             ) : (
@@ -976,9 +984,12 @@ GROUP BY
                                                         {
                                                             fontSize: fontSizeCount,
                                                             alignSelf: 'flex-end',
-                                                            color: !darkMode ? colors.grey6 : colors.white,
+                                                            color: !darkMode
+                                                                ? colors.grey6
+                                                                : colors.white,
                                                         },
-                                                    ]}>
+                                                    ]}
+                                                >
                                                     {renderText(item)}
                                                 </Text>
                                             )}
@@ -1015,14 +1026,14 @@ GROUP BY
 
                     orientation == 'LANDSCAPE'
                         ? {
-                            width: Dimensions.get('window').width / 2,
-                            position: 'absolute',
-                            bottom: 0,
-                        }
+                              width: Dimensions.get('window').width / 2,
+                              position: 'absolute',
+                              bottom: 0,
+                          }
                         : {
-                            position: 'relative',
-                            width: Dimensions.get('window').width,
-                        },
+                              position: 'relative',
+                              width: Dimensions.get('window').width,
+                          },
                 ]}
             >
                 {downloadingLoader && (
