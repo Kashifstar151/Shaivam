@@ -412,37 +412,39 @@ export const Temples = ({ navigation, route }) => {
 
                 <View style={styles.topBarWrapper}>
                     <View style={styles.colorContWrapper}>
-                        {Object.entries(assetMapWithTempleType).map(([key, value], indx) =>
-                            !(key == 8 || key == 9) ? (
-                                <Pressable
-                                    style={styles.contWrapper}
-                                    onPress={() => {
-                                        // adding callback on the category btn press and navigating to the filter page
-                                        if (permissionGranted === RESULTS.GRANTED) {
-                                            categoryBtnClbk(navigation, key, regionCoordinate);
-                                        } else {
-                                            setShowModal(!showModal);
-                                        }
-                                    }}
-                                    key={indx}
-                                >
-                                    <View
-                                        style={[
-                                            styles.textContWrapper,
-                                            {
-                                                backgroundColor: value.metaData.color,
-                                            },
-                                        ]}
+                        {Object.entries(assetMapWithTempleType)
+                            .reverse()
+                            .map(([key, value], indx) =>
+                                !(key == 8 || key == 9) ? (
+                                    <Pressable
+                                        style={styles.contWrapper}
+                                        onPress={() => {
+                                            // adding callback on the category btn press and navigating to the filter page
+                                            if (permissionGranted === RESULTS.GRANTED) {
+                                                categoryBtnClbk(navigation, key, regionCoordinate);
+                                            } else {
+                                                setShowModal(!showModal);
+                                            }
+                                        }}
+                                        key={indx}
                                     >
-                                        {value.metaData.letterAssociated && (
-                                            <Text style={styles.textStyleForCont}>
-                                                {value.metaData.letterAssociated}
-                                            </Text>
-                                        )}
-                                    </View>
-                                </Pressable>
-                            ) : null
-                        )}
+                                        <View
+                                            style={[
+                                                styles.textContWrapper,
+                                                {
+                                                    backgroundColor: value.metaData.color,
+                                                },
+                                            ]}
+                                        >
+                                            {value.metaData.letterAssociated && (
+                                                <Text style={styles.textStyleForCont}>
+                                                    {value.metaData.letterAssociated}
+                                                </Text>
+                                            )}
+                                        </View>
+                                    </Pressable>
+                                ) : null
+                            )}
                     </View>
 
                     <SearchContainerWithIcon>
