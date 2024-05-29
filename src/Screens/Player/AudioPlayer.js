@@ -105,7 +105,7 @@ const AudioPlayer = ({
     setDownloadingLoader,
     isFav,
     activeTrack,
-    downloadSong
+    downloadSong,
 }) => {
     // console.log("🚀 ~ downloadSong:", downloadSong)
     useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], async (event) => {
@@ -123,7 +123,7 @@ const AudioPlayer = ({
                 activeTrack?.url &&
                 duration !== 0 &&
                 new Date(position * 1000).toISOString().substring(14, 19) >=
-                new Date(duration * 1000).toISOString().substring(14, 19)
+                    new Date(duration * 1000).toISOString().substring(14, 19)
             ) {
                 queryForNextPrevId();
             }
@@ -133,11 +133,10 @@ const AudioPlayer = ({
     useEffect(() => {
         songsData?.map((i, ind) => {
             if (i?.id == downloadSong?.id) {
-                playById(ind)
+                playById(ind);
             }
-        })
-
-    }, [songsData])
+        });
+    }, [songsData]);
     useEffect(() => {
         Icon.getImageSource('circle', 18, '#C1554E').then((source) => {
             return setThumbImage({ thumbIcon: source });
@@ -149,7 +148,6 @@ const AudioPlayer = ({
         //     getFavAudios(),
         //     updateRecentlyPlayed({ ...activeTrack, prevId }),
         // ]);
-
     }, []);
     const updateRecentlyPlayed = async (newTrack) => {
         const maxRecentTracks = 4;
@@ -198,7 +196,7 @@ const AudioPlayer = ({
                         }
                     );
                 })
-                .catch((err) => { });
+                .catch((err) => {});
         });
     };
     const { position, duration } = useProgress();
@@ -231,7 +229,7 @@ const AudioPlayer = ({
                 updateRecentlyPlayed({ ...activeTrack, prevId }),
             ]);
         }
-    }, [playBackState])
+    }, [playBackState]);
 
     const getFavAudios = () => {
         listfavAudios((callbacks) => {
@@ -357,47 +355,46 @@ const AudioPlayer = ({
                 Platform.OS == 'android'
                     ? `${RNFS.ExternalDirectoryPath}/${item?.title}`
                     : `${RNFS.DocumentDirectoryPath}/${item?.id}/audio.mp3`;
-            const pathIOS =
-                RNFetchBlob.config({
-                    path: path,
-                    fileCache: true,
+            const pathIOS = RNFetchBlob.config({
+                path: path,
+                fileCache: true,
+            })
+                .fetch('GET', `${item?.url}`)
+                .then(async (res) => {
+                    console.log('the audio file save to this path', res.path());
+                    const jsonValue = {
+                        id: item?.id,
+                        title: item?.title,
+                        artist: item?.artist,
+                        url: `file://${res.path()}`,
+                        categoryName: item?.categoryName,
+                        thalamOdhuvarTamilname: item?.thalamOdhuvarTamilname,
+                        thirumariasiriyar: item?.thirumariasiriyar,
+                        prevId: prevId,
+                    };
+                    const recentTracksJSON = await AsyncStorage.getItem('downloaded');
+                    const recentTracks = recentTracksJSON ? JSON.parse(recentTracksJSON) : [];
+                    // Check if the track already exists and remove it
+                    const filteredTracks = recentTracks.filter(
+                        (track) => track.id !== jsonValue.id
+                    );
+                    // Add the new track to the start of the array
+                    const updatedTracks = [jsonValue, ...filteredTracks];
+                    // console.log("🚀 ~ updateRecentlyPlayed ~ updatedTracks:", updatedTracks)
+                    // Store the updated list back to AsyncStorage
+                    await AsyncStorage.setItem(`downloaded`, JSON.stringify(updatedTracks));
+                    // await AsyncStorage.setItem(
+                    //     `downloaded:${item?.thalamOdhuvarTamilname}`,
+                    //     jsonValue
+                    // );
+                    setDownloadingLoader(false);
+                    setDownloadedSong(true);
+                    console.log('Metadata saved');
                 })
-                    .fetch('GET', `${item?.url}`)
-                    .then(async (res) => {
-                        console.log('the audio file save to this path', res.path());
-                        const jsonValue = {
-                            id: item?.id,
-                            title: item?.title,
-                            artist: item?.artist,
-                            url: `file://${res.path()}`,
-                            categoryName: item?.categoryName,
-                            thalamOdhuvarTamilname: item?.thalamOdhuvarTamilname,
-                            thirumariasiriyar: item?.thirumariasiriyar,
-                            prevId: prevId,
-                        };
-                        const recentTracksJSON = await AsyncStorage.getItem('downloaded');
-                        const recentTracks = recentTracksJSON ? JSON.parse(recentTracksJSON) : [];
-                        // Check if the track already exists and remove it
-                        const filteredTracks = recentTracks.filter(
-                            (track) => track.id !== jsonValue.id
-                        );
-                        // Add the new track to the start of the array
-                        const updatedTracks = [jsonValue, ...filteredTracks];
-                        // console.log("🚀 ~ updateRecentlyPlayed ~ updatedTracks:", updatedTracks)
-                        // Store the updated list back to AsyncStorage
-                        await AsyncStorage.setItem(`downloaded`, JSON.stringify(updatedTracks));
-                        // await AsyncStorage.setItem(
-                        //     `downloaded:${item?.thalamOdhuvarTamilname}`,
-                        //     jsonValue
-                        // );
-                        setDownloadingLoader(false);
-                        setDownloadedSong(true);
-                        console.log('Metadata saved');
-                    })
-                    .catch((err) => {
-                        console.log('error occured in downloading audio', err);
-                        setDownloadingLoader(false);
-                    });
+                .catch((err) => {
+                    console.log('error occured in downloading audio', err);
+                    setDownloadingLoader(false);
+                });
         });
     };
     const playById = async (id) => {
@@ -413,25 +410,31 @@ const AudioPlayer = ({
                 style={
                     orientation == 'LANDSCAPE' || !visibleStatusBar
                         ? {
-                            width: !(orientation == 'LANDSCAPE')
-                                ? Dimensions.get('window').width
-                                : Dimensions.get('window').width / 2,
-                            backgroundColor: '#222222',
-                            height: 70,
-                            alignItems: 'center',
-                        }
+                              width: !(orientation == 'LANDSCAPE')
+                                  ? Dimensions.get('window').width
+                                  : Dimensions.get('window').width / 2,
+                              backgroundColor: '#222222',
+                              height: 70,
+                              alignItems: 'center',
+                          }
                         : { backgroundColor: '#222222', height: 200 }
                 }
             >
                 {orientation == 'LANDSCAPE' || !visibleStatusBar ? null : (
                     <View style={styles.container}>
-                        <View>
+                        <View
+                            style={{
+                                width: '20%',
+                            }}
+                        >
                             <Text style={styles.headingText}>Odhuvar</Text>
                             <Text style={styles.headingText}>(Select One)</Text>
                         </View>
                         <View
                             style={{
                                 width: 'auto',
+                                width: '80%',
+                                paddingHorizontal: 10,
                             }}
                         >
                             <FlatList
@@ -446,7 +449,7 @@ const AudioPlayer = ({
                                         index={index}
                                         clb={playById}
                                         activeTrack={downloaded ? downloadSong : activeTrack}
-                                    // downloadAudioIndex={downloadSongIndex}
+                                        // downloadAudioIndex={downloadSongIndex}
                                     />
                                 )}
                             />
@@ -707,7 +710,7 @@ const AudioPlayer = ({
 };
 export const styles = StyleSheet.create({
     main: {},
-    container: { flexDirection: 'row', padding: 10 },
+    container: { flexDirection: 'row', padding: 10, gap: 5 },
     headingText: {
         fontSize: 12,
         // fontWeight: '500',
