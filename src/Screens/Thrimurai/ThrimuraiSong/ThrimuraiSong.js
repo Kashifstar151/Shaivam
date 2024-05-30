@@ -517,9 +517,9 @@ GROUP BY
     });
 
     const setAndroidClipBoard = useCallback(async (initialString) => {
-        if (!initialString.includes('Read more at https://shaivam.org/')) {
+        if (!initialString.includes('Read more at https://shaivaam.page')) {
             clipBoardStringRef.current = initialString;
-            clipBoardStringRef.current += ' Read more at https://shaivam.org/';
+            clipBoardStringRef.current += ` Read more at https://shaivaam.page.link/org?prevId=${musicState?.prevId}`;
             Clipboard.setString(clipBoardStringRef.current);
         }
     }, []);
@@ -943,6 +943,18 @@ GROUP BY
             {/* <TouchableWithoutFeedback onPress={() => setShowSetting(false)}> */}
             <View style={styles.lyricsContainer}>
                 <ScrollView style={{ paddingHorizontal: 20 }}>
+                    <Text
+                        style={[
+                            styles.lyricsText,
+                            {
+                                fontSize: fontSizeCount,
+                                color: !darkMode ? colors.grey6 : colors.white,
+                            },
+                        ]}
+                    >
+                        {t('Thiruchirrambalam')}
+                    </Text>
+
                     {musicState?.songDetails?.length > 0 && (
                         <FlatList
                             keyExtractor={(item) => item?.id}
@@ -951,66 +963,79 @@ GROUP BY
                             data={musicState?.songDetails}
                             initialScrollIndex={songNo ? songNo - 1 : 0}
                             renderItem={({ item, index }) => (
-                                <TouchableWithoutFeedback onPress={() => setShowSetting(false)}>
-                                    <View
-                                        style={{
-                                            borderBottomColor: colors.grey3,
-                                            borderBottomWidth: 1,
-                                            paddingBottom: 7,
-                                            flexDirection: 'row',
-                                            width: Dimensions.get('window').width - 60,
-                                        }}
-                                    >
-                                        <View>
-                                            {item?.type !== null && (
-                                                <Text
-                                                    style={{
-                                                        color: colors.commonColor,
-                                                        fontFamily: 'Mulish-Regular',
-                                                    }}
-                                                >
-                                                    {item?.type}
-                                                </Text>
-                                            )}
-                                            {searchScreen ? (
-                                                renderResult(item)
-                                            ) : (
-                                                <Text
-                                                    key={Math.random()}
-                                                    selectable={true}
-                                                    selectionColor="orange"
-                                                    style={[
-                                                        styles.lyricsText,
-                                                        {
-                                                            fontSize: fontSizeCount,
-                                                            alignSelf: 'flex-end',
-                                                            color: !darkMode
-                                                                ? colors.grey6
-                                                                : colors.white,
-                                                        },
-                                                    ]}
-                                                >
-                                                    {renderText(item)}
-                                                </Text>
-                                            )}
-                                        </View>
-                                        <Text
-                                            style={[
-                                                styles.lyricsText,
-                                                {
-                                                    fontSize: fontSizeCount,
-                                                    alignSelf: 'flex-end',
-                                                    color: !darkMode ? colors.grey6 : colors.white,
-                                                },
-                                            ]}
-                                        >
-                                            {item?.songNo}
-                                        </Text>
+                                // <TouchableWithoutFeedback onPress={() => setShowSetting(false)}>
+                                <View
+                                    style={{
+                                        borderBottomColor: colors.grey3,
+                                        borderBottomWidth: 1,
+                                        paddingBottom: 7,
+                                        flexDirection: 'row',
+                                        width: Dimensions.get('window').width - 60,
+                                    }}
+                                >
+                                    <View>
+                                        {item?.type !== null && (
+                                            <Text
+                                                style={{
+                                                    color: colors.commonColor,
+                                                    fontFamily: 'Mulish-Regular',
+                                                }}
+                                            >
+                                                {item?.type}
+                                            </Text>
+                                        )}
+                                        {searchScreen ? (
+                                            renderResult(item)
+                                        ) : (
+                                            <Text
+                                                key={Math.random()}
+                                                selectable={true}
+                                                selectionColor="orange"
+                                                style={[
+                                                    styles.lyricsText,
+                                                    {
+                                                        fontSize: fontSizeCount,
+                                                        alignSelf: 'flex-end',
+                                                        color: !darkMode
+                                                            ? colors.grey6
+                                                            : colors.white,
+                                                    },
+                                                ]}
+                                            >
+                                                {renderText(item)}
+                                            </Text>
+                                        )}
                                     </View>
-                                </TouchableWithoutFeedback>
+                                    <Text
+                                        style={[
+                                            styles.lyricsText,
+                                            {
+                                                fontSize: fontSizeCount,
+                                                alignSelf: 'flex-end',
+                                                color: !darkMode ? colors.grey6 : colors.white,
+                                            },
+                                        ]}
+                                    >
+                                        {item?.songNo}
+                                    </Text>
+                                </View>
+                                // </TouchableWithoutFeedback>
                             )}
                         />
                     )}
+
+                    <Text
+                        style={[
+                            styles.lyricsText,
+                            {
+                                fontSize: fontSizeCount,
+                                paddingTop: 20,
+                                color: !darkMode ? colors.grey6 : colors.white,
+                            },
+                        ]}
+                    >
+                        {t('Thiruchirrambalam')}
+                    </Text>
                 </ScrollView>
             </View>
             {/* </TouchableWithoutFeedback> */}
