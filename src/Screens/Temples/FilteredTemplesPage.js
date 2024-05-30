@@ -1,11 +1,14 @@
 // filter page on the temple category
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, Text, View } from 'react-native';
 import TempleCard from './TempleCard';
 import { ScrollView } from 'react-native-gesture-handler';
 import BottomSheetTempleTemplate from './BottomSheetTempleTemplate';
 import templeData from './AssetMapWithTempleType';
-import { useGetNearByTemplesQuery } from '../../store/features/Temple/TemplApiSlice';
+import {
+    useGetNearByTemplesQuery,
+    useLazyGetNearByTemplesQuery,
+} from '../../store/features/Temple/TemplApiSlice';
 import { RFValue } from 'react-native-responsive-fontsize';
 import getDimension from '../../Helpers/getDimension';
 
@@ -27,8 +30,26 @@ const FilteredTemplesPage = ({ navigation, route }) => {
         }
     );
 
+    // const [getNearByTemples, { data, isSuccess, isLoading, isFetching, isError, error }] =
+    //     useLazyGetNearByTemplesQuery();
+
+    // useEffect(() => {
+    //     try {
+    //         getNearByTemples({
+    //             flag: route?.params?.data?.flag,
+    //             ...route?.params?.data?.regionCoordinate,
+    //             limit: 100,
+    //         });
+    //     } catch (err) {
+    //         console.log('the error is -==-=-=-=-=-=-=-=--=-==--==--==-=-=--==--=-===-==->', err);
+    //     }
+    // }, [route?.params?.data]);
+
     const [snapIndex, setSnapIndex] = useState(0);
-    const { screenHeight } = getDimension();
+    // const { screenHeight } = getDimension();
+    const { screenHeight, screenWidth } = getDimension();
+    const LATITUDE_DELTA = 0.5;
+    const LONGITUDE_DELTA = LATITUDE_DELTA * (screenWidth / screenHeight);
 
     return (
         <BottomSheetTempleTemplate
@@ -38,8 +59,8 @@ const FilteredTemplesPage = ({ navigation, route }) => {
             showSearchBarWhenFullSize={true}
             regionCoordinate={{
                 ...route?.params?.data?.regionCoordinate,
-                latitudeDelta: 0.015,
-                longitudeDelta: 0.0121,
+                latitudeDelta: LATITUDE_DELTA,
+                longitudeDelta: LONGITUDE_DELTA,
                 locationName: '',
             }}
             initialIndexOfSize={1}

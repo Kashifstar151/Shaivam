@@ -36,7 +36,6 @@ const BottomSheetTempleTemplate = ({
     isSearchFieldDisabled,
     isSearchFieldDisabledInFullScreenMode,
 }) => {
-    console.log('🚀 ~ ---------data:', data);
     const bottomSheetRef = useRef(null);
     const [padState, setPadState] = useState(null);
     const handleSheetChanges = useCallback(

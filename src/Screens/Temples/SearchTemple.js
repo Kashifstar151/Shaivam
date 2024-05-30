@@ -41,7 +41,7 @@ const SearchTemple = ({
     const debounceVal = useDebouncer(searchText, 500);
 
     const clearTheSearchText = () => {
-        setSearchText('');
+        if (!isDisable) setSearchText('');
     };
     const searchResultData = async () =>
         await fetch(

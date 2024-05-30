@@ -60,7 +60,7 @@ export const Temples = ({ navigation, route }) => {
 
     const { screenHeight, screenWidth } = getDimension();
 
-    const LATITUDE_DELTA = 0.18;
+    const LATITUDE_DELTA = 0.5;
     const LONGITUDE_DELTA = LATITUDE_DELTA * (screenWidth / screenHeight);
 
     const [userLocation, setUserLocation] = useState({});

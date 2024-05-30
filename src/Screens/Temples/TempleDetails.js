@@ -20,6 +20,7 @@ import { useGetTempleDetailQuery } from '../../store/features/Temple/TemplApiSli
 import { RFValue } from 'react-native-responsive-fontsize';
 import DirectionSVG from '../../components/SVGs/DirectionSVG';
 import { TouchableHighlight } from '@gorhom/bottom-sheet';
+import getDimension from '../../Helpers/getDimension';
 
 const TempleDetails = ({ navigation }) => {
     const route = useRoute();
@@ -55,6 +56,10 @@ const TempleDetails = ({ navigation }) => {
             Linking.openURL(googleMapsUrlFallBack);
         });
     };
+    const { screenHeight, screenWidth } = getDimension();
+    const LATITUDE_DELTA = 0.5;
+    const LONGITUDE_DELTA = LATITUDE_DELTA * (screenWidth / screenHeight);
+
     return (
         <>
             <BottomSheetTempleTemplate
@@ -70,8 +75,8 @@ const TempleDetails = ({ navigation }) => {
                 ]}
                 regionCoordinate={{
                     ...temple?.templeCoordinate,
-                    latitudeDelta: 0.015,
-                    longitudeDelta: 0.0121,
+                    latitudeDelta: LATITUDE_DELTA,
+                    longitudeDelta: LONGITUDE_DELTA,
                     locationName: '',
                 }}
                 snapIndex={snapIndex}
