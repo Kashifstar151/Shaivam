@@ -725,7 +725,7 @@ const Calender = ({ navigation }) => {
                                             theme={{ colorscheme: theme.colorscheme }}
                                         >
                                             <EventCard
-                                                Icon={CategoryAssets[item?.attributes?.logo_flag]?.Svg}
+                                                Icon={CategoryAssets[item?.attributes?.category]?.Svg}
                                                 date={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).get('D') : moment(item.start_date).get('D')}
                                                 dateNo={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).format('DD') : moment(item.start_date).format('DD')}
                                                 day={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).format('ddd') : moment(item.start_date).format('ddd')}

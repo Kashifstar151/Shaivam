@@ -6,6 +6,7 @@ import moment from 'moment';
 import { colors } from '../Helpers';
 
 const EventCard = ({ date, timing, title, theme, item, header, day, dateNo, Icon }) => {
+    console.log("🚀 ~ EventCard ~ Icon:", item?.attributes?.category)
     let d =
         header == 'Festivals'
             ? moment(item?.attributes?.calendar_from_date)

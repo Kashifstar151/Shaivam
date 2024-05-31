@@ -98,7 +98,19 @@ const OmChanting = ({ close, setOmPlayTiming }) => {
                             </Text>
                         </View>
                         <TouchableOpacity
-                            onPress={() => setTiming(timing + 1)}
+                            // onPress={() =>
+                            // setTiming(timing + 1)}
+
+                            onPress={() =>
+                                setTiming((prev) => {
+                                    if (prev <= 59) {
+                                        return prev + 1;
+                                    } else {
+                                        alert("Can't set time more than 59 min");
+                                        return prev;
+                                    }
+                                })
+                            }
                             style={{
                                 justifyContent: 'center',
                                 alignItems: 'center',

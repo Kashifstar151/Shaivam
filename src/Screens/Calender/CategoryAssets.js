@@ -12,37 +12,37 @@ import Category9 from "../../../assets/Images/EventsImages/ic_bookmark.svg"
 
 
 const CategoryAssets = {
-    1: {
+    'Festival': {
         name: 'Festivals',
-        Svg: <Category1 />
-    },
-    2: {
-        name: 'Discource',
         Svg: <Category2 />
     },
-    3: {
+    'Discource': {
         name: 'Discource',
         Svg: <Category3 />
     },
-    4: {
+    'Concert': {
         name: 'Discource',
         Svg: <Category4 />
     },
-    5: {
+    'Parayanam/Recitation': {
         name: 'Discource',
         Svg: <Category5 />
     },
-    6: {
+    'Uzhavarapani': {
         name: 'Discource',
         Svg: <Category6 />
     },
-    7: {
+    'Gurupujai': {
         name: 'Discource',
         Svg: <Category7 />
     },
-    8: {
+    'Puja': {
         name: 'Discource',
         Svg: <Category8 />
+    },
+    'Others': {
+        name: 'Discource',
+        Svg: <Category9 />
     },
     9: {
         name: 'Discource',
