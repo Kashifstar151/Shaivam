@@ -10,6 +10,7 @@ import { useDebouncer } from '../../Helpers/useDebouncer';
 import getDimension from '../../Helpers/getDimension';
 import { ScrollView } from 'react-native-gesture-handler';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import * as RNLocalize from 'react-native-localize';
 
 const SearchTemple = ({
     setRegionCoordinate,
@@ -43,9 +44,13 @@ const SearchTemple = ({
     const clearTheSearchText = () => {
         if (!isDisable) setSearchText('');
     };
-    const searchResultData = async () =>
-        await fetch(
-            `https://nominatim.openstreetmap.org/search?format=json&q=${debounceVal}&accept-language=en`,
+    const searchResultData = async () => {
+        return await fetch(
+            // `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${debounceVal}&key=${'AIzaSyC9Esy5cuOwL4OsSxPuhOet3ky5cKI8J1k'}&language=en`,
+            `https://nominatim.openstreetmap.org/search?format=json&q=${debounceVal}&accept-language=${
+                RNLocalize.getLocales().map((locale) => locale.languageCode)[0]
+            }`,
+
             {
                 method: 'GET',
                 headers: new Headers({
@@ -53,6 +58,7 @@ const SearchTemple = ({
                 }),
             }
         ).then((res) => res.json());
+    };
 
     const [fetchedLocationsName, setFetchedLocationsName] = useState([]);
     useEffect(() => {
