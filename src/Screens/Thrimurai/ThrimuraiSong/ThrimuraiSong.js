@@ -52,7 +52,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const isFocused = useIsFocused;
     const { data, downloaded, searchedword, downloadSong, searchScreen, songNo } =
         route.params || {};
-    console.log('🚀 ~ ThrimuraiSong ~ route.params:', JSON.stringify(route.params, 0, 2));
+    console.log('🚀 ~ ThrimuraiSong ~ route.params:', searchScreen);
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
@@ -942,21 +942,35 @@ GROUP BY
             )}
             {/* <TouchableWithoutFeedback onPress={() => setShowSetting(false)}> */}
             <View style={styles.lyricsContainer}>
-                <ScrollView style={{ paddingHorizontal: 20 }}>
-                    <Text
-                        style={[
-                            styles.lyricsText,
-                            {
-                                fontSize: fontSizeCount,
-                                color: !darkMode ? colors.grey6 : colors.white,
-                            },
-                        ]}
-                    >
-                        {t('Thiruchirrambalam')}
-                    </Text>
-
+                <View style={{ paddingHorizontal: 20 }}>
                     {musicState?.songDetails?.length > 0 && (
                         <FlatList
+                            ListHeaderComponent={
+                                <Text
+                                    style={[
+                                        styles.lyricsText,
+                                        {
+                                            fontSize: fontSizeCount,
+                                            color: !darkMode ? colors.grey6 : colors.white,
+                                        },
+                                    ]}
+                                >
+                                    {t('Thiruchirrambalam')}
+                                </Text>
+                            }
+                            ListFooterComponent={
+                                <Text
+                                    style={[
+                                        styles.lyricsText,
+                                        {
+                                            fontSize: fontSizeCount,
+                                            color: !darkMode ? colors.grey6 : colors.white,
+                                        },
+                                    ]}
+                                >
+                                    {t('Thiruchirrambalam')}
+                                </Text>
+                            }
                             keyExtractor={(item) => item?.id}
                             getItemLayout={getItemLayOut}
                             ref={flatListRef}
@@ -965,13 +979,19 @@ GROUP BY
                             renderItem={({ item, index }) => (
                                 // <TouchableWithoutFeedback onPress={() => setShowSetting(false)}>
                                 <View
-                                    style={{
-                                        borderBottomColor: colors.grey3,
-                                        borderBottomWidth: 1,
-                                        paddingBottom: 7,
-                                        flexDirection: 'row',
-                                        width: Dimensions.get('window').width - 60,
-                                    }}
+                                    style={[
+                                        {
+                                            paddingBottom: 7,
+                                            flexDirection: 'row',
+                                            width: Dimensions.get('window').width - 60,
+                                        },
+                                        musicState?.songDetails[index + 1]
+                                            ? {
+                                                  borderBottomColor: colors.grey3,
+                                                  borderBottomWidth: 1,
+                                              }
+                                            : {},
+                                    ]}
                                 >
                                     <View>
                                         {item?.type !== null && (
@@ -1023,20 +1043,7 @@ GROUP BY
                             )}
                         />
                     )}
-
-                    <Text
-                        style={[
-                            styles.lyricsText,
-                            {
-                                fontSize: fontSizeCount,
-                                paddingTop: 20,
-                                color: !darkMode ? colors.grey6 : colors.white,
-                            },
-                        ]}
-                    >
-                        {t('Thiruchirrambalam')}
-                    </Text>
-                </ScrollView>
+                </View>
             </View>
             {/* </TouchableWithoutFeedback> */}
 
