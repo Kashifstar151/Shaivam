@@ -34,7 +34,7 @@ import { colors } from '../../Helpers';
 import ListAudios from '../Thrimurai/ThrimuraiList/ListAudios';
 import { usePlayer } from '../../Context/PlayerContext';
 import { useTranslation } from 'react-i18next';
-import { useGetFestivalListQuery } from '../../store/features/Calender/CalenderApiSlice';
+import { useGetFestivalListQuery, useGetUpcomingFestivalQuery } from '../../store/features/Calender/CalenderApiSlice';
 import moment from 'moment';
 import {
     checkPermissionAccess,
@@ -57,16 +57,16 @@ const HomeScreen = ({ navigation }) => {
         isFetching: isfestivaldataFetching,
         refetch: refetchFestival,
         isSuccess: isFestivalSuccess,
-    } = useGetFestivalListQuery({ selectMonth });
+    } = useGetUpcomingFestivalQuery({ startDate: moment().format('YYYY-MM-DD'), endDate: moment().add(1, 'months').endOf('month').format('YYYY-MM-DD') });
     // console.log('🚀 ~ HomeScreen ~ festivalEvents:', festivalEvents);
     const [festivalEvent, setFestivalEvent] = useState([]);
     const [compHeight, setCompHeight] = useState();
-    const [textInsidePlaylistCard, setTextInsidePlaylistCard] = useState(0);
-    const [playlistCardHeight, setPlaylistCardHeight] = useState(0);
-    const [dimentionsOfText1, setDimentionsOfText1] = useState({
-        width: 0,
-        height: 0,
-    });
+    // const [textInsidePlaylistCard, setTextInsidePlaylistCard] = useState(0);
+    // const [playlistCardHeight, setPlaylistCardHeight] = useState(0);
+    // const [dimentionsOfText1, setDimentionsOfText1] = useState({
+    //     width: 0,
+    //     height: 0,
+    // });
     const isFocused = useIsFocused();
     useEffect(() => {
         if (festivalEvents?.data && isFestivalSuccess) {
@@ -74,7 +74,7 @@ const HomeScreen = ({ navigation }) => {
                 return moment(item?.attributes?.calendar_from_date) > moment();
             });
             // console.log(arr, 'upacoming festivals')
-            setFestivalEvent(arr?.slice(0, 5));
+            setFestivalEvent(arr?.slice(0, 3));
         }
     }, [selectMonth, isFocused, isFestivalSuccess]);
 
@@ -243,7 +243,7 @@ const HomeScreen = ({ navigation }) => {
     const getPlaylistSong = async () => {
         if (selectedPlaylistType == 'Recently Played') {
             const data = await AsyncStorage.getItem('recentTrack');
-            console.log('🚀 ~ getPlaylistSong ~ data:', data);
+            // console.log('🚀 ~ getPlaylistSong ~ data:', data);
             setPlaylistSong(JSON.parse(data));
         } else {
             MostPlayedList('d', (callbacks) => {

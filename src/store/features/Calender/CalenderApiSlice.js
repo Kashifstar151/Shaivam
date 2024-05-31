@@ -21,6 +21,7 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
             providesTags: ['Calender'],
         }),
 
+
         getRecurringEventList: builder.query({
             query: (date) => {
                 let url = date?.selectedLocation !== null ?
@@ -85,6 +86,17 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
         getFestivalList: builder.query({
             query: (date) => {
                 const url = `calendars?populate=*&filters[calendar_from_date][$gte]=${moment(date?.selectMonth).startOf('month').format('YYYY-MM-DD')}&filters[calendar_from_date][$lte]=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&sort=calendar_from_date:ASC`;
+                console.log('🚀 ~ url: recuriing month', url);
+                return {
+                    url: url,
+                    method: 'GET',
+                };
+            },
+            providesTags: ['Calender'],
+        }),
+        getUpcomingFestival: builder.query({
+            query: (date) => {
+                const url = `calendars?populate=*&filters[calendar_from_date][$gte]=${date?.startDate}&filters[calendar_from_date][$lte]=${date?.endDate}&sort=calendar_from_date:ASC`;
                 console.log('🚀 ~ url: recuriing month', url);
                 return {
                     url: url,
@@ -172,5 +184,5 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
 export const { useGetListQuery, useAddRegularEventMutation, useAddImageForEventMutation,
     useGetRecurringEventListQuery, useGetRecurringEventMonthlyQuery,
     useGetFestivalListQuery, useAddRecurringEventMutation,
-    useGetRadioListQuery, useLazyGetRecurringByIdQuery, useLazyGetRegularByIdQuery } =
+    useGetRadioListQuery, useLazyGetRecurringByIdQuery, useLazyGetRegularByIdQuery, useGetUpcomingFestivalQuery } =
     CalenderApiSlice;

@@ -44,43 +44,25 @@ import { PlayerProvider } from '../Context/PlayerContext';
 import DBInfo from '../../DBInfo';
 import WebsiteView from '../Screens/Calender/WebsiteView';
 import Notification from '../Screens/Notifications/Notification';
+import FestivalVideo from '../Screens/Calender/FestivalVideo';
+import SendFestivalEvent from '../Screens/Calender/SendFestivalEvent';
 // import { ThemeContextProvider } from '../Context/ThemeContext';
 
 const Route = () => {
     const Stack = createNativeStackNavigator();
-    const database = SQLite.openDatabase({ name: 'songData.db', createFromLocation: 1 });
+    // const database = SQLite.openDatabase({ name: 'songData.db', createFromLocation: 1 });
     const [showDownloading, setShowDownloading] = useState(false);
     const [isConnected, setIsConnected] = useState();
     const offlineDatabase = SQLite.openDatabase({ name: 'main.db', });
 
     // const database = SQLite.openDatabase({ name: databaseName, });
     useEffect(() => {
-        // AsyncStorage.setItem(
-        //     '@database',
-        //     JSON.stringify({ name: 'songData.db', createFromLocation: 1 })
-        // );
-
         LogBox.ignoreAllLogs();
-        // AppState.addEventListener('change', (nextAppState) => {
-        //     if (nextAppState === 'background' || nextAppState === 'inactive') {
-        //         // database.close();
-        //     }
-        // });
-        // offlineDataBAse()
         const unsubscribe = addEventListener((state) => {
             if (state.isConnected) {
                 setIsConnected(true);
             }
         });
-        // RNFS.unlink(`${RNFS.DocumentDirectoryPath}`).then((res) => {
-        //     RNFS.scanFile(`${RNFS.DocumentDirectoryPath}`);
-        //     console.log("🚀 ~ RNFS.unlink ~ res:", res)
-        // }).catch((error) => {
-        //     console.log("🚀 ~ RNFS.unlink ~ error:", error)
-        // })
-        // attachDb()
-        // connectDataBaseToFolder()
-
         return unsubscribe();
     }, []);
 
@@ -153,9 +135,7 @@ const Route = () => {
                                 }
                             )
                         }
-
                         // checkFileExist(localDBMetaData) 
-
                     }
                 })
                 .catch((err) => {
@@ -392,6 +372,8 @@ const Route = () => {
                         <Stack.Screen name={'filteredTemples'} component={FilteredTemplesPage} />
                         <Stack.Screen name={RouteTexts.RADIO} component={Radios} />
                         <Stack.Screen name={RouteTexts.OM_CHANTING} component={OmChanting} />
+                        <Stack.Screen name={RouteTexts.FESTIVAL_VIDEO} component={FestivalVideo} />
+                        <Stack.Screen name={RouteTexts.SEND_FESTIVAL_VIDEO} component={SendFestivalEvent} />
                         {/* <Stack.Screen name={'PinTheLocation'} component={PinTheLocation} /> */}
                         {/* <Stack.Screen name={'templeDetails'} component={TempleDetails} /> */}
                     </Stack.Navigator>

@@ -6478,6 +6478,11 @@ react-native-localize@^3.0.4:
   resolved "https://registry.npmjs.org/react-native-localize/-/react-native-localize-3.0.6.tgz#6df2e317038c0cafe051184b2f0280f89ef8050c"
   integrity sha512-pfwwNKRfXcxp0LZEzj5oW2/uo5oZOhiQ4PYlg8uLlsl9pDLcWg03yLCHohTWKX02vE/BFz9hkrHT/nQtlO/iFg==
 
+react-native-mail@^6.1.1:
+  version "6.1.1"
+  resolved "https://registry.npmjs.org/react-native-mail/-/react-native-mail-6.1.1.tgz#f1b1f8034c84d2510a93e4a2a795f0db5a13595e"
+  integrity sha512-pTs180wwyh7hN/iyTC9SfOX579U4YhDlHOLxi47IGvhPJENqO/QFdBq+wWKxyhNqdQuVSy+LoeIxLreWnIeYmg==
+
 react-native-maps@^1.11.3:
   version "1.11.3"
   resolved "https://registry.npmjs.org/react-native-maps/-/react-native-maps-1.11.3.tgz#7186add5851b50d92501e3791fca2dd7437c80ba"
@@ -6639,6 +6644,11 @@ react-native-vector-icons@^10.0.1:
   dependencies:
     prop-types "^15.7.2"
     yargs "^16.1.1"
+
+react-native-video@^6.1.2:
+  version "6.1.2"
+  resolved "https://registry.npmjs.org/react-native-video/-/react-native-video-6.1.2.tgz#84580458e0d0ebbf6ca395cc15cd2f76c337bbda"
+  integrity sha512-oKk4hLhcWiL+k5CRgqs+/Bvp23QrHFGx3ylawrF4OWjKRekGeHNCf2mSf7+er66ZmktMtJC0ofBTgEPq4rRG6A==
 
 react-native-webview@^13.8.1:
   version "13.8.1"

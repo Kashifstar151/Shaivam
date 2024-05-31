@@ -11,6 +11,7 @@ import {
     Text,
     ScrollView,
     ActivityIndicator,
+    Modal,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/Entypo';
 import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
@@ -22,7 +23,7 @@ import InActiveCalender from '../../assets/Images/UnactiveCalender.svg';
 import ActiveStar from '../../assets/Images/ActiveStar.svg';
 import InActiveStar from '../../assets/Images/UnactiveStart.svg';
 import ActiveCalender from '../../assets/Images/CalenderAct.svg';
-import { ExpandableCalendar, CalendarProvider, Calendar } from 'react-native-calendars';
+import { Calendar } from 'react-native-calendars';
 import { colors } from '../../Helpers';
 import ElevatedCard from '../../components/ElevatedCard';
 import EventCard from '../../components/EventCard';
@@ -30,7 +31,6 @@ import { ThemeContext } from '../../Context/ThemeContext';
 import EventSelectionType from './EventSelectionType';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import ButtonComp from '../Temples/Common/ButtonComp';
 import LocationSelection from './LocationSelection';
 import { RouteTexts } from '../../navigation/RouteText';
 import SubmitEnteries from './SubmitEnteries';
@@ -46,6 +46,7 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { useTranslation } from 'react-i18next';
 import { useDebouncer } from '../../Helpers/useDebouncer';
 import CategoryAssets from './CategoryAssets';
+import FestivalVideo from './FestivalVideo';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -67,6 +68,7 @@ const Calender = ({ navigation }) => {
     const [showLoader, setShowLoader] = useState(false)
     const [endDate, setEndDate] = useState('')
     const flatListRef = useRef(null)
+    const festivalVideoref = useRef(null)
     const {
         data: regularEvent,
         isFetching: isFetchingRegular,
@@ -108,10 +110,12 @@ const Calender = ({ navigation }) => {
     const bottomSheetRef = useRef(null);
     const [selectedFilter, setSelectedFilter] = useState(null);
     const disableMonthChangeValRef = useRef();
+    const selectEventRef = useRef(null)
     const [disableMonthChangeVal, setDisableMonthChangeVal] = useState(false);
     const [notificationOnEvent, setNotificationEvents] = useState([])
     const { theme } = useContext(ThemeContext);
     const [filteredData, setFilteredData] = useState([])
+    const [showFestivalVideo, setShowFestivalVideo] = useState(false)
     const debounceVal = useDebouncer(searchText, 500);
     useEffect(() => {
         setWeekly([]);
@@ -130,18 +134,12 @@ const Calender = ({ navigation }) => {
 
     const getScheduleNotification = () => {
         PushNotification.getScheduledLocalNotifications(callbacks => {
-            // console.log("🚀 ~ getScheduleNotification ~ callbacks:", callbacks)
             setNotificationEvents(callbacks)
         })
     }
     useEffect(() => {
-
-        // console.log("🚀 ~ useEffect ~ regularEvent:", regularEvent)
         if (regularEvent && regularSuccess) {
             setShowLoader(true)
-            // alert('regular event')
-            // console.log('recurringEventList?.meta?.pagination?.total regular', regularEvent?.meta?.pagination?.total)
-
             setRegular([]);
             const data = regularEvent.data.map(event => ({
                 ...event,
@@ -155,7 +153,6 @@ const Calender = ({ navigation }) => {
 
     // Process recurring event list
     useEffect(() => {
-        // console.log("🚀 ~ useEffect ~ recurringEventList:", recurringEventList)
         if (recurringEventList && recurringSuccess) {
             const data = []
             const cDate = moment().startOf("day");
@@ -313,12 +310,17 @@ const Calender = ({ navigation }) => {
     }, [searchText])
 
     const selectFilter = (item) => {
-        setSelectedFilter(item);
-        bottomSheetRef.current.open();
+        if (item == 'Add Event') {
+            setSelectedFilter(item);
+            selectEventRef.current.open();
+        } else {
+            setSelectedFilter(item);
+            bottomSheetRef.current.open()
+        }
     };
 
     const findFinalizedDate = (days, daysType, cDate) => {
-        console.log("🚀 ~ findFinalizedDate ~ days:", days, daysType, cDate)
+        // console.log("🚀 ~ findFinalizedDate ~ days:", days, daysType, cDate)
         let finalizedDate = null;
 
         switch (daysType) {
@@ -344,7 +346,7 @@ const Calender = ({ navigation }) => {
     };
 
     function getDaysInMonth(month, year, dayOfWeek) {
-        console.log("🚀 ~ getDaysInMonth ~ month:", month, year)
+        // console.log("🚀 ~ getDaysInMonth ~ month:", month, year)
         const daysInMonth = moment(`${year}-${month}-01`).daysInMonth();
         //get the number of days in the month. ⤴️
         const firstDayOfMonth = moment(`${year}-${month}-01`);
@@ -368,20 +370,20 @@ const Calender = ({ navigation }) => {
         return days;
     }
     const selectdateHandler = (res) => {
-        console.log("🚀 ~ selectdateHandler ~ res:", res)
+        // console.log("🚀 ~ selectdateHandler ~ res:", res)
         // mainData?.map((item, index) => {
         if (selectedHeader === data1[1].name) {
             let arr = mainData?.filter((item) =>
                 moment(item?.start_date).format('YYYY-MM-DD') == res?.dateString
             )
-            console.log(arr.length, 'onsole.log(arr.length)')
+            // console.log(arr.length, 'onsole.log(arr.length)')
             setSelecetedList(arr)
         } else {
             let arr = festivalEvents?.data?.filter((item) =>
                 moment(item?.attributes?.calendar_from_date).format('YYYY-MM-DD') == res?.dateString
             )
             setSelecetedList(arr)
-            console.log(arr.length, 'onsole.log(arr.length)')
+            // console.log(arr.length, 'onsole.log(arr.length)')
 
         }
     }
@@ -435,9 +437,6 @@ const Calender = ({ navigation }) => {
 
         }
     }, [selectedHeader, festivalEvents]);
-
-
-
     return (
         <View style={{ backgroundColor: '#fff', flex: 1 }} >
             <Background>
@@ -509,17 +508,14 @@ const Calender = ({ navigation }) => {
                         disableArrowRight={isFetchingRegular || disableMonthChangeVal}
                         displayLoadingIndicator={isFetchingRegular || disableMonthChangeVal}
                         onMonthChange={(month) => {
-                            // alert(prevNext)
                             setDisableMonthChangeVal(() => true);
                             if (disableMonthChangeValRef.current) {
                                 clearTimeout(disableMonthChangeValRef.current);
                             }
                             disableMonthChangeValRef.current = setTimeout(() => {
                                 setDisableMonthChangeVal(() => false);
-                                // alert(selectMonth?.split('-')[1])
                                 const newMonth = moment(month.dateString);
                                 const currentMonth = moment(selectMonth);
-
                                 // Check year and month using moment
                                 if (newMonth.isAfter(currentMonth, 'month')) {
                                     setPrevNext(prev => prev + 1);
@@ -531,12 +527,6 @@ const Calender = ({ navigation }) => {
                                 setSelectMonth(newMonth.toISOString());
                             }, 1000);
                         }}
-                        // onPressArrowLeft={() => {
-                        //     setPrevNext(prev => prev - 1)
-                        // }}
-                        // onPressArrowRight={() => {
-                        //     setPrevNext(prev => prev + 1)
-                        // }}
                         markingType="custom"
                         markedDates={marked}
                         style={styles.calenderTheme}
@@ -753,6 +743,17 @@ const Calender = ({ navigation }) => {
                                 />
                             </>
                     }
+                    <RBSheet closeOnDragDown ref={selectEventRef}>
+                        <SubmitEnteries
+                            navigation={navigation}
+                            setSelectedEvent={setSelectedFilter}
+                            selectedEvent={selectedFilter}
+                            closeSheet={selectEventRef}
+                            festivalVideoref={festivalVideoref}
+                            setShowFestivalVideo={setShowFestivalVideo}
+
+                        />
+                    </RBSheet>
                     <RBSheet height={500} closeOnDragDown ref={bottomSheetRef}>
                         {selectedFilter === 'Event' ? (
                             <>
@@ -761,32 +762,20 @@ const Calender = ({ navigation }) => {
                                     category={eventCategory}
                                     bottomSheetRef={bottomSheetRef}
                                 />
-                                {/* <View
-                                    style={{
-                                        justifyContent: 'center',
-                                        alignSelf: 'center',
-                                        position: 'absolute',
-                                        bottom: 10,
-                                    }}
-                                >
-                                    <ButtonComp
-                                        color={true}
-                                        text="Search"
-                                        navigation={() => bottomSheetRef?.current?.close()}
-                                    />
-                                </View> */}
                             </>
-                        ) : selectedFilter === 'Add Event' ? (
-                            <SubmitEnteries
-                                navigation={navigation}
-                                setSelectedEvent={setSelectedFilter}
-                                selectedEvent={selectedFilter}
-                                closeSheet={() => bottomSheetRef.current.close()}
-                            />
                         ) : (
                             <LocationSelection selectedLocation={selectedLocation} calender={true} setSelected={setSelectedLocation} close={bottomSheetRef} />
                         )}
                     </RBSheet>
+                    {
+                        showFestivalVideo &&
+                        <Modal>
+                            <FestivalVideo setShowFestivalVideo={setShowFestivalVideo} navigation={navigation} />
+                        </Modal>
+                    }
+                    {/* <RBSheet ref={festivalVideoref} height={500}>
+
+                    </RBSheet> */}
                 </View>
             </ScrollView>
         </View>

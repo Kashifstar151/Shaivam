@@ -136,6 +136,8 @@ const MoreOption = () => {
             Shareapp()
         } else if (item?.title == 'Acknowledgement') {
             acknowladgeRef.current.open()
+        } else if (item?.title === 'Rate the app') {
+            Linking.openURL("https://play.google.com/store/apps/details?id=org.shaivam")
         }
     };
 

@@ -370,7 +370,7 @@ GROUP BY
                         {
                             fontSize: fontSizeCount,
                             alignSelf: 'flex-end',
-                            color: !darkMode ? colors.grey6 : colors.white,
+                            color: !darkMode ? '#000000' : colors.white,
                         },
                     ]}
                     highlightStyle={{
@@ -951,52 +951,50 @@ GROUP BY
                             data={musicState?.songDetails}
                             initialScrollIndex={songNo ? songNo - 1 : 0}
                             renderItem={({ item, index }) => (
-                                <TouchableWithoutFeedback onPress={() => setShowSetting(false)}>
-                                    <View
-                                        style={{
-                                            borderBottomColor: colors.grey3,
-                                            borderBottomWidth: 1,
-                                            paddingBottom: 7,
-                                            flexDirection: 'row',
-                                            width: Dimensions.get('window').width - 60
-                                        }}>
-                                        <View>
-                                            {item?.type !== null &&
-                                                <Text style={{ color: colors.commonColor, fontFamily: 'Mulish-Regular' }}>{item?.type}</Text>
-                                            }
-                                            {searchScreen ? (
-                                                renderResult(item)
-                                            ) : (
-                                                <Text
-                                                    key={Math.random()}
-                                                    selectable={true}
-                                                    selectionColor="orange"
-                                                    style={[
-                                                        styles.lyricsText,
-                                                        {
-                                                            fontSize: fontSizeCount,
-                                                            alignSelf: 'flex-end',
-                                                            color: !darkMode ? colors.grey6 : colors.white,
-                                                        },
-                                                    ]}>
-                                                    {renderText(item)}
-                                                </Text>
-                                            )}
-                                        </View>
-                                        <Text
-                                            style={[
-                                                styles.lyricsText,
-                                                {
-                                                    fontSize: fontSizeCount,
-                                                    alignSelf: 'flex-end',
-                                                    color: !darkMode ? colors.grey6 : colors.white,
-                                                },
-                                            ]}
-                                        >
-                                            {item?.songNo}
-                                        </Text>
+                                <View
+                                    style={{
+                                        borderBottomColor: colors.grey3,
+                                        borderBottomWidth: 1,
+                                        paddingBottom: 7,
+                                        flexDirection: 'row',
+                                        width: Dimensions.get('window').width - 60
+                                    }}>
+                                    <View>
+                                        {item?.type !== null &&
+                                            <Text style={{ color: colors.commonColor, fontFamily: 'Mulish-Regular' }}>{item?.type}</Text>
+                                        }
+                                        {searchScreen ? (
+                                            renderResult(item)
+                                        ) : (
+                                            <Text
+                                                key={Math.random()}
+                                                selectable={true}
+                                                selectionColor="orange"
+                                                style={[
+                                                    styles.lyricsText,
+                                                    {
+                                                        fontSize: fontSizeCount,
+                                                        alignSelf: 'flex-end',
+                                                        color: !darkMode ? '#000000' : colors.white,
+                                                    },
+                                                ]}>
+                                                {renderText(item)}
+                                            </Text>
+                                        )}
                                     </View>
-                                </TouchableWithoutFeedback>
+                                    <Text
+                                        style={[
+                                            styles.lyricsText,
+                                            {
+                                                fontSize: fontSizeCount,
+                                                alignSelf: 'flex-end',
+                                                color: !darkMode ? colors.grey6 : colors.white,
+                                            },
+                                        ]}
+                                    >
+                                        {item?.songNo}
+                                    </Text>
+                                </View>
                             )}
                         />
                     )}

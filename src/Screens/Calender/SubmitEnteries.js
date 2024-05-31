@@ -6,7 +6,7 @@ import { ThemeContext } from "../../Context/ThemeContext";
 import { colors } from "../../Helpers";
 import { RouteTexts } from "../../navigation/RouteText";
 
-const SubmitEnteries = ({ setSelectedEvent, selectedEvent, closeSheet, navigation }) => {
+const SubmitEnteries = ({ setSelectedEvent, selectedEvent, closeSheet, navigation, festivalVideoref, setShowFestivalVideo }) => {
     const theme = useContext(ThemeContext)
     const { t } = useTranslation()
     const type = [
@@ -14,10 +14,16 @@ const SubmitEnteries = ({ setSelectedEvent, selectedEvent, closeSheet, navigatio
         { name: 'Send a festival video', id: 2 }
     ]
     const selectionHandler = (item) => {
+        console.log("🚀 ~ selectionHandler ~ item:", item)
         setSelectedEvent(item)
-        closeSheet
+        // closeSheet
         if (item?.name == 'Add an event') {
+            closeSheet.current.close()
             navigation.navigate(RouteTexts.VIRTUAL_EVENT_CREATE)
+        } else if (item?.name == 'Send a festival video') {
+            closeSheet.current.close()
+            setShowFestivalVideo(true)
+            // navigation.navigate(RouteTexts.FESTIVAL_VIDEO)
         }
     }
 
@@ -26,18 +32,15 @@ const SubmitEnteries = ({ setSelectedEvent, selectedEvent, closeSheet, navigatio
             <Text style={{ fontFamily: 'Lora-Bold', fontSize: 16, color: 'black', marginVertical: 10 }}>{t('Select one of the following')}</Text>
             <FlatList data={type} renderItem={({ item, index }) => (
                 <TouchableOpacity
-                    onPress={() => index == 0 && selectionHandler(item)}
-                    style={styles.dropDown}
-                >
+                    onPress={() => selectionHandler(item)}
+                    style={styles.dropDown}>
                     <Text style={{ fontFamily: 'Mulish-Regular', color: theme.textColor }}>
                         {t(item?.name)}
                     </Text>
                     <View
-                        style={selectedEvent?.name == item?.name ? [styles.iconContainer, { backgroundColor: colors.commonColor }] : styles.iconContainer}
-                    >
+                        style={selectedEvent?.name == item?.name ? [styles.iconContainer, { backgroundColor: colors.commonColor }] : styles.iconContainer}>
                         <Feather name="check" size={14} color={selectedEvent?.name == item?.name ? 'white' : '#222222'} />
                     </View>
-                    {/* <View style={{ height: 2, width: Dimensions.get('window').width - 20, backgroundColor: '#fff' }} /> */}
                 </TouchableOpacity>
             )} />
         </View>

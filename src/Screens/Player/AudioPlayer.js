@@ -142,6 +142,7 @@ const AudioPlayer = ({
         Icon.getImageSource('circle', 18, '#C1554E').then((source) => {
             return setThumbImage({ thumbIcon: source });
         });
+        createUserTable()
         // Promise.allSettled([
         //     createUserTable(),
         //     MostPlayedSongList(),
@@ -167,7 +168,7 @@ const AudioPlayer = ({
     const downloadAudios = () => {
         listfavAudios((calbacks) => {
             let lenght = calbacks?.length;
-            console.log('🚀 ~ downloadAudios ~ lenght:', prevId);
+            // console.log('🚀 ~ downloadAudios ~ lenght:', prevId);
             TrackPlayer.getActiveTrack()
                 .then((res) => {
                     AddSongToDatabase(
@@ -224,7 +225,7 @@ const AudioPlayer = ({
     useEffect(() => {
         if (playBackState.state !== 'playing' && position >= 3) {
             Promise.allSettled([
-                createUserTable(),
+
                 MostPlayedSongList(),
                 getMostPlayedSong(),
                 getFavAudios(),
