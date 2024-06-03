@@ -133,7 +133,7 @@ const RenderEachTitle = ({
     );
 };
 
-const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio }) => {
+const RenderTitle = ({ data, navigation, prevId, thalam, ThalamHeaders, flagShowAudio }) => {
     console.log('🚀 ~ RenderTitle ~ data:', data);
     let key = true;
     const { i18n } = useTranslation();
@@ -154,9 +154,9 @@ const RenderTitle = ({ data, navigation, thalam, ThalamHeaders, flagShowAudio })
         }
         const query2 = `Select * from thirumurais where ${
             ThalamHeaders === 0 ? 'country' : 'thalam'
-        }='${data}'  and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language}' ${
-            ThalamHeaders === 0 ? 'GROUP BY thalam' : ''
-        }  ORDER BY fkTrimuria,titleNo  ASC `;
+        }='${data?.title}' and  fkTrimuria ${data.prevId}    and locale='${
+            i18n.language === 'en-IN' ? 'RoI' : i18n.language
+        }' ${ThalamHeaders === 0 ? 'GROUP BY thalam' : ''}  ORDER BY fkTrimuria,titleNo  ASC `;
 
         getSqlData(thalam ? query2 : query, (callbacks) => {
             console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
