@@ -18,9 +18,9 @@ const BottomSheetTempleTemplate = ({
         longitudeDelta: 0.0121,
         locationName: '',
     },
+    userLocation,
     snapIndex,
     setSnapIndex,
-
     showSearchBarWhenFullSize,
     initialIndexOfSize,
     snapPoints = ['10%', '50%', '95%'],
@@ -36,6 +36,7 @@ const BottomSheetTempleTemplate = ({
     isSearchFieldDisabled,
     isSearchFieldDisabledInFullScreenMode,
 }) => {
+    console.log('🚀 ~ data:', data);
     const bottomSheetRef = useRef(null);
     const [padState, setPadState] = useState(null);
     const handleSheetChanges = useCallback(
@@ -58,12 +59,13 @@ const BottomSheetTempleTemplate = ({
                 {data?.length > 0 &&
                     data.map((item) => {
                         return (
-                            <CustomMarker
+                            <MarkerCallOut
                                 setPadState={setPadState}
                                 callback={() => {
                                     // setting the type of the marker you pressed
                                     // callback function for naving to page which has the temple details
                                     // markerPressClbk(navigation, 7);
+                                    markerPressClbk(navigation, item?.flag, item, userLocation);
                                 }}
                                 flag={item?.flag || item?.Flag}
                                 coordinate={{
@@ -71,7 +73,7 @@ const BottomSheetTempleTemplate = ({
                                     longitude: parseFloat(item?.longitude),
                                 }}
                                 keyName={'COORDINATE'}
-                                description={data?.templeName}
+                                description={data?.templeName || item?.name}
                             />
                         );
                     })}

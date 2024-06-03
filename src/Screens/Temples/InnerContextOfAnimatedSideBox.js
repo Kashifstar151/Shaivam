@@ -5,7 +5,7 @@ import { categoryBtnClbk } from './CallBacksForClick';
 import { useTranslation } from 'react-i18next';
 console.log('🚀 ~ templeMetaData:', templeMetaData);
 
-const InnerContextOfAnimatedSideBox = ({ navigation, regionCoordinate }) => {
+const InnerContextOfAnimatedSideBox = ({ navigation, regionCoordinate, userLocation }) => {
     const { t } = useTranslation();
     return (
         <View style={{}}>
@@ -18,7 +18,12 @@ const InnerContextOfAnimatedSideBox = ({ navigation, regionCoordinate }) => {
                                 onPress={() => {
                                     // adding callback on the category btn press and navigating to the filter page
                                     // alert(key)
-                                    categoryBtnClbk(navigation, key, regionCoordinate);
+                                    categoryBtnClbk(
+                                        navigation,
+                                        key,
+                                        regionCoordinate,
+                                        userLocation
+                                    );
                                 }}
                                 style={{ gap: 2, paddingBottom: 10 }}
                                 key={indx}

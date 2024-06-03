@@ -79,6 +79,11 @@ const TempleDetails = ({ navigation }) => {
                     longitudeDelta: LONGITUDE_DELTA,
                     locationName: '',
                 }}
+                userLocation={{
+                    ...route?.params?.data?.userLocation,
+                    latitudeDelta: LATITUDE_DELTA,
+                    longitudeDelta: LONGITUDE_DELTA,
+                }}
                 snapIndex={snapIndex}
                 setSnapIndex={setSnapIndex}
                 initialIndexOfSize={0}

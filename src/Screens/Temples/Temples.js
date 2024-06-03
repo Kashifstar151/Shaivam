@@ -407,6 +407,7 @@ export const Temples = ({ navigation, route }) => {
                     <InnerContextOfAnimatedSideBox
                         navigation={navigation}
                         regionCoordinate={regionCoordinate}
+                        userLocation={userLocation}
                     />
                 </AnimatedRightSideView>
 
@@ -421,7 +422,12 @@ export const Temples = ({ navigation, route }) => {
                                         onPress={() => {
                                             // adding callback on the category btn press and navigating to the filter page
                                             if (permissionGranted === RESULTS.GRANTED) {
-                                                categoryBtnClbk(navigation, key, regionCoordinate);
+                                                categoryBtnClbk(
+                                                    navigation,
+                                                    key,
+                                                    regionCoordinate,
+                                                    userLocation
+                                                );
                                             } else {
                                                 setShowModal(!showModal);
                                             }

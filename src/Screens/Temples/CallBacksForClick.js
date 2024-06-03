@@ -18,12 +18,13 @@ const markerPressClbk = (navigation, flag, item, userLocation) => {
     }
 };
 
-const categoryBtnClbk = (navigation, flag, regionCoordinate) => {
+const categoryBtnClbk = (navigation, flag, regionCoordinate, userLocation) => {
     console.log('🚀 ~ categoryBtnClbk ~ flag:', flag);
     navigation.navigate('filteredTemples', {
         data: {
             flag,
             regionCoordinate,
+            userLocation,
         },
     });
 };
