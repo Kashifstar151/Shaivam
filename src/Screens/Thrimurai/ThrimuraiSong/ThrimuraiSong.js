@@ -10,9 +10,9 @@ import {
     Animated as AnimatedRN,
     Platform,
     StatusBar,
-    TouchableWithoutFeedback,
-    Keyboard,
-    ScrollView,
+    // TouchableWithoutFeedback,
+    // Keyboard,
+    // ScrollView,
 } from 'react-native';
 import BackButton from '../../../components/BackButton';
 import ShareIcon from '../../../assets/Images/share-1.svg';
@@ -25,7 +25,7 @@ import SettingIcon from '../../../assets/Images/Settings (1) 1.svg';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { getSqlData } from '../../Database';
 import { useIsFocused } from '@react-navigation/native';
-import { ThemeContext } from '../../../Context/ThemeContext';
+// import { ThemeContext } from '../../../Context/ThemeContext';
 import { colors } from '../../../Helpers';
 import { useTranslation } from 'react-i18next';
 import '../../../../localization';
@@ -47,12 +47,13 @@ import TrackPlayer, {
 import Clipboard from '@react-native-clipboard/clipboard';
 import { listfavAudios } from '../../../Databases/AudioPlayerDatabase';
 import SettingsSVG from '../../../components/SVGs/SettingsSVG';
+import { useNetInfo, addEventListener } from "@react-native-community/netinfo";
 
 const ThrimuraiSong = ({ route, navigation }) => {
     const isFocused = useIsFocused;
     const { data, downloaded, searchedword, downloadSong, searchScreen, songNo } =
         route.params || {};
-    console.log('🚀 ~ ThrimuraiSong ~ route.params:', searchScreen);
+    // console.log('🚀 ~ ThrimuraiSong ~ route.params:', searchScreen);
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
@@ -65,6 +66,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const [language, setLang] = useState(['Original', 'Tamil', 'English', 'Hindi']);
     const [selectedLang, setSelectedLang] = useState('Original');
     const [fontSizeCount, setFontSizeCount] = useState(null);
+    const [isconnected, setIsConnected] = useState(false)
+    const [showAudioPlayer, setShowAudioPlayer] = useState(false)
     // const [refFlatList, setRefFlatList] = useState(null);
     const flatListRef = useRef(null);
     const firstRender = useRef(true);
@@ -78,7 +81,29 @@ const ThrimuraiSong = ({ route, navigation }) => {
             setFontSizeCount(parseInt(value));
         }
     };
+    useEffect(() => {
+        // LogBox.ignoreAllLogs();
+        const unsubscribe = addEventListener((state) => {
+            if (state.isConnected) {
+                setIsConnected(true);
+            }
+        });
+        return unsubscribe();
+        checkConditionForPlayer()
+    }, []);
 
+    const checkConditionForPlayer = () => {
+        console.log('res?.url?.substring(0,5)', res?.url?.substring(0, 5))
+        TrackPlayer.getActiveTrack().then((res) => {
+            if (res?.url) {
+                if (isconnected && res?.url?.substring(0, 5) == 'file') {
+
+                }
+            }
+        }).catch((err) => {
+            console.log("🚀 ~ TrackPlayer.getActiveTrack ~ err:", err)
+        })
+    }
     const setFontSizeForLyrics = async (fontSizeCount) => {
         await AsyncStorage.setItem('@lyricsFontSize', String(fontSizeCount));
     };
@@ -142,8 +167,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
             } else {
                 setOrientation('LANDSCAPE');
             }
-        });
-
+        })
         if (isFocused) {
             changeTranlation('Original');
         }
@@ -982,9 +1006,9 @@ GROUP BY
                                         },
                                         musicState?.songDetails[index + 1]
                                             ? {
-                                                  borderBottomColor: colors.grey3,
-                                                  borderBottomWidth: 1,
-                                              }
+                                                borderBottomColor: colors.grey3,
+                                                borderBottomWidth: 1,
+                                            }
                                             : {},
                                     ]}
                                 >
@@ -1105,7 +1129,7 @@ GROUP BY
                         }}
                     ></TouchableOpacity>
                 </View>
-                {activeTrackState?.url && (
+                {isconnected && activeTrackState?.url && (
                     <AudioPlayer
                         activeTrack={activeTrackState}
                         setDownloadingLoader={setDownloadingLoader}

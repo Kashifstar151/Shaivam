@@ -39,7 +39,7 @@ const EventDetails = ({ navigation, route }) => {
         console.log("🚀 ~ callApi ~ check:", item?.split('_')[1])
         if (item?.split('_')[0] == 'recurring') {
             GetReccuringById({ data: item?.split('_')[1] }).then((result) => {
-                console.log("🚀 ~ getReccuringById ~ result:", result)
+                // console.log("🚀 ~ getReccuringById ~ result:", result)
                 setEventData(result?.data?.data)
             }).catch((err) => {
                 console.log("🚀 ~ getReccuringById ~ err:", err)
@@ -67,6 +67,10 @@ const EventDetails = ({ navigation, route }) => {
     useEffect(() => {
         if (notificationOn) {
             scheduleNotification()
+        } else {
+            // alert(true)
+            PushNotification.cancelLocalNotification(item?.id)
+            setNotification(false)
         }
         getScheduleNotification()
 
@@ -90,7 +94,7 @@ const EventDetails = ({ navigation, route }) => {
     const checkPermissionAccess = async () => {
         // alert(true)
         const permission = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);;
-        console.log("🚀 ~ checkPermissionAccess ~ permission:", permission)
+        // console.log("🚀 ~ checkPermissionAccess ~ permission:", permission)
     }
     const createChannel = () => {
         PushNotification.createChannel({

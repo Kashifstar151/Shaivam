@@ -8,52 +8,32 @@ import Video, { VideoRef } from 'react-native-video';
 import TextInputCom from "../Temples/Common/TextInputCom";
 import MaterialIcons from "react-native-vector-icons/dist/MaterialIcons";
 import Button from "../Temples/Common/Button";
-import Mailer from "react-native-mail";
+import Share from 'react-native-share'
+import { useSelector } from "react-redux";
 
 const SendFestivalEvent = ({ navigation, route }) => {
     const { params } = route
+    const inputValue = useSelector(state => state.form?.inputValues || '');
     const { t } = useTranslation();
-    const useSendEmail = ({ subject, attachments }) => {
-        console.log("🚀 ~ useSendEmail ~ attachments:", {
-            path: params?.image[0]?.originalPath,
-            uri: params?.image[0]?.uri,  // The absolute path of the file from which to read data.
-            type: params?.image[0]?.type,   // Mime Type: jpg, png, doc, ppt, html, pdf
-            name: params?.image[0]?.fileName,   // Optional: Custom filename for attachment
-        })
-        // const sendEmail = useCallback(
-        // () => {
-        // return new Promise((resolve, reject) => {
-        Mailer.mail(
-            {
-                subject,
-                recipients: ["kashif@bytive.in"], // replace with your email
-                body: 'Here are my attachments',
-                //   isHTML,
-                attachments: [{
-                    path: params?.image[0]?.originalPath,
-                    uri: params?.image[0]?.uri,  // The absolute path of the file from which to read data.
-                    type: params?.image[0]?.type,   // Mime Type: jpg, png, doc, ppt, html, pdf
-                    name: params?.image[0]?.fileName,   // Optional: Custom filename for attachment
-                }],
-            },
-            (error, event) => {
-                if (error) {
-                    console.log("🚀 ~ //returnnewPromise ~ error:", error)
-                    // return reject(error);
-                }
-                console.log("🚀 ~ //returnnewPromise ~ event:", event)
-
-                // resolve(event);
-            }
-        );
-        // });
-        // },
-        //     []
-        // );
+    const useSendEmail = async ({ subject, attachments }) => {
+        const shareOptions = {
+            title: 'Send Festival Video',
+            subject: 'Email Subject',
+            message: `Festival Name: ${inputValue['Festival Name']},
+Festival Location: ${inputValue['Festival Location']},
+Name: ${inputValue['Creator name']}
+Phone: ${inputValue['Creator number']}`,
+            social: Share.Social.EMAIL,
+            email: 'kashif@bytive.in',
+        };
+        try {
+            const ShareResponse = await Share.open(shareOptions);
+        } catch (error) {
+            console.log('Error sharing', error);
+        }
     };
-    // console.log("🚀 ~ SendFestivalEvent ~ params:", params)
     return (
-        <ScrollView style={{ backgroundColor: '#fff', flex: 1 }} bounces={false}>
+        <View style={{ backgroundColor: '#fff', height: Dimensions.get('window').height }} bounces={false}>
             <Background>
                 <View style={styles.mainCom}>
                     <View style={{ width: '95%' }}>
@@ -65,7 +45,7 @@ const SendFestivalEvent = ({ navigation, route }) => {
                     </TouchableOpacity>
                 </View>
             </Background>
-            <View style={{ paddingHorizontal: 20 }}>
+            <ScrollView style={{ paddingHorizontal: 20, flex: 1 }}>
                 <Text style={{ fontFamily: 'Mulish-Regular', fontSize: 12 }}>Upload videos (Video limit: 15mb)</Text>
                 <View style={{ borderRadius: 20, width: 100, marginTop: 20 }}>
                     <TouchableOpacity style={{ position: 'absolute', top: -10, right: -10, zIndex: 100 }}>
@@ -76,19 +56,21 @@ const SendFestivalEvent = ({ navigation, route }) => {
                     </View>
                     <Text>video1.mp4</Text>
                 </View>
-                <TextInputCom insiderText={t('Type here') ? t('Type here') : 'Type here'} headinText={t('Festival Name*') ? t('Festival Name*') : 'Festival Name*'} width={Dimensions.get('window').width - 50} />
-                <TextInputCom insiderText={t('Type here') ? t('Type here') : 'Type here'} headinText={t('Festival Location*') ? t('Festival Location*') : 'Festival Location*'} width={Dimensions.get('window').width - 50} />
-                <TextInputCom insiderText={t('Type here') ? t('Type here') : 'Type here'} headinText={t('Your Name*') ? t('Your Name*') : 'Your Name*'} width={Dimensions.get('window').width - 50} />
-                <TextInputCom insiderText={t('Type here') ? t('Type here') : 'Type here'} headinText={t('Phone number*') ? t('Phone number*') : 'Phone number*'} width={Dimensions.get('window').width - 50} />
-                <Button navigation={() => useSendEmail({
-                    attachments: params?.image?.map((result) => ({
-                        uri: result.uri,
-                        type: result.type,
-                        name: result.fileName, // optional
-                    })), subject: 'jjj'
-                })} />
-            </View>
-        </ScrollView>
+                <TextInputCom inputKey={'Festival Name'} value={inputValue['Festival Name']} insiderText={t('Type here') ? t('Type here') : 'Type here'} headinText={t('Festival Name*') ? t('Festival Name*') : 'Festival Name*'} width={Dimensions.get('window').width - 50} />
+                <TextInputCom value={inputValue['Festival Location']} inputKey={'Festival Location'} insiderText={t('Type here') ? t('Type here') : 'Type here'} headinText={t('Festival Location*') ? t('Festival Location*') : 'Festival Location*'} width={Dimensions.get('window').width - 50} />
+                <TextInputCom inputKey={'Creator name'} value={inputValue['Creator name']} insiderText={t('Type here') ? t('Type here') : 'Type here'} headinText={t('Your Name*') ? t('Your Name*') : 'Your Name*'} width={Dimensions.get('window').width - 50} />
+                <TextInputCom inputKey={'Creator number'} value={inputValue['Creator number']} insiderText={t('Type here') ? t('Type here') : 'Type here'} headinText={t('Phone number*') ? t('Phone number*') : 'Phone number*'} width={Dimensions.get('window').width - 50} />
+            </ScrollView>
+            <Button navigation={() => useSendEmail({
+                attachments: params?.image?.map((result) => ({
+                    uri: result.uri,
+                    type: result.type,
+                    name: result.fileName, // optional
+                })), subject: 'jjj'
+            })} />
+            {/* <View style={{ position: 'absolute', bottom: 20 }}> */}
+            {/* </View> */}
+        </View>
 
     );
 };

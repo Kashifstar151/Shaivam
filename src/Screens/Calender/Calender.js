@@ -107,6 +107,7 @@ const Calender = ({ navigation }) => {
     const [changed, setChanged] = useState(false);
     const [selectedList, setSelecetedList] = useState([])
     const [prevNext, setPrevNext] = useState(0)
+    const [weekEvent, setWeekEvent] = useState([]);
     const bottomSheetRef = useRef(null);
     const [selectedFilter, setSelectedFilter] = useState(null);
     const disableMonthChangeValRef = useRef();

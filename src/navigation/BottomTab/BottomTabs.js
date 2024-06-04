@@ -24,6 +24,8 @@ import SelectedCalenderSVG from '../../components/SVGs/SelectedCalenderSVG';
 // import { addTracks, setupPlayer } from './OmChantPlayerTrack';
 import { usePlayer } from '../../Context/PlayerContext';
 import OmChantPlayer from '../../Screens/Player/OmChantPlayer';
+import { useActiveTrack, usePlaybackState } from 'react-native-track-player';
+import CommonPlayer from '../../components/CommonPlayer';
 const Tab = createBottomTabNavigator();
 
 const MyTabBar = ({ state, descriptors, navigation, theme, ...restProps }) => {
@@ -76,8 +78,8 @@ const MyTabBar = ({ state, descriptors, navigation, theme, ...restProps }) => {
                     options.tabBarLabel !== undefined
                         ? options.tabBarLabel
                         : options.title !== undefined
-                        ? options.title
-                        : route.name;
+                            ? options.title
+                            : route.name;
 
                 const isFocused = state.index === index;
 
@@ -157,13 +159,18 @@ const MyTabBar = ({ state, descriptors, navigation, theme, ...restProps }) => {
 };
 
 const BottomTab = ({ navigation }) => {
-    // const playbackState = usePlaybackState()
+    const playbackState = usePlaybackState()
+    console.log("🚀 ~ BottomTab ~ playbackState:", playbackState)
+    const activeTrack = useActiveTrack()
+    // console.log("🚀 ~ BottomTab ~ playbackState:", playbackState)
     const { showPlayer } = usePlayer();
 
     const { theme } = useContext(ThemeContext);
     return (
         <>
             {showPlayer && <OmChantPlayer />}
+            {!showPlayer ? playbackState?.state == 'paused' || playbackState?.state == 'playing' ? <CommonPlayer /> : <></> : <></>}
+
             <BottomSheetModalProvider>
                 {/* {showPlayer &&
                     <View style={{ paddingHorizontal: 15, justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', borderRadius: 15, alignSelf: 'center', zIndex: 100, height: 70, width: Dimensions.get('window').width - 20, backgroundColor: '#222222', position: 'absolute', bottom: 60 }}>
@@ -210,8 +217,8 @@ const BottomTab = ({ navigation }) => {
                             styles.tabContainer,
                             Platform.OS !== 'ios'
                                 ? {
-                                      height: 65,
-                                  }
+                                    height: 65,
+                                }
                                 : { height: 0 },
                         ],
                         tabBarHideOnKeyboard: true,

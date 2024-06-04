@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import templeMetaData from './AssetMapWithTempleType';
 import { categoryBtnClbk } from './CallBacksForClick';
 import { useTranslation } from 'react-i18next';
-console.log('🚀 ~ templeMetaData:', templeMetaData);
+// console.log('🚀 ~ templeMetaData:', templeMetaData);
 
 const InnerContextOfAnimatedSideBox = ({ navigation, regionCoordinate }) => {
     const { t } = useTranslation();

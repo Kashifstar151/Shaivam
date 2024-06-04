@@ -14,7 +14,7 @@ const FestivalVideo = ({ navigation, setShowFestivalVideo }) => {
             mediaType: 'mixed'
         }, callbacks => {
             setAsset(callbacks?.assets)
-            if (res?.assets?.length > 0) {
+            if (callbacks?.assets?.length > 0) {
                 setShowFestivalVideo(false)
                 navigation.navigate(RouteTexts.SEND_FESTIVAL_VIDEO, {
                     image: callbacks?.assets

@@ -327,6 +327,7 @@ const Fav = ({ navigation }) => {
                         onPress={() =>
                             navigation.navigate(RouteTexts.SONGS_LIST, {
                                 data: favList,
+                                selecetedHeader: selecetedHeader
                             })
                         }
                     >
@@ -354,7 +355,8 @@ const Fav = ({ navigation }) => {
                         style={styles.RearrangsTask}
                         onPress={() =>
                             navigation.navigate(RouteTexts.SONGS_LIST, {
-                                data: favList,
+                                data: downloadList,
+                                selecetedHeader: selecetedHeader
                             })
                         }
                     >
