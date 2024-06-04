@@ -15,7 +15,7 @@ import { RouteTexts } from '../../../navigation/RouteText';
 import SelectErrorPage from './SelectErrorPage';
 import { useTranslation } from 'react-i18next';
 
-const SpottingErrorPage = ({ setModalVisible, navigation }) => {
+const SpottingErrorPage = ({ setModalVisible, navigation, existingTempDetail }) => {
     const [selectedMessage, setSelectedMessage] = useState(null);
     const theme = useColorScheme(ThemeContext);
     const [showSubmitPage, setShowSubmit] = useState(false);
@@ -76,6 +76,7 @@ const SpottingErrorPage = ({ setModalVisible, navigation }) => {
                     setShowSubmit={setShowSubmit}
                     selectedError={selectedMessage}
                     navigation={navigation}
+                    existingTempDetail={existingTempDetail}
                 />
             ) : (
                 <View
@@ -86,7 +87,7 @@ const SpottingErrorPage = ({ setModalVisible, navigation }) => {
                 >
                     <View style={styles.topContainer}>
                         <Text style={{ fontFamily: 'Mulish-Regular', color: '#777777' }}>
-                            Bramhalingeshwara
+                            {existingTempDetail?.templeName ?? ''}
                         </Text>
                         <TouchableOpacity onPress={() => setModalVisible(false)}>
                             <Icon name="x" color={theme.textColor} size={22} />

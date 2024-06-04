@@ -184,6 +184,22 @@ const SearchScreen = ({ navigation, route }) => {
     function minTwoDigits(n) {
         return (n < 10 ? '0' : '') + n;
     }
+
+    const renderThirumuraiId = (id) => {
+        if (id < 9) {
+            return id;
+        } else if (id == 9) {
+            return '8K';
+        } else if (id == 10 || id == 11) {
+            return 9;
+        } else if (id == 12) {
+            return 10;
+        } else if (id == 13) {
+            return 11;
+        } else {
+            return 12;
+        }
+    };
     const renderResult = (item, index, key) => {
         if (key === 'title') {
             console.log('🚀 ~ renderResult ~ item:', JSON.stringify(item, 0, 2));
@@ -201,9 +217,11 @@ const SearchScreen = ({ navigation, route }) => {
                 }
             >
                 {key == 'title' ? null : (
-                    <Text>{`${item?.thirumuraiId}.${minTwoDigits(item?.titleNo)}.${minTwoDigits(
-                        item?.songNo
-                    )}`}</Text>
+                    <Text>
+                        {`${renderThirumuraiId(item?.thirumuraiId)}.${minTwoDigits(
+                            item?.titleNo
+                        )}.${minTwoDigits(item?.songNo)}`}
+                    </Text>
                 )}
                 {highlight(item, index, key)}
             </Pressable>

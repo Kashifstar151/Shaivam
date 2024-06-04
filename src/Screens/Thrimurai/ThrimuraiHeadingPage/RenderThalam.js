@@ -7,7 +7,7 @@ import RenderAudios from '../RenderAudios';
 import RenderTitle from './RenderTitle';
 import { colors } from '../../../Helpers';
 
-const RenderThalam = React.memo(({ item, index, navigation, ThalamHeaders }) => {
+const RenderThalam = React.memo(({ prevId, item, index, navigation, ThalamHeaders }) => {
     const { theme } = useContext(ThemeContext);
     const [selectedTitle, setSelectedTitle] = useState(null);
     return (
@@ -52,7 +52,7 @@ const RenderThalam = React.memo(({ item, index, navigation, ThalamHeaders }) => 
             {
                 selectedTitle == index && (
                     <RenderTitle
-                        data={item}
+                        data={{ title: item, prevId }}
                         navigation={navigation}
                         thalam={true}
                         ThalamHeaders={ThalamHeaders}

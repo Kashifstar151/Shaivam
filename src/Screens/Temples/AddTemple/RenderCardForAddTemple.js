@@ -59,7 +59,7 @@ const StatusLabel = ({ title }) => {
             bgColor: '#60B278',
             color: '#fff',
         },
-        declined: {
+        rejected: {
             bgColor: '#FFF5F5',
             color: '#000',
         },

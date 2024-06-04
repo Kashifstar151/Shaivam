@@ -79,6 +79,11 @@ const TempleDetails = ({ navigation }) => {
                     longitudeDelta: LONGITUDE_DELTA,
                     locationName: '',
                 }}
+                userLocation={{
+                    ...route?.params?.data?.userLocation,
+                    latitudeDelta: LATITUDE_DELTA,
+                    longitudeDelta: LONGITUDE_DELTA,
+                }}
                 snapIndex={snapIndex}
                 setSnapIndex={setSnapIndex}
                 initialIndexOfSize={0}
@@ -192,16 +197,15 @@ const TempleDetails = ({ navigation }) => {
                                     templeName: temple?.templeName,
                                     flag: temple?.templeFlag,
                                     templeType: assetMapWithTempleType[temple?.templeFlag].name,
-                                    coordinate: {
-                                        latitude: temple?.templeCoordinate?.longitude,
-                                        longitude: temple?.templeCoordinate?.latitude,
-                                    },
+                                    longitude: temple?.templeCoordinate?.longitude,
+                                    latitude: temple?.templeCoordinate?.latitude,
                                 }}
-                                showButton={false}
+                                regionCoordinate={userLocation}
+                                showButton={true}
                                 showMargin={false}
                             />
 
-                            <View
+                            {/* <View
                                 style={{
                                     flex: 1,
                                     flexDirection: 'row',
@@ -233,7 +237,7 @@ const TempleDetails = ({ navigation }) => {
                                         {t('Directions')}
                                     </Text>
                                 </Pressable>
-                            </View>
+                            </View> */}
 
                             {templeDetail ? (
                                 <View style={{ marginHorizontal: 20, marginVertical: 10, gap: 8 }}>

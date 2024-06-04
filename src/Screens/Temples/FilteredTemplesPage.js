@@ -53,6 +53,7 @@ const FilteredTemplesPage = ({ navigation, route }) => {
 
     return (
         <BottomSheetTempleTemplate
+            navigation={navigation}
             snapIndex={snapIndex}
             setSnapIndex={setSnapIndex}
             snapPoints={snapPointsArray}
@@ -62,6 +63,11 @@ const FilteredTemplesPage = ({ navigation, route }) => {
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA,
                 locationName: '',
+            }}
+            userLocation={{
+                ...route?.params?.data?.userLocation,
+                latitudeDelta: LATITUDE_DELTA,
+                longitudeDelta: LONGITUDE_DELTA,
             }}
             initialIndexOfSize={1}
             disappearsOnIndex={1}

@@ -142,6 +142,7 @@ const Thalamurai = ({ navigation, prevId }) => {
                                 renderItem={({ item, index }) => (
                                     <RenderThalam
                                         item={item}
+                                        prevId={prevId}
                                         index={index}
                                         navigation={navigation}
                                         ThalamHeaders={ThalamHeaders}

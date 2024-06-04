@@ -1,5 +1,5 @@
 import { BlurView } from '@react-native-community/blur';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
     Dimensions,
     KeyboardAvoidingView,
@@ -18,8 +18,15 @@ import ButtonComp from '../Common/ButtonComp';
 import LocationLogo from '../../../components/SVGs/LocationLogo';
 import PinTheLocation from '../PinTheLocationPage';
 import LottieView from 'lottie-react-native';
+import { getTheLocationName } from '../../../Helpers/GeolocationFunc';
 
-const SelectErrorPage = ({ setShowSubmit, selectedError, navigation, setModalVisible }) => {
+const SelectErrorPage = ({
+    setShowSubmit,
+    selectedError,
+    navigation,
+    setModalVisible,
+    existingTempDetail,
+}) => {
     const theme = useColorScheme(ThemeContext);
     const [desciption, setDescription] = useState(null);
     const [phoneNumber, setphoneNumber] = useState(null);
@@ -44,6 +51,49 @@ const SelectErrorPage = ({ setShowSubmit, selectedError, navigation, setModalVis
         animationref.current?.play(30, 120);
     }, [submitted]);
 
+    const [existingLocName, setExistingLocName] = useState({
+        name: '',
+        state: 0,
+        /*
+        ? 1=> for success,
+        ? -1 => failed
+        ? 0 => loading 
+
+        */
+    });
+
+    const fetchTheLocationName = useCallback(
+        async (lat, lng) => {
+            setExistingLocName((prev) => ({ ...prev, state: 0 }));
+            const locationDetail = await getTheLocationName({
+                latitude: lat,
+                longitude: lng,
+            });
+            if (locationDetail?.status === 'SUCCESS') {
+                setExistingLocName((prev) => {
+                    return {
+                        name:
+                            locationDetail?.data?.address?.village ||
+                            locationDetail?.data?.name ||
+                            locationDetail?.data?.display_name,
+
+                        state: 1,
+                    };
+                });
+            } else if (locationDetail.status === 'FAILED') {
+                console.log('the error has occured ===>', locationDetail?.err);
+                setExistingLocName((prev) => ({ ...prev, state: -1 }));
+            }
+        },
+        [existingTempDetail?.coords.latitude, existingTempDetail?.coords.longitude]
+    );
+
+    useEffect(() => {
+        fetchTheLocationName(
+            existingTempDetail?.coords.latitude,
+            existingTempDetail?.coords.longitude
+        );
+    }, [existingTempDetail?.coords.latitude, existingTempDetail?.coords.longitude]);
     return (
         <>
             {!pinTheLocation ? (
@@ -122,7 +172,7 @@ const SelectErrorPage = ({ setShowSubmit, selectedError, navigation, setModalVis
                                             marginBottom: 15,
                                         }}
                                     >
-                                        Bramhalingeshwara
+                                        {existingTempDetail?.templeName}
                                     </Text>
                                     <Text style={styles.submitText}>Spotted an error?</Text>
                                     <Text style={styles.descriptionText}>
@@ -206,7 +256,15 @@ const SelectErrorPage = ({ setShowSubmit, selectedError, navigation, setModalVis
                                                         fontSize: 14,
                                                     }}
                                                 >
-                                                    Saraswathipuram
+                                                    {/* {existingTempDetail?.coords.latitude}
+                                                    {existingTempDetail?.coords.longitude} */}
+                                                    {existingLocName.state === 1 &&
+                                                        existingLocName?.name}
+
+                                                    {existingLocName.state === 0 && 'Loading ...'}
+
+                                                    {existingLocName.state === -1 &&
+                                                        'Some error occured while fetching !! '}
                                                 </Text>
                                             </View>
                                         </View>
@@ -316,6 +374,7 @@ const SelectErrorPage = ({ setShowSubmit, selectedError, navigation, setModalVis
                         close={() => {
                             setPinTheLocation(false);
                         }}
+                        // initialDragCoorMarker ={}
                         // setDescription={setDescription}
                         valueSetter={(value) => setDescription(value?.display_name)}
                     />

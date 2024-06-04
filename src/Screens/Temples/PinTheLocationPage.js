@@ -138,6 +138,7 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
     }, []);
 
     const mapRef = useRef();
+    const [reRender, setReRender] = useState(true);
     return (
         <View style={styles.mainContainer}>
             <MapView
@@ -227,7 +228,7 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
                             },
                             { duration: 1000 }
                         );
-
+                        setReRender(!reRender);
                         dragCoor.current = {
                             ...item,
                             latitude: parseFloat(item.lat),
