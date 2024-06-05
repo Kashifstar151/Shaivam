@@ -85,8 +85,7 @@ const AddTempleForm = ({ navigation, setStep }) => {
         <View>
             <ScrollView>
                 <ImageBackground
-                    // source={theme.colorscheme === 'light' ? bgImg : bgImgDark}
-                    source={bgImg}
+                    source={theme.colorscheme === 'light' ? bgImg : bgImgDark}
                     resizeMode="cover"
                     style={styles.imageDimension}
                 />

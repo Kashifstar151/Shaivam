@@ -1,6 +1,6 @@
 import { BlurView } from '@react-native-community/blur';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AlertSVG from '../../../../assets/Images/AlertSVG.svg';
 import { CustomLongBtn } from '../../../components/Buttons';
 import getDimension from '../../../Helpers/getDimension';
@@ -9,6 +9,8 @@ import { TextInput } from 'react-native-gesture-handler';
 import { colors } from '../../../Helpers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { RouteTexts } from '../../../navigation/RouteText';
+import BackBtnSvg from '../../../components/SVGs/BackBtnSvg';
 
 const emailReg = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
 const AddEmail = ({ setStep, setEmail, navigation }) => {
@@ -45,6 +47,17 @@ const AddEmail = ({ setStep, setEmail, navigation }) => {
                 style={styles.contentWrap}
             ></BlurView>
             <View style={styles.topWrapper}>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate(RouteTexts.TEMPLE_TABS_NAVIGATE)}
+                    style={{
+                        position: 'absolute',
+                        top: 20,
+                        left: 20,
+                    }}
+                >
+                    <BackBtnSvg width={24} height={24} fill={'#fff'} />
+                </TouchableOpacity>
+
                 <View
                     style={[
                         styles.innerWrapper,
@@ -55,6 +68,13 @@ const AddEmail = ({ setStep, setEmail, navigation }) => {
                     ]}
                 >
                     {/* <AlertSVG /> */}
+                    {/* <View
+                        style={{
+                            backgroundColor: 'red',
+                            width: '100%',
+                            flexDirection: 'row',
+                        }}
+                    > */}
                     <View
                         style={{
                             width: '100%',
@@ -69,6 +89,16 @@ const AddEmail = ({ setStep, setEmail, navigation }) => {
                             <Text style={styles.subLine}>Email is required</Text>
                         </View>
                     </View>
+
+                    {/* <View
+                            style={
+                                {
+                                    // backgroundColor: 'green',
+                                }
+                            }
+                        > */}
+                    {/* </View> */}
+                    {/* </View> */}
 
                     <TextInput
                         value={localEmail}
