@@ -1,6 +1,14 @@
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { Image, Linking, Modal, Pressable, Text, View } from 'react-native';
+import {
+    Image,
+    Linking,
+    Modal,
+    Pressable,
+    Text,
+    TouchableNativeFeedback,
+    View,
+} from 'react-native';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import DirectionSVG from '../../components/SVGs/DirectionSVG';
 import { CustomButton } from '../../components/Buttons';
@@ -12,7 +20,14 @@ import { useTranslation } from 'react-i18next';
 import templeMetaData from './AssetMapWithTempleType';
 
 //
-const TempleCard = ({ dataSet, children, regionCoordinate, showMargin, showButton }) => {
+const TempleCard = ({
+    dataSet,
+    children,
+    regionCoordinate,
+    showMargin,
+    showButton,
+    onTitleClick,
+}) => {
     const nav = useNavigation();
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedHeader, setSelectedHeader] = useState('direction');
@@ -24,6 +39,7 @@ const TempleCard = ({ dataSet, children, regionCoordinate, showMargin, showButto
         setModalVisible(true);
     };
     const { t } = useTranslation();
+    const route = useRoute();
 
     return (
         <View style={{ paddingHorizontal: 20 }}>
@@ -51,9 +67,17 @@ const TempleCard = ({ dataSet, children, regionCoordinate, showMargin, showButto
                     ) : null}
                 </Modal>
             )}
-            <Text style={{ color: 'black', fontFamily: 'Lora-Bold', fontSize: 18 }}>
-                {dataSet?.templeName}
-            </Text>
+            <Pressable
+                onPress={() => {
+                    if (route.name == 'filteredTemples') {
+                        onTitleClick();
+                    }
+                }}
+            >
+                <Text style={{ color: 'black', fontFamily: 'Lora-Bold', fontSize: 18 }}>
+                    {dataSet?.templeName}
+                </Text>
+            </Pressable>
 
             <Text style={{ color: 'black', fontFamily: 'Mulish-Regular', paddingTop: 10 }}>
                 {templeMetaData[dataSet.flag]?.name}
