@@ -5,8 +5,6 @@ import bgImgDark from '../../../../assets/Images/BackgroundCommon.png';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { ScrollView } from 'react-native-gesture-handler';
 import { CustomLongBtn } from '../../../components/Buttons';
-import BackIcon from '../../../../src/assets/Images/BackIcon.svg';
-import WhiteBackButton from '../../../../src/assets/Images/arrow (1) 1.svg';
 import KeyValueBox from './KeyValueBox';
 import { useSelector } from 'react-redux';
 import { ThemeContext } from '../../../Context/ThemeContext';
@@ -14,6 +12,7 @@ import {
     useAddTempleImagesMutation,
     useAddTempleMutation,
 } from '../../../store/features/Temple/TemplApiSlice';
+import BackBtnSvg from '../../../components/SVGs/BackBtnSvg';
 
 const PreviewPage = ({ navigation, setStep, email }) => {
     const templadata = useSelector((state) => state.temple);
@@ -31,6 +30,7 @@ const PreviewPage = ({ navigation, setStep, email }) => {
     ] = useAddTempleImagesMutation();
 
     const { theme } = useContext(ThemeContext);
+    console.log('🚀 ~ PreviewPage ~ theme:', theme.colorscheme);
     const handleOnSubmit = () => {
         addTemple({
             Name: templadata?.templeName,
@@ -113,7 +113,7 @@ const PreviewPage = ({ navigation, setStep, email }) => {
                             }}
                         >
                             <Pressable onPress={() => setStep(1)}>
-                                {theme.colorscheme !== 'light' ? <WhiteBackButton /> : <BackIcon />}
+                                {<BackBtnSvg fill={'#222222'} />}
                             </Pressable>
                             <Text
                                 style={{
