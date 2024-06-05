@@ -99,6 +99,7 @@ const BottomSheetTempleTemplate = ({
                 onChange={handleSheetChanges}
                 snapPoints={snapPoints}
                 index={initialIndexOfSize}
+                handleStyle={{ height: 40 }}
                 backdropComponent={(props) => (
                     <BottomSheetBackdrop
                         opacity={1}
