@@ -13,10 +13,10 @@ import Category9 from "../../../assets/Images/EventsImages/ic_bookmark.svg"
 
 const CategoryAssets = {
     'Festival': {
-        name: 'Festivals',
+        name: 'Festival',
         Svg: <Category2 />
     },
-    'Discource': {
+    'Discourse': {
         name: 'Discource',
         Svg: <Category3 />
     },

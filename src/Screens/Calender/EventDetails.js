@@ -179,7 +179,7 @@ const EventDetails = ({ navigation, route }) => {
                         />
                     }
                     {
-                        item?.attributes?.virtual_event_link !== null &&
+                        item?.attributes?.virtual_event_link && item?.attributes?.virtual_event_link !== null &&
                         <CustomButton
                             svg={<DirectionSVG fill={'#fff'} />}
                             onPress={() => {
@@ -193,7 +193,7 @@ const EventDetails = ({ navigation, route }) => {
                                 shadowColor: 'black',
                                 width: Dimensions.get('window').width / 2.4,
                             }}
-                            text={t('Directions')}
+                            text={t('Virtual Event')}
                             backgroundColor={'#C1554E'}
                             textColor={'#fff'}
                         />

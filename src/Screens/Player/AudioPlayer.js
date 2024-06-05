@@ -123,7 +123,7 @@ const AudioPlayer = ({
                 activeTrack?.url &&
                 duration !== 0 &&
                 new Date(position * 1000).toISOString().substring(14, 19) >=
-                    new Date(duration * 1000).toISOString().substring(14, 19)
+                new Date(duration * 1000).toISOString().substring(14, 19)
             ) {
                 queryForNextPrevId();
             }
@@ -197,7 +197,7 @@ const AudioPlayer = ({
                         }
                     );
                 })
-                .catch((err) => {});
+                .catch((err) => { });
         });
     };
     const { position, duration } = useProgress();
@@ -411,13 +411,13 @@ const AudioPlayer = ({
                 style={
                     orientation == 'LANDSCAPE' || !visibleStatusBar
                         ? {
-                              width: !(orientation == 'LANDSCAPE')
-                                  ? Dimensions.get('window').width
-                                  : Dimensions.get('window').width / 2,
-                              backgroundColor: '#222222',
-                              height: 70,
-                              alignItems: 'center',
-                          }
+                            width: !(orientation == 'LANDSCAPE')
+                                ? Dimensions.get('window').width
+                                : Dimensions.get('window').width / 2,
+                            backgroundColor: '#222222',
+                            height: 70,
+                            alignItems: 'center',
+                        }
                         : { backgroundColor: '#222222', height: 200 }
                 }
             >
@@ -450,7 +450,7 @@ const AudioPlayer = ({
                                         index={index}
                                         clb={playById}
                                         activeTrack={downloaded ? downloadSong : activeTrack}
-                                        // downloadAudioIndex={downloadSongIndex}
+                                    // downloadAudioIndex={downloadSongIndex}
                                     />
                                 )}
                             />
@@ -465,51 +465,50 @@ const AudioPlayer = ({
                             justifyContent: 'space-between',
                             paddingHorizontal: 10,
                             width: '100%',
-                            flex: 1,
+                            // flex: 1,
                         }}
                     >
-                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-                            <View
-                                style={{
-                                    height: 50,
-                                    width: 50,
-                                    backgroundColor: colors.grey7,
-                                    marginHorizontal: 5,
-                                    borderRadius: 10,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <MusicIcon />
-                            </View>
-                            <View>
-                                <Text
-                                    style={[
-                                        styles.AudioText,
-                                        { fontWeight: '700', color: '#FFFFFF' },
-                                    ]}
-                                >
-                                    {activeTrack?.thalamOdhuvarTamilname}
-                                </Text>
-                                <Text
-                                    style={[
-                                        styles.AudioText,
-                                        { fontWeight: '400', color: '#FFFFFF', fontSize: 12 },
-                                    ]}
-                                >
-                                    {activeTrack?.title}
-                                </Text>
-                            </View>
-                            {/* </TouchableOpacity> */}
+                        {/* <View style={{ flexDirection: 'row', alignItems: 'center', gap: 0, backgroundColor: 'red' }}> */}
+                        <View
+                            style={{
+                                height: 50,
+                                width: 50,
+                                backgroundColor: colors.grey7,
+                                marginHorizontal: 5,
+                                borderRadius: 10,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <MusicIcon />
                         </View>
+                        <View style={{ width: '55%', }}>
+                            <Text
+                                style={[
+                                    styles.AudioText,
+                                    { fontWeight: '700', color: '#FFFFFF' },
+                                ]}
+                            >
+                                {activeTrack?.thalamOdhuvarTamilname}
+                            </Text>
+                            <Text
+                                style={[
+                                    styles.AudioText,
+                                    { fontWeight: '400', color: '#FFFFFF', fontSize: 12 },
+                                ]}
+                            >
+                                {activeTrack?.title}
+                            </Text>
+                        </View>
+                        {/* </TouchableOpacity> */}
+                        {/* </View> */}
                         <View style={{}}>
                             <View
                                 style={{
                                     flexDirection: 'row',
                                     alignItems: 'center',
-                                    width: '50%',
-                                }}
-                            >
+                                    width: 'auto',
+                                }}>
                                 <TouchableOpacity onPress={() => handlePrevious()}>
                                     <Icon name="stepbackward" size={24} color="white" />
                                 </TouchableOpacity>
@@ -523,7 +522,7 @@ const AudioPlayer = ({
                                                 backgroundColor: '#FAF8FF',
                                                 justifyContent: 'center',
                                                 alignItems: 'center',
-                                                marginHorizontal: 30,
+                                                marginHorizontal: 10,
                                             }}
                                         >
                                             <Icon name="pause" size={32} color="black" />
@@ -538,7 +537,7 @@ const AudioPlayer = ({
                                             // backgroundColor: '#FAF8FF',
                                             justifyContent: 'center',
                                             alignItems: 'center',
-                                            marginHorizontal: 30,
+                                            marginHorizontal: 10,
                                         }}
                                         onPress={() => handlePlay(playBackState)}
                                     >
