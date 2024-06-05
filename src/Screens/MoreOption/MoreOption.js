@@ -62,7 +62,7 @@ const MoreOption = () => {
         // },
         {
             title: 'Go to website',
-            Description: 'Your Selection',
+            Description: 'Shaivam.org',
             icon: <GoToWebSVG fill={'#333333'} />,
         },
         // {

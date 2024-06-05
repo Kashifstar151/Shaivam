@@ -147,24 +147,44 @@ const EventDetails = ({ navigation, route }) => {
                 <Text
                     style={{ color: '#777777', fontFamily: 'Mulish-Regular', marginHorizontal: 10 }}
                 >
-                    {item?.attributes?.category}
+                    {item?.attributes?.event_category}
                 </Text>
                 <View style={{ flexDirection: 'row', marginVertical: 5 }}>
                     {
-                        item?.attributes?.Latitude && item?.attributes?.Longitude &&
+                        item?.attributes?.latitude && item?.attributes?.longitude &&
                         <CustomButton
                             svg={<DirectionSVG fill={'#fff'} />}
                             onPress={() => {
                                 const sourceLatitude = parseFloat(regionCoordinate?.latitude); // Example source latitude
                                 const sourceLongitude = parseFloat(regionCoordinate?.longitude); // Example source longitude
-                                const destinationLatitude = parseFloat(eventData?.attributes?.Latitude); // Example destination latitude
-                                const destinationLongitude = parseFloat(eventData?.attributes?.Longitude); // Example destination longitude
+                                const destinationLatitude = parseFloat(eventData?.attributes?.latitude); // Example destination latitude
+                                const destinationLongitude = parseFloat(eventData?.attributes?.longitude); // Example destination longitude
                                 const googleMapsUrl = `geo:${sourceLatitude},${sourceLongitude}?q=${destinationLatitude},${destinationLongitude}`;
                                 Linking.openURL(googleMapsUrl).catch((err) => {
                                     console.log('the map is not avialable');
                                     const googleMapsUrlFallBack = `https://www.google.com/maps/dir/?api=1&origin=${sourceLatitude},${sourceLongitude}&destination=${destinationLatitude},${destinationLongitude}`;
                                     Linking.openURL(googleMapsUrlFallBack);
                                 });
+
+                            }}
+                            style={{
+                                margin: 10,
+                                elevation: 3,
+                                shadowColor: 'black',
+                                width: Dimensions.get('window').width / 2.4,
+                            }}
+                            text={t('Directions')}
+                            backgroundColor={'#C1554E'}
+                            textColor={'#fff'}
+                        />
+                    }
+                    {
+                        item?.attributes?.virtual_event_link !== null &&
+                        <CustomButton
+                            svg={<DirectionSVG fill={'#fff'} />}
+                            onPress={() => {
+
+                                Linking.openURL('https://meet.google.com/')
 
                             }}
                             style={{

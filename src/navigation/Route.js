@@ -370,12 +370,10 @@ const Route = () => {
                             }}
                         />
                         <Stack.Screen name={'filteredTemples'} component={FilteredTemplesPage} />
-                        <Stack.Screen name={RouteTexts.RADIO} component={Radios} />
                         <Stack.Screen name={RouteTexts.OM_CHANTING} component={OmChanting} />
                         <Stack.Screen name={RouteTexts.FESTIVAL_VIDEO} component={FestivalVideo} />
                         <Stack.Screen name={RouteTexts.SEND_FESTIVAL_VIDEO} component={SendFestivalEvent} />
-                        {/* <Stack.Screen name={'PinTheLocation'} component={PinTheLocation} /> */}
-                        {/* <Stack.Screen name={'templeDetails'} component={TempleDetails} /> */}
+                        <Stack.Screen name={RouteTexts.RADIO} component={Radios} />
                     </Stack.Navigator>
                 </NavigationContainer>
             )}

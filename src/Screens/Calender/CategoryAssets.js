@@ -24,7 +24,7 @@ const CategoryAssets = {
         name: 'Discource',
         Svg: <Category4 />
     },
-    'Parayanam/Recitation': {
+    'Parayanam / Recitation': {
         name: 'Discource',
         Svg: <Category5 />
     },

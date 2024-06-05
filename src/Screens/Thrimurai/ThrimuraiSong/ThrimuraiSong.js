@@ -48,11 +48,14 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import { listfavAudios } from '../../../Databases/AudioPlayerDatabase';
 import SettingsSVG from '../../../components/SVGs/SettingsSVG';
 import { useNetInfo, addEventListener } from "@react-native-community/netinfo";
+import dynamicLinks from '@react-native-firebase/dynamic-links';
 
 const ThrimuraiSong = ({ route, navigation }) => {
     const isFocused = useIsFocused;
     const { data, downloaded, searchedword, downloadSong, searchScreen, songNo } =
         route.params || {};
+    const { isConnected } = useNetInfo()
+    console.log("🚀 ~ ThrimuraiSong ~ isConnected:", isConnected)
     // console.log('🚀 ~ ThrimuraiSong ~ route.params:', searchScreen);
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
@@ -66,11 +69,13 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const [language, setLang] = useState(['Original', 'Tamil', 'English', 'Hindi']);
     const [selectedLang, setSelectedLang] = useState('Original');
     const [fontSizeCount, setFontSizeCount] = useState(null);
-    const [isconnected, setIsConnected] = useState(false)
+    const [isconnected, setIsConnected] = useState(isConnected)
     const [showAudioPlayer, setShowAudioPlayer] = useState(false)
+    const [deeplink, setDeeplink] = useState(null)
     // const [refFlatList, setRefFlatList] = useState(null);
     const flatListRef = useRef(null);
     const firstRender = useRef(true);
+
 
     const initializeTheFontSize = async () => {
         const value = await AsyncStorage.getItem('@lyricsFontSize');
@@ -82,23 +87,38 @@ const ThrimuraiSong = ({ route, navigation }) => {
         }
     };
     useEffect(() => {
-        // LogBox.ignoreAllLogs();
+        buildLink()
+    }, [])
+    // const { isConnected } = useNetInfo()
+    useEffect(() => {
+
         const unsubscribe = addEventListener((state) => {
             if (state.isConnected) {
                 setIsConnected(true);
+                // checkConditionForPlayer(state.isConnected);
             }
         });
         return unsubscribe();
-        checkConditionForPlayer()
     }, []);
+    useEffect(() => {
+        // console.log("🚀 ~ useEffect ~ isconnected:", isconnected)
+        // if (isconnected) {
+        checkConditionForPlayer();
+        // }
+    }, [isConnected]);
+
 
     const checkConditionForPlayer = () => {
-        console.log('res?.url?.substring(0,5)', res?.url?.substring(0, 5))
         TrackPlayer.getActiveTrack().then((res) => {
-            if (res?.url) {
-                if (isconnected && res?.url?.substring(0, 5) == 'file') {
-
+            // console.log('res?.url?.substring(0,5)', res?.url?.substring(0, 5), isConnected)
+            if (isConnected) {
+                if (res?.url?.substring(0, 5) == 'https') {
+                    // if (isConnected) {
+                    setShowAudioPlayer(true)
+                    // }
                 }
+            } else if (res?.url?.substring(0, 5) == 'file:') {
+                setShowAudioPlayer(true)
             }
         }).catch((err) => {
             console.log("🚀 ~ TrackPlayer.getActiveTrack ~ err:", err)
@@ -153,11 +173,34 @@ const ThrimuraiSong = ({ route, navigation }) => {
     }, [flatListRef, activeTrackState?.url]);
     useEffect(() => {
         // console.log('🚀 ~ useEffect ~ initilizeTheTheme: 1');
+
         initilizeTheTheme();
         firstRender.current = false;
     }, []);
     const [favList, setFavList] = useState(null);
-
+    async function buildLink() {
+        // alert(true)
+        const link = await dynamicLinks().buildShortLink({
+            link: `https://shaivaam.page.link/org?prevId=${data?.prevId}`,
+            domainUriPrefix: 'https://shaivaam.page.link',
+            ios: {
+                appStoreId: '1575138510',
+                bundleId: 'com.Shaivam.shaivam',
+                minimumVersion: '18',
+            },
+            android: {
+                packageName: 'org.shaivam'
+            }
+            // optional setup which updates Firebase analytics campaign
+            // "banner". This also needs setting up before hand
+        },
+            dynamicLinks.ShortLinkType.DEFAULT,
+        );
+        console.log("🚀 ~ buildLink ~ link:", link)
+        setDeeplink(link)
+        // console.log("🚀 ~ link ~ link:", `https://shaivaam.page.link/org?eventId=${item?.attributes?.schedula_type ? 'recurring_' + item?.attributes?.id : 'regular_' + item?.attributes?.id}`)
+        return link;
+    }
     useEffect(() => {
         fetchAndDisplayDownloads();
         getFavAudios();
@@ -174,7 +217,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     }, []);
     const [repeatMode, setRepeatMode] = useState();
     const { musicState, dispatchMusic } = useContext(MusicContext);
-    console.log('🚀 ~ ThrimuraiSong ~ musicState:', JSON.stringify(musicState, 0, 2));
+    // console.log('🚀 ~ ThrimuraiSong ~ musicState:', JSON.stringify(musicState, 0, 2));
     const [darkMode, setDarkMode] = useState();
     const [tamilSplit, setTamilSplit] = useState(false);
     // const { theme, setTheme } = useContext(ThemeContext);
@@ -536,9 +579,10 @@ GROUP BY
     });
 
     const setAndroidClipBoard = useCallback(async (initialString) => {
+        let link = await buildLink()
         if (!initialString.includes('Read more at https://shaivaam.page')) {
             clipBoardStringRef.current = initialString;
-            clipBoardStringRef.current += ` Read more at https://shaivaam.page.link/org?prevId=${musicState?.prevId}`;
+            clipBoardStringRef.current += ` Read more at ${link}`;
             Clipboard.setString(clipBoardStringRef.current);
         }
     }, []);
@@ -1129,7 +1173,7 @@ GROUP BY
                         }}
                     ></TouchableOpacity>
                 </View>
-                {isconnected && activeTrackState?.url && (
+                {activeTrackState?.url && isConnected || downloaded ? (
                     <AudioPlayer
                         activeTrack={activeTrackState}
                         setDownloadingLoader={setDownloadingLoader}
@@ -1146,7 +1190,7 @@ GROUP BY
                         queryForPreviousPrevId={queryForPreviousPrevId}
                         downloadSong={downloadSong}
                     />
-                )}
+                ) : <></>}
             </Animated.View>
 
             {/* </BottomSheet> */}

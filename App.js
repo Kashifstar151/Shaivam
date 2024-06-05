@@ -14,14 +14,12 @@ import NavigationServices from './src/navigation/NavigationServices';
 import { RouteTexts } from './src/navigation/RouteText';
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import PushNotification, { Importance } from "react-native-push-notification";
+import Radios from './src/Screens/Radio/Radios';
 
 const App = () => {
     useEffect(() => {
         enableLatestRenderer();
         initialUrl()
-        const unsubscribe = dynamicLinks().onLink(HandleDynamicLink);
-        // When the component is unmounted, remove the listener
-        return () => unsubscribe();
     }, []);
     const initialUrl = async () => {
         await dynamicLinks()
@@ -30,10 +28,12 @@ const App = () => {
                 HandleDynamicLink(link);
             });
         const linkingListener = dynamicLinks().onLink(HandleDynamicLink);
-        return () => linkingListener();
+        return () => {
+            linkingListener();
+        };
     };
     const HandleDynamicLink = link => {
-        // console.log("🚀 ~ HandleDynamicLink ~ link:", link)
+        console.log("🚀 ~ HandleDynamicLink ~ link:", link)
         const getId = link?.url?.split('=').pop()
         // console.log("🚀 ~ HandleDynamicLink ~ getId:", getId)
         // if (link !== null) {
@@ -64,10 +64,20 @@ const App = () => {
         // Handle dynamic link inside your own application
 
     };
+    useEffect(() => {
+        // console.log("🚀 ~ useEffect ~ permission:", permission)
+
+    }, [])
 
 
 
+    useEffect(() => {
+        checkPermissionAccess()
+        const unsubscribe = dynamicLinks().onLink(HandleDynamicLink);
+        // When the component is unmounted, remove the listener
+        return () => unsubscribe();
 
+    }, []);
     const checkPermissionAccess = async () => {
         const permission = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);;
         console.log("🚀 ~ checkPermissionAccess ~ permission:", permission)
@@ -77,8 +87,8 @@ const App = () => {
             <ThemeContextProvider>
                 <SafeAreaView style={{ flex: 1 }}>
                     <GestureHandlerRootView style={{ flex: 1 }}>
-
                         <Route />
+                        {/* <Radios /> */}
                     </GestureHandlerRootView>
                 </SafeAreaView>
             </ThemeContextProvider>
