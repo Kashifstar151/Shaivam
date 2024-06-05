@@ -40,16 +40,12 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
     const LONGITUDE_DELTA = LATITUDE_DELTA * (screenWidth / screenHeight);
 
     const [userLocation, setUserLocation] = useState({
-        latitude: 28.500271,
-        longitude: 77.387901,
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
     });
 
     const [padState, setPadState] = useState(1);
     const dragCoor = useRef({
-        latitude: 28.500271,
-        longitude: 77.387901,
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
     });
@@ -64,8 +60,11 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
         async (coors) => {
             // console.log('the location fetch enters  ');
             if (coors?.latitude && coors?.longitude) {
-                // console.log('the location is fetching  ');
-                const locationDetail = await getTheLocationName({ ...dragCoor.current });
+                const locationDetail = await getTheLocationName({
+                    latitude: coors?.latitude,
+                    longitude: coors?.longitude,
+                    ...dragCoor.current,
+                });
                 console.log('the location  fetching  is done', locationDetail);
                 if (locationDetail.status === 'SUCCESS') {
                     setUserLocName((prev) => {
@@ -148,8 +147,13 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
                         setPadState(!padState);
                     }, 5000)
                 }
+                initialRegion={{
+                    longitude: 77.40369287235171,
+                    latitude: 28.49488467262243,
+                    latitudeDelta: LATITUDE_DELTA,
+                    longitudeDelta: LONGITUDE_DELTA,
+                }}
                 provider={PROVIDER_GOOGLE}
-                initialRegion={userLocation}
                 style={styles.map}
                 // onRegionChangeComplete={(args, gesture) => {
                 //     if (gesture.isGesture) {
