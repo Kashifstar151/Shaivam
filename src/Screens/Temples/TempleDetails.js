@@ -180,6 +180,7 @@ const TempleDetails = ({ navigation }) => {
                                 dataSet={{
                                     templeName: temple?.templeName,
                                     flag: temple?.templeFlag,
+                                    id: temple?.templeId,
                                     templeType: assetMapWithTempleType[temple?.templeFlag].name,
                                     longitude: temple?.templeCoordinate?.longitude,
                                     latitude: temple?.templeCoordinate?.latitude,
