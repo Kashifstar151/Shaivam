@@ -11,6 +11,7 @@ import {
 } from '../../store/features/Temple/TemplApiSlice';
 import { RFValue } from 'react-native-responsive-fontsize';
 import getDimension from '../../Helpers/getDimension';
+import { markerPressClbk } from './CallBacksForClick';
 
 const snapPointsArray = ['10%', '50%', '95%'];
 const snapMap = {
@@ -94,6 +95,13 @@ const FilteredTemplesPage = ({ navigation, route }) => {
                                 regionCoordinate={route?.params?.data?.regionCoordinate}
                                 showButton={true}
                                 showMargin={true}
+                                onTitleClick={() => {
+                                    markerPressClbk(navigation, item?.flag, item, {
+                                        ...route?.params?.data?.userLocation,
+                                        latitudeDelta: LATITUDE_DELTA,
+                                        longitudeDelta: LONGITUDE_DELTA,
+                                    });
+                                }}
                             />
                         ))}
                     </ScrollView>
