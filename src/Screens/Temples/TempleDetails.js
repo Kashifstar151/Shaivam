@@ -303,7 +303,7 @@ const TempleDetails = ({ navigation }) => {
                                             paddingVertical: 10,
                                         }}
                                     >
-                                        Temple Description
+                                        {t('Temple Description')}
                                     </Text>
 
                                     <AutoHeightWebView
