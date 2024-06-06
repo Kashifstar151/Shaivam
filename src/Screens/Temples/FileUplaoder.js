@@ -180,7 +180,12 @@ const FileUplaoder = ({ setModalVisible, id, dataSet }) => {
                     {/* <View style={{ paddingHorizontal: 10, height: 120 }}> */}
                     {images?.length > 0 ? (
                         <FlatList
-                            contentContainerStyle={{ marginBottom: 20, height: 120, flex: 1 }}
+                            contentContainerStyle={{
+                                marginHorizontal: 10,
+                                marginBottom: 20,
+                                height: 120,
+                                flex: 1,
+                            }}
                             horizontal
                             data={images}
                             renderItem={({ item, index }) => RenderImage(item)}

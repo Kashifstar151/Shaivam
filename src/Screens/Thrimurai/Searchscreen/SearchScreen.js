@@ -52,11 +52,18 @@ const SearchScreen = ({ navigation, route }) => {
         setRecentKeywords(JSON.parse(data))
     }
     const normalizeString = (str) => {
-        setSearchText(str.normalize('NFD').replace(/[\u0300-\u036f]/g, ''));
-        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        setSearchText(
+            str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            // .replace(/\s/g, '')
+        );
+        return str
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/\s/g, '');
     };
     const getDataFromSql = (searchText) => {
         setIsSearched(false);
+        setSignal(true);
         if (searchText && searchText.length >= 3) {
             getSqlData(
                 `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${normalizeString(
@@ -113,9 +120,11 @@ const SearchScreen = ({ navigation, route }) => {
     //     );
     // };
 
+    const [signal, setSignal] = useState(false);
     const highlight = (item, index, key) => {
         const textContent = key === 'title' ? item?.title : item?.rawSong;
-        // const parts = textContent.split('\r\n');
+        console.log('🚀 ~ highlight ~ textContent:', textContent);
+
         return (
             <View
                 style={{
@@ -124,7 +133,7 @@ const SearchScreen = ({ navigation, route }) => {
                     flexWrap: 'wrap',
                 }}
             >
-                <HighlightText
+                {/* <HighlightText
                     style={{
                         fontFamily: 'AnekTamil-Bold',
                         fontSize: 14,
@@ -139,6 +148,18 @@ const SearchScreen = ({ navigation, route }) => {
                     }}
                     searchWords={[`${searchText}`]}
                     textToHighlight={textContent}
+                    autoEscape={true}
+                    // sanitize={(text) => {
+                    //     console.log('the sanitize string ==>', text);
+                    //     return text.split('').join('\\s*');
+                    // }}
+                /> */}
+
+                <HighlightedText
+                    setSignal={setSignal}
+                    signal={signal}
+                    text={textContent}
+                    highlight={searchText}
                 />
                 {/* {key == 'title'
                     ? parts?.map((statement, i) => {

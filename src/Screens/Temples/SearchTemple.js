@@ -3,7 +3,6 @@ import { Keyboard, Pressable, StyleSheet, TouchableWithoutFeedback } from 'react
 import { View, Text, TextInput } from 'react-native';
 import SearchSVG from '../../components/SVGs/SearchSVG';
 import { useNavigation } from '@react-navigation/core';
-import BackBtnSvg from '../../components/SVGs/BackBtnSvg';
 import { StackActions } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { useDebouncer } from '../../Helpers/useDebouncer';
@@ -11,6 +10,7 @@ import getDimension from '../../Helpers/getDimension';
 import { ScrollView } from 'react-native-gesture-handler';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import * as RNLocalize from 'react-native-localize';
+// import BackBtnSVG from '../../components/SVGs/BackBtnSvg';
 
 const SearchTemple = ({
     setRegionCoordinate,
@@ -47,8 +47,7 @@ const SearchTemple = ({
     const searchResultData = async () => {
         return await fetch(
             // `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${debounceVal}&key=${'AIzaSyC9Esy5cuOwL4OsSxPuhOet3ky5cKI8J1k'}&language=en`,
-            `https://nominatim.openstreetmap.org/search?format=json&q=${debounceVal}&accept-language=${
-                RNLocalize.getLocales().map((locale) => locale.languageCode)[0]
+            `https://nominatim.openstreetmap.org/search?format=json&q=${debounceVal}&accept-language=${RNLocalize.getLocales().map((locale) => locale.languageCode)[0]
             }`,
 
             {
@@ -133,7 +132,7 @@ const SearchTemple = ({
                             navigation.dispatch(popAction);
                         }}
                     >
-                        <BackBtnSvg />
+                        {/* <BackBtnSVG /> */}
                     </Pressable>
                 )}
                 <TextInput

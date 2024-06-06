@@ -26,7 +26,7 @@ const Notification = ({ navigation }) => {
         })
     }
     const removeItem = (index, item) => {
-        setRemoveAbleItem(index)
+        setRemoveAbleItem(item)
         setUndo(false)
         setShowUndoBox(true)
         setNotificationList(currentList => currentList.filter((_, i) => i !== index));
@@ -37,11 +37,12 @@ const Notification = ({ navigation }) => {
     useEffect(() => {
         if (undo) {
             getScheduleNotification()
-            // alert(false)
         } else {
             if (!showUndoBox && removeAbleItem !== null) {
-                // alert(true)
-
+                console.log('🚀 ~ useEffect ~ callbacks:', removeAbleItem?.id)
+                PushNotification.cancelLocalNotification(removeAbleItem?.id, callbacks => {
+                    console.log("🚀 ~ useEffect ~ callbacks:", callbacks)
+                })
             }
         }
     }, [undo, showUndoBox])

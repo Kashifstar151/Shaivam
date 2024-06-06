@@ -117,7 +117,7 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
                     },
                 };
             },
-            invalidatesTags: ['Add_Temple_Records'],
+            invalidatesTags: ['Add_Temple_Records', 'TempleDetail'],
         }),
 
         getAddedTempleOnEmail: builder.query({

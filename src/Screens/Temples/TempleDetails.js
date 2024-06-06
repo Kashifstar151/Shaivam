@@ -21,6 +21,8 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import DirectionSVG from '../../components/SVGs/DirectionSVG';
 import { TouchableHighlight } from '@gorhom/bottom-sheet';
 import getDimension from '../../Helpers/getDimension';
+// import WebView from 'react-native-webview';
+import AutoHeightWebView from 'react-native-autoheight-webview';
 
 const TempleDetails = ({ navigation }) => {
     const route = useRoute();
@@ -173,29 +175,12 @@ const TempleDetails = ({ navigation }) => {
                         </View>
                     </View>
                     <ScrollView style={{ marginHorizontal: 0 }}>
-                        {/* <WebView
-                            originWhitelist={['*']}
-                            source={{ html: data?.attributes?.Specialities_Description }}
-                            containerStyle={
-                                {
-                                    // flex: 0,
-                                    // height: 200,
-                                }
-                            }
-                            style={
-                                {
-                                    // flex: 0,
-                                    // height: '100%',
-                                    // width: '100%',
-                                }
-                            }
-                        /> */}
-
                         <View>
                             <TempleCard
                                 dataSet={{
                                     templeName: temple?.templeName,
                                     flag: temple?.templeFlag,
+                                    id: temple?.templeId,
                                     templeType: assetMapWithTempleType[temple?.templeFlag].name,
                                     longitude: temple?.templeCoordinate?.longitude,
                                     latitude: temple?.templeCoordinate?.latitude,
@@ -268,16 +253,63 @@ const TempleDetails = ({ navigation }) => {
                                         Temple Description
                                     </Text>
 
-                                    <RenderHTML
+                                    {/* <RenderHTML
                                         contentWidth={Dimensions.get('window').width - 20}
                                         source={{ html: templeDetail?.Sthala_Puranam_Description }}
+                                        enableExperimentalMarginCollapsing={true}
+                                    /> */}
+
+                                    <AutoHeightWebView
+                                        style={{
+                                            width: Dimensions.get('window').width - 15,
+                                            marginTop: 35,
+                                        }}
+                                        // style={{
+                                        //     backgroundColor: 'green',
+                                        //     height: '100%',
+                                        //     width: '100%',
+                                        // }}
+                                        originWhitelist={['*']}
+                                        source={{
+                                            html: templeDetail?.Sthala_Puranam_Description,
+                                        }}
+                                        // containerStyle={{
+                                        //     flex: 1,
+                                        //     minHeight: Dimensions.get('window').height,
+                                        // }}
+                                        // injectedJavaScript={`const meta = document.createElement('meta'); meta.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=2.0'); meta.setAttribute('name', 'viewport'); document.getElementsByTagName('head')[0].appendChild(meta); `}
+                                        // scalesPageToFit={true}
                                     />
 
-                                    <RenderHTML
+                                    {/* <RenderHTML
                                         contentWidth={Dimensions.get('window').width}
                                         source={{
                                             html: templeDetail?.Specialities_Description,
                                         }}
+                                        enableExperimentalMarginCollapsing={true}
+                                    /> */}
+
+                                    <AutoHeightWebView
+                                        style={{
+                                            width: Dimensions.get('window').width - 15,
+                                            marginTop: 35,
+                                        }}
+                                        originWhitelist={['*']}
+                                        source={{
+                                            html: templeDetail?.Specialities_Description,
+                                        }}
+                                        // containerStyle={{
+                                        //     flex: 1,
+                                        //     minHeight: Dimensions.get('window').height,
+                                        // }}
+                                        // injectedJavaScript={`const meta = document.createElement('meta'); meta.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=2.0'); meta.setAttribute('name', 'viewport'); document.getElementsByTagName('head')[0].appendChild(meta); `}
+                                        // scalesPageToFit={false}
+                                        // scalesPageToFit={true}
+                                        // style={{
+                                        //     backgroundColor: 'red',
+                                        //     height: '100%',
+                                        //     width: '100%',
+                                        // }}
                                     />
                                 </View>
                             ) : (
