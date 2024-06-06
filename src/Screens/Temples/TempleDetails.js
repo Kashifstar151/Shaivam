@@ -295,16 +295,18 @@ const TempleDetails = ({ navigation }) => {
                                         )
                                     )}
 
-                                    <Text
-                                        style={{
-                                            color: 'black',
-                                            fontFamily: 'Mulish-Bold',
-                                            fontSize: 18,
-                                            paddingVertical: 10,
-                                        }}
-                                    >
-                                        {t('Temple Description')}
-                                    </Text>
+                                    {templeDetail?.Sthala_Puranam_Description && (
+                                        <Text
+                                            style={{
+                                                color: 'black',
+                                                fontFamily: 'Mulish-Bold',
+                                                fontSize: 18,
+                                                paddingVertical: 10,
+                                            }}
+                                        >
+                                            {t('Temple Description')}
+                                        </Text>
+                                    )}
 
                                     <AutoHeightWebView
                                         style={{
@@ -319,10 +321,22 @@ const TempleDetails = ({ navigation }) => {
                                         }}
                                     />
 
+                                    {templeDetail?.Specialities_Description && (
+                                        <Text
+                                            style={{
+                                                color: 'black',
+                                                fontFamily: 'Mulish-Bold',
+                                                fontSize: 18,
+                                                paddingVertical: 10,
+                                            }}
+                                        >
+                                            {t('Specialities ')}
+                                        </Text>
+                                    )}
+
                                     <AutoHeightWebView
                                         style={{
                                             width: Dimensions.get('window').width - 15,
-                                            marginTop: 35,
                                         }}
                                         originWhitelist={['*']}
                                         source={{
