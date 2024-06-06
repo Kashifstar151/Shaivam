@@ -42,12 +42,12 @@ const EventDetails = ({ navigation, route }) => {
                 // console.log("🚀 ~ getReccuringById ~ result:", result)
                 setEventData(result?.data?.data)
             }).catch((err) => {
-                console.log("🚀 ~ getReccuringById ~ err:", err)
+                // console.log("🚀 ~ getReccuringById ~ err:", err)
                 setEventData(result?.data?.data)
             });
         } else {
             GetRegularById({ data: item?.split('_')[1] }).then((result) => {
-                console.log("🚀 ~ getRegularById ~ result:", result)
+                // console.log("🚀 ~ getRegularById ~ result:", result)
 
             }).catch((err) => {
                 console.log("🚀 ~ getRegularById ~ err:", err)
@@ -106,6 +106,7 @@ const EventDetails = ({ navigation, route }) => {
         PushNotification.localNotificationSchedule({
             channelId: 'Event',
             title: item?.title,
+            category: item?.event_category,
             date: new Date(item?.start_date ? item?.start_date : item?.attributes?.start_date + 120 * 1000),
             message: item?.attributes?.title,
             id: item?.id,
@@ -268,11 +269,13 @@ const EventDetails = ({ navigation, route }) => {
                         renderItem={({ item, index }) => (
                             <Image
                                 source={
-                                    item?.url
-                                        ? { url: item?.url }
-                                        : require('../../assets/Images/Background.png')
+                                    { uri: item?.url }
+                                    // item?.url
+                                    //     ? { url: item?.url }
+                                    //     : require('../../assets/Images/Background.png')
                                 }
-                                style={{ color: 'black', width: 200, height: 130, borderRadius: 8 }}
+                                resizeMode='cover'
+                                style={{ width: 200, height: 130, borderRadius: 8 }}
                             />
                         )}
                     />
