@@ -281,7 +281,7 @@ const EventDetails = ({ navigation, route }) => {
                     />
                 </View>
             </ScrollView>
-            <View style={{ position: 'absolute', bottom: 30, paddingHorizontal: 20 }}>
+            <View style={{ position: 'absolute', bottom: 20, paddingHorizontal: 20, backgroundColor: '#fff' }}>
                 <ReminderSnackBar setRecurringEvent={setNotification} recurringEvent={notificationOn} />
             </View>
         </View>

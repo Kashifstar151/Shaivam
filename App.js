@@ -1,20 +1,16 @@
 import { NavigationContainer } from '@react-navigation/native';
 import React, { useEffect } from 'react';
-import { StatusBar, View, useColorScheme, Dimensions, Platform, PermissionsAndroid } from 'react-native';
+import { PermissionsAndroid } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Route from './src/navigation/Route';
-import HomeScreen from './src/Screens/Home/HomeScreen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import SQLite from 'react-native-sqlite-storage';
 import { ThemeContextProvider } from './src/Context/ThemeContext';
 import { enableLatestRenderer } from 'react-native-maps';
 import StoreProvider from './src/store/storeProvider';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import NavigationServices from './src/navigation/NavigationServices';
 import { RouteTexts } from './src/navigation/RouteText';
-import PushNotificationIOS from "@react-native-community/push-notification-ios";
-import PushNotification, { Importance } from "react-native-push-notification";
-import Radios from './src/Screens/Radio/Radios';
+import KeepAwake from 'react-native-keep-awake';
 
 const App = () => {
     useEffect(() => {
@@ -65,9 +61,14 @@ const App = () => {
 
     };
     useEffect(() => {
-        // console.log("🚀 ~ useEffect ~ permission:", permission)
+        // Activate keep awake when component mounts
+        KeepAwake.activate();
 
-    }, [])
+        // Deactivate keep awake when component unmounts
+        return () => {
+            KeepAwake.deactivate();
+        };
+    }, []);
 
 
 

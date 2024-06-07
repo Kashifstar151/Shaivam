@@ -265,6 +265,7 @@ const Calender = ({ navigation }) => {
         setMainData([])
         // alert('main data')
         let today = []
+        let week = []
         const allEvents = []
         if (weekly) {
             for (let w of weekly) {
@@ -287,12 +288,14 @@ const Calender = ({ navigation }) => {
         setShowLoader(false)
         sortedEvents?.map((item) => {
             if (moment() >= moment(item?.start_date) && moment() <= moment(item?.end_date)) {
-                // setTodayEvent(prev => [...prev, item])
                 today.push(item)
             }
-
+            if (moment().isSame(moment(item?.start_date), 'week')) {
+                week.push(item)
+            }
         })
         setTodayEvent(today)
+        setWeekEvent(week)
         // setMainData(sortedEvents);
     }, [changed]);
 
@@ -674,6 +677,45 @@ const Calender = ({ navigation }) => {
                             </View>
                             <FlatList
                                 data={todayEvent}
+                                key={(item, index) => index}
+                                contentContainerStyle={{ paddingBottom: 10 }}
+                                renderItem={({ item, index }) => (
+                                    <ElevatedCard
+                                        navigation={() =>
+                                            navigation.navigate(RouteTexts.EVENT_DETAILS, {
+                                                item: item,
+                                            })
+                                        }
+                                        theme={{ colorscheme: theme.colorscheme }}
+                                    >
+                                        <EventCard
+                                            date={moment(item.start_date).get('D')}
+                                            Icon={CategoryAssets[item?.attributes?.logo_flag]?.Svg}
+                                            dateNo={moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('DD')}
+                                            day={moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('ddd')}
+                                            timing={`${moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('MMMM DD YYYY')} - ${moment(item.end_date ? item.end_date : item?.attributes?.end_date).format('MMMM DD YYYY')}`}
+                                            title={selectedHeader == data1[0].name ? item?.attributes?.Calendar_title : item.attributes.title}
+                                            item={item}
+                                            theme={{
+                                                textColor: theme.textColor,
+                                                colorscheme: theme.colorscheme,
+                                            }}
+                                        />
+                                    </ElevatedCard>
+                                )}
+                            />
+                        </>
+                    }
+                    {
+                        weekEvent?.length > 0 && selectedHeader !== data1[0].name &&
+                        <>
+                            <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
+                                <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold', color: '#222222' }}>
+                                    {t('This Week')}
+                                </Text>
+                            </View>
+                            <FlatList
+                                data={weekEvent}
                                 key={(item, index) => index}
                                 contentContainerStyle={{ paddingBottom: 10 }}
                                 renderItem={({ item, index }) => (

@@ -183,7 +183,7 @@ export async function UpdateMostPlayed(query, body, callbacks) {
     );
 }
 export async function MostPlayedList(query, callbacks) {
-    let sql = 'SELECT * FROM most_played';
+    let sql = 'SELECT * FROM most_played ORDER BY count DESC';
     audioPlayerDatabase.transaction((tx) => {
         tx.executeSql(
             sql,
@@ -195,10 +195,10 @@ export async function MostPlayedList(query, callbacks) {
                     console.log('row data', resultSet.rows.item(i));
                     arr.push(resultSet.rows.item(i));
                 }
-                let newArr = arr.sort((a, b) => {
-                    return a.count - b.count;
-                });
-                callbacks(newArr);
+                // let newArr = arr.sort((a, b) => {
+                //     return a.count - b.count;
+                // });
+                callbacks(arr);
             },
             (error) => {
                 console.log('List user error', error);
