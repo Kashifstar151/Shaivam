@@ -170,7 +170,6 @@ const BottomTab = ({ navigation }) => {
         <>
             {showPlayer && <OmChantPlayer />}
             {!showPlayer ? playbackState?.state == 'paused' || playbackState?.state == 'playing' ? <CommonPlayer /> : <></> : <></>}
-
             <BottomSheetModalProvider>
                 {/* {showPlayer &&
                     <View style={{ paddingHorizontal: 15, justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', borderRadius: 15, alignSelf: 'center', zIndex: 100, height: 70, width: Dimensions.get('window').width - 20, backgroundColor: '#222222', position: 'absolute', bottom: 60 }}>
@@ -259,7 +258,7 @@ const BottomTab = ({ navigation }) => {
                             tabBarShowLabel: false,
                         }}
                         initialParams={{
-                            svg: 'Calender',
+                            svg: 'Calendar',
                         }}
                         name={RouteTexts.CALENDER}
                         component={Calender}

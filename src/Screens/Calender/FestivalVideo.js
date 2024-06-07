@@ -108,7 +108,7 @@ const FestivalVideo = ({ navigation, setShowFestivalVideo }) => {
                 <TouchableOpacity touchSoundDisabled style={{ position: 'absolute', top: 20, right: 20, }} onPress={() => setShowFestivalVideo(false)}>
                     <Feather name='x' size={24} />
                 </TouchableOpacity>
-                <Text style={{ fontSize: 16, fontFamily: 'Lora-SemiBold' }}>Submit Enteries</Text>
+                <Text style={{ fontSize: 16, fontFamily: 'Lora-SemiBold' }}>Submit Entries</Text>
                 <Text style={{ color: '#777777', fontFamily: 'Mulish-Regular' }}>Select one of the following</Text>
                 <View style={styles.childContainer}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
