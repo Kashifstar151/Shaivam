@@ -2,20 +2,10 @@ import { useContext, useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import { ThemeContext } from '../../../Context/ThemeContext';
 
-const HighlightedText = ({ text, highlight, lyrics, setSignal, signal }) => {
+const HighlightedText = ({ text, highlight, lyrics }) => {
     const { theme } = useContext(ThemeContext);
     if (!text) return null;
-    const [localSearchState, setLocalSearchState] = useState('');
-    useEffect(() => {
-        if (signal) {
-            setLocalSearchState(() => {
-                setSignal(!signal);
-                return highlight.replace(/\s/g, '');
-            });
-        }
-    }, [highlight]);
-
-    const escapedHighlight = localSearchState.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const escapedHighlight = highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const regex = new RegExp(`(${escapedHighlight.split('').join('\\s*')})`, 'gi');
     let key = 0;
     const parts = text.split(regex);
@@ -40,7 +30,7 @@ const HighlightedText = ({ text, highlight, lyrics, setSignal, signal }) => {
                         {part}
                     </Text>
                 ) : (
-                    <Text key={i}>{part}</Text>
+                    <Text key={key++}>{part}</Text>
                 )
             )}
         </Text>
