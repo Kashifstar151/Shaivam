@@ -39,7 +39,7 @@ Phone: ${inputValue['Creator number']}`,
     };
     return (
         <KeyboardAvoidingView behavior='position'>
-            <View style={{ backgroundColor: '#fff', height: Dimensions.get('window').height }} bounces={false}>
+            <ScrollView style={{ backgroundColor: '#fff', paddingBottom: 0 }} >
                 <Background>
                     <View style={styles.mainCom}>
                         <View style={{ width: '95%' }}>
@@ -51,7 +51,7 @@ Phone: ${inputValue['Creator number']}`,
                         </TouchableOpacity>
                     </View>
                 </Background>
-                <ScrollView style={{ paddingHorizontal: 20, flex: 1 }}>
+                <View style={{ paddingHorizontal: 20, flex: 1, height: Dimensions.get('window').height - 100 }}>
                     <Text style={{ fontFamily: 'Mulish-Regular', fontSize: 12 }}>Upload videos (Video limit: 15mb)</Text>
                     {
                         imageData?.length > 0 &&
@@ -70,23 +70,26 @@ Phone: ${inputValue['Creator number']}`,
                     <TextInputCom value={inputValue['Festival Location']} inputKey={'Festival Location'} insiderText={t('Type here') ? t('Type here') : 'Type here'} headinText={t('Festival Location*') ? t('Festival Location*') : 'Festival Location*'} width={Dimensions.get('window').width - 50} />
                     <TextInputCom inputKey={'Creator name'} value={inputValue['Creator name']} insiderText={t('Type here') ? t('Type here') : 'Type here'} headinText={t('Your Name*') ? t('Your Name*') : 'Your Name*'} width={Dimensions.get('window').width - 50} />
                     <TextInputCom inputKey={'Creator number'} value={inputValue['Creator number']} insiderText={t('Type here') ? t('Type here') : 'Type here'} headinText={t('Phone number*') ? t('Phone number*') : 'Phone number*'} width={Dimensions.get('window').width - 50} />
-                </ScrollView>
+                </View>
                 {
                     showModal &&
                     <Modal transparent>
                         <AlertScreen headingText={'Are you sure you want to delete the recorded video ?'} descriptionText={{ title: 'You will be asked to record again' }} setShowModal={setShowModal} removeFromPlaylist={() => setImageData([])} />
                     </Modal>
                 }
-                <Button navigation={() => useSendEmail({
-                    attachments: params?.image?.map((result) => ({
-                        uri: result.uri,
-                        type: result.type,
-                        name: result.fileName, // optional
-                    })), subject: 'jjj'
-                })} />
+                <View style={{ position: 'absolute', top: Dimensions.get('window').height }}>
+
+                    <Button navigation={() => useSendEmail({
+                        attachments: params?.image?.map((result) => ({
+                            uri: result.uri,
+                            type: result.type,
+                            name: result.fileName, // optional
+                        })), subject: 'jjj'
+                    })} />
+                </View>
                 {/* <View style={{ position: 'absolute', bottom: 20 }}> */}
                 {/* </View> */}
-            </View>
+            </ScrollView>
         </KeyboardAvoidingView>
 
     );

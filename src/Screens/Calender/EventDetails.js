@@ -148,7 +148,7 @@ const EventDetails = ({ navigation, route }) => {
                 <Text
                     style={{ color: '#777777', fontFamily: 'Mulish-Regular', marginHorizontal: 10 }}
                 >
-                    {item?.attributes?.event_category}
+                    {item?.attributes?.event_category ? item?.attributes?.event_category : item?.attributes?.category}
                 </Text>
                 <View style={{ flexDirection: 'row', marginVertical: 5 }}>
                     {

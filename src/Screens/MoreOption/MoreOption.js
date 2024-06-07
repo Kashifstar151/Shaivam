@@ -77,17 +77,17 @@ const MoreOption = () => {
         },
         {
             title: 'Share the app',
-            Description: 'Your Selection',
+            Description: '',
             icon: <ShareSVG fill={'#333333'} />,
         },
         {
             title: 'Rate the app',
-            Description: 'Your Selection',
+            Description: '',
             icon: <RateTheAppSVG fill={'#333333'} />,
         },
         {
             title: 'About',
-            Description: 'Your Selection',
+            Description: '',
             icon: <AboutSVG fill={'#333333'} />,
         },
         {
@@ -156,7 +156,7 @@ const MoreOption = () => {
         { name: 'മലയാളം', lngCode: 'ml' },
         { name: 'ଓଡ଼ିଆ', lngCode: 'od' },
         { name: 'ਪੰਜਾਬੀ', lngCode: 'pa' },
-        { name: 'सिन्धी', lngCode: 'si' },
+        { name: 'Sinhala', lngCode: 'si' },
         { name: 'தமிழ்', lngCode: 'en' },
         { name: 'తెలుగు', lngCode: 'te' },
         // { name: 'اُردُو', lngCode: 'ur' },

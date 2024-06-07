@@ -690,7 +690,7 @@ const Calender = ({ navigation }) => {
                                     >
                                         <EventCard
                                             date={moment(item.start_date).get('D')}
-                                            Icon={CategoryAssets[item?.attributes?.logo_flag]?.Svg}
+                                            Icon={CategoryAssets[item?.attributes?.event_category ? item?.attributes?.event_category : item?.attributes?.category]?.Svg}
                                             dateNo={moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('DD')}
                                             day={moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('ddd')}
                                             timing={`${moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('MMMM DD YYYY')} - ${moment(item.end_date ? item.end_date : item?.attributes?.end_date).format('MMMM DD YYYY')}`}
@@ -729,7 +729,7 @@ const Calender = ({ navigation }) => {
                                     >
                                         <EventCard
                                             date={moment(item.start_date).get('D')}
-                                            Icon={CategoryAssets[item?.attributes?.logo_flag]?.Svg}
+                                            Icon={CategoryAssets[item?.attributes?.event_category ? item?.attributes?.event_category : item?.attributes?.category]?.Svg}
                                             dateNo={moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('DD')}
                                             day={moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('ddd')}
                                             timing={`${moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('MMMM DD YYYY')} - ${moment(item.end_date ? item.end_date : item?.attributes?.end_date).format('MMMM DD YYYY')}`}
@@ -769,7 +769,7 @@ const Calender = ({ navigation }) => {
                                             theme={{ colorscheme: theme.colorscheme }}
                                         >
                                             <EventCard
-                                                Icon={CategoryAssets[item?.attributes?.event_category]?.Svg}
+                                                Icon={CategoryAssets[item?.attributes?.event_category ? item?.attributes?.event_category : item?.attributes?.category]?.Svg}
                                                 date={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).get('D') : moment(item.start_date).get('D')}
                                                 dateNo={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).format('DD') : moment(item.start_date).format('DD')}
                                                 day={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).format('ddd') : moment(item.start_date).format('ddd')}
