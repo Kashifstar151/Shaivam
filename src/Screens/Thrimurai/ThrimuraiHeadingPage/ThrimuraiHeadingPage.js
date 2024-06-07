@@ -166,7 +166,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const [thrimurais, setThrimurais] = useState(null);
     console.log('🚀 ~ ThrimuraiHeadingPage ~ thrimurais:', thrimurais);
     useEffect(() => {
-        retrieveData(query);
+        retrieveData();
     }, []);
     const { t } = useTranslation();
     const retrieveData = async () => {
@@ -175,7 +175,12 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
         // alert(true)
         getSqlData(query, (callbacks) => {
             setShowLoading(false);
-            setThrimurais(callbacks);
+            setThrimurais(() =>
+                callbacks.map((item) => {
+                    let itemToReturn = { ...item, id: item.prevId };
+                    return itemToReturn;
+                })
+            );
         });
     };
     return (
@@ -186,18 +191,17 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                     <SearchInput
                         setState={setSearchedText}
                         state={searchedText}
-                        setOnFocus={() =>
-                            navigation.navigate(RouteTexts.SEARCH_SCREEN, {
-                                query1: `SELECT * FROM thirumurais WHERE search_thirumurai_title LIKE`,
-                                query2: `AND fkTrimuria <=7 LIMIT 10 OFFSET 0`,
-                                allThirumirai: false,
-                                thrimurais: thrimurais.map((item) => {
-                                    let itemToReturn = { ...item, id: item.prevId };
-                                    return itemToReturn;
-                                }),
-                                prevId: prevId,
-                            })
-                        }
+                        setOnFocus={() => {
+                            if (thrimurais?.length) {
+                                navigation.navigate(RouteTexts.SEARCH_SCREEN, {
+                                    query1: `SELECT * FROM thirumurais WHERE search_thirumurai_title LIKE`,
+                                    query2: `AND fkTrimuria <=7 LIMIT 10 OFFSET 0`,
+                                    allThirumirai: false,
+                                    thrimurais: thrimurais,
+                                    prevId: prevId,
+                                });
+                            }
+                        }}
                         // placeholder={'Search for anything (Eg - தோடுடைய செவியன்) '}
                         placeholder={t('Search for any Thirumurai here')}
                         styleOverwrite={{ paddingTop: 10 }}
