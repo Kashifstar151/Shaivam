@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import {
     Alert,
     Dimensions,
@@ -21,12 +21,18 @@ import { useTranslation } from 'react-i18next';
 import HighlightText from '@sanar/react-native-highlight-text';
 import getDimension from '../../../Helpers/getDimension';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDebouncer } from '../../../Helpers/useDebouncer';
 
 const SearchScreen = ({ navigation, route }) => {
     const { i18n } = useTranslation();
     const { thrimurais } = route?.params;
-    const updatedThrimurai = thrimurais.length ? [{ id: 0, name: 'All' }, ...thrimurais] : null;
+    const [updatedThrimurai, setUpdatedThrimurai] = useState([
+        { id: 0, name: 'All' },
+        ...thrimurais,
+    ]);
     const [searchText, setSearchText] = useState('');
+
+    const debounceVal = useDebouncer(searchText, 1000);
     const [searchResult, setSearchedResult] = useState([]);
     const [onFocus, setOnFocus] = useState(false);
     const [rawSongs, setRawSongs] = useState(null);
@@ -37,12 +43,18 @@ const SearchScreen = ({ navigation, route }) => {
     const { screenHeight } = getDimension();
 
     useEffect(() => {
-        getDataFromSql(searchText);
+        getDataFromSql(debounceVal);
 
         return () => {
             setIsSearched(false);
         };
     }, [fktrimuria]);
+
+    useState(() => {
+        setUpdatedThrimurai(() =>
+            thrimurais?.length ? [{ id: 0, name: 'All' }, ...thrimurais] : null
+        );
+    }, [thrimurais]);
     useEffect(() => {
         getSearchedTexxs();
     }, []);
@@ -63,7 +75,6 @@ const SearchScreen = ({ navigation, route }) => {
     };
     const getDataFromSql = (searchText) => {
         setIsSearched(false);
-        setSignal(true);
         if (searchText && searchText.length >= 3) {
             getSqlData(
                 `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${normalizeString(
@@ -123,11 +134,9 @@ const SearchScreen = ({ navigation, route }) => {
     //     );
     // };
 
-    const [signal, setSignal] = useState(false);
     const highlight = (item, index, key) => {
         const textContent = key === 'title' ? item?.title : item?.rawSong;
-        console.log('🚀 ~ highlight ~ textContent:', textContent);
-
+        // console.log('searchText =====>', debounceVal);
         return (
             <View
                 style={{
@@ -158,12 +167,7 @@ const SearchScreen = ({ navigation, route }) => {
                     // }}
                 /> */}
 
-                <HighlightedText
-                    setSignal={setSignal}
-                    signal={signal}
-                    text={textContent}
-                    highlight={searchText}
-                />
+                <HighlightedText text={textContent} highlight={debounceVal} />
                 {/* {key == 'title'
                     ? parts?.map((statement, i) => {
                         return (
@@ -238,16 +242,13 @@ const SearchScreen = ({ navigation, route }) => {
         }
     };
     const renderResult = (item, index, key) => {
-        if (key === 'title') {
-            console.log('🚀 ~ renderResult ~ item:', JSON.stringify(item, 0, 2));
-        }
         return (
             <Pressable
                 style={{ marginVertical: 10 }}
                 onPress={() =>
                     navigation.navigate(RouteTexts.THRIMURAI_SONG, {
                         data: item,
-                        searchedword: searchText,
+                        searchedword: debounceVal,
                         searchScreen: true,
                         songNo: item?.songNo,
                     })
@@ -315,11 +316,11 @@ const SearchScreen = ({ navigation, route }) => {
                     }}
                 >
                     <HeaderWithTextInput
-                        onSubmitEditing={() => getDataFromSql(searchText)}
+                        onSubmitEditing={() => getDataFromSql(debounceVal)}
                         placeholder={`${t('Search for any')} ( முதல்-திருமுறை )`}
                         navigation={navigation}
                         setState={(e) => setSearchText(e)}
-                        state={searchText}
+                        state={debounceVal}
                         ref={focusRef}
                     />
                 </View>
@@ -399,11 +400,14 @@ const SearchScreen = ({ navigation, route }) => {
                             contentContainerStyle={{ marginTop: 10 }}
                             data={searchResult}
                             renderItem={({ item, index }) => renderResult(item, index, 'title')}
+                            windowSize={40}
+                            // renderItem={({ item, index }) => renderResult(item, index, 'title')}
                         />
                         <FlatList
                             contentContainerStyle={{ marginTop: 10 }}
                             data={rawSongs}
                             renderItem={({ item, index }) => renderResult(item, index, 'rawSong')}
+                            windowSize={40}
                         />
                     </ScrollView>
                 ) : (
