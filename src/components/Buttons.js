@@ -15,15 +15,21 @@ const CustomButton = ({ type, svg, style, onPress, text, backgroundColor, textCo
                 ]}
                 onPress={onPress}
             >
-                <CommonPartOfBtn
-                    svg={svg}
-                    textColor={textColor}
-                    text={text}
-                    backgroundColor={backgroundColor}
-                    paddingHorizontal={paddingHorizontal}
-                    paddingVertical={paddingVertical}
-                    borderRadius={borderRadius}
-                />
+                <View
+                    style={{
+                        padding: 5,
+                    }}
+                >
+                    <CommonPartOfBtn
+                        svg={svg}
+                        textColor={textColor}
+                        text={text}
+                        backgroundColor={backgroundColor}
+                        paddingHorizontal={paddingHorizontal}
+                        paddingVertical={paddingVertical}
+                        borderRadius={borderRadius}
+                    />
+                </View>
             </TouchableOpacity>
         );
     }

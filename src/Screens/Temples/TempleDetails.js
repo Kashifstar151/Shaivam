@@ -23,6 +23,7 @@ import { TouchableHighlight } from '@gorhom/bottom-sheet';
 import getDimension from '../../Helpers/getDimension';
 // import WebView from 'react-native-webview';
 import AutoHeightWebView from 'react-native-autoheight-webview';
+import BackBtnSvg from '../../components/SVGs/BackBtnSvg';
 
 const TempleDetails = ({ navigation }) => {
     const route = useRoute();
@@ -61,6 +62,58 @@ const TempleDetails = ({ navigation }) => {
     const { screenHeight, screenWidth } = getDimension();
     const LATITUDE_DELTA = 0.5;
     const LONGITUDE_DELTA = LATITUDE_DELTA * (screenWidth / screenHeight);
+
+    const embedNonClickableHTML = (innerFractionOfHTML) => {
+        return `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>WebView with Links</title>
+        </head>
+        <style>
+        *{
+            user-select: none;
+        }
+        </style>
+        <body>
+          ${innerFractionOfHTML}
+          <script differ>
+            document.addEventListener('click', function(event) {
+              if (event.target.tagName === 'A') {
+                event.preventDefault();
+              }
+            }); // this is to disable the click on links
+            
+            document.addEventListener('contextmenu', function(event) { event.preventDefault(); }); // this is to disable the click on links
+
+
+            // document.addEventListener('touchstart', function(event) {
+            //       const target = event.target;
+            //       const timeout = setTimeout(() => {
+            //         window.ReactNativeWebView.postMessage(JSON.stringify({
+            //           type: 'longPress',
+            //           href: target.href,
+            //           text: target.innerText
+            //         }));
+                    
+            //         // Trigger a custom context menu
+            //         const customEvent = new TouchEvent('contextmenu', {
+            //           bubbles: true,
+            //           cancelable: true,
+            //           view: window
+            //         });
+            //         target.dispatchEvent(customEvent);
+            //       }, 500);
+          
+            //       target.addEventListener('touchend', () => clearTimeout(timeout), { once: true });
+            //       target.addEventListener('touchcancel', () => clearTimeout(timeout), { once: true });
+            //     }
+
+          </script>
+        </body>
+        </html>`;
+    };
 
     return (
         <>
@@ -116,7 +169,7 @@ const TempleDetails = ({ navigation }) => {
                         }}
                     >
                         <CustomButton
-                            svg={<DownArrowSVG fill={'#000'} width={20} height={20} />}
+                            svg={<BackBtnSvg fill={'#000'} width={20} height={20} />}
                             style={{
                                 paddingVertical: 0,
                                 paddingHorizontal: 0,
@@ -225,7 +278,7 @@ const TempleDetails = ({ navigation }) => {
                             </View> */}
 
                             {templeDetail ? (
-                                <View style={{ marginHorizontal: 20, marginVertical: 10, gap: 8 }}>
+                                <View style={{ marginHorizontal: 20, marginVertical: 10 }}>
                                     <Text
                                         style={{
                                             color: 'black',
@@ -242,74 +295,55 @@ const TempleDetails = ({ navigation }) => {
                                         )
                                     )}
 
-                                    <Text
-                                        style={{
-                                            color: 'black',
-                                            fontFamily: 'Mulish-Bold',
-                                            fontSize: 18,
-                                            paddingVertical: 10,
-                                        }}
-                                    >
-                                        Temple Description
-                                    </Text>
-
-                                    {/* <RenderHTML
-                                        contentWidth={Dimensions.get('window').width - 20}
-                                        source={{ html: templeDetail?.Sthala_Puranam_Description }}
-                                        enableExperimentalMarginCollapsing={true}
-                                    /> */}
+                                    {templeDetail?.Sthala_Puranam_Description && (
+                                        <Text
+                                            style={{
+                                                color: 'black',
+                                                fontFamily: 'Mulish-Bold',
+                                                fontSize: 18,
+                                                paddingVertical: 10,
+                                            }}
+                                        >
+                                            {t('Temple Description')}
+                                        </Text>
+                                    )}
 
                                     <AutoHeightWebView
                                         style={{
                                             width: Dimensions.get('window').width - 15,
                                             marginTop: 35,
                                         }}
-                                        // style={{
-                                        //     backgroundColor: 'green',
-                                        //     height: '100%',
-                                        //     width: '100%',
-                                        // }}
                                         originWhitelist={['*']}
                                         source={{
-                                            html: templeDetail?.Sthala_Puranam_Description,
+                                            html: embedNonClickableHTML(
+                                                templeDetail?.Sthala_Puranam_Description
+                                            ),
                                         }}
-                                        // containerStyle={{
-                                        //     flex: 1,
-                                        //     minHeight: Dimensions.get('window').height,
-                                        // }}
-                                        // injectedJavaScript={`const meta = document.createElement('meta'); meta.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=2.0'); meta.setAttribute('name', 'viewport'); document.getElementsByTagName('head')[0].appendChild(meta); `}
-                                        // scalesPageToFit={true}
                                     />
 
-                                    {/* <RenderHTML
-                                        contentWidth={Dimensions.get('window').width}
-                                        source={{
-                                            html: templeDetail?.Specialities_Description,
-                                        }}
-                                        enableExperimentalMarginCollapsing={true}
-                                    /> */}
+                                    {templeDetail?.Specialities_Description && (
+                                        <Text
+                                            style={{
+                                                color: 'black',
+                                                fontFamily: 'Mulish-Bold',
+                                                fontSize: 18,
+                                                paddingVertical: 10,
+                                            }}
+                                        >
+                                            {t('Specialities ')}
+                                        </Text>
+                                    )}
 
                                     <AutoHeightWebView
                                         style={{
                                             width: Dimensions.get('window').width - 15,
-                                            marginTop: 35,
                                         }}
                                         originWhitelist={['*']}
                                         source={{
-                                            html: templeDetail?.Specialities_Description,
+                                            html: embedNonClickableHTML(
+                                                templeDetail?.Specialities_Description
+                                            ),
                                         }}
-                                        // containerStyle={{
-                                        //     flex: 1,
-                                        //     minHeight: Dimensions.get('window').height,
-                                        // }}
-                                        // injectedJavaScript={`const meta = document.createElement('meta'); meta.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=2.0'); meta.setAttribute('name', 'viewport'); document.getElementsByTagName('head')[0].appendChild(meta); `}
-                                        // scalesPageToFit={false}
-                                        // scalesPageToFit={true}
-                                        // style={{
-                                        //     backgroundColor: 'red',
-                                        //     height: '100%',
-                                        //     width: '100%',
-                                        // }}
                                     />
                                 </View>
                             ) : (

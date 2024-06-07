@@ -13,29 +13,28 @@ const SearchInput = ({ placeholder, setState, state, color, setOnFocus, styleOve
             style={
                 color
                     ? [
-                        styles.inputcontainer,
-                        {
-                            backgroundColor: '#F3F3F3',
-                            marginHorizontal: styleOverwrite?.marginHorizontalUnset ? 0 : 15,
-                            marginTop: styleOverwrite.paddingTop,
-                        },
-                    ]
+                          styles.inputcontainer,
+                          {
+                              backgroundColor: '#F3F3F3',
+                              marginHorizontal: styleOverwrite?.marginHorizontalUnset ? 0 : 15,
+                              marginTop: styleOverwrite.paddingTop,
+                          },
+                      ]
                     : [
-                        styles.inputcontainer,
-                        {
-                            backgroundColor: theme.searchBox.bgColor,
-                            marginHorizontal: styleOverwrite?.marginHorizontalUnset ? 0 : 15,
-                            marginTop: styleOverwrite?.paddingTop,
-                        },
-                    ]
+                          styles.inputcontainer,
+                          {
+                              backgroundColor: theme.searchBox.bgColor,
+                              marginHorizontal: styleOverwrite?.marginHorizontalUnset ? 0 : 15,
+                              marginTop: styleOverwrite?.paddingTop,
+                          },
+                      ]
             }
         >
             <Icon name="search" size={28} color={color ? '#777777' : colors.grey1} />
             <TextInput
-                onBlur={setOnFocus ? () => setOnFocus(false) : null}
+                // onBlur={setOnFocus ? () => setOnFocus(false) : null}
                 onFocus={setOnFocus ? () => setOnFocus() : null}
                 placeholder={t(placeholder)}
-
                 onChangeText={(e) => setState(e)}
                 placeholderTextColor={theme.searchBox.textColor}
                 value={state}
@@ -44,7 +43,7 @@ const SearchInput = ({ placeholder, setState, state, color, setOnFocus, styleOve
                     paddingHorizontal: 5,
                     color: '#FF9D9D',
                     fontFamily: 'Mulish-Regular',
-                    width: '100%'
+                    width: '100%',
                 }}
             />
         </View>

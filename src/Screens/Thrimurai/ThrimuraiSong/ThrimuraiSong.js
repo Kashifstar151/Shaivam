@@ -90,33 +90,25 @@ const ThrimuraiSong = ({ route, navigation }) => {
     useEffect(() => {
         buildLink()
     }, [])
-    // const { isConnected } = useNetInfo()
     useEffect(() => {
 
         const unsubscribe = addEventListener((state) => {
             if (state.isConnected) {
                 setIsConnected(true);
-                // checkConditionForPlayer(state.isConnected);
             }
         });
         return unsubscribe();
     }, []);
     useEffect(() => {
-        // console.log("🚀 ~ useEffect ~ isconnected:", isconnected)
-        // if (isconnected) {
         checkConditionForPlayer();
-        // }
     }, [isConnected]);
 
 
     const checkConditionForPlayer = () => {
         TrackPlayer.getActiveTrack().then((res) => {
-            // console.log('res?.url?.substring(0,5)', res?.url?.substring(0, 5), isConnected)
             if (isConnected) {
                 if (res?.url?.substring(0, 5) == 'https') {
-                    // if (isConnected) {
                     setShowAudioPlayer(true)
-                    // }
                 }
             } else if (res?.url?.substring(0, 5) == 'file:') {
                 setShowAudioPlayer(true)
