@@ -55,7 +55,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const isFocused = useIsFocused;
     const { data, downloaded, searchedword, downloadSong, searchScreen, songNo } =
         route.params || {};
-    const { isConnected } = useNetInfo()
+    const { isConnected } = useNetInfo();
     // console.log("🚀 ~ ThrimuraiSong ~ isConnected:", isConnected)
     // console.log('🚀 ~ ThrimuraiSong ~ route.params:', searchScreen);
     const translateX = useSharedValue(0);
@@ -70,13 +70,12 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const [language, setLang] = useState(['Original', 'Tamil', 'English', 'Hindi']);
     const [selectedLang, setSelectedLang] = useState('Original');
     const [fontSizeCount, setFontSizeCount] = useState(null);
-    const [isconnected, setIsConnected] = useState(isConnected)
-    const [showAudioPlayer, setShowAudioPlayer] = useState(false)
-    const [deeplink, setDeeplink] = useState(null)
+    const [isconnected, setIsConnected] = useState(isConnected);
+    const [showAudioPlayer, setShowAudioPlayer] = useState(false);
+    const [deeplink, setDeeplink] = useState(null);
     // const [refFlatList, setRefFlatList] = useState(null);
     const flatListRef = useRef(null);
     const firstRender = useRef(true);
-
 
     const initializeTheFontSize = async () => {
         const value = await AsyncStorage.getItem('@lyricsFontSize');
@@ -88,8 +87,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
         }
     };
     useEffect(() => {
-        buildLink()
-    }, [])
+        buildLink();
+    }, []);
     useEffect(() => {
         const unsubscribe = addEventListener((state) => {
             if (state.isConnected) {
@@ -102,20 +101,21 @@ const ThrimuraiSong = ({ route, navigation }) => {
         checkConditionForPlayer();
     }, [isConnected]);
 
-
     const checkConditionForPlayer = () => {
-        TrackPlayer.getActiveTrack().then((res) => {
-            if (isConnected) {
-                if (res?.url?.substring(0, 5) == 'https') {
-                    setShowAudioPlayer(true)
+        TrackPlayer.getActiveTrack()
+            .then((res) => {
+                if (isConnected) {
+                    if (res?.url?.substring(0, 5) == 'https') {
+                        setShowAudioPlayer(true);
+                    }
+                } else if (res?.url?.substring(0, 5) == 'file:') {
+                    setShowAudioPlayer(true);
                 }
-            } else if (res?.url?.substring(0, 5) == 'file:') {
-                setShowAudioPlayer(true)
-            }
-        }).catch((err) => {
-            console.log("🚀 ~ TrackPlayer.getActiveTrack ~ err:", err)
-        })
-    }
+            })
+            .catch((err) => {
+                console.log('🚀 ~ TrackPlayer.getActiveTrack ~ err:', err);
+            });
+    };
     const setFontSizeForLyrics = async (fontSizeCount) => {
         await AsyncStorage.setItem('@lyricsFontSize', String(fontSizeCount));
     };
@@ -164,32 +164,31 @@ const ThrimuraiSong = ({ route, navigation }) => {
         }
     }, [flatListRef.current, activeTrackState?.url]);
     useEffect(() => {
-        // console.log('🚀 ~ useEffect ~ initilizeTheTheme: 1');
-
         initilizeTheTheme();
         firstRender.current = false;
     }, []);
     const [favList, setFavList] = useState(null);
     async function buildLink() {
         // alert(true)
-        const link = await dynamicLinks().buildShortLink({
-            link: `https://shaivaam.page.link/org?prevId=${data?.prevId}`,
-            domainUriPrefix: 'https://shaivaam.page.link',
-            ios: {
-                appStoreId: '1575138510',
-                bundleId: 'com.Shaivam.shaivam',
-                minimumVersion: '18',
+        const link = await dynamicLinks().buildShortLink(
+            {
+                link: `https://shaivaam.page.link/org?prevId=${data?.prevId}`,
+                domainUriPrefix: 'https://shaivaam.page.link',
+                ios: {
+                    appStoreId: '1575138510',
+                    bundleId: 'com.Shaivam.shaivam',
+                    minimumVersion: '18',
+                },
+                android: {
+                    packageName: 'org.shaivam',
+                },
+                // optional setup which updates Firebase analytics campaign
+                // "banner". This also needs setting up before hand
             },
-            android: {
-                packageName: 'org.shaivam'
-            }
-            // optional setup which updates Firebase analytics campaign
-            // "banner". This also needs setting up before hand
-        },
-            dynamicLinks.ShortLinkType.DEFAULT,
+            dynamicLinks.ShortLinkType.DEFAULT
         );
-        console.log("🚀 ~ buildLink ~ link:", link)
-        setDeeplink(link)
+        console.log('🚀 ~ buildLink ~ link:', link);
+        setDeeplink(link);
         // console.log("🚀 ~ link ~ link:", `https://shaivaam.page.link/org?eventId=${item?.attributes?.schedula_type ? 'recurring_' + item?.attributes?.id : 'regular_' + item?.attributes?.id}`)
         return link;
     }
@@ -202,7 +201,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
             } else {
                 setOrientation('LANDSCAPE');
             }
-        })
+        });
         if (isFocused) {
             changeTranlation('Original');
         }
@@ -342,8 +341,9 @@ GROUP BY
             getSqlData(detailQuery, (details) => {
                 console.log('🚀 ~ getSqlData ~ data:', JSON.stringify(details, 0, 2));
 
-                const query2 = `SELECT * FROM odhuvars WHERE title='${data.filter((i) => i.tamil !== null)[0]?.tamil
-                    }'`;
+                const query2 = `SELECT * FROM odhuvars WHERE title='${
+                    data.filter((i) => i.tamil !== null)[0]?.tamil
+                }'`;
                 getSqlData(query2, (callbacks) => {
                     // console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
                     dispatchMusic({ type: 'SONG_DETAILS', payload: details });
@@ -584,7 +584,7 @@ GROUP BY
     });
 
     const setAndroidClipBoard = useCallback(async (initialString) => {
-        let link = await buildLink()
+        let link = await buildLink();
         if (!initialString.includes('Read more at https://shaivaam.page')) {
             clipBoardStringRef.current = initialString;
             clipBoardStringRef.current += ` Read more at ${link}`;
@@ -644,9 +644,9 @@ GROUP BY
                     },
                     musicState?.songDetails[index + 1]
                         ? {
-                            borderBottomColor: colors.grey3,
-                            borderBottomWidth: 1,
-                        }
+                              borderBottomColor: colors.grey3,
+                              borderBottomWidth: 1,
+                          }
                         : {},
                 ]}
             >
@@ -1076,78 +1076,8 @@ GROUP BY
                     </View>
                 </>
             )}
-            {
-                showSetting ?
-                    <TouchableWithoutFeedback onPress={() => setShowSetting(false)}>
-                        <View style={styles.lyricsContainer}>
-                            <View style={{ paddingHorizontal: 20 }}>
-                                {musicState?.songDetails?.length > 0 && (
-                                    <FlatList
-                                        ListHeaderComponent={
-                                            <Text
-                                                style={[
-                                                    styles.lyricsText,
-                                                    {
-                                                        fontSize: fontSizeCount,
-                                                        color: !darkMode ? colors.grey6 : colors.white,
-                                                    },
-                                                ]}
-                                            >
-                                                {t('Thiruchirrambalam')}
-                                            </Text>
-                                        }
-                                        ListFooterComponent={
-                                            <Text
-                                                style={[
-                                                    styles.lyricsText,
-                                                    {
-                                                        fontSize: fontSizeCount,
-                                                        color: !darkMode ? colors.grey6 : colors.white,
-                                                    },
-                                                ]}
-                                            >
-                                                {t('Thiruchirrambalam')}
-                                            </Text>
-                                        }
-                                        keyExtractor={(item) => item?.id}
-                                        ref={flatListRef}
-                                        data={musicState?.songDetails}
-                                        getItemLayOut={getItemLayOut}
-                                        // initialScrollIndex={songNo ? songNo - 1 : 1}
-                                        initialNumToRender={songNo ? songNo - 1 : 40}
-                                        onScrollToIndexFailed={({
-                                            index,
-                                            averageItemLength,
-                                            highestMeasuredFrameIndex,
-                                        }) => {
-                                            // console.log(
-                                            //     '🚀 ~ ThrimuraiSong ---  ~ info:',
-                                            //     index,
-                                            //     averageItemLength,
-                                            //     highestMeasuredFrameIndex
-                                            // );
-                                            const wait = new Promise((resolve) => setTimeout(resolve, 1000));
-                                            wait.then(() => {
-                                                flatListRef.current?.scrollToOffset({
-                                                    // index: index,
-                                                    offset:
-                                                        averageItemLength * songNo +
-                                                        Math.abs(highestMeasuredFrameIndex - songNo) *
-                                                        averageItemLength,
-                                                    animated: true,
-                                                });
-                                            });
-                                        }}
-                                        renderItem={({ item, index }) => (
-                                            <RenderLyricsText item={item} index={index} />
-                                        )}
-                                        windowSize={40}
-                                    />
-                                )}
-
-                            </View>
-                        </View>
-                    </TouchableWithoutFeedback> :
+            {showSetting ? (
+                <TouchableWithoutFeedback onPress={() => setShowSetting(false)}>
                     <View style={styles.lyricsContainer}>
                         <View style={{ paddingHorizontal: 20 }}>
                             {musicState?.songDetails?.length > 0 && (
@@ -1182,8 +1112,8 @@ GROUP BY
                                     ref={flatListRef}
                                     data={musicState?.songDetails}
                                     getItemLayOut={getItemLayOut}
-                                    // initialScrollIndex={songNo ? songNo - 1 : 1}
-                                    initialNumToRender={songNo ? songNo - 1 : 40}
+                                    initialScrollIndex={songNo ? songNo - 1 : 1}
+                                    initialNumToRender={songNo ? songNo + 1 : 40}
                                     onScrollToIndexFailed={({
                                         index,
                                         averageItemLength,
@@ -1195,14 +1125,16 @@ GROUP BY
                                         //     averageItemLength,
                                         //     highestMeasuredFrameIndex
                                         // );
-                                        const wait = new Promise((resolve) => setTimeout(resolve, 1000));
+                                        const wait = new Promise((resolve) =>
+                                            setTimeout(resolve, 1000)
+                                        );
                                         wait.then(() => {
                                             flatListRef.current?.scrollToOffset({
                                                 // index: index,
                                                 offset:
                                                     averageItemLength * songNo +
                                                     Math.abs(highestMeasuredFrameIndex - songNo) *
-                                                    averageItemLength,
+                                                        averageItemLength,
                                                 animated: true,
                                             });
                                         });
@@ -1213,8 +1145,79 @@ GROUP BY
                                     windowSize={40}
                                 />
                             )}
+                        </View>
+                    </View>
+                </TouchableWithoutFeedback>
+            ) : (
+                <View style={styles.lyricsContainer}>
+                    <View style={{ paddingHorizontal: 20 }}>
+                        {musicState?.songDetails?.length > 0 && (
+                            <FlatList
+                                ListHeaderComponent={
+                                    <Text
+                                        style={[
+                                            styles.lyricsText,
+                                            {
+                                                fontSize: fontSizeCount,
+                                                color: !darkMode ? colors.grey6 : colors.white,
+                                            },
+                                        ]}
+                                    >
+                                        {t('Thiruchirrambalam')}
+                                    </Text>
+                                }
+                                ListFooterComponent={
+                                    <Text
+                                        style={[
+                                            styles.lyricsText,
+                                            {
+                                                fontSize: fontSizeCount,
+                                                color: !darkMode ? colors.grey6 : colors.white,
+                                            },
+                                        ]}
+                                    >
+                                        {t('Thiruchirrambalam')}
+                                    </Text>
+                                }
+                                keyExtractor={(item) => item?.id}
+                                ref={flatListRef}
+                                data={musicState?.songDetails}
+                                getItemLayOut={getItemLayOut}
+                                initialScrollIndex={songNo ? songNo - 1 : 1}
+                                initialNumToRender={songNo ? songNo + 1 : 40}
+                                onScrollToIndexFailed={({
+                                    index,
+                                    averageItemLength,
+                                    highestMeasuredFrameIndex,
+                                }) => {
+                                    // console.log(
+                                    //     '🚀 ~ ThrimuraiSong ---  ~ info:',
+                                    //     index,
+                                    //     averageItemLength,
+                                    //     highestMeasuredFrameIndex
+                                    // );
+                                    const wait = new Promise((resolve) =>
+                                        setTimeout(resolve, 1000)
+                                    );
+                                    wait.then(() => {
+                                        flatListRef.current?.scrollToOffset({
+                                            // index: index,
+                                            offset:
+                                                averageItemLength * songNo +
+                                                Math.abs(highestMeasuredFrameIndex - songNo) *
+                                                    averageItemLength,
+                                            animated: true,
+                                        });
+                                    });
+                                }}
+                                renderItem={({ item, index }) => (
+                                    <RenderLyricsText item={item} index={index} />
+                                )}
+                                windowSize={40}
+                            />
+                        )}
 
-                            {/* {musicState?.songDetails?.length > 0 && (
+                        {/* {musicState?.songDetails?.length > 0 && (
                                 <FlatList
                                     ListHeaderComponent={
                                         <Text
@@ -1313,10 +1316,9 @@ GROUP BY
                                     )}
                                 />
                             )} */}
-                        </View>
                     </View>
-
-            }
+                </View>
+            )}
 
             <Animated.View
                 style={[
@@ -1329,14 +1331,14 @@ GROUP BY
 
                     orientation == 'LANDSCAPE'
                         ? {
-                            width: Dimensions.get('window').width / 2,
-                            position: 'absolute',
-                            bottom: 0,
-                        }
+                              width: Dimensions.get('window').width / 2,
+                              position: 'absolute',
+                              bottom: 0,
+                          }
                         : {
-                            position: 'relative',
-                            width: Dimensions.get('window').width,
-                        },
+                              position: 'relative',
+                              width: Dimensions.get('window').width,
+                          },
                 ]}
             >
                 {downloadingLoader && (
@@ -1381,7 +1383,7 @@ GROUP BY
                         }}
                     ></TouchableOpacity>
                 </View>
-                {activeTrackState?.url && isConnected || downloaded ? (
+                {(activeTrackState?.url && isConnected) || downloaded ? (
                     <AudioPlayer
                         activeTrack={activeTrackState}
                         setDownloadingLoader={setDownloadingLoader}
@@ -1398,7 +1400,9 @@ GROUP BY
                         queryForPreviousPrevId={queryForPreviousPrevId}
                         downloadSong={downloadSong}
                     />
-                ) : <></>}
+                ) : (
+                    <></>
+                )}
             </Animated.View>
 
             {/* </BottomSheet> */}
