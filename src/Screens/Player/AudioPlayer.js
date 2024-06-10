@@ -204,7 +204,7 @@ const AudioPlayer = ({
     useEffect(() => {
         (async () => {
             if (playBackState.state === 'ready') {
-                mostPlayed();
+                // mostPlayed();
             } else if (playBackState.state !== 'playing') {
                 setPaused(false);
             } else {
@@ -214,13 +214,16 @@ const AudioPlayer = ({
         })();
     }, [playBackState]);
     useEffect(() => {
-        console.log('playBackState', playBackState);
+        // console.log('playBackState', playBackState);
+        if (playBackState.state == 'playing') {
+            mostPlayed()
+        }
     }, [playBackState])
     useEffect(() => {
         if (playBackState.state !== 'playing' && position >= 3) {
             Promise.allSettled([
                 updateRecentlyPlayed({ ...activeTrack, prevId }),
-                mostPlayed()
+                // mostPlayed()
             ]);
         }
     }, [playBackState]);
