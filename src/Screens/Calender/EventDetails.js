@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, FlatList, Image, Linking, PermissionsAndroid, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, FlatList, Image, Linking, Modal, PermissionsAndroid, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import BackButton from '../../components/BackButton';
 import Background from '../../components/Background';
 import ShareIcon from '../../assets/Images/share-1.svg';
@@ -16,6 +16,7 @@ import PushNotification, { Importance } from 'react-native-push-notification';
 import { StackActions, useIsFocused } from '@react-navigation/native';
 import { getCurrentLocation } from '../../Helpers/GeolocationFunc';
 import { useLazyGetRecurringByIdQuery, useLazyGetRegularByIdQuery } from '../../store/features/Calender/CalenderApiSlice';
+import Feather from 'react-native-vector-icons/dist/Feather';
 
 
 const EventDetails = ({ navigation, route }) => {
@@ -28,6 +29,7 @@ const EventDetails = ({ navigation, route }) => {
     console.log('🚀 ~ EventDetails ~ item:', JSON.stringify(item, 0, 2));
     const [notificationOn, setNotification] = useState(false)
     const [regionCoordinate, setRegionCoordinate] = useState(null)
+    const [showModal, setShowModal] = useState(false)
     const [eventData, setEventData] = useState(item)
     useEffect(() => {
         if (external) {
@@ -93,8 +95,31 @@ const EventDetails = ({ navigation, route }) => {
     const [selectedHeader, setSelectedHeader] = useState('Direction');
     const checkPermissionAccess = async () => {
         // alert(true)
-        const permission = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);;
-        // console.log("🚀 ~ checkPermissionAccess ~ permission:", permission)
+        const permission = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+        console.log('plateform version', Platform.Version)
+        if (Platform.OS === 'android' && Platform.Version >= 33) {
+            const canScheduleExactAlarms = await PermissionsAndroid.check(
+                PermissionsAndroid.PERMISSIONS.SCHEDULE_EXACT_ALARM
+            );
+            if (!canScheduleExactAlarms) {
+                Alert.alert(
+                    "Need Permission",
+                    "Our app needs permission to schedule alarms. Please enable it in the settings.",
+                    [
+                        {
+                            text: "Cancel",
+                            style: "cancel"
+                        },
+                        {
+                            text: "Go to Settings",
+                            onPress: () => {
+                                Linking.openSettings();
+                            }
+                        }
+                    ]
+                );
+            }
+        }
     }
     const createChannel = () => {
         PushNotification.createChannel({
@@ -115,7 +140,7 @@ const EventDetails = ({ navigation, route }) => {
     }
     const getScheduleNotification = () => {
         PushNotification.getScheduledLocalNotifications(callbacks => {
-            console.log("🚀 ~ getScheduleNotification ~ callbacks:", callbacks)
+            // console.log("🚀 ~ getScheduleNotification ~ callbacks:", callbacks)
             callbacks?.map((res) => {
                 if (res?.id == item?.id) {
                     setNotification(true)
@@ -201,7 +226,7 @@ const EventDetails = ({ navigation, route }) => {
                     }
                 </View>
                 <View style={{ paddingHorizontal: 10 }}>
-                    <Text style={styles.descriptionText}>{item?.attributes?.description}</Text>
+                    <Text style={styles.descriptionText}>{item?.attributes?.description ? item?.attributes?.description : item?.attributes?.breif_description}</Text>
                     <FlatList
                         bounces={false}
                         contentContainerStyle={{ marginTop: 10 }}
@@ -263,24 +288,39 @@ const EventDetails = ({ navigation, route }) => {
                     />
                     <FlatList
                         horizontal
-                        contentContainerStyle={{ gap: 10, paddingVertical: 10, marginTop: 10 }}
+                        contentContainerStyle={{ gap: 10, paddingVertical: 10, marginTop: 10, paddingBottom: 100 }}
                         // data={Array.from({ length: 7 }, (_, i) => i)}
                         data={item?.attributes?.File}
                         renderItem={({ item, index }) => (
-                            <Image
-                                source={
-                                    { uri: item?.url }
-                                    // item?.url
-                                    //     ? { url: item?.url }
-                                    //     : require('../../assets/Images/Background.png')
-                                }
-                                resizeMode='cover'
-                                style={{ width: 200, height: 130, borderRadius: 8 }}
-                            />
+                            <TouchableOpacity onPress={() => setShowModal(true)}>
+                                <Image
+                                    source={
+                                        { uri: item?.url }
+                                    }
+                                    resizeMode='cover'
+                                    style={{ width: 200, height: 130, borderRadius: 8 }}
+                                />
+                            </TouchableOpacity>
                         )}
                     />
                 </View>
             </ScrollView>
+            {
+                showModal &&
+                <Modal transparent>
+                    <View>
+                        <TouchableOpacity style={{ position: 'absolute', top: 2, right: 5, zIndex: 100 }} onPress={() => setShowModal(false)}>
+                            <Feather name='x' size={34} color='black' />
+                        </TouchableOpacity>
+                        <FlatList horizontal data={item?.attributes?.File} renderItem={({ item, index }) => (
+                            <View style={{ flex: 1, margin: 20 }}>
+                                <Image source={{ uri: item?.url }} resizeMode='cover'
+                                    style={{ width: Dimensions.get('window').width - 40, height: Dimensions.get('window').height - 20, borderRadius: 8 }} />
+                            </View>
+                        )} />
+                    </View>
+                </Modal>
+            }
             <View style={{ position: 'absolute', bottom: 20, paddingHorizontal: 20, backgroundColor: '#fff' }}>
                 <ReminderSnackBar setRecurringEvent={setNotification} recurringEvent={notificationOn} />
             </View>

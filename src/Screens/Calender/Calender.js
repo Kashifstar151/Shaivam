@@ -54,19 +54,20 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 
 const Calender = ({ navigation }) => {
     const isFocused = useIsFocused()
-    const { t } = useTranslation()
+    const { t, i18n } = useTranslation()
     const data1 = [
         { name: 'Festivals', selected: <ActiveStar />, unSelected: <InActiveStar /> },
         { name: 'Events', selected: <ActiveCalender />, unSelected: <InActiveCalender /> },
     ];
     const [selectMonth, setSelectMonth] = useState(new Date().toISOString());
+    const [language, setLanguage] = useState(i18n.language == 'en-IN' ? 'en' : i18n.language == 'en' ? 'ta' : i18n.language)
     const [searchText, setSearchText] = useState('');
     const [eventCategory, setEventCategory] = useState(null);
     const [selectedLocation, setSelectedLocation] = useState(null);
-    const [startDate, setStartDate] = useState('')
+    // const [startDate, setStartDate] = useState('')
     const [todayEvent, setTodayEvent] = useState([])
     const [showLoader, setShowLoader] = useState(false)
-    const [endDate, setEndDate] = useState('')
+    // const [endDate, setEndDate] = useState('')
     const flatListRef = useRef(null)
     const festivalVideoref = useRef(null)
     const {
@@ -75,7 +76,6 @@ const Calender = ({ navigation }) => {
         refetch: refetchRegular,
         isSuccess: regularSuccess
     } = useGetListQuery({ selectedLocation, selectMonth, eventCategory }, { skip: !selectMonth });
-    // console.log("🚀 ~ regularEvent:", regularEvent)
     const {
         data: recurringEventList,
         isFetching: isFetchingRecurring,
@@ -83,15 +83,13 @@ const Calender = ({ navigation }) => {
         isSuccess: recurringSuccess
 
     } = useGetRecurringEventListQuery({ selectedLocation, eventCategory });
-    // console.log("🚀 ~ recurringEventList:", recurringEventList)
     const {
         data: festivalEvents,
         isFetching: isfestivaldataFetching,
         refetch: refetchFestival,
         isSuccess: isFestivalSuccess
 
-    } = useGetFestivalListQuery({ selectMonth });
-    // console.log("🚀 ~ Calender ~ recurringEventList:", JSON.stringify(festivalEvents, 0, 2))
+    } = useGetFestivalListQuery({ selectMonth, language });
     const {
         data: monthRecurringEventList,
         isFetching: isFetchingMonthly,
@@ -99,7 +97,6 @@ const Calender = ({ navigation }) => {
         isSuccess: recurringMonthlySuccess
 
     } = useGetRecurringEventMonthlyQuery({ selectedLocation, eventCategory });
-    // console.log("🚀 ~ monthRecurringEventList:", monthRecurringEventList)
     const [weekly, setWeekly] = useState([]);
     const [regular, setRegular] = useState([]);
     const [monthly, setMonthly] = useState([]);
@@ -180,19 +177,10 @@ const Calender = ({ navigation }) => {
             setChanged(!changed);
         }
     }, [recurringEventList, prevNext, selectedLocation, eventCategory, recurringSuccess]);
-
     // Process regular events
-
-
     // Process monthly recurring events
     useEffect(() => {
-        // clearStates()
-        // console.log("🚀 ~ useEffect ~ monthRecurringEventList:", monthRecurringEventList)
         if (monthRecurringEventList && recurringMonthlySuccess) {
-            // alert('recurring event monthly')
-
-            // console.log('recurringEventList?.meta?.pagination?.total month recurring', monthRecurringEventList?.meta?.pagination?.total)
-
             setMonthly([]);
             const cDate = moment().startOf("day");
             const data = [];
@@ -261,9 +249,7 @@ const Calender = ({ navigation }) => {
 
     // Combine all events into a sorted list
     useEffect(() => {
-        // clearStates()
         setMainData([])
-        // alert('main data')
         let today = []
         let week = []
         const allEvents = []
@@ -296,24 +282,18 @@ const Calender = ({ navigation }) => {
         })
         setTodayEvent(today)
         setWeekEvent(week)
-        // setMainData(sortedEvents);
     }, [changed]);
 
     useEffect(() => {
         let data = []
         if (selectedHeader == data1[1].name) {
             data = mainData.filter((item) => item?.attributes?.title?.includes(searchText))
-            // console.log("🚀 ~ useEffect ~ data:", data)
             setFilteredData(data)
         } else {
             data = festivalEvents?.data?.filter((item) => item?.attributes?.Calendar_title?.includes(searchText))
             setFilteredData(data)
         }
     }, [debounceVal])
-    useEffect(() => {
-        // console.log('setFilteredData', searchText)
-    }, [searchText])
-
     const selectFilter = (item) => {
         if (item == 'Add Event') {
             setSelectedFilter(item);
@@ -323,60 +303,46 @@ const Calender = ({ navigation }) => {
             bottomSheetRef.current.open()
         }
     };
+    // const findFinalizedDate = (days, daysType, cDate) => {
+    //     let finalizedDate = null;
 
-    const findFinalizedDate = (days, daysType, cDate) => {
-        // console.log("🚀 ~ findFinalizedDate ~ days:", days, daysType, cDate)
-        let finalizedDate = null;
-
-        switch (daysType) {
-            case "one":
-                finalizedDate = days[0] && days[0] >= cDate ? days[0] : null;
-                break;
-            case "two":
-                finalizedDate = days[1] && days[1] >= cDate ? days[1] : null;
-                break;
-            case "three":
-                finalizedDate = days[2] && days[2] >= cDate ? days[2] : null;
-                break;
-            case "four":
-                finalizedDate = days[3] && days[3] >= cDate ? days[3] : null;
-                break;
-            case "last":
-                const lastDay = days[4] || days[days.length - 1];
-                finalizedDate = lastDay && lastDay >= cDate ? lastDay : null;
-                break;
-        }
-        // console.log('finalizedDate', finalizedDate)
-        return finalizedDate;
-    };
+    //     switch (daysType) {
+    //         case "one":
+    //             finalizedDate = days[0] && days[0] >= cDate ? days[0] : null;
+    //             break;
+    //         case "two":
+    //             finalizedDate = days[1] && days[1] >= cDate ? days[1] : null;
+    //             break;
+    //         case "three":
+    //             finalizedDate = days[2] && days[2] >= cDate ? days[2] : null;
+    //             break;
+    //         case "four":
+    //             finalizedDate = days[3] && days[3] >= cDate ? days[3] : null;
+    //             break;
+    //         case "last":
+    //             const lastDay = days[4] || days[days.length - 1];
+    //             finalizedDate = lastDay && lastDay >= cDate ? lastDay : null;
+    //             break;
+    //     }
+    //     // console.log('finalizedDate', finalizedDate)
+    //     return finalizedDate;
+    // };
 
     function getDaysInMonth(month, year, dayOfWeek) {
-        // console.log("🚀 ~ getDaysInMonth ~ month:", month, year)
         const daysInMonth = moment(`${year}-${month}-01`).daysInMonth();
-        //get the number of days in the month. ⤴️
         const firstDayOfMonth = moment(`${year}-${month}-01`);
-        // first day of the given month and year ⤴️
         const days = [];
-
         for (let i = 0; i < daysInMonth; i++) {
             const day = firstDayOfMonth.clone().add(i, "days");
-            // clone the first day of the month and add the number of days to it ⤴️
             const dayName = day.format("dddd");
             console.log("dayName", dayName);
-            // get the day of the week based on the day of the month ⤴️
-
-
             if (dayName === dayOfWeek) {
                 days.push(day.toDate());
-                // push the day of the week to the days array ⤴️
             }
         }
-
         return days;
     }
     const selectdateHandler = (res) => {
-        // console.log("🚀 ~ selectdateHandler ~ res:", res)
-        // mainData?.map((item, index) => {
         if (selectedHeader === data1[1].name) {
             let arr = mainData?.filter((item) =>
                 moment(item?.start_date).format('YYYY-MM-DD') == res?.dateString
@@ -406,7 +372,6 @@ const Calender = ({ navigation }) => {
     const getItemLayOut = (item, index) => {
         return { length: 100, offset: 100 * index, index };
     };
-
     const [selectedHeader, setSelectedHeader] = useState(data1[0].name);
     const marked = useMemo(() => {
         const markedDates = {};
@@ -424,11 +389,9 @@ const Calender = ({ navigation }) => {
                 };
             });
             return markedDates;
-            // console.log(mainData, '================>')
         } else {
             mainData?.forEach(item => {
                 const date = moment(item?.start_date).format('YYYY-MM-DD');
-                // console.log("🚀 ~ marked ~ date: in evebt", date)
                 markedDates[date] = {
                     marked: true,
                     dotColor: '#FCB300',
@@ -439,7 +402,6 @@ const Calender = ({ navigation }) => {
                 };
             });
             return markedDates;
-
         }
     }, [selectedHeader, festivalEvents]);
     return (
@@ -817,9 +779,6 @@ const Calender = ({ navigation }) => {
                             <FestivalVideo setShowFestivalVideo={setShowFestivalVideo} navigation={navigation} />
                         </Modal>
                     }
-                    {/* <RBSheet ref={festivalVideoref} height={500}>
-
-                    </RBSheet> */}
                 </View>
             </ScrollView>
         </View>

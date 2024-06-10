@@ -156,7 +156,7 @@ const MoreOption = () => {
         { name: 'മലയാളം', lngCode: 'ml' },
         { name: 'ଓଡ଼ିଆ', lngCode: 'od' },
         { name: 'ਪੰਜਾਬੀ', lngCode: 'pa' },
-        { name: 'Sinhala', lngCode: 'si' },
+        { name: 'සිංහල', lngCode: 'si' },
         { name: 'தமிழ்', lngCode: 'en' },
         { name: 'తెలుగు', lngCode: 'te' },
         // { name: 'اُردُو', lngCode: 'ur' },

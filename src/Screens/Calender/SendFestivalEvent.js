@@ -29,7 +29,7 @@ Name: ${inputValue['Creator name']}
 Phone: ${inputValue['Creator number']}`,
             social: Share.Social.EMAIL,
             email: 'shaivam@shaivam.org',
-            url: imageData[0]?.originalPath?.substring(0, 6) == 'file:/' ? imageData[0]?.originalPath : `file://${imageData[0]?.originalPath}`,
+            url: imageData[0]?.uri?.substring(0, 6) == 'file:/' ? imageData[0]?.uri : `file://${imageData[0]?.uri}`,
         };
         try {
             const ShareResponse = await Share.open(shareOptions);
@@ -79,13 +79,16 @@ Phone: ${inputValue['Creator number']}`,
                 }
                 <View style={{ position: 'absolute', top: Dimensions.get('window').height }}>
 
-                    <Button navigation={() => useSendEmail({
-                        attachments: params?.image?.map((result) => ({
-                            uri: result.uri,
-                            type: result.type,
-                            name: result.fileName, // optional
-                        })), subject: 'jjj'
-                    })} />
+                    <Button
+                        buttonText={'Submit'}
+                        active={inputValue['Festival Name'] !== null && inputValue['Festival Location'] !== null && inputValue['Creator name'] !== null && inputValue['Creator number'] !== null ? true : false}
+                        navigation={() => useSendEmail({
+                            attachments: params?.image?.map((result) => ({
+                                uri: result.uri,
+                                type: result.type,
+                                name: result.fileName, // optional
+                            })), subject: 'jjj'
+                        })} />
                 </View>
                 {/* <View style={{ position: 'absolute', bottom: 20 }}> */}
                 {/* </View> */}

@@ -12,7 +12,7 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
                     date?.eventCategory !== null ? `nearby-events?start_date=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&end_date=${startDate}&category=${date.eventCategory}` :
                         date?.selectedLocation !== null && date?.eventCategory !== null ? `nearby-events?long=78.6801553&lat=10.8118335&radius=15000&start_date=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&end_date=${startDate}&category=${date.eventCategory}` :
                             `nearby-events?start_date=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&end_date=${startDate}`;
-                console.log("🚀 ~ url:", url)
+                // console.log("🚀 ~ url:", url)
                 return {
                     url: url,
                     method: 'GET',
@@ -20,8 +20,6 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
             },
             providesTags: ['Calender'],
         }),
-
-
         getRecurringEventList: builder.query({
             query: (date) => {
                 let url = date?.selectedLocation !== null ?
@@ -52,7 +50,7 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
         }),
         getRecurringById: builder.query({
             query: (data) => {
-                console.log("🚀 ~ data:", data)
+                // console.log("🚀 ~ data:", data)
                 // const url = `?temple_coordinates[coords]=${data?.longitude},${data?.latitude}&pagination[pageSize]=200`;
                 // https://lobster-app-gpfv5.ondigitalocean.app/api/nearby-temples?long=77.391029&lat=28.535517&radius=15000
                 // const url = `api/nearby-temples?long=${data?.longitude}&lat=${data?.latitude}&radius=15000`;
@@ -72,7 +70,6 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
             query: (date) => {
                 console.log("🚀 ~ date:", date)
                 const url = `regular-events/${date?.data}?populate[File][fields][0]=url`;
-                console.log('🚀 ~ url: recuriing month', url);
                 return {
                     url: url,
                     method: 'GET',
@@ -85,8 +82,8 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
         }),
         getFestivalList: builder.query({
             query: (date) => {
-                const url = `calendars?populate=*&filters[calendar_from_date][$gte]=${moment(date?.selectMonth).startOf('month').format('YYYY-MM-DD')}&filters[calendar_from_date][$lte]=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&sort=calendar_from_date:ASC`;
-                console.log('🚀 ~ url: recuriing month', url);
+                const url = `calendars?locale=${date?.language}&filters[calendar_from_date][$gte]=${moment(date?.selectMonth).startOf('month').format('YYYY-MM-DD')}&filters[calendar_from_date][$lte]=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&sort=calendar_from_date:ASC`;
+                console.log("🚀 ~ url:", url)
                 return {
                     url: url,
                     method: 'GET',
@@ -96,8 +93,9 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
         }),
         getUpcomingFestival: builder.query({
             query: (date) => {
-                const url = `calendars?populate=*&filters[calendar_from_date][$gte]=${date?.startDate}&filters[calendar_from_date][$lte]=${date?.endDate}&sort=calendar_from_date:ASC`;
-                console.log('🚀 ~ url: recuriing month', url);
+                console.log("🚀 ~ date:", date)
+                const url = `calendars?locale=${date?.lanugage}&filters[calendar_from_date][$gte]=${date?.startDate}&filters[calendar_from_date][$lte]=${date?.endDate}&sort=calendar_from_date:ASC`;
+                console.log("🚀 ~ url:", url)
                 return {
                     url: url,
                     method: 'GET',
@@ -108,7 +106,7 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
         addRegularEvent: builder.mutation({
             query: (data) => {
                 const url = `regular-events`;
-                console.log('🚀 ~ url:', url);
+                // console.log('🚀 ~ url:', url);
                 return {
                     url: url,
                     method: 'POST',
@@ -117,21 +115,16 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
                 };
             },
             providesTags: ['Calender'],
-            // const url = 'regular-events',
         }),
         addRecurringEvent: builder.mutation({
             query: (data, eventType) => {
                 const url = `recurring-events`;
-                // console.log('🚀 ~ url:', url);
                 return {
                     url: url,
                     method: 'POST',
-                    // body: data,
-                    // headers: { 'Content-Type': 'application/json' },
                 };
             },
             providesTags: ['Calender'],
-            // const url = 'regular-events',
         }),
 
         addImageForEvent: builder.mutation({

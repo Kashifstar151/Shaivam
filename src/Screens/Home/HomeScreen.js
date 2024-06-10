@@ -52,32 +52,26 @@ const HomeScreen = ({ navigation }) => {
         usePlayer();
     const { theme } = useContext(ThemeContext);
     const { selectMonth, setSelectedMonth } = useState(moment().format('YYYY-MM-DD'));
+    const { i18n, t } = useTranslation();
+    // var lanugage = i18n.language;
+    // console.log("🚀 ~ lanugage:", lanugage)
     const {
         data: festivalEvents,
         isFetching: isfestivaldataFetching,
         refetch: refetchFestival,
         isSuccess: isFestivalSuccess,
-    } = useGetUpcomingFestivalQuery({ startDate: moment().format('YYYY-MM-DD'), endDate: moment().add(1, 'months').endOf('month').format('YYYY-MM-DD') });
-    // console.log('🚀 ~ HomeScreen ~ festivalEvents:', festivalEvents);
+    } = useGetUpcomingFestivalQuery({ startDate: moment().format('YYYY-MM-DD'), endDate: moment().add(1, 'months').endOf('month').format('YYYY-MM-DD'), lanugage: i18n.language == 'en-IN' ? 'en' : i18n.language == 'en' ? 'ta' : i18n.language });
     const [festivalEvent, setFestivalEvent] = useState([]);
     const [compHeight, setCompHeight] = useState();
-    // const [textInsidePlaylistCard, setTextInsidePlaylistCard] = useState(0);
-    // const [playlistCardHeight, setPlaylistCardHeight] = useState(0);
-    // const [dimentionsOfText1, setDimentionsOfText1] = useState({
-    //     width: 0,
-    //     height: 0,
-    // });
     const isFocused = useIsFocused();
     useEffect(() => {
         if (festivalEvents?.data && isFestivalSuccess) {
             let arr = festivalEvents?.data?.filter((item) => {
                 return moment(item?.attributes?.calendar_from_date) > moment();
             });
-            // console.log(arr, 'upacoming festivals')
             setFestivalEvent(arr?.slice(0, 3));
         }
     }, [selectMonth, isFocused, isFestivalSuccess]);
-
     const handleLayout = useCallback(
         (event) => {
             const { height } = event.nativeEvent.layout;
@@ -102,22 +96,18 @@ const HomeScreen = ({ navigation }) => {
             description: 'सम्पूर्ण ऋग्वेद पाराणम् Complete ...',
         },
     ];
-
     const permissionTypeRef = useRef(
         Platform.select({
             ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
             android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
         })
     );
-
     const [userLocation, setUserLocation] = useState(null);
-
     useEffect(() => {
         onMapReadyCallback();
 
         return clearGetCurrentLocationWatcher();
     }, []);
-
     const [
         getNearByTemples,
         {
@@ -130,8 +120,6 @@ const HomeScreen = ({ navigation }) => {
             status,
         },
     ] = useLazyGetNearByTemplesQuery();
-    // console.log('🚀 ~ HomeScreen ~ nearByTempleDataAfterFetch:', nearByTempleDataAfterFetch);
-
     useFocusEffect(
         React.useCallback(() => {
             // onMapReadyCallback();
@@ -146,55 +134,12 @@ const HomeScreen = ({ navigation }) => {
     );
     const onMapReadyCallback = async () => {
         let state = await checkPermissionAccess(permissionTypeRef.current);
-
         if (state === RESULTS.GRANTED) {
-            // console.log(
-            //     '🚀 ~ getCurrentLocation ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=============:'
-            // );
             getCurrentLocation((val) => {
-                // console.log(
-                //     '🚀 ~ getCurrentLocation ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=============:',
-                //     val
-                // );
                 setUserLocation(() => ({ ...val }));
             });
-
-            // getCurrentLocationWatcher((val) => {
-            //     // console.log('🚀 ~ getCurrentLocationWatcher ~ val:', val);
-            //     setUserLocation(() => ({ ...val }));
-            // });
         }
     };
-
-    // const PlayList = [
-    //     {
-    //         id: 1,
-    //         heading: 'Thirumurais',
-    //         info: 'Attaveerattam and Saptavidanga Thevaram - Audi...',
-    //         subInfo: 'Thiruthani Swaminathan Odhuvar',
-    //         songCount: 46,
-    //         colors: theme.colorscheme === 'light' ? ['#FEE8B3', '#FDD166'] : ['#3A3A3A', '#3A3A3A'],
-    //         navDetail: '',
-    //     },
-    //     {
-    //         id: 2,
-    //         heading: 'Thirumurais',
-    //         info: 'Attaveerattam and Saptavidanga Thevaram - Audi...',
-    //         subInfo: 'Thiruthani Swaminathan Odhuvar',
-    //         songCount: 40,
-    //         colors: theme.colorscheme === 'light' ? ['#AFD9BB', '#60B278'] : ['#3A3A3A', '#3A3A3A'],
-    //         navDetail: '',
-    //     },
-    //     {
-    //         id: 3,
-    //         heading: 'Thirumurais',
-    //         info: 'Attaveerattam and Saptavidanga Thevaram - Audi...',
-    //         subInfo: 'Thiruthani Swaminathan Odhuvar',
-    //         songCount: 45,
-    //         colors: theme.colorscheme === 'light' ? ['#FEE8B3', '#FDD166'] : ['#3A3A3A', '#3A3A3A'],
-    //         navDetail: '',
-    //     },
-    // ];
     const eventData = [
         {
             date: { day: 'THU', dateNo: '06' },
@@ -247,7 +192,7 @@ const HomeScreen = ({ navigation }) => {
             setPlaylistSong(JSON.parse(data));
         } else {
             MostPlayedList('d', (callbacks) => {
-                console.log('🚀 ~ MostPlayedList ~ callbacks:', callbacks);
+                // console.log('🚀 ~ MostPlayedList ~ callbacks:', callbacks);
                 setPlaylistSong(callbacks.slice(0, 4));
             });
         }
@@ -270,7 +215,7 @@ const HomeScreen = ({ navigation }) => {
             address: 'Kanakapura road, Banglore',
         },
     ];
-    const { t } = useTranslation();
+    // const { t } = useTranslation();
     const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
     const [screenHeight, setScreenheight] = useState(Dimensions.get('window').height);
     const [orientation, setOrientation] = useState('PORTRAIT');
@@ -291,7 +236,6 @@ const HomeScreen = ({ navigation }) => {
             subscription?.remove();
         };
     }, []);
-
     return (
         <ScrollView
             bounces={false}
@@ -310,27 +254,22 @@ const HomeScreen = ({ navigation }) => {
                     height:
                         orientation == 'PORTRAIT'
                             ? Dimensions.get('window').height / 2.5
-                            : Dimensions.get('window').height / 1.5,
-                }}
-            >
+                            : Dimensions.get('window').height / 1.5
+                }}>
                 <ImageBackground
                     source={theme.colorscheme === 'light' ? bgImg : bgImgDark}
                     resizeMode="cover"
                     style={{
                         flex: 1,
                         paddingHorizontal: 15,
-                    }}
-                ></ImageBackground>
+                    }}></ImageBackground>
             </View>
-            <View
-                style={{
-                    marginTop:
-                        orientation == 'PORTRAIT'
-                            ? -screenHeight / 2.3
-                            : -Dimensions.get('window').height / 1.3,
-                }}
-                onLayout={handleLayout}
-            >
+            <View style={{
+                marginTop:
+                    orientation == 'PORTRAIT'
+                        ? -screenHeight / 2.3
+                        : -Dimensions.get('window').height / 1.3,
+            }} onLayout={handleLayout}>
                 <CardComponents navigation={navigation} />
             </View>
             {playlistSong?.length > 0 && (
@@ -361,12 +300,9 @@ const HomeScreen = ({ navigation }) => {
                                 <Pressable
                                     onPress={() => {
                                         setSelectedPlaylistType(item);
-                                    }}
-                                >
+                                    }}>
                                     <View
                                         style={{
-                                            // marginRight: 8,
-                                            // elevation: 5,
                                             backgroundColor:
                                                 selectedPlaylistType == item
                                                     ? '#C1554E'

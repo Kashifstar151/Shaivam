@@ -214,6 +214,9 @@ const AudioPlayer = ({
         })();
     }, [playBackState]);
     useEffect(() => {
+        console.log('playBackState', playBackState);
+    }, [playBackState])
+    useEffect(() => {
         if (playBackState.state !== 'playing' && position >= 3) {
             Promise.allSettled([
                 updateRecentlyPlayed({ ...activeTrack, prevId }),

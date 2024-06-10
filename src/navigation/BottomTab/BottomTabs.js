@@ -258,7 +258,7 @@ const BottomTab = ({ navigation }) => {
                             tabBarShowLabel: false,
                         }}
                         initialParams={{
-                            svg: 'Calendar',
+                            svg: 'Calender',
                         }}
                         name={RouteTexts.CALENDER}
                         component={Calender}
