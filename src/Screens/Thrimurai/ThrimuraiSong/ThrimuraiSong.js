@@ -37,7 +37,7 @@ import NaduSVG from '../../../components/SVGs/NaduSVG';
 import PannSVG from '../../../components/SVGs/PannSVG';
 import ThalamSVG from '../../../components/SVGs/ThalamSVG';
 import DownloadIcon from '../../../assets/Images/download.svg';
-import HighlightText from '@sanar/react-native-highlight-text';
+// import HighlightText from '@sanar/react-native-highlight-text';
 import TrackPlayer, {
     AppKilledPlaybackBehavior,
     Capability,
@@ -47,6 +47,7 @@ import TrackPlayer, {
 import Clipboard from '@react-native-clipboard/clipboard';
 import { listfavAudios } from '../../../Databases/AudioPlayerDatabase';
 import SettingsSVG from '../../../components/SVGs/SettingsSVG';
+import HighlightedText from '../Searchscreen/HighlightedText';
 
 const ThrimuraiSong = ({ route, navigation }) => {
     const isFocused = useIsFocused;
@@ -121,10 +122,10 @@ const ThrimuraiSong = ({ route, navigation }) => {
     }, []);
 
     useEffect(() => {
-        if (searchScreen && firstRender.current) {
-            scrollToIndex();
+        if (searchScreen && flatListRef.current) {
+            scrollToIndexFlatList();
         }
-    }, [flatListRef, activeTrackState?.url]);
+    }, [flatListRef.current, activeTrackState?.url]);
     useEffect(() => {
         // console.log('🚀 ~ useEffect ~ initilizeTheTheme: 1');
         initilizeTheTheme();
@@ -355,35 +356,48 @@ GROUP BY
         // const data = parts?.split(' ')
         return (
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                <HighlightText
-                    key={Math.random()}
+                <HighlightedText
+                    screen={'music-player'}
+                    // key={Math.random()}
+                    // selectable={true}
+                    // selectionColor="orange"
+                    // style={[
+                    //     styles.lyricsText,
+                    //     {
+                    //         fontSize: fontSizeCount,
+                    //         alignSelf: 'flex-end',
+                    //         color: !darkMode ? colors.grey6 : colors.white,
+                    //     },
+                    // ]}
+                    // highlightStyle={{
+                    //     backgroundColor: darkMode ? '#A47300' : '#F8E3B2',
+                    // }}
+                    // searchWords={[`${searchedword}`]}
+                    // textToHighlight={
+                    //     selectedLang !== 'Tamil' ? item?.rawSong : item?.tamilExplanation
+                    // }
+
+                    text={selectedLang !== 'Tamil' ? item?.rawSong : item?.tamilExplanation}
+                    highlight={searchedword}
                     selectable={true}
                     selectionColor="orange"
-                    style={[
-                        styles.lyricsText,
-                        {
-                            fontSize: fontSizeCount,
-                            alignSelf: 'flex-end',
-                            color: !darkMode ? colors.grey6 : colors.white,
-                        },
-                    ]}
-                    highlightStyle={{
-                        backgroundColor: darkMode ? '#A47300' : '#F8E3B2',
-                    }}
-                    searchWords={[`${searchedword}`]}
-                    textToHighlight={
-                        selectedLang !== 'Tamil' ? item?.rawSong : item?.tamilExplanation
-                    }
+                    fontSizeCount={fontSizeCount}
                 />
             </View>
         );
     };
 
-    const scrollToIndex = () => {
-        flatListRef?.current?.scrollToIndex({
-            animated: true,
-            index: songNo - 1,
-        });
+    const scrollToIndexFlatList = () => {
+        console.log('🚀 ~ scrollToIndexFlatList ~ scrollToIndexFlatList:', scrollToIndexFlatList);
+
+        if (songNo) {
+            setTimeout(() => {
+                flatListRef?.current?.scrollToIndex({
+                    animated: true,
+                    index: songNo - 1,
+                });
+            }, 1000);
+        }
     };
 
     const getItemLayOut = (item, index) => {
@@ -576,7 +590,6 @@ GROUP BY
             return item?.rawSong;
         }
     };
-
     const RenderLyricsText = memo(
         ({ item, index }) => (
             // <TouchableWithoutFeedback onPress={() => setShowSetting(false)}>
@@ -1023,7 +1036,22 @@ GROUP BY
             )}
             {/* <TouchableWithoutFeedback onPress={() => setShowSetting(false)}> */}
             <View style={styles.lyricsContainer}>
-                <View style={{ paddingHorizontal: 20 }}>
+                <View
+                    style={{ paddingHorizontal: 20 }}
+                    // onLayout={() => {
+                    //     if (flatListRef.current) {
+                    //         // scrollToIndexFlatList();
+                    //         // if (songNo) {
+                    //         //     setTimeout(() => {
+                    //         //         flatListRef?.current?.scrollToIndex({
+                    //         //             animated: true,
+                    //         //             index: songNo - 1,
+                    //         //         });
+                    //         //     }, 1000);
+                    //         // }
+                    //     }
+                    // }}
+                >
                     {musicState?.songDetails?.length > 0 && (
                         <FlatList
                             ListHeaderComponent={
@@ -1055,7 +1083,32 @@ GROUP BY
                             keyExtractor={(item) => item?.id}
                             ref={flatListRef}
                             data={musicState?.songDetails}
-                            initialScrollIndex={songNo ? songNo - 1 : 0}
+                            getItemLayOut={getItemLayOut}
+                            // initialScrollIndex={songNo ? songNo - 1 : 1}
+                            initialNumToRender={songNo ? songNo - 1 : 40}
+                            onScrollToIndexFailed={({
+                                index,
+                                averageItemLength,
+                                highestMeasuredFrameIndex,
+                            }) => {
+                                // console.log(
+                                //     '🚀 ~ ThrimuraiSong ---  ~ info:',
+                                //     index,
+                                //     averageItemLength,
+                                //     highestMeasuredFrameIndex
+                                // );
+                                const wait = new Promise((resolve) => setTimeout(resolve, 1000));
+                                wait.then(() => {
+                                    flatListRef.current?.scrollToOffset({
+                                        // index: index,
+                                        offset:
+                                            averageItemLength * songNo +
+                                            Math.abs(highestMeasuredFrameIndex - songNo) *
+                                                averageItemLength,
+                                        animated: true,
+                                    });
+                                });
+                            }}
                             renderItem={({ item, index }) => (
                                 <RenderLyricsText item={item} index={index} />
                             )}

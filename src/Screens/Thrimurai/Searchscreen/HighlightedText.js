@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import { ThemeContext } from '../../../Context/ThemeContext';
 
-const HighlightedText = ({ text, highlight, lyrics }) => {
+const HighlightedText = ({ fontSizeCount, text, highlight, lyrics, screen, ...restProps }) => {
     const { theme } = useContext(ThemeContext);
     if (!text) return null;
     const escapedHighlight = highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -12,12 +12,23 @@ const HighlightedText = ({ text, highlight, lyrics }) => {
 
     return (
         <Text
-            style={{
-                fontFamily: 'AnekTamil-Bold',
-                fontSize: 14,
-                color: theme.textColor,
-                // fontWeight: lyrics ? '400' : '700',
-            }}
+            style={[
+                screen !== 'music-player'
+                    ? {
+                          fontFamily: 'AnekTamil-Bold',
+                          fontSize: 14,
+                          // fontWeight: lyrics ? '400' : '700',
+                      }
+                    : {
+                          fontFamily: 'AnekTamil-Regular',
+                          fontSize: fontSizeCount,
+                          lineHeight: 30,
+                      },
+                {
+                    color: theme.textColor,
+                },
+            ]}
+            {...restProps}
         >
             {parts.map((part, i) =>
                 regex.test(part) && part.length > 2 ? (

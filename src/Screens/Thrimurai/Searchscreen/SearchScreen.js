@@ -320,7 +320,7 @@ const SearchScreen = ({ navigation, route }) => {
                         placeholder={`${t('Search for any')} ( முதல்-திருமுறை )`}
                         navigation={navigation}
                         setState={(e) => setSearchText(e)}
-                        state={debounceVal}
+                        state={searchText}
                         ref={focusRef}
                     />
                 </View>
