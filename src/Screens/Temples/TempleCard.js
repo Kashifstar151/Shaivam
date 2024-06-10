@@ -27,6 +27,8 @@ const TempleCard = ({
     showMargin,
     showButton,
     onTitleClick,
+    imageArr,
+    showImage,
 }) => {
     const nav = useNavigation();
     const [modalVisible, setModalVisible] = useState(false);
@@ -137,17 +139,33 @@ const TempleCard = ({
                     />
                 </ScrollView>
             )}
-            {/* <FlatList
-                horizontal
-                contentContainerStyle={{ gap: 10, paddingVertical: 10 }}
-                data={Array.from({ length: 7 }, (_, i) => i)}
-                renderItem={({ item, index }) => (
-                    <Image
-                        source={require('../../../assets/Images/Background.png')}
-                        style={{ color: 'black', width: 200, height: 100, borderRadius: 8 }}
+            {showImage && (
+                <View
+                    style={{
+                        width: 'auto',
+                    }}
+                >
+                    <FlatList
+                        horizontal
+                        contentContainerStyle={{
+                            gap: 10,
+                            paddingVertical: 10,
+                        }}
+                        style={{
+                            alignSelf: 'flex-start',
+                        }}
+                        data={imageArr ?? Array.from({ length: 7 }, (_, i) => i)}
+                        renderItem={({ item, index }) => (
+                            <Image
+                                source={{
+                                    uri: item?.url,
+                                }}
+                                style={{ color: 'black', width: 200, height: 100, borderRadius: 8 }}
+                            />
+                        )}
                     />
-                )}
-            /> */}
+                </View>
+            )}
             {showMargin && (
                 <View
                     style={{

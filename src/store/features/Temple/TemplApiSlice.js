@@ -26,7 +26,7 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
 
         getTempleDetail: builder.query({
             query: ({ id }) => {
-                const url = `api/maps/${id}?populate=temple`;
+                const url = `api/maps/${id}?populate=temple,temple_images`;
                 return {
                     url: url,
                     method: 'GET',
@@ -34,30 +34,48 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
             },
             providesTags: ['TempleDetail'],
             transformResponse: (response, meta, arg) => {
-                if (response?.data?.attributes?.temple?.data) {
-                    const {
-                        Swamy_name,
-                        Ambal_Name,
-                        Temple_tree,
-                        Thirtham,
-                        Sages_who_worshiped,
-                        Location,
-                        Specialities_Description,
-                        Sthala_Puranam_Description,
-                    } = response?.data?.attributes?.temple?.data?.attributes;
-                    return {
-                        basicDetails: {
+                let responseToRetun = {};
+                if (response?.data?.attributes) {
+                    if (response?.data?.attributes?.temple?.data?.attributes) {
+                        const {
+                            Swamy_name,
+                            Ambal_Name,
+                            Temple_tree,
+                            Thirtham,
+                            Sages_who_worshiped,
+                            Location,
+                            Specialities_Description,
+                            Sthala_Puranam_Description,
+                        } = response?.data?.attributes?.temple?.data?.attributes;
+
+                        responseToRetun['basicDetails'] = {
                             "Lord's name": Swamy_name,
                             'Divine name': Ambal_Name,
                             'Head tree': Temple_tree ?? 'N/A',
                             Thirtham: Thirtham,
                             Worshipped: Sages_who_worshiped,
                             Location: Location,
-                        },
+                        };
 
-                        Specialities_Description,
-                        Sthala_Puranam_Description,
-                    };
+                        responseToRetun.Specialities_Description = Specialities_Description;
+                        responseToRetun.Sthala_Puranam_Description = Sthala_Puranam_Description;
+                    }
+
+                    if (response?.data?.attributes?.temple_images?.data?.length) {
+                        const temple_images = response?.data?.attributes?.temple_images?.data?.map(
+                            (item) => {
+                                console.log('🚀 ~ 58 item:', item);
+                                return {
+                                    id: item?.id,
+                                    url: item?.attributes?.url,
+                                };
+                            }
+                        );
+
+                        responseToRetun['temple_images'] = temple_images;
+                    }
+
+                    return responseToRetun;
                 } else {
                     return;
                 }

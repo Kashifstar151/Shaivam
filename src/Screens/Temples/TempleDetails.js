@@ -28,14 +28,13 @@ import BackBtnSvg from '../../components/SVGs/BackBtnSvg';
 const TempleDetails = ({ navigation }) => {
     const route = useRoute();
     const { temple, userLocation } = route?.params;
-    console.log('🚀 ~ TempleDetails ~ data:', temple);
     const {
         data: templeDetail,
         isSuccess,
         isFetching,
         isError,
         error,
-    } = useGetTempleDetailQuery({ id: temple?.templeId });
+    } = useGetTempleDetailQuery({ id: temple?.templeId }, { refetchOnFocus: true });
 
     const popAction = StackActions.pop(1);
     const [fav, setFav] = useState(true);
@@ -241,6 +240,8 @@ const TempleDetails = ({ navigation }) => {
                                 regionCoordinate={userLocation}
                                 showButton={true}
                                 showMargin={false}
+                                showImage={true}
+                                imageArr={templeDetail?.temple_images}
                             />
 
                             {/* <View
@@ -277,7 +278,7 @@ const TempleDetails = ({ navigation }) => {
                                 </Pressable>
                             </View> */}
 
-                            {templeDetail ? (
+                            {templeDetail.basicDetails && (
                                 <View style={{ marginHorizontal: 20, marginVertical: 10 }}>
                                     <Text
                                         style={{
@@ -346,7 +347,11 @@ const TempleDetails = ({ navigation }) => {
                                         }}
                                     />
                                 </View>
-                            ) : (
+                            )}
+
+                            {!(
+                                templeDetail?.basicDetails || templeDetail?.temple_images.length
+                            ) && (
                                 <View
                                     style={{
                                         justifyContent: 'center',
@@ -399,7 +404,6 @@ const TempleDetails = ({ navigation }) => {
 };
 
 const KeyValueComp = ({ keyVal, value }) => {
-    // console.log('🚀 ~ KeyValueComp ~ keyVal, value :', keyVal, value);
     return (
         <View
             style={{
