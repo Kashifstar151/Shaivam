@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Keyboard, Pressable, StyleSheet } from 'react-native';
 import { View, TextInput } from 'react-native';
 import SearchSVG from '../../components/SVGs/SearchSVG';
-import BackBtnSvg from '../../components/SVGs/BackBtnSvg';
+// import BackBtnSvg from '../../components/SVGs/BackBtnSvg';
 import { useTranslation } from 'react-i18next';
 import { useDebouncer } from '../../Helpers/useDebouncer';
 
@@ -66,7 +66,7 @@ const FilterTheTempleFromList = ({ route, data = [], setDataToRender }) => {
                             navigation.dispatch(popAction);
                         }}
                     >
-                        <BackBtnSvg />
+                        {/* <BackBtnSvg /> */}
                     </Pressable>
                 )}
                 <TextInput

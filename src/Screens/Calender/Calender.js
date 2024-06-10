@@ -11,6 +11,7 @@ import {
     Text,
     ScrollView,
     ActivityIndicator,
+    Modal,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/Entypo';
 import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
@@ -22,7 +23,7 @@ import InActiveCalender from '../../assets/Images/UnactiveCalender.svg';
 import ActiveStar from '../../assets/Images/ActiveStar.svg';
 import InActiveStar from '../../assets/Images/UnactiveStart.svg';
 import ActiveCalender from '../../assets/Images/CalenderAct.svg';
-import { ExpandableCalendar, CalendarProvider, Calendar } from 'react-native-calendars';
+import { Calendar } from 'react-native-calendars';
 import { colors } from '../../Helpers';
 import ElevatedCard from '../../components/ElevatedCard';
 import EventCard from '../../components/EventCard';
@@ -30,7 +31,6 @@ import { ThemeContext } from '../../Context/ThemeContext';
 import EventSelectionType from './EventSelectionType';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import ButtonComp from '../Temples/Common/ButtonComp';
 import LocationSelection from './LocationSelection';
 import { RouteTexts } from '../../navigation/RouteText';
 import SubmitEnteries from './SubmitEnteries';
@@ -46,6 +46,7 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import { useTranslation } from 'react-i18next';
 import { useDebouncer } from '../../Helpers/useDebouncer';
 import CategoryAssets from './CategoryAssets';
+import FestivalVideo from './FestivalVideo';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -53,27 +54,28 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 
 const Calender = ({ navigation }) => {
     const isFocused = useIsFocused()
-    const { t } = useTranslation()
+    const { t, i18n } = useTranslation()
     const data1 = [
         { name: 'Festivals', selected: <ActiveStar />, unSelected: <InActiveStar /> },
         { name: 'Events', selected: <ActiveCalender />, unSelected: <InActiveCalender /> },
     ];
     const [selectMonth, setSelectMonth] = useState(new Date().toISOString());
+    const [language, setLanguage] = useState(i18n.language == 'en-IN' ? 'en' : i18n.language == 'en' ? 'ta' : i18n.language)
     const [searchText, setSearchText] = useState('');
     const [eventCategory, setEventCategory] = useState(null);
     const [selectedLocation, setSelectedLocation] = useState(null);
-    const [startDate, setStartDate] = useState('')
+    // const [startDate, setStartDate] = useState('')
     const [todayEvent, setTodayEvent] = useState([])
     const [showLoader, setShowLoader] = useState(false)
-    const [endDate, setEndDate] = useState('')
+    // const [endDate, setEndDate] = useState('')
     const flatListRef = useRef(null)
+    const festivalVideoref = useRef(null)
     const {
         data: regularEvent,
         isFetching: isFetchingRegular,
         refetch: refetchRegular,
         isSuccess: regularSuccess
     } = useGetListQuery({ selectedLocation, selectMonth, eventCategory }, { skip: !selectMonth });
-    // console.log("🚀 ~ regularEvent:", regularEvent)
     const {
         data: recurringEventList,
         isFetching: isFetchingRecurring,
@@ -81,15 +83,13 @@ const Calender = ({ navigation }) => {
         isSuccess: recurringSuccess
 
     } = useGetRecurringEventListQuery({ selectedLocation, eventCategory });
-    // console.log("🚀 ~ recurringEventList:", recurringEventList)
     const {
         data: festivalEvents,
         isFetching: isfestivaldataFetching,
         refetch: refetchFestival,
         isSuccess: isFestivalSuccess
 
-    } = useGetFestivalListQuery({ selectMonth });
-    // console.log("🚀 ~ Calender ~ recurringEventList:", JSON.stringify(festivalEvents, 0, 2))
+    } = useGetFestivalListQuery({ selectMonth, language });
     const {
         data: monthRecurringEventList,
         isFetching: isFetchingMonthly,
@@ -97,7 +97,6 @@ const Calender = ({ navigation }) => {
         isSuccess: recurringMonthlySuccess
 
     } = useGetRecurringEventMonthlyQuery({ selectedLocation, eventCategory });
-    // console.log("🚀 ~ monthRecurringEventList:", monthRecurringEventList)
     const [weekly, setWeekly] = useState([]);
     const [regular, setRegular] = useState([]);
     const [monthly, setMonthly] = useState([]);
@@ -105,13 +104,16 @@ const Calender = ({ navigation }) => {
     const [changed, setChanged] = useState(false);
     const [selectedList, setSelecetedList] = useState([])
     const [prevNext, setPrevNext] = useState(0)
+    const [weekEvent, setWeekEvent] = useState([]);
     const bottomSheetRef = useRef(null);
     const [selectedFilter, setSelectedFilter] = useState(null);
     const disableMonthChangeValRef = useRef();
+    const selectEventRef = useRef(null)
     const [disableMonthChangeVal, setDisableMonthChangeVal] = useState(false);
     const [notificationOnEvent, setNotificationEvents] = useState([])
     const { theme } = useContext(ThemeContext);
     const [filteredData, setFilteredData] = useState([])
+    const [showFestivalVideo, setShowFestivalVideo] = useState(false)
     const debounceVal = useDebouncer(searchText, 500);
     useEffect(() => {
         setWeekly([]);
@@ -130,18 +132,12 @@ const Calender = ({ navigation }) => {
 
     const getScheduleNotification = () => {
         PushNotification.getScheduledLocalNotifications(callbacks => {
-            // console.log("🚀 ~ getScheduleNotification ~ callbacks:", callbacks)
             setNotificationEvents(callbacks)
         })
     }
     useEffect(() => {
-
-        // console.log("🚀 ~ useEffect ~ regularEvent:", regularEvent)
         if (regularEvent && regularSuccess) {
             setShowLoader(true)
-            // alert('regular event')
-            // console.log('recurringEventList?.meta?.pagination?.total regular', regularEvent?.meta?.pagination?.total)
-
             setRegular([]);
             const data = regularEvent.data.map(event => ({
                 ...event,
@@ -155,7 +151,6 @@ const Calender = ({ navigation }) => {
 
     // Process recurring event list
     useEffect(() => {
-        // console.log("🚀 ~ useEffect ~ recurringEventList:", recurringEventList)
         if (recurringEventList && recurringSuccess) {
             const data = []
             const cDate = moment().startOf("day");
@@ -182,19 +177,10 @@ const Calender = ({ navigation }) => {
             setChanged(!changed);
         }
     }, [recurringEventList, prevNext, selectedLocation, eventCategory, recurringSuccess]);
-
     // Process regular events
-
-
     // Process monthly recurring events
     useEffect(() => {
-        // clearStates()
-        // console.log("🚀 ~ useEffect ~ monthRecurringEventList:", monthRecurringEventList)
         if (monthRecurringEventList && recurringMonthlySuccess) {
-            // alert('recurring event monthly')
-
-            // console.log('recurringEventList?.meta?.pagination?.total month recurring', monthRecurringEventList?.meta?.pagination?.total)
-
             setMonthly([]);
             const cDate = moment().startOf("day");
             const data = [];
@@ -263,10 +249,9 @@ const Calender = ({ navigation }) => {
 
     // Combine all events into a sorted list
     useEffect(() => {
-        // clearStates()
         setMainData([])
-        // alert('main data')
         let today = []
+        let week = []
         const allEvents = []
         if (weekly) {
             for (let w of weekly) {
@@ -289,99 +274,87 @@ const Calender = ({ navigation }) => {
         setShowLoader(false)
         sortedEvents?.map((item) => {
             if (moment() >= moment(item?.start_date) && moment() <= moment(item?.end_date)) {
-                // setTodayEvent(prev => [...prev, item])
                 today.push(item)
+            }
+            if (moment().isSame(moment(item?.start_date), 'week')) {
+                week.push(item)
             }
         })
         setTodayEvent(today)
-        // setMainData(sortedEvents);
+        setWeekEvent(week)
     }, [changed]);
 
     useEffect(() => {
         let data = []
         if (selectedHeader == data1[1].name) {
             data = mainData.filter((item) => item?.attributes?.title?.includes(searchText))
-            // console.log("🚀 ~ useEffect ~ data:", data)
             setFilteredData(data)
         } else {
             data = festivalEvents?.data?.filter((item) => item?.attributes?.Calendar_title?.includes(searchText))
             setFilteredData(data)
         }
     }, [debounceVal])
-    useEffect(() => {
-        // console.log('setFilteredData', searchText)
-    }, [searchText])
-
     const selectFilter = (item) => {
-        setSelectedFilter(item);
-        bottomSheetRef.current.open();
-    };
-
-    const findFinalizedDate = (days, daysType, cDate) => {
-        console.log("🚀 ~ findFinalizedDate ~ days:", days, daysType, cDate)
-        let finalizedDate = null;
-
-        switch (daysType) {
-            case "one":
-                finalizedDate = days[0] && days[0] >= cDate ? days[0] : null;
-                break;
-            case "two":
-                finalizedDate = days[1] && days[1] >= cDate ? days[1] : null;
-                break;
-            case "three":
-                finalizedDate = days[2] && days[2] >= cDate ? days[2] : null;
-                break;
-            case "four":
-                finalizedDate = days[3] && days[3] >= cDate ? days[3] : null;
-                break;
-            case "last":
-                const lastDay = days[4] || days[days.length - 1];
-                finalizedDate = lastDay && lastDay >= cDate ? lastDay : null;
-                break;
+        if (item == 'Add Event') {
+            setSelectedFilter(item);
+            selectEventRef.current.open();
+        } else {
+            setSelectedFilter(item);
+            bottomSheetRef.current.open()
         }
-        // console.log('finalizedDate', finalizedDate)
-        return finalizedDate;
     };
+    // const findFinalizedDate = (days, daysType, cDate) => {
+    //     let finalizedDate = null;
+
+    //     switch (daysType) {
+    //         case "one":
+    //             finalizedDate = days[0] && days[0] >= cDate ? days[0] : null;
+    //             break;
+    //         case "two":
+    //             finalizedDate = days[1] && days[1] >= cDate ? days[1] : null;
+    //             break;
+    //         case "three":
+    //             finalizedDate = days[2] && days[2] >= cDate ? days[2] : null;
+    //             break;
+    //         case "four":
+    //             finalizedDate = days[3] && days[3] >= cDate ? days[3] : null;
+    //             break;
+    //         case "last":
+    //             const lastDay = days[4] || days[days.length - 1];
+    //             finalizedDate = lastDay && lastDay >= cDate ? lastDay : null;
+    //             break;
+    //     }
+    //     // console.log('finalizedDate', finalizedDate)
+    //     return finalizedDate;
+    // };
 
     function getDaysInMonth(month, year, dayOfWeek) {
-        console.log("🚀 ~ getDaysInMonth ~ month:", month, year)
         const daysInMonth = moment(`${year}-${month}-01`).daysInMonth();
-        //get the number of days in the month. ⤴️
         const firstDayOfMonth = moment(`${year}-${month}-01`);
-        // first day of the given month and year ⤴️
         const days = [];
-
         for (let i = 0; i < daysInMonth; i++) {
             const day = firstDayOfMonth.clone().add(i, "days");
-            // clone the first day of the month and add the number of days to it ⤴️
             const dayName = day.format("dddd");
             console.log("dayName", dayName);
-            // get the day of the week based on the day of the month ⤴️
-
-
             if (dayName === dayOfWeek) {
                 days.push(day.toDate());
-                // push the day of the week to the days array ⤴️
             }
         }
-
         return days;
     }
     const selectdateHandler = (res) => {
-        console.log("🚀 ~ selectdateHandler ~ res:", res)
-        // mainData?.map((item, index) => {
         if (selectedHeader === data1[1].name) {
             let arr = mainData?.filter((item) =>
                 moment(item?.start_date).format('YYYY-MM-DD') == res?.dateString
             )
-            console.log(arr.length, 'onsole.log(arr.length)')
+            // console.log(arr.length, 'onsole.log(arr.length)')
             setSelecetedList(arr)
         } else {
             let arr = festivalEvents?.data?.filter((item) =>
                 moment(item?.attributes?.calendar_from_date).format('YYYY-MM-DD') == res?.dateString
             )
             setSelecetedList(arr)
-            console.log(arr.length, 'onsole.log(arr.length)')
+            // console.log(arr.length, 'onsole.log(arr.length)')
 
         }
     }
@@ -399,7 +372,6 @@ const Calender = ({ navigation }) => {
     const getItemLayOut = (item, index) => {
         return { length: 100, offset: 100 * index, index };
     };
-
     const [selectedHeader, setSelectedHeader] = useState(data1[0].name);
     const marked = useMemo(() => {
         const markedDates = {};
@@ -417,11 +389,9 @@ const Calender = ({ navigation }) => {
                 };
             });
             return markedDates;
-            // console.log(mainData, '================>')
         } else {
             mainData?.forEach(item => {
                 const date = moment(item?.start_date).format('YYYY-MM-DD');
-                // console.log("🚀 ~ marked ~ date: in evebt", date)
                 markedDates[date] = {
                     marked: true,
                     dotColor: '#FCB300',
@@ -432,12 +402,8 @@ const Calender = ({ navigation }) => {
                 };
             });
             return markedDates;
-
         }
     }, [selectedHeader, festivalEvents]);
-
-
-
     return (
         <View style={{ backgroundColor: '#fff', flex: 1 }} >
             <Background>
@@ -509,17 +475,14 @@ const Calender = ({ navigation }) => {
                         disableArrowRight={isFetchingRegular || disableMonthChangeVal}
                         displayLoadingIndicator={isFetchingRegular || disableMonthChangeVal}
                         onMonthChange={(month) => {
-                            // alert(prevNext)
                             setDisableMonthChangeVal(() => true);
                             if (disableMonthChangeValRef.current) {
                                 clearTimeout(disableMonthChangeValRef.current);
                             }
                             disableMonthChangeValRef.current = setTimeout(() => {
                                 setDisableMonthChangeVal(() => false);
-                                // alert(selectMonth?.split('-')[1])
                                 const newMonth = moment(month.dateString);
                                 const currentMonth = moment(selectMonth);
-
                                 // Check year and month using moment
                                 if (newMonth.isAfter(currentMonth, 'month')) {
                                     setPrevNext(prev => prev + 1);
@@ -531,12 +494,6 @@ const Calender = ({ navigation }) => {
                                 setSelectMonth(newMonth.toISOString());
                             }, 1000);
                         }}
-                        // onPressArrowLeft={() => {
-                        //     setPrevNext(prev => prev - 1)
-                        // }}
-                        // onPressArrowRight={() => {
-                        //     setPrevNext(prev => prev + 1)
-                        // }}
                         markingType="custom"
                         markedDates={marked}
                         style={styles.calenderTheme}
@@ -695,7 +652,46 @@ const Calender = ({ navigation }) => {
                                     >
                                         <EventCard
                                             date={moment(item.start_date).get('D')}
-                                            Icon={CategoryAssets[item?.attributes?.logo_flag]?.Svg}
+                                            Icon={CategoryAssets[item?.attributes?.event_category ? item?.attributes?.event_category : item?.attributes?.category]?.Svg}
+                                            dateNo={moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('DD')}
+                                            day={moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('ddd')}
+                                            timing={`${moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('MMMM DD YYYY')} - ${moment(item.end_date ? item.end_date : item?.attributes?.end_date).format('MMMM DD YYYY')}`}
+                                            title={selectedHeader == data1[0].name ? item?.attributes?.Calendar_title : item.attributes.title}
+                                            item={item}
+                                            theme={{
+                                                textColor: theme.textColor,
+                                                colorscheme: theme.colorscheme,
+                                            }}
+                                        />
+                                    </ElevatedCard>
+                                )}
+                            />
+                        </>
+                    }
+                    {
+                        weekEvent?.length > 0 && selectedHeader !== data1[0].name &&
+                        <>
+                            <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
+                                <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold', color: '#222222' }}>
+                                    {t('This Week')}
+                                </Text>
+                            </View>
+                            <FlatList
+                                data={weekEvent}
+                                key={(item, index) => index}
+                                contentContainerStyle={{ paddingBottom: 10 }}
+                                renderItem={({ item, index }) => (
+                                    <ElevatedCard
+                                        navigation={() =>
+                                            navigation.navigate(RouteTexts.EVENT_DETAILS, {
+                                                item: item,
+                                            })
+                                        }
+                                        theme={{ colorscheme: theme.colorscheme }}
+                                    >
+                                        <EventCard
+                                            date={moment(item.start_date).get('D')}
+                                            Icon={CategoryAssets[item?.attributes?.event_category ? item?.attributes?.event_category : item?.attributes?.category]?.Svg}
                                             dateNo={moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('DD')}
                                             day={moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('ddd')}
                                             timing={`${moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('MMMM DD YYYY')} - ${moment(item.end_date ? item.end_date : item?.attributes?.end_date).format('MMMM DD YYYY')}`}
@@ -735,7 +731,7 @@ const Calender = ({ navigation }) => {
                                             theme={{ colorscheme: theme.colorscheme }}
                                         >
                                             <EventCard
-                                                Icon={CategoryAssets[item?.attributes?.logo_flag]?.Svg}
+                                                Icon={CategoryAssets[item?.attributes?.event_category ? item?.attributes?.event_category : item?.attributes?.category]?.Svg}
                                                 date={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).get('D') : moment(item.start_date).get('D')}
                                                 dateNo={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).format('DD') : moment(item.start_date).format('DD')}
                                                 day={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).format('ddd') : moment(item.start_date).format('ddd')}
@@ -753,6 +749,17 @@ const Calender = ({ navigation }) => {
                                 />
                             </>
                     }
+                    <RBSheet closeOnDragDown ref={selectEventRef}>
+                        <SubmitEnteries
+                            navigation={navigation}
+                            setSelectedEvent={setSelectedFilter}
+                            selectedEvent={selectedFilter}
+                            closeSheet={selectEventRef}
+                            festivalVideoref={festivalVideoref}
+                            setShowFestivalVideo={setShowFestivalVideo}
+
+                        />
+                    </RBSheet>
                     <RBSheet height={500} closeOnDragDown ref={bottomSheetRef}>
                         {selectedFilter === 'Event' ? (
                             <>
@@ -761,32 +768,17 @@ const Calender = ({ navigation }) => {
                                     category={eventCategory}
                                     bottomSheetRef={bottomSheetRef}
                                 />
-                                {/* <View
-                                    style={{
-                                        justifyContent: 'center',
-                                        alignSelf: 'center',
-                                        position: 'absolute',
-                                        bottom: 10,
-                                    }}
-                                >
-                                    <ButtonComp
-                                        color={true}
-                                        text="Search"
-                                        navigation={() => bottomSheetRef?.current?.close()}
-                                    />
-                                </View> */}
                             </>
-                        ) : selectedFilter === 'Add Event' ? (
-                            <SubmitEnteries
-                                navigation={navigation}
-                                setSelectedEvent={setSelectedFilter}
-                                selectedEvent={selectedFilter}
-                                closeSheet={() => bottomSheetRef.current.close()}
-                            />
                         ) : (
                             <LocationSelection selectedLocation={selectedLocation} calender={true} setSelected={setSelectedLocation} close={bottomSheetRef} />
                         )}
                     </RBSheet>
+                    {
+                        showFestivalVideo &&
+                        <Modal>
+                            <FestivalVideo setShowFestivalVideo={setShowFestivalVideo} navigation={navigation} />
+                        </Modal>
+                    }
                 </View>
             </ScrollView>
         </View>

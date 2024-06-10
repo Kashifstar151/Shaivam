@@ -62,7 +62,7 @@ const MoreOption = () => {
         // },
         {
             title: 'Go to website',
-            Description: 'Your Selection',
+            Description: 'Shaivam.org',
             icon: <GoToWebSVG fill={'#333333'} />,
         },
         // {
@@ -77,17 +77,17 @@ const MoreOption = () => {
         },
         {
             title: 'Share the app',
-            Description: 'Your Selection',
+            Description: '',
             icon: <ShareSVG fill={'#333333'} />,
         },
         {
             title: 'Rate the app',
-            Description: 'Your Selection',
+            Description: '',
             icon: <RateTheAppSVG fill={'#333333'} />,
         },
         {
             title: 'About',
-            Description: 'Your Selection',
+            Description: '',
             icon: <AboutSVG fill={'#333333'} />,
         },
         {
@@ -136,6 +136,8 @@ const MoreOption = () => {
             Shareapp()
         } else if (item?.title == 'Acknowledgement') {
             acknowladgeRef.current.open()
+        } else if (item?.title === 'Rate the app') {
+            Linking.openURL("https://play.google.com/store/apps/details?id=org.shaivam")
         }
     };
 
@@ -154,7 +156,7 @@ const MoreOption = () => {
         { name: 'മലയാളം', lngCode: 'ml' },
         { name: 'ଓଡ଼ିଆ', lngCode: 'od' },
         { name: 'ਪੰਜਾਬੀ', lngCode: 'pa' },
-        { name: 'सिन्धी', lngCode: 'si' },
+        { name: 'සිංහල', lngCode: 'si' },
         { name: 'தமிழ்', lngCode: 'en' },
         { name: 'తెలుగు', lngCode: 'te' },
         // { name: 'اُردُو', lngCode: 'ur' },

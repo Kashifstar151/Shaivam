@@ -25,7 +25,7 @@ const BackButton = ({
     eventShare,
     item
 }) => {
-    console.log("🚀 ~ item:", item)
+    // console.log("🚀 ~ item:", item)
     const { musicState, dispatchMusic } = useContext(MusicContext);
     const { t } = useTranslation()
     // console.log("🚀 ~ musicState:", musicState)
@@ -53,8 +53,14 @@ const BackButton = ({
     const shareSong = async () => {
         const link = await buildLink()
         Share.open({
-            message: eventShare ? `${t('EventShare')}${link}` : `${secondMiddleText}I want to share this Thirumurai with you.
+            title: item?.attributes?.title,
+            message: eventShare ? `Event Title : ${item?.attributes?.title}
+Start date : ${item?.attributes?.start_date} 
+Location : ${item?.attributes?.location}
+This event is shared through Shaivam.org Mobile App. For more details about this event, please check here:${link}` :
+                `${secondMiddleText}I want to share this Thirumurai with you.
             இந்தத் திருமுறையை Shaivam.org Mobile செயலியில் படித்தேன்.மிகவும் பிடித்திருந்தது.பகிர்கின்றேன்.படித்து மகிழவும் ${link} `
+
 
         })
     }

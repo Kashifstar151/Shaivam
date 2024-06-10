@@ -1,22 +1,22 @@
 import * as React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
-function BackBtnSvg(props) {
+function BackBtnSVG({ fill, width = 24, height = 24, ...props }) {
     return (
         <Svg
-            width={16}
-            height={9}
-            viewBox="0 0 16 9"
+            width={width}
+            height={height}
+            viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             {...props}
         >
             <Path
-                d="M.5 4.378a.624.624 0 00.179.433l.003.007 3.75 3.75a.625.625 0 00.884-.884L2.634 5.001h12.241a.625.625 0 100-1.25H2.634l2.682-2.683a.625.625 0 00-.883-.884l-3.75 3.75-.004.007a.611.611 0 00-.13.196.609.609 0 00-.049.239v.002z"
-                fill="#777"
+                d="M3 11.254a.75.75 0 00.215.519l.004.009 4.5 4.5a.75.75 0 001.06-1.06L5.562 12H20.25a.75.75 0 100-1.5H5.56l3.22-3.22a.75.75 0 00-1.061-1.06l-4.5 4.5-.004.008a.733.733 0 00-.156.235.73.73 0 00-.059.287v.003z"
+                fill={fill}
             />
         </Svg>
     );
 }
 
-export default BackBtnSvg;
+export default BackBtnSVG;

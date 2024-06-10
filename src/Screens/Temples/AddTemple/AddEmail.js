@@ -10,7 +10,8 @@ import { colors } from '../../../Helpers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { RouteTexts } from '../../../navigation/RouteText';
-import BackBtnSvg from '../../../components/SVGs/BackBtnSvg';
+import BackBtnSVG from '../../../components/SVGs/BackBtnSvg';
+// import BackBtnSvg from '../../../components/SVGs/BackBtnSvg';
 
 const emailReg = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
 const AddEmail = ({ setStep, setEmail, navigation }) => {
@@ -55,7 +56,7 @@ const AddEmail = ({ setStep, setEmail, navigation }) => {
                         left: 20,
                     }}
                 >
-                    <BackBtnSvg width={24} height={24} fill={'#fff'} />
+                    <BackBtnSVG width={24} height={24} fill={'#fff'} />
                 </TouchableOpacity>
 
                 <View

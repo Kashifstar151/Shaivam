@@ -12,7 +12,7 @@ import {
     useAddTempleImagesMutation,
     useAddTempleMutation,
 } from '../../../store/features/Temple/TemplApiSlice';
-import BackBtnSvg from '../../../components/SVGs/BackBtnSvg';
+// import BackBtnSvg from '../../../components/SVGs/BackBtnSvg';
 
 const PreviewPage = ({ navigation, setStep, email }) => {
     const templadata = useSelector((state) => state.temple);
@@ -113,7 +113,7 @@ const PreviewPage = ({ navigation, setStep, email }) => {
                             }}
                         >
                             <Pressable onPress={() => setStep(1)}>
-                                {<BackBtnSvg fill={'#222222'} />}
+                                {/* {<BackBtnSvg fill={'#222222'} />} */}
                             </Pressable>
                             <Text
                                 style={{
@@ -121,8 +121,7 @@ const PreviewPage = ({ navigation, setStep, email }) => {
                                     fontSize: RFValue(18, 850),
                                     fontFamily: 'Lora-Bold',
                                     lineHeight: 20,
-                                }}
-                            >
+                                }}>
                                 Preview temple submission
                             </Text>
                         </View>

@@ -564,7 +564,7 @@ export const Temples = ({ navigation, route }) => {
                                 work
                             </Text>
                             <CustomLongBtn
-                                onPress={handleModalAction}
+                                // onPress={handleModalAction}
                                 text={'Enable location access'}
                                 textStyle={{
                                     color: '#4C3600',

@@ -59,7 +59,7 @@ const Fav = ({ navigation }) => {
                 }
             }),
         ]);
-        checkFile();
+        // checkFile();
     }, [isFocuced]);
     const checkFile = async (path) => {
         RNFS.readFile(`file://${RNFS.MainBundlePath}`)
@@ -327,6 +327,7 @@ const Fav = ({ navigation }) => {
                         onPress={() =>
                             navigation.navigate(RouteTexts.SONGS_LIST, {
                                 data: favList,
+                                selecetedHeader: selecetedHeader
                             })
                         }
                     >
@@ -348,13 +349,14 @@ const Fav = ({ navigation }) => {
                         renderItem={({ item, index }) => renderSong(item, index)}
                     />
                 </View>
-            ) : selecetedHeader == 'Offline Downloads' && downloadList?.length > 0 ? (
+            ) : selecetedHeader == 'Offline downloads' && downloadList?.length > 0 ? (
                 <View style={{ flex: 1 }}>
                     <TouchableOpacity
                         style={styles.RearrangsTask}
                         onPress={() =>
                             navigation.navigate(RouteTexts.SONGS_LIST, {
-                                data: favList,
+                                data: downloadList,
+                                selecetedHeader: selecetedHeader
                             })
                         }
                     >

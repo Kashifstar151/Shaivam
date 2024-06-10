@@ -13,6 +13,7 @@ import { colors } from '../../Helpers';
 import { useDebouncer } from '../../Helpers/useDebouncer';
 import { useGetListQuery } from '../../store/features/Calender/CalenderApiSlice';
 import { useTranslation } from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LocationSelection = ({ calender, setSelected, close, selectedLocation }) => {
     // const [selectedEvent, setSelectedEvent] = useState(null)
@@ -41,6 +42,7 @@ const LocationSelection = ({ calender, setSelected, close, selectedLocation }) =
         displayName: '',
     });
     const [searchedText, setSearchText] = useState('');
+    const [recentKeyword, setRecentKeywords] = useState([])
     const fetchTheName = useCallback(
         async (coors) => {
             // console.log('the location fetch enters  ');
@@ -85,6 +87,9 @@ const LocationSelection = ({ calender, setSelected, close, selectedLocation }) =
             setFetchedLocationsName((prev) => response)
         });
     }, [debounceVal]);
+    useEffect(() => {
+        getSearchedTexxs()
+    }, [])
     const fetchMyLocation = async () => {
         // alert(true)
         getCurrentLocation(async (val) => {
@@ -112,6 +117,31 @@ const LocationSelection = ({ calender, setSelected, close, selectedLocation }) =
         setSelected({ lat: item?.lat, long: item.lon, name: item?.name });
         close?.current?.close();
     };
+    const setRecentSearches = () => {
+        const keys = recentKeyword ? recentKeyword : []
+        const s = keys?.filter((keys) => keys !== searchText)
+        const updated = [...s, searchedText].slice(0, 6)
+        AsyncStorage.setItem("recentLocationSearch", JSON.stringify(updated))
+    }
+    const getSearchedTexxs = async () => {
+        const data = await AsyncStorage.getItem('recentLocationSearch')
+        console.log("🚀 ~ getSearchedTexxs ~ data:", data)
+        setRecentKeywords(JSON.parse(data))
+    }
+    const renderRecentSearch = (item) => {
+        console.log("🚀 ~ renderRecentSearch ~ item:", item)
+        return (
+            <TouchableOpacity style={{ borderWidth: 1, borderColor: '#777777', width: 'auto', height: 35, borderRadius: 16, paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center', marginLeft: 10 }} onPress={() => {
+                setSearchText(item)
+                // setTimeout(() => {
+                //     getDataFromSql(item)
+                // }, 1000)
+                // getDataFromSql()
+            }}>
+                <Text style={{ fontSize: 12, fontFamily: 'Mulish-Regular' }}>{item}</Text>
+            </TouchableOpacity>
+        )
+    }
 
     const rednerItem = (item, index) => (
         <TouchableOpacity
@@ -147,16 +177,18 @@ const LocationSelection = ({ calender, setSelected, close, selectedLocation }) =
                 }}
             >
                 <MaterialIcons name="search" size={28} color={colors.grey4} />
-                <TextInput placeholder="Search for locations" placeholderTextColor={colors.grey5} onChangeText={(e) => setSearchText(e)} val={selectedLocation} />
+                <TextInput placeholder="Search for locations" placeholderTextColor={colors.grey5} onChangeText={(e) => setSearchText(e)} val={selectedLocation} onSubmitEditing={setRecentSearches} />
             </View>
             {/* <SearchInput color={true} styleOverwrite={{ marginHorizontalUnset: 20 }} /> */}
             <View style={{ paddingHorizontal: 20 }}>
                 <Text style={{ color: '#C1554E', fontSize: 16, fontFamily: 'Mulish-Bold' }}>
                     {t('Most searched locations')}
                 </Text>
-                <Text style={{ color: '#666666', fontFamily: 'Mulish-Regular', fontSize: 12 }}>
+                <FlatList data={recentKeyword} contentContainerStyle={{ marginTop: 5 }} renderItem={({ item, index }) => renderRecentSearch(item)} horizontal />
+
+                {/* <Text style={{ color: '#666666', fontFamily: 'Mulish-Regular', fontSize: 12 }}>
                     {t('Lorem ipsum dolor set')}
-                </Text>
+                </Text> */}
             </View>
             <FlatList contentContainerStyle={{ paddingHorizontal: 20 }} data={fetchLocationName} renderItem={({ item, index }) => (
                 rednerItem(item, index)

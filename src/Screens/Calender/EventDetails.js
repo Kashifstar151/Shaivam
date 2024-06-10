@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, FlatList, Image, Linking, PermissionsAndroid, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, FlatList, Image, Linking, Modal, PermissionsAndroid, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import BackButton from '../../components/BackButton';
 import Background from '../../components/Background';
 import ShareIcon from '../../assets/Images/share-1.svg';
@@ -16,6 +16,7 @@ import PushNotification, { Importance } from 'react-native-push-notification';
 import { StackActions, useIsFocused } from '@react-navigation/native';
 import { getCurrentLocation } from '../../Helpers/GeolocationFunc';
 import { useLazyGetRecurringByIdQuery, useLazyGetRegularByIdQuery } from '../../store/features/Calender/CalenderApiSlice';
+import Feather from 'react-native-vector-icons/dist/Feather';
 
 
 const EventDetails = ({ navigation, route }) => {
@@ -28,6 +29,7 @@ const EventDetails = ({ navigation, route }) => {
     console.log('🚀 ~ EventDetails ~ item:', JSON.stringify(item, 0, 2));
     const [notificationOn, setNotification] = useState(false)
     const [regionCoordinate, setRegionCoordinate] = useState(null)
+    const [showModal, setShowModal] = useState(false)
     const [eventData, setEventData] = useState(item)
     useEffect(() => {
         if (external) {
@@ -39,15 +41,15 @@ const EventDetails = ({ navigation, route }) => {
         console.log("🚀 ~ callApi ~ check:", item?.split('_')[1])
         if (item?.split('_')[0] == 'recurring') {
             GetReccuringById({ data: item?.split('_')[1] }).then((result) => {
-                console.log("🚀 ~ getReccuringById ~ result:", result)
+                // console.log("🚀 ~ getReccuringById ~ result:", result)
                 setEventData(result?.data?.data)
             }).catch((err) => {
-                console.log("🚀 ~ getReccuringById ~ err:", err)
+                // console.log("🚀 ~ getReccuringById ~ err:", err)
                 setEventData(result?.data?.data)
             });
         } else {
             GetRegularById({ data: item?.split('_')[1] }).then((result) => {
-                console.log("🚀 ~ getRegularById ~ result:", result)
+                // console.log("🚀 ~ getRegularById ~ result:", result)
 
             }).catch((err) => {
                 console.log("🚀 ~ getRegularById ~ err:", err)
@@ -67,6 +69,10 @@ const EventDetails = ({ navigation, route }) => {
     useEffect(() => {
         if (notificationOn) {
             scheduleNotification()
+        } else {
+            // alert(true)
+            PushNotification.cancelLocalNotification(item?.id)
+            setNotification(false)
         }
         getScheduleNotification()
 
@@ -89,8 +95,31 @@ const EventDetails = ({ navigation, route }) => {
     const [selectedHeader, setSelectedHeader] = useState('Direction');
     const checkPermissionAccess = async () => {
         // alert(true)
-        const permission = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);;
-        console.log("🚀 ~ checkPermissionAccess ~ permission:", permission)
+        const permission = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+        console.log('plateform version', Platform.Version)
+        if (Platform.OS === 'android' && Platform.Version >= 33) {
+            const canScheduleExactAlarms = await PermissionsAndroid.check(
+                PermissionsAndroid.PERMISSIONS.SCHEDULE_EXACT_ALARM
+            );
+            if (!canScheduleExactAlarms) {
+                Alert.alert(
+                    "Need Permission",
+                    "Our app needs permission to schedule alarms. Please enable it in the settings.",
+                    [
+                        {
+                            text: "Cancel",
+                            style: "cancel"
+                        },
+                        {
+                            text: "Go to Settings",
+                            onPress: () => {
+                                Linking.openSettings();
+                            }
+                        }
+                    ]
+                );
+            }
+        }
     }
     const createChannel = () => {
         PushNotification.createChannel({
@@ -102,6 +131,7 @@ const EventDetails = ({ navigation, route }) => {
         PushNotification.localNotificationSchedule({
             channelId: 'Event',
             title: item?.title,
+            category: item?.event_category,
             date: new Date(item?.start_date ? item?.start_date : item?.attributes?.start_date + 120 * 1000),
             message: item?.attributes?.title,
             id: item?.id,
@@ -110,7 +140,7 @@ const EventDetails = ({ navigation, route }) => {
     }
     const getScheduleNotification = () => {
         PushNotification.getScheduledLocalNotifications(callbacks => {
-            console.log("🚀 ~ getScheduleNotification ~ callbacks:", callbacks)
+            // console.log("🚀 ~ getScheduleNotification ~ callbacks:", callbacks)
             callbacks?.map((res) => {
                 if (res?.id == item?.id) {
                     setNotification(true)
@@ -143,18 +173,18 @@ const EventDetails = ({ navigation, route }) => {
                 <Text
                     style={{ color: '#777777', fontFamily: 'Mulish-Regular', marginHorizontal: 10 }}
                 >
-                    {item?.attributes?.category}
+                    {item?.attributes?.event_category ? item?.attributes?.event_category : item?.attributes?.category}
                 </Text>
                 <View style={{ flexDirection: 'row', marginVertical: 5 }}>
                     {
-                        item?.attributes?.Latitude && item?.attributes?.Longitude &&
+                        item?.attributes?.latitude && item?.attributes?.longitude &&
                         <CustomButton
                             svg={<DirectionSVG fill={'#fff'} />}
                             onPress={() => {
                                 const sourceLatitude = parseFloat(regionCoordinate?.latitude); // Example source latitude
                                 const sourceLongitude = parseFloat(regionCoordinate?.longitude); // Example source longitude
-                                const destinationLatitude = parseFloat(eventData?.attributes?.Latitude); // Example destination latitude
-                                const destinationLongitude = parseFloat(eventData?.attributes?.Longitude); // Example destination longitude
+                                const destinationLatitude = parseFloat(eventData?.attributes?.latitude); // Example destination latitude
+                                const destinationLongitude = parseFloat(eventData?.attributes?.longitude); // Example destination longitude
                                 const googleMapsUrl = `geo:${sourceLatitude},${sourceLongitude}?q=${destinationLatitude},${destinationLongitude}`;
                                 Linking.openURL(googleMapsUrl).catch((err) => {
                                     console.log('the map is not avialable');
@@ -174,9 +204,29 @@ const EventDetails = ({ navigation, route }) => {
                             textColor={'#fff'}
                         />
                     }
+                    {
+                        item?.attributes?.virtual_event_link && item?.attributes?.virtual_event_link !== null &&
+                        <CustomButton
+                            svg={<DirectionSVG fill={'#fff'} />}
+                            onPress={() => {
+
+                                Linking.openURL('https://meet.google.com/')
+
+                            }}
+                            style={{
+                                margin: 10,
+                                elevation: 3,
+                                shadowColor: 'black',
+                                width: Dimensions.get('window').width / 2.4,
+                            }}
+                            text={t('Virtual Event')}
+                            backgroundColor={'#C1554E'}
+                            textColor={'#fff'}
+                        />
+                    }
                 </View>
                 <View style={{ paddingHorizontal: 10 }}>
-                    <Text style={styles.descriptionText}>{item?.attributes?.description}</Text>
+                    <Text style={styles.descriptionText}>{item?.attributes?.description ? item?.attributes?.description : item?.attributes?.breif_description}</Text>
                     <FlatList
                         bounces={false}
                         contentContainerStyle={{ marginTop: 10 }}
@@ -238,23 +288,40 @@ const EventDetails = ({ navigation, route }) => {
                     />
                     <FlatList
                         horizontal
-                        contentContainerStyle={{ gap: 10, paddingVertical: 10, marginTop: 10 }}
+                        contentContainerStyle={{ gap: 10, paddingVertical: 10, marginTop: 10, paddingBottom: 100 }}
                         // data={Array.from({ length: 7 }, (_, i) => i)}
                         data={item?.attributes?.File}
                         renderItem={({ item, index }) => (
-                            <Image
-                                source={
-                                    item?.url
-                                        ? { url: item?.url }
-                                        : require('../../assets/Images/Background.png')
-                                }
-                                style={{ color: 'black', width: 200, height: 130, borderRadius: 8 }}
-                            />
+                            <TouchableOpacity onPress={() => setShowModal(true)}>
+                                <Image
+                                    source={
+                                        { uri: item?.url }
+                                    }
+                                    resizeMode='cover'
+                                    style={{ width: 200, height: 130, borderRadius: 8 }}
+                                />
+                            </TouchableOpacity>
                         )}
                     />
                 </View>
             </ScrollView>
-            <View style={{ position: 'absolute', bottom: 30, paddingHorizontal: 20 }}>
+            {
+                showModal &&
+                <Modal transparent>
+                    <View>
+                        <TouchableOpacity style={{ position: 'absolute', top: 2, right: 5, zIndex: 100 }} onPress={() => setShowModal(false)}>
+                            <Feather name='x' size={34} color='black' />
+                        </TouchableOpacity>
+                        <FlatList horizontal data={item?.attributes?.File} renderItem={({ item, index }) => (
+                            <View style={{ flex: 1, margin: 20 }}>
+                                <Image source={{ uri: item?.url }} resizeMode='cover'
+                                    style={{ width: Dimensions.get('window').width - 40, height: Dimensions.get('window').height - 20, borderRadius: 8 }} />
+                            </View>
+                        )} />
+                    </View>
+                </Modal>
+            }
+            <View style={{ position: 'absolute', bottom: 20, paddingHorizontal: 20, backgroundColor: '#fff' }}>
                 <ReminderSnackBar setRecurringEvent={setNotification} recurringEvent={notificationOn} />
             </View>
         </View>

@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { Dimensions, FlatList, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, FlatList, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import MaterialIcons from "react-native-vector-icons/dist/MaterialIcons";
 import BackButton from "../../components/BackButton";
 import Background from "../../components/Background";
@@ -199,7 +199,7 @@ const Radios = ({ navigation }) => {
                 {
                     renderUi &&
                     <FlatList bounces={false} data={radioData?.data} renderItem={({ item, index }) => (
-                        <Pressable style={{ paddingHorizontal: 10, flexDirection: 'row', alignItems: 'center', borderRadius: 10, elevation: 10, shadowColor: 'black', shadowOffset: { height: 2, width: 1 }, shadowOpacity: 0.2, shadowRadius: 1, marginVertical: 10, backgroundColor: '#FEF0CC', height: 80, width: orientation == 'LANDSCAPE' ? Dimensions.get('window').height - 30 : Dimensions.get('window').width - 30 }}>
+                        <Pressable style={selectedMusic?.id == item?.id && playBackState?.state == 'playing' ? [styles.radioView, { width: orientation == 'LANDSCAPE' ? Dimensions.get('window').height - 30 : Dimensions.get('window').width - 30, backgroundColor: '#FFB500' }] : [styles.radioView, { width: orientation == 'LANDSCAPE' ? Dimensions.get('window').height - 30 : Dimensions.get('window').width - 30 }]}>
                             <RadioSVG fill={'#4C3600'} />
                             <View style={{ paddingHorizontal: 10, width: orientation == 'LANDSCAPE' ? Dimensions.get('window').height / 1.5 : Dimensions.get('window').width / 1.5 }}>
                                 <Text style={{ color: '#4C3600', fontFamily: 'Mulish-Regular' }}>{item?.attributes?.Title}</Text>
@@ -286,4 +286,7 @@ const Radios = ({ navigation }) => {
         </View >
     );
 };
+export const styles = StyleSheet.create({
+    radioView: { paddingHorizontal: 10, flexDirection: 'row', alignItems: 'center', borderRadius: 10, elevation: 10, shadowColor: 'black', shadowOffset: { height: 2, width: 1 }, shadowOpacity: 0.2, shadowRadius: 1, marginVertical: 10, backgroundColor: '#FEF0CC', height: 80, }
+})
 export default Radios;
