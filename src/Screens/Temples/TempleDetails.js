@@ -278,7 +278,7 @@ const TempleDetails = ({ navigation }) => {
                                 </Pressable>
                             </View> */}
 
-                            {templeDetail.basicDetails && (
+                            {templeDetail?.basicDetails && (
                                 <View style={{ marginHorizontal: 20, marginVertical: 10 }}>
                                     <Text
                                         style={{
@@ -352,34 +352,34 @@ const TempleDetails = ({ navigation }) => {
                             {!(
                                 templeDetail?.basicDetails || templeDetail?.temple_images.length
                             ) && (
-                                <View
-                                    style={{
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        paddingVertical: 40,
-                                        gap: 10,
-                                    }}
-                                >
-                                    <Image
-                                        source={require('../../../assets/Images/no-data.png')}
+                                    <View
                                         style={{
-                                            width: 100,
-                                            height: 100,
-                                        }}
-                                    />
-                                    <Text
-                                        style={{
-                                            color: '#000',
-                                            textAlign: 'center',
-
-                                            fontFamily: 'Mulish-Bold',
-                                            fontSize: RFValue(16, 850),
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            paddingVertical: 40,
+                                            gap: 10,
                                         }}
                                     >
-                                        Temple data is not Available
-                                    </Text>
-                                </View>
-                            )}
+                                        <Image
+                                            source={require('../../../assets/Images/no-data.png')}
+                                            style={{
+                                                width: 100,
+                                                height: 100,
+                                            }}
+                                        />
+                                        <Text
+                                            style={{
+                                                color: '#000',
+                                                textAlign: 'center',
+
+                                                fontFamily: 'Mulish-Bold',
+                                                fontSize: RFValue(16, 850),
+                                            }}
+                                        >
+                                            Temple data is not Available
+                                        </Text>
+                                    </View>
+                                )}
                         </View>
                     </ScrollView>
 
