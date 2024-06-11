@@ -350,36 +350,36 @@ const TempleDetails = ({ navigation }) => {
                             )}
 
                             {!(
-                                templeDetail?.basicDetails || templeDetail?.temple_images.length
+                                templeDetail?.basicDetails || templeDetail?.temple_images?.length
                             ) && (
-                                    <View
+                                <View
+                                    style={{
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        paddingVertical: 40,
+                                        gap: 10,
+                                    }}
+                                >
+                                    <Image
+                                        source={require('../../../assets/Images/no-data.png')}
                                         style={{
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            paddingVertical: 40,
-                                            gap: 10,
+                                            width: 100,
+                                            height: 100,
+                                        }}
+                                    />
+                                    <Text
+                                        style={{
+                                            color: '#000',
+                                            textAlign: 'center',
+
+                                            fontFamily: 'Mulish-Bold',
+                                            fontSize: RFValue(16, 850),
                                         }}
                                     >
-                                        <Image
-                                            source={require('../../../assets/Images/no-data.png')}
-                                            style={{
-                                                width: 100,
-                                                height: 100,
-                                            }}
-                                        />
-                                        <Text
-                                            style={{
-                                                color: '#000',
-                                                textAlign: 'center',
-
-                                                fontFamily: 'Mulish-Bold',
-                                                fontSize: RFValue(16, 850),
-                                            }}
-                                        >
-                                            Temple data is not Available
-                                        </Text>
-                                    </View>
-                                )}
+                                        Temple data is not Available
+                                    </Text>
+                                </View>
+                            )}
                         </View>
                     </ScrollView>
 

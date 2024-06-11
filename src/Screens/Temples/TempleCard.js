@@ -27,7 +27,7 @@ const TempleCard = ({
     showMargin,
     showButton,
     onTitleClick,
-    imageArr,
+    imageArr = [],
     showImage,
 }) => {
     const nav = useNavigation();
@@ -139,7 +139,7 @@ const TempleCard = ({
                     />
                 </ScrollView>
             )}
-            {showImage && (
+            {showImage && imageArr?.length ? (
                 <View
                     style={{
                         width: 'auto',
@@ -154,7 +154,7 @@ const TempleCard = ({
                         style={{
                             alignSelf: 'flex-start',
                         }}
-                        data={imageArr ?? Array.from({ length: 7 }, (_, i) => i)}
+                        data={imageArr}
                         renderItem={({ item, index }) => (
                             <Image
                                 source={{
@@ -165,7 +165,7 @@ const TempleCard = ({
                         )}
                     />
                 </View>
-            )}
+            ) : null}
             {showMargin && (
                 <View
                     style={{
