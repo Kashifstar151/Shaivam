@@ -19,6 +19,9 @@ import LocationLogo from '../../../components/SVGs/LocationLogo';
 import PinTheLocation from '../PinTheLocationPage';
 import LottieView from 'lottie-react-native';
 import { getTheLocationName } from '../../../Helpers/GeolocationFunc';
+import { useTempleErrorhandlerMutation } from '../../../store/features/Temple/TemplApiSlice';
+
+const indianMobRegex = /^[6789]\d{9}$/g;
 
 const SelectErrorPage = ({
     setShowSubmit,
@@ -31,10 +34,26 @@ const SelectErrorPage = ({
     const [desciption, setDescription] = useState(null);
     const [phoneNumber, setphoneNumber] = useState(null);
     const [disable, setDisable] = useState(true);
-    const [submitted, setSubmitted] = useState(false);
+    const [submitted, setSubmitted] = useState(0);
+    const [newLocation, setNewLocation] = useState({
+        new_longitude: null,
+        new_latitude: null,
+    });
+    const [
+        templeErrorhandler,
+        {
+            data: templeErrorReportedData,
+            error: templeErrorhandlerError,
+            isError: templeErrorhandlerIsError,
+            isSuccess: templeErrorhandlerIsSuccess,
+        },
+    ] = useTempleErrorhandlerMutation({});
+
     useEffect(() => {
-        if (desciption !== null && phoneNumber !== null) {
+        if (desciption !== null && indianMobRegex.test(phoneNumber)) {
             setDisable(false);
+        } else {
+            setDisable(true);
         }
     }, [desciption, phoneNumber]);
     const [pinTheLocation, setPinTheLocation] = useState(false);
@@ -94,6 +113,46 @@ const SelectErrorPage = ({
             existingTempDetail?.coords.longitude
         );
     }, [existingTempDetail?.coords.latitude, existingTempDetail?.coords.longitude]);
+
+    useEffect(() => {
+        if (templeErrorhandlerIsError) {
+            setSubmitted(-1);
+        }
+        if (templeErrorhandlerIsSuccess) {
+            setSubmitted(1);
+        }
+    }, [
+        templeErrorhandlerError,
+        templeErrorhandlerIsError,
+        templeErrorhandlerIsSuccess,
+        templeErrorReportedData,
+    ]);
+
+    const onSubmitHandler = () => {
+        if (!disable) {
+            const errorList = {
+                1: 'Temp_Detail',
+                2: 'Temp_Location',
+                3: 'Temp_Not_Empty',
+            };
+            const body = {
+                error_type: errorList[selectedError?.id],
+                temple_id: existingTempDetail?.templeId,
+                phone_number: phoneNumber,
+            };
+
+            if (selectedError?.id === 2) {
+                body['new_latitude'] = newLocation.new_latitude;
+                body['new_longitude'] = newLocation.new_longitude;
+                // delete body['user_comment'];
+                body['location_name'] = desciption;
+            } else {
+                body['user_comment'] = desciption;
+            }
+
+            templeErrorhandler(body);
+        }
+    };
     return (
         <>
             {!pinTheLocation ? (
@@ -107,7 +166,7 @@ const SelectErrorPage = ({
                             width: '100%',
                         }}
                     ></BlurView>
-                    {submitted ? (
+                    {submitted === -1 && (
                         <View
                             style={[
                                 styles.mainContainer,
@@ -141,6 +200,54 @@ const SelectErrorPage = ({
                                     color: '#222222',
                                 }}
                             >
+                                {'Error submission Failed !'}
+                            </Text>
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                    fontFamily: 'Mulish-Regular',
+                                    color: '#222222',
+                                }}
+                            >
+                                OOps.. something went wrong !!
+                            </Text>
+                        </View>
+                    )}
+
+                    {submitted === 1 && (
+                        <View
+                            style={[
+                                styles.mainContainer,
+                                {
+                                    height: Dimensions.get('window').height / 2,
+                                    flex: 1,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    padding: 20,
+                                    gap: 20,
+                                },
+                            ]}
+                        >
+                            <TouchableOpacity
+                                onPress={() => setModalVisible(false)}
+                                style={{ position: 'absolute', top: 10, right: 10 }}
+                            >
+                                <Icon name="x" color="#222222" size={22} />
+                            </TouchableOpacity>
+                            <View style={{ backgroundColor: 'white' }}>
+                                <LottieView
+                                    ref={animationref}
+                                    style={{ height: 200, width: 200 }}
+                                    source={require('../../../assets/JSON/SuccessGIF.json')}
+                                />
+                            </View>
+                            <Text
+                                style={{
+                                    fontSize: 20,
+                                    fontFamily: 'Mulish-Bold',
+                                    color: '#222222',
+                                }}
+                            >
                                 {'Error submitted!'}
                             </Text>
                             <Text
@@ -154,7 +261,9 @@ const SelectErrorPage = ({
                                 on to the app.
                             </Text>
                         </View>
-                    ) : (
+                    )}
+
+                    {submitted === 0 && (
                         <KeyboardAvoidingView behavior="position" style={styles.mainContainer}>
                             <View style={[styles.mainContainer, { backgroundColor: '#fff' }]}>
                                 {/* <BackButton nandiLogo={false} navigation={navigation} /> */}
@@ -340,9 +449,13 @@ const SelectErrorPage = ({
                                 <View style={styles.inputContainer}>
                                     <Text style={styles.descriptionText}>Your Phone number*</Text>
                                     <TextInput
-                                        onChangeText={(e) => setphoneNumber(e)}
+                                        onChangeText={(e) => {
+                                            setphoneNumber(e);
+                                        }}
+                                        maxLength={10}
                                         placeholderTextColor={colors.grey5}
                                         placeholder="Type here"
+                                        keyboardType="numeric"
                                         style={{
                                             color: 'black',
                                             backgroundColor: '#F3F3F3',
@@ -354,7 +467,8 @@ const SelectErrorPage = ({
                                 </View>
                                 <View style={{ paddingHorizontal: 20, marginVertical: 20 }}>
                                     <ButtonComp
-                                        navigation={() => setSubmitted(true)}
+                                        // navigation={() => setSubmitted(true)}
+                                        navigation={() => onSubmitHandler()}
                                         text={'Submit'}
                                         color={!disable}
                                     />
@@ -376,7 +490,13 @@ const SelectErrorPage = ({
                         }}
                         // initialDragCoorMarker ={}
                         // setDescription={setDescription}
-                        valueSetter={(value) => setDescription(value?.display_name)}
+                        valueSetter={(value) => {
+                            setNewLocation(() => ({
+                                new_latitude: value?.lat,
+                                new_longitude: value?.lon,
+                            }));
+                            return setDescription(value?.display_name);
+                        }}
                     />
                 </View>
             )}
