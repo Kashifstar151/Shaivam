@@ -60,7 +60,7 @@ const HomeScreen = ({ navigation }) => {
         isFetching: isfestivaldataFetching,
         refetch: refetchFestival,
         isSuccess: isFestivalSuccess,
-    } = useGetUpcomingFestivalQuery({ startDate: moment().format('YYYY-MM-DD'), endDate: moment().add(1, 'months').endOf('month').format('YYYY-MM-DD'), lanugage: i18n.language == 'en-IN' ? 'en' : i18n.language == 'en' ? 'ta' : i18n.language });
+    } = useGetUpcomingFestivalQuery({ startDate: moment().format('YYYY-MM-DD'), endDate: moment().add(1, 'months').endOf('month').format('YYYY-MM-DD'), lanugage: i18n.language == 'en-IN' ? 'en' : i18n.language == 'en' ? 'ta' : i18n.language == 'DV' ? 'hi' : 'en' });
     const [festivalEvent, setFestivalEvent] = useState([]);
     const [compHeight, setCompHeight] = useState();
     const isFocused = useIsFocused();

@@ -138,11 +138,13 @@ const CreateVirtualEvent = ({ navigation }) => {
                         formData.append("field", "Files");
                         AddImage(formData).then((res) => {
                             console.log("🚀 ~ AddImage ~ res:", JSON.stringify(res))
+                            dispatch(setInputValue({ inputKey: 'empty', inputValue: 1 }))
                         }).catch((error) => {
                             console.log("🚀 ~ AddImage ~ error:", JSON.stringify(error))
                         })
                         navigation.navigate(RouteTexts.SUCCESS)
                     } else {
+                        dispatch(setInputValue({ inputKey: 'empty', inputValue: 1 }))
                         navigation.navigate(RouteTexts.SUCCESS)
                     }
                 }).catch((error) => {
@@ -173,11 +175,13 @@ const CreateVirtualEvent = ({ navigation }) => {
                         formData.append("field", "Files");
                         AddImage(formData).then((res) => {
                             console.log("🚀 ~ AddImage ~ res:", JSON.stringify(res))
+                            dispatch(setInputValue({ inputKey: 'empty', inputValue: 1 }))
                         }).catch((error) => {
                             console.log("🚀 ~ AddImage ~ error:", JSON.stringify(error))
                         })
                         navigation.navigate(RouteTexts.SUCCESS)
                     } else {
+                        dispatch(setInputValue({ inputKey: 'empty', inputValue: 1 }))
                         navigation.navigate(RouteTexts.SUCCESS)
                     }
                 }).catch((error) => {

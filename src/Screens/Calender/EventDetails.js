@@ -128,6 +128,7 @@ const EventDetails = ({ navigation, route }) => {
         })
     }
     const scheduleNotification = () => {
+        console.log("item ", JSON.stringify(item, 0, 2))
         PushNotification.localNotificationSchedule({
             channelId: 'Event',
             title: item?.title,
@@ -135,7 +136,8 @@ const EventDetails = ({ navigation, route }) => {
             date: new Date(item?.start_date ? item?.start_date : item?.attributes?.start_date + 120 * 1000),
             message: item?.attributes?.title,
             id: item?.id,
-            allowWhileIdle: true
+            allowWhileIdle: true,
+            soundName: item?.attributes?.event_category ? item?.attributes?.event_category : item?.attributes?.category
         })
     }
     const getScheduleNotification = () => {
@@ -286,23 +288,26 @@ const EventDetails = ({ navigation, route }) => {
                             </>
                         )}
                     />
-                    <FlatList
-                        horizontal
-                        contentContainerStyle={{ gap: 10, paddingVertical: 10, marginTop: 10, paddingBottom: 100 }}
-                        // data={Array.from({ length: 7 }, (_, i) => i)}
-                        data={item?.attributes?.File}
-                        renderItem={({ item, index }) => (
-                            <TouchableOpacity onPress={() => setShowModal(true)}>
-                                <Image
-                                    source={
-                                        { uri: item?.url }
-                                    }
-                                    resizeMode='cover'
-                                    style={{ width: 200, height: 130, borderRadius: 8 }}
-                                />
-                            </TouchableOpacity>
-                        )}
-                    />
+                    {
+                        item?.attributes?.File?.length > 0 &&
+                        <FlatList
+                            horizontal
+                            contentContainerStyle={{ gap: 10, paddingVertical: 10, marginTop: 10, paddingBottom: 100 }}
+                            // data={Array.from({ length: 7 }, (_, i) => i)}
+                            data={item?.attributes?.File}
+                            renderItem={({ item, index }) => (
+                                <TouchableOpacity onPress={() => setShowModal(true)}>
+                                    <Image
+                                        source={
+                                            { uri: item?.url }
+                                        }
+                                        resizeMode='cover'
+                                        style={{ width: 200, height: 130, borderRadius: 8 }}
+                                    />
+                                </TouchableOpacity>
+                            )}
+                        />
+                    }
                 </View>
             </ScrollView>
             {

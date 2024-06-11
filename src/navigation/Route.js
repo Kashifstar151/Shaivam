@@ -75,6 +75,7 @@ const Route = () => {
     const checkConnection = async (connected) => {
 
         let localDBMetaData = JSON.parse(await AsyncStorage.getItem('DB_METADATA'));
+        // console.log("🚀 ~ checkConnection ~ localDBMetaData:", localDBMetaData)
         if (!localDBMetaData) {
             AsyncStorage.setItem('DB_METADATA', JSON.stringify(DBInfo));
             localDBMetaData = DBInfo;
@@ -85,7 +86,7 @@ const Route = () => {
             )
                 .then((result) => result.json())
                 .then(async (response) => {
-                    console.log('the api response is ===>', response?.data?.[0]?.attributes);
+                    console.log('the api response is ===>', response?.data?.[0]?.attributes, localDBMetaData?.Version);
                     if (
                         localDBMetaData?.Version &&
                         response?.data?.[0]?.attributes.Version !== localDBMetaData?.Version
@@ -112,8 +113,9 @@ const Route = () => {
                         ]);
                     } else {
                         console.log('fsjdh')
-                        let data = await AsyncStorage.getItem('@databse')
+                        let data = await AsyncStorage.getItem('@database')
                         data = JSON.parse(data)
+                        console.log("🚀 ~ .then ~ data:", data)
                         if (data?.name == 'main.db') {
                             offlineDatabase.transaction(
                                 async (tx) => {

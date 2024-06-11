@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import PushNotification from "react-native-push-notification"
-import { Dimensions, FlatList, StyleSheet, Text, View } from "react-native";
+import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import BackButton from "../../components/BackButton";
 import ElevatedCard from "../../components/ElevatedCard";
 import moment from "moment";
@@ -9,6 +9,7 @@ import { ThemeContext } from "../../Context/ThemeContext";
 import NotificationIcon from "../../assets/Images/notifications 1.svg"
 import { PanGestureHandler } from "react-native-gesture-handler";
 import Animated, { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import { RFValue } from "react-native-responsive-fontsize";
 const Notification = ({ navigation }) => {
     const { theme } = useContext(ThemeContext);
 
@@ -93,7 +94,7 @@ const Notification = ({ navigation }) => {
 
     }
     return (
-        <View>
+        <View style={{ height: Dimensions.get('window').height }}>
             <BackButton navigation={navigation} />
             <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
                 <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold', color: '#222222' }}>
@@ -109,42 +110,50 @@ const Notification = ({ navigation }) => {
             }
             {
                 notificationList?.length > 0 ?
-                    <FlatList
-                        data={notificationList}
-                        key={(item, index) => index}
-                        contentContainerStyle={{ paddingBottom: 10 }}
-                        renderItem={({ item, index }) => (
-                            <FlatListItem item={item} index={index} />
-                            // <ElevatedCard
-                            //     // navigation={() =>
-                            //     //     navigation.navigate(RouteTexts.EVENT_DETAILS, {
-                            //     //         item: item,
-                            //     //     })
-                            //     // }
-                            //     theme={{ colorscheme: theme.colorscheme }}
-                            // >
-                            //     <EventCard
-                            //         date={moment(item.date).get('D')}
-                            //         dateNo={moment(item?.date).format('DD')}
-                            //         day={moment(item?.date).format('ddd')}
-                            //         timing={`${moment(item.date).format('MMMM DD YYYY')} - ${moment(item.date).format('MMMM DD YYYY')}`}
-                            //         title={item?.message}
-                            //         item={item}
-                            //         theme={{
-                            //             textColor: theme.textColor,
-                            //             colorscheme: theme.colorscheme,
-                            //         }}
-                            //     />
-                            // </ElevatedCard>
-                        )}
-                    /> :
+                    <>
+                        <FlatList
+                            data={notificationList}
+                            key={(item, index) => index}
+                            contentContainerStyle={{ paddingBottom: 10 }}
+                            renderItem={({ item, index }) => (
+                                <FlatListItem item={item} index={index} />
+                                // <ElevatedCard
+                                //     // navigation={() =>
+                                //     //     navigation.navigate(RouteTexts.EVENT_DETAILS, {
+                                //     //         item: item,
+                                //     //     })
+                                //     // }
+                                //     theme={{ colorscheme: theme.colorscheme }}
+                                // >
+                                //     <EventCard
+                                //         date={moment(item.date).get('D')}
+                                //         dateNo={moment(item?.date).format('DD')}
+                                //         day={moment(item?.date).format('ddd')}
+                                //         timing={`${moment(item.date).format('MMMM DD YYYY')} - ${moment(item.date).format('MMMM DD YYYY')}`}
+                                //         title={item?.message}
+                                //         item={item}
+                                //         theme={{
+                                //             textColor: theme.textColor,
+                                //             colorscheme: theme.colorscheme,
+                                //         }}
+                                //     />
+                                // </ElevatedCard>
+                            )}
+                        />
+
+                    </>
+                    :
                     <View style={{ height: 400, justifyContent: 'center', alignItems: 'center' }}>
                         <NotificationIcon />
                         <Text style={{ fontFamily: 'Mulish-Bold', color: 'black', fontSize: 18 }}>No new notifications!</Text>
                         <Text style={{ fontFamily: 'Mulish-Regular', color: 'black', fontSize: 14 }}>Get notified for kaala pujas, festivals, radio programs etc. </Text>
                     </View>
             }
-
+            <View style={{ position: 'absolute', bottom: 10, alignSelf: 'center' }}>
+                <TouchableOpacity style={{ height: 30, width: 150, borderRadius: 20, borderWidth: 1, borderColor: '#C1554E', justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ fontSize: RFValue(9), color: '#C1554E', fontFamily: 'Mulish-Bold' }}>Dismiss all Notification</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };
