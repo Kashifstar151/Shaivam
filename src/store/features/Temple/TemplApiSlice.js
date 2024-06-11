@@ -122,6 +122,37 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
             invalidatesTags: ['Add_Temple_Records'],
         }),
 
+        templeErrorhandler: builder.mutation({
+            // add email field
+            query: (body) => {
+                console.log('🚀 ~ body:', { ...body, publishedAt: new Date() });
+                const url = `api/error-reporteds`;
+                return {
+                    url: url,
+                    method: 'POST',
+                    body: {
+                        data: { ...body, publishedAt: `${new Date()}` },
+                    },
+                    headers: { 'Content-Type': 'application/json' },
+                };
+            },
+
+            transformResponse: (response, meta, arg) => {
+                console.log('🚀 ~ response:', response);
+                return {
+                    data: response?.data,
+                    status: 'SUCCESS',
+                };
+            },
+            transformErrorResponse: (response, meta, arg) => {
+                return {
+                    status: 'FAILED',
+                    error: response?.data?.error,
+                };
+            },
+            invalidatesTags: ['Add_Temple_Records'],
+        }),
+
         addTempleImages: builder.mutation({
             // add email field
             query: (data) => {
@@ -168,4 +199,5 @@ export const {
     useAddTempleMutation,
     useAddTempleImagesMutation,
     useLazyGetAddedTempleOnEmailQuery,
+    useTempleErrorhandlerMutation,
 } = TempleApiSliceCall;
