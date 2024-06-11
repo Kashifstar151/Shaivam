@@ -62,7 +62,7 @@ const TempleCard = ({
                                     latitude: dataSet?.latitude,
                                     longitude: dataSet?.longitude,
                                 },
-
+                                templeId: dataSet?.id,
                                 templeName: dataSet.templeName,
                             }}
                         />
