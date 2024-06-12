@@ -101,6 +101,7 @@ const EventDetails = ({ navigation, route }) => {
             const canScheduleExactAlarms = await PermissionsAndroid.check(
                 PermissionsAndroid.PERMISSIONS.SCHEDULE_EXACT_ALARM
             );
+            console.log("🚀 ~ checkPermissionAccess ~ canScheduleExactAlarms:", canScheduleExactAlarms)
             if (!canScheduleExactAlarms) {
                 Alert.alert(
                     "Need Permission",
