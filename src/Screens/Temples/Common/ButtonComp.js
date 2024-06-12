@@ -4,6 +4,7 @@ import { Dimensions, StyleSheet, Text, TouchableOpacity } from 'react-native';
 const ButtonComp = ({ text, navigation, color }) => {
     return (
         <TouchableOpacity
+            disabled={!color}
             onPress={navigation}
             style={color ? styles.buttton : [styles.buttton, { backgroundColor: '#777777' }]}
         >

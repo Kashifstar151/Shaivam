@@ -60,15 +60,15 @@ const App = () => {
         // Handle dynamic link inside your own application
 
     };
-    // useEffect(() => {
-    //     // Activate keep awake when component mounts
-    //     KeepAwake.activate();
+    useEffect(() => {
+        // Activate keep awake when component mounts
+        KeepAwake.activate();
 
-    //     // Deactivate keep awake when component unmounts
-    //     return () => {
-    //         KeepAwake.deactivate();
-    //     };
-    // }, []);
+        // Deactivate keep awake when component unmounts
+        return () => {
+            KeepAwake.deactivate();
+        };
+    }, []);
 
 
 
