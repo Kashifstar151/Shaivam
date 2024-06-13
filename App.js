@@ -15,12 +15,12 @@ import KeepAwake from 'react-native-keep-awake';
 const App = () => {
     useEffect(() => {
         enableLatestRenderer();
-        initialUrl()
+        initialUrl();
     }, []);
     const initialUrl = async () => {
         await dynamicLinks()
             .getInitialLink()
-            .then(link => {
+            .then((link) => {
                 HandleDynamicLink(link);
             });
         const linkingListener = dynamicLinks().onLink(HandleDynamicLink);
@@ -28,26 +28,35 @@ const App = () => {
             linkingListener();
         };
     };
-    const HandleDynamicLink = link => {
-        console.log("🚀 ~ HandleDynamicLink ~ link:", link)
-        const getId = link?.url?.split('=').pop()
-        // console.log("🚀 ~ HandleDynamicLink ~ getId:", getId)
+    const HandleDynamicLink = (link) => {
+        console.log('🚀 ~ HandleDynamicLink ~ link:', link);
+        const getId = link?.url?.split('=').pop();
+        console.log('🚀 ~ HandleDynamicLink ~ getId:', link);
         // if (link !== null) {
         if (link?.url == `https://shaivaam.page.link/org?eventId=${getId}`) {
             setTimeout(() => {
                 NavigationServices.navigate(RouteTexts.EVENT_DETAILS, {
                     item: getId,
-                    external: true
+                    external: true,
                 });
-            }, 1000)
+            }, 1000);
         } else if (link?.url == `https://shaivaam.page.link/org?prevId=${getId}`) {
             setTimeout(() => {
                 NavigationServices.navigate(RouteTexts.THRIMURAI_SONG, {
                     data: {
-                        prevId: getId
-                    }
+                        prevId: getId,
+                    },
                 });
-            }, 1000)
+            }, 1000);
+        } else if (link?.url == `https://shaivaam.page.link/org?templeId=${getId}`) {
+            setTimeout(() => {
+                NavigationServices.navigate('templeDetails', {
+                    temple: {
+                        templeId: getId,
+                    },
+                    external: true,
+                });
+            }, 1000);
         }
         // }
         // if (link) {
@@ -58,7 +67,6 @@ const App = () => {
         //     });
         // }
         // Handle dynamic link inside your own application
-
     };
     useEffect(() => {
         // Activate keep awake when component mounts
@@ -70,19 +78,18 @@ const App = () => {
         };
     }, []);
 
-
-
     useEffect(() => {
-        checkPermissionAccess()
+        checkPermissionAccess();
         const unsubscribe = dynamicLinks().onLink(HandleDynamicLink);
         // When the component is unmounted, remove the listener
         return () => unsubscribe();
-
     }, []);
     const checkPermissionAccess = async () => {
-        const permission = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);;
-        console.log("🚀 ~ checkPermissionAccess ~ permission:", permission)
-    }
+        const permission = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+        );
+        console.log('🚀 ~ checkPermissionAccess ~ permission:', permission);
+    };
     return (
         <StoreProvider>
             <ThemeContextProvider>

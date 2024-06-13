@@ -36,6 +36,15 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
             transformResponse: (response, meta, arg) => {
                 let responseToRetun = {};
                 if (response?.data?.attributes) {
+                    const { Longitude, Latitude, Flag, Name } = response?.data?.attributes;
+
+                    responseToRetun['templeName'] = Name;
+                    responseToRetun['templeCoordinate'] = {
+                        latitude: Latitude,
+                        longitude: Longitude,
+                    };
+                    responseToRetun['flag'] = Flag;
+
                     if (response?.data?.attributes?.temple?.data?.attributes) {
                         const {
                             Swamy_name,
