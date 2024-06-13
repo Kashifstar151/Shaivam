@@ -63,6 +63,7 @@ const TempleDetails = ({ navigation }) => {
     const LONGITUDE_DELTA = LATITUDE_DELTA * (screenWidth / screenHeight);
 
     const embedNonClickableHTML = (innerFractionOfHTML) => {
+
         return `<!DOCTYPE html>
         <html lang="en">
         <head>
@@ -81,12 +82,21 @@ const TempleDetails = ({ navigation }) => {
             document.addEventListener('click', function(event) {
               if (event.target.tagName === 'A') {
                 event.preventDefault();
+                var href = event.target.href;
+
+                // Check if href starts with 'http:'
+                if (href.startsWith('http:')) {
+                  // Open the URL as is
+                  window.open(href, '_blank');
+                } else {
+                  // Append the base URL if it does not start with 'http:'
+                  window.open('http://shaivam.org' + href, '_blank');
+                }
+              
               }
             }); // this is to disable the click on links
             
             document.addEventListener('contextmenu', function(event) { event.preventDefault(); }); // this is to disable the click on links
-
-
             // document.addEventListener('touchstart', function(event) {
             //       const target = event.target;
             //       const timeout = setTimeout(() => {
@@ -108,7 +118,6 @@ const TempleDetails = ({ navigation }) => {
             //       target.addEventListener('touchend', () => clearTimeout(timeout), { once: true });
             //       target.addEventListener('touchcancel', () => clearTimeout(timeout), { once: true });
             //     }
-
           </script>
         </body>
         </html>`;
@@ -279,7 +288,7 @@ const TempleDetails = ({ navigation }) => {
                             </View> */}
 
                             {templeDetail?.basicDetails && (
-                                <View style={{ marginHorizontal: 20, marginVertical: 10 }}>
+                                <View style={{ marginHorizontal: 20, marginVertical: 10, paddingBottom: 350 }}>
                                     <Text
                                         style={{
                                             color: 'black',
@@ -352,34 +361,34 @@ const TempleDetails = ({ navigation }) => {
                             {!(
                                 templeDetail?.basicDetails || templeDetail?.temple_images?.length
                             ) && (
-                                <View
-                                    style={{
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        paddingVertical: 40,
-                                        gap: 10,
-                                    }}
-                                >
-                                    <Image
-                                        source={require('../../../assets/Images/no-data.png')}
+                                    <View
                                         style={{
-                                            width: 100,
-                                            height: 100,
-                                        }}
-                                    />
-                                    <Text
-                                        style={{
-                                            color: '#000',
-                                            textAlign: 'center',
-
-                                            fontFamily: 'Mulish-Bold',
-                                            fontSize: RFValue(16, 850),
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            paddingVertical: 40,
+                                            gap: 10,
                                         }}
                                     >
-                                        Temple data is not Available
-                                    </Text>
-                                </View>
-                            )}
+                                        <Image
+                                            source={require('../../../assets/Images/no-data.png')}
+                                            style={{
+                                                width: 100,
+                                                height: 100,
+                                            }}
+                                        />
+                                        <Text
+                                            style={{
+                                                color: '#000',
+                                                textAlign: 'center',
+
+                                                fontFamily: 'Mulish-Bold',
+                                                fontSize: RFValue(16, 850),
+                                            }}
+                                        >
+                                            Temple data is not Available
+                                        </Text>
+                                    </View>
+                                )}
                         </View>
                     </ScrollView>
 
