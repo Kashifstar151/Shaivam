@@ -116,6 +116,7 @@ const SelectErrorPage = ({
 
     useEffect(() => {
         if (templeErrorhandlerIsError) {
+            console.log('templeErrorhandlerError ===>', templeErrorhandlerError);
             setSubmitted(-1);
         }
         if (templeErrorhandlerIsSuccess) {
@@ -131,7 +132,7 @@ const SelectErrorPage = ({
     const onSubmitHandler = () => {
         if (!disable) {
             const errorList = {
-                1: 'Temp_Detail',
+                1: 'Temp_Details',
                 2: 'Temp_Location',
                 3: 'Temp_Not_Empty',
             };
