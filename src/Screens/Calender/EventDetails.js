@@ -98,28 +98,28 @@ const EventDetails = ({ navigation, route }) => {
         const permission = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
         console.log('plateform version', Platform.Version)
         if (Platform.OS === 'android' && Platform.Version >= 33) {
-            const canScheduleExactAlarms = await PermissionsAndroid.check(
-                PermissionsAndroid.PERMISSIONS.SCHEDULE_EXACT_ALARM
-            );
-            console.log("🚀 ~ checkPermissionAccess ~ canScheduleExactAlarms:", canScheduleExactAlarms)
-            if (!canScheduleExactAlarms) {
-                Alert.alert(
-                    "Need Permission",
-                    "Our app needs permission to schedule alarms. Please enable it in the settings.",
-                    [
-                        {
-                            text: "Cancel",
-                            style: "cancel"
-                        },
-                        {
-                            text: "Go to Settings",
-                            onPress: () => {
-                                Linking.openSettings();
-                            }
-                        }
-                    ]
-                );
-            }
+            // const canScheduleExactAlarms = await PermissionsAndroid.check(
+            //     PermissionsAndroid.PERMISSIONS.SCHEDULE_EXACT_ALARM
+            // );
+            // console.log("🚀 ~ checkPermissionAccess ~ canScheduleExactAlarms:", canScheduleExactAlarms)
+            // if (!canScheduleExactAlarms) {
+            //     Alert.alert(
+            //         "Need Permission",
+            //         "Our app needs permission to schedule alarms. Please enable it in the settings.",
+            //         [
+            //             {
+            //                 text: "Cancel",
+            //                 style: "cancel"
+            //             },
+            //             {
+            //                 text: "Go to Settings",
+            //                 onPress: () => {
+            //                     Linking.openSettings();
+            //                 }
+            //             }
+            //         ]
+            //     );
+            // }
         }
     }
     const createChannel = () => {
