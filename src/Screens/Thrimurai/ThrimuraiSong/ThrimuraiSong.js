@@ -52,6 +52,7 @@ import HighlightedText from '../Searchscreen/HighlightedText';
 import { addEventListener, useNetInfo } from '@react-native-community/netinfo';
 
 const ThrimuraiSong = ({ route, navigation }) => {
+    console.log("🚀 ~ ThrimuraiSong ~ route:", route)
     const isFocused = useIsFocused;
     const { data, downloaded, searchedword, downloadSong, searchScreen, songNo } =
         route.params || {};
@@ -341,9 +342,8 @@ GROUP BY
             getSqlData(detailQuery, (details) => {
                 console.log('🚀 ~ getSqlData ~ data:', JSON.stringify(details, 0, 2));
 
-                const query2 = `SELECT * FROM odhuvars WHERE title='${
-                    data.filter((i) => i.tamil !== null)[0]?.tamil
-                }'`;
+                const query2 = `SELECT * FROM odhuvars WHERE title='${data.filter((i) => i.tamil !== null)[0]?.tamil
+                    }'`;
                 getSqlData(query2, (callbacks) => {
                     // console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
                     dispatchMusic({ type: 'SONG_DETAILS', payload: details });
@@ -644,9 +644,9 @@ GROUP BY
                     },
                     musicState?.songDetails[index + 1]
                         ? {
-                              borderBottomColor: colors.grey3,
-                              borderBottomWidth: 1,
-                          }
+                            borderBottomColor: colors.grey3,
+                            borderBottomWidth: 1,
+                        }
                         : {},
                 ]}
             >
@@ -1134,7 +1134,7 @@ GROUP BY
                                                 offset:
                                                     averageItemLength * songNo +
                                                     Math.abs(highestMeasuredFrameIndex - songNo) *
-                                                        averageItemLength,
+                                                    averageItemLength,
                                                 animated: true,
                                             });
                                         });
@@ -1205,7 +1205,7 @@ GROUP BY
                                             offset:
                                                 averageItemLength * songNo +
                                                 Math.abs(highestMeasuredFrameIndex - songNo) *
-                                                    averageItemLength,
+                                                averageItemLength,
                                             animated: true,
                                         });
                                     });
@@ -1331,14 +1331,14 @@ GROUP BY
 
                     orientation == 'LANDSCAPE'
                         ? {
-                              width: Dimensions.get('window').width / 2,
-                              position: 'absolute',
-                              bottom: 0,
-                          }
+                            width: Dimensions.get('window').width / 2,
+                            position: 'absolute',
+                            bottom: 0,
+                        }
                         : {
-                              position: 'relative',
-                              width: Dimensions.get('window').width,
-                          },
+                            position: 'relative',
+                            width: Dimensions.get('window').width,
+                        },
                 ]}
             >
                 {downloadingLoader && (

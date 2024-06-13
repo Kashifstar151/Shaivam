@@ -11,6 +11,7 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnable
 import com.facebook.react.defaults.DefaultReactActivityDelegate
 import android.util.Log
 import android.app.AlertDialog
+import io.sentry.Sentry
 
 class MainActivity : ReactActivity() {
 
@@ -22,6 +23,11 @@ class MainActivity : ReactActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        try {
+      throw Exception("This is a test.")
+       } catch (e: Exception) {
+         Sentry.captureException(e)
+         }
         // Additional initialization can go here.
     }
 

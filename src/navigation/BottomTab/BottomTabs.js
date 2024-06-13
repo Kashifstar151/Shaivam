@@ -26,6 +26,7 @@ import { usePlayer } from '../../Context/PlayerContext';
 import OmChantPlayer from '../../Screens/Player/OmChantPlayer';
 import { useActiveTrack, usePlaybackState } from 'react-native-track-player';
 import CommonPlayer from '../../components/CommonPlayer';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
 const Tab = createBottomTabNavigator();
 
 const MyTabBar = ({ state, descriptors, navigation, theme, ...restProps }) => {
@@ -160,10 +161,54 @@ const MyTabBar = ({ state, descriptors, navigation, theme, ...restProps }) => {
 
 const BottomTab = ({ navigation }) => {
     const playbackState = usePlaybackState()
-    console.log("🚀 ~ BottomTab ~ playbackState:", playbackState)
+    // console.log("🚀 ~ BottomTab ~ playbackState:", playbackState)
     const activeTrack = useActiveTrack()
     // console.log("🚀 ~ BottomTab ~ playbackState:", playbackState)
     const { showPlayer } = usePlayer();
+    useEffect(() => {
+        initialUrl()
+    }, [])
+    useEffect(() => {
+        // checkPermissionAccess()
+        const unsubscribe = dynamicLinks().onLink(HandleDynamicLink);
+        // When the component is unmounted, remove the listener
+        return () => unsubscribe();
+
+    }, []);
+    const initialUrl = async () => {
+        await dynamicLinks()
+            .getInitialLink()
+            .then(link => {
+                HandleDynamicLink(link);
+            });
+        const linkingListener = dynamicLinks().onLink(HandleDynamicLink);
+        return () => {
+            linkingListener();
+        };
+    };
+    const HandleDynamicLink = link => {
+        // console.log("🚀 ~ HandleDynamicLink ~ link:", link)
+        const getId = link?.url?.split('=').pop()
+        // console.log("🚀 ~ HandleDynamicLink ~ getId:", getId)
+        // if (link !== null) {
+        if (link?.url == `https://shaivaam.page.link/org?eventId=${getId}`) {
+            setTimeout(() => {
+                navigation.navigate(RouteTexts.EVENT_DETAILS, {
+                    item: getId,
+                    external: true
+                });
+            }, 1000)
+        } else if (link?.url == `https://shaivaam.page.link/org?prevId=${getId}`) {
+            setTimeout(() => {
+                navigation.navigate(RouteTexts.THRIMURAI_SONG, {
+                    data: {
+                        prevId: getId
+                    }
+                });
+            }, 1000)
+        }
+
+    };
 
     const { theme } = useContext(ThemeContext);
     return (

@@ -1,3 +1,8 @@
+
+plugins {
+    id 'io.sentry.android.gradle' version '4.7.1'
+}
+
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
@@ -137,3 +142,13 @@ dependencies {
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
 apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+
+
+sentry {
+    org = "bytive-technologies"
+    projectName = "shaivam"
+
+    // this will upload your source code to Sentry to show it as part of the stack traces
+    // disable if you don't want to expose your sources
+    includeSourceContext = true
+}
