@@ -125,13 +125,12 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
         templeErrorhandler: builder.mutation({
             // add email field
             query: (body) => {
-                console.log('🚀 ~ body:', { ...body, publishedAt: new Date() });
                 const url = `api/error-reporteds`;
                 return {
                     url: url,
                     method: 'POST',
                     body: {
-                        data: { ...body, publishedAt: `${new Date()}` },
+                        data: { ...body, publishedAt: `${new Date().toISOString()}` },
                     },
                     headers: { 'Content-Type': 'application/json' },
                 };
@@ -145,6 +144,7 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
                 };
             },
             transformErrorResponse: (response, meta, arg) => {
+                console.log('🚀 ~ response error :', response);
                 return {
                     status: 'FAILED',
                     error: response?.data?.error,
