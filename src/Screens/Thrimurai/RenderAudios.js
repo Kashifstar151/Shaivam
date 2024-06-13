@@ -99,11 +99,9 @@ const RenderAudios = ({
         /*
          todos: have to optimize the queries  
          */
-        const query3 = `SELECT * FROM thirumurais WHERE  authorNo='${
-            songs?.authorNo
-        }'  and locale='${
+        const query3 = `SELECT * FROM thirumurais WHERE  author='${songs?.author}'  and locale='${
             i18n.language === 'en-IN' ? 'RoI' : i18n.language
-        }' GROUP BY titleS ORDER by orderAuthor  `;
+        }' GROUP BY titleS ORDER by orderAuthor`;
 
         const makeQuery = thalam ? templleQuery : varakatimurai ? query3 : query;
         getSqlData(makeQuery, (callbacks) => {
