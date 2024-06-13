@@ -144,11 +144,12 @@ const Fav = ({ navigation }) => {
         }
     }, [showToastMessage]);
     const removeFromPlaylist = (item) => {
-        if (selecetedHeader == 'Offline Downloads') {
+        console.log(JSON.stringify(item))
+        if (selecetedHeader == 'Offline downloads') {
             let arr = downloadList.filter((res) => {
                 return res.id !== item.id;
             });
-            console.log('🚀 ~ removeFromPlaylist ~ arr:', arr);
+            // console.log('🚀 ~ removeFromPlaylist ~ arr:', arr);
             setDownloadList(arr);
             AsyncStorage.setItem('downloaded', JSON.stringify(arr));
             setShowModal(false);
@@ -432,8 +433,7 @@ const Fav = ({ navigation }) => {
                             selecetedHeader == 'Favourites'
                                 ? 'Are you sure you want to remove this from Favourite Songs?'
                                 : t('Are you sure you want to delete this from offline downloads?')
-                        }
-                    />
+                        } />
                 </Modal>
             )}
             <View

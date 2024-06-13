@@ -264,217 +264,217 @@ const SelectErrorPage = ({
                     )}
 
                     {submitted === 0 && (
-                        <KeyboardAvoidingView behavior="position" style={styles.mainContainer}>
-                            <View style={[styles.mainContainer, { backgroundColor: '#fff' }]}>
-                                {/* <BackButton nandiLogo={false} navigation={navigation} /> */}
-                                <TouchableOpacity
-                                    style={{ paddingHorizontal: 20, marginVertical: 20 }}
-                                    onPress={() => setShowSubmit(false)}
+                        // <KeyboardAvoidingView behavior="position" style={styles.mainContainer}>
+                        <View style={[styles.mainContainer, { backgroundColor: '#fff' }]}>
+                            {/* <BackButton nandiLogo={false} navigation={navigation} /> */}
+                            <TouchableOpacity
+                                style={{ paddingHorizontal: 20, marginVertical: 20 }}
+                                onPress={() => setShowSubmit(false)}
+                            >
+                                <WhiteBackButton />
+                            </TouchableOpacity>
+                            <View style={{ paddingHorizontal: 20 }}>
+                                <Text
+                                    style={{
+                                        fontFamily: 'Mulish-Regular',
+                                        color: '#777777',
+                                        marginBottom: 15,
+                                    }}
                                 >
-                                    <WhiteBackButton />
-                                </TouchableOpacity>
-                                <View style={{ paddingHorizontal: 20 }}>
+                                    {existingTempDetail?.templeName}
+                                </Text>
+                                <Text style={styles.submitText}>Spotted an error?</Text>
+                                <Text style={styles.descriptionText}>
+                                    Select one of the following options
+                                </Text>
+                            </View>
+                            <View style={{ marginVertical: 10 }}>
+                                <View style={styles.errorContainer}>
                                     <Text
                                         style={{
                                             fontFamily: 'Mulish-Regular',
-                                            color: '#777777',
-                                            marginBottom: 15,
+                                            color: '#222222',
                                         }}
                                     >
-                                        {existingTempDetail?.templeName}
+                                        {selectedError?.name}
                                     </Text>
-                                    <Text style={styles.submitText}>Spotted an error?</Text>
-                                    <Text style={styles.descriptionText}>
-                                        Select one of the following options
-                                    </Text>
-                                </View>
-                                <View style={{ marginVertical: 10 }}>
-                                    <View style={styles.errorContainer}>
-                                        <Text
-                                            style={{
-                                                fontFamily: 'Mulish-Regular',
-                                                color: '#222222',
-                                            }}
-                                        >
-                                            {selectedError?.name}
-                                        </Text>
-                                        <View
-                                            style={{
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                                borderRadius: 10,
-                                                width: 20,
-                                                height: 20,
-                                                backgroundColor: '#C1554E',
-                                            }}
-                                        >
-                                            <Icon name="check" size={14} color="#fff" />
-                                        </View>
-                                    </View>
-                                </View>
-                                {selectedError?.id === 1 && (
-                                    <View style={styles.inputContainer}>
-                                        <Text style={styles.descriptionText}>
-                                            Tell us what is incorrect
-                                        </Text>
-                                        <TextInput
-                                            onChangeText={(e) => setDescription(e)}
-                                            placeholderTextColor={colors.grey5}
-                                            placeholder="Type here"
-                                            style={{
-                                                color: 'black',
-                                                backgroundColor: '#F3F3F3',
-                                                borderRadius: 10,
-                                                padding: 10,
-                                                height: 100,
-                                            }}
-                                        />
-                                    </View>
-                                )}
-
-                                {selectedError?.id === 2 && (
-                                    <View style={styles.inputContainer}>
-                                        <View
-                                            style={{
-                                                borderRadius: 15,
-                                                borderWidth: 1,
-                                                borderColor: '#F3F3F3',
-                                                paddingHorizontal: 20,
-                                                paddingVertical: 15,
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                gap: 10,
-                                                marginBottom: 20,
-                                            }}
-                                        >
-                                            <LocationLogo fill={'#777777'} />
-                                            <View>
-                                                <Text
-                                                    style={{
-                                                        color: '#777777',
-                                                        fontFamily: 'Mulish-Regular',
-                                                        fontSize: 12,
-                                                    }}
-                                                >
-                                                    Existing temple location
-                                                </Text>
-                                                <Text
-                                                    style={{
-                                                        color: '#777777',
-                                                        fontFamily: 'Mulish-Bold',
-                                                        fontSize: 14,
-                                                    }}
-                                                >
-                                                    {/* {existingTempDetail?.coords.latitude}
-                                                    {existingTempDetail?.coords.longitude} */}
-                                                    {existingLocName.state === 1 &&
-                                                        existingLocName?.name}
-
-                                                    {existingLocName.state === 0 && 'Loading ...'}
-
-                                                    {existingLocName.state === -1 &&
-                                                        'Some error occured while fetching !! '}
-                                                </Text>
-                                            </View>
-                                        </View>
-
-                                        <Text style={styles.descriptionText}>
-                                            Correct temple location*
-                                        </Text>
-                                        <View>
-                                            <LocationLogo
-                                                style={{
-                                                    position: 'absolute',
-                                                    top: '50%',
-                                                    zIndex: 100,
-                                                    transform: [
-                                                        {
-                                                            translateY: -10,
-                                                        },
-                                                        {
-                                                            translateX: 20,
-                                                        },
-                                                    ],
-                                                }}
-                                                fill={'#C1554E'}
-                                            />
-
-                                            <TextInput
-                                                ref={textRef}
-                                                selection={{ start: 30, end: 0 }}
-                                                value={desciption}
-                                                placeholderTextColor={colors.grey5}
-                                                // multiline
-                                                placeholder="Select location"
-                                                onFocus={() => {
-                                                    // navigation.navigate('PinTheLocation');
-                                                    setPinTheLocation(!pinTheLocation);
-                                                }}
-                                                style={{
-                                                    color: 'black',
-                                                    backgroundColor: '#F3F3F3',
-                                                    borderRadius: 10,
-                                                    paddingLeft: 45,
-                                                    paddingRight: 10,
-                                                    paddingVertical: 15,
-                                                    height: 50,
-                                                    textAlign: 'left',
-                                                    verticalAlign: 'top',
-                                                    fontFamily: 'Mulish-Regular',
-                                                }}
-                                            />
-                                        </View>
-                                    </View>
-                                )}
-
-                                {selectedError?.id === 3 && (
-                                    <View style={styles.inputContainer}>
-                                        <Text style={styles.descriptionText}>
-                                            Why do you say the temple doesn’t exist?
-                                        </Text>
-                                        <TextInput
-                                            onChangeText={(e) => setDescription(e)}
-                                            placeholderTextColor={colors.grey5}
-                                            placeholder="Type your explaination here"
-                                            style={{
-                                                color: 'black',
-                                                backgroundColor: '#F3F3F3',
-                                                borderRadius: 10,
-                                                padding: 10,
-                                                height: 100,
-                                            }}
-                                        />
-                                    </View>
-                                )}
-                                <View style={styles.inputContainer}>
-                                    <Text style={styles.descriptionText}>Your Phone number*</Text>
-                                    <TextInput
-                                        onChangeText={(e) => {
-                                            setphoneNumber(e);
+                                    <View
+                                        style={{
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            borderRadius: 10,
+                                            width: 20,
+                                            height: 20,
+                                            backgroundColor: '#C1554E',
                                         }}
-                                        maxLength={10}
+                                    >
+                                        <Icon name="check" size={14} color="#fff" />
+                                    </View>
+                                </View>
+                            </View>
+                            {selectedError?.id === 1 && (
+                                <View style={styles.inputContainer}>
+                                    <Text style={styles.descriptionText}>
+                                        Tell us what is incorrect
+                                    </Text>
+                                    <TextInput
+                                        onChangeText={(e) => setDescription(e)}
                                         placeholderTextColor={colors.grey5}
                                         placeholder="Type here"
-                                        keyboardType="numeric"
                                         style={{
                                             color: 'black',
                                             backgroundColor: '#F3F3F3',
                                             borderRadius: 10,
                                             padding: 10,
-                                            height: 50,
+                                            height: 100,
                                         }}
                                     />
                                 </View>
-                                <View style={{ paddingHorizontal: 20, marginVertical: 20 }}>
-                                    <ButtonComp
-                                        // navigation={() => setSubmitted(true)}
-                                        navigation={() => onSubmitHandler()}
-                                        text={'Submit'}
-                                        color={!disable}
+                            )}
+
+                            {selectedError?.id === 2 && (
+                                <View style={styles.inputContainer}>
+                                    <View
+                                        style={{
+                                            borderRadius: 15,
+                                            borderWidth: 1,
+                                            borderColor: '#F3F3F3',
+                                            paddingHorizontal: 20,
+                                            paddingVertical: 15,
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            gap: 10,
+                                            marginBottom: 20,
+                                        }}
+                                    >
+                                        <LocationLogo fill={'#777777'} />
+                                        <View>
+                                            <Text
+                                                style={{
+                                                    color: '#777777',
+                                                    fontFamily: 'Mulish-Regular',
+                                                    fontSize: 12,
+                                                }}
+                                            >
+                                                Existing temple location
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    color: '#777777',
+                                                    fontFamily: 'Mulish-Bold',
+                                                    fontSize: 14,
+                                                }}
+                                            >
+                                                {/* {existingTempDetail?.coords.latitude}
+                                                    {existingTempDetail?.coords.longitude} */}
+                                                {existingLocName.state === 1 &&
+                                                    existingLocName?.name}
+
+                                                {existingLocName.state === 0 && 'Loading ...'}
+
+                                                {existingLocName.state === -1 &&
+                                                    'Some error occured while fetching !! '}
+                                            </Text>
+                                        </View>
+                                    </View>
+
+                                    <Text style={styles.descriptionText}>
+                                        Correct temple location*
+                                    </Text>
+                                    <View>
+                                        <LocationLogo
+                                            style={{
+                                                position: 'absolute',
+                                                top: '50%',
+                                                zIndex: 100,
+                                                transform: [
+                                                    {
+                                                        translateY: -10,
+                                                    },
+                                                    {
+                                                        translateX: 20,
+                                                    },
+                                                ],
+                                            }}
+                                            fill={'#C1554E'}
+                                        />
+
+                                        <TextInput
+                                            ref={textRef}
+                                            selection={{ start: 30, end: 0 }}
+                                            value={desciption}
+                                            placeholderTextColor={colors.grey5}
+                                            // multiline
+                                            placeholder="Select location"
+                                            onFocus={() => {
+                                                // navigation.navigate('PinTheLocation');
+                                                setPinTheLocation(!pinTheLocation);
+                                            }}
+                                            style={{
+                                                color: 'black',
+                                                backgroundColor: '#F3F3F3',
+                                                borderRadius: 10,
+                                                paddingLeft: 45,
+                                                paddingRight: 10,
+                                                paddingVertical: 15,
+                                                height: 50,
+                                                textAlign: 'left',
+                                                verticalAlign: 'top',
+                                                fontFamily: 'Mulish-Regular',
+                                            }}
+                                        />
+                                    </View>
+                                </View>
+                            )}
+
+                            {selectedError?.id === 3 && (
+                                <View style={styles.inputContainer}>
+                                    <Text style={styles.descriptionText}>
+                                        Why do you say the temple doesn’t exist?
+                                    </Text>
+                                    <TextInput
+                                        onChangeText={(e) => setDescription(e)}
+                                        placeholderTextColor={colors.grey5}
+                                        placeholder="Type your explaination here"
+                                        style={{
+                                            color: 'black',
+                                            backgroundColor: '#F3F3F3',
+                                            borderRadius: 10,
+                                            padding: 10,
+                                            height: 100,
+                                        }}
                                     />
                                 </View>
+                            )}
+                            <View style={styles.inputContainer}>
+                                <Text style={styles.descriptionText}>Your Phone number*</Text>
+                                <TextInput
+                                    onChangeText={(e) => {
+                                        setphoneNumber(e);
+                                    }}
+                                    maxLength={10}
+                                    placeholderTextColor={colors.grey5}
+                                    placeholder="Type here"
+                                    keyboardType="numeric"
+                                    style={{
+                                        color: 'black',
+                                        backgroundColor: '#F3F3F3',
+                                        borderRadius: 10,
+                                        padding: 10,
+                                        height: 50,
+                                    }}
+                                />
                             </View>
-                        </KeyboardAvoidingView>
+                            <View style={{ paddingHorizontal: 20, marginVertical: 20 }}>
+                                <ButtonComp
+                                    // navigation={() => setSubmitted(true)}
+                                    navigation={() => onSubmitHandler()}
+                                    text={'Submit'}
+                                    color={!disable}
+                                />
+                            </View>
+                        </View>
+                        // </KeyboardAvoidingView>
                     )}
                 </View>
             ) : (

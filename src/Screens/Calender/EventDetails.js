@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, FlatList, Image, Linking, Modal, PermissionsAndroid, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Dimensions, FlatList, Image, Linking, Modal, PermissionsAndroid, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import BackButton from '../../components/BackButton';
 import Background from '../../components/Background';
 import ShareIcon from '../../assets/Images/share-1.svg';
@@ -98,27 +98,28 @@ const EventDetails = ({ navigation, route }) => {
         const permission = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
         console.log('plateform version', Platform.Version)
         if (Platform.OS === 'android' && Platform.Version >= 33) {
-            const canScheduleExactAlarms = await PermissionsAndroid.check(
-                PermissionsAndroid.PERMISSIONS.SCHEDULE_EXACT_ALARM
-            );
-            if (!canScheduleExactAlarms) {
-                Alert.alert(
-                    "Need Permission",
-                    "Our app needs permission to schedule alarms. Please enable it in the settings.",
-                    [
-                        {
-                            text: "Cancel",
-                            style: "cancel"
-                        },
-                        {
-                            text: "Go to Settings",
-                            onPress: () => {
-                                Linking.openSettings();
-                            }
-                        }
-                    ]
-                );
-            }
+            // const canScheduleExactAlarms = await PermissionsAndroid.check(
+            //     PermissionsAndroid.PERMISSIONS.SCHEDULE_EXACT_ALARM
+            // );
+            // console.log("🚀 ~ checkPermissionAccess ~ canScheduleExactAlarms:", canScheduleExactAlarms)
+            // if (!canScheduleExactAlarms) {
+            //     Alert.alert(
+            //         "Need Permission",
+            //         "Our app needs permission to schedule alarms. Please enable it in the settings.",
+            //         [
+            //             {
+            //                 text: "Cancel",
+            //                 style: "cancel"
+            //             },
+            //             {
+            //                 text: "Go to Settings",
+            //                 onPress: () => {
+            //                     Linking.openSettings();
+            //                 }
+            //             }
+            //         ]
+            //     );
+            // }
         }
     }
     const createChannel = () => {
@@ -128,6 +129,7 @@ const EventDetails = ({ navigation, route }) => {
         })
     }
     const scheduleNotification = () => {
+        console.log("item ", JSON.stringify(item, 0, 2))
         PushNotification.localNotificationSchedule({
             channelId: 'Event',
             title: item?.title,
@@ -135,7 +137,8 @@ const EventDetails = ({ navigation, route }) => {
             date: new Date(item?.start_date ? item?.start_date : item?.attributes?.start_date + 120 * 1000),
             message: item?.attributes?.title,
             id: item?.id,
-            allowWhileIdle: true
+            allowWhileIdle: true,
+            soundName: item?.attributes?.event_category ? item?.attributes?.event_category : item?.attributes?.category
         })
     }
     const getScheduleNotification = () => {
@@ -286,23 +289,26 @@ const EventDetails = ({ navigation, route }) => {
                             </>
                         )}
                     />
-                    <FlatList
-                        horizontal
-                        contentContainerStyle={{ gap: 10, paddingVertical: 10, marginTop: 10, paddingBottom: 100 }}
-                        // data={Array.from({ length: 7 }, (_, i) => i)}
-                        data={item?.attributes?.File}
-                        renderItem={({ item, index }) => (
-                            <TouchableOpacity onPress={() => setShowModal(true)}>
-                                <Image
-                                    source={
-                                        { uri: item?.url }
-                                    }
-                                    resizeMode='cover'
-                                    style={{ width: 200, height: 130, borderRadius: 8 }}
-                                />
-                            </TouchableOpacity>
-                        )}
-                    />
+                    {
+                        item?.attributes?.File?.length > 0 &&
+                        <FlatList
+                            horizontal
+                            contentContainerStyle={{ gap: 10, paddingVertical: 10, marginTop: 10, paddingBottom: 100 }}
+                            // data={Array.from({ length: 7 }, (_, i) => i)}
+                            data={item?.attributes?.File}
+                            renderItem={({ item, index }) => (
+                                <TouchableOpacity onPress={() => setShowModal(true)}>
+                                    <Image
+                                        source={
+                                            { uri: item?.url }
+                                        }
+                                        resizeMode='cover'
+                                        style={{ width: 200, height: 130, borderRadius: 8 }}
+                                    />
+                                </TouchableOpacity>
+                            )}
+                        />
+                    }
                 </View>
             </ScrollView>
             {

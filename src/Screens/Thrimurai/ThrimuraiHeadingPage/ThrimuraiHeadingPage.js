@@ -133,7 +133,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const { theme } = useContext(ThemeContext);
     const [range, setRange] = useState({});
     const { page, list, query, prevId, flagShowAudio, name } = route.params;
-    console.log('🚀 ~ ThrimuraiHeadingPage ~ prevId---------------->:', prevId, name);
+    // console.log('🚀 ~ ThrimuraiHeadingPage ~ prevId---------------->:', prevId, name);
     const headerData = [
         {
             name: 'Panmurai',
@@ -164,7 +164,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const [showLoading, setShowLoading] = useState(false);
     / Get latest DB from the disk /;
     const [thrimurais, setThrimurais] = useState(null);
-    console.log('🚀 ~ ThrimuraiHeadingPage ~ thrimurais:', thrimurais);
+    // console.log('🚀 ~ ThrimuraiHeadingPage ~ thrimurais:', thrimurais);
     useEffect(() => {
         retrieveData();
     }, []);
@@ -202,7 +202,6 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                                 });
                             }
                         }}
-                        // placeholder={'Search for anything (Eg - தோடுடைய செவியன்) '}
                         placeholder={t('Search for any Thirumurai here')}
                         styleOverwrite={{ paddingTop: 10 }}
                     />
@@ -248,7 +247,6 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                 }}
             >
                 {showLoading ? (
-                    // <Modal transparent presentationStyle='overFullScreen'>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <ActivityIndicator size={'small'} />
                     </View>
@@ -271,7 +269,6 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                                 contentContainerStyle={{ marginTop: 10, paddingBottom: 250 }}
                                 data={thrimurais}
                                 renderItem={({ item, index }) => (
-                                    // renderContents(item, index)
                                     <RenderContents
                                         item={item}
                                         index={index}

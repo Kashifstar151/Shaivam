@@ -23,15 +23,6 @@ const FestivalVideo = ({ navigation, setShowFestivalVideo }) => {
         })
     }
     const openCamera = async () => {
-        // launchCamera({
-        //     // selectionLimit: 1,
-        //     mediaType: 'mixed',
-        //     quality: 0.5
-        // }, callbacks => {
-        //     console.log("🚀 ~ openCamera ~ callbacks:", callbacks)
-        //     setAsset(callbacks?.assets)
-
-        // })
         const grantedcamera = await PermissionsAndroid.request(
             PermissionsAndroid.PERMISSIONS.CAMERA,
             {
@@ -53,17 +44,16 @@ const FestivalVideo = ({ navigation, setShowFestivalVideo }) => {
                 buttonPositive: "OK"
             }
         );
-        if (grantedcamera === PermissionsAndroid.RESULTS.GRANTED && grantedstorage === PermissionsAndroid.RESULTS.GRANTED) {
-            console.log("Camera & storage permission given");
-
+        console.log("🚀 ~ openCamera ~ grantedstorage:", grantedstorage, PermissionsAndroid.RESULTS.GRANTED)
+        if (grantedcamera !== 'denied') {
+            // console.log("Camera & storage permission given");
             var options = {
                 mediaType: 'video', //to allow only photo to select ...no video
                 saveToPhotos: true,  //to store captured photo via camera to photos or else it will be stored in temp folders and will get deleted on temp clear
                 includeBase64: false,
             };
-
             launchCamera(options, (res) => {
-                console.log('Response = ', res);
+                // console.log('Response = ', res);
                 if (res?.assets?.length > 0) {
                     setShowFestivalVideo(false)
                     navigation.navigate(RouteTexts.SEND_FESTIVAL_VIDEO, {

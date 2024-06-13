@@ -107,6 +107,7 @@ const CreateVirtualEvent = ({ navigation }) => {
     const onSubmit = () => {
         if (!emailReg.test(inputValue['email'])) {
             setErrorMsg({ email: 'Please enter valid email' })
+            alert(true)
             // console.log('fbsbfjdfbjsdbfbdb')
         } else if (!inputValue['title']) {
             setErrorMsg({ title: 'Title is require ' })
@@ -138,11 +139,13 @@ const CreateVirtualEvent = ({ navigation }) => {
                         formData.append("field", "Files");
                         AddImage(formData).then((res) => {
                             console.log("🚀 ~ AddImage ~ res:", JSON.stringify(res))
+                            dispatch(setInputValue({ inputKey: 'empty', inputValue: 1 }))
                         }).catch((error) => {
                             console.log("🚀 ~ AddImage ~ error:", JSON.stringify(error))
                         })
                         navigation.navigate(RouteTexts.SUCCESS)
                     } else {
+                        dispatch(setInputValue({ inputKey: 'empty', inputValue: 1 }))
                         navigation.navigate(RouteTexts.SUCCESS)
                     }
                 }).catch((error) => {
@@ -173,11 +176,13 @@ const CreateVirtualEvent = ({ navigation }) => {
                         formData.append("field", "Files");
                         AddImage(formData).then((res) => {
                             console.log("🚀 ~ AddImage ~ res:", JSON.stringify(res))
+                            dispatch(setInputValue({ inputKey: 'empty', inputValue: 1 }))
                         }).catch((error) => {
                             console.log("🚀 ~ AddImage ~ error:", JSON.stringify(error))
                         })
                         navigation.navigate(RouteTexts.SUCCESS)
                     } else {
+                        dispatch(setInputValue({ inputKey: 'empty', inputValue: 1 }))
                         navigation.navigate(RouteTexts.SUCCESS)
                     }
                 }).catch((error) => {
@@ -235,7 +240,10 @@ const CreateVirtualEvent = ({ navigation }) => {
                         <Text style={styles.mainHeading}>{t('Add events') ? t('Add events') : 'Add events'}</Text>
                         <Text style={styles.subHeadingText}>{t('You can add events items directly to the Shaivam.org News listing now. (They will be published after moderation.)')}</Text>
                     </View>
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <TouchableOpacity onPress={() => {
+                        navigation.goBack(),
+                            dispatch(setInputValue({ inputKey: 'empty', inputValue: 1 }))
+                    }}>
                         <Icon name='x' color='black' size={24} />
                     </TouchableOpacity>
                 </View>
@@ -467,7 +475,10 @@ const CreateVirtualEvent = ({ navigation }) => {
                     }
                     <DatePickerCalender inputKey={'start_date'} showDatePicker={showDatePicker} setShowDatePicker={setShowDatePicker} />
                     <DatePickerCalender inputKey={'end_date'} showDatePicker={showEndDatePicker} setShowDatePicker={setShowEndDatePicker} />
-                    <ButtonComp text={'Submit'} navigation={() => onSubmit()} />
+                    <ButtonComp text={'Submit'} navigation={() => onSubmit()} color={inputValue['title'] && selectedFrequecy !== null && inputValue['email'] ? true : false} />
+                    {/* <TouchableOpacity style={{ height: 40, width: 100, backgroundColor: 'red' }} onPress={onSubmit}>
+
+                    </TouchableOpacity> */}
                 </View>
             </TouchableWithoutFeedback>
             {/* </TouchableWithoutFeedback> */}

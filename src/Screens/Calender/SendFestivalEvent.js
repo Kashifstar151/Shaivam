@@ -9,32 +9,50 @@ import TextInputCom from "../Temples/Common/TextInputCom";
 import MaterialIcons from "react-native-vector-icons/dist/MaterialIcons";
 import Button from "../Temples/Common/Button";
 import Share from 'react-native-share'
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AlertScreen from "../../components/AlertScreen";
+import { setInputValue } from "../../store/features/Calender/FormSlice";
 
 const SendFestivalEvent = ({ navigation, route }) => {
     const { params } = route
-    console.log("🚀 ~ SendFestivalEvent ~ params:", params)
+    const dispatch = useDispatch()
+    // console.log("🚀 ~ SendFestivalEvent ~ params:", params)
     const [showModal, setShowModal] = useState(false)
     const [imageData, setImageData] = useState(params?.image)
+    const [showError, setShowError] = useState(null)
     const inputValue = useSelector(state => state.form?.inputValues || '');
+
+    // console.log("🚀 ~ SendFestivalEvent ~ inputValue:", inputValue)
     const { t } = useTranslation();
     const useSendEmail = async ({ subject, attachments }) => {
-        const shareOptions = {
-            title: 'Send Festival Video',
-            subject: 'Festival Video Submission.',
-            message: `Festival Name: ${inputValue['Festival Name']},
-Festival Location: ${inputValue['Festival Location']},
-Name: ${inputValue['Creator name']}
-Phone: ${inputValue['Creator number']}`,
-            social: Share.Social.EMAIL,
-            email: 'shaivam@shaivam.org',
-            url: imageData[0]?.uri?.substring(0, 6) == 'file:/' ? imageData[0]?.uri : `file://${imageData[0]?.uri}`,
-        };
-        try {
-            const ShareResponse = await Share.open(shareOptions);
-        } catch (error) {
-            console.log('Error sharing', error);
+        if (!inputValue['Festival Name']) {
+            setShowError({ Fname: 'Festival name is required', })
+        } else if (!inputValue['Festival Location']) {
+            setShowError({ Location: 'Festival Location is required', })
+        } else if (!inputValue['Creator name']) {
+            setShowError({ Cname: `Creator's Location is required`, })
+        } else if (!inputValue['Creator number']) {
+            setShowError({ Number: `Creator's Number is required`, })
+        } else {
+            const shareOptions = {
+                title: 'Send Festival Video',
+                subject: 'Festival Video Submission.',
+                message: `Festival Name: ${inputValue['Festival Name']},
+    Festival Location: ${inputValue['Festival Location']},
+    Name: ${inputValue['Creator name']}
+    Phone: ${inputValue['Creator number']}`,
+                social: Share.Social.EMAIL,
+                email: 'shaivam@shaivam.org',
+                url: imageData[0]?.uri?.substring(0, 6) == 'file:/' ? imageData[0]?.uri : `file://${imageData[0]?.uri}`,
+            };
+            try {
+                const ShareResponse = await Share.open(shareOptions);
+                console.log("🚀 ~ useSendEmail ~ ShareResponse:", ShareResponse)
+                dispatch(setInputValue({ inputKey: 'empty', inputValue: 1 }))
+
+            } catch (error) {
+                console.log('Error sharing', error);
+            }
         }
     };
     return (
@@ -67,9 +85,41 @@ Phone: ${inputValue['Creator number']}`,
                         </View>
                     }
                     <TextInputCom inputKey={'Festival Name'} value={inputValue['Festival Name']} insiderText={t('Type here') ? t('Type here') : 'Type here'} headinText={t('Festival Name*') ? t('Festival Name*') : 'Festival Name*'} width={Dimensions.get('window').width - 50} />
+                    {
+                        showError !== null && showError.hasOwnProperty("Fname") && <Text style={{
+                            fontWeight: '300',
+                            color: '#EB0D0D',
+                            fontSize: 10,
+                            marginLeft: 16,
+                        }}>{showError.Fname}</Text>
+                    }
                     <TextInputCom value={inputValue['Festival Location']} inputKey={'Festival Location'} insiderText={t('Type here') ? t('Type here') : 'Type here'} headinText={t('Festival Location*') ? t('Festival Location*') : 'Festival Location*'} width={Dimensions.get('window').width - 50} />
+                    {
+                        showError !== null && showError.hasOwnProperty("Location") && <Text style={{
+                            fontWeight: '300',
+                            color: '#EB0D0D',
+                            fontSize: 10,
+                            marginLeft: 16,
+                        }}>{showError.Location}</Text>
+                    }
                     <TextInputCom inputKey={'Creator name'} value={inputValue['Creator name']} insiderText={t('Type here') ? t('Type here') : 'Type here'} headinText={t('Your Name*') ? t('Your Name*') : 'Your Name*'} width={Dimensions.get('window').width - 50} />
+                    {
+                        showError !== null && showError.hasOwnProperty("Cname") && <Text style={{
+                            fontWeight: '300',
+                            color: '#EB0D0D',
+                            fontSize: 10,
+                            marginLeft: 16,
+                        }}>{showError.Cname}</Text>
+                    }
                     <TextInputCom inputKey={'Creator number'} value={inputValue['Creator number']} insiderText={t('Type here') ? t('Type here') : 'Type here'} headinText={t('Phone number*') ? t('Phone number*') : 'Phone number*'} width={Dimensions.get('window').width - 50} />
+                    {
+                        showError !== null && showError.hasOwnProperty("number") && <Text style={{
+                            fontWeight: '300',
+                            color: '#EB0D0D',
+                            fontSize: 10,
+                            marginLeft: 16,
+                        }}>{showError.number}</Text>
+                    }
                 </View>
                 {
                     showModal &&
@@ -79,20 +129,20 @@ Phone: ${inputValue['Creator number']}`,
                 }
                 <View style={{ position: 'absolute', top: Dimensions.get('window').height }}>
 
-                    <Button
-                        buttonText={'Submit'}
-                        active={inputValue['Festival Name'] !== null && inputValue['Festival Location'] !== null && inputValue['Creator name'] !== null && inputValue['Creator number'] !== null ? true : false}
-                        navigation={() => useSendEmail({
-                            attachments: params?.image?.map((result) => ({
-                                uri: result.uri,
-                                type: result.type,
-                                name: result.fileName, // optional
-                            })), subject: 'jjj'
-                        })} />
                 </View>
                 {/* <View style={{ position: 'absolute', bottom: 20 }}> */}
                 {/* </View> */}
             </ScrollView>
+            <Button
+                buttonText={'Submit'}
+                active={inputValue['Festival Name'] && inputValue['Festival Location'] && inputValue['Creator name'] && inputValue['Creator number'] ? true : false}
+                navigation={() => useSendEmail({
+                    attachments: params?.image?.map((result) => ({
+                        uri: result.uri,
+                        type: result.type,
+                        name: result.fileName, // optional
+                    })), subject: 'jjj'
+                })} />
         </KeyboardAvoidingView>
 
     );
