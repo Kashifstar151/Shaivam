@@ -219,6 +219,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                                     selectedHeader={selectedHeader}
                                     setSelectedheader={setSelectedheader}
                                     item={item}
+                                    prevId={prevId}
                                 />
                             )}
                             horizontal
@@ -233,6 +234,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                                     selectedHeader={selectedHeader}
                                     setSelectedheader={setSelectedheader}
                                     item={item}
+                                    prevId={prevId}
                                 />
                             )}
                             horizontal
@@ -261,7 +263,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                                 />
                             </View>
                         ) : selectedHeader.name == 'Varalatrumurai' ? (
-                            <Varakatrimurai navigation={navigation} />
+                            <Varakatrimurai navigation={navigation} prevId={prevId} />
                         ) : selectedHeader?.name == 'Thalamurai' ? (
                             <Thalamurai navigation={navigation} prevId={prevId} />
                         ) : (

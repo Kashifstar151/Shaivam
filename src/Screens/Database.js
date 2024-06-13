@@ -28,7 +28,7 @@ export async function attachDb(metaData) {
                     RNFS.readDir(jsonFilePath)
                         .then((files) => {
                             const fileNames = files.map((fileInfo) => fileInfo.name);
-                            console.log(fileNames, "fileNames")
+                            console.log(fileNames, 'fileNames');
                             try {
                                 database.transaction(
                                     async (tx) => {
@@ -38,9 +38,8 @@ export async function attachDb(metaData) {
                                                 `${jsonFilePath}/thirumuraiSong_${metaData.Version}.db`,
                                             ],
                                             async (tx, results) => {
-                                                console.log("🚀 ~ results:", results)
+                                                console.log('🚀 ~ results:', results);
                                                 resolve(tx);
-
                                             }
                                         );
                                     },
@@ -173,12 +172,19 @@ async function requestFilePermissions() {
 }
 
 function unzipDownloadFile(target, cb) {
-    requestFilePermissions()
+    requestFilePermissions();
     const sourcePath = target;
     // console.log("🚀 ~ file: Database.js:72 ~ unzipDownloadFile ~ targetPath:", sourcePath)
-    const targetPath = Platform.OS == 'ios' ? `${RNFS.DocumentDirectoryPath}/Thrimurai` : `${RNFS.ExternalDirectoryPath}/Thrimurai`;
+    const targetPath =
+        Platform.OS == 'ios'
+            ? `${RNFS.DocumentDirectoryPath}/Thrimurai`
+            : `${RNFS.ExternalDirectoryPath}/Thrimurai`;
     // const filePath = RNFS.DocumentDirectoryPath + '/myData.db';
-    console.log("🚀 ~ unzipDownloadFile ~ targetPath:", targetPath, `${RNFS.DocumentDirectoryPath}/Thrimurai`)
+    console.log(
+        '🚀 ~ unzipDownloadFile ~ targetPath:',
+        targetPath,
+        `${RNFS.DocumentDirectoryPath}/Thrimurai`
+    );
     const charset = 'UTF-8';
     RNFS.mkdir(targetPath)
         .then(() => {
@@ -207,7 +213,6 @@ export async function getSqlData(query, callbacks) {
     const databasename = JSON.parse(data);
     console.log('🚀 ~ file: Database.js:142 ~ getSqlData ~ data:', databasename);
     if (databasename?.name == 'songData.db' || databasename == null) {
-        console.log('offline database========>')
         await offlineDatabase.transaction(
             (tx) => {
                 tx.executeSql(query, [], (_, results) => {
@@ -216,7 +221,7 @@ export async function getSqlData(query, callbacks) {
                     if (results?.rows?.length > 0) {
                         for (let i = 0; i < results?.rows?.length; i++) {
                             const tableName = results.rows.item(i);
-                            console.log(" offline Database data", tableName);
+                            // console.log(" offline Database data", tableName);
                             arr.push(tableName);
                             // console.log("🚀 ~ file: ThrimuraiSong.js:57 ~ tx.executeSql ~ arr:", JSON.stringify(arr, 0, 2))
                         }
@@ -232,16 +237,16 @@ export async function getSqlData(query, callbacks) {
             }
         );
     } else {
-        console.log('online database===>')
+        console.log('online database===>');
         await database.transaction(
             (tx) => {
                 tx.executeSql(query, [], (_, results) => {
-                    console.log("🚀 ~ file: Database.js:149 ~ tx.executeSql ~ results:", results)
+                    console.log('🚀 ~ file: Database.js:149 ~ tx.executeSql ~ results:', results);
                     let arr = [];
                     if (results?.rows?.length > 0) {
                         for (let i = 0; i < results?.rows?.length; i++) {
                             const tableName = results.rows.item(i);
-                            console.log(" offline Database data", tableName);
+                            console.log(' offline Database data', tableName);
                             arr.push(tableName);
                             // console.log("🚀 ~ file: ThrimuraiSong.js:57 ~ tx.executeSql ~ arr:", JSON.stringify(arr, 0, 2))
                         }
