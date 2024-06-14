@@ -410,14 +410,11 @@ GROUP BY
     }, [musicState.song, downloadList]);
 
     const renderResult = (item) => {
-        // console.log("🚀 ~ renderResult ~ item:", item)
-        // console.log("🚀 ~ renderResult ~ item:", item)
-        // const parts = item?.rawSong.split('\r\n');
-        // const data = parts?.split(' ')
         return (
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                 <HighlightedText
                     screen={'music-player'}
+                    textColor={!darkMode ? '#000' : colors.white}
                     // key={Math.random()}
                     // selectable={true}
                     // selectionColor="orange"
@@ -437,7 +434,8 @@ GROUP BY
                     //     selectedLang !== 'Tamil' ? item?.rawSong : item?.tamilExplanation
                     // }
 
-                    text={selectedLang !== 'Tamil' ? item?.rawSong : item?.tamilExplanation}
+                    // text={selectedLang !== 'Tamil' ? item : item?.tamilExplanation}
+                    text={item}
                     highlight={searchedword}
                     selectable={true}
                     selectionColor="orange"
@@ -664,7 +662,7 @@ GROUP BY
                         </Text>
                     )}
                     {searchScreen ? (
-                        renderResult(item)
+                        renderResult(renderText(item))
                     ) : (
                         <Text
                             key={Math.random()}
@@ -675,7 +673,7 @@ GROUP BY
                                 {
                                     fontSize: fontSizeCount,
                                     alignSelf: 'flex-end',
-                                    color: !darkMode ? colors.grey6 : colors.white,
+                                    color: !darkMode ? '#000' : colors.white,
                                 },
                             ]}
                         >
@@ -1165,7 +1163,7 @@ GROUP BY
                                             },
                                         ]}
                                     >
-                                        {t('Thiruchirrambalam')}
+                                        {t('திருச்சிற்றம்பலம்')}
                                     </Text>
                                 }
                                 ListFooterComponent={
@@ -1178,7 +1176,7 @@ GROUP BY
                                             },
                                         ]}
                                     >
-                                        {t('Thiruchirrambalam')}
+                                        {t('திருச்சிற்றம்பலம்')}
                                     </Text>
                                 }
                                 keyExtractor={(item) => item?.id}
@@ -1508,9 +1506,8 @@ export const styles = StyleSheet.create({
     },
     lyricsContainer: { flex: 1, paddingHorizontal: 0, marginTop: 10 },
     lyricsText: {
-        // fontWeight: '500',
-        fontFamily: 'AnekTamil-Regular',
-        lineHeight: 30,
+        fontFamily: 'AnekTamil-Medium',
+        lineHeight: 23,
     },
     settingButton: {
         flexDirection: 'row',
