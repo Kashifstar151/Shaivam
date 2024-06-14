@@ -298,7 +298,7 @@ const BottomTab = ({ navigation }) => {
                     <Tab.Screen
                         options={{
                             headerShown: false,
-                            tabBarLabel: 'Calender',
+                            tabBarLabel: 'Calendar',
                             tabBarActiveTintColor: 'white',
                             tabBarShowLabel: false,
                         }}
