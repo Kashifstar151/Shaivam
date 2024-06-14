@@ -39,7 +39,7 @@ const CreateVirtualEvent = ({ navigation }) => {
     const inputValue = useSelector(state => state.form?.inputValues || '');
     const RbSheetRef = useRef(null)
     const [selectedFrequecy, setSelectedFrequecy] = useState(null)
-    const [selectedWeek, setSelectedWeek] = useState(null)
+    // const [selectedWeek, setSelectedWeek] = useState(null)
     const [bottomCom, setBottomCom] = useState('')
     const [recurringEvent, setRecurringEvent] = useState(false)
     const [virtualEvent, setVirtualEvent] = useState(false)

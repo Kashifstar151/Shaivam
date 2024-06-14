@@ -11,6 +11,20 @@ import dynamicLinks from '@react-native-firebase/dynamic-links';
 import NavigationServices from './src/navigation/NavigationServices';
 import { RouteTexts } from './src/navigation/RouteText';
 import KeepAwake from 'react-native-keep-awake';
+import * as Sentry from "@sentry/react-native";
+
+// Sentry.init({
+//     dsn: "https://34040ba1caae1102625264b6fe33ba1d@o4505442494971904.ingest.us.sentry.io/4507423552569344",
+//     // Set tracesSampleRate to 1.0 to capture 100% of transactions for tracing.
+//     // We recommend adjusting this value in production.
+//     tracesSampleRate: 1.0,
+//     _experiments: {
+//         // profilesSampleRate is relative to tracesSampleRate.
+//         // Here, we'll capture profiles for 100% of transactions.
+//         profilesSampleRate: 1.0,
+//     },
+// });
+
 
 const App = () => {
     useEffect(() => {
@@ -48,4 +62,4 @@ const App = () => {
     );
 };
 
-export default App;
+export default Sentry.wrap(App);

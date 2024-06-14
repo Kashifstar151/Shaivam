@@ -46,7 +46,7 @@ import TrackPlayer, {
     useTrackPlayerEvents,
 } from 'react-native-track-player';
 import Clipboard from '@react-native-clipboard/clipboard';
-import { listfavAudios } from '../../../Databases/AudioPlayerDatabase';
+import { listfavAudios, MostPlayedSongList } from '../../../Databases/AudioPlayerDatabase';
 import SettingsSVG from '../../../components/SVGs/SettingsSVG';
 import HighlightedText from '../Searchscreen/HighlightedText';
 import { addEventListener, useNetInfo } from '@react-native-community/netinfo';
@@ -196,6 +196,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     useEffect(() => {
         fetchAndDisplayDownloads();
         getFavAudios();
+        MostPlayedSongList()
         Dimensions.addEventListener('change', ({ window: { width, height } }) => {
             if (width < height) {
                 setOrientation('PORTRAIT');

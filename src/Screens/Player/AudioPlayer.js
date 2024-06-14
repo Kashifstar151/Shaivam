@@ -122,8 +122,7 @@ const AudioPlayer = ({
         });
         Promise.allSettled(
             [getMostPlayedSong(),
-            getFavAudios(), createUserTable(),
-            MostPlayedSongList()])
+            getFavAudios(), createUserTable()])
         // createUserTable()
         // MostPlayedSongList()
     }, []);
@@ -131,7 +130,9 @@ const AudioPlayer = ({
         if (event?.state == State?.nextTrack) {
             // let index = await TrackPlayer.getActiveTrack();
             const newObj = { ...activeTrack, prevId: prevId };
+            console.log('first block')
             updateRecentlyPlayed(newObj);
+            mostPlayed()
             // done the change when song completes the padikam gets changed (tricked)
             const activeTrack = await TrackPlayer.getActiveTrack();
             if (
@@ -152,7 +153,7 @@ const AudioPlayer = ({
         const filteredTracks = recentTracks.filter((track) => track.id !== newTrack.id);
         // Add the new track to the start of the array
         const updatedTracks = [newTrack, ...filteredTracks].slice(0, maxRecentTracks);
-        // console.log('🚀 ~ updateRecentlyPlayed ~ updatedTracks:', updatedTracks);
+        console.log('🚀 ~ updateRecentlyPlayed ~ updatedTracks:', JSON.stringify(updatedTracks, 0, 2));
         // Store the updated list back to AsyncStorage
         await AsyncStorage.setItem(`recentTrack`, JSON.stringify(updatedTracks));
     };
@@ -213,18 +214,20 @@ const AudioPlayer = ({
             // fetchAndDisplayDownloads();
         })();
     }, [playBackState]);
-    useEffect(() => {
-        // console.log('playBackState', playBackState);
-        if (playBackState.state == 'playing') {
-            mostPlayed()
-        }
-    }, [playBackState])
+    // useEffect(() => {
+    //     // console.log('playBackState', playBackState);
+    //     if (playBackState.state == 'playing') {
+    //         mostPlayed()
+    //         console.log('second bloack')
+    //     }
+    // }, [playBackState])
     useEffect(() => {
         if (playBackState.state !== 'playing' && position >= 3) {
-            Promise.allSettled([
-                updateRecentlyPlayed({ ...activeTrack, prevId }),
-                // mostPlayed()
-            ]);
+            console.log('second bloack running'),
+                Promise.allSettled([
+                    updateRecentlyPlayed({ ...activeTrack, prevId }),
+                    mostPlayed()
+                ]);
         }
     }, [playBackState]);
 
@@ -300,7 +303,7 @@ const AudioPlayer = ({
         if (num?.length > 0) {
             let sql = `UPDATE most_played SET count=? WHERE id=?`;
             UpdateMostPlayed(sql, [num[0].count + 1, num[0].id], (callbacks) => {
-                console.log('🚀 ~ mostPlayedSongs.map ~ callbacks:', callbacks);
+                // console.log('🚀 ~ mostPlayedSongs.map ~ callbacks:', callbacks);
             });
         } else {
             AddMostPlayed(
@@ -310,8 +313,8 @@ const AudioPlayer = ({
                     activeTrack?.url,
                     activeTrack?.title,
                     activeTrack?.artist,
-                    activeTrack?.categoryName,
                     activeTrack?.thalamOdhuvarTamilname,
+                    activeTrack?.categoryName,
                     activeTrack?.thirumariasiriyar,
                     count,
                     prevId,
