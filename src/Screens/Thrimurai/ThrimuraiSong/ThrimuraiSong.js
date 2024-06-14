@@ -1114,7 +1114,7 @@ GROUP BY
                                     ref={flatListRef}
                                     data={musicState?.songDetails}
                                     getItemLayOut={getItemLayOut}
-                                    initialScrollIndex={songNo ? songNo - 1 : 1}
+                                    initialScrollIndex={songNo ? songNo - 1 : 0}
                                     initialNumToRender={songNo ? songNo + 1 : 40}
                                     onScrollToIndexFailed={({
                                         index,
@@ -1185,7 +1185,7 @@ GROUP BY
                                 ref={flatListRef}
                                 data={musicState?.songDetails}
                                 getItemLayOut={getItemLayOut}
-                                initialScrollIndex={songNo ? songNo - 1 : 1}
+                                initialScrollIndex={songNo ? songNo - 1 : 0}
                                 initialNumToRender={songNo ? songNo + 1 : 40}
                                 onScrollToIndexFailed={({
                                     index,
