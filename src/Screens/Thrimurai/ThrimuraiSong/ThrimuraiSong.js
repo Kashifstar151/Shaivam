@@ -38,6 +38,8 @@ import NaduSVG from '../../../components/SVGs/NaduSVG';
 import PannSVG from '../../../components/SVGs/PannSVG';
 import ThalamSVG from '../../../components/SVGs/ThalamSVG';
 import DownloadIcon from '../../../assets/Images/download.svg';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
+
 // import HighlightText from '@sanar/react-native-highlight-text';
 import TrackPlayer, {
     AppKilledPlaybackBehavior,
@@ -409,14 +411,11 @@ GROUP BY
     }, [musicState.song, downloadList]);
 
     const renderResult = (item) => {
-        // console.log("🚀 ~ renderResult ~ item:", item)
-        // console.log("🚀 ~ renderResult ~ item:", item)
-        // const parts = item?.rawSong.split('\r\n');
-        // const data = parts?.split(' ')
         return (
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                 <HighlightedText
                     screen={'music-player'}
+                    textColor={!darkMode ? '#000' : colors.white}
                     // key={Math.random()}
                     // selectable={true}
                     // selectionColor="orange"
@@ -436,7 +435,8 @@ GROUP BY
                     //     selectedLang !== 'Tamil' ? item?.rawSong : item?.tamilExplanation
                     // }
 
-                    text={selectedLang !== 'Tamil' ? item?.rawSong : item?.tamilExplanation}
+                    // text={selectedLang !== 'Tamil' ? item : item?.tamilExplanation}
+                    text={item}
                     highlight={searchedword}
                     selectable={true}
                     selectionColor="orange"
@@ -603,7 +603,7 @@ GROUP BY
     useEffect(() => {
         Clipboard.addListener(async () => {
             fetchClipBoardString().then((string) => {
-                setClipBoardString((prev) => string);
+                setClipBoardString(() => string);
             });
         });
 
@@ -663,7 +663,7 @@ GROUP BY
                         </Text>
                     )}
                     {searchScreen ? (
-                        renderResult(item)
+                        renderResult(renderText(item))
                     ) : (
                         <Text
                             key={Math.random()}
@@ -674,7 +674,7 @@ GROUP BY
                                 {
                                     fontSize: fontSizeCount,
                                     alignSelf: 'flex-end',
-                                    color: !darkMode ? colors.grey6 : colors.white,
+                                    color: !darkMode ? '#000' : colors.white,
                                 },
                             ]}
                         >
@@ -1113,7 +1113,7 @@ GROUP BY
                                     ref={flatListRef}
                                     data={musicState?.songDetails}
                                     getItemLayOut={getItemLayOut}
-                                    initialScrollIndex={songNo ? songNo - 1 : 1}
+                                    initialScrollIndex={songNo ? songNo - 1 : 0}
                                     initialNumToRender={songNo ? songNo + 1 : 40}
                                     onScrollToIndexFailed={({
                                         index,
@@ -1164,7 +1164,7 @@ GROUP BY
                                             },
                                         ]}
                                     >
-                                        {t('Thiruchirrambalam')}
+                                        {t('திருச்சிற்றம்பலம்')}
                                     </Text>
                                 }
                                 ListFooterComponent={
@@ -1177,14 +1177,14 @@ GROUP BY
                                             },
                                         ]}
                                     >
-                                        {t('Thiruchirrambalam')}
+                                        {t('திருச்சிற்றம்பலம்')}
                                     </Text>
                                 }
                                 keyExtractor={(item) => item?.id}
                                 ref={flatListRef}
                                 data={musicState?.songDetails}
                                 getItemLayOut={getItemLayOut}
-                                initialScrollIndex={songNo ? songNo - 1 : 1}
+                                initialScrollIndex={songNo ? songNo - 1 : 0}
                                 initialNumToRender={songNo ? songNo + 1 : 40}
                                 onScrollToIndexFailed={({
                                     index,
@@ -1507,9 +1507,8 @@ export const styles = StyleSheet.create({
     },
     lyricsContainer: { flex: 1, paddingHorizontal: 0, marginTop: 10 },
     lyricsText: {
-        // fontWeight: '500',
-        fontFamily: 'AnekTamil-Regular',
-        lineHeight: 30,
+        fontFamily: 'AnekTamil-Medium',
+        lineHeight: 23,
     },
     settingButton: {
         flexDirection: 'row',

@@ -45,9 +45,11 @@ const App = () => {
 
 
     const checkPermissionAccess = async () => {
-        const permission = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);;
-        console.log("🚀 ~ checkPermissionAccess ~ permission:", permission)
-    }
+        const permission = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+        );
+        console.log('🚀 ~ checkPermissionAccess ~ permission:', permission);
+    };
     return (
         <StoreProvider>
             <ThemeContextProvider>
