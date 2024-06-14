@@ -38,6 +38,8 @@ import NaduSVG from '../../../components/SVGs/NaduSVG';
 import PannSVG from '../../../components/SVGs/PannSVG';
 import ThalamSVG from '../../../components/SVGs/ThalamSVG';
 import DownloadIcon from '../../../assets/Images/download.svg';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
+
 // import HighlightText from '@sanar/react-native-highlight-text';
 import TrackPlayer, {
     AppKilledPlaybackBehavior,
@@ -602,7 +604,7 @@ GROUP BY
     useEffect(() => {
         Clipboard.addListener(async () => {
             fetchClipBoardString().then((string) => {
-                setClipBoardString((prev) => string);
+                setClipBoardString(() => string);
             });
         });
 
