@@ -125,7 +125,15 @@ export const Temples = ({ navigation, route }) => {
     };
     const fetchTheCurrentLocation = () => {
         getCurrentLocation((val) => {
-            mapRef.current?.animateCamera({ center: val }, { duration: 1000 });
+            mapRef.current?.animateCamera(
+                {
+                    center: {
+                        latitude: parseFloat(val.latitude),
+                        longitude: parseFloat(val.longitude),
+                    },
+                },
+                { duration: 500 }
+            );
             setUserLocation((prev) => ({
                 ...prev,
                 ...val,
@@ -275,12 +283,6 @@ export const Temples = ({ navigation, route }) => {
                         }, 5000)
                     }
                     provider={PROVIDER_GOOGLE}
-                    initialRegion={{
-                        longitude: 77.40369287235171,
-                        latitude: 28.49488467262243,
-                        latitudeDelta: LATITUDE_DELTA,
-                        longitudeDelta: LONGITUDE_DELTA,
-                    }}
                     style={styles.map}
                     onRegionChangeComplete={(args, gesture) => {
                         if (gesture.isGesture) {
