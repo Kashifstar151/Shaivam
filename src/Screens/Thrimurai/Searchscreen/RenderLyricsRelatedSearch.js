@@ -50,13 +50,6 @@ const RenderLyricsRelatedSearch = ({
                     if (!(searchResult?.length < 40)) {
                         setoffSet((prev) => {
                             if (searchResult?.length) {
-                                console.log(
-                                    'prev[selectedTab=================>',
-                                    prev,
-                                    selectedTab,
-                                    'and ==>',
-                                    prev[selectedTab]
-                                );
                                 return {
                                     ...prev,
                                     [selectedTab]: {

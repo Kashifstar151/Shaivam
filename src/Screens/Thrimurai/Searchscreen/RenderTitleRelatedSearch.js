@@ -43,6 +43,11 @@ const RenderTitleRelatedSearch = ({
                     )
                 }
                 windowSize={40}
+                keyExtractor={(item, index) => index}
+                maxToRenderPerBatch={40}
+                updateCellsBatchingPeriod={20}
+                removeClippedSubviews={true}
+                onEndReachedThreshold={0.8}
                 onEndReached={() => {
                     if (!(searchResult?.length < 40)) {
                         setoffSet((prev) => {

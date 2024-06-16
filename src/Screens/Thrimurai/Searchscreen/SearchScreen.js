@@ -36,6 +36,18 @@ const SearchScreen = ({ navigation, route }) => {
     const [fktrimuria, setFkTrimuria] = useState(new Set([0]));
     const [isSearched, setIsSearched] = useState(false); // state --> loading, search
     const { screenHeight, screenWidth } = getDimension();
+    const tab = [
+        {
+            name: 'title',
+            showVal: 'Title Based',
+        },
+        {
+            name: 'rawSongs',
+            showVal: 'Lyrics Based',
+        },
+    ];
+
+    const [selectedTab, setSelectedTab] = useState(tab[0]?.name);
 
     const [offset, setoffSet] = useState({
         title: {
@@ -57,7 +69,7 @@ const SearchScreen = ({ navigation, route }) => {
         };
     }, [fktrimuria]);
 
-    useState(() => {
+    useEffect(() => {
         setUpdatedThrimurai(() =>
             thrimurais?.length ? [{ id: 0, name: 'All' }, ...thrimurais] : null
         );
@@ -124,7 +136,7 @@ const SearchScreen = ({ navigation, route }) => {
                                 return {
                                     ...prev,
                                     title: {
-                                        ...offset?.title,
+                                        ...prev.title,
                                         isfetching: false,
                                     },
                                 };
@@ -157,7 +169,7 @@ const SearchScreen = ({ navigation, route }) => {
                         }  AND ts.locale='${
                             i18n.language === 'en-IN' ? 'RoI' : i18n.language
                         }' GROUP BY   ts.thirumuraiId, ts.prevId, ts.songNo ORDER BY ts.thirumuraiId, ts.prevId, ts.songNo ASC  limit 40 offset ${
-                            offset['rawSongs']?.page
+                            offset?.rawSongs?.page
                         } `,
                         (callbacks) => {
                             setRawSongs((prev) => {
@@ -170,10 +182,11 @@ const SearchScreen = ({ navigation, route }) => {
                             });
                             // setRawSongs([...rawSongs, ...callbacks]);
                             setoffSet((prev) => {
+                                console.log('🚀 ~ setoffSet ~ prev 185:', prev);
                                 return {
                                     ...prev,
                                     rawSongs: {
-                                        ...prev['rawSongs'],
+                                        ...prev.rawSongs,
                                         isfetching: false,
                                     },
                                 };
@@ -257,17 +270,6 @@ const SearchScreen = ({ navigation, route }) => {
             focusRef.current.focus();
         }
     }, [focusRef.current]);
-    const tab = [
-        {
-            name: 'title',
-            showVal: 'Title Based',
-        },
-        {
-            name: 'rawSongs',
-            showVal: 'Lyrics Based',
-        },
-    ];
-    const [selectedTab, setSelectedTab] = useState(tab[0]?.name);
 
     return (
         <View style={[styles.main, { backgroundColor: theme.backgroundColor }]}>
@@ -278,7 +280,7 @@ const SearchScreen = ({ navigation, route }) => {
                     }}
                 >
                     <HeaderWithTextInput
-                        onSubmitEditing={getDataFromSql}
+                        onSubmitEditing={() => getDataFromSql(searchText, selectedTab)}
                         placeholder={`${t('Search for any')} ( முதல்-திருமுறை )`}
                         navigation={navigation}
                         setState={(e) => setSearchText(e)}
