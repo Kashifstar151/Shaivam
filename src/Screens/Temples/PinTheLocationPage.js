@@ -4,15 +4,15 @@
 */
 
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { CustomMarker, DraggableMarker } from './CustomMarker';
 import {
+    checkPermissionAccess,
     clearGetCurrentLocationWatcher,
     getCurrentLocation,
     getCurrentLocationWatcher,
     getTheLocationName,
-    locationPermission,
     onRegionChangeCompleteCallback,
 } from '../../Helpers/GeolocationFunc';
 import { CustomButton, CustomLongBtn } from '../../components/Buttons';
@@ -23,29 +23,31 @@ import BackIcon from '../../../src/assets/Images/BackIcon.svg';
 import WhiteBackButton from '../../../src/assets/Images/arrow (1) 1.svg';
 import SearchTemple from './SearchTemple';
 import getDimension from '../../Helpers/getDimension';
+import { PERMISSIONS, RESULTS } from 'react-native-permissions';
 
 const PinTheLocation = ({ setDescription, close, valueSetter }) => {
-    const [regionCoordinate, setRegionCoordinate] = useState({
-        latitude: 28.500271,
-        longitude: 77.387901,
-        latitudeDelta: 0.015,
-        longitudeDelta: 0.0121,
-        locationName: '',
-    });
+    // const [regionCoordinate, setRegionCoordinate] = useState({
+    //     // latitude: 28.500271,
+    //     // longitude: 77.387901,
+    //     // latitudeDelta: 0.015,
+    //     // longitudeDelta: 0.0121,
+    //     // locationName: '',
+    // });
+
+    const { screenWidth, screenHeight } = getDimension();
+
+    const LATITUDE_DELTA = 0.18;
+    const LONGITUDE_DELTA = LATITUDE_DELTA * (screenWidth / screenHeight);
 
     const [userLocation, setUserLocation] = useState({
-        latitude: 28.500271,
-        longitude: 77.387901,
-        latitudeDelta: 0.015,
-        longitudeDelta: 0.0121,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
     });
 
     const [padState, setPadState] = useState(1);
     const dragCoor = useRef({
-        latitude: 28.500271,
-        longitude: 77.387901,
-        latitudeDelta: 0.015,
-        longitudeDelta: 0.0121,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
     });
     const [userLocName, setUserLocName] = useState({
         name: '',
@@ -58,8 +60,11 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
         async (coors) => {
             // console.log('the location fetch enters  ');
             if (coors?.latitude && coors?.longitude) {
-                // console.log('the location is fetching  ');
-                const locationDetail = await getTheLocationName({ ...dragCoor.current });
+                const locationDetail = await getTheLocationName({
+                    latitude: coors?.latitude,
+                    longitude: coors?.longitude,
+                    ...dragCoor.current,
+                });
                 console.log('the location  fetching  is done', locationDetail);
                 if (locationDetail.status === 'SUCCESS') {
                     setUserLocName((prev) => {
@@ -79,20 +84,43 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
         [dragCoor.current]
     );
     const [btnState, setBtnState] = useState(false);
+    const permissionTypeRef = useRef(
+        Platform.select({
+            ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+            android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+        })
+    );
 
     const onMapReadyCallback = async () => {
-        const state = await locationPermission();
-        console.log('🚀 ~ onMapReadyCallback ~ state:', state);
+        console.log('🚀 ~ onMapReadyCallback ~ state:');
 
-        if (state.status) {
+        const state = await checkPermissionAccess(permissionTypeRef.current);
+
+        if (state === RESULTS.GRANTED) {
             // console.log("the fetch of the user's location");
             getCurrentLocation((val) => {
                 fetchTheName(val);
-                setUserLocation((prev) => ({ ...prev, ...val }));
+
+                mapRef.current?.animateCamera(
+                    {
+                        center: {
+                            latitude: parseFloat(val?.latitude),
+                            longitude: parseFloat(val?.longitude),
+                        },
+                    },
+                    { duration: 1000 }
+                );
+                setUserLocation((prev) => {
+                    dragCoor.current = { ...prev, ...val };
+                    return dragCoor.current;
+                });
             });
             getCurrentLocationWatcher((val) => {
                 fetchTheName(val);
-                setUserLocation((prev) => ({ ...prev, ...val }));
+                setUserLocation((prev) => {
+                    dragCoor.current = { ...prev, ...val };
+                    return dragCoor.current;
+                });
             });
         }
     };
@@ -108,8 +136,8 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
         };
     }, []);
 
-    const { screenWidth } = getDimension();
     const mapRef = useRef();
+    const [reRender, setReRender] = useState(true);
     return (
         <View style={styles.mainContainer}>
             <MapView
@@ -119,8 +147,13 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
                         setPadState(!padState);
                     }, 5000)
                 }
+                initialRegion={{
+                    longitude: 77.40369287235171,
+                    latitude: 28.49488467262243,
+                    latitudeDelta: LATITUDE_DELTA,
+                    longitudeDelta: LONGITUDE_DELTA,
+                }}
                 provider={PROVIDER_GOOGLE}
-                initialRegion={regionCoordinate}
                 style={styles.map}
                 // onRegionChangeComplete={(args, gesture) => {
                 //     if (gesture.isGesture) {
@@ -132,22 +165,26 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
                 // region={regionCoordinate}
                 ref={mapRef}
             >
-                <CustomMarker
-                    setPadState={setPadState}
-                    flag={8}
-                    coordinate={userLocation}
-                    keyName={'USER_LOCATION_MARKER'}
-                />
+                {userLocation?.latitude && userLocation?.longitude && (
+                    <>
+                        <CustomMarker
+                            setPadState={setPadState}
+                            flag={8}
+                            coordinate={userLocation}
+                            keyName={'USER_LOCATION_MARKER'}
+                        />
 
-                <DraggableMarker
-                    callback={(e) => {
-                        dragCoor.current = e;
-                        fetchTheName(e);
-                    }}
-                    flag={1}
-                    coordinate={dragCoor.current}
-                    keyName={'COORDINATE2'}
-                />
+                        <DraggableMarker
+                            callback={(e) => {
+                                dragCoor.current = e;
+                                fetchTheName(e);
+                            }}
+                            flag={9}
+                            coordinate={dragCoor.current}
+                            keyName={'COORDINATE2'}
+                        />
+                    </>
+                )}
             </MapView>
             <View
                 style={{
@@ -195,18 +232,18 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
                             },
                             { duration: 1000 }
                         );
-
+                        setReRender(!reRender);
                         dragCoor.current = {
                             ...item,
                             latitude: parseFloat(item.lat),
                             longitude: parseFloat(item.lon),
                         };
                         fetchTheName(dragCoor.current);
-                        setRegionCoordinate((prev) => ({
-                            ...prev,
-                            latitude: parseFloat(item.lat),
-                            longitude: parseFloat(item.lon),
-                        }));
+                        // setRegionCoordinate((prev) => ({
+                        //     ...prev,
+                        //     latitude: parseFloat(item.lat),
+                        //     longitude: parseFloat(item.lon),
+                        // }));
                     }}
                 />
             </View>
@@ -219,7 +256,16 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
                             // write the function that we have used in the temple module to get the current location and set the name of the location in the near by place name
                             dragCoor.current = { ...userLocation };
                             fetchTheName(dragCoor.current);
-                            setRegionCoordinate((prev) => ({ ...prev, ...userLocation }));
+                            mapRef.current?.animateCamera(
+                                {
+                                    center: {
+                                        latitude: parseFloat(userLocation?.latitude),
+                                        longitude: parseFloat(userLocation?.longitude),
+                                    },
+                                },
+                                { duration: 1000 }
+                            );
+                            // setRegionCoordinate((prev) => ({ ...prev, ...userLocation }));
                         }}
                         style={{
                             margin: 10,

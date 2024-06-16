@@ -6,7 +6,7 @@ import SearchTemple from './SearchTemple';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { ImageBackground } from 'react-native';
 import { ThemeContext } from '../../Context/ThemeContext';
-import { MarkerCallOut } from './CustomMarker';
+import { CustomMarker, MarkerCallOut } from './CustomMarker';
 import { markerPressClbk } from './CallBacksForClick';
 
 const BottomSheetTempleTemplate = ({
@@ -18,7 +18,9 @@ const BottomSheetTempleTemplate = ({
         longitudeDelta: 0.0121,
         locationName: '',
     },
-
+    userLocation,
+    snapIndex,
+    setSnapIndex,
     showSearchBarWhenFullSize,
     initialIndexOfSize,
     snapPoints = ['10%', '50%', '95%'],
@@ -34,14 +36,16 @@ const BottomSheetTempleTemplate = ({
     isSearchFieldDisabled,
     isSearchFieldDisabledInFullScreenMode,
 }) => {
-    console.log('🚀 ~ ---------data:', data);
+    console.log('🚀 ~ data:', data);
     const bottomSheetRef = useRef(null);
     const [padState, setPadState] = useState(null);
-    const [snapIndex, setSnapIndex] = useState(0);
-    const handleSheetChanges = useCallback((indx) => {
-        console.log('handleSheetChanges', indx);
-        setSnapIndex(indx);
-    }, []);
+    const handleSheetChanges = useCallback(
+        (indx) => {
+            console.log('handleSheetChanges', indx);
+            setSnapIndex(indx);
+        },
+        [setSnapIndex]
+    );
 
     const { theme } = useContext(ThemeContext);
     return (
@@ -52,23 +56,27 @@ const BottomSheetTempleTemplate = ({
                 style={styles.map}
                 region={regionCoordinate}
             >
-                {data?.templeCoordinate?.latitude && data?.templeCoordinate?.longitude && (
-                    <MarkerCallOut
-                        setPadState={setPadState}
-                        callback={() => {
-                            // setting the type of the marker you pressed
-                            // callback function for naving to page which has the temple details
-                            // markerPressClbk(navigation, 7);
-                        }}
-                        flag={9}
-                        coordinate={{
-                            latitude: data?.templeCoordinate?.latitude,
-                            longitude: data?.templeCoordinate?.longitude,
-                        }}
-                        keyName={'COORDINATE'}
-                        description={data?.templeName}
-                    />
-                )}
+                {data?.length > 0 &&
+                    data.map((item) => {
+                        return (
+                            <MarkerCallOut
+                                setPadState={setPadState}
+                                callback={() => {
+                                    // setting the type of the marker you pressed
+                                    // callback function for naving to page which has the temple details
+                                    // markerPressClbk(navigation, 7);
+                                    markerPressClbk(navigation, item?.flag, item, userLocation);
+                                }}
+                                flag={item?.flag || item?.Flag}
+                                coordinate={{
+                                    latitude: parseFloat(item?.latitude),
+                                    longitude: parseFloat(item?.longitude),
+                                }}
+                                keyName={'COORDINATE'}
+                                description={data?.templeName || item?.name}
+                            />
+                        );
+                    })}
             </MapView>
             <View
                 style={{
@@ -91,6 +99,7 @@ const BottomSheetTempleTemplate = ({
                 onChange={handleSheetChanges}
                 snapPoints={snapPoints}
                 index={initialIndexOfSize}
+                handleStyle={{ height: 40 }}
                 backdropComponent={(props) => (
                     <BottomSheetBackdrop
                         opacity={1}

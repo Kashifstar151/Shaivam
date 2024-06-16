@@ -3,11 +3,15 @@ import { TempleApiSlice } from '../../apiSlice';
 const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getNearByTemples: builder.query({
-            query: (date) => {
-                console.log(date, 'date from calender');
-                // const url = `?temple_coordinates[coords]=${date?.longitude},${date?.latitude}&pagination[pageSize]=200`;
+            query: (data) => {
+                // const url = `?temple_coordinates[coords]=${data?.longitude},${data?.latitude}&pagination[pageSize]=200`;
                 // https://lobster-app-gpfv5.ondigitalocean.app/api/nearby-temples?long=77.391029&lat=28.535517&radius=15000
-                const url = `api/nearby-temples?long=${date?.longitude}&lat=${date?.latitude}&radius=15000`;
+                // const url = `api/nearby-temples?long=${data?.longitude}&lat=${data?.latitude}&radius=15000`;
+                const url = `api/nearby-temples?long=${data?.longitude}&lat=${
+                    data?.latitude
+                }&radius=15000${data.flag ? `&flag=${data.flag}` : ''}${
+                    data?.limit ? `&limit=${data.limit}` : '&limit=100'
+                }`;
                 console.log('🚀 ~ url:', url);
                 return {
                     url: url,
@@ -15,11 +19,14 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
                 };
             },
             providesTags: ['Temple'],
+            transformResponse: (response, meta, arg) => {
+                return response;
+            },
         }),
 
         getTempleDetail: builder.query({
             query: ({ id }) => {
-                const url = `api/maps/${id}?populate=temple`;
+                const url = `api/maps/${id}?populate=temple,temple_images`;
                 return {
                     url: url,
                     method: 'GET',
@@ -27,30 +34,57 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
             },
             providesTags: ['TempleDetail'],
             transformResponse: (response, meta, arg) => {
-                if (response?.data?.attributes?.temple?.data) {
-                    const {
-                        Swamy_name,
-                        Ambal_Name,
-                        Temple_tree,
-                        Thirtham,
-                        Sages_who_worshiped,
-                        Location,
-                        Specialities_Description,
-                        Sthala_Puranam_Description,
-                    } = response?.data?.attributes?.temple?.data?.attributes;
-                    return {
-                        basicDetails: {
+                let responseToRetun = {};
+                if (response?.data?.attributes) {
+                    const { Longitude, Latitude, Flag, Name } = response?.data?.attributes;
+
+                    responseToRetun['templeName'] = Name;
+                    responseToRetun['templeCoordinate'] = {
+                        latitude: Latitude,
+                        longitude: Longitude,
+                    };
+                    responseToRetun['flag'] = Flag;
+
+                    if (response?.data?.attributes?.temple?.data?.attributes) {
+                        const {
+                            Swamy_name,
+                            Ambal_Name,
+                            Temple_tree,
+                            Thirtham,
+                            Sages_who_worshiped,
+                            Location,
+                            Specialities_Description,
+                            Sthala_Puranam_Description,
+                        } = response?.data?.attributes?.temple?.data?.attributes;
+
+                        responseToRetun['basicDetails'] = {
                             "Lord's name": Swamy_name,
                             'Divine name': Ambal_Name,
                             'Head tree': Temple_tree ?? 'N/A',
                             Thirtham: Thirtham,
                             Worshipped: Sages_who_worshiped,
                             Location: Location,
-                        },
+                        };
 
-                        Specialities_Description,
-                        Sthala_Puranam_Description,
-                    };
+                        responseToRetun.Specialities_Description = Specialities_Description;
+                        responseToRetun.Sthala_Puranam_Description = Sthala_Puranam_Description;
+                    }
+
+                    if (response?.data?.attributes?.temple_images?.data?.length) {
+                        const temple_images = response?.data?.attributes?.temple_images?.data?.map(
+                            (item) => {
+                                console.log('🚀 ~ 58 item:', item);
+                                return {
+                                    id: item?.id,
+                                    url: item?.attributes?.url,
+                                };
+                            }
+                        );
+
+                        responseToRetun['temple_images'] = temple_images;
+                    }
+
+                    return responseToRetun;
                 } else {
                     return;
                 }
@@ -59,7 +93,7 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
 
         addTemple: builder.mutation({
             // add email field
-            query: ({ Name, Description, Longitude, Latitude }) => {
+            query: ({ Name, Description, Longitude, Latitude, email }) => {
                 console.log('🚀 ~ Name, Description, Longitude, Latitude :', {
                     Name,
                     Description,
@@ -76,6 +110,7 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
                             Description,
                             Longitude,
                             Latitude,
+                            email,
                         },
                     },
                     headers: { 'Content-Type': 'application/json' },
@@ -88,6 +123,37 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
                 };
             },
             transformErrorResponse: (response, meta, arg) => {
+                return {
+                    status: 'FAILED',
+                    error: response?.data?.error,
+                };
+            },
+            invalidatesTags: ['Add_Temple_Records'],
+        }),
+
+        templeErrorhandler: builder.mutation({
+            // add email field
+            query: (body) => {
+                const url = `api/error-reporteds`;
+                return {
+                    url: url,
+                    method: 'POST',
+                    body: {
+                        data: { ...body, publishedAt: `${new Date().toISOString()}` },
+                    },
+                    headers: { 'Content-Type': 'application/json' },
+                };
+            },
+
+            transformResponse: (response, meta, arg) => {
+                console.log('🚀 ~ response:', response);
+                return {
+                    data: response?.data,
+                    status: 'SUCCESS',
+                };
+            },
+            transformErrorResponse: (response, meta, arg) => {
+                console.log('🚀 ~ response error :', response);
                 return {
                     status: 'FAILED',
                     error: response?.data?.error,
@@ -109,26 +175,28 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
                     },
                 };
             },
-            invalidatesTags: ['Add_Temple_Records'],
+            invalidatesTags: ['Add_Temple_Records', 'TempleDetail'],
         }),
 
-        getAllTemplesAddRequest: builder.query({
-            // add email field
+        getAddedTempleOnEmail: builder.query({
             query: ({ email }) => {
-                const url = `api/maps/${id}?filters[email][$eq]=${email}?populate=temple`;
+                console.log('🚀 ~ email:', email);
+                // https://lobster-app-gpfv5.ondigitalocean.app/api/maps?filters[email][$eq]=adsfa@gmail.com
+
                 return {
-                    url: url,
+                    url: `api/maps?filters[email][$eq]=${email}`,
                     method: 'GET',
-                    body: {
-                        Name,
-                        Description,
-                        Longitude,
-                        Latitude,
-                        temple_images,
-                    },
                 };
             },
-            invalidatesTags: ['Add_Temple_Records'],
+
+            transformResponse: (response, meta, arg) => {
+                console.log('🚀 ~ response:', response);
+                return response?.data;
+                // return {
+                //     data: response?.data,
+                //     status: 'SUCCESS',
+                // };
+            },
         }),
     }),
 });
@@ -139,4 +207,6 @@ export const {
     useGetTempleDetailQuery,
     useAddTempleMutation,
     useAddTempleImagesMutation,
+    useLazyGetAddedTempleOnEmailQuery,
+    useTempleErrorhandlerMutation,
 } = TempleApiSliceCall;

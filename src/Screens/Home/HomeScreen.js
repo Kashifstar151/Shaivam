@@ -11,43 +11,67 @@ import {
     FlatList,
     Platform,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/dist/MaterialIcons';
+// import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import CardComponents from '../../components/CardComponents';
 import '../../../localization';
 import { ThemeContext } from '../../Context/ThemeContext';
 import bgImg from '../../../assets/Images/Background.png';
 import bgImgDark from '../../../assets/Images/BackgroundCommon.png';
-import HomePlaylistCard from '../../components/HomePlaylistCard';
 import ElevatedCard from '../../components/ElevatedCard';
 import EventCard from '../../components/EventCard';
-import OmChat from './OmChat';
+import OmChant from './OmChat';
 import HeadingAndView from './HeadingAndView';
-import PlaceCard from './PlaceCard';
+// import PlaceCard from './PlaceCard';
 import { RFValue } from 'react-native-responsive-fontsize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { listfavAudios, MostPlayedList } from '../../Databases/AudioPlayerDatabase';
-import { useIsFocused } from '@react-navigation/native';
-import Quiz from './Quiz';
-import VideosList from './VideosList';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
+// import Quiz from './Quiz';
+// import VideosList from './VideosList';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import OmChanting from './OmChanting';
 import { colors } from '../../Helpers';
 import ListAudios from '../Thrimurai/ThrimuraiList/ListAudios';
 import { usePlayer } from '../../Context/PlayerContext';
 import { useTranslation } from 'react-i18next';
+import { useGetUpcomingFestivalQuery } from '../../store/features/Calender/CalenderApiSlice';
+import moment from 'moment';
+import {
+    checkPermissionAccess,
+    clearGetCurrentLocationWatcher,
+    getCurrentLocation,
+    getCurrentLocationWatcher,
+} from '../../Helpers/GeolocationFunc';
+import { PERMISSIONS, RESULTS } from 'react-native-permissions';
+import { useLazyGetNearByTemplesQuery } from '../../store/features/Temple/TemplApiSlice';
+import { RouteTexts } from '../../navigation/RouteText';
 
 const HomeScreen = ({ navigation }) => {
     const RBSheetRef = useRef(null);
-    const { showPlayer, setShowPlayer, OmPlayTiming, setOmPlayTiming } = usePlayer();
+    const { showPlayer, setShowPlayer, OmPlayTiming, setOmPlayTiming, isPlaying, setIsPlaying } =
+        usePlayer();
     const { theme } = useContext(ThemeContext);
+    const { selectMonth, setSelectedMonth } = useState(moment().format('YYYY-MM-DD'));
+    const { i18n, t } = useTranslation();
+    // var lanugage = i18n.language;
+    // console.log("🚀 ~ lanugage:", lanugage)
+    const {
+        data: festivalEvents,
+        isFetching: isfestivaldataFetching,
+        refetch: refetchFestival,
+        isSuccess: isFestivalSuccess,
+    } = useGetUpcomingFestivalQuery({ startDate: moment().format('YYYY-MM-DD'), endDate: moment().add(1, 'months').endOf('month').format('YYYY-MM-DD'), lanugage: i18n.language == 'en-IN' ? 'en' : i18n.language == 'en' ? 'ta' : i18n.language == 'DV' ? 'hi' : 'en' });
+    const [festivalEvent, setFestivalEvent] = useState([]);
     const [compHeight, setCompHeight] = useState();
-    const [textInsidePlaylistCard, setTextInsidePlaylistCard] = useState(0);
-    const [playlistCardHeight, setPlaylistCardHeight] = useState(0);
-    const [dimentionsOfText1, setDimentionsOfText1] = useState({
-        width: 0,
-        height: 0,
-    });
     const isFocused = useIsFocused();
+    useEffect(() => {
+        if (festivalEvents?.data && isFestivalSuccess) {
+            let arr = festivalEvents?.data?.filter((item) => {
+                return moment(item?.attributes?.calendar_from_date) > moment();
+            });
+            setFestivalEvent(arr?.slice(0, 3));
+        }
+    }, [selectMonth, isFocused, isFestivalSuccess]);
     const handleLayout = useCallback(
         (event) => {
             const { height } = event.nativeEvent.layout;
@@ -72,36 +96,50 @@ const HomeScreen = ({ navigation }) => {
             description: 'सम्पूर्ण ऋग्वेद पाराणम् Complete ...',
         },
     ];
+    const permissionTypeRef = useRef(
+        Platform.select({
+            ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+            android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+        })
+    );
+    const [userLocation, setUserLocation] = useState(null);
+    useEffect(() => {
+        onMapReadyCallback();
 
-    const PlayList = [
+        return clearGetCurrentLocationWatcher();
+    }, []);
+    const [
+        getNearByTemples,
         {
-            id: 1,
-            heading: 'Thirumurais',
-            info: 'Attaveerattam and Saptavidanga Thevaram - Audi...',
-            subInfo: 'Thiruthani Swaminathan Odhuvar',
-            songCount: 46,
-            colors: theme.colorscheme === 'light' ? ['#FEE8B3', '#FDD166'] : ['#3A3A3A', '#3A3A3A'],
-            navDetail: '',
+            data: nearByTempleDataAfterFetch,
+            isSuccess,
+            isFetching,
+            isError,
+            isUninitialized,
+            error,
+            status,
         },
-        {
-            id: 2,
-            heading: 'Thirumurais',
-            info: 'Attaveerattam and Saptavidanga Thevaram - Audi...',
-            subInfo: 'Thiruthani Swaminathan Odhuvar',
-            songCount: 40,
-            colors: theme.colorscheme === 'light' ? ['#AFD9BB', '#60B278'] : ['#3A3A3A', '#3A3A3A'],
-            navDetail: '',
-        },
-        {
-            id: 3,
-            heading: 'Thirumurais',
-            info: 'Attaveerattam and Saptavidanga Thevaram - Audi...',
-            subInfo: 'Thiruthani Swaminathan Odhuvar',
-            songCount: 45,
-            colors: theme.colorscheme === 'light' ? ['#FEE8B3', '#FDD166'] : ['#3A3A3A', '#3A3A3A'],
-            navDetail: '',
-        },
-    ];
+    ] = useLazyGetNearByTemplesQuery();
+    useFocusEffect(
+        React.useCallback(() => {
+            // onMapReadyCallback();
+            if (userLocation?.latitude && userLocation?.longitude) {
+                getNearByTemples({
+                    latitude: userLocation?.latitude,
+                    longitude: userLocation?.longitude,
+                    limit: 5,
+                });
+            }
+        }, [userLocation?.latitude, userLocation?.longitude])
+    );
+    const onMapReadyCallback = async () => {
+        let state = await checkPermissionAccess(permissionTypeRef.current);
+        if (state === RESULTS.GRANTED) {
+            getCurrentLocation((val) => {
+                setUserLocation(() => ({ ...val }));
+            });
+        }
+    };
     const eventData = [
         {
             date: { day: 'THU', dateNo: '06' },
@@ -135,7 +173,6 @@ const HomeScreen = ({ navigation }) => {
             setFavList(callbacks);
         });
     }, [selectedPlaylistType, isFocused]);
-    useEffect(() => { }, []);
 
     const checkIsFav = (item) => {
         let v = false;
@@ -151,34 +188,34 @@ const HomeScreen = ({ navigation }) => {
     const getPlaylistSong = async () => {
         if (selectedPlaylistType == 'Recently Played') {
             const data = await AsyncStorage.getItem('recentTrack');
-            console.log('🚀 ~ getPlaylistSong ~ data:', data);
+            // console.log('🚀 ~ getPlaylistSong ~ data:', data);
             setPlaylistSong(JSON.parse(data));
         } else {
             MostPlayedList('d', (callbacks) => {
-                console.log('🚀 ~ MostPlayedList ~ callbacks:', callbacks);
+                // console.log('🚀 ~ MostPlayedList ~ callbacks:', callbacks);
                 setPlaylistSong(callbacks.slice(0, 4));
             });
         }
     };
 
-    const nearByTempleData = [
-        {
-            img: 'https://s3-alpha-sig.figma.com/img/6700/69a2/03a54c10e1ad2d1887bbcff155403f1b?Expires=1705881600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=PkT20h7qdc~YIQF~kGaGxb5qLWbWMoNT8MiSQGsZSIoaUduQhJ0yvVXL1udbmoV8cZLi-SlUnHH5AbOpoTnnQhYifWVAynjIZ~Jd8nYrdr3eXY9cwTGaqI2SL3iaff5ffwML2Vgyjqyeg8GQFc~TVs26g8s1R41X-sFWgbyp-J7YaAK6SlvFs3m6lwGKnIe8BFr1qsjom6qDOp8o~y6JgYInVyUpYtemjMMXGUrQgD0BJOrCKaKfG2t-jsW-VTrlrKHrKRe7arx-wVkde531J~IjCjednhvbsCV3e7ZL3Y4u9D7p1MEvkJe5WSxS7sarKFjY2S-qrgRPAvhmAxHfNA__',
-            templeName: 'Brahmalingeshwara',
-            address: 'Kanakapura road, Banglore',
-        },
-        {
-            img: 'https://s3-alpha-sig.figma.com/img/271a/e6ac/4dafe0139a026f994bc4f9e2718768cf?Expires=1705881600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=YyIAVCbH6bvqM4W1z8nwzvYtllzoNjN0GCuB0scpWZBQXXR8miDFBtfA2j43~yxLa5S3dP9qSNcsowbRGQiHnJhbEum2SHffUrCGXCQQdGZ7mcOAOSM8WiX1t-VmNKqGTVuYqFCf-eI1Gg2xZJEyrrsxD8bT24kQJa4dgaGJoWav8M4L5TUXq57wbJ2UNA9p9-tvkvBQyGOyyN-iv1pkGsDgEto69UB-uuQI2P2rnNhrpUx020TKc34WRUAf9lTmpL29iuodm2uioh2euQLDQff5dpd0S3WBMAzR2kE6bkSS~-V1AY2Z8D8dwHX1Mkd2l0Kf9VoPSUgYTpcx0HmOGA__',
-            templeName: 'Mahadeshwara',
-            address: 'Kanakapura road, Banglore',
-        },
-        {
-            img: 'https://s3-alpha-sig.figma.com/img/6700/69a2/03a54c10e1ad2d1887bbcff155403f1b?Expires=1705881600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=PkT20h7qdc~YIQF~kGaGxb5qLWbWMoNT8MiSQGsZSIoaUduQhJ0yvVXL1udbmoV8cZLi-SlUnHH5AbOpoTnnQhYifWVAynjIZ~Jd8nYrdr3eXY9cwTGaqI2SL3iaff5ffwML2Vgyjqyeg8GQFc~TVs26g8s1R41X-sFWgbyp-J7YaAK6SlvFs3m6lwGKnIe8BFr1qsjom6qDOp8o~y6JgYInVyUpYtemjMMXGUrQgD0BJOrCKaKfG2t-jsW-VTrlrKHrKRe7arx-wVkde531J~IjCjednhvbsCV3e7ZL3Y4u9D7p1MEvkJe5WSxS7sarKFjY2S-qrgRPAvhmAxHfNA__',
-            templeName: 'Brahmalingeshwara',
-            address: 'Kanakapura road, Banglore',
-        },
-    ];
-    const { t } = useTranslation();
+    // const nearByTempleData = [
+    //     {
+    //         img: 'https://s3-alpha-sig.figma.com/img/6700/69a2/03a54c10e1ad2d1887bbcff155403f1b?Expires=1705881600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=PkT20h7qdc~YIQF~kGaGxb5qLWbWMoNT8MiSQGsZSIoaUduQhJ0yvVXL1udbmoV8cZLi-SlUnHH5AbOpoTnnQhYifWVAynjIZ~Jd8nYrdr3eXY9cwTGaqI2SL3iaff5ffwML2Vgyjqyeg8GQFc~TVs26g8s1R41X-sFWgbyp-J7YaAK6SlvFs3m6lwGKnIe8BFr1qsjom6qDOp8o~y6JgYInVyUpYtemjMMXGUrQgD0BJOrCKaKfG2t-jsW-VTrlrKHrKRe7arx-wVkde531J~IjCjednhvbsCV3e7ZL3Y4u9D7p1MEvkJe5WSxS7sarKFjY2S-qrgRPAvhmAxHfNA__',
+    //         templeName: 'Brahmalingeshwara',
+    //         address: 'Kanakapura road, Banglore',
+    //     },
+    //     {
+    //         img: 'https://s3-alpha-sig.figma.com/img/271a/e6ac/4dafe0139a026f994bc4f9e2718768cf?Expires=1705881600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=YyIAVCbH6bvqM4W1z8nwzvYtllzoNjN0GCuB0scpWZBQXXR8miDFBtfA2j43~yxLa5S3dP9qSNcsowbRGQiHnJhbEum2SHffUrCGXCQQdGZ7mcOAOSM8WiX1t-VmNKqGTVuYqFCf-eI1Gg2xZJEyrrsxD8bT24kQJa4dgaGJoWav8M4L5TUXq57wbJ2UNA9p9-tvkvBQyGOyyN-iv1pkGsDgEto69UB-uuQI2P2rnNhrpUx020TKc34WRUAf9lTmpL29iuodm2uioh2euQLDQff5dpd0S3WBMAzR2kE6bkSS~-V1AY2Z8D8dwHX1Mkd2l0Kf9VoPSUgYTpcx0HmOGA__',
+    //         templeName: 'Mahadeshwara',
+    //         address: 'Kanakapura road, Banglore',
+    //     },
+    //     {
+    //         img: 'https://s3-alpha-sig.figma.com/img/6700/69a2/03a54c10e1ad2d1887bbcff155403f1b?Expires=1705881600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=PkT20h7qdc~YIQF~kGaGxb5qLWbWMoNT8MiSQGsZSIoaUduQhJ0yvVXL1udbmoV8cZLi-SlUnHH5AbOpoTnnQhYifWVAynjIZ~Jd8nYrdr3eXY9cwTGaqI2SL3iaff5ffwML2Vgyjqyeg8GQFc~TVs26g8s1R41X-sFWgbyp-J7YaAK6SlvFs3m6lwGKnIe8BFr1qsjom6qDOp8o~y6JgYInVyUpYtemjMMXGUrQgD0BJOrCKaKfG2t-jsW-VTrlrKHrKRe7arx-wVkde531J~IjCjednhvbsCV3e7ZL3Y4u9D7p1MEvkJe5WSxS7sarKFjY2S-qrgRPAvhmAxHfNA__',
+    //         templeName: 'Brahmalingeshwara',
+    //         address: 'Kanakapura road, Banglore',
+    //     },
+    // ];
+    // const { t } = useTranslation();
     const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
     const [screenHeight, setScreenheight] = useState(Dimensions.get('window').height);
     const [orientation, setOrientation] = useState('PORTRAIT');
@@ -199,7 +236,6 @@ const HomeScreen = ({ navigation }) => {
             subscription?.remove();
         };
     }, []);
-
     return (
         <ScrollView
             bounces={false}
@@ -209,33 +245,31 @@ const HomeScreen = ({ navigation }) => {
                 backgroundColor: theme.backgroundColor,
                 paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight : 0,
             }}
+            contentContainerStyle={{
+                paddingBottom: 100,
+            }}
         >
             <View
                 style={{
                     height:
                         orientation == 'PORTRAIT'
                             ? Dimensions.get('window').height / 2.5
-                            : Dimensions.get('window').height / 1.5,
-                }}
-            >
+                            : Dimensions.get('window').height / 1.5
+                }}>
                 <ImageBackground
                     source={theme.colorscheme === 'light' ? bgImg : bgImgDark}
                     resizeMode="cover"
                     style={{
                         flex: 1,
                         paddingHorizontal: 15,
-                    }}
-                ></ImageBackground>
+                    }}></ImageBackground>
             </View>
-            <View
-                style={{
-                    marginTop:
-                        orientation == 'PORTRAIT'
-                            ? -screenHeight / 2.3
-                            : -Dimensions.get('window').height / 1.3,
-                }}
-                onLayout={handleLayout}
-            >
+            <View style={{
+                marginTop:
+                    orientation == 'PORTRAIT'
+                        ? -screenHeight / 2.3
+                        : -Dimensions.get('window').height / 1.3,
+            }} onLayout={handleLayout}>
                 <CardComponents navigation={navigation} />
             </View>
             {playlistSong?.length > 0 && (
@@ -266,12 +300,9 @@ const HomeScreen = ({ navigation }) => {
                                 <Pressable
                                     onPress={() => {
                                         setSelectedPlaylistType(item);
-                                    }}
-                                >
+                                    }}>
                                     <View
                                         style={{
-                                            // marginRight: 8,
-                                            // elevation: 5,
                                             backgroundColor:
                                                 selectedPlaylistType == item
                                                     ? '#C1554E'
@@ -324,22 +355,26 @@ const HomeScreen = ({ navigation }) => {
                             key={(item) => item?.id}
                             data={playlistSong}
                             renderItem={({ item, index }) => (
-                                <ListAudios
-                                    listFav={favList}
-                                    colorSet={{
-                                        textColor: theme.textColor,
-                                    }}
-                                    item={item}
-                                    navigation={navigation}
-                                    isFav={() => checkIsFav(item)}
-                                />
+                                <>
+                                    {item?.thalamOdhuvarTamilname && item?.id && (
+                                        <ListAudios
+                                            listFav={favList}
+                                            colorSet={{
+                                                textColor: theme.textColor,
+                                            }}
+                                            item={item}
+                                            navigation={navigation}
+                                            isFav={() => checkIsFav(item)}
+                                        />
+                                    )}
+                                </>
                             )}
                         />
                     </View>
                 </View>
             )}
 
-            <View
+            {/* <View
                 style={{
                     height: 250,
                     marginVertical: 20,
@@ -464,55 +499,78 @@ const HomeScreen = ({ navigation }) => {
                         />
                     </View>
                 </View>
-            </View>
+            </View> */}
 
             {/* upcoming events  */}
-            <View>
-                <View style={{ paddingBottom: 15, paddingHorizontal: 15 }}>
-                    <HeadingAndView
-                        viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
-                        title={t('Upcoming Festivals')}
-                        theme={{ textColor: theme.textColor, colorscheme: theme.colorscheme }}
-                        onPress={() => { }}
+            {isFestivalSuccess && (
+                <View>
+                    <View style={{ paddingBottom: 15, paddingHorizontal: 15 }}>
+                        <HeadingAndView
+                            viewBtnColor={
+                                theme.colorscheme === 'light' ? colors.maroon : colors.white
+                            }
+                            title={t('Upcoming Festivals')}
+                            theme={{ textColor: theme.textColor, colorscheme: theme.colorscheme }}
+                            onPress={() =>
+                                navigation.navigate(RouteTexts.BOTTOM_TABS, {
+                                    screen: RouteTexts.CALENDER,
+                                })
+                            }
+                        />
+                    </View>
+                    <FlatList
+                        contentContainerStyle={{
+                            rowGap: 4,
+                            paddingBottom: 15,
+                        }}
+                        key={(item) => item?.id}
+                        data={festivalEvent}
+                        renderItem={({ item, index }) => (
+                            <ElevatedCard
+                                theme={{ colorscheme: theme.colorscheme }}
+                                navigation={() =>
+                                    navigation.navigate(RouteTexts.WEBSIRE_VIEW, {
+                                        item: item,
+                                    })
+                                }
+                            >
+                                <EventCard
+                                    date={moment(item?.attributes?.calendar_from_date).get('D')}
+                                    timing={null}
+                                    day={moment(item?.attributes?.calendar_from_date).format('ddd')}
+                                    dateNo={moment(item?.attributes?.calendar_from_date).format(
+                                        'DD'
+                                    )}
+                                    title={item?.attributes?.Calendar_title}
+                                    item={item}
+                                    theme={{
+                                        textColor: theme.textColor,
+                                        colorscheme: theme.colorscheme,
+                                    }}
+                                />
+                            </ElevatedCard>
+                        )}
                     />
                 </View>
-                <FlatList
-                    contentContainerStyle={{
-                        rowGap: 4,
-                        paddingBottom: 15,
-                    }}
-                    key={(item) => item?.id}
-                    data={eventData}
-                    renderItem={({ item, index }) => (
-                        <ElevatedCard theme={{ colorscheme: theme.colorscheme }}>
-                            <EventCard
-                                date={item.date}
-                                timing={item.timing}
-                                title={item.title}
-                                theme={{
-                                    textColor: theme.textColor,
-                                    colorscheme: theme.colorscheme,
-                                }}
-                            />
-                        </ElevatedCard>
-                    )}
-                />
-            </View>
+            )}
+
             {/* om chant */}
             <View>
-                <OmChat
+                <OmChant
                     navigation={navigation}
                     onPress={() => {
                         RBSheetRef.current.open();
                         if (showPlayer) {
                             setShowPlayer(false);
+                            setIsPlaying(false);
                         }
                     }}
+                    isPlaying={isPlaying}
                 />
             </View>
 
             {/* last section */}
-            <View>
+            {/* <View>
                 <View style={{ padding: 15 }}>
                     <HeadingAndView
                         viewBtnColor={theme.colorscheme === 'light' ? colors.maroon : colors.white}
@@ -528,7 +586,7 @@ const HomeScreen = ({ navigation }) => {
                     contentContainerStyle={{
                         rowGap: 4,
                         paddingTop: 15,
-                        paddingBottom: 30,
+                        paddingBottom: 100,
                     }}
                     key={(item) => item?.id}
                     data={nearByTempleData}
@@ -547,10 +605,8 @@ const HomeScreen = ({ navigation }) => {
                     )}
                 />
             </View>
-            {/* Quiz */}
-            <Quiz />
-            {/* video list */}
-            <View
+            {/* <Quiz /> */}
+            {/* <View
                 style={{
                     paddingBottom: 60,
                     paddingHorizontal: 15,
@@ -567,7 +623,7 @@ const HomeScreen = ({ navigation }) => {
                     }}
                 />
                 <VideosList screenDimension={{ screenHeight, screenWidth }} />
-            </View>
+            </View> */}
             <RBSheet
                 height={340}
                 ref={RBSheetRef}

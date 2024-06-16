@@ -1,11 +1,24 @@
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import FavSVG from '../../components/SVGs/FavSVG';
+import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import templeMetaData from './AssetMapWithTempleType';
-const CardForNearByTemple = ({ item }) => {
+const CardForNearByTemple = React.memo(({ userLocation, item }) => {
+    console.log('🚀 ~ CardForNearByTemple ~ item:', item);
     const [favState, setFavState] = useState(false);
+    const onPress = () => {
+        const sourceLatitude = parseFloat(userLocation?.latitude); // Example source latitude
+        const sourceLongitude = parseFloat(userLocation?.longitude); // Example source longitude
+        const destinationLatitude = parseFloat(item?.latitude); // Example destination latitude
+        const destinationLongitude = parseFloat(item?.longitude); // Example destination longitude
+
+        const googleMapsUrl = `geo:${sourceLatitude},${sourceLongitude}?q=${destinationLatitude},${destinationLongitude}`;
+        Linking.openURL(googleMapsUrl).catch((err) => {
+            console.log('the map is not avialable');
+            const googleMapsUrlFallBack = `https://www.google.com/maps/dir/?api=1&origin=${sourceLatitude},${sourceLongitude}&destination=${destinationLatitude},${destinationLongitude}`;
+            Linking.openURL(googleMapsUrlFallBack);
+        });
+    };
     return (
-        <View style={styles.topWrapperForCard}>
+        <Pressable style={styles.topWrapperForCard} onPress={onPress}>
             <View style={[styles.flexRow, { paddingHorizontal: 5 }]}>
                 <View style={[styles.flexRow, { gap: 8 }]}>
                     <View
@@ -29,7 +42,7 @@ const CardForNearByTemple = ({ item }) => {
                     </View>
                 </View>
 
-                <View style={styles.btnWrapper}>
+                {/* <View style={styles.btnWrapper}>
                     <Pressable
                         onPress={() => {
                             setFavState(!favState);
@@ -37,12 +50,11 @@ const CardForNearByTemple = ({ item }) => {
                     >
                         <FavSVG fill={'#000'} />
                     </Pressable>
-                </View>
+                </View> */}
             </View>
-        </View>
+        </Pressable>
     );
-};
-
+});
 const styles = StyleSheet.create({
     topWrapperForCard: {
         backgroundColor: 'white',

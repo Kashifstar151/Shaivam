@@ -1,5 +1,4 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-
   <uses-permission android:name="android.permission.CAMERA" />
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -10,20 +9,29 @@
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
   <uses-permission android:name="android.permission.VIBRATE" />
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-  <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-  <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
-  <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
+  <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" android:maxSdkVersion="33" />
+  <uses-permission android:name="android.permission.USE_EXACT_ALARM" android:minSdkVersion="33" />
+  <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" android:maxSdkVersion="33" />
   <application
     android:name=".MainApplication"
     android:extractNativeLibs="true"
     android:label="@string/app_name"
     android:icon="@mipmap/ic_launcher"
-    android:roundIcon="@mipmap/ic_launcher_round"
     android:allowBackup="false"
     android:requestLegacyExternalStorage="true"
     android:theme="@style/AppTheme"
   >
+    <meta-data android:name="io.sentry.dsn"
+      android:value="https://34040ba1caae1102625264b6fe33ba1d@o4505442494971904.ingest.us.sentry.io/4507423552569344" />
+    <meta-data android:name="io.sentry.traces.user-interaction.enable" android:value="true" />
+    <meta-data android:name="io.sentry.attach-screenshot" android:value="true" />
+    <!-- enable view hierarchy for crashes -->
+    <meta-data android:name="io.sentry.attach-view-hierarchy" android:value="true" />
+
+    <!-- enable the performance API by setting a sample-rate, adjust in production env -->
+    <meta-data android:name="io.sentry.traces.sample-rate" android:value="1.0" />
+    <!-- enable profiling when starting transactions, adjust in production env -->
+    <meta-data android:name="io.sentry.traces.profiling.sample-rate" android:value="1.0" />
     <meta-data android:name="com.dieam.reactnativepushnotification.notification_foreground"
       android:value="false" />
     <!-- Change the resource name to your App's accent color - or any other color you want -->
@@ -35,15 +43,14 @@
       android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher" />
     <receiver
       android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationBootEventReceiver"
-      android:enabled="true"
-      android:exported="false"
-    >
+      android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED" />
         <action android:name="android.intent.action.QUICKBOOT_POWERON" />
         <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
       </intent-filter>
     </receiver>
+
     <service
       android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService"
       android:exported="false">
@@ -65,9 +72,6 @@
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
-        <!-- <data
-        android:host="shaivaam.page.link"
-        android:scheme="https"/> -->
       </intent-filter>
     </activity>
     <service android:name="com.voximplant.foregroundservice.VIForegroundService"> </service>

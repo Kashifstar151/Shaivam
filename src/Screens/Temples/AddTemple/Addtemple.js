@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import { Modal, RefreshControl, StatusBar, StyleSheet, Text, View } from 'react-native';
 import Background from '../../../components/Background';
 import TempleHeader from '../TempleHeader';
 import { FlatList } from 'react-native';
@@ -16,6 +16,10 @@ import Icon from 'react-native-vector-icons/dist/Entypo';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AddEmail from './AddEmail';
+import { useLazyGetAddedTempleOnEmailQuery } from '../../../store/features/Temple/TemplApiSlice';
+import { TouchableOpacity } from '@gorhom/bottom-sheet';
+import { useIsFocused } from '@react-navigation/native';
+import { RouteTexts } from '../../../navigation/RouteText';
 
 const initialStepVal = {
     email: 'false',
@@ -25,35 +29,56 @@ const initialStepVal = {
     success: false,
     failed: false,
 };
-const Addtemple = ({ navigation }) => {
-    const data = [1, 2, 3, 4, 5, 6, 7];
-    // const data = [];
-    // for stepper form
+const Addtemple = ({ navigation, route }) => {
     const [step, setStep] = useState(initialStepVal);
+
+    const [getAllTemplesAddRequest, { data: getAllAddedTempleData }] =
+        useLazyGetAddedTempleOnEmailQuery();
+    // console.log('🚀 ~ Addtemple ~ getAllAddedTempleData:', getAllAddedTempleData);
 
     // for refresh
     const [refreshing, setRefreshing] = React.useState(false);
+    const [email, setEmail] = useState('');
+    // console.log('🚀 ~ Addtemple ~ email:', email);
+
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        setTimeout(() => {
-            setRefreshing(false);
-        }, 2000);
-    }, []);
-
-    const [email, setEmail] = useState('');
+        getTheEmail();
+        getAllTemplesAddRequest({ email })
+            .then((res) => {
+                setRefreshing(false);
+            })
+            .catch((err) => {
+                setRefreshing(false);
+            });
+    }, [email]);
 
     const getTheEmail = async () => {
         const fetchedEmail = await AsyncStorage.getItem('email');
-        console.log('🚀 ~ getTheEmail ~ fetchedEmail:', fetchedEmail);
         if (!fetchedEmail) {
             setTheFlagsForModal('EMAIL');
         } else {
             setEmail(() => fetchedEmail);
         }
     };
+
+    // const isFocused = useIsFocused();
     useEffect(() => {
         getTheEmail();
     }, []);
+
+    useEffect(() => {
+        if (email) {
+            // make the fetch call
+            getAllTemplesAddRequest({ email })
+                .then((res) => {
+                    console.log('the response for correspondingemail===========>', res);
+                })
+                .catch((err) => {
+                    console.log('the response for correspondingemail===========>', err);
+                });
+        }
+    }, [email]);
 
     const setTheFlagsForModal = (num) => {
         {
@@ -129,7 +154,7 @@ const Addtemple = ({ navigation }) => {
             </Background>
             <View style={style.flatListContainer}>
                 <FlatList
-                    data={data}
+                    data={getAllAddedTempleData}
                     style={
                         {
                             // flex: 1,
@@ -144,6 +169,7 @@ const Addtemple = ({ navigation }) => {
                     refreshControl={
                         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                     }
+                    keyExtractor={(item, key) => `item=${item?.id}and${key}`}
                     ListEmptyComponent={() => (
                         <EmptyList
                             onPressOfBtn={() => {
@@ -158,8 +184,8 @@ const Addtemple = ({ navigation }) => {
                 />
             </View>
 
-            {data.length > 0 && (
-                <TouchableHighlight
+            {getAllAddedTempleData?.length > 0 && (
+                <TouchableOpacity
                     style={style.addBtn}
                     onPress={() => {
                         setStep((prev) => ({
@@ -169,10 +195,15 @@ const Addtemple = ({ navigation }) => {
                     }}
                 >
                     <Icon name="plus" size={25} color="#222222" />
-                </TouchableHighlight>
+                </TouchableOpacity>
             )}
 
-            <ModalComponent isVisible={step.email} onRequestClose={() => {}}>
+            <ModalComponent
+                isVisible={step.email}
+                onRequestClose={() => {
+                    navigation.navigate(RouteTexts.TEMPLE_TABS_NAVIGATE);
+                }}
+            >
                 <AddEmail
                     setEmail={setEmail}
                     navigation={navigation}

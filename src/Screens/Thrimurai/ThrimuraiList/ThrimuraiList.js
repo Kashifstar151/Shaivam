@@ -153,15 +153,17 @@ const ThrimuraiList = ({ navigation }) => {
                     >
                         <Icon name="search" size={28} color={colors.grey1} />
                         <TextInput
-                            onBlur={() => setOnFocus(false)}
-                            onFocus={() =>
-                                navigation.navigate(RouteTexts.SEARCH_SCREEN, {
-                                    thrimurais: thrimurais,
-                                    allThirumirai: true,
-                                    query1: `SELECT * FROM thirumurais WHERE search_thirumurai_title LIKE`,
-                                    query2: `ORDER BY Thirumurai_title  ASC LIMIT 10 OFFSET 0;`,
-                                })
-                            }
+                            // onBlur={() => setOnFocus(false)}
+                            onFocus={() => {
+                                if (thrimurais?.length) {
+                                    navigation.navigate(RouteTexts.SEARCH_SCREEN, {
+                                        thrimurais: thrimurais,
+                                        allThirumirai: true,
+                                        query1: `SELECT * FROM thirumurais WHERE search_thirumurai_title LIKE`,
+                                        query2: `ORDER BY Thirumurai_title  ASC LIMIT 10 OFFSET 0;`,
+                                    });
+                                }
+                            }}
                             placeholder={`${t('Search for any Thirumurai here')}`}
                             onChangeText={(e) => setSearchText(e)}
                             placeholderTextColor={theme.searchBox.textColor}
@@ -467,14 +469,18 @@ const ThrimuraiList = ({ navigation }) => {
                             key={(item) => item?.id}
                             data={recentPlayed}
                             renderItem={({ item, index }) => (
-                                <ListAudios
-                                    listFav={listFav}
-                                    colorSet={{
-                                        textColor: theme.textColor,
-                                    }}
-                                    item={item}
-                                    navigation={navigation}
-                                />
+                                <>
+                                    {item?.thalamOdhuvarTamilname && item?.id && (
+                                        <ListAudios
+                                            listFav={listFav}
+                                            colorSet={{
+                                                textColor: theme.textColor,
+                                            }}
+                                            item={item}
+                                            navigation={navigation}
+                                        />
+                                    )}
+                                </>
                             )}
                         />
                     </View>

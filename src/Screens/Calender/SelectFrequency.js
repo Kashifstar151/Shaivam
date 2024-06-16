@@ -1,6 +1,7 @@
 import { useIsFocused } from "@react-navigation/native";
 import React, { useContext, useEffect, useState } from "react";
-import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useTranslation } from "react-i18next";
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Feather from "react-native-vector-icons/dist/Feather";
 import { useDispatch } from "react-redux";
 import { ThemeContext } from "../../Context/ThemeContext";
@@ -8,7 +9,8 @@ import { colors } from "../../Helpers";
 import { setInputValue } from "../../store/features/Calender/FormSlice";
 
 const SelectFrequency = ({ selectedFrequecy, setSelectedFrequecy, closeBottomSheet, showCategory, comp }) => {
-    console.log("🚀 ~ SelectFrequency ~ comp:", comp)
+    // console.log("🚀 ~ SelectFrequency ~ comp:", comp)
+    const { t } = useTranslation()
     const theme = useContext(ThemeContext)
     const isFocueseed = useIsFocused()
     const dispatch = useDispatch()
@@ -22,7 +24,7 @@ const SelectFrequency = ({ selectedFrequecy, setSelectedFrequecy, closeBottomShe
     const category = [
         { name: 'Festival', id: 1 },
         { name: 'Concert', id: 2 },
-        { name: 'Discource', id: 3 },
+        { name: 'Discourse', id: 3 },
         { name: 'Pranayam / Recitation', id: 4 },
         { name: 'Uzhavarappani', id: 5 },
         { name: 'Others', id: 6 }
@@ -61,14 +63,14 @@ const SelectFrequency = ({ selectedFrequecy, setSelectedFrequecy, closeBottomShe
     }
     return (
         <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
-            <Text style={{ fontFamily: 'Lora-Bold', fontSize: 16, color: 'black', marginVertical: 10 }}>Select freuency of event</Text>
+            <Text style={{ fontFamily: 'Lora-Bold', fontSize: 16, color: 'black', marginVertical: 10 }}>{t('Select frequency of the event') ? t('Select frequency of the event') : 'Select frequency of the event'}</Text>
             <FlatList data={showCategory ? category : type} renderItem={({ item, index }) => (
                 <TouchableOpacity
                     onPress={() => selectionHandler(item)}
                     style={styles.dropDown}
                 >
                     <Text style={{ fontFamily: 'Mulish-Regular', color: theme.textColor }}>
-                        {item?.name}
+                        {t(item?.name) ? t(item?.name) : item?.name}
                     </Text>
                     <View
                         style={selectedFrequecy?.name == item?.name ? [styles.iconContainer, { backgroundColor: colors.commonColor }] : styles.iconContainer}

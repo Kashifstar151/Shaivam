@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 const MyTrip = ({ navigation }) => {
     const [selectedHeader, setSelectedHeader] = useState('My trips');
     const { theme } = useContext(ThemeContext);
-    const { t } = useTranslation();
+    const { t } = useTranslation()
     var header = [
         {
             name: 'My trips',

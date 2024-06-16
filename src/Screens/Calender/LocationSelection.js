@@ -12,10 +12,12 @@ import SearchInput from '../../components/SearchInput';
 import { colors } from '../../Helpers';
 import { useDebouncer } from '../../Helpers/useDebouncer';
 import { useGetListQuery } from '../../store/features/Calender/CalenderApiSlice';
+import { useTranslation } from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const LocationSelection = ({ calender, setSelected, close }) => {
+const LocationSelection = ({ calender, setSelected, close, selectedLocation }) => {
     // const [selectedEvent, setSelectedEvent] = useState(null)
-
+    const { t } = useTranslation()
     const [regionCoordinate, setRegionCoordinate] = useState({
         latitude: 28.500271,
         longitude: 77.387901,
@@ -40,6 +42,7 @@ const LocationSelection = ({ calender, setSelected, close }) => {
         displayName: '',
     });
     const [searchedText, setSearchText] = useState('');
+    const [recentKeyword, setRecentKeywords] = useState([])
     const fetchTheName = useCallback(
         async (coors) => {
             // console.log('the location fetch enters  ');
@@ -81,16 +84,24 @@ const LocationSelection = ({ calender, setSelected, close }) => {
                 'the response for the search of the place name is ========================== ==>',
                 response
             );
-            setFetchedLocationsName((prev) => response);
+            setFetchedLocationsName((prev) => response)
         });
     }, [debounceVal]);
-    const fetchMyLocation = () => {
-        getCurrentLocation((val) => {
-            console.log('🚀 ~ getCurrentLocation ~ val:', val);
+    useEffect(() => {
+        getSearchedTexxs()
+    }, [])
+    const fetchMyLocation = async () => {
+        // alert(true)
+        getCurrentLocation(async (val) => {
+            console.log("🚀 ~ getCurrentLocation ~ val:", val)
+            const locationDetail = await getTheLocationName({ ...val });
+            console.log("🚀 ~ getCurrentLocation ~ locationDetail:", locationDetail)
             // alert(true)
             // mapRef.current?.animateCamera({ center: val }, { duration: 1000 });
             setUserLocation((prev) => ({ ...prev, ...val }));
             setRegionCoordinate((prev) => ({ ...prev, ...val }));
+            setSelected({ lat: locationDetail?.data?.lat, long: locationDetail?.data?.lon, name: locationDetail?.data?.display_name })
+            close?.current?.close()
         });
     };
     const data = [
@@ -103,9 +114,36 @@ const LocationSelection = ({ calender, setSelected, close }) => {
     ];
     const selectionHandler = (item) => {
         console.log('🚀 ~ selectionHandler ~ item:', JSON.stringify(item, 0, 2));
-        setSelected(item);
+        setSelected({ lat: item?.lat, long: item.lon, name: item?.name });
         close?.current?.close();
     };
+    const setRecentSearches = () => {
+        if (searchedText !== null && searchedText !== '') {
+            const keys = recentKeyword ? recentKeyword : []
+            const s = keys?.filter((keys) => keys !== searchedText)
+            const updated = [...s, searchedText].slice(0, 6)
+            AsyncStorage.setItem("recentLocationSearch", JSON.stringify(updated))
+        }
+    }
+    const getSearchedTexxs = async () => {
+        const data = await AsyncStorage.getItem('recentLocationSearch')
+        console.log("🚀 ~ getSearchedTexxs ~ data:", data)
+        setRecentKeywords(JSON.parse(data))
+    }
+    const renderRecentSearch = (item) => {
+        console.log("🚀 ~ renderRecentSearch ~ item:", item)
+        return (
+            <TouchableOpacity style={{ borderWidth: 1, borderColor: '#777777', width: 'auto', height: 35, borderRadius: 16, paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center', marginLeft: 10 }} onPress={() => {
+                setSearchText(item)
+                // setTimeout(() => {
+                //     getDataFromSql(item)
+                // }, 1000)
+                // getDataFromSql()
+            }}>
+                <Text style={{ fontSize: 12, fontFamily: 'Mulish-Regular' }}>{item}</Text>
+            </TouchableOpacity>
+        )
+    }
 
     const rednerItem = (item, index) => (
         <TouchableOpacity
@@ -127,7 +165,7 @@ const LocationSelection = ({ calender, setSelected, close }) => {
     );
     return (
         <View style={{ paddingHorizontal: 0 }}>
-            <Text style={styles.headingText}>Search By Location</Text>
+            <Text style={styles.headingText}>{t('Search by location')}</Text>
             <View
                 style={{
                     paddingHorizontal: 20,
@@ -141,38 +179,36 @@ const LocationSelection = ({ calender, setSelected, close }) => {
                 }}
             >
                 <MaterialIcons name="search" size={28} color={colors.grey4} />
-                <TextInput
-                    placeholder="Search for locations"
-                    placeholderTextColor={colors.grey5}
-                    onChangeText={(e) => setSearchText(e)}
-                />
+                <TextInput placeholder="Search for locations" placeholderTextColor={colors.grey5} onChangeText={(e) => setSearchText(e)} val={selectedLocation} onSubmitEditing={setRecentSearches} />
             </View>
             {/* <SearchInput color={true} styleOverwrite={{ marginHorizontalUnset: 20 }} /> */}
             <View style={{ paddingHorizontal: 20 }}>
                 <Text style={{ color: '#C1554E', fontSize: 16, fontFamily: 'Mulish-Bold' }}>
-                    Most Searched Location
+                    {t('Most searched locations')}
                 </Text>
-                <Text style={{ color: '#666666', fontFamily: 'Mulish-Regular', fontSize: 12 }}>
-                    Lorem ipsum dolor set
-                </Text>
+                <FlatList data={recentKeyword} contentContainerStyle={{ marginTop: 5 }} renderItem={({ item, index }) => renderRecentSearch(item)} horizontal />
+
+                {/* <Text style={{ color: '#666666', fontFamily: 'Mulish-Regular', fontSize: 12 }}>
+                    {t('Lorem ipsum dolor set')}
+                </Text> */}
             </View>
-            <FlatList
-                contentContainerStyle={{ paddingHorizontal: 20 }}
-                data={fetchLocationName}
-                renderItem={({ item, index }) => rednerItem(item, index)}
-            />
-            {/* <TouchableOpacity > */}
+            <FlatList contentContainerStyle={{ paddingHorizontal: 20 }} data={fetchLocationName} renderItem={({ item, index }) => (
+                rednerItem(item, index)
+            )} />
             <CustomButton
                 svg={<TrackBackToLocSVG width={16} height={16} fill={'#C1554E'} />}
                 onPress={() => {
                     if (calender) {
-                        fetchMyLocation();
+                        fetchMyLocation()
+                        alert(true)
+                        // alert(true)
                     } else {
-                        dragCoor.current = { ...userLocation };
-                        fetchTheName(dragCoor.current);
-                        setRegionCoordinate((prev) => ({ ...prev, ...userLocation }));
+                        // alert(true)
+                        fetchMyLocation()
+                        // dragCoor.current = { ...userLocation };
+                        // fetchTheName(dragCoor.current);
+                        // setRegionCoordinate((prev) => ({ ...prev, ...userLocation }));
                     }
-                    // write the function that we have used in the temple module to get the current location and set the name of the location in the near by place name
                 }}
                 style={{
                     margin: 10,
@@ -183,7 +219,7 @@ const LocationSelection = ({ calender, setSelected, close }) => {
                     borderColor: '#C1554E',
                     borderWidth: 1,
                 }}
-                text={'Use my current location'}
+                text={t('Use my current location')}
                 backgroundColor={'#ffffff'}
                 textColor={'#C1554E'}
             />

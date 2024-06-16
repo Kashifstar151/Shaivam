@@ -28,7 +28,7 @@ export async function attachDb(metaData) {
                     RNFS.readDir(jsonFilePath)
                         .then((files) => {
                             const fileNames = files.map((fileInfo) => fileInfo.name);
-                            console.log(metaData, "metaData")
+                            console.log(fileNames, 'fileNames');
                             try {
                                 database.transaction(
                                     async (tx) => {
@@ -38,6 +38,7 @@ export async function attachDb(metaData) {
                                                 `${jsonFilePath}/thirumuraiSong_${metaData.Version}.db`,
                                             ],
                                             async (tx, results) => {
+                                                console.log('🚀 ~ results:', results);
                                                 resolve(tx);
                                             }
                                         );
@@ -171,13 +172,19 @@ async function requestFilePermissions() {
 }
 
 function unzipDownloadFile(target, cb) {
-
+    requestFilePermissions();
     const sourcePath = target;
     // console.log("🚀 ~ file: Database.js:72 ~ unzipDownloadFile ~ targetPath:", sourcePath)
     const targetPath =
-        `${RNFS.DocumentDirectoryPath}/Thrimurai`;
-    const filePath = RNFS.DocumentDirectoryPath + '/myData.db';
-    console.log("🚀 ~ unzipDownloadFile ~ targetPath:", targetPath)
+        Platform.OS == 'ios'
+            ? `${RNFS.DocumentDirectoryPath}/Thrimurai`
+            : `${RNFS.ExternalDirectoryPath}/Thrimurai`;
+    // const filePath = RNFS.DocumentDirectoryPath + '/myData.db';
+    console.log(
+        '🚀 ~ unzipDownloadFile ~ targetPath:',
+        targetPath,
+        `${RNFS.DocumentDirectoryPath}/Thrimurai`
+    );
     const charset = 'UTF-8';
     RNFS.mkdir(targetPath)
         .then(() => {
@@ -185,6 +192,7 @@ function unzipDownloadFile(target, cb) {
             unzip(sourcePath, targetPath, charset)
                 .then((path) => {
                     console.log(`unzip completed at ${path}`);
+                    AsyncStorage.setItem('@database', JSON.stringify({ name: 'main.db' }));
                     // downloadFile(path, filePath)
                     return cb(path);
                 })
@@ -201,35 +209,10 @@ function unzipDownloadFile(target, cb) {
 export async function getSqlData(query, callbacks) {
     console.log('🚀 ~ file: Database.js:146 ~ getSqlData ~ query:', query);
     const data = await AsyncStorage.getItem('@database');
+    // console.log("🚀 ~ getSqlData ~ data:", data)
     const databasename = JSON.parse(data);
     console.log('🚀 ~ file: Database.js:142 ~ getSqlData ~ data:', databasename);
-    if (databasename?.name == 'main.db') {
-        // alert(true)
-        await database.transaction(
-            (tx) => {
-                tx.executeSql(query, [], (_, results) => {
-                    console.log("🚀 ~ file: Database.js:149 ~ tx.executeSql ~ results:", results)
-                    let arr = [];
-                    if (results?.rows?.length > 0) {
-                        for (let i = 0; i < results?.rows?.length; i++) {
-                            const tableName = results.rows.item(i);
-                            console.log(" offline Database data", tableName);
-                            arr.push(tableName);
-                            // console.log("🚀 ~ file: ThrimuraiSong.js:57 ~ tx.executeSql ~ arr:", JSON.stringify(arr, 0, 2))
-                        }
-                        callbacks(arr);
-                    } else {
-                        console.log('No tables found.');
-                        callbacks({ error: 'error in database' });
-                    }
-                });
-            },
-            (error) => {
-                console.error('error occured in fetching data at 1', error);
-            }
-        );
-    } else {
-        // alert(false)
+    if (databasename?.name == 'songData.db' || databasename == null) {
         await offlineDatabase.transaction(
             (tx) => {
                 tx.executeSql(query, [], (_, results) => {
@@ -238,7 +221,7 @@ export async function getSqlData(query, callbacks) {
                     if (results?.rows?.length > 0) {
                         for (let i = 0; i < results?.rows?.length; i++) {
                             const tableName = results.rows.item(i);
-                            console.log(" offline Database data", tableName);
+                            // console.log(" offline Database data", tableName);
                             arr.push(tableName);
                             // console.log("🚀 ~ file: ThrimuraiSong.js:57 ~ tx.executeSql ~ arr:", JSON.stringify(arr, 0, 2))
                         }
@@ -251,6 +234,31 @@ export async function getSqlData(query, callbacks) {
             },
             (error) => {
                 console.error('error occured in fetching data at 2', error);
+            }
+        );
+    } else {
+        console.log('online database===>');
+        await database.transaction(
+            (tx) => {
+                tx.executeSql(query, [], (_, results) => {
+                    console.log('🚀 ~ file: Database.js:149 ~ tx.executeSql ~ results:', results);
+                    let arr = [];
+                    if (results?.rows?.length > 0) {
+                        for (let i = 0; i < results?.rows?.length; i++) {
+                            const tableName = results.rows.item(i);
+                            console.log(' offline Database data', tableName);
+                            arr.push(tableName);
+                            // console.log("🚀 ~ file: ThrimuraiSong.js:57 ~ tx.executeSql ~ arr:", JSON.stringify(arr, 0, 2))
+                        }
+                        callbacks(arr);
+                    } else {
+                        console.log('No tables found.');
+                        callbacks({ error: 'error in database' });
+                    }
+                });
+            },
+            (error) => {
+                console.error('error occured in fetching data at 1', error);
             }
         );
     }

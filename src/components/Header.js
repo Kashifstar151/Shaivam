@@ -116,7 +116,7 @@ const Header = ({ navigation }) => {
 };
 export const styles = StyleSheet.create({
     headerContainer: {
-        paddingHorizontal: 10,
+        // paddingHorizontal: 10,
         paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 40 : 20,
         justifyContent: 'space-between',
         flexDirection: 'row',

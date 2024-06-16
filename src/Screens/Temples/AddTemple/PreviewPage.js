@@ -5,8 +5,6 @@ import bgImgDark from '../../../../assets/Images/BackgroundCommon.png';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { ScrollView } from 'react-native-gesture-handler';
 import { CustomLongBtn } from '../../../components/Buttons';
-import BackIcon from '../../../../src/assets/Images/BackIcon.svg';
-import WhiteBackButton from '../../../../src/assets/Images/arrow (1) 1.svg';
 import KeyValueBox from './KeyValueBox';
 import { useSelector } from 'react-redux';
 import { ThemeContext } from '../../../Context/ThemeContext';
@@ -14,6 +12,7 @@ import {
     useAddTempleImagesMutation,
     useAddTempleMutation,
 } from '../../../store/features/Temple/TemplApiSlice';
+// import BackBtnSvg from '../../../components/SVGs/BackBtnSvg';
 
 const PreviewPage = ({ navigation, setStep, email }) => {
     const templadata = useSelector((state) => state.temple);
@@ -31,6 +30,7 @@ const PreviewPage = ({ navigation, setStep, email }) => {
     ] = useAddTempleImagesMutation();
 
     const { theme } = useContext(ThemeContext);
+    console.log('🚀 ~ PreviewPage ~ theme:', theme.colorscheme);
     const handleOnSubmit = () => {
         addTemple({
             Name: templadata?.templeName,
@@ -38,6 +38,7 @@ const PreviewPage = ({ navigation, setStep, email }) => {
             Longitude: templadata.templeLocation.coordinate.longitude,
             Latitude: templadata.templeLocation.coordinate.latitude,
             email,
+            location_name: templadata?.templeLocation?.locationName,
             // temple_images: templadata.templeLocation.coordinate.imageSrc,
         })
             .unwrap()
@@ -46,10 +47,6 @@ const PreviewPage = ({ navigation, setStep, email }) => {
                 if (response.status === 'SUCCESS') {
                     const id = response?.data?.id;
                     const formData = new FormData();
-                    console.log(
-                        'templadata.templeLocation.coordinate.imageSrc.length====>',
-                        templadata.imageSrc
-                    );
 
                     for (let i = 0; i < templadata.imageSrc.length; i++) {
                         formData.append('files', {
@@ -116,7 +113,7 @@ const PreviewPage = ({ navigation, setStep, email }) => {
                             }}
                         >
                             <Pressable onPress={() => setStep(1)}>
-                                {theme.colorscheme !== 'light' ? <WhiteBackButton /> : <BackIcon />}
+                                {/* {<BackBtnSvg fill={'#222222'} />} */}
                             </Pressable>
                             <Text
                                 style={{
@@ -124,8 +121,7 @@ const PreviewPage = ({ navigation, setStep, email }) => {
                                     fontSize: RFValue(18, 850),
                                     fontFamily: 'Lora-Bold',
                                     lineHeight: 20,
-                                }}
-                            >
+                                }}>
                                 Preview temple submission
                             </Text>
                         </View>

@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
     Dimensions,
     Switch,
@@ -10,6 +10,10 @@ import {
     Animated as AnimatedRN,
     Platform,
     StatusBar,
+    TouchableWithoutFeedback,
+    // TouchableWithoutFeedback,
+    // Keyboard,
+    // ScrollView,
 } from 'react-native';
 import BackButton from '../../../components/BackButton';
 import ShareIcon from '../../../assets/Images/share-1.svg';
@@ -22,7 +26,7 @@ import SettingIcon from '../../../assets/Images/Settings (1) 1.svg';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { getSqlData } from '../../Database';
 import { useIsFocused } from '@react-navigation/native';
-import { ThemeContext } from '../../../Context/ThemeContext';
+// import { ThemeContext } from '../../../Context/ThemeContext';
 import { colors } from '../../../Helpers';
 import { useTranslation } from 'react-i18next';
 import '../../../../localization';
@@ -34,7 +38,9 @@ import NaduSVG from '../../../components/SVGs/NaduSVG';
 import PannSVG from '../../../components/SVGs/PannSVG';
 import ThalamSVG from '../../../components/SVGs/ThalamSVG';
 import DownloadIcon from '../../../assets/Images/download.svg';
-import HighlightText from '@sanar/react-native-highlight-text';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
+
+// import HighlightText from '@sanar/react-native-highlight-text';
 import TrackPlayer, {
     AppKilledPlaybackBehavior,
     Capability,
@@ -42,12 +48,19 @@ import TrackPlayer, {
     useTrackPlayerEvents,
 } from 'react-native-track-player';
 import Clipboard from '@react-native-clipboard/clipboard';
-import { listfavAudios } from '../../../Databases/AudioPlayerDatabase';
+import { listfavAudios, MostPlayedSongList } from '../../../Databases/AudioPlayerDatabase';
 import SettingsSVG from '../../../components/SVGs/SettingsSVG';
+import HighlightedText from '../Searchscreen/HighlightedText';
+import { addEventListener, useNetInfo } from '@react-native-community/netinfo';
 
 const ThrimuraiSong = ({ route, navigation }) => {
+    console.log("🚀 ~ ThrimuraiSong ~ route:", route)
     const isFocused = useIsFocused;
-    const { data, downloaded, searchedword, searchScreen, songNo } = route.params || {};
+    const { data, downloaded, searchedword, downloadSong, searchScreen, songNo } =
+        route.params || {};
+    const { isConnected } = useNetInfo();
+    // console.log("🚀 ~ ThrimuraiSong ~ isConnected:", isConnected)
+    // console.log('🚀 ~ ThrimuraiSong ~ route.params:', searchScreen);
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
@@ -56,9 +69,13 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const [downloadingLoader, setDownloadingLoader] = useState(false);
     // const snapPoints = useMemo(() => ['25%', '25%'], []);
     const [showSetting, setShowSetting] = useState(false);
-    const language = ['Original', 'Tamil', 'English', 'Hindi'];
+    // const language = ['Original', 'Tamil', 'English', 'Hindi'];
+    const [language, setLang] = useState(['Original', 'Tamil', 'English', 'Hindi']);
     const [selectedLang, setSelectedLang] = useState('Original');
     const [fontSizeCount, setFontSizeCount] = useState(null);
+    const [isconnected, setIsConnected] = useState(isConnected);
+    const [showAudioPlayer, setShowAudioPlayer] = useState(false);
+    const [deeplink, setDeeplink] = useState(null);
     // const [refFlatList, setRefFlatList] = useState(null);
     const flatListRef = useRef(null);
     const firstRender = useRef(true);
@@ -72,7 +89,36 @@ const ThrimuraiSong = ({ route, navigation }) => {
             setFontSizeCount(parseInt(value));
         }
     };
+    useEffect(() => {
+        buildLink();
+    }, []);
+    useEffect(() => {
+        const unsubscribe = addEventListener((state) => {
+            if (state.isConnected) {
+                setIsConnected(true);
+            }
+        });
+        return unsubscribe();
+    }, []);
+    useEffect(() => {
+        checkConditionForPlayer();
+    }, [isConnected]);
 
+    const checkConditionForPlayer = () => {
+        TrackPlayer.getActiveTrack()
+            .then((res) => {
+                if (isConnected) {
+                    if (res?.url?.substring(0, 5) == 'https') {
+                        setShowAudioPlayer(true);
+                    }
+                } else if (res?.url?.substring(0, 5) == 'file:') {
+                    setShowAudioPlayer(true);
+                }
+            })
+            .catch((err) => {
+                console.log('🚀 ~ TrackPlayer.getActiveTrack ~ err:', err);
+            });
+    };
     const setFontSizeForLyrics = async (fontSizeCount) => {
         await AsyncStorage.setItem('@lyricsFontSize', String(fontSizeCount));
     };
@@ -116,20 +162,43 @@ const ThrimuraiSong = ({ route, navigation }) => {
     }, []);
 
     useEffect(() => {
-        if (searchScreen && firstRender.current) {
-            scrollToIndex();
+        if (searchScreen && flatListRef.current) {
+            scrollToIndexFlatList();
         }
-    }, [flatListRef, activeTrackState?.url]);
+    }, [flatListRef.current, activeTrackState?.url]);
     useEffect(() => {
-        // console.log('🚀 ~ useEffect ~ initilizeTheTheme: 1');
         initilizeTheTheme();
         firstRender.current = false;
     }, []);
     const [favList, setFavList] = useState(null);
-
+    async function buildLink() {
+        // alert(true)
+        const link = await dynamicLinks().buildShortLink(
+            {
+                link: `https://shaivaam.page.link/org?prevId=${data?.prevId}`,
+                domainUriPrefix: 'https://shaivaam.page.link',
+                ios: {
+                    appStoreId: '1575138510',
+                    bundleId: 'com.Shaivam.shaivam',
+                    minimumVersion: '18',
+                },
+                android: {
+                    packageName: 'org.shaivam',
+                },
+                // optional setup which updates Firebase analytics campaign
+                // "banner". This also needs setting up before hand
+            },
+            dynamicLinks.ShortLinkType.DEFAULT
+        );
+        console.log('🚀 ~ buildLink ~ link:', link);
+        setDeeplink(link);
+        // console.log("🚀 ~ link ~ link:", `https://shaivaam.page.link/org?eventId=${item?.attributes?.schedula_type ? 'recurring_' + item?.attributes?.id : 'regular_' + item?.attributes?.id}`)
+        return link;
+    }
     useEffect(() => {
         fetchAndDisplayDownloads();
         getFavAudios();
+        MostPlayedSongList()
         Dimensions.addEventListener('change', ({ window: { width, height } }) => {
             if (width < height) {
                 setOrientation('PORTRAIT');
@@ -137,28 +206,23 @@ const ThrimuraiSong = ({ route, navigation }) => {
                 setOrientation('LANDSCAPE');
             }
         });
-
         if (isFocused) {
             changeTranlation('Original');
         }
-        // return () => {
-        //     TrackPlayer.stop();
-        //     TrackPlayer.reset();
-        // };
     }, []);
     const [repeatMode, setRepeatMode] = useState();
     const { musicState, dispatchMusic } = useContext(MusicContext);
-    // console.log("🚀 ~ ThrimuraiSong ~ musicState:", musicState)
+    // console.log('🚀 ~ ThrimuraiSong ~ musicState:', JSON.stringify(musicState, 0, 2));
     const [darkMode, setDarkMode] = useState();
     const [tamilSplit, setTamilSplit] = useState(false);
-    const { theme, setTheme } = useContext(ThemeContext);
+    // const { theme, setTheme } = useContext(ThemeContext);
     const { t, i18n } = useTranslation();
     const [selectedLngCode, setSelectedLngCode] = useState(i18n.language);
     const [downloadList, setDownloadList] = useState([]);
     const langMap = {
         'en-IN': 'RoI',
-        English: 'en-IN',
-        Hindi: 'hi-t',
+        English: 'en',
+        Hindi: 'en',
         Tamil: 'en',
         ar: 'ar',
         as: 'as',
@@ -197,7 +261,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const getFavAudios = (songList) => {
         // const activeTrack = useActiveTrack();
         listfavAudios((callbacks) => {
-            console.log('🚀 ~ useEffect ~ callbacks:', JSON.stringify(callbacks, 0, 2));
+            // console.log('🚀 ~ useEffect ~ callbacks:', JSON.stringify(callbacks, 0, 2));
             // setFavList(callbacks)
             const updatedArray2 = songList?.map((item2) => {
                 const match = callbacks.find((item1) => item1.id === item2.id);
@@ -216,10 +280,10 @@ const ThrimuraiSong = ({ route, navigation }) => {
         try {
             // const keys = await AsyncStorage.getAllKeys();
             const parsedMetadata = await AsyncStorage.getItem('downloaded');
-            console.log(
-                '🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:',
-                JSON.stringify(parsedMetadata, 0, 2)
-            );
+            // console.log(
+            //     '🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:',
+            //     JSON.stringify(JSON.parse(parsedMetadata), 0, 2)
+            // );
             // const metadataKeys = keys.filter(key => key.startsWith('downloaded:'));
             // const metadata = await AsyncStorage.multiGet(metadataKeys);
             // const parsedMetadata = metadata.map(([key, value]) => JSON.parse(value));
@@ -263,7 +327,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
 
     const getSOngData = (from) => {
         TrackPlayer.reset();
-        const detailQuery = `SELECT rawSong, tamilExplanation, tamilSplit , songNo , title from thirumurai_songs where prevId=${musicState?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
+        const detailQuery = `SELECT * from thirumurai_songs where prevId=${musicState?.prevId} and title NOTNULL and locale='${langMap[selectedLngCode]}' ORDER BY songNo ASC`;
         const titleQuery = `SELECT
         MAX(CASE WHEN locale = 'en' THEN titleS END) AS tamil,
     MAX(CASE WHEN locale = '${langMap[selectedLngCode]}' THEN titleS END) AS localeBased FROM thirumurais WHERE prevId =${musicState?.prevId}
@@ -279,6 +343,8 @@ GROUP BY
                 payload: data.filter((i) => i.localBased !== null)[0].localeBased,
             });
             getSqlData(detailQuery, (details) => {
+                console.log('🚀 ~ getSqlData ~ data:', JSON.stringify(details, 0, 2));
+
                 const query2 = `SELECT * FROM odhuvars WHERE title='${data.filter((i) => i.tamil !== null)[0]?.tamil
                     }'`;
                 getSqlData(query2, (callbacks) => {
@@ -303,7 +369,6 @@ GROUP BY
                     // } else {
                     // }
                     dispatchMusic({ type: 'SET_SONG', payload: callbacks });
-
                     // scrollToIndex();
                 });
             });
@@ -315,11 +380,12 @@ GROUP BY
     };
     useEffect(() => {
         dispatchMusic({ type: 'PREV_ID', payload: data?.prevId });
-
+    }, [data, downloadList]);
+    useEffect(() => {
         if (downloaded) {
-            setUpPlayer(data);
+            checkDownloaded(musicState.song);
         }
-    }, [data]);
+    }, [data, downloadList, musicState?.song]);
 
     const toggleSwitch = (value, callbacks) => {
         callbacks(!value);
@@ -327,10 +393,10 @@ GROUP BY
     const checkDownloaded = (songList) => {
         if (downloadList?.length > 0) {
             const updatedArray2 = songList?.map((item2) => {
-                const match = downloadList.find((item1) => item1.id === item2.id);
+                const match = downloadList?.find((item1) => item1.id === item2.id);
                 return match ? { ...match, isLocal: true } : item2; // Replace with the object from array1 if there's a match
             });
-            console.log('🚀 ~ updatedArray2 ~ updatedArray2:', updatedArray2);
+            // console.log('🚀 ~ updatedArray2 ~ updatedArray2:', JSON.stringify(updatedArray2, 0, 2));
             setUpPlayer(updatedArray2);
         } else {
             setUpPlayer(songList);
@@ -338,47 +404,59 @@ GROUP BY
     };
 
     useEffect(() => {
-        if (musicState.song.length) {
+        if (musicState.song.length && !downloaded) {
             checkDownloaded(musicState.song);
             getFavAudios(musicState.song);
         }
     }, [musicState.song, downloadList]);
 
     const renderResult = (item) => {
-        // const parts = item?.rawSong.split('\r\n');
-        // const data = parts?.split(' ')
         return (
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                <HighlightText
-                    key={Math.random()}
+                <HighlightedText
+                    screen={'music-player'}
+                    textColor={!darkMode ? '#000' : colors.white}
+                    // key={Math.random()}
+                    // selectable={true}
+                    // selectionColor="orange"
+                    // style={[
+                    //     styles.lyricsText,
+                    //     {
+                    //         fontSize: fontSizeCount,
+                    //         alignSelf: 'flex-end',
+                    //         color: !darkMode ? colors.grey6 : colors.white,
+                    //     },
+                    // ]}
+                    // highlightStyle={{
+                    //     backgroundColor: darkMode ? '#A47300' : '#F8E3B2',
+                    // }}
+                    // searchWords={[`${searchedword}`]}
+                    // textToHighlight={
+                    //     selectedLang !== 'Tamil' ? item?.rawSong : item?.tamilExplanation
+                    // }
+
+                    // text={selectedLang !== 'Tamil' ? item : item?.tamilExplanation}
+                    text={item}
+                    highlight={searchedword}
                     selectable={true}
                     selectionColor="orange"
-                    style={[
-                        styles.lyricsText,
-                        {
-                            fontSize: fontSizeCount,
-                            alignSelf: 'flex-end',
-                            color: !darkMode ? colors.grey6 : colors.white,
-                        },
-                    ]}
-                    highlightStyle={{
-                        backgroundColor: darkMode ? '#A47300' : '#F8E3B2',
-                    }}
-                    searchWords={[`${searchedword}`]}
-                    textToHighlight={
-                        selectedLang !== 'Tamil' ? item?.rawSong : item?.tamilExplanation
-                    }
+                    fontSizeCount={fontSizeCount}
                 />
             </View>
         );
     };
 
-    const scrollToIndex = () => {
-        // console.log("songnonsjc", typeof songNo)
-        flatListRef?.current?.scrollToIndex({
-            animated: true,
-            index: songNo - 1,
-        });
+    const scrollToIndexFlatList = () => {
+        console.log('🚀 ~ scrollToIndexFlatList ~ scrollToIndexFlatList:', scrollToIndexFlatList);
+
+        if (songNo) {
+            setTimeout(() => {
+                flatListRef?.current?.scrollToIndex({
+                    animated: true,
+                    index: songNo - 1,
+                });
+            }, 1000);
+        }
     };
 
     const getItemLayOut = (item, index) => {
@@ -387,6 +465,7 @@ GROUP BY
     };
     const setUpPlayer = useCallback(
         async (song, from) => {
+            // console.log('songs data setup players', JSON.stringify(song, 0, 2))
             try {
                 if (!TrackPlayer._initialized) {
                     await TrackPlayer.setupPlayer();
@@ -441,6 +520,7 @@ GROUP BY
         await TrackPlayer.reset();
 
         getSqlData(query, (clb) => {
+            console.log('🚀 ~ getSqlData ~ clb:', clb);
             if (clb[0].nextPrevId) {
                 dispatchMusic({ type: 'RESET' });
                 dispatchMusic({ type: 'PREV_ID', payload: clb[0].nextPrevId });
@@ -474,17 +554,19 @@ GROUP BY
             }
         }
     );
+
     const [activeTrackState, setActiveTrackState] = useState({});
 
     useEffect(() => {
         if (musicState.prevId && selectedLang) {
             getSqlData(
-                `SELECT author,thalam,country,pann from thirumurais WHERE prevId=${musicState?.prevId}`,
+                `SELECT addon,author,thalam,country,pann from thirumurais WHERE prevId=${musicState?.prevId}`,
                 (cb) => {
-                    const { author, country, thalam, pann } = cb[0];
+                    const { author, country, thalam, pann, addon } = cb[0];
+                    // console.log("🚀 ~ useEffect ~  cb[0]:", cb[0])
                     dispatchMusic({
                         type: 'META_DATA',
-                        payload: { author, country, thalam, pann },
+                        payload: { author, country, thalam, pann, addon },
                     });
                 }
             );
@@ -503,9 +585,10 @@ GROUP BY
     });
 
     const setAndroidClipBoard = useCallback(async (initialString) => {
-        if (!initialString.includes('Read more at https://shaivam.org/')) {
+        let link = await buildLink();
+        if (!initialString.includes('Read more at https://shaivaam.page')) {
             clipBoardStringRef.current = initialString;
-            clipBoardStringRef.current += ' Read more at https://shaivam.org/';
+            clipBoardStringRef.current += ` Read more at ${link}`;
             Clipboard.setString(clipBoardStringRef.current);
         }
     }, []);
@@ -520,7 +603,7 @@ GROUP BY
     useEffect(() => {
         Clipboard.addListener(async () => {
             fetchClipBoardString().then((string) => {
-                setClipBoardString((prev) => string);
+                setClipBoardString(() => string);
             });
         });
 
@@ -535,6 +618,89 @@ GROUP BY
             });
         }
     }, [clipBoardString]);
+
+    const renderText = (item) => {
+        console.log('🚀 ~ renderText ~ item:', JSON.stringify(item, 0, 2));
+        if (tamilSplit && i18n.language === 'en' && selectedLang === 'Original') {
+            return item?.tamilSplit || 'Text currently not available';
+        } else if (selectedLang === 'Tamil') {
+            return item?.tamilExplanation || 'Text currently not available';
+        } else if (selectedLang === 'English') {
+            return item?.englishTranslation || 'Text currently not available';
+        } else if (selectedLang === 'Hindi') {
+            return item?.hindiTranslation || 'Text currently not available';
+        } else {
+            return item?.rawSong;
+        }
+    };
+    const RenderLyricsText = memo(
+        ({ item, index }) => (
+            // <TouchableWithoutFeedback onPress={() => setShowSetting(false)}>
+            <View
+                style={[
+                    {
+                        paddingBottom: 7,
+                        flexDirection: 'row',
+                        width: Dimensions.get('window').width - 60,
+                    },
+                    musicState?.songDetails[index + 1]
+                        ? {
+                            borderBottomColor: colors.grey3,
+                            borderBottomWidth: 1,
+                        }
+                        : {},
+                ]}
+            >
+                <View>
+                    {item?.type !== null && (
+                        <Text
+                            style={{
+                                color: colors.commonColor,
+                                fontFamily: 'Mulish-Regular',
+                            }}
+                        >
+                            {item?.type}
+                        </Text>
+                    )}
+                    {searchScreen ? (
+                        renderResult(renderText(item))
+                    ) : (
+                        <Text
+                            key={Math.random()}
+                            selectable={true}
+                            selectionColor="orange"
+                            style={[
+                                styles.lyricsText,
+                                {
+                                    fontSize: fontSizeCount,
+                                    alignSelf: 'flex-end',
+                                    color: !darkMode ? '#000' : colors.white,
+                                },
+                            ]}
+                        >
+                            {renderText(item)}
+                        </Text>
+                    )}
+                </View>
+                <Text
+                    style={[
+                        styles.lyricsText,
+                        {
+                            fontSize: fontSizeCount,
+                            alignSelf: 'flex-end',
+                            color: !darkMode ? colors.grey6 : colors.white,
+                        },
+                    ]}
+                >
+                    {item?.songNo}
+                </Text>
+            </View>
+            // </TouchableWithoutFeedback>
+        ),
+        (prevProps, nextProps) => {
+            return prevProps.item?.prevId === nextProps.item?.prevId;
+        }
+    );
 
     return (
         <View style={{ flex: 1, backgroundColor: colorSet?.backgroundColor }}>
@@ -649,7 +815,6 @@ GROUP BY
                                         </View>
                                     </View>
                                 )}
-
                                 {musicState?.metaData?.thalam && (
                                     <View style={styles.container}>
                                         <View
@@ -672,6 +837,13 @@ GROUP BY
                                                 {t(musicState?.metaData?.thalam)}
                                             </Text>
                                         </View>
+                                    </View>
+                                )}
+                                {musicState?.songDetails[0]?.addon && (
+                                    <View>
+                                        <Text style={styles.valueDropDown}>
+                                            {t(musicState?.songDetails[0]?.addon)}
+                                        </Text>
                                     </View>
                                 )}
                             </>
@@ -899,86 +1071,255 @@ GROUP BY
                                 ]}
                                 onPress={handlePress}
                             >
-                                {/* <SettingIcon /> */}
                                 <SettingsSVG />
-                                {/* <Text
-                                    style={[
-                                        styles.settingText,
-                                        {
-                                            color: colorSet?.textColor,
-                                        },
-                                    ]}
-                                >
-                                    Settings
-                                </Text> */}
                             </TouchableOpacity>
                         )}
                     </View>
                 </>
             )}
-
-            {/* lyrics part */}
-            <View style={styles.lyricsContainer}>
-                <View style={{ paddingHorizontal: 20 }}>
-                    {musicState?.songDetails?.length > 0 && (
-                        <FlatList
-                            keyExtractor={(item) => item?.id}
-                            getItemLayout={getItemLayOut}
-                            ref={flatListRef}
-                            data={musicState?.songDetails}
-                            initialScrollIndex={songNo ? songNo - 1 : 0}
-                            renderItem={({ item, index }) => (
-                                <View
-                                    style={{
-                                        borderBottomColor: colors.grey3,
-                                        borderBottomWidth: 1,
-                                        paddingBottom: 7,
-                                        flexDirection: 'row',
-                                    }}
-                                >
-                                    {searchScreen ? (
-                                        renderResult(item)
-                                    ) : (
+            {showSetting ? (
+                <TouchableWithoutFeedback onPress={() => setShowSetting(false)}>
+                    <View style={styles.lyricsContainer}>
+                        <View style={{ paddingHorizontal: 20 }}>
+                            {musicState?.songDetails?.length > 0 && (
+                                <FlatList
+                                    ListHeaderComponent={
                                         <Text
-                                            key={Math.random()}
-                                            selectable={true}
-                                            selectionColor="orange"
                                             style={[
                                                 styles.lyricsText,
                                                 {
                                                     fontSize: fontSizeCount,
-                                                    alignSelf: 'flex-end',
                                                     color: !darkMode ? colors.grey6 : colors.white,
                                                 },
                                             ]}
                                         >
-                                            {!(tamilSplit && i18n.language === 'en')
-                                                ? selectedLang !== 'Tamil'
-                                                    ? item?.rawSong
-                                                    : item?.tamilExplanation ||
-                                                    'Text currently not available'
-                                                : item?.tamilSplit ||
-                                                'Text currently not available'}
+                                            {t('Thiruchirrambalam')}
                                         </Text>
+                                    }
+                                    ListFooterComponent={
+                                        <Text
+                                            style={[
+                                                styles.lyricsText,
+                                                {
+                                                    fontSize: fontSizeCount,
+                                                    color: !darkMode ? colors.grey6 : colors.white,
+                                                },
+                                            ]}
+                                        >
+                                            {t('Thiruchirrambalam')}
+                                        </Text>
+                                    }
+                                    keyExtractor={(item) => item?.id}
+                                    ref={flatListRef}
+                                    data={musicState?.songDetails}
+                                    getItemLayOut={getItemLayOut}
+                                    initialScrollIndex={songNo ? songNo - 1 : 0}
+                                    initialNumToRender={songNo ? songNo + 1 : 40}
+                                    onScrollToIndexFailed={({
+                                        index,
+                                        averageItemLength,
+                                        highestMeasuredFrameIndex,
+                                    }) => {
+                                        // console.log(
+                                        //     '🚀 ~ ThrimuraiSong ---  ~ info:',
+                                        //     index,
+                                        //     averageItemLength,
+                                        //     highestMeasuredFrameIndex
+                                        // );
+                                        const wait = new Promise((resolve) =>
+                                            setTimeout(resolve, 1000)
+                                        );
+                                        wait.then(() => {
+                                            flatListRef.current?.scrollToOffset({
+                                                // index: index,
+                                                offset:
+                                                    averageItemLength * songNo +
+                                                    Math.abs(highestMeasuredFrameIndex - songNo) *
+                                                    averageItemLength,
+                                                animated: true,
+                                            });
+                                        });
+                                    }}
+                                    renderItem={({ item, index }) => (
+                                        <RenderLyricsText item={item} index={index} />
                                     )}
+                                    windowSize={40}
+                                />
+                            )}
+                        </View>
+                    </View>
+                </TouchableWithoutFeedback>
+            ) : (
+                <View style={styles.lyricsContainer}>
+                    <View style={{ paddingHorizontal: 20 }}>
+                        {musicState?.songDetails?.length > 0 && (
+                            <FlatList
+                                ListHeaderComponent={
                                     <Text
                                         style={[
                                             styles.lyricsText,
                                             {
                                                 fontSize: fontSizeCount,
-                                                alignSelf: 'flex-end',
                                                 color: !darkMode ? colors.grey6 : colors.white,
                                             },
                                         ]}
                                     >
-                                        {item?.songNo}
+                                        {t('திருச்சிற்றம்பலம்')}
                                     </Text>
-                                </View>
-                            )}
-                        />
-                    )}
+                                }
+                                ListFooterComponent={
+                                    <Text
+                                        style={[
+                                            styles.lyricsText,
+                                            {
+                                                fontSize: fontSizeCount,
+                                                color: !darkMode ? colors.grey6 : colors.white,
+                                            },
+                                        ]}
+                                    >
+                                        {t('திருச்சிற்றம்பலம்')}
+                                    </Text>
+                                }
+                                keyExtractor={(item) => item?.id}
+                                ref={flatListRef}
+                                data={musicState?.songDetails}
+                                getItemLayOut={getItemLayOut}
+                                initialScrollIndex={songNo ? songNo - 1 : 0}
+                                initialNumToRender={songNo ? songNo + 1 : 40}
+                                onScrollToIndexFailed={({
+                                    index,
+                                    averageItemLength,
+                                    highestMeasuredFrameIndex,
+                                }) => {
+                                    // console.log(
+                                    //     '🚀 ~ ThrimuraiSong ---  ~ info:',
+                                    //     index,
+                                    //     averageItemLength,
+                                    //     highestMeasuredFrameIndex
+                                    // );
+                                    const wait = new Promise((resolve) =>
+                                        setTimeout(resolve, 1000)
+                                    );
+                                    wait.then(() => {
+                                        flatListRef.current?.scrollToOffset({
+                                            // index: index,
+                                            offset:
+                                                averageItemLength * songNo +
+                                                Math.abs(highestMeasuredFrameIndex - songNo) *
+                                                averageItemLength,
+                                            animated: true,
+                                        });
+                                    });
+                                }}
+                                renderItem={({ item, index }) => (
+                                    <RenderLyricsText item={item} index={index} />
+                                )}
+                                windowSize={40}
+                            />
+                        )}
+
+                        {/* {musicState?.songDetails?.length > 0 && (
+                                <FlatList
+                                    ListHeaderComponent={
+                                        <Text
+                                            style={[
+                                                styles.lyricsText,
+                                                {
+                                                    fontSize: fontSizeCount,
+                                                    color: !darkMode ? colors.grey6 : colors.white,
+                                                },
+                                            ]}
+                                        >
+                                            {t('Thiruchirrambalam')}
+                                        </Text>
+                                    }
+                                    ListFooterComponent={
+                                        <Text
+                                            style={[
+                                                styles.lyricsText,
+                                                {
+                                                    fontSize: fontSizeCount,
+                                                    color: !darkMode ? colors.grey6 : colors.white,
+                                                },
+                                            ]}
+                                        >
+                                            {t('Thiruchirrambalam')}
+                                        </Text>
+                                    }
+                                    keyExtractor={(item) => item?.id}
+                                    getItemLayout={getItemLayOut}
+                                    ref={flatListRef}
+                                    data={musicState?.songDetails}
+                                    initialScrollIndex={songNo ? songNo - 1 : 0}
+                                    renderItem={({ item, index }) => (
+                                        // <TouchableWithoutFeedback onPress={() => setShowSetting(false)}>
+                                        <View
+                                            style={[
+                                                {
+                                                    paddingBottom: 7,
+                                                    flexDirection: 'row',
+                                                    width: Dimensions.get('window').width - 60,
+                                                },
+                                                musicState?.songDetails[index + 1]
+                                                    ? {
+                                                        borderBottomColor: colors.grey3,
+                                                        borderBottomWidth: 1,
+                                                    }
+                                                    : {},
+                                            ]}>
+                                            <View>
+                                                {item?.type !== null && (
+                                                    <Text
+                                                        style={{
+                                                            color: colors.commonColor,
+                                                            fontFamily: 'Mulish-Regular',
+                                                        }}
+                                                    >
+                                                        {item?.type}
+                                                    </Text>
+                                                )}
+                                                {searchScreen ? (
+                                                    renderResult(item)
+                                                ) : (
+                                                    <Text
+                                                        key={Math.random()}
+                                                        selectable={true}
+                                                        selectionColor="orange"
+                                                        style={[
+                                                            styles.lyricsText,
+                                                            {
+                                                                fontSize: fontSizeCount,
+                                                                alignSelf: 'flex-end',
+                                                                color: !darkMode
+                                                                    ? colors.grey6
+                                                                    : colors.white,
+                                                            },
+                                                        ]}
+                                                    >
+                                                        {renderText(item)}
+                                                    </Text>
+                                                )}
+                                            </View>
+                                            <Text
+                                                style={[
+                                                    styles.lyricsText,
+                                                    {
+                                                        fontSize: fontSizeCount,
+                                                        alignSelf: 'flex-end',
+                                                        color: !darkMode ? colors.grey6 : colors.white,
+                                                    },
+                                                ]}
+                                            >
+                                                {item?.songNo}
+                                            </Text>
+                                        </View>
+                                        // </TouchableWithoutFeedback>
+                                    )}
+                                />
+                            )} */}
+                    </View>
                 </View>
-            </View>
+            )}
 
             <Animated.View
                 style={[
@@ -1043,7 +1384,7 @@ GROUP BY
                         }}
                     ></TouchableOpacity>
                 </View>
-                {activeTrackState?.url && (
+                {(activeTrackState?.url && isConnected) || downloaded ? (
                     <AudioPlayer
                         activeTrack={activeTrackState}
                         setDownloadingLoader={setDownloadingLoader}
@@ -1058,7 +1399,10 @@ GROUP BY
                         setRepeatMode={setRepeatMode}
                         queryForNextPrevId={queryForNextPrevId}
                         queryForPreviousPrevId={queryForPreviousPrevId}
+                        downloadSong={downloadSong}
                     />
+                ) : (
+                    <></>
                 )}
             </Animated.View>
 
@@ -1163,9 +1507,8 @@ export const styles = StyleSheet.create({
     },
     lyricsContainer: { flex: 1, paddingHorizontal: 0, marginTop: 10 },
     lyricsText: {
-        // fontWeight: '500',
-        fontFamily: 'AnekTamil-Regular',
-        lineHeight: 30,
+        fontFamily: 'AnekTamil-Medium',
+        lineHeight: 23,
     },
     settingButton: {
         flexDirection: 'row',

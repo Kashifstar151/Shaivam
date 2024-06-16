@@ -14,19 +14,20 @@ import {
 import Background from '../../components/Background';
 import DragIcon from '../../assets/Images/Frame 34902.svg';
 import Button from '../Temples/Common/Button';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const SongLists = ({ navigation, route }) => {
-    const { data } = route?.params;
+    const { data,selecetedHeader } = route?.params;
     const [index, setIndex] = useState(0);
     const isFocuced = useIsFocused();
     const [favList, setFavList] = useState(data);
-    // console.log("🚀 ~ SongLists ~ favList:", favList)
-    useEffect(() => {
-        // fetchAndDisplayDownloads()
-        listfavAudios((callbacks) => {
-            console.log('🚀 ~ useEffect ~ callbacks:', callbacks);
-            setFavList(callbacks);
-        });
-    }, [isFocuced]);
+    console.log("🚀 ~ SongLists ~ favList:", route?.params)
+    // useEffect(() => {
+    //     // fetchAndDisplayDownloads()
+    //     listfavAudios((callbacks) => {
+    //         console.log('🚀 ~ useEffect ~ callbacks:', callbacks);
+    //         setFavList(callbacks);
+    //     });
+    // }, [isFocuced]);
     // const isFocused = useIsFocused()
     // useEffect(() => {
     //     getSongList()
@@ -63,15 +64,28 @@ const SongLists = ({ navigation, route }) => {
         </ScaleDecorator>
     );
     const updateList = (item) => {
-        for (let i in item) {
-            // console.log("index" ,i)
-            let query = `UPDATE fav_odhuvar SET serialNo=? WHERE id=?`;
-            updatefavPlaylist(query, [i, item?.[i]?.id], (callbacks) => {
-                console.log('🚀 ~ updateList ~ callbacks:', callbacks);
-            });
+        if(selecetedHeader =='Offline downloads'){
+            setFavList(item)  
+            // AsyncStorage.setItem('downloaded', JSON.stringify(item));
+        }else{
+            for (let i in item) {
+                // console.log("index" ,i)
+                let query = `UPDATE fav_odhuvar SET serialNo=? WHERE id=?`;
+                updatefavPlaylist(query, [i, item?.[i]?.id], (callbacks) => {
+                    console.log('🚀 ~ updateList ~ callbacks:', callbacks);
+                });
+            }
+            setFavList(item);
         }
-        setFavList(item);
     };
+    const onSubmit = async()=>{
+        if(selecetedHeader =='Offline downloads'){
+          await  AsyncStorage.setItem('downloaded', JSON.stringify(favList));
+          navigation.goBack()
+        }else{
+            navigation.goBack()
+        }
+    }
     return (
         <Background>
             <View
@@ -115,7 +129,7 @@ const SongLists = ({ navigation, route }) => {
                     />
                 </NestableScrollContainer>
             </View>
-            <Button active buttonText={'Save'} navigation={() => navigation.goBack()} />
+            <Button active buttonText={'Save'} navigation={() => onSubmit()} />
         </Background>
         // </ScrollView>
     );

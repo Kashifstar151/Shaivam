@@ -1,6 +1,14 @@
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { Image, Linking, Modal, Pressable, Text, View } from 'react-native';
+import {
+    Image,
+    Linking,
+    Modal,
+    Pressable,
+    Text,
+    TouchableNativeFeedback,
+    View,
+} from 'react-native';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import DirectionSVG from '../../components/SVGs/DirectionSVG';
 import { CustomButton } from '../../components/Buttons';
@@ -9,8 +17,19 @@ import ErrorSpotSVG from '../../components/SVGs/ErrorSpotSVG';
 import FileUplaoder from './FileUplaoder';
 import SpottingErrorPage from './SuccuessPages/SpottingErrorPage';
 import { useTranslation } from 'react-i18next';
+import templeMetaData from './AssetMapWithTempleType';
 
-const TempleCard = ({ dataSet, children, showMargin, showButton }) => {
+//
+const TempleCard = ({
+    dataSet,
+    children,
+    regionCoordinate,
+    showMargin,
+    showButton,
+    onTitleClick,
+    imageArr = [],
+    showImage,
+}) => {
     const nav = useNavigation();
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedHeader, setSelectedHeader] = useState('direction');
@@ -22,24 +41,48 @@ const TempleCard = ({ dataSet, children, showMargin, showButton }) => {
         setModalVisible(true);
     };
     const { t } = useTranslation();
+    const route = useRoute();
 
     return (
         <View style={{ paddingHorizontal: 20 }}>
             {modalVisible && (
                 <Modal transparent>
                     {selectedHeader == 'Submit Images' ? (
-                        <FileUplaoder setModalVisible={setModalVisible} />
+                        <FileUplaoder
+                            setModalVisible={setModalVisible}
+                            id={dataSet?.id}
+                            dataSet={dataSet}
+                        />
                     ) : selectedHeader == 'Spot an error? Send Corrections' ? (
-                        <SpottingErrorPage setModalVisible={setModalVisible} navigation={nav} />
+                        <SpottingErrorPage
+                            setModalVisible={setModalVisible}
+                            navigation={nav}
+                            existingTempDetail={{
+                                coords: {
+                                    latitude: dataSet?.latitude,
+                                    longitude: dataSet?.longitude,
+                                },
+                                templeId: dataSet?.id,
+                                templeName: dataSet.templeName,
+                            }}
+                        />
                     ) : null}
                 </Modal>
             )}
-            <Text style={{ color: 'black', fontFamily: 'Lora-Bold', fontSize: 18 }}>
-                {dataSet?.templeName}
-            </Text>
+            <Pressable
+                onPress={() => {
+                    if (route.name == 'filteredTemples') {
+                        onTitleClick();
+                    }
+                }}
+            >
+                <Text style={{ color: 'black', fontFamily: 'Lora-Bold', fontSize: 18 }}>
+                    {dataSet?.templeName}
+                </Text>
+            </Pressable>
 
             <Text style={{ color: 'black', fontFamily: 'Mulish-Regular', paddingTop: 10 }}>
-                {dataSet?.templeType}
+                {templeMetaData[dataSet.flag]?.name}
             </Text>
             {showButton && (
                 <ScrollView
@@ -51,10 +94,11 @@ const TempleCard = ({ dataSet, children, showMargin, showButton }) => {
                     <CustomButton
                         svg={<DirectionSVG fill={'#fff'} />}
                         onPress={() => {
-                            const sourceLatitude = 37.7749; // Example source latitude
-                            const sourceLongitude = -122.4194; // Example source longitude
-                            const destinationLatitude = 34.0522; // Example destination latitude
-                            const destinationLongitude = -118.2437; // Example destination longitude
+                            const sourceLatitude = parseFloat(regionCoordinate?.latitude); // Example source latitude
+                            const sourceLongitude = parseFloat(regionCoordinate?.longitude); // Example source longitude
+                            const destinationLatitude = parseFloat(dataSet?.latitude); // Example destination latitude
+                            const destinationLongitude = parseFloat(dataSet?.longitude); // Example destination longitude
+
                             const googleMapsUrl = `geo:${sourceLatitude},${sourceLongitude}?q=${destinationLatitude},${destinationLongitude}`;
                             Linking.openURL(googleMapsUrl).catch((err) => {
                                 console.log('the map is not avialable');
@@ -95,17 +139,33 @@ const TempleCard = ({ dataSet, children, showMargin, showButton }) => {
                     />
                 </ScrollView>
             )}
-            {/* <FlatList
-                horizontal
-                contentContainerStyle={{ gap: 10, paddingVertical: 10 }}
-                data={Array.from({ length: 7 }, (_, i) => i)}
-                renderItem={({ item, index }) => (
-                    <Image
-                        source={require('../../../assets/Images/Background.png')}
-                        style={{ color: 'black', width: 200, height: 100, borderRadius: 8 }}
+            {showImage && imageArr?.length ? (
+                <View
+                    style={{
+                        width: 'auto',
+                    }}
+                >
+                    <FlatList
+                        horizontal
+                        contentContainerStyle={{
+                            gap: 10,
+                            paddingVertical: 10,
+                        }}
+                        style={{
+                            alignSelf: 'flex-start',
+                        }}
+                        data={imageArr}
+                        renderItem={({ item, index }) => (
+                            <Image
+                                source={{
+                                    uri: item?.url,
+                                }}
+                                style={{ color: 'black', width: 200, height: 100, borderRadius: 8 }}
+                            />
+                        )}
                     />
-                )}
-            /> */}
+                </View>
+            ) : null}
             {showMargin && (
                 <View
                     style={{

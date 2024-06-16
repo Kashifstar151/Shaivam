@@ -4,48 +4,57 @@ import templeMetaData from './AssetMapWithTempleType';
 import { categoryBtnClbk } from './CallBacksForClick';
 import { useTranslation } from 'react-i18next';
 
-const InnerContextOfAnimatedSideBox = ({ navigation }) => {
+const InnerContextOfAnimatedSideBox = ({ navigation, regionCoordinate, userLocation }) => {
     const { t } = useTranslation();
     return (
         <View style={{}}>
-            {Object?.entries(templeMetaData).map(([key, value], indx) => {
-                if (key !== '8') {
-                    return (
-                        <Pressable
-                            onPress={() => {
-                                // adding callback on the category btn press and navigating to the filter page
-                                // alert(key)
-                                categoryBtnClbk(navigation, key);
-                            }}
-                            style={{ gap: 2, paddingBottom: 10 }}
-                            key={indx}
-                        >
-                            <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
+            {Object?.entries(templeMetaData)
+                .reverse()
+                .map(([key, value], indx) => {
+                    if (key !== '8' && key !== '9') {
+                        return (
+                            <Pressable
+                                onPress={() => {
+                                    // adding callback on the category btn press and navigating to the filter page
+                                    // alert(key)
+                                    categoryBtnClbk(
+                                        navigation,
+                                        key,
+                                        regionCoordinate,
+                                        userLocation
+                                    );
+                                }}
+                                style={{ gap: 2, paddingBottom: 10 }}
+                                key={indx}
+                            >
                                 <View
-                                    style={[
-                                        styles.textContWrapper,
-                                        {
-                                            backgroundColor: value.metaData.color,
-                                        },
-                                    ]}
+                                    style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}
                                 >
-                                    {value.metaData.letterAssociated && (
-                                        <Text style={styles.textStyleForCont}>
-                                            {value.metaData.letterAssociated}
-                                        </Text>
-                                    )}
+                                    <View
+                                        style={[
+                                            styles.textContWrapper,
+                                            {
+                                                backgroundColor: value.metaData.color,
+                                            },
+                                        ]}
+                                    >
+                                        {value.metaData.letterAssociated && (
+                                            <Text style={styles.textStyleForCont}>
+                                                {value.metaData.letterAssociated}
+                                            </Text>
+                                        )}
+                                    </View>
+                                    <Text style={{ color: '#000', fontWeight: 600, fontSize: 12 }}>
+                                        {t(`${value.fullName}`)}
+                                    </Text>
                                 </View>
-                                <Text style={{ color: '#000', fontWeight: 600, fontSize: 12 }}>
-                                    {t(`${value.fullName}`)}
-                                </Text>
-                            </View>
-                            <Text style={{ color: '#222222', fontSize: 10 }}>{value.content}</Text>
-                        </Pressable>
-                    );
-                } else {
-                    return null;
-                }
-            })}
+                                {/* <Text style={{ color: '#222222', fontSize: 10 }}>{value.content}</Text> */}
+                            </Pressable>
+                        );
+                    } else {
+                        return null;
+                    }
+                })}
         </View>
     );
 };

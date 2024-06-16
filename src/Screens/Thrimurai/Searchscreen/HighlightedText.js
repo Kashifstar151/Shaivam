@@ -1,14 +1,10 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import { ThemeContext } from '../../../Context/ThemeContext';
 
-const HighlightedText = ({ text, highlight, lyrics }) => {
-    console.log('🚀 ~ HighlightedText ~ text:', text);
-    console.log('🚀 ~ HighlightedText ~ text:', text);
+const HighlightedText = ({ fontSizeCount, text, highlight, lyrics, screen, ...restProps }) => {
     const { theme } = useContext(ThemeContext);
     if (!text) return null;
-
-    highlight = highlight.replace(/\s/g, '');
     const escapedHighlight = highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const regex = new RegExp(`(${escapedHighlight.split('').join('\\s*')})`, 'gi');
     let key = 0;
@@ -16,12 +12,24 @@ const HighlightedText = ({ text, highlight, lyrics }) => {
 
     return (
         <Text
-            style={{
-                fontFamily: 'AnekTamil-Bold',
-                fontSize: 14,
-                color: theme.textColor,
-                // fontWeight: lyrics ? '400' : '700',
-            }}
+            style={[
+                screen !== 'music-player'
+                    ? {
+                          fontFamily: 'AnekTamil-Bold',
+                          fontSize: 14,
+
+                          //   fontWeight: lyrics ? '400' : '700',
+                      }
+                    : {
+                          fontFamily: 'AnekTamil-medium',
+                          fontSize: fontSizeCount,
+                          lineHeight: 22,
+                      },
+                {
+                    color: restProps?.textColor ? restProps?.textColor : theme.textColor,
+                },
+            ]}
+            {...restProps}
         >
             {parts.map((part, i) =>
                 regex.test(part) && part.length > 2 ? (
@@ -34,7 +42,7 @@ const HighlightedText = ({ text, highlight, lyrics }) => {
                         {part}
                     </Text>
                 ) : (
-                    `${part} `
+                    <Text key={key++}>{part}</Text>
                 )
             )}
         </Text>

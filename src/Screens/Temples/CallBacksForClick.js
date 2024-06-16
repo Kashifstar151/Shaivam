@@ -1,23 +1,31 @@
 import assetMapWithTempleType from './AssetMapWithTempleType';
-const markerPressClbk = (navigation, flag, item) => {
+const markerPressClbk = (navigation, flag, item, userLocation) => {
     console.log('🚀 ~ markerPressClbk ~ agrs:', flag, item);
-    navigation.navigate('templeDetails', {
-        temple: {
-            // metaDate: item ? item : assetMapWithTempleType[item?.flag],
-            templeFlag: item?.flag,
-            templeName: item?.name,
-            templeId: item?.id,
-            templeCoordinate: {
-                longitude: parseFloat(item?.longitude),
-                latitude: parseFloat(item?.latitude),
+    if (flag) {
+        navigation.navigate('templeDetails', {
+            temple: {
+                // metaDate: item ? item : assetMapWithTempleType[item?.flag],
+                templeFlag: item?.flag,
+                templeName: item?.name,
+                templeId: item?.id,
+                templeCoordinate: {
+                    longitude: parseFloat(item?.longitude),
+                    latitude: parseFloat(item?.latitude),
+                },
             },
-        },
-    });
+            userLocation,
+        });
+    }
 };
 
-const categoryBtnClbk = (navigation, flag) => {
+const categoryBtnClbk = (navigation, flag, regionCoordinate, userLocation) => {
+    console.log('🚀 ~ categoryBtnClbk ~ flag:', flag);
     navigation.navigate('filteredTemples', {
-        data: assetMapWithTempleType[flag],
+        data: {
+            flag,
+            regionCoordinate,
+            userLocation,
+        },
     });
 };
 

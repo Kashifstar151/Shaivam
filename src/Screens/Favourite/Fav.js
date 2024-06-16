@@ -35,8 +35,10 @@ import DeleteSVG from '../../components/SVGs/DeleteSVG';
 // import Button from '../Temples/Common/Button'
 // import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import * as RNFS from 'react-native-fs';
+import { useTranslation } from 'react-i18next';
 const Fav = ({ navigation }) => {
     // const BottomSheetRef = useRef(null)
+    const { t } = useTranslation()
     const { theme } = useContext(ThemeContext);
     const isFocuced = useIsFocused();
     const [selecetedHeader, setSelectedHeader] = useState('Favourites');
@@ -47,15 +49,6 @@ const Fav = ({ navigation }) => {
     const [showToastMessage, setShowToast] = useState(false);
     const [emptyImage, setEmptyImage] = useState(true);
     useEffect(() => {
-        // fetchAndDisplayDownloads()
-        // listfavAudios(callbacks => {
-        //     console.log("🚀 ~ useEffect ~ callbacks:", JSON.stringify(callbacks, 0, 2))
-        //     setFavList(callbacks)
-        //     if(callbacks?.length>0){
-        //         setEmptyImage(false)
-        //     }
-        // })
-
         Promise.all([
             fetchAndDisplayDownloads(),
             listfavAudios((callbacks) => {
@@ -66,7 +59,7 @@ const Fav = ({ navigation }) => {
                 }
             }),
         ]);
-        checkFile();
+        // checkFile();
     }, [isFocuced]);
     const checkFile = async (path) => {
         RNFS.readFile(`file://${RNFS.MainBundlePath}`)
@@ -92,7 +85,7 @@ const Fav = ({ navigation }) => {
             ),
         },
         {
-            name: 'Special Playlist',
+            name: 'Special Playlists',
             icon: (
                 <Icon
                     name="bookmark-outline"
@@ -102,7 +95,7 @@ const Fav = ({ navigation }) => {
             ),
         },
         {
-            name: 'Offline Downloads',
+            name: 'Offline downloads',
             icon: (
                 <Icon name="download" size={24} color={theme.searchContext.unSelected.textColor} />
             ),
@@ -151,11 +144,12 @@ const Fav = ({ navigation }) => {
         }
     }, [showToastMessage]);
     const removeFromPlaylist = (item) => {
-        if (selecetedHeader == 'Offline Downloads') {
+        console.log(JSON.stringify(item))
+        if (selecetedHeader == 'Offline downloads') {
             let arr = downloadList.filter((res) => {
                 return res.id !== item.id;
             });
-            console.log('🚀 ~ removeFromPlaylist ~ arr:', arr);
+            // console.log('🚀 ~ removeFromPlaylist ~ arr:', arr);
             setDownloadList(arr);
             AsyncStorage.setItem('downloaded', JSON.stringify(arr));
             setShowModal(false);
@@ -227,6 +221,7 @@ const Fav = ({ navigation }) => {
                 navigation.navigate(RouteTexts.THRIMURAI_SONG, {
                     data: item,
                     downloaded: true,
+                    downloadSong: item
                 });
             }}
         >
@@ -275,10 +270,10 @@ const Fav = ({ navigation }) => {
             <Background>
                 <View style={{ marginVertical: 10 }}>
                     <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
-                        <HeadingText text={'Favourites'} nandiLogo={true} />
+                        <HeadingText text={t('Favourites')} nandiLogo={true} />
                     </View>
                     <SearchInput
-                        placeholder={'Search for your favourties (Eg - தோடுடைய)'}
+                        placeholder={t('Search for your favourites')}
                         setState={setSearchText}
                         state={searchText}
                         setOnFocus={setOnFocus}
@@ -320,7 +315,7 @@ const Fav = ({ navigation }) => {
                                         ]
                                 }
                             >
-                                {item?.name}
+                                {t(item?.name)}
                             </Text>
                         </TouchableOpacity>
                     )}
@@ -333,6 +328,7 @@ const Fav = ({ navigation }) => {
                         onPress={() =>
                             navigation.navigate(RouteTexts.SONGS_LIST, {
                                 data: favList,
+                                selecetedHeader: selecetedHeader
                             })
                         }
                     >
@@ -346,7 +342,7 @@ const Fav = ({ navigation }) => {
                                 fontSize: 12,
                             }}
                         >
-                            Re arrange task
+                            {t('Re-arrange Tracks')}
                         </Text>
                     </TouchableOpacity>
                     <FlatList
@@ -354,13 +350,14 @@ const Fav = ({ navigation }) => {
                         renderItem={({ item, index }) => renderSong(item, index)}
                     />
                 </View>
-            ) : selecetedHeader == 'Offline Downloads' && downloadList?.length > 0 ? (
+            ) : selecetedHeader == 'Offline downloads' && downloadList?.length > 0 ? (
                 <View style={{ flex: 1 }}>
                     <TouchableOpacity
                         style={styles.RearrangsTask}
                         onPress={() =>
                             navigation.navigate(RouteTexts.SONGS_LIST, {
-                                data: favList,
+                                data: downloadList,
+                                selecetedHeader: selecetedHeader
                             })
                         }
                     >
@@ -374,7 +371,7 @@ const Fav = ({ navigation }) => {
                                 fontSize: 12,
                             }}
                         >
-                            Re arrange task
+                            {t('Re-arrange Tracks')}
                         </Text>
                     </TouchableOpacity>
                     <FlatList
@@ -401,11 +398,10 @@ const Fav = ({ navigation }) => {
                             marginVertical: 15,
                         }}
                     >
-                        You haven’t favourited anything!
+                        {t(`You haven’t favourited anything!`)}
                     </Text>
                     <Text style={{ color: '#222222', fontFamily: 'Mulish-Regular', fontSize: 14 }}>
-                        Start adding stotras, vedas, thirumurais etc. here for easy access to them
-                        every time
+                        {t('Start adding stotras, vedas, thirumurais etc. here for easy access to them every time')}
                     </Text>
                 </View>
             )}
@@ -436,9 +432,8 @@ const Fav = ({ navigation }) => {
                         headingText={
                             selecetedHeader == 'Favourites'
                                 ? 'Are you sure you want to remove this from Favourite Songs?'
-                                : 'Are you sure you want to delete this from Offline Download?'
-                        }
-                    />
+                                : t('Are you sure you want to delete this from offline downloads?')
+                        } />
                 </Modal>
             )}
             <View
@@ -491,7 +486,8 @@ export const styles = StyleSheet.create({
         marginTop: 10,
         borderWidth: 1.5,
         borderColor: '#C1554E',
-        height: 30,
+        // height: 30,
+        paddingVertical: 5,
         borderRadius: 15,
         width: 150,
         marginHorizontal: 20,

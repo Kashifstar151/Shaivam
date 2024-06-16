@@ -3,12 +3,14 @@ import { Keyboard, Pressable, StyleSheet, TouchableWithoutFeedback } from 'react
 import { View, Text, TextInput } from 'react-native';
 import SearchSVG from '../../components/SVGs/SearchSVG';
 import { useNavigation } from '@react-navigation/core';
-import BackBtnSvg from '../../components/SVGs/BackBtnSvg';
 import { StackActions } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { useDebouncer } from '../../Helpers/useDebouncer';
 import getDimension from '../../Helpers/getDimension';
 import { ScrollView } from 'react-native-gesture-handler';
+import AntDesign from 'react-native-vector-icons/dist/AntDesign';
+import * as RNLocalize from 'react-native-localize';
+// import BackBtnSVG from '../../components/SVGs/BackBtnSvg';
 
 const SearchTemple = ({
     setRegionCoordinate,
@@ -39,9 +41,15 @@ const SearchTemple = ({
 
     const debounceVal = useDebouncer(searchText, 500);
 
-    const searchResultData = async () =>
-        await fetch(
-            `https://nominatim.openstreetmap.org/search?format=json&q=${debounceVal}&accept-language=en`,
+    const clearTheSearchText = () => {
+        if (!isDisable) setSearchText('');
+    };
+    const searchResultData = async () => {
+        return await fetch(
+            // `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${debounceVal}&key=${'AIzaSyC9Esy5cuOwL4OsSxPuhOet3ky5cKI8J1k'}&language=en`,
+            `https://nominatim.openstreetmap.org/search?format=json&q=${debounceVal}&accept-language=${RNLocalize.getLocales().map((locale) => locale.languageCode)[0]
+            }`,
+
             {
                 method: 'GET',
                 headers: new Headers({
@@ -49,6 +57,7 @@ const SearchTemple = ({
                 }),
             }
         ).then((res) => res.json());
+    };
 
     const [fetchedLocationsName, setFetchedLocationsName] = useState([]);
     useEffect(() => {
@@ -123,7 +132,7 @@ const SearchTemple = ({
                             navigation.dispatch(popAction);
                         }}
                     >
-                        <BackBtnSvg />
+                        {/* <BackBtnSVG /> */}
                     </Pressable>
                 )}
                 <TextInput
@@ -146,6 +155,20 @@ const SearchTemple = ({
                         }
                     }}
                 />
+
+                {searchText.length > 1 && (
+                    <Pressable
+                        style={{
+                            width: 25,
+                            height: 25,
+                            borderRadius: 20,
+                            marginRight: -10,
+                        }}
+                        onPress={clearTheSearchText}
+                    >
+                        <AntDesign name="close" size={20} color="rgba(119, 119, 119, 1)" />
+                    </Pressable>
+                )}
             </View>
 
             {isAutoComplete && showSuggestion && (

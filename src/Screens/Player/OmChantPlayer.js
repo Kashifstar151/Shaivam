@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 const OmChantPlayer = () => {
     const playbackState = usePlaybackState();
     const [paused, setPaused] = useState(false);
-    const { showPlayer, setShowPlayer, OmPlayTiming } = usePlayer();
+    const { showPlayer, setShowPlayer, OmPlayTiming, isPlaying, setIsPlaying } = usePlayer();
     const [timeRemaining, setTimeRemaining] = useState(0);
     useEffect(() => {
         async function removeTheTrackPlayer() {
@@ -50,6 +50,7 @@ const OmChantPlayer = () => {
             setTimeRemaining((prev) => {
                 if (prev >= OmPlayTiming) {
                     setShowPlayer(false);
+                    setIsPlaying(false);
                     return prev;
                 } else {
                     return prev + 10;
@@ -83,18 +84,21 @@ const OmChantPlayer = () => {
         //     });
         TrackPlayer.play();
         setTheRef();
+        setIsPlaying(true);
     };
 
     function formatSeconds(seconds) {
         const date = new Date(seconds * 1000);
         const minutes = date.getUTCMinutes();
         const formattedSeconds = ('0' + date.getUTCSeconds()).slice(-2);
+        console.log('date ,minutes ', date.getUTCSeconds(), seconds)
         return `${minutes}:${formattedSeconds}`;
     }
     const pauseAudio = async () => {
         console.log(playbackState);
         TrackPlayer.pause();
         clearTheRef();
+        setIsPlaying(false);
     };
 
     const { t } = useTranslation();
@@ -117,7 +121,10 @@ const OmChantPlayer = () => {
         >
             <TouchableOpacity
                 style={{ position: 'absolute', top: -10, right: -5 }}
-                onPress={() => setShowPlayer(false)}
+                onPress={() => {
+                    setShowPlayer(false);
+                    setIsPlaying(false);
+                }}
             >
                 <Icon name="closecircle" color={colors.grey7} size={23} />
             </TouchableOpacity>

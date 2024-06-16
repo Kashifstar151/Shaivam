@@ -30,7 +30,7 @@ const RenderItem = ({ blockRef, item, navigation, theme }) => {
 
     const onLayout = (event, index) => {
         const { x, y, width, height } = event.nativeEvent.layout;
-        console.log('🚀 ~ RenderItem ~ index:', index);
+        // console.log('🚀 ~ RenderItem ~ index:', index);
         if (index == 0) {
             console.log('🚀 ~ onLayout ~ width:', width);
             setBlockWidth(width);
@@ -82,6 +82,7 @@ const RenderItem = ({ blockRef, item, navigation, theme }) => {
                                 i?.navName == 'Stotras' ||
                                 i?.navName == RouteTexts.TEMPLE_TABS_NAVIGATE ||
                                 i?.navName == RouteTexts.CALENDER ||
+                                i?.navName == RouteTexts.FAVOURITE ||
                                 i?.navName == RouteTexts.RADIO
                                 ? () => navigation.navigate(i?.navName)
                                 : i?.navName == 'Website'
@@ -143,40 +144,21 @@ const CardComponents = ({ navigation }) => {
                     title: t('Thirumurais'),
                     navName: 'Thirumurais',
                 },
-                {
-                    icon: <OmLetterSvg fill={theme.textColorHomeCardYellow} />,
-                    title: t('Vedas'),
-                    navName: 'Vedas',
-                },
-                {
-                    icon: <StrotasSVG fill={theme.textColorHomeCardYellow} />,
-                    title: t('Stotras'),
-                    navName: 'Stotras',
-                },
-                {
-                    icon: <ShaivaSVG fill={theme.textColorHomeCardYellow} />,
-                    title: t('Shaiva Siddanta'),
-                    navName: 'S Siddanta',
-                },
-            ],
-        },
-        {
-            text: t('Shaivam Media'),
-            description: t('Check out shaivam media features'),
-            id: 2,
-            gradient: theme.gradientHomeCardGreen,
-            textColor: theme.textColor,
-            subComp: [
-                {
-                    icon: <ShaivamTVSVG fill={theme.textColor} />,
-                    title: t('Shaivam TV'),
-                    navName: 'Shaivam TV',
-                },
-                {
-                    icon: <RadioSVG fill={theme.textColor} />,
-                    title: t('Radio'),
-                    navName: RouteTexts.RADIO,
-                },
+                // {
+                //     icon: <OmLetterSvg fill={theme.textColorHomeCardYellow} />,
+                //     title: t('Vedas'),
+                //     navName: 'Vedas',
+                // },
+                // {
+                //     icon: <RadioSVG fill={theme.textColor} />,
+                //     title: t('Radio'),
+                //     navName: RouteTexts.RADIO,
+                // },
+                // {
+                //     icon: <StrotasSVG fill={theme.textColorHomeCardYellow} />,
+                //     title: t('Stotras'),
+                //     navName: 'Stotras',
+                // },
                 {
                     icon: <Temple1Svg fill={theme.textColor} />,
                     title: t('Temples'),
@@ -187,53 +169,102 @@ const CardComponents = ({ navigation }) => {
                     title: t('Calendar'),
                     navName: 'Calender',
                 },
+                // {
+                //     icon: <ShaivaSVG fill={theme.textColorHomeCardYellow} />,
+                //     title: t('Shaiva Siddanta'),
+                //     navName: 'S Siddanta',
+                // },
             ],
         },
         {
-            text: t('More Features'),
-            description: 'Listed to all shiva related audios here',
-            id: 3,
-            gradient: theme.gradientHomeCardYellow,
-            textColor: theme.textColorHomeCardYellow,
-
+            text: t('Shaivam Media'),
+            description: t('Check out shaivam media features'),
+            id: 2,
+            gradient: theme.gradientHomeCardGreen,
+            textColor: theme.textColor,
             subComp: [
-                {
-                    icon: <KalaPujaSVG fill={theme.textColorHomeCardYellow} />,
-                    title: t('Kaala Puja'),
-                    navName: 'Kaala Puja',
-                },
-
+                // {
+                //     icon: <ShaivamTVSVG fill={theme.textColor} />,
+                //     title: t('Shaivam TV'),
+                //     navName: 'Shaivam TV',
+                // },
                 {
                     icon: <HeartSVG fill={theme.textColorHomeCardYellow} />,
                     title: t('Favourites'),
-                    navName: 'Favourites',
+                    navName: RouteTexts.FAVOURITE,
                 },
                 {
-                    icon: <QuizSVG fill={theme.textColorHomeCardYellow} />,
-                    title: t('Quiz'),
-                    navName: 'Quiz',
+                    icon: <RadioSVG fill={theme.textColor} />,
+                    title: t('Radio'),
+                    navName: RouteTexts.RADIO,
                 },
                 {
                     icon: <Logo fill={theme.textColorHomeCardYellow} />,
                     title: 'Shaivam.org',
                     navName: 'Website',
                 },
+                // {
+                //     icon: <Temple1Svg fill={theme.textColor} />,
+                //     title: t('Temples'),
+                //     navName: RouteTexts.TEMPLE_TABS_NAVIGATE,
+                // },
+                // {
+                //     icon: <CalendarSVG fill={theme.textColor} />,
+                //     title: t('Calendar'),
+                //     navName: 'Calender',
+                // },
             ],
         },
+        // {
+        //     text: t('More Features'),
+        //     description: 'Listed to all shiva related audios here',
+        //     id: 3,
+        //     gradient: theme.gradientHomeCardYellow,
+        //     textColor: theme.textColorHomeCardYellow,
+
+        //     subComp: [
+        //         {
+        //             icon: <KalaPujaSVG fill={theme.textColorHomeCardYellow} />,
+        //             title: t('Kaala Puja'),
+        //             navName: 'Kaala Puja',
+        //         },
+
+        //         {
+        //             icon: <HeartSVG fill={theme.textColorHomeCardYellow} />,
+        //             title: t('Favourites'),
+        //             navName: 'Favourites',
+        //         },
+        //         {
+        //             icon: <QuizSVG fill={theme.textColorHomeCardYellow} />,
+        //             title: t('Quiz'),
+        //             navName: 'Quiz',
+        //         },
+        //         // {
+        //         //     icon: <Logo fill={theme.textColorHomeCardYellow} />,
+        //         //     title: 'Shaivam.org',
+        //         //     navName: 'Website',
+        //         // },
+        //         {
+        //             icon: <ShaivaSVG fill={theme.textColorHomeCardYellow} />,
+        //             title: t('Shaiva Siddanta'),
+        //             navName: 'S Siddanta',
+        //         },
+        //     ],
+        // },
     ];
 
     return (
         <View style={{ paddingLeft: 0 }}>
             <View style={{ marginTop: 24, paddingHorizontal: 15 }}>
                 <Header navigation={navigation} />
-                <SearchInput
+                {/* <SearchInput
                     placeholder={t('Search for anything (Eg - தோடுடைய செவியன்) ')}
                     setState={setSearchText}
                     state={searchText}
                     setOnFocus={setOnFocus}
                     extraPad={false}
                     styleOverwrite={{ marginHorizontalUnset: true, paddingTop: 24 }}
-                />
+                /> */}
                 <HeadingText text={t('Shaivam Exclusives')} />
                 <Text
                     style={{

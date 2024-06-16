@@ -62,7 +62,18 @@ const AnimatedRightSideView = ({ children, heading, RightIcon }) => {
                             <TouchableOpacity style={styles.InsiderSettingButton}>
                                 {RightIcon}
                             </TouchableOpacity>
-                            <Text style={styles.headingText}>{heading}</Text>
+                            <Text
+                                style={[
+                                    styles.headingText,
+                                    {
+                                        width: screenWidth * 0.5,
+                                    },
+                                ]}
+                                ellipsizeMode="tail"
+                                numberOfLines={1}
+                            >
+                                {heading}
+                            </Text>
                         </View>
                         <TouchableOpacity style={styles.clearIcon} onPress={toggleStatusBar}>
                             <Icon
@@ -82,7 +93,7 @@ const AnimatedRightSideView = ({ children, heading, RightIcon }) => {
                         styles.openBtnWrapper,
                         {
                             top: screenHeight * 0.2,
-                            width: 'auto',
+                            maxWidth: screenWidth * 0.4,
                         },
                     ]}
                 >

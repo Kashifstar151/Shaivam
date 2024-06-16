@@ -58,8 +58,8 @@ const TempleTab = ({ navigation }) => {
                     {},
                     Platform.OS !== 'ios'
                         ? {
-                              height: 65,
-                          }
+                            height: 65,
+                        }
                         : {},
                 ],
             }}
@@ -172,7 +172,7 @@ const TempleTab = ({ navigation }) => {
                 name="Temples"
                 component={Temples}
             />
-            <Tab.Screen
+            {/* <Tab.Screen
                 options={{
                     headerShown: false,
                     tabBarLabel: '',
@@ -183,13 +183,11 @@ const TempleTab = ({ navigation }) => {
                         <View style={styles.IconStyles}>
                             {focused ? (
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                    {/* <ActiveTeample /> */}
                                     <ActiveTrip />
                                     <Text style={[styles.tabBarLable]}>My Trip</Text>
                                 </View>
                             ) : (
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                    {/* <ActiveTeample /> */}
                                     <InActiveTrip />
 
                                     <Text style={[styles.tabBarLable]}>My Trip</Text>
@@ -203,7 +201,6 @@ const TempleTab = ({ navigation }) => {
                                         style={{
                                             height: 10,
                                             width: '100%',
-                                            // backgroundColor: 'black',
                                         }}
                                     ></View>
                                 )}
@@ -213,7 +210,7 @@ const TempleTab = ({ navigation }) => {
                 }}
                 name={RouteTexts.MY_TRIP}
                 component={MyTrip}
-            />
+            /> */}
             <Tab.Screen
                 options={{
                     headerShown: false,

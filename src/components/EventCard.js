@@ -5,12 +5,13 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import moment from 'moment';
 import { colors } from '../Helpers';
 
-const EventCard = ({ date, timing, title, theme, item, header, day, dateNo }) => {
+const EventCard = ({ date, timing, title, theme, item, header, day, dateNo, Icon }) => {
+    console.log("🚀 ~ EventCard ~ Icon:", JSON.stringify(item?.attributes, 0, 2))
     let d =
         header == 'Festivals'
             ? moment(item?.attributes?.calendar_from_date)
             : moment(item?.attributes?.start_date);
-    let dayname = d.format('ddd');
+    // let dayname = d.format('ddd');
     // let day = d.format('DD');
     // console.log("🚀 ~ EventCard ~ day:", day)
     return (
@@ -54,7 +55,7 @@ const EventCard = ({ date, timing, title, theme, item, header, day, dateNo }) =>
                 </Text> */}
             </View>
             <View style={{ height: 30, borderRightWidth: 1, borderRightColor: '#EAEAEA' }}></View>
-            <OpenBookSVG fill={theme.colorscheme === 'light' ? '#4C3600' : '#fff'} />
+            {Icon ? Icon : <OpenBookSVG fill={theme.colorscheme === 'light' ? '#4C3600' : '#fff'} />}
             <View style={{ rowGap: 5, justifyContent: 'center', rowGap: 4, width: '75%' }}>
                 <Text
                     style={{
@@ -66,15 +67,19 @@ const EventCard = ({ date, timing, title, theme, item, header, day, dateNo }) =>
                 >
                     {title}
                 </Text>
-                <Text
-                    style={{
-                        fontWeight: '600',
-                        color: theme.colorscheme === 'light' ? '#4C3600' : '#fff',
-                        fontSize: RFValue(12, 800),
-                    }}
-                >
-                    {timing}
-                </Text>
+                {
+                    timing == null ? <></> :
+                        <Text
+                            style={{
+                                fontWeight: '600',
+                                color: theme.colorscheme === 'light' ? '#4C3600' : '#fff',
+                                fontSize: RFValue(12, 800),
+                            }}
+                        >
+                            {timing}
+                        </Text>
+                }
+
             </View>
         </View>
     );
@@ -82,7 +87,7 @@ const EventCard = ({ date, timing, title, theme, item, header, day, dateNo }) =>
 
 const styles = StyleSheet.create({
     topContainer: {
-        padding: 18,
+        padding: 15,
         flexDirection: 'row',
         columnGap: 16,
         alignItems: 'center',

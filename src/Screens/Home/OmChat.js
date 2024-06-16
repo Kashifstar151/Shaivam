@@ -11,8 +11,11 @@ import bgImg from '../../../assets/Images/Background.png';
 import PlayBtnSVG from '../../components/SVGs/PlayBtnSVG';
 import { RouteTexts } from '../../navigation/RouteText';
 import { useTranslation } from 'react-i18next';
+import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
+import { styles } from './OmChanting';
 
-const OmChat = ({ navigation, onPress }) => {
+const OmChant = ({ navigation, onPress, isPlaying }) => {
+    console.log('🚀 ~ OmChant ~ isPlaying:', isPlaying);
     const [dimension, setDimension] = useState({
         width: 0,
         height: 0,
@@ -65,7 +68,15 @@ const OmChat = ({ navigation, onPress }) => {
                         </Text>
                     </View>
                     <TouchableOpacity onPress={onPress}>
-                        <PlayBtnSVG fill={'#4C3600'} />
+                        {!isPlaying ? (
+                            <View style={style.iconWrapper}>
+                                <MaterialIcons name="play-arrow" size={20} color={'#000'} />
+                            </View>
+                        ) : (
+                            <View style={style.iconWrapper}>
+                                <MaterialIcons name="square" size={16} color={'#000'} />
+                            </View>
+                        )}
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
@@ -89,6 +100,15 @@ const OmChat = ({ navigation, onPress }) => {
     );
 };
 
-export default OmChat;
+export default OmChant;
 
-const style = StyleSheet.create({});
+const style = StyleSheet.create({
+    iconWrapper: {
+        width: 34,
+        height: 34,
+        borderRadius: 20,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});

@@ -5,11 +5,17 @@ const PlayerContext = createContext();
 export const PlayerProvider = ({ children }) => {
     const [showPlayer, setShowPlayer] = useState(false);
     const [OmPlayTiming, setOmPlayTiming] = useState(0);
-    console.log('🚀 ~ PlayerProvider ~ OmPlayTiming:', OmPlayTiming);
-
+    const [isPlaying, setIsPlaying] = useState(false);
     return (
         <PlayerContext.Provider
-            value={{ showPlayer, setShowPlayer, OmPlayTiming, setOmPlayTiming }}
+            value={{
+                showPlayer,
+                setShowPlayer,
+                OmPlayTiming,
+                setOmPlayTiming,
+                isPlaying,
+                setIsPlaying,
+            }}
         >
             {children}
         </PlayerContext.Provider>

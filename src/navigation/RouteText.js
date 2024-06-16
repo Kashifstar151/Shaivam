@@ -25,5 +25,8 @@ export const RouteTexts = {
     RADIO: 'Radios',
     OM_CHANTING: 'OmChanting',
     WEBSIRE_VIEW: 'WebsiteView',
-    NOTIFICATION: 'Notification'
+    NOTIFICATION: 'Notification',
+    FESTIVAL_VIDEO: 'FestivalVideo',
+    SEND_FESTIVAL_VIDEO: 'SendFestivalVideo',
+    LOADING: 'LoadingScreen'
 }
