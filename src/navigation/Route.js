@@ -46,6 +46,7 @@ import WebsiteView from '../Screens/Calender/WebsiteView';
 import Notification from '../Screens/Notifications/Notification';
 import FestivalVideo from '../Screens/Calender/FestivalVideo';
 import SendFestivalEvent from '../Screens/Calender/SendFestivalEvent';
+import LoadingScreen from '../Screens/Loading/LoadingScreen';
 // import { ThemeContextProvider } from '../Context/ThemeContext';
 
 const Route = () => {
@@ -91,16 +92,6 @@ const Route = () => {
                         localDBMetaData?.Version &&
                         response?.data?.[0]?.attributes.Version !== localDBMetaData?.Version
                     ) {
-                        /*
-                           *? response?.data?.[0]?.attributes ==> is our metaData whihc will contain  data like 
-                           {
-                                "DumpName": "thirumuraiSongs", 
-                                "FilePath": "https://shaivamfiles.fra1.cdn.digitaloceanspaces.com/sqlitedump/thirumuraiSongs_12.zip", 
-                                "Version": "12", 
-                                "createdAt": "2024-04-09T10:17:27.323Z", 
-                                "publishedAt": "2024-04-09T10:17:28.545Z", 
-                                "updatedAt": "2024-04-29T07:08:10.139Z"}
-                        */
                         Alert.alert('New Update Available', 'Click ok to sync latest data', [
                             {
                                 text: 'Cancel',
@@ -112,7 +103,7 @@ const Route = () => {
                             },
                         ]);
                     } else {
-                        console.log('fsjdh')
+                        // console.log('fsjdh')
                         let data = await AsyncStorage.getItem('@database')
                         data = JSON.parse(data)
                         console.log("🚀 ~ .then ~ data:", data)
@@ -201,25 +192,25 @@ const Route = () => {
         }
     }
 
-    const downloadDB = async (metaData) => {
-        setShowDownloading(true)
-        await requestFilePermissions();
-        const promise = await attachDb(metaData);
-        setShowDownloading(false);
-        promise
-            .then((res) => {
-                console.log('res', res);
-                setShowDownloading(false);
-                // setting the metaData once the update is done
-                AsyncStorage.setItem('DB_METADATA', JSON.stringify(metaData));
-                AsyncStorage.setItem('@database', JSON.stringify({ name: 'main.db' }));
-            })
-            .catch((error) => {
-                console.log('error', error);
-                setShowDownloading(false);
-                AsyncStorage.setItem('@database', JSON.stringify({ name: 'main.db' }));
-            });
-    };
+    // const downloadDB = async (metaData) => {
+    //     setShowDownloading(true)
+    //     await requestFilePermissions();
+    //     const promise = await attachDb(metaData);
+    //     setShowDownloading(false);
+    //     promise
+    //         .then((res) => {
+    //             console.log('res', res);
+    //             setShowDownloading(false);
+    //             // setting the metaData once the update is done
+    //             AsyncStorage.setItem('DB_METADATA', JSON.stringify(metaData));
+    //             AsyncStorage.setItem('@database', JSON.stringify({ name: 'main.db' }));
+    //         })
+    //         .catch((error) => {
+    //             console.log('error', error);
+    //             setShowDownloading(false);
+    //             AsyncStorage.setItem('@database', JSON.stringify({ name: 'main.db' }));
+    //         });
+    // };
 
     const checkFileExist = async (metaData) => {
         let path =
@@ -299,13 +290,12 @@ const Route = () => {
                     />
                 </View>
             ) : (
-                <NavigationContainer ref={(ref) => NavigationServices.setTopLevelNavigator(ref)}>
+                <NavigationContainer ref={ref => NavigationServices.setTopLevelNavigator(ref)}>
                     <Stack.Navigator
                         initialRouteName={RouteTexts.ONBOARDING_SCREEN}
                         screenOptions={{
                             headerShown: false,
-                        }}
-                    >
+                        }}>
                         <Stack.Screen name={RouteTexts.BOTTOM_TABS} component={BottomTa} />
                         <Stack.Screen name={RouteTexts.TEMPLE_Tabs} component={TempleTabs} />
                         <Stack.Screen name="Home" component={HomeScreen} />
@@ -314,6 +304,7 @@ const Route = () => {
                         <Stack.Screen name={RouteTexts.ONBOARDING_SCREEN} component={Onboarding} />
                         <Stack.Screen name={RouteTexts.WEBSIRE_VIEW} component={WebsiteView} />
                         <Stack.Screen name={RouteTexts.NOTIFICATION} component={Notification} />
+                        <Stack.Screen name={RouteTexts.LOADING} component={LoadingScreen} />
                         <Stack.Screen
                             name={RouteTexts.VIRTUAL_EVENT_CREATE}
                             component={CreateVirtualEvent}

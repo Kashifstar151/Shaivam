@@ -118,10 +118,12 @@ const LocationSelection = ({ calender, setSelected, close, selectedLocation }) =
         close?.current?.close();
     };
     const setRecentSearches = () => {
-        const keys = recentKeyword ? recentKeyword : []
-        const s = keys?.filter((keys) => keys !== searchText)
-        const updated = [...s, searchedText].slice(0, 6)
-        AsyncStorage.setItem("recentLocationSearch", JSON.stringify(updated))
+        if (searchedText !== null && searchedText !== '') {
+            const keys = recentKeyword ? recentKeyword : []
+            const s = keys?.filter((keys) => keys !== searchedText)
+            const updated = [...s, searchedText].slice(0, 6)
+            AsyncStorage.setItem("recentLocationSearch", JSON.stringify(updated))
+        }
     }
     const getSearchedTexxs = async () => {
         const data = await AsyncStorage.getItem('recentLocationSearch')

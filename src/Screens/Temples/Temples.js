@@ -46,6 +46,7 @@ import {
 } from '../../store/features/Temple/TemplApiSlice';
 import { useTranslation } from 'react-i18next';
 import RefreshSVG from '../../components/SVGs/RefreshSVG.js';
+import LoadingScreen from '../Loading/LoadingScreen';
 
 // setting the delta
 
@@ -271,59 +272,75 @@ export const Temples = ({ navigation, route }) => {
 
     return (
         <>
-            <View
-                style={{ flex: 1, position: 'relative', marginTop: Platform.OS == 'ios' ? 15 : 0 }}
-            >
-                {/* {userLocation?.latitude ? ( */}
-                <MapView
-                    onMapReady={() =>
-                        setTimeout(() => {
-                            console.log('setting the pad');
-                            setPadState(!padState);
-                        }, 5000)
-                    }
-                    provider={PROVIDER_GOOGLE}
-                    style={styles.map}
-                    onRegionChangeComplete={(args, gesture) => {
-                        if (gesture.isGesture) {
-                            onRegionChangeCompleteCallback(args, (input) => {
-                                console.log('the gesture is true');
-                                mapRef.current?.animateCamera({ center: input }, { duration: 500 });
-                                setRegionCoordinate(() => input);
-                            });
-                        }
+            {isLoading ? (
+                <LoadingScreen />
+            ) : (
+                <View
+                    style={{
+                        flex: 1,
+                        position: 'relative',
+                        marginTop: Platform.OS == 'ios' ? 15 : 0,
                     }}
-                    // region={regionCoordinate}
-                    // zoomEnabled
-                    zoomEnabled={mapInteractivityState}
-                    scrollEnabled={mapInteractivityState}
-                    ref={mapRef}
                 >
-                    {permissionGranted === RESULTS.GRANTED && (
-                        <View>
-                            {userLocation?.latitude && userLocation?.longitude && (
-                                <MarkerCallOut
-                                    setPadState={setPadState}
-                                    flag={8}
-                                    coordinate={userLocation}
-                                    keyName={'USER_LOCATION_MARKER'}
-                                    description={"User's location"}
-                                />
-                            )}
-                            {/* <MarkerCallOut
+                    {/* {userLocation?.latitude ? ( */}
+                    <MapView
+                        onMapReady={() =>
+                            setTimeout(() => {
+                                console.log('setting the pad');
+                                setPadState(!padState);
+                            }, 5000)
+                        }
+                        provider={PROVIDER_GOOGLE}
+                        initialRegion={{
+                            longitude: 77.40369287235171,
+                            latitude: 28.49488467262243,
+                            latitudeDelta: LATITUDE_DELTA,
+                            longitudeDelta: LONGITUDE_DELTA,
+                        }}
+                        style={styles.map}
+                        onRegionChangeComplete={(args, gesture) => {
+                            if (gesture.isGesture) {
+                                onRegionChangeCompleteCallback(args, (input) => {
+                                    console.log('the gesture is true');
+                                    mapRef.current?.animateCamera(
+                                        { center: input },
+                                        { duration: 500 }
+                                    );
+                                    setRegionCoordinate(() => input);
+                                });
+                            }
+                        }}
+                        // region={regionCoordinate}
+                        // zoomEnabled
+                        zoomEnabled={mapInteractivityState}
+                        scrollEnabled={mapInteractivityState}
+                        ref={mapRef}
+                    >
+                        {permissionGranted === RESULTS.GRANTED && (
+                            <View>
+                                {userLocation?.latitude && userLocation?.longitude && (
+                                    <MarkerCallOut
+                                        setPadState={setPadState}
+                                        flag={8}
+                                        coordinate={userLocation}
+                                        keyName={'USER_LOCATION_MARKER'}
+                                        description={"User's location"}
+                                    />
+                                )}
+                                {/* <MarkerCallOut
                                     setPadState={setPadState}
                                     flag={7}
                                     coordinate={regionCoordinate}
                                     keyName={'COORDINATE'}
                                     description={"Region's location"}
                                 /> */}
-                        </View>
-                    )}
-                    {data?.temples?.map((item, index) => (
-                        <>
-                            {item?.latitude && item?.longitude && (
-                                <>
-                                    {/* <Marker
+                            </View>
+                        )}
+                        {data?.temples?.map((item, index) => (
+                            <>
+                                {item?.latitude && item?.longitude && (
+                                    <>
+                                        {/* <Marker
                                         tracksViewChanges={false}
                                         coordinate={{
                                             longitude: item?.longitude,
@@ -336,253 +353,254 @@ export const Temples = ({ navigation, route }) => {
                                             alignItems: 'center',
                                         }}
                                     ></Marker> */}
-                                    <MarkerCallOut
-                                        setPadState={setPadState}
-                                        callback={() => {
-                                            //   setting the type of the marker you pressed
-                                            //   callback function for naving to page which has the temple details
-                                            markerPressClbk(
-                                                navigation,
-                                                item?.flag,
-                                                item,
-                                                userLocation
-                                            );
-                                        }}
-                                        flag={item?.flag}
-                                        templeId={item?.id}
-                                        coordinate={{
-                                            longitude: item?.longitude,
-                                            latitude: item?.latitude,
-                                        }}
-                                        keyName={'COORDINATE'}
-                                        description={item?.name}
-                                    />
-                                </>
-                            )}
-                        </>
-                    ))}
-                </MapView>
-                {/* ) : null} */}
+                                        <MarkerCallOut
+                                            setPadState={setPadState}
+                                            callback={() => {
+                                                //   setting the type of the marker you pressed
+                                                //   callback function for naving to page which has the temple details
+                                                markerPressClbk(
+                                                    navigation,
+                                                    item?.flag,
+                                                    item,
+                                                    userLocation
+                                                );
+                                            }}
+                                            flag={item?.flag}
+                                            templeId={item?.id}
+                                            coordinate={{
+                                                longitude: item?.longitude,
+                                                latitude: item?.latitude,
+                                            }}
+                                            keyName={'COORDINATE'}
+                                            description={item?.name}
+                                        />
+                                    </>
+                                )}
+                            </>
+                        ))}
+                    </MapView>
+                    {/* ) : null} */}
 
-                <Pressable
-                    style={[
-                        styles.floatingBtn,
-                        {
-                            bottom: Dimensions.get('window').height * 0.275,
-                        },
-                    ]}
-                    onPress={() => {
-                        // setSkip(() => false);
-                        getNearByTemples(regionCoordinate);
-                    }}
-                    disabled={isFetching}
-                >
-                    {/* bring user's location into view */}
-                    <RefreshSVG
-                        width={28}
-                        height={28}
-                        viewBox="0 0 24 24"
-                        fill={!isFetching ? '#777' : '#bababa'}
-                    />
-                </Pressable>
+                    <Pressable
+                        style={[
+                            styles.floatingBtn,
+                            {
+                                bottom: Dimensions.get('window').height * 0.275,
+                            },
+                        ]}
+                        onPress={() => {
+                            // setSkip(() => false);
+                            getNearByTemples(regionCoordinate);
+                        }}
+                        disabled={isFetching}
+                    >
+                        {/* bring user's location into view */}
+                        <RefreshSVG
+                            width={28}
+                            height={28}
+                            viewBox="0 0 24 24"
+                            fill={!isFetching ? '#777' : '#bababa'}
+                        />
+                    </Pressable>
 
-                {/* floating side btn */}
-                <Pressable
-                    style={[
-                        styles.floatingBtn,
-                        {
-                            bottom: Dimensions.get('window').height * 0.2,
-                        },
-                    ]}
-                    onPress={handleTrackBack}
-                >
-                    {/* bring user's location into view */}
-                    <TrackBackToLocSVG fill={'#777'} />
-                </Pressable>
+                    {/* floating side btn */}
+                    <Pressable
+                        style={[
+                            styles.floatingBtn,
+                            {
+                                bottom: Dimensions.get('window').height * 0.2,
+                            },
+                        ]}
+                        onPress={handleTrackBack}
+                    >
+                        {/* bring user's location into view */}
+                        <TrackBackToLocSVG fill={'#777'} />
+                    </Pressable>
 
-                {/* for test purpose  */}
-                {/* <View style={{ position: 'absolute', backgroundColor: 'red', top: 10 }}>
+                    {/* for test purpose  */}
+                    {/* <View style={{ position: 'absolute', backgroundColor: 'red', top: 10 }}>
                 <Text>{JSON.stringify(userLocation)}</Text>
             </View> */}
 
-                <AnimatedRightSideView heading={t('Map Legend')} RightIcon={<MapIconSVG />}>
-                    <InnerContextOfAnimatedSideBox
-                        navigation={navigation}
-                        regionCoordinate={regionCoordinate}
-                        userLocation={userLocation}
-                    />
-                </AnimatedRightSideView>
-
-                <View style={styles.topBarWrapper}>
-                    <View style={styles.colorContWrapper}>
-                        {Object.entries(assetMapWithTempleType)
-                            .reverse()
-                            .map(([key, value], indx) =>
-                                !(key == 8 || key == 9) ? (
-                                    <Pressable
-                                        style={styles.contWrapper}
-                                        onPress={() => {
-                                            // adding callback on the category btn press and navigating to the filter page
-                                            if (permissionGranted === RESULTS.GRANTED) {
-                                                categoryBtnClbk(
-                                                    navigation,
-                                                    key,
-                                                    regionCoordinate,
-                                                    userLocation
-                                                );
-                                            } else {
-                                                setShowModal(!showModal);
-                                            }
-                                        }}
-                                        key={indx}
-                                    >
-                                        <View
-                                            style={[
-                                                styles.textContWrapper,
-                                                {
-                                                    backgroundColor: value.metaData.color,
-                                                },
-                                            ]}
-                                        >
-                                            {value.metaData.letterAssociated && (
-                                                <Text style={styles.textStyleForCont}>
-                                                    {value.metaData.letterAssociated}
-                                                </Text>
-                                            )}
-                                        </View>
-                                    </Pressable>
-                                ) : null
-                            )}
-                    </View>
-
-                    <SearchContainerWithIcon>
-                        <SearchTemple
-                            route={route.name}
-                            value={null}
-                            isNavigable={false}
-                            isDisable={false}
-                            isAutoComplete={true}
-                            setRegionCoordinate={(val) => setSearchParams(val)}
-                            setMapInteractivityState={setMapInteractivityState}
+                    <AnimatedRightSideView heading={t('Map Legend')} RightIcon={<MapIconSVG />}>
+                        <InnerContextOfAnimatedSideBox
+                            navigation={navigation}
+                            regionCoordinate={regionCoordinate}
+                            userLocation={userLocation}
                         />
-                    </SearchContainerWithIcon>
-                </View>
+                    </AnimatedRightSideView>
 
-                {permissionGranted === 'granted' ? (
-                    <BottomSheet
-                        ref={bottomSheetRef}
-                        onChange={handleSheetChanges}
-                        snapPoints={['15%', '95%']}
-                        backdropComponent={(props) => (
-                            <BottomSheetBackdrop
-                                opacity={1}
-                                appearsOnIndex={1}
-                                disappearsOnIndex={0}
-                                pressBehavior={'collapse'}
-                                {...props}
-                            >
-                                {/* <View style={{ backgroundColor: 'red', flex: 1 }}></View> */}
-                                <ImageBackground
-                                    source={
-                                        theme.colorscheme === 'light'
-                                            ? require('../../../assets/Images/Background.png')
-                                            : require('../../../assets/Images/BackgroundCommon.png')
-                                    }
-                                    style={{
-                                        paddingVertical: 0,
-                                        borderRadius: 10,
-                                        width: '100%',
-                                        height: '40%',
-                                    }}
-                                ></ImageBackground>
-                            </BottomSheetBackdrop>
-                        )}
-                    >
-                        {userLocName?.showName ? (
-                            <NearByTemples
-                                userLocation={userLocation}
-                                route={route}
-                                setRegionCoordinate={(val) => setSearchParams(val)}
-                                locationName={userLocName?.name}
-                                data={data?.temples}
-                                snapIndex={snapIndex}
-                                navigation={navigation}
-                                close={() => bottomSheetRef.current.snapToIndex(0)}
-                            />
-                        ) : (
-                            <ActivityIndicator />
-                        )}
-                    </BottomSheet>
-                ) : null}
-
-                <Modal visible={showModal} animationType="fade" transparent>
-                    <BlurView
-                        blurType="dark"
-                        blurAmount={1}
-                        blurRadius={10}
-                        style={styles.contentWrap}
-                    ></BlurView>
-                    <View
-                        style={{
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            flex: 1,
-                        }}
-                    >
-                        <View
-                            style={[
-                                {
-                                    backgroundColor: '#FFFFFF',
-                                    overflow: 'hidden',
-                                    borderRadius: 10,
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    padding: 20,
-                                    width: screenWidth * 0.85,
-                                    height: screenHeight * 0.3,
-                                },
-                            ]}
-                        >
-                            <AlertmapSVG />
-                            <Text
-                                style={{
-                                    color: 'black',
-                                    fontFamily: 'Mulish-Bold',
-                                    fontSize: 18,
-                                }}
-                            >
-                                Uh oh, We can't locate you!
-                            </Text>
-                            <Text
-                                style={{
-                                    color: '#777777',
-                                    textAlign: 'center',
-                                    fontFamily: 'Mulish-Regular',
-                                    fontSize: 14,
-                                    lineHeight: 18,
-                                }}
-                            >
-                                Your location services need to be turned on for Shaivam Temples to
-                                work
-                            </Text>
-                            <CustomLongBtn
-                                // onPress={handleModalAction}
-                                text={'Enable location access'}
-                                textStyle={{
-                                    color: '#4C3600',
-                                    fontFamily: 'Mulish-Bold',
-                                    paddingHorizontal: 15,
-                                }}
-                                containerStyle={{
-                                    backgroundColor: '#FCB300',
-                                    alignSelf: 'center',
-                                    marginBottom: 5,
-                                }}
-                            />
+                    <View style={styles.topBarWrapper}>
+                        <View style={styles.colorContWrapper}>
+                            {Object.entries(assetMapWithTempleType)
+                                .reverse()
+                                .map(([key, value], indx) =>
+                                    !(key == 8 || key == 9) ? (
+                                        <Pressable
+                                            style={styles.contWrapper}
+                                            onPress={() => {
+                                                // adding callback on the category btn press and navigating to the filter page
+                                                if (permissionGranted === RESULTS.GRANTED) {
+                                                    categoryBtnClbk(
+                                                        navigation,
+                                                        key,
+                                                        regionCoordinate,
+                                                        userLocation
+                                                    );
+                                                } else {
+                                                    setShowModal(!showModal);
+                                                }
+                                            }}
+                                            key={indx}
+                                        >
+                                            <View
+                                                style={[
+                                                    styles.textContWrapper,
+                                                    {
+                                                        backgroundColor: value.metaData.color,
+                                                    },
+                                                ]}
+                                            >
+                                                {value.metaData.letterAssociated && (
+                                                    <Text style={styles.textStyleForCont}>
+                                                        {value.metaData.letterAssociated}
+                                                    </Text>
+                                                )}
+                                            </View>
+                                        </Pressable>
+                                    ) : null
+                                )}
                         </View>
+
+                        <SearchContainerWithIcon>
+                            <SearchTemple
+                                route={route.name}
+                                value={null}
+                                isNavigable={false}
+                                isDisable={false}
+                                isAutoComplete={true}
+                                setRegionCoordinate={(val) => setSearchParams(val)}
+                                setMapInteractivityState={setMapInteractivityState}
+                            />
+                        </SearchContainerWithIcon>
                     </View>
-                </Modal>
-            </View>
+
+                    {permissionGranted === 'granted' ? (
+                        <BottomSheet
+                            ref={bottomSheetRef}
+                            onChange={handleSheetChanges}
+                            snapPoints={['15%', '95%']}
+                            backdropComponent={(props) => (
+                                <BottomSheetBackdrop
+                                    opacity={1}
+                                    appearsOnIndex={1}
+                                    disappearsOnIndex={0}
+                                    pressBehavior={'collapse'}
+                                    {...props}
+                                >
+                                    {/* <View style={{ backgroundColor: 'red', flex: 1 }}></View> */}
+                                    <ImageBackground
+                                        source={
+                                            theme.colorscheme === 'light'
+                                                ? require('../../../assets/Images/Background.png')
+                                                : require('../../../assets/Images/BackgroundCommon.png')
+                                        }
+                                        style={{
+                                            paddingVertical: 0,
+                                            borderRadius: 10,
+                                            width: '100%',
+                                            height: '40%',
+                                        }}
+                                    ></ImageBackground>
+                                </BottomSheetBackdrop>
+                            )}
+                        >
+                            {userLocName?.showName ? (
+                                <NearByTemples
+                                    userLocation={userLocation}
+                                    route={route}
+                                    setRegionCoordinate={(val) => setSearchParams(val)}
+                                    locationName={userLocName?.name}
+                                    data={data?.temples}
+                                    snapIndex={snapIndex}
+                                    navigation={navigation}
+                                    close={() => bottomSheetRef.current.snapToIndex(0)}
+                                />
+                            ) : (
+                                <ActivityIndicator />
+                            )}
+                        </BottomSheet>
+                    ) : null}
+
+                    <Modal visible={showModal} animationType="fade" transparent>
+                        <BlurView
+                            blurType="dark"
+                            blurAmount={1}
+                            blurRadius={10}
+                            style={styles.contentWrap}
+                        ></BlurView>
+                        <View
+                            style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                flex: 1,
+                            }}
+                        >
+                            <View
+                                style={[
+                                    {
+                                        backgroundColor: '#FFFFFF',
+                                        overflow: 'hidden',
+                                        borderRadius: 10,
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        padding: 20,
+                                        width: screenWidth * 0.85,
+                                        height: screenHeight * 0.3,
+                                    },
+                                ]}
+                            >
+                                <AlertmapSVG />
+                                <Text
+                                    style={{
+                                        color: 'black',
+                                        fontFamily: 'Mulish-Bold',
+                                        fontSize: 18,
+                                    }}
+                                >
+                                    Uh oh, We can't locate you!
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: '#777777',
+                                        textAlign: 'center',
+                                        fontFamily: 'Mulish-Regular',
+                                        fontSize: 14,
+                                        lineHeight: 18,
+                                    }}
+                                >
+                                    Your location services need to be turned on for Shaivam Temples
+                                    to work
+                                </Text>
+                                <CustomLongBtn
+                                    // onPress={handleModalAction}
+                                    text={'Enable location access'}
+                                    textStyle={{
+                                        color: '#4C3600',
+                                        fontFamily: 'Mulish-Bold',
+                                        paddingHorizontal: 15,
+                                    }}
+                                    containerStyle={{
+                                        backgroundColor: '#FCB300',
+                                        alignSelf: 'center',
+                                        marginBottom: 5,
+                                    }}
+                                />
+                            </View>
+                        </View>
+                    </Modal>
+                </View>
+            )}
         </>
     );
 };

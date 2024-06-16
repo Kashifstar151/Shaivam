@@ -71,3 +71,5 @@ buck-out/
 /vendor/bundle/
 .git_backup/*
 git_backup/*
+# Sentry Config File
+sentry.properties

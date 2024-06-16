@@ -11,7 +11,7 @@ import {
     FlatList,
     Platform,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/dist/MaterialIcons';
+// import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import CardComponents from '../../components/CardComponents';
 import '../../../localization';
 import { ThemeContext } from '../../Context/ThemeContext';
@@ -21,20 +21,20 @@ import ElevatedCard from '../../components/ElevatedCard';
 import EventCard from '../../components/EventCard';
 import OmChant from './OmChat';
 import HeadingAndView from './HeadingAndView';
-import PlaceCard from './PlaceCard';
+// import PlaceCard from './PlaceCard';
 import { RFValue } from 'react-native-responsive-fontsize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { listfavAudios, MostPlayedList } from '../../Databases/AudioPlayerDatabase';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
-import Quiz from './Quiz';
-import VideosList from './VideosList';
+// import Quiz from './Quiz';
+// import VideosList from './VideosList';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import OmChanting from './OmChanting';
 import { colors } from '../../Helpers';
 import ListAudios from '../Thrimurai/ThrimuraiList/ListAudios';
 import { usePlayer } from '../../Context/PlayerContext';
 import { useTranslation } from 'react-i18next';
-import { useGetFestivalListQuery, useGetUpcomingFestivalQuery } from '../../store/features/Calender/CalenderApiSlice';
+import { useGetUpcomingFestivalQuery } from '../../store/features/Calender/CalenderApiSlice';
 import moment from 'moment';
 import {
     checkPermissionAccess,
@@ -198,23 +198,23 @@ const HomeScreen = ({ navigation }) => {
         }
     };
 
-    const nearByTempleData = [
-        {
-            img: 'https://s3-alpha-sig.figma.com/img/6700/69a2/03a54c10e1ad2d1887bbcff155403f1b?Expires=1705881600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=PkT20h7qdc~YIQF~kGaGxb5qLWbWMoNT8MiSQGsZSIoaUduQhJ0yvVXL1udbmoV8cZLi-SlUnHH5AbOpoTnnQhYifWVAynjIZ~Jd8nYrdr3eXY9cwTGaqI2SL3iaff5ffwML2Vgyjqyeg8GQFc~TVs26g8s1R41X-sFWgbyp-J7YaAK6SlvFs3m6lwGKnIe8BFr1qsjom6qDOp8o~y6JgYInVyUpYtemjMMXGUrQgD0BJOrCKaKfG2t-jsW-VTrlrKHrKRe7arx-wVkde531J~IjCjednhvbsCV3e7ZL3Y4u9D7p1MEvkJe5WSxS7sarKFjY2S-qrgRPAvhmAxHfNA__',
-            templeName: 'Brahmalingeshwara',
-            address: 'Kanakapura road, Banglore',
-        },
-        {
-            img: 'https://s3-alpha-sig.figma.com/img/271a/e6ac/4dafe0139a026f994bc4f9e2718768cf?Expires=1705881600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=YyIAVCbH6bvqM4W1z8nwzvYtllzoNjN0GCuB0scpWZBQXXR8miDFBtfA2j43~yxLa5S3dP9qSNcsowbRGQiHnJhbEum2SHffUrCGXCQQdGZ7mcOAOSM8WiX1t-VmNKqGTVuYqFCf-eI1Gg2xZJEyrrsxD8bT24kQJa4dgaGJoWav8M4L5TUXq57wbJ2UNA9p9-tvkvBQyGOyyN-iv1pkGsDgEto69UB-uuQI2P2rnNhrpUx020TKc34WRUAf9lTmpL29iuodm2uioh2euQLDQff5dpd0S3WBMAzR2kE6bkSS~-V1AY2Z8D8dwHX1Mkd2l0Kf9VoPSUgYTpcx0HmOGA__',
-            templeName: 'Mahadeshwara',
-            address: 'Kanakapura road, Banglore',
-        },
-        {
-            img: 'https://s3-alpha-sig.figma.com/img/6700/69a2/03a54c10e1ad2d1887bbcff155403f1b?Expires=1705881600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=PkT20h7qdc~YIQF~kGaGxb5qLWbWMoNT8MiSQGsZSIoaUduQhJ0yvVXL1udbmoV8cZLi-SlUnHH5AbOpoTnnQhYifWVAynjIZ~Jd8nYrdr3eXY9cwTGaqI2SL3iaff5ffwML2Vgyjqyeg8GQFc~TVs26g8s1R41X-sFWgbyp-J7YaAK6SlvFs3m6lwGKnIe8BFr1qsjom6qDOp8o~y6JgYInVyUpYtemjMMXGUrQgD0BJOrCKaKfG2t-jsW-VTrlrKHrKRe7arx-wVkde531J~IjCjednhvbsCV3e7ZL3Y4u9D7p1MEvkJe5WSxS7sarKFjY2S-qrgRPAvhmAxHfNA__',
-            templeName: 'Brahmalingeshwara',
-            address: 'Kanakapura road, Banglore',
-        },
-    ];
+    // const nearByTempleData = [
+    //     {
+    //         img: 'https://s3-alpha-sig.figma.com/img/6700/69a2/03a54c10e1ad2d1887bbcff155403f1b?Expires=1705881600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=PkT20h7qdc~YIQF~kGaGxb5qLWbWMoNT8MiSQGsZSIoaUduQhJ0yvVXL1udbmoV8cZLi-SlUnHH5AbOpoTnnQhYifWVAynjIZ~Jd8nYrdr3eXY9cwTGaqI2SL3iaff5ffwML2Vgyjqyeg8GQFc~TVs26g8s1R41X-sFWgbyp-J7YaAK6SlvFs3m6lwGKnIe8BFr1qsjom6qDOp8o~y6JgYInVyUpYtemjMMXGUrQgD0BJOrCKaKfG2t-jsW-VTrlrKHrKRe7arx-wVkde531J~IjCjednhvbsCV3e7ZL3Y4u9D7p1MEvkJe5WSxS7sarKFjY2S-qrgRPAvhmAxHfNA__',
+    //         templeName: 'Brahmalingeshwara',
+    //         address: 'Kanakapura road, Banglore',
+    //     },
+    //     {
+    //         img: 'https://s3-alpha-sig.figma.com/img/271a/e6ac/4dafe0139a026f994bc4f9e2718768cf?Expires=1705881600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=YyIAVCbH6bvqM4W1z8nwzvYtllzoNjN0GCuB0scpWZBQXXR8miDFBtfA2j43~yxLa5S3dP9qSNcsowbRGQiHnJhbEum2SHffUrCGXCQQdGZ7mcOAOSM8WiX1t-VmNKqGTVuYqFCf-eI1Gg2xZJEyrrsxD8bT24kQJa4dgaGJoWav8M4L5TUXq57wbJ2UNA9p9-tvkvBQyGOyyN-iv1pkGsDgEto69UB-uuQI2P2rnNhrpUx020TKc34WRUAf9lTmpL29iuodm2uioh2euQLDQff5dpd0S3WBMAzR2kE6bkSS~-V1AY2Z8D8dwHX1Mkd2l0Kf9VoPSUgYTpcx0HmOGA__',
+    //         templeName: 'Mahadeshwara',
+    //         address: 'Kanakapura road, Banglore',
+    //     },
+    //     {
+    //         img: 'https://s3-alpha-sig.figma.com/img/6700/69a2/03a54c10e1ad2d1887bbcff155403f1b?Expires=1705881600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=PkT20h7qdc~YIQF~kGaGxb5qLWbWMoNT8MiSQGsZSIoaUduQhJ0yvVXL1udbmoV8cZLi-SlUnHH5AbOpoTnnQhYifWVAynjIZ~Jd8nYrdr3eXY9cwTGaqI2SL3iaff5ffwML2Vgyjqyeg8GQFc~TVs26g8s1R41X-sFWgbyp-J7YaAK6SlvFs3m6lwGKnIe8BFr1qsjom6qDOp8o~y6JgYInVyUpYtemjMMXGUrQgD0BJOrCKaKfG2t-jsW-VTrlrKHrKRe7arx-wVkde531J~IjCjednhvbsCV3e7ZL3Y4u9D7p1MEvkJe5WSxS7sarKFjY2S-qrgRPAvhmAxHfNA__',
+    //         templeName: 'Brahmalingeshwara',
+    //         address: 'Kanakapura road, Banglore',
+    //     },
+    // ];
     // const { t } = useTranslation();
     const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
     const [screenHeight, setScreenheight] = useState(Dimensions.get('window').height);

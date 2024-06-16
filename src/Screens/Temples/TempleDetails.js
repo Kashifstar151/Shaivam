@@ -64,6 +64,7 @@ const TempleDetails = ({ navigation }) => {
     const LONGITUDE_DELTA = LATITUDE_DELTA * (screenWidth / screenHeight);
 
     const embedNonClickableHTML = (innerFractionOfHTML) => {
+
         return `<!DOCTYPE html>
         <html lang="en">
         <head>
@@ -82,12 +83,21 @@ const TempleDetails = ({ navigation }) => {
             document.addEventListener('click', function(event) {
               if (event.target.tagName === 'A') {
                 event.preventDefault();
+                var href = event.target.href;
+
+                // Check if href starts with 'http:'
+                if (href.startsWith('http:') || href.startsWith('Http:')) {
+                  // Open the URL as is
+                  window.open(href, '_blank');
+                } else {
+                  // Append the base URL if it does not start with 'http:'
+                  window.open('http://shaivam.org' + href, '_blank');
+                }
+              
               }
             }); // this is to disable the click on links
             
             document.addEventListener('contextmenu', function(event) { event.preventDefault(); }); // this is to disable the click on links
-
-
             // document.addEventListener('touchstart', function(event) {
             //       const target = event.target;
             //       const timeout = setTimeout(() => {
@@ -109,7 +119,6 @@ const TempleDetails = ({ navigation }) => {
             //       target.addEventListener('touchend', () => clearTimeout(timeout), { once: true });
             //       target.addEventListener('touchcancel', () => clearTimeout(timeout), { once: true });
             //     }
-
           </script>
         </body>
         </html>`;
@@ -171,15 +180,15 @@ const TempleDetails = ({ navigation }) => {
                     regionCoordinate={
                         !external
                             ? {
-                                  ...temple?.templeCoordinate,
-                                  latitudeDelta: LATITUDE_DELTA,
-                                  longitudeDelta: LONGITUDE_DELTA,
-                              }
+                                ...temple?.templeCoordinate,
+                                latitudeDelta: LATITUDE_DELTA,
+                                longitudeDelta: LONGITUDE_DELTA,
+                            }
                             : {
-                                  ...templeDetail?.templeCoordinate,
-                                  latitudeDelta: LATITUDE_DELTA,
-                                  longitudeDelta: LONGITUDE_DELTA,
-                              }
+                                ...templeDetail?.templeCoordinate,
+                                latitudeDelta: LATITUDE_DELTA,
+                                longitudeDelta: LONGITUDE_DELTA,
+                            }
                     }
                     userLocation={{
                         ...route?.params?.data?.userLocation,
@@ -416,53 +425,55 @@ const TempleDetails = ({ navigation }) => {
                                     templeDetail?.basicDetails ||
                                     templeDetail?.temple_images?.length
                                 ) && (
-                                    <View
-                                        style={{
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            paddingVertical: 40,
-                                            gap: 10,
-                                        }}
-                                    >
-                                        <Image
-                                            source={require('../../../assets/Images/no-data.png')}
+                                        <View
                                             style={{
-                                                width: 100,
-                                                height: 100,
-                                            }}
-                                        />
-                                        <Text
-                                            style={{
-                                                color: '#000',
-                                                textAlign: 'center',
-
-                                                fontFamily: 'Mulish-Bold',
-                                                fontSize: RFValue(16, 850),
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                paddingVertical: 40,
+                                                gap: 10,
                                             }}
                                         >
-                                            Temple data is not Available
-                                        </Text>
-                                    </View>
-                                )}
-                            </View>
-                        </ScrollView>
+                                            <Image
+                                                source={require('../../../assets/Images/no-data.png')}
+                                                style={{
+                                                    width: 100,
+                                                    height: 100,
+                                                }}
+                                            />
+                                            <Text
+                                                style={{
+                                                    color: '#000',
+                                                    textAlign: 'center',
+
+                                                    fontFamily: 'Mulish-Bold',
+                                                    fontSize: RFValue(16, 850),
+                                                }}
+                                            >
+                                                Temple data is not Available
+                                            </Text >
+                                        </View >
+                                    )}
+                            </View >
+                        </ScrollView >
 
                         {/* <Toast /> */}
-                        {fav && animateToast ? (
-                            <AnimatedToast
-                                state={animateToast && fav}
-                                type={'SUCCESS'}
-                                text={'Saved in My Trips > Saved Temples'}
-                            />
-                        ) : (
-                            <AnimatedToast
-                                state={animateToast && fav}
-                                type={'ERROR'}
-                                text={'Temple removed from saved'}
-                            />
-                        )}
-                    </View>
-                </BottomSheetTempleTemplate>
+                        {
+                            fav && animateToast ? (
+                                <AnimatedToast
+                                    state={animateToast && fav}
+                                    type={'SUCCESS'}
+                                    text={'Saved in My Trips > Saved Temples'}
+                                />
+                            ) : (
+                                <AnimatedToast
+                                    state={animateToast && fav}
+                                    type={'ERROR'}
+                                    text={'Temple removed from saved'}
+                                />
+                            )
+                        }
+                    </View >
+                </BottomSheetTempleTemplate >
             }
         </>
     );

@@ -31,23 +31,20 @@ const SendFestivalEvent = ({ navigation, route }) => {
             setShowError({ Location: 'Festival Location is required', })
         } else if (!inputValue['Creator name']) {
             setShowError({ Cname: `Creator's Location is required`, })
-        } else if (!inputValue['Creator number']) {
-            setShowError({ Number: `Creator's Number is required`, })
         } else {
             const shareOptions = {
                 title: 'Send Festival Video',
                 subject: 'Festival Video Submission.',
                 message: `Festival Name: ${inputValue['Festival Name']},
     Festival Location: ${inputValue['Festival Location']},
-    Name: ${inputValue['Creator name']}
-    Phone: ${inputValue['Creator number']}`,
+    Name: ${inputValue['Creator name']}`,
                 social: Share.Social.EMAIL,
                 email: 'shaivam@shaivam.org',
                 url: imageData[0]?.uri?.substring(0, 6) == 'file:/' ? imageData[0]?.uri : `file://${imageData[0]?.uri}`,
             };
             try {
                 const ShareResponse = await Share.open(shareOptions);
-                console.log("🚀 ~ useSendEmail ~ ShareResponse:", ShareResponse)
+                // console.log("🚀 ~ useSendEmail ~ ShareResponse:", ShareResponse)
                 dispatch(setInputValue({ inputKey: 'empty', inputValue: 1 }))
 
             } catch (error) {
@@ -111,7 +108,7 @@ const SendFestivalEvent = ({ navigation, route }) => {
                             marginLeft: 16,
                         }}>{showError.Cname}</Text>
                     }
-                    <TextInputCom inputKey={'Creator number'} value={inputValue['Creator number']} insiderText={t('Type here') ? t('Type here') : 'Type here'} headinText={t('Phone number*') ? t('Phone number*') : 'Phone number*'} width={Dimensions.get('window').width - 50} />
+                    {/* <TextInputCom inputKey={'Creator number'} value={inputValue['Creator number']} insiderText={t('Type here') ? t('Type here') : 'Type here'} headinText={t('Phone number*') ? t('Phone number*') : 'Phone number*'} width={Dimensions.get('window').width - 50} />
                     {
                         showError !== null && showError.hasOwnProperty("number") && <Text style={{
                             fontWeight: '300',
@@ -119,7 +116,7 @@ const SendFestivalEvent = ({ navigation, route }) => {
                             fontSize: 10,
                             marginLeft: 16,
                         }}>{showError.number}</Text>
-                    }
+                    } */}
                 </View>
                 {
                     showModal &&
@@ -135,7 +132,7 @@ const SendFestivalEvent = ({ navigation, route }) => {
             </ScrollView>
             <Button
                 buttonText={'Submit'}
-                active={inputValue['Festival Name'] && inputValue['Festival Location'] && inputValue['Creator name'] && inputValue['Creator number'] ? true : false}
+                active={inputValue['Festival Name'] && inputValue['Festival Location'] && inputValue['Creator name'] ? true : false}
                 navigation={() => useSendEmail({
                     attachments: params?.image?.map((result) => ({
                         uri: result.uri,
