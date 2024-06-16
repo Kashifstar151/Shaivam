@@ -41,7 +41,13 @@ const SpottingErrorPage = ({ setModalVisible, navigation, existingTempDetail }) 
                 flexDirection: 'row',
             }}
         >
-            <Text style={{ fontFamily: 'Mulish-Regular', color: theme.textColor }}>
+            <Text
+                style={{
+                    fontFamily: 'Mulish-Regular',
+                    // color: theme.textColor
+                    color: '#222222',
+                }}
+            >
                 {item?.name}
             </Text>
             <View
@@ -82,7 +88,8 @@ const SpottingErrorPage = ({ setModalVisible, navigation, existingTempDetail }) 
                 <View
                     style={[
                         styles.mainContainer,
-                        { backgroundColor: theme == 'light' ? '#fff' : '#333333' },
+                        { backgroundColor: '#fff' },
+                        // { backgroundColor: theme == 'light' ? '#fff' : '#333333' },
                     ]}
                 >
                     <View style={styles.topContainer}>
@@ -90,14 +97,37 @@ const SpottingErrorPage = ({ setModalVisible, navigation, existingTempDetail }) 
                             {existingTempDetail?.templeName ?? ''}
                         </Text>
                         <TouchableOpacity onPress={() => setModalVisible(false)}>
-                            <Icon name="x" color={theme.textColor} size={22} />
+                            <Icon
+                                name="x"
+                                // color={theme.textColor}
+                                color={'#222222'}
+                                size={22}
+                            />
                         </TouchableOpacity>
                     </View>
                     <View style={{ paddingHorizontal: 20 }}>
-                        <Text style={[styles.submitText, { color: theme.textColor }]}>
+                        <Text
+                            style={[
+                                styles.submitText,
+                                {
+                                    color: '#222222',
+
+                                    // color: theme.textColor
+                                },
+                            ]}
+                        >
                             {t('Submit Images')}
                         </Text>
-                        <Text style={[styles.descriptionText, { color: theme.textColor }]}>
+                        <Text
+                            style={[
+                                styles.descriptionText,
+                                {
+                                    color: '#222222',
+
+                                    // color: theme.textColor
+                                },
+                            ]}
+                        >
                             You can submit images for this temple
                         </Text>
                     </View>

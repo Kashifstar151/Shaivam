@@ -126,15 +126,6 @@ export const Temples = ({ navigation, route }) => {
     };
     const fetchTheCurrentLocation = () => {
         getCurrentLocation((val) => {
-            mapRef.current?.animateCamera(
-                {
-                    center: {
-                        latitude: parseFloat(val.latitude),
-                        longitude: parseFloat(val.longitude),
-                    },
-                },
-                { duration: 500 }
-            );
             setUserLocation((prev) => ({
                 ...prev,
                 ...val,
@@ -152,6 +143,19 @@ export const Temples = ({ navigation, route }) => {
             });
         });
     };
+
+    useEffect(() => {
+        mapRef.current?.animateCamera(
+            {
+                center: userLocation,
+                pitch: 2,
+                heading: 20,
+                zoom: 10,
+                altitude: 200,
+            },
+            { duration: 500 }
+        );
+    }, [userLocation]);
 
     const handleTrackBack = async () => {
         let theCurrentPermission = await checkPermissionAccess(permissionTypeRef.current);
@@ -291,12 +295,6 @@ export const Temples = ({ navigation, route }) => {
                             }, 5000)
                         }
                         provider={PROVIDER_GOOGLE}
-                        initialRegion={{
-                            longitude: 77.40369287235171,
-                            latitude: 28.49488467262243,
-                            latitudeDelta: LATITUDE_DELTA,
-                            longitudeDelta: LONGITUDE_DELTA,
-                        }}
                         style={styles.map}
                         onRegionChangeComplete={(args, gesture) => {
                             if (gesture.isGesture) {
