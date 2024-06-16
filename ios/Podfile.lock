@@ -968,7 +968,7 @@ PODS:
     - React-Core
   - react-native-geolocation-service (5.3.1):
     - React
-  - react-native-google-maps (1.15.6):
+  - react-native-google-maps (1.11.3):
     - Google-Maps-iOS-Utils (= 4.2.2)
     - GoogleMaps (= 7.4.0)
     - React-Core
@@ -978,7 +978,7 @@ PODS:
     - React-Core
   - react-native-keep-awake (4.0.0):
     - React
-  - react-native-maps (1.15.6):
+  - react-native-maps (1.11.3):
     - React-Core
   - react-native-netinfo (11.3.2):
     - React-Core
@@ -1579,10 +1579,10 @@ SPEC CHECKSUMS:
   react-native-blur: 799045500f56146afc46245148080e7b7623cb75
   react-native-config: 86038147314e2e6d10ea9972022aa171e6b1d4d8
   react-native-geolocation-service: 608e1da71a1ac31b4de64d9ef2815f697978c55b
-  react-native-google-maps: 7ca1d252585c9ee2bbe2a3f64e4c061801b43d64
+  react-native-google-maps: b80d3947411fcf462ec420c3e6122b7fa24beb9a
   react-native-image-picker: d3db110a3ded6e48c93aef7e8e51afdde8b16ed0
   react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
-  react-native-maps: 7b2c2cee95271592a92ba485eea1dec66a363a6e
+  react-native-maps: 79610ffcd0ec2ca8e0cefb48aa8ae7c62a75d7cc
   react-native-netinfo: 076df4f9b07f6670acf4ce9a75aac8d34c2e2ccc
   react-native-render-html: 984dfe2294163d04bf5fe25d7c9f122e60e05ebe
   react-native-safe-area-context: 399a5859f6acbdf67f671c69b53113f535f3b5b0

@@ -87,7 +87,7 @@ android {
         applicationId "org.shaivam"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 39
+        versionCode 40
         versionName "3.25"
     }
     signingConfigs {

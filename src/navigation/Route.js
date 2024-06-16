@@ -290,7 +290,7 @@ const Route = () => {
                     />
                 </View>
             ) : (
-                <NavigationContainer ref={(ref) => NavigationServices.setTopLevelNavigator(ref)}>
+                <NavigationContainer ref={ref => NavigationServices.setTopLevelNavigator(ref)}>
                     <Stack.Navigator
                         initialRouteName={RouteTexts.ONBOARDING_SCREEN}
                         screenOptions={{

@@ -206,6 +206,15 @@ const BottomTab = ({ navigation }) => {
                     }
                 });
             }, 1000)
+        } else if (link?.url == `https://shaivaam.page.link/org?templeId=${getId}`) {
+            setTimeout(() => {
+                navigation.navigate('templeDetails', {
+                    temple: {
+                        templeId: getId,
+                    },
+                    external: true,
+                });
+            }, 1000);
         }
 
     };
