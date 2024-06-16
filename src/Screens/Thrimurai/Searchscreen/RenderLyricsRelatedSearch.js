@@ -22,20 +22,8 @@ const RenderLyricsRelatedSearch = ({
     useEffect(() => {
         setResult(() => searchResult);
     }, [searchResult]);
-
-    const [initialLayoutHeight, setInitialLayoutHeight] = useState({});
-
-    const handleMomentumScrollEnd = (event) => {
-        console.log('Momentum scroll ended:', event.nativeEvent);
-    };
     return (
-        <View
-            onLayout={(e) => {
-                let { height } = e.nativeEvent.layout;
-                setInitialLayoutHeight(height);
-                console.log('the layout of the ox ====>', e.nativeEvent.layout);
-            }}
-        >
+        <View>
             <FlatList
                 key={(item) => {
                     return item?.id;
@@ -54,11 +42,10 @@ const RenderLyricsRelatedSearch = ({
                 }
                 windowSize={40}
                 keyExtractor={(item, index) => index}
-                onMomentumScrollBegin={handleMomentumScrollEnd}
-                onScrollEndDrag={(e) => {
-                    console.log('the scroll of the flatlist ==>', e.nativeEvent);
-                }}
-                onEndReachedThreshold={0.1}
+                maxToRenderPerBatch={40}
+                updateCellsBatchingPeriod={20}
+                removeClippedSubviews={true}
+                onEndReachedThreshold={0.8}
                 onEndReached={() => {
                     if (!(searchResult?.length < 40)) {
                         setoffSet((prev) => {
