@@ -121,6 +121,11 @@ const SelectErrorPage = ({
             setSubmitted(-1);
         }
         if (templeErrorhandlerIsSuccess) {
+            // console.log(
+            //     '🚀 ~ useEffect ~ templeErrorhandlerIsSuccess:',
+            //     templeErrorhandlerIsSuccess,
+            //     templeErrorReportedData
+            // );
             setSubmitted(1);
         }
     }, [

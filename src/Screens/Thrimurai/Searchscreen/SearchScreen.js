@@ -53,16 +53,31 @@ const SearchScreen = ({ navigation, route }) => {
         title: {
             page: 0,
             isfetching: false,
+            isHavingMore: true,
         },
         rawSongs: {
             page: 0,
             isfetching: false,
+            isHavingMore: true,
         },
     });
 
     useEffect(() => {
+        setRawSongs([]);
+        setSearchedResult([]);
+        setoffSet({
+            title: {
+                page: 0,
+                isfetching: false,
+                isHavingMore: true,
+            },
+            rawSongs: {
+                page: 0,
+                isfetching: false,
+                isHavingMore: true,
+            },
+        });
         getDataFromSql(debounceVal, selectedTab);
-        console.log('🚀 ~ SearchScreen ~ fktrimuria:', fktrimuria);
 
         return () => {
             setIsSearched(false);
@@ -123,21 +138,38 @@ const SearchScreen = ({ navigation, route }) => {
                         (callbacks) => {
                             setSearchedResult((prev) => {
                                 if (prev?.length) {
-                                    console.log('🚀 ~ setSearchedResult ~ prev:', prev);
-                                    // const newArray = [...prev];
-                                    // newArray.push(...callbacks);
-                                    return callbacks;
+                                    // console.log('🚀 ~ setSearchedResult ~ prev:', prev);
+                                    const newArray = [...prev];
+                                    callbacks?.length && newArray.push(...callbacks);
+                                    return newArray;
                                 }
                                 return callbacks;
                             });
 
                             setoffSet((prev) => {
-                                console.log('🚀 ~ setoffSet ~ prev:', prev, prev?.title);
+                                console.log('🚀 ~ setoffSet ~ prev:', {
+                                    ...prev,
+                                    title: {
+                                        ...prev.title,
+                                        isfetching: false,
+                                    },
+                                });
+                                if (!callbacks?.length) {
+                                    return {
+                                        ...prev,
+                                        title: {
+                                            ...prev.title,
+                                            isfetching: false,
+                                            isHavingMore: false,
+                                        },
+                                    };
+                                }
                                 return {
                                     ...prev,
                                     title: {
                                         ...prev.title,
                                         isfetching: false,
+                                        isHavingMore: true,
                                     },
                                 };
                             });
@@ -175,19 +207,37 @@ const SearchScreen = ({ navigation, route }) => {
                             setRawSongs((prev) => {
                                 if (prev?.length) {
                                     const newArray = [...prev];
-                                    newArray.push(...callbacks);
+                                    // console.log('🚀 ~ setRawSongs ~ newArray:', newArray);
+                                    callbacks?.length && newArray.push(...callbacks);
                                     return newArray;
                                 }
                                 return callbacks;
                             });
                             // setRawSongs([...rawSongs, ...callbacks]);
                             setoffSet((prev) => {
-                                console.log('🚀 ~ setoffSet ~ prev 185:', prev);
+                                console.log('🚀 ~ setoffSet ~ prev 185:', {
+                                    ...prev,
+                                    rawSongs: {
+                                        ...prev.rawSongs,
+                                        isfetching: false,
+                                    },
+                                });
+                                if (!callbacks?.length) {
+                                    return {
+                                        ...prev,
+                                        rawSongs: {
+                                            ...prev.rawSongs,
+                                            isfetching: false,
+                                            isHavingMore: false,
+                                        },
+                                    };
+                                }
                                 return {
                                     ...prev,
                                     rawSongs: {
                                         ...prev.rawSongs,
                                         isfetching: false,
+                                        isHavingMore: true,
                                     },
                                 };
                             });

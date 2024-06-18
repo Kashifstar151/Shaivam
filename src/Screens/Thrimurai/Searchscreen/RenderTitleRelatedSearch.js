@@ -51,12 +51,23 @@ const RenderTitleRelatedSearch = ({
                 onEndReached={() => {
                     if (!(searchResult?.length < 40)) {
                         setoffSet((prev) => {
-                            if (searchResult?.length) {
+                            if (searchResult?.length && prev[selectedTab]?.isHavingMore) {
                                 return {
                                     ...prev,
                                     [selectedTab]: {
+                                        ...prev[selectedTab],
                                         page: prev[selectedTab]?.page + 40,
                                         isfetching: true,
+                                    },
+                                };
+                            } else {
+                                return {
+                                    ...prev,
+                                    [selectedTab]: {
+                                        ...prev[selectedTab],
+                                        // page: prev[selectedTab]?.page + 40,
+                                        // isfetching: true,
+                                        isHavingMore: false,
                                     },
                                 };
                             }
