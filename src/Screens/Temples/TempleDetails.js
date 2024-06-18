@@ -2,7 +2,16 @@
 // callback function for naving to page which has the temple details
 import { StackActions, useRoute } from '@react-navigation/native';
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { Dimensions, Image, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+    ActivityIndicator,
+    Dimensions,
+    Image,
+    Linking,
+    Pressable,
+    StyleSheet,
+    Text,
+    View,
+} from 'react-native';
 import Share from 'react-native-share';
 import DownArrowSVG from '../../components/SVGs/DownArrowSVG';
 import FavSVG from '../../components/SVGs/FavSVG';
@@ -64,7 +73,6 @@ const TempleDetails = ({ navigation }) => {
     const LONGITUDE_DELTA = LATITUDE_DELTA * (screenWidth / screenHeight);
 
     const embedNonClickableHTML = (innerFractionOfHTML) => {
-
         return `<!DOCTYPE html>
         <html lang="en">
         <head>
@@ -156,7 +164,18 @@ const TempleDetails = ({ navigation }) => {
     };
 
     if (isFetching) {
-        return <Text>Fetching data ....</Text>;
+        return (
+            <View
+                style={{
+                    // backgroundColor: 'red',
+                    height: '100%',
+                    justifyContent: 'center',
+                    alignContent: 'center',
+                }}
+            >
+                <ActivityIndicator size={'large'} />
+            </View>
+        );
     }
 
     return (
@@ -180,15 +199,15 @@ const TempleDetails = ({ navigation }) => {
                     regionCoordinate={
                         !external
                             ? {
-                                ...temple?.templeCoordinate,
-                                latitudeDelta: LATITUDE_DELTA,
-                                longitudeDelta: LONGITUDE_DELTA,
-                            }
+                                  ...temple?.templeCoordinate,
+                                  latitudeDelta: LATITUDE_DELTA,
+                                  longitudeDelta: LONGITUDE_DELTA,
+                              }
                             : {
-                                ...templeDetail?.templeCoordinate,
-                                latitudeDelta: LATITUDE_DELTA,
-                                longitudeDelta: LONGITUDE_DELTA,
-                            }
+                                  ...templeDetail?.templeCoordinate,
+                                  latitudeDelta: LATITUDE_DELTA,
+                                  longitudeDelta: LONGITUDE_DELTA,
+                              }
                     }
                     userLocation={{
                         ...route?.params?.data?.userLocation,
@@ -377,7 +396,7 @@ const TempleDetails = ({ navigation }) => {
                                                     paddingVertical: 10,
                                                 }}
                                             >
-                                                {t('Temple Description')}
+                                                {t('Description')}
                                             </Text>
                                         )}
 
@@ -425,55 +444,53 @@ const TempleDetails = ({ navigation }) => {
                                     templeDetail?.basicDetails ||
                                     templeDetail?.temple_images?.length
                                 ) && (
-                                        <View
+                                    <View
+                                        style={{
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            paddingVertical: 40,
+                                            gap: 10,
+                                        }}
+                                    >
+                                        <Image
+                                            source={require('../../../assets/Images/no-data.png')}
                                             style={{
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                                paddingVertical: 40,
-                                                gap: 10,
+                                                width: 100,
+                                                height: 100,
+                                            }}
+                                        />
+                                        <Text
+                                            style={{
+                                                color: '#000',
+                                                textAlign: 'center',
+
+                                                fontFamily: 'Mulish-Bold',
+                                                fontSize: RFValue(16, 850),
                                             }}
                                         >
-                                            <Image
-                                                source={require('../../../assets/Images/no-data.png')}
-                                                style={{
-                                                    width: 100,
-                                                    height: 100,
-                                                }}
-                                            />
-                                            <Text
-                                                style={{
-                                                    color: '#000',
-                                                    textAlign: 'center',
-
-                                                    fontFamily: 'Mulish-Bold',
-                                                    fontSize: RFValue(16, 850),
-                                                }}
-                                            >
-                                                Temple data is not Available
-                                            </Text >
-                                        </View >
-                                    )}
-                            </View >
-                        </ScrollView >
+                                            Temple data is not Available
+                                        </Text>
+                                    </View>
+                                )}
+                            </View>
+                        </ScrollView>
 
                         {/* <Toast /> */}
-                        {
-                            fav && animateToast ? (
-                                <AnimatedToast
-                                    state={animateToast && fav}
-                                    type={'SUCCESS'}
-                                    text={'Saved in My Trips > Saved Temples'}
-                                />
-                            ) : (
-                                <AnimatedToast
-                                    state={animateToast && fav}
-                                    type={'ERROR'}
-                                    text={'Temple removed from saved'}
-                                />
-                            )
-                        }
-                    </View >
-                </BottomSheetTempleTemplate >
+                        {fav && animateToast ? (
+                            <AnimatedToast
+                                state={animateToast && fav}
+                                type={'SUCCESS'}
+                                text={'Saved in My Trips > Saved Temples'}
+                            />
+                        ) : (
+                            <AnimatedToast
+                                state={animateToast && fav}
+                                type={'ERROR'}
+                                text={'Temple removed from saved'}
+                            />
+                        )}
+                    </View>
+                </BottomSheetTempleTemplate>
             }
         </>
     );
