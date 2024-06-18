@@ -50,7 +50,8 @@ const SelectErrorPage = ({
     ] = useTempleErrorhandlerMutation({});
 
     useEffect(() => {
-        if (desciption !== null && indianMobRegex.test(phoneNumber)) {
+        if (desciption !== null && phoneNumber) {
+            // if (desciption !== null && indianMobRegex.test(phoneNumber)) {
             setDisable(false);
         } else {
             setDisable(true);
