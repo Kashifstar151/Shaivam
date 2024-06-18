@@ -149,6 +149,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
 
     const initilizeActiveTrack = useCallback(async () => {
         const activeSong = await TrackPlayer.getActiveTrack();
+        console.log("🚀 ~ initilizeActiveTrack ~ activeSong:", activeSong)
         setActiveTrackState(activeSong);
     }, []);
 
@@ -161,11 +162,11 @@ const ThrimuraiSong = ({ route, navigation }) => {
         }
     }, []);
 
-    useEffect(() => {
-        if (searchScreen && flatListRef.current) {
-            scrollToIndexFlatList();
-        }
-    }, [flatListRef.current, activeTrackState?.url]);
+    // useEffect(() => {
+    //     if (searchScreen && flatListRef.current) {
+    //         scrollToIndexFlatList();
+    //     }
+    // }, [flatListRef.current, activeTrackState?.url]);
     useEffect(() => {
         initilizeTheTheme();
         firstRender.current = false;
@@ -338,12 +339,13 @@ GROUP BY
     title`;
 
         getSqlData(titleQuery, (data) => {
+            console.log("🚀 ~ getSqlData ~ data:", data)
             dispatchMusic({
                 type: 'SET_TITLE',
                 payload: data.filter((i) => i.localBased !== null)[0].localeBased,
             });
             getSqlData(detailQuery, (details) => {
-                console.log('🚀 ~ getSqlData ~ data:', JSON.stringify(details, 0, 2));
+                // console.log('🚀 ~ getSqlData ~ data:', JSON.stringify(details, 0, 2));
 
                 const query2 = `SELECT * FROM odhuvars WHERE title='${data.filter((i) => i.tamil !== null)[0]?.tamil
                     }'`;
@@ -370,6 +372,7 @@ GROUP BY
                     // }
                     dispatchMusic({ type: 'SET_SONG', payload: callbacks });
                     // scrollToIndex();
+                    scrollToIndexFlatList()
                 });
             });
         });
@@ -447,20 +450,20 @@ GROUP BY
     };
 
     const scrollToIndexFlatList = () => {
-        console.log('🚀 ~ scrollToIndexFlatList ~ scrollToIndexFlatList:', scrollToIndexFlatList);
-
         if (songNo) {
             setTimeout(() => {
-                flatListRef?.current?.scrollToIndex({
-                    animated: true,
+                flatListRef.current?.scrollToIndex({
+                    // index: index,
                     index: songNo - 1,
+                    animated: true,
                 });
+
+
             }, 1000);
         }
     };
 
     const getItemLayOut = (item, index) => {
-        // console.log("🚀 ~ getItemLayOut ~ index: 222", index, JSON.stringify(item, 0, 2))
         return { length: 260, offset: 260 * index, index };
     };
     const setUpPlayer = useCallback(
@@ -520,7 +523,7 @@ GROUP BY
         await TrackPlayer.reset();
 
         getSqlData(query, (clb) => {
-            console.log('🚀 ~ getSqlData ~ clb:', clb);
+            // console.log('🚀 ~ getSqlData ~ clb:', clb);
             if (clb[0].nextPrevId) {
                 dispatchMusic({ type: 'RESET' });
                 dispatchMusic({ type: 'PREV_ID', payload: clb[0].nextPrevId });
@@ -541,19 +544,7 @@ GROUP BY
         });
     };
 
-    useTrackPlayerEvents(
-        [Event.PlaybackQueueEnded, Event.PlaybackActiveTrackChanged, Event.RemoteSeek],
-        async (event) => {
-            if (event.type === Event.PlaybackQueueEnded && repeatMode === 0) {
-                queryForNextPrevId();
-            } else if (event.type === Event.PlaybackActiveTrackChanged) {
-                setActiveTrackState(event.track);
-            }
-            if (event.type === Event.RemoteSeek) {
-                TrackPlayer.seekTo(event.position);
-            }
-        }
-    );
+
 
     const [activeTrackState, setActiveTrackState] = useState({});
 
@@ -573,6 +564,21 @@ GROUP BY
             getSOngData();
         }
     }, [musicState.prevId, selectedLang]);
+
+    useTrackPlayerEvents(
+        [Event.PlaybackQueueEnded, Event.PlaybackActiveTrackChanged, Event.RemoteSeek],
+        async (event) => {
+            if (event.type === Event.PlaybackQueueEnded && repeatMode === 0) {
+                queryForNextPrevId();
+            } else if (event.type === Event.PlaybackActiveTrackChanged) {
+                console.log("🚀 ~ event:", event)
+                setActiveTrackState(event.track);
+            }
+            if (event.type === Event.RemoteSeek) {
+                TrackPlayer.seekTo(event.position);
+            }
+        }
+    );
 
     const [clipBoardString, setClipBoardString] = useState('');
     const clipBoardStringRef = useRef('');
@@ -999,7 +1005,6 @@ GROUP BY
                                                 >
                                                     Tamil Split
                                                 </Text>
-
                                                 <Text
                                                     style={{
                                                         fontFamily: 'Mulish-Regular',
@@ -1115,27 +1120,25 @@ GROUP BY
                                     getItemLayOut={getItemLayOut}
                                     initialScrollIndex={songNo ? songNo - 1 : 0}
                                     initialNumToRender={songNo ? songNo + 1 : 40}
+
                                     onScrollToIndexFailed={({
                                         index,
                                         averageItemLength,
                                         highestMeasuredFrameIndex,
                                     }) => {
-                                        // console.log(
-                                        //     '🚀 ~ ThrimuraiSong ---  ~ info:',
-                                        //     index,
-                                        //     averageItemLength,
-                                        //     highestMeasuredFrameIndex
-                                        // );
+                                        console.log(
+                                            '🚀 ~ ThrimuraiSong ---  ~ info:',
+                                            index,
+                                            averageItemLength,
+                                            highestMeasuredFrameIndex
+                                        );
                                         const wait = new Promise((resolve) =>
                                             setTimeout(resolve, 1000)
                                         );
                                         wait.then(() => {
-                                            flatListRef.current?.scrollToOffset({
+                                            flatListRef.current?.scrollToIndex({
                                                 // index: index,
-                                                offset:
-                                                    averageItemLength * songNo +
-                                                    Math.abs(highestMeasuredFrameIndex - songNo) *
-                                                    averageItemLength,
+                                                index: index,
                                                 animated: true,
                                             });
                                         });
@@ -1184,29 +1187,29 @@ GROUP BY
                                 ref={flatListRef}
                                 data={musicState?.songDetails}
                                 getItemLayOut={getItemLayOut}
-                                initialScrollIndex={songNo ? songNo - 1 : 0}
+                                // initialScrollIndex={songNo ? songNo - 1 : 0}
                                 initialNumToRender={songNo ? songNo + 1 : 40}
                                 onScrollToIndexFailed={({
                                     index,
                                     averageItemLength,
                                     highestMeasuredFrameIndex,
                                 }) => {
-                                    // console.log(
-                                    //     '🚀 ~ ThrimuraiSong ---  ~ info:',
-                                    //     index,
-                                    //     averageItemLength,
-                                    //     highestMeasuredFrameIndex
-                                    // );
+                                    console.log(
+                                        '🚀 ~ ThrimuraiSong ---  ~ info:',
+                                        index,
+                                        averageItemLength,
+                                        highestMeasuredFrameIndex
+                                    );
                                     const wait = new Promise((resolve) =>
                                         setTimeout(resolve, 1000)
                                     );
                                     wait.then(() => {
-                                        flatListRef.current?.scrollToOffset({
-                                            // index: index,
-                                            offset:
-                                                averageItemLength * songNo +
-                                                Math.abs(highestMeasuredFrameIndex - songNo) *
-                                                averageItemLength,
+                                        flatListRef.current?.scrollToIndex({
+                                            index: index,
+                                            // offset:
+                                            //     averageItemLength * songNo +
+                                            //     Math.abs(highestMeasuredFrameIndex - songNo) *
+                                            //     averageItemLength,
                                             animated: true,
                                         });
                                     });
