@@ -60,7 +60,18 @@ const HomeScreen = ({ navigation }) => {
         isFetching: isfestivaldataFetching,
         refetch: refetchFestival,
         isSuccess: isFestivalSuccess,
-    } = useGetUpcomingFestivalQuery({ startDate: moment().format('YYYY-MM-DD'), endDate: moment().add(1, 'months').endOf('month').format('YYYY-MM-DD'), lanugage: i18n.language == 'en-IN' ? 'en' : i18n.language == 'en' ? 'ta' : i18n.language == 'DV' ? 'hi' : 'en' });
+    } = useGetUpcomingFestivalQuery({
+        startDate: moment().format('YYYY-MM-DD'),
+        endDate: moment().add(1, 'months').endOf('month').format('YYYY-MM-DD'),
+        lanugage:
+            i18n.language == 'en-IN'
+                ? 'en'
+                : i18n.language == 'en'
+                ? 'ta'
+                : i18n.language == 'DV'
+                ? 'hi'
+                : 'en',
+    });
     const [festivalEvent, setFestivalEvent] = useState([]);
     const [compHeight, setCompHeight] = useState();
     const isFocused = useIsFocused();
@@ -254,22 +265,27 @@ const HomeScreen = ({ navigation }) => {
                     height:
                         orientation == 'PORTRAIT'
                             ? Dimensions.get('window').height / 2.5
-                            : Dimensions.get('window').height / 1.5
-                }}>
+                            : Dimensions.get('window').height / 1.5,
+                }}
+            >
                 <ImageBackground
                     source={theme.colorscheme === 'light' ? bgImg : bgImgDark}
                     resizeMode="cover"
                     style={{
                         flex: 1,
                         paddingHorizontal: 15,
-                    }}></ImageBackground>
+                    }}
+                ></ImageBackground>
             </View>
-            <View style={{
-                marginTop:
-                    orientation == 'PORTRAIT'
-                        ? -screenHeight / 2.3
-                        : -Dimensions.get('window').height / 1.3,
-            }} onLayout={handleLayout}>
+            <View
+                style={{
+                    marginTop:
+                        orientation == 'PORTRAIT'
+                            ? -screenHeight / 2.3
+                            : -Dimensions.get('window').height / 1.3,
+                }}
+                onLayout={handleLayout}
+            >
                 <CardComponents navigation={navigation} />
             </View>
             {playlistSong?.length > 0 && (
@@ -300,7 +316,8 @@ const HomeScreen = ({ navigation }) => {
                                 <Pressable
                                     onPress={() => {
                                         setSelectedPlaylistType(item);
-                                    }}>
+                                    }}
+                                >
                                     <View
                                         style={{
                                             backgroundColor:
@@ -503,7 +520,11 @@ const HomeScreen = ({ navigation }) => {
 
             {/* upcoming events  */}
             {isFestivalSuccess && (
-                <View>
+                <View
+                    style={{
+                        paddingTop: 30,
+                    }}
+                >
                     <View style={{ paddingBottom: 15, paddingHorizontal: 15 }}>
                         <HeadingAndView
                             viewBtnColor={
