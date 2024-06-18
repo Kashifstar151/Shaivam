@@ -145,6 +145,8 @@ export const Temples = ({ navigation, route }) => {
     };
 
     useEffect(() => {
+        console.log('🚀 ~ Temples ~ userLocation:', mapRef?.current);
+
         mapRef.current?.animateCamera(
             {
                 center: userLocation,
@@ -155,7 +157,7 @@ export const Temples = ({ navigation, route }) => {
             },
             { duration: 500 }
         );
-    }, [userLocation]);
+    }, [userLocation, mapRef?.current]);
 
     const handleTrackBack = async () => {
         let theCurrentPermission = await checkPermissionAccess(permissionTypeRef.current);
@@ -274,6 +276,12 @@ export const Temples = ({ navigation, route }) => {
         });
     };
 
+    const props = userLocation?.latitude
+        ? {
+              initialRegion: userLocation,
+          }
+        : {};
+
     return (
         <>
             {isLoading ? (
@@ -296,6 +304,7 @@ export const Temples = ({ navigation, route }) => {
                         }
                         provider={PROVIDER_GOOGLE}
                         style={styles.map}
+                        {...props}
                         onRegionChangeComplete={(args, gesture) => {
                             if (gesture.isGesture) {
                                 onRegionChangeCompleteCallback(args, (input) => {
