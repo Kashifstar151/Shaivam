@@ -30,6 +30,7 @@ import {
     updateTempleName,
     updateimageSrc,
 } from '../../../store/features/Temple/TempleSlice';
+import { useTranslation } from 'react-i18next';
 
 const AddTempleForm = ({ navigation, setStep }) => {
     const { theme } = useContext(ThemeContext);
@@ -80,6 +81,8 @@ const AddTempleForm = ({ navigation, setStep }) => {
             </View>
         );
     };
+
+    const { t } = useTranslation();
 
     return (
         <View>
@@ -134,10 +137,10 @@ const AddTempleForm = ({ navigation, setStep }) => {
                         >
                             <StepTitleContainer
                                 step={1}
-                                title={'Enter the Temple Location'}
-                                subtitle={
+                                title={t('Enter the Temple Location')}
+                                subtitle={t(
                                     'Map will open. In that point the marker to the location of the temple, you want to add.'
-                                }
+                                )}
                             />
 
                             <Text style={styles.descriptionText}>Temple location*</Text>
@@ -178,11 +181,11 @@ const AddTempleForm = ({ navigation, setStep }) => {
                         >
                             <StepTitleContainer
                                 step={2}
-                                title={'Enter the Temple name'}
-                                subtitle={'Town/Village name followed by Swamy/Temple name'}
+                                title={t('Enter the Temple name')}
+                                subtitle={t('Town/Village name followed by Swamy/Temple name')}
                             />
 
-                            <Text style={styles.descriptionText}>Temple name*</Text>
+                            <Text style={styles.descriptionText}>{t('Temple name')}*</Text>
                             <View>
                                 <TextInput
                                     placeholderTextColor={colors.grey5}
@@ -201,11 +204,11 @@ const AddTempleForm = ({ navigation, setStep }) => {
                         >
                             <StepTitleContainer
                                 step={3}
-                                title={'Description'}
-                                subtitle={'A short description about the temple'}
+                                title={t('Description')}
+                                subtitle={t('A short description about the temple')}
                             />
 
-                            <Text style={styles.descriptionText}>Temple Description</Text>
+                            <Text style={styles.descriptionText}>{t('Temple Description')}</Text>
                             <View>
                                 <TextInput
                                     // selection={{ start: 30, end: 0 }}
@@ -232,17 +235,17 @@ const AddTempleForm = ({ navigation, setStep }) => {
                         >
                             <StepTitleContainer
                                 step={4}
-                                title={'Add images'}
-                                subtitle={
+                                title={t('Add images')}
+                                subtitle={t(
                                     'You can take the picture now or add a picture that is already taken'
-                                }
+                                )}
                             />
 
                             <View>
                                 <Text
                                     style={[styles.descriptionText, { fontFamily: 'Mulish-Bold' }]}
                                 >
-                                    Upload Images (You can upload multiple images)
+                                    {t('Upload Images (You can upload multiple images)')}
                                 </Text>
                                 <TouchableOpacity
                                     onPress={openGallary}
@@ -255,7 +258,7 @@ const AddTempleForm = ({ navigation, setStep }) => {
                                             { fontSize: 14, marginHorizontal: 10 },
                                         ]}
                                     >
-                                        Click here to upload photo
+                                        {t('Click here to upload photo')}
                                     </Text>
                                 </TouchableOpacity>
 
