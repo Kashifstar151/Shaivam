@@ -112,6 +112,9 @@ export const Temples = ({ navigation, route }) => {
         } else if (state === RESULTS.DENIED) {
             let requestedVal = await requestThePermission(permissionTypeRef.current);
             setPermissionGranted(() => requestedVal.permissionType);
+            if (requestedVal.permissionType === RESULTS.GRANTED) {
+                fetchTheCurrentLocation();
+            }
         } else if (state === RESULTS.BLOCKED) {
             setShowModal(!showModal);
         } else if (state === RESULTS.GRANTED) {
