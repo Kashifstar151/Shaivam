@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Dimensions, FlatList, Image, Linking, Modal, PermissionsAndroid, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Dimensions, FlatList, Image, Linking, Modal, PermissionsAndroid, Platform, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import BackButton from '../../components/BackButton';
 import Background from '../../components/Background';
 import ShareIcon from '../../assets/Images/share-1.svg';
@@ -41,67 +41,16 @@ const EventDetails = ({ navigation, route }) => {
         console.log("🚀 ~ callApi ~ check:", item?.split('_')[1])
         if (item?.split('_')[0] == 'recurring') {
             GetReccuringById({ data: item?.split('_')[1] }).then((result) => {
-                console.log("🚀 ~ getReccuringById ~ result:", JSON.stringify(result?.data?.data, 0, 2))
-                setEventData({
-                    id: result?.data?.data?.id,
-                    attributes: {
-                        latitude: result?.data?.data?.attributes?.Latitude,
-                        longitude: result?.data?.data?.attributes?.Longitude,
-                        event_category: result?.data?.data?.attributes?.Event_Category,
-                        district: result?.data?.data?.attributes?.District,
-                        city: result?.data?.data?.attributes?.City,
-                        location: result?.data?.data?.attributes?.Location,
-                        day: result?.data?.data?.attributes?.Day,
-                        SchedulaType: result?.data?.data?.attributes?.SchedulaType,
-                        File: result?.data?.data?.attributes?.File,
-                        title: result?.data?.data?.attributes?.title,
-                        breif_description: result?.data?.data?.attributes?.Breif_description,
-                        Url: result?.data?.data?.attributes?.URL,
-                        name: result?.data?.data?.attributes?.Name
-                    }
-                })
+                // console.log("🚀 ~ getReccuringById ~ result:", result)
+                setEventData(result?.data?.data)
             }).catch((err) => {
-                console.log("🚀 ~ getReccuringById ~ err:", err)
-                setEventData({
-                    id: result?.data?.data?.id,
-                    attributes: {
-                        latitude: result?.data?.data?.Latitude,
-                        longitude: result?.data?.data?.Longitude,
-                        event_category: result?.data?.data?.Event_Category,
-                        district: result?.data?.data?.District,
-                        city: result?.data?.data?.City,
-                        location: result?.data?.data?.Location,
-                        day: result?.data?.data?.Day,
-                        SchedulaType: result?.data?.data?.SchedulaType,
-                        File: result?.data?.data?.File,
-                        title: result?.data?.data?.title,
-                        breif_description: result?.data?.data?.Breif_description,
-                        Url: result?.data?.data?.URL,
-                        name: result?.data?.data?.Name
-                    }
-                })
+                // console.log("🚀 ~ getReccuringById ~ err:", err)
+                setEventData(result?.data?.data)
             });
         } else {
             GetRegularById({ data: item?.split('_')[1] }).then((result) => {
                 // console.log("🚀 ~ getRegularById ~ result:", result)
-                setEventData({
-                    id: result?.data?.data?.id,
-                    attributes: {
-                        latitude: result?.data?.data?.Latitude,
-                        longitude: result?.data?.data?.Longitude,
-                        event_category: result?.data?.data?.Event_Category,
-                        district: result?.data?.data?.District,
-                        city: result?.data?.data?.City,
-                        location: result?.data?.data?.Location,
-                        day: result?.data?.data?.Day,
-                        SchedulaType: result?.data?.data?.SchedulaType,
-                        File: result?.data?.data?.File,
-                        title: result?.data?.data?.title,
-                        breif_description: result?.data?.data?.Breif_description,
-                        Url: result?.data?.data?.URL,
-                        name: result?.data?.data?.Name
-                    }
-                })
+
             }).catch((err) => {
                 console.log("🚀 ~ getRegularById ~ err:", err)
 
@@ -132,16 +81,16 @@ const EventDetails = ({ navigation, route }) => {
     const keys = [
         {
             name: 'Start date',
-            value: moment(eventData?.start_date ? eventData?.start_date : eventData?.attributes?.start_date).format('ddd,MMMM DD , YYYY'),
+            value: moment(item?.start_date ? item?.start_date : item?.attributes?.start_date).format('ddd,MMMM DD , YYYY'),
         },
         {
             name: 'End date',
-            value: moment(eventData?.end_date ? eventData?.end_date : eventData?.attributes?.end_date).format('ddd,MMMM DD , YYYY'),
+            value: moment(item?.end_date ? item?.end_date : item?.attributes?.end_date).format('ddd,MMMM DD , YYYY'),
         },
-        { name: 'Location', value: eventData?.attributes?.location },
+        { name: 'Location', value: item?.attributes?.location },
         { name: 'Contact No', value: '+91-9876710234' },
-        { name: 'Url', value: eventData?.attributes?.Url },
-        { name: 'Presenter', value: eventData?.attributes?.name },
+        { name: 'Url', value: item?.attributes?.Url },
+        { name: 'Presenter', value: item?.attributes?.name },
     ];
     const [selectedHeader, setSelectedHeader] = useState('Direction');
     const checkPermissionAccess = async () => {
@@ -215,14 +164,15 @@ const EventDetails = ({ navigation, route }) => {
                 <BackButton
                     navigation={navigation}
                     // firstRightIcon={true}
-                    middleText={eventData?.attributes?.title}
+                    middleText={item?.attributes?.title}
                     rightIcon={true}
                     color={true}
                     eventShare={true}
-                    item={eventData}
+                    item={item}
                 />
             </Background>
             <ScrollView style={styles.main}>
+                <Text style={styles.headingText}>{item?.attributes?.title}</Text>
                 <Text
                     style={{ color: '#777777', fontFamily: 'Mulish-Regular', marginHorizontal: 10 }}
                 >
@@ -230,7 +180,7 @@ const EventDetails = ({ navigation, route }) => {
                 </Text>
                 <View style={{ flexDirection: 'row', marginVertical: 5 }}>
                     {
-                        eventData?.attributes?.latitude && eventData?.attributes?.longitude &&
+                        item?.attributes?.latitude && item?.attributes?.longitude &&
                         <CustomButton
                             svg={<DirectionSVG fill={'#fff'} />}
                             onPress={() => {
@@ -258,7 +208,7 @@ const EventDetails = ({ navigation, route }) => {
                         />
                     }
                     {
-                        eventData?.attributes?.virtual_event_link && eventData?.attributes?.virtual_event_link !== null &&
+                        item?.attributes?.virtual_event_link && item?.attributes?.virtual_event_link !== null &&
                         <CustomButton
                             svg={<DirectionSVG fill={'#fff'} />}
                             onPress={() => {
@@ -279,7 +229,7 @@ const EventDetails = ({ navigation, route }) => {
                     }
                 </View>
                 <View style={{ paddingHorizontal: 10 }}>
-                    <Text style={styles.descriptionText}>{eventData?.attributes?.description ? eventData?.attributes?.description : eventData?.attributes?.breif_description}</Text>
+                    <Text style={styles.descriptionText}>{item?.attributes?.description ? item?.attributes?.description : item?.attributes?.breif_description}</Text>
                     <FlatList
                         bounces={false}
                         contentContainerStyle={{ marginTop: 10 }}
@@ -364,21 +314,22 @@ const EventDetails = ({ navigation, route }) => {
             {
                 showModal &&
                 <Modal transparent>
-                    <View>
-                        <TouchableOpacity style={{ position: 'absolute', top: 2, right: 5, zIndex: 100 }} onPress={() => setShowModal(false)}>
-                            <Feather name='x' size={34} color='black' />
+                    <View style={{ height: Dimensions.get('window').height, justifyContent: 'center', alignItems: 'center' }}>
+                        <TouchableOpacity style={{ position: 'absolute', top: 45, right: 5, zIndex: 100 }} onPress={() => setShowModal(false)}>
+                            <Feather name='x' size={34} color='#C1554E' />
                         </TouchableOpacity>
-                        <FlatList horizontal data={item?.attributes?.File} renderItem={({ item, index }) => (
-                            <View style={{ flex: 1, margin: 20 }}>
-                                <Image source={{ uri: item?.url }} resizeMode='cover'
-                                    style={{ width: Dimensions.get('window').width - 40, height: Dimensions.get('window').height - 20, borderRadius: 8 }} />
+                        <FlatList contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }} horizontal data={item?.attributes?.File} renderItem={({ item, index }) => (
+                            <View style={{ margin: 20, justifyContent: 'center', alignItems: 'center' }}>
+                                {/* <Text>item?.url </Text> */}
+                                <Image source={{ uri: item?.url }} resizeMode='center'
+                                    style={{ width: Dimensions.get('window').width - 40, height: '95%', borderRadius: 8, }} />
                             </View>
                         )} />
                     </View>
                 </Modal>
             }
             <View style={{ position: 'absolute', bottom: 20, paddingHorizontal: 20, backgroundColor: '#fff' }}>
-                {external ? <></> : <ReminderSnackBar setRecurringEvent={setNotification} recurringEvent={notificationOn} />}
+                <ReminderSnackBar setRecurringEvent={setNotification} recurringEvent={notificationOn} />
             </View>
         </View>
     );

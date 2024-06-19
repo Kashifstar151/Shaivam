@@ -462,7 +462,7 @@ const CreateVirtualEvent = ({ navigation }) => {
                                     </>
                             }
                             <TextInputCom value={inputValue['name'] || inputValue['Name']} inputKey={recurringEvent ? 'Name' : 'name'} insiderText={t('Enter your name')} headinText={t('Name')} width={Dimensions.get('window').width - 40} />
-                            <TextInputCom reg={emailReg} value={inputValue['email'] || inputValue['Email']} inputKey={recurringEvent ? 'Email' : 'email'} insiderText={t('Enter your email')} headinText={t('Email')} width={Dimensions.get('window').width - 40} />
+                            <TextInputCom reg={emailReg} value={inputValue['email'] || inputValue['Email']} inputKey={recurringEvent ? 'Email' : 'email'} insiderText={t('Enter your email')} headinText={`${t('Email')}*`} width={Dimensions.get('window').width - 40} />
                             {
                                 errorMsg !== null && errorMsg.hasOwnProperty("email") && <Text style={{
                                     fontWeight: '300',

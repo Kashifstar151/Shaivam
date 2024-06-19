@@ -57,11 +57,11 @@ const SpottingErrorPage = ({ setModalVisible, navigation, existingTempDetail }) 
                     borderRadius: 10,
                     width: 20,
                     height: 20,
-                    borderColor: theme.textColor,
+                    borderColor: theme == 'light' ? theme.textColor : 'white',
                     borderWidth: 1,
                 }}
             >
-                <Icon name="check" size={14} color={theme.textColor} />
+                <Icon name="check" size={14} color={theme == 'light' ? theme.textColor : 'white'} />
             </View>
         </TouchableOpacity>
     );

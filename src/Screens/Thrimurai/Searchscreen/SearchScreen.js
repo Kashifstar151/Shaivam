@@ -1,5 +1,7 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import {
+    Alert,
+    Dimensions,
     FlatList,
     Pressable,
     ScrollView,
@@ -13,12 +15,13 @@ import HeaderWithTextInput from '../../../components/HeaderWithTextInput';
 import CenterIcon from '../../../assets/Images/Vector (3).svg';
 import { getSqlData } from '../../Database';
 import { ThemeContext } from '../../../Context/ThemeContext';
+import HighlightedText from './HighlightedText';
+import { RouteTexts } from '../../../navigation/RouteText';
 import { useTranslation } from 'react-i18next';
+import HighlightText from '@sanar/react-native-highlight-text';
 import getDimension from '../../../Helpers/getDimension';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDebouncer } from '../../../Helpers/useDebouncer';
-import RenderTitleRelatedSearch from './RenderTitleRelatedSearch';
-import RenderLyricsRelatedSearch from './RenderLyricsRelatedSearch';
 
 const SearchScreen = ({ navigation, route }) => {
     const { i18n } = useTranslation();
@@ -28,80 +31,42 @@ const SearchScreen = ({ navigation, route }) => {
         ...thrimurais,
     ]);
     const [searchText, setSearchText] = useState('');
+
     const debounceVal = useDebouncer(searchText, 1000);
     const [searchResult, setSearchedResult] = useState([]);
+    // const [onFocus, setOnFocus] = useState(false);
     const [rawSongs, setRawSongs] = useState(null);
     const { theme } = useContext(ThemeContext);
     const [recentKeyword, setRecentKeywords] = useState([]);
     const [fktrimuria, setFkTrimuria] = useState(new Set([0]));
-    const [isSearched, setIsSearched] = useState(false); // state --> loading, search
-    const { screenHeight, screenWidth } = getDimension();
-    const tab = [
-        {
-            name: 'title',
-            showVal: 'Title Based',
-        },
-        {
-            name: 'rawSongs',
-            showVal: 'Lyrics Based',
-        },
-    ];
-
-    const [selectedTab, setSelectedTab] = useState(tab[0]?.name);
-
-    const [offset, setoffSet] = useState({
-        title: {
-            page: 0,
-            isfetching: false,
-            isHavingMore: true,
-        },
-        rawSongs: {
-            page: 0,
-            isfetching: false,
-            isHavingMore: true,
-        },
-    });
+    const [isSearched, setIsSearched] = useState(false);
+    const { screenHeight } = getDimension();
 
     useEffect(() => {
-        setRawSongs([]);
-        setSearchedResult([]);
-        setoffSet({
-            title: {
-                page: 0,
-                isfetching: false,
-                isHavingMore: true,
-            },
-            rawSongs: {
-                page: 0,
-                isfetching: false,
-                isHavingMore: true,
-            },
-        });
-        getDataFromSql(debounceVal, selectedTab);
+        getDataFromSql(debounceVal);
 
         return () => {
             setIsSearched(false);
         };
     }, [fktrimuria]);
 
-    useEffect(() => {
+    useState(() => {
         setUpdatedThrimurai(() =>
             thrimurais?.length ? [{ id: 0, name: 'All' }, ...thrimurais] : null
         );
     }, [thrimurais]);
-
     useEffect(() => {
         getSearchedTexxs();
     }, []);
-
     const getSearchedTexxs = async () => {
         const data = await AsyncStorage.getItem('recentKeyword');
-        setRecentKeywords(JSON.parse(data));
+        let arr = JSON.parse(data);
+        // console.log("🚀 ~ getSearchedTexxs ~ data:", arr?.reverse())
+        setRecentKeywords(arr?.reverse());
     };
-
     const normalizeString = (str) => {
         setSearchText(
-            () => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
             // .replace(/\s/g, '')
         );
         return str
@@ -109,148 +74,130 @@ const SearchScreen = ({ navigation, route }) => {
             .replace(/[\u0300-\u036f]/g, '')
             .replace(/\s/g, '');
     };
+    const getDataFromSql = (searchText) => {
+        setIsSearched(false);
+        if (searchText && searchText.length >= 3) {
+            getSqlData(
+                `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${normalizeString(
+                    searchText.trim()
+                )}%' and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language}' ${
+                    !fktrimuria.has(0)
+                        ? `and fkTrimuria IN (${[...fktrimuria].join(',')})`
+                        : `and fkTrimuria IN (${[...thrimurais.map((item) => item.id)].join(',')})`
+                } GROUP BY titleS;`,
+                (callbacks) => {
+                    setSearchedResult(callbacks);
+                    const keys = recentKeyword ? recentKeyword : [];
+                    const s = keys?.filter((keys) => keys !== searchText);
+                    const updated = [...s, searchText].slice(-6);
+                    AsyncStorage.setItem('recentKeyword', JSON.stringify(updated));
+                }
+            );
+            getSqlData(
+                `SELECT t.prevId, t.titleNo ,ts.thirumuraiId, ts.songNo ,ts.rawSong FROM thirumurais t  JOIN thirumurai_songs ts ON t.prevId = ts.prevId WHERE ts.searchTitle LIKE '%${normalizeString(
+                    searchText.trim()
+                )}%'  ${
+                    !fktrimuria.has(0)
+                        ? `and ts.thirumuraiId IN (${[...fktrimuria].join(',')})`
+                        : `and ts.thirumuraiId IN (${[...thrimurais.map((item) => item.id)].join(
+                              ','
+                          )})`
+                }  AND ts.locale='${
+                    i18n.language === 'en-IN' ? 'RoI' : i18n.language
+                }' GROUP BY   ts.thirumuraiId, ts.prevId, ts.songNo ORDER BY ts.thirumuraiId, ts.prevId, ts.songNo ASC`,
+                (callbacks) => {
+                    setRawSongs(callbacks);
+                }
+            );
 
-    useEffect(() => {
-        console.log(
-            'the  offset?.title?.page, offset?.rawSongs?.page==========================------------------------------------------------------------------------------------------------------------------------------------------------------==================================================================================>',
-            offset?.title?.page,
-            offset?.rawSongs?.page
+            setIsSearched(true);
+        }
+    };
+    // const highlight = (item, index, key) => {
+    //     // console.log("🚀 ~ highlight ~ item:", JSON.stringify(item))
+    //     const textContent = key === 'title' ? item?.title : item?.rawSong;
+    //     const cleanedText = textContent.replace(/\s+/g, ' ').trim();
+    //     const parts = cleanedText.split(' ');
+    //     return (
+    //         <View
+    //             style={{
+    //                 flexDirection: 'row',
+    //                 maxWidth: Dimensions.get('window').width - 30,
+    //                 flexWrap: 'wrap',
+    //             }}
+    //         >
+    //             {key == 'title'
+    //                 ? parts?.map((res, i) => <HighlightedText text={res} highlight={searchText} />)
+    //                 : parts?.map((res, i) => (
+    //                       <HighlightedText text={res} highlight={searchText} lyrics={true} />
+    //                   ))}
+    //         </View>
+    //     );
+    // };
+
+    const highlight = (item, index, key) => {
+        const textContent = key === 'title' ? item?.title : item?.rawSong;
+        // console.log('searchText =====>', debounceVal);
+        return (
+            <View
+                style={{
+                    flexDirection: 'row',
+                    maxWidth: Dimensions.get('window').width - 30,
+                    flexWrap: 'wrap',
+                }}
+            >
+                {/* <HighlightText
+                    style={{
+                        fontFamily: 'AnekTamil-Bold',
+                        fontSize: 14,
+                        color: theme.textColor,
+                        // fontWeight: key === 'title' ? '700' : '400',
+                    }}
+                    highlightStyle={{
+                        fontFamily: 'AnekTamil-Bold',
+                        fontSize: 14,
+                        color: theme.textColor,
+                        backgroundColor: theme.colorscheme === 'dark' ? '#A47300' : '#F8E3B2',
+                    }}
+                    searchWords={[`${searchText}`]}
+                    textToHighlight={textContent}
+                    autoEscape={true}
+                    // sanitize={(text) => {
+                    //     console.log('the sanitize string ==>', text);
+                    //     return text.split('').join('\\s*');
+                    // }}
+                /> */}
+
+                <HighlightedText text={textContent} highlight={debounceVal} />
+                {/* {key == 'title'
+                    ? parts?.map((statement, i) => {
+                        return (
+                            <Text>
+                                {statement.split(' ').map((words, idx) => (
+                                    <HighlightedText text={words} highlight={searchText} />
+                                ))}
+                            </Text>
+                        );
+                    }) :
+                    : parts?.map((statement, i) => {
+                        return (
+                            <Text>
+                                {statement.split(' ').map((words, idx) => (
+                                    <HighlightedText
+                                        text={words}
+                                        highlight={searchText}
+                                        lyrics={true}
+                                    />
+                                ))}
+                            </Text>
+                    );
+                    })}
+                } */}
+            </View>
         );
-    }, [offset?.title?.page, offset?.rawSongs?.page]);
-
-    const getDataFromSql = useCallback(
-        (searchText, tab) => {
-            console.log('🚀 ~ SearchScreen ~ tab:', tab);
-            setIsSearched(() => false);
-            if (searchText && searchText.length >= 3) {
-                if (tab === 'title') {
-                    getSqlData(
-                        `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${normalizeString(
-                            searchText.trim()
-                            // setSearchText
-                        )}%' and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language}' ${
-                            !fktrimuria.has(0)
-                                ? `and fkTrimuria IN (${[...fktrimuria].join(',')})`
-                                : `and fkTrimuria IN (${[...thrimurais.map((item) => item.id)].join(
-                                      ','
-                                  )})`
-                        } GROUP BY titleS limit 40 offset ${offset?.title?.page}  `,
-                        (callbacks) => {
-                            setSearchedResult((prev) => {
-                                if (prev?.length) {
-                                    // console.log('🚀 ~ setSearchedResult ~ prev:', prev);
-                                    const newArray = [...prev];
-                                    callbacks?.length && newArray.push(...callbacks);
-                                    return newArray;
-                                }
-                                return callbacks;
-                            });
-
-                            setoffSet((prev) => {
-                                console.log('🚀 ~ setoffSet ~ prev:', {
-                                    ...prev,
-                                    title: {
-                                        ...prev.title,
-                                        isfetching: false,
-                                    },
-                                });
-                                if (!callbacks?.length) {
-                                    return {
-                                        ...prev,
-                                        title: {
-                                            ...prev.title,
-                                            isfetching: false,
-                                            isHavingMore: false,
-                                        },
-                                    };
-                                }
-                                return {
-                                    ...prev,
-                                    title: {
-                                        ...prev.title,
-                                        isfetching: false,
-                                        isHavingMore: true,
-                                    },
-                                };
-                            });
-
-                            const keys = recentKeyword ? recentKeyword : [];
-                            const s = keys?.filter((keys) => keys !== searchText);
-                            const updated = [...s, searchText].slice(0, 6);
-                            AsyncStorage.setItem('recentKeyword', JSON.stringify(updated));
-                        }
-                    );
-                }
-
-                if (tab === 'rawSongs') {
-                    console.log(
-                        "🚀 ~ SearchScreen ~ selectedTab === 'rawSong':",
-                        selectedTab === 'rawSong'
-                    );
-
-                    getSqlData(
-                        `SELECT t.prevId, t.titleNo ,ts.thirumuraiId, ts.songNo ,ts.rawSong FROM thirumurais t  JOIN thirumurai_songs ts ON t.prevId = ts.prevId WHERE ts.searchTitle LIKE '%${normalizeString(
-                            searchText.trim()
-                            // setSearchText
-                        )}%'  ${
-                            !fktrimuria.has(0)
-                                ? `and ts.thirumuraiId IN (${[...fktrimuria].join(',')})`
-                                : `and ts.thirumuraiId IN (${[
-                                      ...thrimurais.map((item) => item.id),
-                                  ].join(',')})`
-                        }  AND ts.locale='${
-                            i18n.language === 'en-IN' ? 'RoI' : i18n.language
-                        }' GROUP BY   ts.thirumuraiId, ts.prevId, ts.songNo ORDER BY ts.thirumuraiId, ts.prevId, ts.songNo ASC  limit 40 offset ${
-                            offset?.rawSongs?.page
-                        } `,
-                        (callbacks) => {
-                            setRawSongs((prev) => {
-                                if (prev?.length) {
-                                    const newArray = [...prev];
-                                    // console.log('🚀 ~ setRawSongs ~ newArray:', newArray);
-                                    callbacks?.length && newArray.push(...callbacks);
-                                    return newArray;
-                                }
-                                return callbacks;
-                            });
-                            // setRawSongs([...rawSongs, ...callbacks]);
-                            setoffSet((prev) => {
-                                console.log('🚀 ~ setoffSet ~ prev 185:', {
-                                    ...prev,
-                                    rawSongs: {
-                                        ...prev.rawSongs,
-                                        isfetching: false,
-                                    },
-                                });
-                                if (!callbacks?.length) {
-                                    return {
-                                        ...prev,
-                                        rawSongs: {
-                                            ...prev.rawSongs,
-                                            isfetching: false,
-                                            isHavingMore: false,
-                                        },
-                                    };
-                                }
-                                return {
-                                    ...prev,
-                                    rawSongs: {
-                                        ...prev.rawSongs,
-                                        isfetching: false,
-                                        isHavingMore: true,
-                                    },
-                                };
-                            });
-                        }
-                    );
-                }
-                setIsSearched(() => true);
-            }
-        },
-        [debounceVal, selectedTab, fktrimuria, offset?.title?.page, offset?.rawSongs?.page]
-    );
-
+    };
     const renderRecentSearch = (item) => {
+        console.log('🚀 ~ renderRecentSearch ~ item:', item);
         return (
             <TouchableOpacity
                 style={{
@@ -266,19 +213,61 @@ const SearchScreen = ({ navigation, route }) => {
                 }}
                 onPress={() => {
                     setSearchText(item);
-                    // console.log('🚀 ~ renderRecentSearch ~ onPress:', onPress);
                     setTimeout(() => {
-                        getDataFromSql(item, selectedTab);
+                        getDataFromSql(item);
                     }, 1000);
+                    // getDataFromSql()
                 }}
             >
                 <Text style={{ fontSize: 12, fontFamily: 'Mulish-Regular' }}>{item}</Text>
             </TouchableOpacity>
         );
     };
+    function minTwoDigits(n) {
+        return (n < 10 ? '0' : '') + n;
+    }
+
+    const renderThirumuraiId = (id) => {
+        if (id < 9) {
+            return id;
+        } else if (id == 9) {
+            return '8K';
+        } else if (id == 10 || id == 11) {
+            return 9;
+        } else if (id == 12) {
+            return 10;
+        } else if (id == 13) {
+            return 11;
+        } else {
+            return 12;
+        }
+    };
+    const renderResult = (item, index, key) => {
+        return (
+            <Pressable
+                style={{ marginVertical: 10 }}
+                onPress={() =>
+                    navigation.navigate(RouteTexts.THRIMURAI_SONG, {
+                        data: item,
+                        searchedword: debounceVal,
+                        searchScreen: true,
+                        songNo: item?.songNo,
+                    })
+                }
+            >
+                {key == 'title' ? null : (
+                    <Text>
+                        {`${renderThirumuraiId(item?.thirumuraiId)}.${minTwoDigits(
+                            item?.titleNo
+                        )}.${minTwoDigits(item?.songNo)}`}
+                    </Text>
+                )}
+                {highlight(item, index, key)}
+            </Pressable>
+        );
+    };
 
     const { t } = useTranslation();
-
     const setFkTrimuriaFunc = (item) => {
         setFkTrimuria((prev) => {
             let updateData = new Set(prev);
@@ -302,7 +291,6 @@ const SearchScreen = ({ navigation, route }) => {
             return updateData;
         });
     };
-
     const nameMap = {
         'Thrimurai 8': '(2nd bar pink)',
         'Thrimurai 9': '(3rd bar Green)',
@@ -320,7 +308,6 @@ const SearchScreen = ({ navigation, route }) => {
             focusRef.current.focus();
         }
     }, [focusRef.current]);
-
     return (
         <View style={[styles.main, { backgroundColor: theme.backgroundColor }]}>
             <Background>
@@ -330,7 +317,7 @@ const SearchScreen = ({ navigation, route }) => {
                     }}
                 >
                     <HeaderWithTextInput
-                        onSubmitEditing={() => getDataFromSql(searchText, selectedTab)}
+                        onSubmitEditing={() => getDataFromSql(debounceVal)}
                         placeholder={`${t('Search for any')} ( முதல்-திருமுறை )`}
                         navigation={navigation}
                         setState={(e) => setSearchText(e)}
@@ -404,91 +391,35 @@ const SearchScreen = ({ navigation, route }) => {
                         )}
                     />
                 </View>
-                {/* tabs */}
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        gap: 8,
-                        width: screenWidth,
-                        paddingHorizontal: '20',
-                        justifyContent: 'center',
-                        marginBottom: 10,
-                    }}
-                >
-                    <Pressable
-                        onPress={() => {
-                            setSelectedTab(() => tab[0]?.name);
-                        }}
-                        style={{
-                            backgroundColor:
-                                selectedTab !== tab[0]?.name
-                                    ? theme.searchContext.unSelected.bgColor
-                                    : theme.searchContext.selected.bgColor,
-                            width: (screenWidth - 28) / 2,
-                            paddingVertical: 5,
-                            borderRadius: 20,
-                        }}
-                    >
-                        <Text
-                            style={{
-                                textAlign: 'center',
-                            }}
-                        >
-                            {' '}
-                            {tab[0]?.showVal}
-                        </Text>
-                    </Pressable>
-                    <Pressable
-                        onPress={() => {
-                            setSelectedTab(() => tab[1]?.name);
-                        }}
-                        style={{
-                            backgroundColor:
-                                selectedTab !== tab[1]?.name
-                                    ? theme.searchContext.unSelected.bgColor
-                                    : theme.searchContext.selected.bgColor,
-
-                            width: (screenWidth - 28) / 2,
-                            paddingVertical: 5,
-                            borderRadius: 20,
-                        }}
-                    >
-                        <Text
-                            style={{
-                                textAlign: 'center',
-                            }}
-                        >
-                            {tab[1]?.showVal}
-                        </Text>
-                    </Pressable>
-                </View>
             </Background>
-            {isSearched || searchResult.length || rawSongs?.length ? (
-                <ScrollView style={{ paddingHorizontal: 10 }} showsVerticalScrollIndicator>
-                    {selectedTab === tab[0].name && (
-                        <RenderTitleRelatedSearch
-                            searchTextVal={debounceVal}
-                            getDataFromSql={getDataFromSql}
-                            tab={tab}
-                            searchResult={searchResult}
-                            selectedTab={selectedTab}
-                            setoffSet={setoffSet}
-                            offset={offset}
+            {isSearched ? (
+                // searchResult?.length > 0 || rawSongs?.length > 0 ?
+                isSearched && !(searchResult?.error && rawSongs?.error) ? (
+                    <ScrollView style={{ paddingHorizontal: 10 }} showsVerticalScrollIndicator>
+                        <FlatList
+                            key={(item) => item?.id}
+                            contentContainerStyle={{ marginTop: 10 }}
+                            data={searchResult}
+                            // inverted
+                            renderItem={({ item, index }) => renderResult(item, index, 'title')}
+                            windowSize={40}
+                            // renderItem={({ item, index }) => renderResult(item, index, 'title')}
                         />
-                    )}
-
-                    {selectedTab === tab[1].name && (
-                        <RenderLyricsRelatedSearch
-                            searchTextVal={debounceVal}
-                            getDataFromSql={getDataFromSql}
-                            tab={tab}
-                            searchResult={rawSongs}
-                            selectedTab={selectedTab}
-                            setoffSet={setoffSet}
-                            offset={offset}
+                        <FlatList
+                            contentContainerStyle={{ marginTop: 10 }}
+                            data={rawSongs}
+                            renderItem={({ item, index }) => renderResult(item, index, 'rawSong')}
+                            windowSize={40}
                         />
-                    )}
-                </ScrollView>
+                    </ScrollView>
+                ) : (
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <CenterIcon />
+                        <Text style={{ color: '#777777', fontFamily: 'Mulish-Regular' }}>
+                            No Result found
+                        </Text>
+                    </View>
+                )
             ) : (
                 <View style={{ flex: 1 }}>
                     <Text style={{ fontSize: 18, fontFamily: 'Lora-SemiBold', margin: 5 }}>

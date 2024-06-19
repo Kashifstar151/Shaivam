@@ -3,6 +3,7 @@ import {
     FlatList,
     Image,
     ImageBackground,
+    Platform,
     Pressable,
     StyleSheet,
     Text,
@@ -86,7 +87,7 @@ const AddTempleForm = ({ navigation, setStep }) => {
 
     return (
         <View>
-            <ScrollView>
+            <ScrollView bounces={false}>
                 <ImageBackground
                     source={theme.colorscheme === 'light' ? bgImg : bgImgDark}
                     resizeMode="cover"
@@ -98,7 +99,7 @@ const AddTempleForm = ({ navigation, setStep }) => {
                         styles.wholeContainerWrapper,
                         {
                             backgroundColor: 'white',
-                            paddingBottom: 80,
+                            paddingBottom: Platform.OS == 'ios' ? 180 : 80,
                         },
                     ]}
                 >
@@ -223,7 +224,7 @@ const AddTempleForm = ({ navigation, setStep }) => {
                                     value={templadata.description}
                                     onChangeText={(text) => dispatch(updateDescription(text))}
                                     numberOfLines={4}
-                                    style={{ ...styles.textInputStyle }}
+                                    style={{ ...styles.textInputStyle, height: 80 }}
                                 />
                             </View>
                         </View>

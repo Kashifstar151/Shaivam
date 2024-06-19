@@ -61,7 +61,7 @@ const SearchTemple = ({
 
     const [fetchedLocationsName, setFetchedLocationsName] = useState([]);
     useEffect(() => {
-        if (debounceVal && triggerCall.current) {
+        if (debounceVal) {
             searchResultData()
                 .then((response) => {
                     console.log(
