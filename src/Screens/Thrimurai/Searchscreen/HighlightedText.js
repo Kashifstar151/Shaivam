@@ -15,17 +15,18 @@ const HighlightedText = ({ fontSizeCount, text, highlight, lyrics, screen, ...re
             style={[
                 screen !== 'music-player'
                     ? {
-                        fontFamily: 'AnekTamil-Bold',
-                        fontSize: 14,
-                        // fontWeight: lyrics ? '400' : '700',
-                    }
+                          fontFamily: 'AnekTamil-Bold',
+                          fontSize: 14,
+
+                          //   fontWeight: lyrics ? '400' : '700',
+                      }
                     : {
-                        fontFamily: 'AnekTamil-Regular',
-                        fontSize: fontSizeCount,
-                        lineHeight: 30,
-                    },
+                          fontFamily: 'AnekTamil-medium',
+                          fontSize: fontSizeCount,
+                          lineHeight: 22,
+                      },
                 {
-                    color: theme.textColor,
+                    color: restProps?.textColor ? restProps?.textColor : theme.textColor,
                 },
             ]}
             {...restProps}

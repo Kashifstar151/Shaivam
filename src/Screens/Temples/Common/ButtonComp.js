@@ -6,8 +6,7 @@ const ButtonComp = ({ text, navigation, color }) => {
         <TouchableOpacity
             disabled={!color}
             onPress={navigation}
-            style={color ? styles.buttton : [styles.buttton, { backgroundColor: '#777777' }]}
-        >
+            style={color ? styles.buttton : [styles.buttton, { backgroundColor: '#777777' }]}>
             <Text style={color ? styles.text : [styles.text, { color: '#ffffff' }]}>{text}</Text>
         </TouchableOpacity>
     );

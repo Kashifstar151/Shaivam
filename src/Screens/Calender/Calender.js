@@ -47,6 +47,7 @@ import { useTranslation } from 'react-i18next';
 import { useDebouncer } from '../../Helpers/useDebouncer';
 import CategoryAssets from './CategoryAssets';
 import FestivalVideo from './FestivalVideo';
+import LoadingScreen from '../Loading/LoadingScreen';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -60,7 +61,7 @@ const Calender = ({ navigation }) => {
         { name: 'Events', selected: <ActiveCalender />, unSelected: <InActiveCalender /> },
     ];
     const [selectMonth, setSelectMonth] = useState(new Date().toISOString());
-    const [language, setLanguage] = useState(i18n.language == 'en-IN' ? 'en' : i18n.language == 'en' ? 'ta' : i18n.language)
+    const [language, setLanguage] = useState(i18n.language == 'en-IN' ? 'en' : i18n.language == 'en' ? 'ta' : i18n.language == 'DV' ? 'hi' : 'en')
     const [searchText, setSearchText] = useState('');
     const [eventCategory, setEventCategory] = useState(null);
     const [selectedLocation, setSelectedLocation] = useState(null);
@@ -87,9 +88,10 @@ const Calender = ({ navigation }) => {
         data: festivalEvents,
         isFetching: isfestivaldataFetching,
         refetch: refetchFestival,
+        isLoading: isFestivalLoading,
         isSuccess: isFestivalSuccess
 
-    } = useGetFestivalListQuery({ selectMonth, language });
+    } = useGetFestivalListQuery({ selectMonth, language: i18n.language == 'en-IN' ? 'en' : i18n.language == 'en' ? 'ta' : i18n.language == 'DV' ? 'hi' : 'en' });
     const {
         data: monthRecurringEventList,
         isFetching: isFetchingMonthly,
@@ -128,7 +130,9 @@ const Calender = ({ navigation }) => {
     );
     useEffect(() => {
         getScheduleNotification()
+        refetchFestival()
     }, [isFocused])
+
 
     const getScheduleNotification = () => {
         PushNotification.getScheduledLocalNotifications(callbacks => {
@@ -711,42 +715,46 @@ const Calender = ({ navigation }) => {
                         showLoader ? <View style={{ height: 200, width: 200, justifyContent: 'center', alignItems: 'center' }}>
                             <ActivityIndicator size={'large'} />
                         </View> :
+
                             <>
                                 <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
                                     <Text style={{ fontSize: 16, fontFamily: 'Lora-Bold', color: '#222222' }}>
                                         {t('This Month')}
                                     </Text>
                                 </View>
-                                <FlatList
-                                    getItemLayout={getItemLayOut}
-                                    ref={flatListRef}
-                                    data={selectedHeader == data1[0].name ? searchText == '' ? festivalEvents?.data : filteredData : searchText == '' ? mainData : filteredData}
-                                    key={(item, index) => index}
-                                    contentContainerStyle={{ paddingBottom: 100 }}
-                                    renderItem={({ item, index }) => (
-                                        <ElevatedCard
-                                            navigation={() =>
-                                                EventNavigation(item)
-                                            }
-                                            theme={{ colorscheme: theme.colorscheme }}
-                                        >
-                                            <EventCard
-                                                Icon={CategoryAssets[item?.attributes?.event_category ? item?.attributes?.event_category : item?.attributes?.category]?.Svg}
-                                                date={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).get('D') : moment(item.start_date).get('D')}
-                                                dateNo={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).format('DD') : moment(item.start_date).format('DD')}
-                                                day={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).format('ddd') : moment(item.start_date).format('ddd')}
-                                                timing={selectedHeader == data1[0].name ? null : `${moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('MMMM DD YYYY')} - ${moment(item.end_date ? item.end_date : item?.attributes?.end_date).format('MMMM DD YYYY')}`}
-                                                title={selectedHeader == data1[0].name ? item?.attributes?.Calendar_title : item.attributes.title}
-                                                item={item}
-                                                header={selectedHeader}
-                                                theme={{
-                                                    textColor: theme.textColor,
-                                                    colorscheme: theme.colorscheme,
-                                                }}
-                                            />
-                                        </ElevatedCard>
-                                    )}
-                                />
+                                {
+                                    isFestivalLoading ? <LoadingScreen /> : <FlatList
+                                        getItemLayout={getItemLayOut}
+                                        ref={flatListRef}
+                                        data={selectedHeader == data1[0].name ? searchText == '' ? festivalEvents?.data : filteredData : searchText == '' ? mainData : filteredData}
+                                        key={(item, index) => index}
+                                        contentContainerStyle={{ paddingBottom: 100 }}
+                                        renderItem={({ item, index }) => (
+                                            <ElevatedCard
+                                                navigation={() =>
+                                                    EventNavigation(item)
+                                                }
+                                                theme={{ colorscheme: theme.colorscheme }}
+                                            >
+                                                <EventCard
+                                                    Icon={CategoryAssets[item?.attributes?.event_category ? item?.attributes?.event_category : item?.attributes?.category]?.Svg}
+                                                    date={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).get('D') : moment(item.start_date).get('D')}
+                                                    dateNo={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).format('DD') : moment(item.start_date).format('DD')}
+                                                    day={selectedHeader == data1[0].name ? moment(item?.attributes?.calendar_from_date).format('ddd') : moment(item.start_date).format('ddd')}
+                                                    timing={selectedHeader == data1[0].name ? null : `${moment(item.start_date ? item.start_date : item?.attributes?.start_date).format('MMMM DD YYYY')} - ${moment(item.end_date ? item.end_date : item?.attributes?.end_date).format('MMMM DD YYYY')}`}
+                                                    title={selectedHeader == data1[0].name ? item?.attributes?.Calendar_title : item.attributes.title}
+                                                    item={item}
+                                                    header={selectedHeader}
+                                                    theme={{
+                                                        textColor: theme.textColor,
+                                                        colorscheme: theme.colorscheme,
+                                                    }}
+                                                />
+                                            </ElevatedCard>
+                                        )}
+                                    />
+                                }
+
                             </>
                     }
                     <RBSheet closeOnDragDown ref={selectEventRef}>

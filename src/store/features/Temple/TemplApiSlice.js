@@ -36,6 +36,15 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
             transformResponse: (response, meta, arg) => {
                 let responseToRetun = {};
                 if (response?.data?.attributes) {
+                    const { Longitude, Latitude, Flag, Name } = response?.data?.attributes;
+
+                    responseToRetun['templeName'] = Name;
+                    responseToRetun['templeCoordinate'] = {
+                        latitude: Latitude,
+                        longitude: Longitude,
+                    };
+                    responseToRetun['flag'] = Flag;
+
                     if (response?.data?.attributes?.temple?.data?.attributes) {
                         const {
                             Swamy_name,
@@ -125,13 +134,12 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
         templeErrorhandler: builder.mutation({
             // add email field
             query: (body) => {
-                console.log('🚀 ~ body:', { ...body, publishedAt: new Date() });
                 const url = `api/error-reporteds`;
                 return {
                     url: url,
                     method: 'POST',
                     body: {
-                        data: { ...body, publishedAt: `${new Date()}` },
+                        data: { ...body, publishedAt: `${new Date().toISOString()}` },
                     },
                     headers: { 'Content-Type': 'application/json' },
                 };
@@ -145,6 +153,7 @@ const TempleApiSliceCall = TempleApiSlice.injectEndpoints({
                 };
             },
             transformErrorResponse: (response, meta, arg) => {
+                console.log('🚀 ~ response error :', response);
                 return {
                     status: 'FAILED',
                     error: response?.data?.error,

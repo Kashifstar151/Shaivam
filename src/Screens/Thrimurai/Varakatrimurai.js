@@ -7,7 +7,7 @@ import { getSqlData } from '../Database';
 import { useTranslation } from 'react-i18next';
 import { FlatList } from 'react-native-gesture-handler';
 
-const Varakatrimurai = ({ navigation }) => {
+const Varakatrimurai = ({ navigation, prevId }) => {
     const { theme } = useContext(ThemeContext);
     const [selectedTitle, setSelectedTitle] = useState(null);
     const [authordata, setAuthorData] = useState(null);
@@ -16,7 +16,11 @@ const Varakatrimurai = ({ navigation }) => {
 
     useEffect(() => {
         getSqlData(
-            'select * from thirumurais WHERE authorNo IS NOT NULL GROUP BY authorNo ',
+            `select * from thirumurais WHERE fkTrimuria ${prevId} ${
+                prevId === ' IN (10,11)'
+                    ? 'and author IS NOT NULL GROUP BY author'
+                    : 'and authorNo IS NOT NULL GROUP BY authorNo'
+            } `,
             (cb) => {
                 setAuthorData(cb);
             }

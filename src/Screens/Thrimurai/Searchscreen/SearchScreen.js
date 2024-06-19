@@ -60,8 +60,9 @@ const SearchScreen = ({ navigation, route }) => {
     }, [])
     const getSearchedTexxs = async () => {
         const data = await AsyncStorage.getItem('recentKeyword')
-        // console.log("🚀 ~ getSearchedTexxs ~ data:", data)
-        setRecentKeywords(JSON.parse(data))
+        let arr = JSON.parse(data)
+        // console.log("🚀 ~ getSearchedTexxs ~ data:", arr?.reverse())
+        setRecentKeywords(arr?.reverse())
     }
     const normalizeString = (str) => {
         setSearchText(
@@ -87,7 +88,7 @@ const SearchScreen = ({ navigation, route }) => {
                     setSearchedResult(callbacks);
                     const keys = recentKeyword ? recentKeyword : []
                     const s = keys?.filter((keys) => keys !== searchText)
-                    const updated = [...s, searchText].slice(0, 6)
+                    const updated = [...s, searchText].slice(-6)
                     AsyncStorage.setItem("recentKeyword", JSON.stringify(updated))
                 }
             );
@@ -379,9 +380,10 @@ const SearchScreen = ({ navigation, route }) => {
                             key={(item) => item?.id}
                             contentContainerStyle={{ marginTop: 10 }}
                             data={searchResult}
+                            // inverted
                             renderItem={({ item, index }) => renderResult(item, index, 'title')}
                             windowSize={40}
-                            // renderItem={({ item, index }) => renderResult(item, index, 'title')}
+                        // renderItem={({ item, index }) => renderResult(item, index, 'title')}
                         />
                         <FlatList
                             contentContainerStyle={{ marginTop: 10 }}

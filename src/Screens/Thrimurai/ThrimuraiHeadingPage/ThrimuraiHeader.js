@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ThemeContext } from '../../../Context/ThemeContext';
 import { useTranslation } from 'react-i18next';
-const ThrimuraiHeader = ({ selectedHeader, setSelectedheader, item }) => {
+const ThrimuraiHeader = ({ selectedHeader, setSelectedheader, item, prevId }) => {
     const { theme } = useContext(ThemeContext);
     const { t } = useTranslation();
     const [itemWidth, setItemWidth] = useState(Dimensions.get('window').width / 4);
@@ -34,7 +34,9 @@ const ThrimuraiHeader = ({ selectedHeader, setSelectedheader, item }) => {
                             { fontWeight: '700', color: theme.iconHeadingColor.activeTextColor },
                         ]}
                     >
-                        {t(item.name)}
+                        {prevId == ' IN (10,11)' && item.name === 'Varalatrumurai'
+                            ? t('By Author')
+                            : t(item.name)}
                     </Text>
                 </TouchableOpacity>
             ) : (
@@ -51,7 +53,9 @@ const ThrimuraiHeader = ({ selectedHeader, setSelectedheader, item }) => {
                             },
                         ]}
                     >
-                        {t(item.name)}
+                        {prevId == ' IN (10,11)' && item.name === 'Varalatrumurai'
+                            ? t('By Author')
+                            : t(item.name)}
                     </Text>
                 </TouchableOpacity>
             )}

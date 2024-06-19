@@ -50,11 +50,11 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
         }),
         getRecurringById: builder.query({
             query: (data) => {
-                // console.log("🚀 ~ data:", data)
+                console.log("🚀 ~ data:", data)
                 // const url = `?temple_coordinates[coords]=${data?.longitude},${data?.latitude}&pagination[pageSize]=200`;
                 // https://lobster-app-gpfv5.ondigitalocean.app/api/nearby-temples?long=77.391029&lat=28.535517&radius=15000
                 // const url = `api/nearby-temples?long=${data?.longitude}&lat=${data?.latitude}&radius=15000`;
-                const url = `recurring-events/${data?.id}?populate[File][fields][0]=url`;
+                const url = `recurring-events/${data?.data}?populate[File][fields][0]=url`;
                 console.log('🚀 ~ url:', url);
                 return {
                     url: url,

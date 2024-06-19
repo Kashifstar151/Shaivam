@@ -27,5 +27,6 @@ export const RouteTexts = {
     WEBSIRE_VIEW: 'WebsiteView',
     NOTIFICATION: 'Notification',
     FESTIVAL_VIDEO: 'FestivalVideo',
-    SEND_FESTIVAL_VIDEO: 'SendFestivalVideo'
+    SEND_FESTIVAL_VIDEO: 'SendFestivalVideo',
+    LOADING: 'LoadingScreen'
 }
