@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Keyboard, Pressable, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import { Keyboard, Platform, Pressable, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { View, Text, TextInput } from 'react-native';
 import SearchSVG from '../../components/SVGs/SearchSVG';
 import { useNavigation } from '@react-navigation/core';
@@ -10,6 +10,8 @@ import getDimension from '../../Helpers/getDimension';
 import { ScrollView } from 'react-native-gesture-handler';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import * as RNLocalize from 'react-native-localize';
+import { checkPermissionAccess } from '../../Helpers/GeolocationFunc';
+import { PERMISSIONS } from 'react-native-permissions';
 // import BackBtnSVG from '../../components/SVGs/BackBtnSvg';
 
 const SearchTemple = ({
@@ -47,7 +49,8 @@ const SearchTemple = ({
     const searchResultData = async () => {
         return await fetch(
             // `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${debounceVal}&key=${'AIzaSyC9Esy5cuOwL4OsSxPuhOet3ky5cKI8J1k'}&language=en`,
-            `https://nominatim.openstreetmap.org/search?format=json&q=${debounceVal}&accept-language=${RNLocalize.getLocales().map((locale) => locale.languageCode)[0]
+            `https://nominatim.openstreetmap.org/search?format=json&q=${debounceVal}&accept-language=${
+                RNLocalize.getLocales().map((locale) => locale.languageCode)[0]
             }`,
 
             {
@@ -113,6 +116,13 @@ const SearchTemple = ({
             keyboardDidShowListener.remove();
         };
     }, []);
+
+    const permissionTypeRef = useRef(
+        Platform.select({
+            ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+            android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+        })
+    );
 
     return (
         <View style={{ flexGrow: 1 }}>
@@ -207,7 +217,8 @@ const SearchTemple = ({
                                             handleBlur();
                                             triggerCall.current = false;
                                             setSearchText(() => item.display_name);
-                                            setRegionCoordinate(item);
+                                            checkPermissionAccess(permissionTypeRef.current) &&
+                                                setRegionCoordinate(item);
                                         }}
                                     >
                                         <Text
