@@ -37,7 +37,7 @@ const SearchScreen = ({ navigation, route }) => {
     // const [onFocus, setOnFocus] = useState(false);
     const [rawSongs, setRawSongs] = useState(null);
     const { theme } = useContext(ThemeContext);
-    const [recentKeyword, setRecentKeywords] = useState([])
+    const [recentKeyword, setRecentKeywords] = useState([]);
     const [fktrimuria, setFkTrimuria] = useState(new Set([0]));
     const [isSearched, setIsSearched] = useState(false);
     const { screenHeight } = getDimension();
@@ -56,14 +56,14 @@ const SearchScreen = ({ navigation, route }) => {
         );
     }, [thrimurais]);
     useEffect(() => {
-        getSearchedTexxs()
-    }, [])
+        getSearchedTexxs();
+    }, []);
     const getSearchedTexxs = async () => {
-        const data = await AsyncStorage.getItem('recentKeyword')
-        let arr = JSON.parse(data)
+        const data = await AsyncStorage.getItem('recentKeyword');
+        let arr = JSON.parse(data);
         // console.log("🚀 ~ getSearchedTexxs ~ data:", arr?.reverse())
-        setRecentKeywords(arr?.reverse())
-    }
+        setRecentKeywords(arr?.reverse());
+    };
     const normalizeString = (str) => {
         setSearchText(
             str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
@@ -80,27 +80,30 @@ const SearchScreen = ({ navigation, route }) => {
             getSqlData(
                 `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${normalizeString(
                     searchText.trim()
-                )}%' and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language}' ${!fktrimuria.has(0)
-                    ? `and fkTrimuria IN (${[...fktrimuria].join(',')})`
-                    : `and fkTrimuria IN (${[...thrimurais.map((item) => item.id)].join(',')})`
+                )}%' and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language}' ${
+                    !fktrimuria.has(0)
+                        ? `and fkTrimuria IN (${[...fktrimuria].join(',')})`
+                        : `and fkTrimuria IN (${[...thrimurais.map((item) => item.id)].join(',')})`
                 } GROUP BY titleS;`,
                 (callbacks) => {
                     setSearchedResult(callbacks);
-                    const keys = recentKeyword ? recentKeyword : []
-                    const s = keys?.filter((keys) => keys !== searchText)
-                    const updated = [...s, searchText].slice(-6)
-                    AsyncStorage.setItem("recentKeyword", JSON.stringify(updated))
+                    const keys = recentKeyword ? recentKeyword : [];
+                    const s = keys?.filter((keys) => keys !== searchText);
+                    const updated = [...s, searchText].slice(-6);
+                    AsyncStorage.setItem('recentKeyword', JSON.stringify(updated));
                 }
             );
             getSqlData(
                 `SELECT t.prevId, t.titleNo ,ts.thirumuraiId, ts.songNo ,ts.rawSong FROM thirumurais t  JOIN thirumurai_songs ts ON t.prevId = ts.prevId WHERE ts.searchTitle LIKE '%${normalizeString(
                     searchText.trim()
-                )}%'  ${!fktrimuria.has(0)
-                    ? `and ts.thirumuraiId IN (${[...fktrimuria].join(',')})`
-                    : `and ts.thirumuraiId IN (${[...thrimurais.map((item) => item.id)].join(
-                        ','
-                    )})`
-                }  AND ts.locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language
+                )}%'  ${
+                    !fktrimuria.has(0)
+                        ? `and ts.thirumuraiId IN (${[...fktrimuria].join(',')})`
+                        : `and ts.thirumuraiId IN (${[...thrimurais.map((item) => item.id)].join(
+                              ','
+                          )})`
+                }  AND ts.locale='${
+                    i18n.language === 'en-IN' ? 'RoI' : i18n.language
                 }' GROUP BY   ts.thirumuraiId, ts.prevId, ts.songNo ORDER BY ts.thirumuraiId, ts.prevId, ts.songNo ASC`,
                 (callbacks) => {
                     setRawSongs(callbacks);
@@ -194,19 +197,32 @@ const SearchScreen = ({ navigation, route }) => {
         );
     };
     const renderRecentSearch = (item) => {
-        console.log("🚀 ~ renderRecentSearch ~ item:", item)
+        console.log('🚀 ~ renderRecentSearch ~ item:', item);
         return (
-            <TouchableOpacity style={{ borderWidth: 1, borderColor: '#777777', width: 'auto', height: 35, borderRadius: 16, paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center', marginLeft: 10 }} onPress={() => {
-                setSearchText(item)
-                setTimeout(() => {
-                    getDataFromSql(item)
-                }, 1000)
-                // getDataFromSql()
-            }}>
+            <TouchableOpacity
+                style={{
+                    borderWidth: 1,
+                    borderColor: '#777777',
+                    width: 'auto',
+                    height: 35,
+                    borderRadius: 16,
+                    paddingHorizontal: 10,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginLeft: 10,
+                }}
+                onPress={() => {
+                    setSearchText(item);
+                    setTimeout(() => {
+                        getDataFromSql(item);
+                    }, 1000);
+                    // getDataFromSql()
+                }}
+            >
                 <Text style={{ fontSize: 12, fontFamily: 'Mulish-Regular' }}>{item}</Text>
             </TouchableOpacity>
-        )
-    }
+        );
+    };
     function minTwoDigits(n) {
         return (n < 10 ? '0' : '') + n;
     }
@@ -350,22 +366,26 @@ const SearchScreen = ({ navigation, route }) => {
                                     }}
                                 >
                                     {`${item?.id === 0 ? 'All' : ''} `}
-                                    {`${item?.id > 0 && item?.id < 8
-                                        ? `${t(`Thrimurai ${item?.id}`)}`
-                                        : ''
-                                        }`}
-                                    {`${item?.id >= 8 && item?.id !== 10 && item?.id !== 11
-                                        ? `${t(nameMap[`Thrimurai ${item?.id}`])}`
-                                        : ''
-                                        }`}
-                                    {`${item?.id === 10
-                                        ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[0]}`
-                                        : ''
-                                        }`}
-                                    {`${item?.id === 11
-                                        ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[1]}`
-                                        : ''
-                                        }`}
+                                    {`${
+                                        item?.id > 0 && item?.id < 8
+                                            ? `${t(`Thrimurai ${item?.id}`)}`
+                                            : ''
+                                    }`}
+                                    {`${
+                                        item?.id >= 8 && item?.id !== 10 && item?.id !== 11
+                                            ? `${t(nameMap[`Thrimurai ${item?.id}`])}`
+                                            : ''
+                                    }`}
+                                    {`${
+                                        item?.id === 10
+                                            ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[0]}`
+                                            : ''
+                                    }`}
+                                    {`${
+                                        item?.id === 11
+                                            ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[1]}`
+                                            : ''
+                                    }`}
                                 </Text>
                             </TouchableOpacity>
                         )}
@@ -375,7 +395,7 @@ const SearchScreen = ({ navigation, route }) => {
             {isSearched ? (
                 // searchResult?.length > 0 || rawSongs?.length > 0 ?
                 isSearched && !(searchResult?.error && rawSongs?.error) ? (
-                    <ScrollView style={{ paddingHorizontal: 10 }} showsVerticalScrollIndicator >
+                    <ScrollView style={{ paddingHorizontal: 10 }} showsVerticalScrollIndicator>
                         <FlatList
                             key={(item) => item?.id}
                             contentContainerStyle={{ marginTop: 10 }}
@@ -383,7 +403,7 @@ const SearchScreen = ({ navigation, route }) => {
                             // inverted
                             renderItem={({ item, index }) => renderResult(item, index, 'title')}
                             windowSize={40}
-                        // renderItem={({ item, index }) => renderResult(item, index, 'title')}
+                            // renderItem={({ item, index }) => renderResult(item, index, 'title')}
                         />
                         <FlatList
                             contentContainerStyle={{ marginTop: 10 }}
@@ -401,10 +421,17 @@ const SearchScreen = ({ navigation, route }) => {
                     </View>
                 )
             ) : (
-                <View style={{ flex: 1, }}>
-                    <Text style={{ fontSize: 18, fontFamily: 'Lora-SemiBold', margin: 5 }}>Recent Searches</Text>
-                    <FlatList data={recentKeyword} contentContainerStyle={{ marginTop: 5 }} renderItem={({ item, index }) => renderRecentSearch(item)} horizontal />
-                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
+                <View style={{ flex: 1 }}>
+                    <Text style={{ fontSize: 18, fontFamily: 'Lora-SemiBold', margin: 5 }}>
+                        Recent Searches
+                    </Text>
+                    <FlatList
+                        data={recentKeyword}
+                        contentContainerStyle={{ marginTop: 5 }}
+                        renderItem={({ item, index }) => renderRecentSearch(item)}
+                        horizontal
+                    />
+                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                         <CenterIcon />
                         <Text style={{ color: '#777777', fontFamily: 'Mulish-Regular' }}>
                             Search for any Thirumurai here

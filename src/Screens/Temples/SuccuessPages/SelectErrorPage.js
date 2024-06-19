@@ -50,7 +50,8 @@ const SelectErrorPage = ({
     ] = useTempleErrorhandlerMutation({});
 
     useEffect(() => {
-        if (desciption !== null && indianMobRegex.test(phoneNumber)) {
+        if (desciption !== null && phoneNumber) {
+            // if (desciption !== null && indianMobRegex.test(phoneNumber)) {
             setDisable(false);
         } else {
             setDisable(true);
@@ -120,6 +121,11 @@ const SelectErrorPage = ({
             setSubmitted(-1);
         }
         if (templeErrorhandlerIsSuccess) {
+            // console.log(
+            //     '🚀 ~ useEffect ~ templeErrorhandlerIsSuccess:',
+            //     templeErrorhandlerIsSuccess,
+            //     templeErrorReportedData
+            // );
             setSubmitted(1);
         }
     }, [

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import templeMetaData from './AssetMapWithTempleType';
 const CardForNearByTemple = React.memo(({ userLocation, item }) => {
-    console.log('🚀 ~ CardForNearByTemple ~ item:', item);
     const [favState, setFavState] = useState(false);
     const onPress = () => {
         const sourceLatitude = parseFloat(userLocation?.latitude); // Example source latitude
