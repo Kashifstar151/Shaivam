@@ -135,6 +135,16 @@ export const Temples = ({ navigation, route }) => {
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA,
             }));
+            mapRef.current?.animateCamera(
+                {
+                    center: userLocation,
+                    pitch: 2,
+                    heading: 20,
+                    zoom: 10,
+                    altitude: 200,
+                },
+                { duration: 500 }
+            );
             setRegionCoordinate((prev) => {
                 getNearByTemples({ ...prev, ...val });
                 return {
@@ -147,20 +157,20 @@ export const Temples = ({ navigation, route }) => {
         });
     };
 
-    useEffect(() => {
-        console.log('🚀 ~ Temples ~ userLocation:', mapRef?.current);
+    // useEffect(() => {
+    //     console.log('🚀 ~ Temples ~ userLocation:');
 
-        mapRef.current?.animateCamera(
-            {
-                center: userLocation,
-                pitch: 2,
-                heading: 20,
-                zoom: 10,
-                altitude: 200,
-            },
-            { duration: 500 }
-        );
-    }, [userLocation, mapRef?.current]);
+    //     mapRef.current?.animateCamera(
+    //         {
+    //             center: userLocation,
+    //             pitch: 2,
+    //             heading: 20,
+    //             zoom: 10,
+    //             altitude: 200,
+    //         },
+    //         { duration: 500 }
+    //     );
+    // }, [userLocation]);
 
     const handleTrackBack = async () => {
         let theCurrentPermission = await checkPermissionAccess(permissionTypeRef.current);
