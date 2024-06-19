@@ -199,6 +199,8 @@ export const Temples = ({ navigation, route }) => {
                 setPermissionGranted(() => finalState.permissionType);
                 if (finalState.permissionType === RESULTS.BLOCKED) {
                     setShowModal(!showModal);
+                } else if (finalState.permissionType === RESULTS.GRANTED) {
+                    fetchTheCurrentLocation();
                 }
             });
         } else {
