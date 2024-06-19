@@ -77,12 +77,30 @@ const TempleDetails = ({ navigation }) => {
         <html lang="en">
         <head>
           <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <meta name="viewport"
+          content="width=device-width, 
+                   initial-scale=1.0">
           <title>WebView with Links</title>
         </head>
         <style>
         *{
             user-select: none;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+        li{
+             margin-left:-25px;
+             margin-right:30px
+        }
+        p {
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+        pre{
+            display:flex;
+            flex-wrap:wrap
         }
         </style>
         <body>
