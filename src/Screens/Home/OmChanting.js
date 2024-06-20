@@ -33,8 +33,11 @@ const OmChanting = ({ close, setOmPlayTiming }) => {
                 >
                     <View style={styles.topConatiner}>
                         <Text style={styles.title}>{t('Om Namah Shivaya Chant')}</Text>
-                        <TouchableOpacity style={styles.iconContainer}>
-                            <Feather name="x" size={26} />
+                        <TouchableOpacity
+                            style={[styles.iconContainer, { right: 0 }]}
+                            onPress={() => close?.current?.close()}
+                        >
+                            <Feather name="x" size={26} color={'#000'} />
                         </TouchableOpacity>
                     </View>
                     <View style={{ marginVertical: 20 }}>
@@ -75,7 +78,7 @@ const OmChanting = ({ close, setOmPlayTiming }) => {
                                 borderRadius: 15,
                             }}
                         >
-                            <AntDesign name="minus" size={25} />
+                            <AntDesign name="minus" size={25} color={'#000'} />
                         </TouchableOpacity>
                         <View style={{ alignItems: 'center' }}>
                             <Text
@@ -122,7 +125,7 @@ const OmChanting = ({ close, setOmPlayTiming }) => {
                                 borderRadius: 15,
                             }}
                         >
-                            <AntDesign name="plus" size={25} />
+                            <AntDesign name="plus" size={25} color={'#000'} />
                         </TouchableOpacity>
                     </View>
                     <View style={{ position: 'absolute', bottom: 10, alignSelf: 'center' }}>
@@ -148,7 +151,7 @@ const OmChanting = ({ close, setOmPlayTiming }) => {
                         style={[styles.iconContainer, { position: 'absolute', top: 10 }]}
                         onPress={() => close?.current?.close()}
                     >
-                        <Feather name="x" size={24} />
+                        <Feather name="x" size={24} color={'#000'} />
                     </TouchableOpacity>
                     <View style={{ marginVertical: 30, alignSelf: 'center' }}>
                         <OMIcon />
