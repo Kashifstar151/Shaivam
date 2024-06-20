@@ -1090,7 +1090,7 @@ GROUP BY
                                                 },
                                             ]}
                                         >
-                                            {t('Thiruchirrambalam')}
+                                            {t('திருச்சிற்றம்பலம்')}
                                         </Text>
                                     }
                                     ListFooterComponent={
