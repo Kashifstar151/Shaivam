@@ -54,13 +54,10 @@ import HighlightedText from '../Searchscreen/HighlightedText';
 import { addEventListener, useNetInfo } from '@react-native-community/netinfo';
 
 const ThrimuraiSong = ({ route, navigation }) => {
-    console.log('🚀 ~ ThrimuraiSong ~ route:', route);
     const isFocused = useIsFocused;
     const { data, downloaded, searchedword, downloadSong, searchScreen, songNo } =
         route.params || {};
     const { isConnected } = useNetInfo();
-    // console.log("🚀 ~ ThrimuraiSong ~ isConnected:", isConnected)
-    // console.log('🚀 ~ ThrimuraiSong ~ route.params:', searchScreen);
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
@@ -568,7 +565,6 @@ GROUP BY
             if (event.type === Event.PlaybackQueueEnded && repeatMode === 0) {
                 queryForNextPrevId();
             } else if (event.type === Event.PlaybackActiveTrackChanged) {
-                console.log('🚀 ~ event:', event);
                 setActiveTrackState(event.track);
             }
             if (event.type === Event.RemoteSeek) {
@@ -623,7 +619,6 @@ GROUP BY
     }, [clipBoardString]);
 
     const renderText = (item) => {
-        console.log('🚀 ~ renderText ~ item:', JSON.stringify(item, 0, 2));
         if (tamilSplit && i18n.language === 'en' && selectedLang === 'Original') {
             return item?.tamilSplit || 'Text currently not available';
         } else if (selectedLang === 'Tamil') {
@@ -1383,7 +1378,9 @@ GROUP BY
                         }}
                     ></TouchableOpacity>
                 </View>
-                {(activeTrackState?.url && isConnected) || downloaded ? (
+                {(activeTrackState?.url && isConnected) ||
+                downloaded ||
+                activeTrackState?.isLocal ? (
                     <AudioPlayer
                         activeTrack={activeTrackState}
                         setDownloadingLoader={setDownloadingLoader}
