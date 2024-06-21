@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Modal, RefreshControl, StatusBar, StyleSheet, Text, View } from 'react-native';
 import Background from '../../../components/Background';
 import TempleHeader from '../TempleHeader';
@@ -20,6 +20,7 @@ import { useLazyGetAddedTempleOnEmailQuery } from '../../../store/features/Templ
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import { useIsFocused } from '@react-navigation/native';
 import { RouteTexts } from '../../../navigation/RouteText';
+import { ThemeContext } from '../../../Context/ThemeContext';
 
 const initialStepVal = {
     email: 'false',
@@ -137,9 +138,12 @@ const Addtemple = ({ navigation, route }) => {
             }
         }
     };
+    const { theme } = useContext(ThemeContext);
     return (
         <View style={{ flex: 1 }}>
-            <Background force={'light'}>
+            <Background
+            // force={'light'}
+            >
                 <View
                     style={{
                         paddingTop: Platform.OS == 'ios' ? StatusBar.currentHeight + 30 : 20,
@@ -164,6 +168,7 @@ const Addtemple = ({ navigation, route }) => {
                         flexGrow: 1,
                         paddingVertical: 20,
                         paddingBottom: 80,
+                        backgroundColor: theme.colorscheme === 'light' ? '#fff' : '#333333',
                     }}
                     renderItem={({ item, index }) => <RenderCardForAddTemple item={item} />}
                     refreshControl={

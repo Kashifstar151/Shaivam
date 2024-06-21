@@ -13,7 +13,6 @@ import {
 //
 import bgImg from '../../../../assets/Images/Background.png';
 import bgImgDark from '../../../../assets/Images/BackgroundCommon.png';
-import CloseBtn from '../../../../assets/Images/CloseBtnSVG.svg';
 import { ThemeContext } from '../../../Context/ThemeContext';
 import { RFValue } from 'react-native-responsive-fontsize';
 import LocationLogo from '../../../components/SVGs/LocationLogo';
@@ -98,14 +97,23 @@ const AddTempleForm = ({ navigation, setStep }) => {
                     style={[
                         styles.wholeContainerWrapper,
                         {
-                            backgroundColor: 'white',
+                            backgroundColor: '#222222',
                             paddingBottom: Platform.OS == 'ios' ? 180 : 80,
                         },
                     ]}
                 >
                     <View style={[styles.topBarWrapper]}>
                         <View style={styles.topBarContainer}>
-                            <Text style={styles.mainHeader}>Add a temple</Text>
+                            <Text
+                                style={[
+                                    styles.mainHeader,
+                                    {
+                                        color: theme.colorscheme === 'light' ? '#000' : '#fff4',
+                                    },
+                                ]}
+                            >
+                                Add a temple
+                            </Text>
 
                             <Pressable
                                 style={{ justifyContent: 'center' }}
@@ -114,11 +122,22 @@ const AddTempleForm = ({ navigation, setStep }) => {
                                     dispatch(resetTheState());
                                 }}
                             >
-                                <CloseBtn />
+                                <Feather
+                                    name="x"
+                                    size={26}
+                                    color={theme.colorscheme === 'light' ? '#000' : '#fff4'}
+                                />
                             </Pressable>
                         </View>
 
-                        <Text style={styles.subHeader}>
+                        <Text
+                            style={[
+                                styles.subHeader,
+                                {
+                                    color: theme.colorscheme === 'light' ? '#777777' : '#fff4',
+                                },
+                            ]}
+                        >
                             You can add Shiva temples in India, Nepal, Srilanka. Hindu temples in
                             the rest of the world.
                         </Text>
@@ -336,13 +355,11 @@ const styles = StyleSheet.create({
     },
 
     mainHeader: {
-        color: 'black',
         fontSize: RFValue(18, 850),
         fontFamily: 'Lora-Bold',
     },
 
     subHeader: {
-        color: '#777777',
         fontSize: RFValue(14, 850),
         fontFamily: 'Mulish',
         lineHeight: 18,

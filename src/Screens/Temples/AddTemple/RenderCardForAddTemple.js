@@ -1,5 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { ThemeContext } from '../../../Context/ThemeContext';
+import { useContext } from 'react';
 
 /*
     item must be like as :{
@@ -19,8 +21,16 @@ function formatDate(timestamp) {
     return `${day}/${month}/${year}`;
 }
 export const RenderCardForAddTemple = ({ item }) => {
+    const { theme } = useContext(ThemeContext);
     return (
-        <View style={style.mainBox}>
+        <View
+            style={[
+                style.mainBox,
+                {
+                    backgroundColor: theme.colorscheme === 'light' ? 'white' : '#3a3a3a',
+                },
+            ]}
+        >
             <View
                 style={{
                     flexDirection: 'row',
@@ -29,9 +39,27 @@ export const RenderCardForAddTemple = ({ item }) => {
                 }}
             >
                 <View>
-                    <Text style={style.heading}>{item?.attributes?.Name}</Text>
+                    <Text
+                        style={[
+                            style.heading,
+                            {
+                                color: theme.colorscheme === 'light' ? '#000' : '#fff',
+                            },
+                        ]}
+                    >
+                        {item?.attributes?.Name}
+                    </Text>
                     {item?.attributes?.location_name && (
-                        <Text style={style.subHeading}>{item?.attributes?.location_name}</Text>
+                        <Text
+                            style={[
+                                style.subHeading,
+                                {
+                                    color: theme.colorscheme === 'light' ? '#777777' : '#fff7',
+                                },
+                            ]}
+                        >
+                            {item?.attributes?.location_name}
+                        </Text>
                     )}
                 </View>
                 {/* {
@@ -42,7 +70,14 @@ export const RenderCardForAddTemple = ({ item }) => {
                     title={item?.attributes?.status ? item?.attributes?.status : 'pending'}
                 />
             </View>
-            <Text style={style.dateOfCreation}>
+            <Text
+                style={[
+                    style.dateOfCreation,
+                    {
+                        color: theme.colorscheme === 'light' ? '#222222' : '#fff8',
+                    },
+                ]}
+            >
                 Submitted on: {formatDate(item?.attributes?.createdAt)}
             </Text>
         </View>
@@ -102,7 +137,6 @@ const style = StyleSheet.create({
         fontFamily: 'Mulish-Medium',
         fontSize: RFValue(14, 850),
         lineHeight: 17,
-        color: '#777777',
     },
     status: {
         fontFamily: 'Mulish-Bold',
@@ -113,7 +147,6 @@ const style = StyleSheet.create({
         borderRadius: 5,
     },
     dateOfCreation: {
-        color: '#222222',
         fontFamily: 'Mulish',
         fontSize: RFValue(12, 850),
     },
