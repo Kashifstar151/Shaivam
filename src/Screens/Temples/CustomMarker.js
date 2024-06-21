@@ -1,20 +1,30 @@
-import { Image, Text, View } from 'react-native';
+import { Image, Platform, Text, View } from 'react-native';
 import { Callout, Marker } from 'react-native-maps';
 import assetMapWithTempleType from './AssetMapWithTempleType';
 export const MarkerCallOut = ({ callback, flag, coordinate, description }) => {
+    const extraProps =
+        Platform.OS === 'ios'
+            ? {
+                  icon: assetMapWithTempleType[flag]?.path
+                      ? assetMapWithTempleType[flag]?.path
+                      : null,
+              }
+            : {};
     return (
         <Marker
             tracksViewChanges={false}
             coordinate={coordinate}
             description={'This is a marker in React Natve'}
             title={'temple'}
-            // image={assetMapWithTempleType[1].path}
+            // pinColor={assetMapWithTempleType[flag]?.metaData?.color}
+            // image={assetMapWithTempleType[flag].path}
             style={{
                 width: '100%',
                 alignItems: 'center',
             }}
+            {...extraProps}
         >
-            <View>{assetMapWithTempleType[flag]?.Svg}</View>
+            {Platform.OS == 'ios' ? null : <View>{assetMapWithTempleType[flag]?.Svg}</View>}
             <Callout
                 tooltip={true}
                 onPress={callback ? callback : null}

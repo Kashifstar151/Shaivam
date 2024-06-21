@@ -170,7 +170,7 @@ export const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderTopWidth: 1,
     },
-    chapterNameTexts: { fontSize: 14, fontWeight: '600' },
+    chapterNameTexts: { fontSize: 15, fontWeight: '600' },
     chapterTexts: { fontSize: 12, fontWeight: '500', color: '#777777', marginTop: 5 },
 });
 export default Thalamurai;

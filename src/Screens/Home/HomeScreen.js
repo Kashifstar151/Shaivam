@@ -45,6 +45,7 @@ import {
 import { PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { useLazyGetNearByTemplesQuery } from '../../store/features/Temple/TemplApiSlice';
 import { RouteTexts } from '../../navigation/RouteText';
+import CategoryAssets from '../Calender/CategoryAssets';
 
 const HomeScreen = ({ navigation }) => {
     const RBSheetRef = useRef(null);
@@ -67,10 +68,10 @@ const HomeScreen = ({ navigation }) => {
             i18n.language == 'en-IN'
                 ? 'en'
                 : i18n.language == 'en'
-                ? 'ta'
-                : i18n.language == 'DV'
-                ? 'hi'
-                : 'en',
+                    ? 'ta'
+                    : i18n.language == 'DV'
+                        ? 'hi'
+                        : 'en',
     });
     const [festivalEvent, setFestivalEvent] = useState([]);
     const [compHeight, setCompHeight] = useState();
@@ -180,7 +181,7 @@ const HomeScreen = ({ navigation }) => {
     useEffect(() => {
         getPlaylistSong();
         listfavAudios((callbacks) => {
-            console.log('🚀 ~ listfavAudios ~ callbacks:', callbacks);
+            // console.log('🚀 ~ listfavAudios ~ callbacks:', callbacks);
             setFavList(callbacks);
         });
     }, [selectedPlaylistType, isFocused]);
@@ -556,6 +557,7 @@ const HomeScreen = ({ navigation }) => {
                                 }
                             >
                                 <EventCard
+                                    Icon={CategoryAssets[item?.attributes?.event_category ? item?.attributes?.event_category : item?.attributes?.category]?.Svg}
                                     date={moment(item?.attributes?.calendar_from_date).get('D')}
                                     timing={null}
                                     day={moment(item?.attributes?.calendar_from_date).format('ddd')}
