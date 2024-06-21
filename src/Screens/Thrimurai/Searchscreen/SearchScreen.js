@@ -80,10 +80,9 @@ const SearchScreen = ({ navigation, route }) => {
             getSqlData(
                 `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${normalizeString(
                     searchText.trim()
-                )}%' and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language}' ${
-                    !fktrimuria.has(0)
-                        ? `and fkTrimuria IN (${[...fktrimuria].join(',')})`
-                        : `and fkTrimuria IN (${[...thrimurais.map((item) => item.id)].join(',')})`
+                )}%' and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language}' ${!fktrimuria.has(0)
+                    ? `and fkTrimuria IN (${[...fktrimuria].join(',')})`
+                    : `and fkTrimuria IN (${[...thrimurais.map((item) => item.id)].join(',')})`
                 } GROUP BY titleS;`,
                 (callbacks) => {
                     setSearchedResult(callbacks);
@@ -96,14 +95,12 @@ const SearchScreen = ({ navigation, route }) => {
             getSqlData(
                 `SELECT t.prevId, t.titleNo ,ts.thirumuraiId, ts.songNo ,ts.rawSong FROM thirumurais t  JOIN thirumurai_songs ts ON t.prevId = ts.prevId WHERE ts.searchTitle LIKE '%${normalizeString(
                     searchText.trim()
-                )}%'  ${
-                    !fktrimuria.has(0)
-                        ? `and ts.thirumuraiId IN (${[...fktrimuria].join(',')})`
-                        : `and ts.thirumuraiId IN (${[...thrimurais.map((item) => item.id)].join(
-                              ','
-                          )})`
-                }  AND ts.locale='${
-                    i18n.language === 'en-IN' ? 'RoI' : i18n.language
+                )}%'  ${!fktrimuria.has(0)
+                    ? `and ts.thirumuraiId IN (${[...fktrimuria].join(',')})`
+                    : `and ts.thirumuraiId IN (${[...thrimurais.map((item) => item.id)].join(
+                        ','
+                    )})`
+                }  AND ts.locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language
                 }' GROUP BY   ts.thirumuraiId, ts.prevId, ts.songNo ORDER BY ts.thirumuraiId, ts.prevId, ts.songNo ASC`,
                 (callbacks) => {
                     setRawSongs(callbacks);
@@ -363,29 +360,24 @@ const SearchScreen = ({ navigation, route }) => {
                                             ? theme.searchContext.unSelected.textColor
                                             : theme.searchContext.selected.textColor,
                                         fontFamily: 'Mulish-Regular',
-                                    }}
-                                >
+                                    }}>
                                     {`${item?.id === 0 ? 'All' : ''} `}
-                                    {`${
-                                        item?.id > 0 && item?.id < 8
-                                            ? `${t(`Thrimurai ${item?.id}`)}`
-                                            : ''
-                                    }`}
-                                    {`${
-                                        item?.id >= 8 && item?.id !== 10 && item?.id !== 11
-                                            ? `${t(nameMap[`Thrimurai ${item?.id}`])}`
-                                            : ''
-                                    }`}
-                                    {`${
-                                        item?.id === 10
-                                            ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[0]}`
-                                            : ''
-                                    }`}
-                                    {`${
-                                        item?.id === 11
-                                            ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[1]}`
-                                            : ''
-                                    }`}
+                                    {`${item?.id > 0 && item?.id < 8
+                                        ? `${t(`Thrimurai ${item?.id}`)}`
+                                        : ''
+                                        }`}
+                                    {`${item?.id >= 8 && item?.id !== 10 && item?.id !== 11
+                                        ? `${t(nameMap[`Thrimurai ${item?.id}`])}`
+                                        : ''
+                                        }`}
+                                    {`${item?.id === 10
+                                        ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[0]}`
+                                        : ''
+                                        }`}
+                                    {`${item?.id === 11
+                                        ? `${t(nameMap[`Thrimurai ${item?.id}`]).split('/')[1]}`
+                                        : ''
+                                        }`}
                                 </Text>
                             </TouchableOpacity>
                         )}
@@ -403,7 +395,7 @@ const SearchScreen = ({ navigation, route }) => {
                             // inverted
                             renderItem={({ item, index }) => renderResult(item, index, 'title')}
                             windowSize={40}
-                            // renderItem={({ item, index }) => renderResult(item, index, 'title')}
+                        // renderItem={({ item, index }) => renderResult(item, index, 'title')}
                         />
                         <FlatList
                             contentContainerStyle={{ marginTop: 10 }}

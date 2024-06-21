@@ -43,9 +43,9 @@ export async function addTracks() {
     await TrackPlayer.add([
         {
             id: 1,
-            url: 'https://shaivamfiles.fra1.cdn.digitaloceanspaces.com/audios/OmChant.mp3',
-            title: 'Fluidity',
-            artist: 'tobylane',
+            url: require('./OmChant.mp3'),
+            title: 'Om Namah Shivay',
+            artist: 'Om Namah Shivay',
             // duration: 60,
         }
     ]);

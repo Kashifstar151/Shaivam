@@ -278,8 +278,8 @@ export const Temples = ({ navigation, route }) => {
 
     const props = userLocation?.latitude
         ? {
-              initialRegion: userLocation,
-          }
+            initialRegion: userLocation,
+        }
         : {};
 
     return (
@@ -590,7 +590,7 @@ export const Temples = ({ navigation, route }) => {
                                     to work
                                 </Text>
                                 <CustomLongBtn
-                                    // onPress={handleModalAction}
+                                    onPress={handleModalAction}
                                     text={'Enable location access'}
                                     textStyle={{
                                         color: '#4C3600',

@@ -108,7 +108,7 @@ const SendFestivalEvent = ({ navigation, route }) => {
                             marginLeft: 16,
                         }}>{showError.Cname}</Text>
                     }
-                    {/* <TextInputCom inputKey={'Creator number'} value={inputValue['Creator number']} insiderText={t('Type here') ? t('Type here') : 'Type here'} headinText={t('Phone number*') ? t('Phone number*') : 'Phone number*'} width={Dimensions.get('window').width - 50} />
+                    <TextInputCom inputKey={'Creator number'} value={inputValue['Creator number']} insiderText={t('Type here') ? t('Type here') : 'Type here'} headinText={t('Phone number*') ? t('Phone number*') : 'Phone number*'} width={Dimensions.get('window').width - 50} />
                     {
                         showError !== null && showError.hasOwnProperty("number") && <Text style={{
                             fontWeight: '300',
@@ -116,7 +116,7 @@ const SendFestivalEvent = ({ navigation, route }) => {
                             fontSize: 10,
                             marginLeft: 16,
                         }}>{showError.number}</Text>
-                    } */}
+                    }
                 </View>
                 {
                     showModal &&
@@ -125,10 +125,7 @@ const SendFestivalEvent = ({ navigation, route }) => {
                     </Modal>
                 }
                 <View style={{ position: 'absolute', top: Dimensions.get('window').height }}>
-
                 </View>
-                {/* <View style={{ position: 'absolute', bottom: 20 }}> */}
-                {/* </View> */}
             </ScrollView>
             <Button
                 buttonText={'Submit'}
