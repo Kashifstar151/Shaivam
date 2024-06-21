@@ -112,6 +112,9 @@ export const Temples = ({ navigation, route }) => {
         } else if (state === RESULTS.DENIED) {
             let requestedVal = await requestThePermission(permissionTypeRef.current);
             setPermissionGranted(() => requestedVal.permissionType);
+            if (requestedVal.permissionType === RESULTS.GRANTED) {
+                fetchTheCurrentLocation();
+            }
         } else if (state === RESULTS.BLOCKED) {
             setShowModal(!showModal);
         } else if (state === RESULTS.GRANTED) {
@@ -132,6 +135,16 @@ export const Temples = ({ navigation, route }) => {
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA,
             }));
+            mapRef.current?.animateCamera(
+                {
+                    center: userLocation,
+                    pitch: 2,
+                    heading: 20,
+                    zoom: 10,
+                    altitude: 200,
+                },
+                { duration: 500 }
+            );
             setRegionCoordinate((prev) => {
                 getNearByTemples({ ...prev, ...val });
                 return {
@@ -144,20 +157,20 @@ export const Temples = ({ navigation, route }) => {
         });
     };
 
-    useEffect(() => {
-        console.log('🚀 ~ Temples ~ userLocation:', mapRef?.current);
+    // useEffect(() => {
+    //     console.log('🚀 ~ Temples ~ userLocation:');
 
-        mapRef.current?.animateCamera(
-            {
-                center: userLocation,
-                pitch: 2,
-                heading: 20,
-                zoom: 10,
-                altitude: 200,
-            },
-            { duration: 500 }
-        );
-    }, [userLocation, mapRef?.current]);
+    //     mapRef.current?.animateCamera(
+    //         {
+    //             center: userLocation,
+    //             pitch: 2,
+    //             heading: 20,
+    //             zoom: 10,
+    //             altitude: 200,
+    //         },
+    //         { duration: 500 }
+    //     );
+    // }, [userLocation]);
 
     const handleTrackBack = async () => {
         let theCurrentPermission = await checkPermissionAccess(permissionTypeRef.current);
@@ -199,6 +212,8 @@ export const Temples = ({ navigation, route }) => {
                 setPermissionGranted(() => finalState.permissionType);
                 if (finalState.permissionType === RESULTS.BLOCKED) {
                     setShowModal(!showModal);
+                } else if (finalState.permissionType === RESULTS.GRANTED) {
+                    fetchTheCurrentLocation();
                 }
             });
         } else {
