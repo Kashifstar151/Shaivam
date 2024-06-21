@@ -48,6 +48,8 @@ import { useTranslation } from 'react-i18next';
 import RefreshSVG from '../../components/SVGs/RefreshSVG.js';
 import LoadingScreen from '../Loading/LoadingScreen';
 
+import { getAvailableLocationProviders } from 'react-native-device-info';
+
 // setting the delta
 
 export const Temples = ({ navigation, route }) => {
@@ -171,23 +173,48 @@ export const Temples = ({ navigation, route }) => {
     //         { duration: 500 }
     //     );
     // }, [userLocation]);
+    const isGPSEnabledForDevice = async () =>
+        new Promise((resolve, reject) => {
+            getAvailableLocationProviders()
+                .then((response) => {
+                    let res = Platform.select({
+                        android: response.gps,
+                        ios: response.locationServicesEnabled,
+                    });
+
+                    resolve(res);
+
+                    // if (!res) {
+                    //     setShowModal(!showModal);
+                    // }
+                })
+                .catch((err) => {
+                    reject(err);
+                });
+        });
 
     const handleTrackBack = async () => {
         let theCurrentPermission = await checkPermissionAccess(permissionTypeRef.current);
-        if (theCurrentPermission === RESULTS.GRANTED) {
+        let isGPSEnabled = await isGPSEnabledForDevice();
+        // console.log('🚀 ~ handleTrackBack ~ isGPSEnabled:', isGPSEnabled);
+        if (theCurrentPermission === RESULTS.GRANTED && isGPSEnabled) {
             setPermissionGranted(() => RESULTS.GRANTED);
-            mapRef.current?.animateCamera({ center: userLocation }, { duration: 1000 });
-            setRegionCoordinate((prev) => ({
-                ...prev,
-                // latitude: 28.5002,
-                // longitude: 77.381,
-                ...userLocation,
-            }));
+            if (userLocation?.longitude && userLocation?.latitude) {
+                mapRef.current?.animateCamera({ center: userLocation }, { duration: 1000 });
+                setRegionCoordinate((prev) => ({
+                    ...prev,
+                    ...userLocation,
+                }));
+            } else {
+                fetchTheCurrentLocation();
+            }
+        } else if (theCurrentPermission === RESULTS.GRANTED && !isGPSEnabled) {
+            alert('Enable the location');
         } else {
             requestThePermission(permissionTypeRef.current).then((finalState) => {
                 grantState = finalState.permissionType;
                 setPermissionGranted(() => grantState);
-                if (finalState.permissionType === RESULTS.BLOCKED) {
+                if (finalState.permissionType !== RESULTS.GRANTED) {
                     setShowModal(!showModal);
                 }
             });
@@ -317,6 +344,17 @@ export const Temples = ({ navigation, route }) => {
                                 setPadState(!padState);
                             }, 5000)
                         }
+                        customMapStyle={[
+                            {
+                                stylers: [
+                                    {
+                                        invert_lightness:
+                                            theme.colorscheme === 'light' ? false : true,
+                                        // color: '#000',
+                                    },
+                                ],
+                            },
+                        ]}
                         provider={PROVIDER_GOOGLE}
                         style={styles.map}
                         {...props}
@@ -408,11 +446,18 @@ export const Temples = ({ navigation, route }) => {
                             styles.floatingBtn,
                             {
                                 bottom: Dimensions.get('window').height * 0.275,
+                                backgroundColor: theme.colorscheme === 'light' ? '#fff' : '#3A3A3A',
+                                borderWidth: theme.colorscheme !== 'light' ? 1 : 0,
+                                borderColor: theme.colorscheme !== 'light' ? '#fff' : '#000',
                             },
                         ]}
-                        onPress={() => {
-                            // setSkip(() => false);
-                            getNearByTemples(regionCoordinate);
+                        onPress={async () => {
+                            let isGPSEnabled = await isGPSEnabledForDevice();
+                            if (!isGPSEnabled) {
+                                alert('Enable the location service');
+                            } else {
+                                getNearByTemples(regionCoordinate);
+                            }
                         }}
                         disabled={isFetching}
                     >
@@ -421,7 +466,13 @@ export const Temples = ({ navigation, route }) => {
                             width={28}
                             height={28}
                             viewBox="0 0 24 24"
-                            fill={!isFetching ? '#777' : '#bababa'}
+                            fill={
+                                theme.colorscheme === 'light'
+                                    ? !isFetching
+                                        ? '#777'
+                                        : '#bababa'
+                                    : '#fff'
+                            }
                         />
                     </Pressable>
 
@@ -431,12 +482,15 @@ export const Temples = ({ navigation, route }) => {
                             styles.floatingBtn,
                             {
                                 bottom: Dimensions.get('window').height * 0.2,
+                                backgroundColor: theme.colorscheme === 'light' ? '#fff' : '#3A3A3A',
+                                borderWidth: theme.colorscheme !== 'light' ? 1 : 0,
+                                borderColor: theme.colorscheme !== 'light' ? '#fff' : '#000',
                             },
                         ]}
                         onPress={handleTrackBack}
                     >
                         {/* bring user's location into view */}
-                        <TrackBackToLocSVG fill={'#777'} />
+                        <TrackBackToLocSVG fill={theme.colorscheme === 'light' ? '#777' : '#fff'} />
                     </Pressable>
 
                     {/* for test purpose  */}
@@ -510,6 +564,14 @@ export const Temples = ({ navigation, route }) => {
                     {permissionGranted === 'granted' ? (
                         <BottomSheet
                             ref={bottomSheetRef}
+                            handleStyle={{
+                                backgroundColor: theme.colorscheme === 'light' ? '#fff' : '#333333',
+                                borderTopLeftRadius: 15,
+                                borderTopRightRadius: 15,
+                            }}
+                            handleIndicatorStyle={{
+                                backgroundColor: theme.colorscheme !== 'light' ? '#fff' : '#333333',
+                            }}
                             onChange={handleSheetChanges}
                             snapPoints={['15%', '95%']}
                             backdropComponent={(props) => (
