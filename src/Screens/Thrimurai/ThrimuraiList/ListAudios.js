@@ -74,7 +74,7 @@ const ListAudios = ({ item, navigation, listFav, colorSet, isFav }) => {
                 <View style={{ paddingHorizontal: 10, width: '70%' }}>
                     <Text
                         style={{
-                            fontSize: 14,
+                            fontSize: 15,
                             // fontWeight: '600',
                             fontFamily: 'Mulish-Regular',
                             color: colorSet.textColor,

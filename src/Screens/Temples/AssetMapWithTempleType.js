@@ -48,7 +48,7 @@ const assetMapWithTempleType = {
         name: 'Temples',
         content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sm.',
         metaData: {
-            color: '#6EDB00',
+            color: '#7CFC00',
             letterAssociated: null,
         },
         path: require('./TempleAssets/Temples.png'),

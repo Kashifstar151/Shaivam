@@ -1,4 +1,4 @@
-import { Image, Text, View } from 'react-native';
+import { Image, Platform, Text, View } from 'react-native';
 import { Callout, Marker } from 'react-native-maps';
 import assetMapWithTempleType from './AssetMapWithTempleType';
 export const MarkerCallOut = ({ callback, flag, coordinate, description }) => {
@@ -8,13 +8,15 @@ export const MarkerCallOut = ({ callback, flag, coordinate, description }) => {
             coordinate={coordinate}
             description={'This is a marker in React Natve'}
             title={'temple'}
-            // image={assetMapWithTempleType[1].path}
+            // pinColor={assetMapWithTempleType[flag]?.metaData?.color}
+            // image={assetMapWithTempleType[flag].path}
+            icon={assetMapWithTempleType[flag]?.path ? assetMapWithTempleType[flag]?.path : assetMapWithTempleType[2]?.path}
             style={{
                 width: '100%',
                 alignItems: 'center',
             }}
         >
-            <View>{assetMapWithTempleType[flag]?.Svg}</View>
+            {Platform.OS == 'ios' ? null : <View>{assetMapWithTempleType[flag]?.Svg}</View>}
             <Callout
                 tooltip={true}
                 onPress={callback ? callback : null}
@@ -92,7 +94,7 @@ export const CustomMarker = ({ setPadState, callback, flag, coordinate, keyName,
             coordinate={coordinate}
             description={'This is a marker in React Natve'}
             onPress={callback ? callback : null}
-            // image={assetMapWithTempleType[1].path}
+        // image={assetMapWithTempleType[1].path}
         >
             {assetMapWithTempleType[flag]?.Svg}
             {/* <Image

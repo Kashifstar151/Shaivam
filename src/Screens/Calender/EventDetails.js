@@ -63,7 +63,7 @@ const EventDetails = ({ navigation, route }) => {
             // console.log("🚀 ~ useEffect ~ callbacks:", callbacks)
             setRegionCoordinate(callbacks)
         })
-        checkPermissionAccess()
+        // checkPermissionAccess()
         createChannel()
     }, [isFocus])
     useEffect(() => {

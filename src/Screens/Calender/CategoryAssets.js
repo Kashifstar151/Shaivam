@@ -15,6 +15,7 @@ import Category13 from "../../../assets/Images/EventsImages/ic_natarajar.svg"
 import Category14 from "../../../assets/Images/EventsImages/ic_theipirai.svg"
 import Category15 from "../../../assets/Images/EventsImages/ic_ammavasai.svg"
 import Category16 from "../../../assets/Images/EventsImages/ic_poornami.svg"
+import Category17 from '../../../assets/Images/EventsImages/ic_songs_thalam.svg'
 const CategoryAssets = {
     'Festival': {
         name: 'Festival',
@@ -76,6 +77,10 @@ const CategoryAssets = {
         name: 'Paurnamasya',
         Svg: <Category16 />
     },
+    'Kumbabhishekam': {
+        name: 'Kumbabhishekam',
+        Svg: <Category17 />
+    }
 };
 export default CategoryAssets;
 

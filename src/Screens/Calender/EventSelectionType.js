@@ -12,7 +12,7 @@ const EventSelectionType = ({ category, setCategory, bottomSheetRef }) => {
         { name: 'Festival' },
         { name: 'Concert' },
         { name: 'Discourse' },
-        // { name: 'Concert' },
+        { name: 'Kumbabhishekam' },
         { name: 'Parayanam/Recitation' },
         { name: 'Uzhavarapani' },
         { name: 'Gurupujai' },
