@@ -1,12 +1,15 @@
 import { BlurView } from '@react-native-community/blur';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import AlertSVG from '../../../../assets/Images/AlertSVG.svg';
 import { CustomLongBtn } from '../../../components/Buttons';
 import getDimension from '../../../Helpers/getDimension';
+import { ThemeContext } from '../../../Context/ThemeContext';
 
 const PromptToCancel = ({ setStep, navigation }) => {
     const { screenHeight, screenWidth } = getDimension();
+    const { theme } = useContext(ThemeContext);
+
     return (
         <View
             style={{
