@@ -134,16 +134,7 @@ export const Temples = ({ navigation, route }) => {
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA,
             }));
-            mapRef.current?.animateCamera(
-                {
-                    center: userLocation,
-                    pitch: 2,
-                    heading: 20,
-                    zoom: 10,
-                    altitude: 200,
-                },
-                { duration: 500 }
-            );
+            animateCamera({ center: { ...val }, pitch: 2, heading: 20, zoom: 10, altitude: 200 });
             setRegionCoordinate((prev) => {
                 getNearByTemples({ ...prev, ...val });
                 return {
@@ -172,14 +163,18 @@ export const Temples = ({ navigation, route }) => {
                 });
         });
 
-    const animateCamera = (center) => {
-        mapRef.current?.animateCamera(
-            {
-                center: center,
-                pitch: 2,
+    const animateCamera = ({ center, ...rest }) => {
+        // extra option
+        /*
+         pitch: 2,
                 heading: 20,
                 zoom: 10,
                 altitude: 200,
+        */
+        mapRef.current?.animateCamera(
+            {
+                center: center,
+                ...rest,
             },
             {
                 duration: 500,
@@ -194,7 +189,13 @@ export const Temples = ({ navigation, route }) => {
         if (theCurrentPermission === RESULTS.GRANTED && isGPSEnabled) {
             setPermissionGranted(() => RESULTS.GRANTED);
             if (userLocation?.longitude && userLocation?.latitude) {
-                animateCamera(userLocation);
+                animateCamera({
+                    center: userLocation,
+                    pitch: 2,
+                    heading: 20,
+                    zoom: 10,
+                    altitude: 200,
+                });
                 setRegionCoordinate((prev) => ({
                     ...prev,
                     ...userLocation,
@@ -286,8 +287,14 @@ export const Temples = ({ navigation, route }) => {
     const [mapInteractivityState, setMapInteractivityState] = useState(true);
     const setSearchParams = (item) => {
         animateCamera({
-            latitude: parseFloat(item.lat),
-            longitude: parseFloat(item.lon),
+            center: {
+                latitude: parseFloat(item.lat),
+                longitude: parseFloat(item.lon),
+            },
+            pitch: 2,
+            heading: 20,
+            zoom: 10,
+            altitude: 200,
         });
         setRegionCoordinate((prev) => {
             getNearByTemples({
@@ -344,7 +351,7 @@ export const Temples = ({ navigation, route }) => {
                                     //     { center: input },
                                     //     { duration: 500 }
                                     // );
-                                    animateCamera(input);
+                                    animateCamera({ center: input });
                                     setRegionCoordinate(() => input);
                                 });
                             }
