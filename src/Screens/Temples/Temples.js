@@ -137,16 +137,8 @@ export const Temples = ({ navigation, route }) => {
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA,
             }));
-            mapRef.current?.animateCamera(
-                {
-                    center: userLocation,
-                    pitch: 2,
-                    heading: 20,
-                    zoom: 10,
-                    altitude: 200,
-                },
-                { duration: 500 }
-            );
+
+            animateCamera({ ...val });
             setRegionCoordinate((prev) => {
                 getNearByTemples({ ...prev, ...val });
                 return {
@@ -159,20 +151,6 @@ export const Temples = ({ navigation, route }) => {
         });
     };
 
-    // useEffect(() => {
-    //     console.log('🚀 ~ Temples ~ userLocation:');
-
-    //     mapRef.current?.animateCamera(
-    //         {
-    //             center: userLocation,
-    //             pitch: 2,
-    //             heading: 20,
-    //             zoom: 10,
-    //             altitude: 200,
-    //         },
-    //         { duration: 500 }
-    //     );
-    // }, [userLocation]);
     const isGPSEnabledForDevice = async () =>
         new Promise((resolve, reject) => {
             getAvailableLocationProviders()
@@ -183,15 +161,26 @@ export const Temples = ({ navigation, route }) => {
                     });
 
                     resolve(res);
-
-                    // if (!res) {
-                    //     setShowModal(!showModal);
-                    // }
                 })
                 .catch((err) => {
                     reject(err);
                 });
         });
+
+    const animateCamera = (center) => {
+        mapRef.current?.animateCamera(
+            {
+                center: center,
+                pitch: 2,
+                heading: 20,
+                zoom: 10,
+                altitude: 200,
+            },
+            {
+                duration: 500,
+            }
+        );
+    };
 
     const handleTrackBack = async () => {
         let theCurrentPermission = await checkPermissionAccess(permissionTypeRef.current);
@@ -200,7 +189,7 @@ export const Temples = ({ navigation, route }) => {
         if (theCurrentPermission === RESULTS.GRANTED && isGPSEnabled) {
             setPermissionGranted(() => RESULTS.GRANTED);
             if (userLocation?.longitude && userLocation?.latitude) {
-                mapRef.current?.animateCamera({ center: userLocation }, { duration: 1000 });
+                animateCamera(userLocation);
                 setRegionCoordinate((prev) => ({
                     ...prev,
                     ...userLocation,
@@ -230,7 +219,6 @@ export const Temples = ({ navigation, route }) => {
         }
     };
     const handleFocusEvent = async () => {
-        // console.log('the mounting of the listner confirmed ');
         let grantState = '';
         let theCurrentPermission = await checkPermissionAccess(permissionTypeRef.current);
         if (theCurrentPermission !== RESULTS.GRANTED) {
@@ -262,7 +250,6 @@ export const Temples = ({ navigation, route }) => {
     };
 
     useEffect(() => {
-        onMapReadyCallback();
         return () => {
             clearGetCurrentLocationWatcher();
         };
@@ -295,15 +282,10 @@ export const Temples = ({ navigation, route }) => {
     const mapRef = useRef();
     const [mapInteractivityState, setMapInteractivityState] = useState(true);
     const setSearchParams = (item) => {
-        mapRef.current?.animateCamera(
-            {
-                center: {
-                    latitude: parseFloat(item.lat),
-                    longitude: parseFloat(item.lon),
-                },
-            },
-            { duration: 1000 }
-        );
+        animateCamera({
+            latitude: parseFloat(item.lat),
+            longitude: parseFloat(item.lon),
+        });
         setRegionCoordinate((prev) => {
             getNearByTemples({
                 ...prev,
@@ -317,12 +299,6 @@ export const Temples = ({ navigation, route }) => {
             };
         });
     };
-
-    const props = userLocation?.latitude
-        ? {
-              initialRegion: userLocation,
-          }
-        : {};
 
     return (
         <>
@@ -338,34 +314,34 @@ export const Temples = ({ navigation, route }) => {
                 >
                     {/* {userLocation?.latitude ? ( */}
                     <MapView
-                        onMapReady={() =>
-                            setTimeout(() => {
-                                console.log('setting the pad');
-                                setPadState(!padState);
-                            }, 5000)
-                        }
-                        customMapStyle={[
-                            {
-                                stylers: [
-                                    {
-                                        invert_lightness:
-                                            theme.colorscheme === 'light' ? false : true,
-                                        // color: '#000',
-                                    },
-                                ],
-                            },
-                        ]}
+                        onMapReady={() => {
+                            onMapReadyCallback();
+                        }}
+                        // onMapLoaded={() => {
+                        //     animateCamera(userLocation);
+                        // }}
+                        // customMapStyle={[
+                        //     {
+                        //         stylers: [
+                        //             {
+                        //                 invert_lightness:
+                        //                     theme.colorscheme === 'light' ? false : true,
+                        //                 // color: '#000',
+                        //             },
+                        //         ],
+                        //     },
+                        // ]}
                         provider={PROVIDER_GOOGLE}
                         style={styles.map}
-                        {...props}
                         onRegionChangeComplete={(args, gesture) => {
                             if (gesture.isGesture) {
                                 onRegionChangeCompleteCallback(args, (input) => {
-                                    console.log('the gesture is true');
-                                    mapRef.current?.animateCamera(
-                                        { center: input },
-                                        { duration: 500 }
-                                    );
+                                    // console.log('the gesture is true');
+                                    // mapRef.current?.animateCamera(
+                                    //     { center: input },
+                                    //     { duration: 500 }
+                                    // );
+                                    animateCamera(input);
                                     setRegionCoordinate(() => input);
                                 });
                             }
