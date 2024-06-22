@@ -1,16 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Keyboard, Pressable, StyleSheet } from 'react-native';
 import { View, TextInput } from 'react-native';
 import SearchSVG from '../../components/SVGs/SearchSVG';
 // import BackBtnSvg from '../../components/SVGs/BackBtnSvg';
 import { useTranslation } from 'react-i18next';
 import { useDebouncer } from '../../Helpers/useDebouncer';
+import { ThemeContext } from '../../Context/ThemeContext';
 
 const FilterTheTempleFromList = ({ route, data = [], setDataToRender }) => {
     const [searchText, setSearchText] = useState('');
     const { t } = useTranslation();
     const debounceVal = useDebouncer(searchText, 500);
-
+    const { theme } = useContext(ThemeContext);
     const removeSpace = (input) => {
         return input.replace(/\s+/g, '');
     };
@@ -54,12 +55,12 @@ const FilterTheTempleFromList = ({ route, data = [], setDataToRender }) => {
                 style={[
                     styles.wrapper,
                     {
-                        backgroundColor: '#F3F3F3',
+                        backgroundColor: theme.colorscheme === 'light' ? '#F3F3F3' : '#3A3A3A',
                     },
                 ]}
             >
                 {route !== 'filteredTemples' ? (
-                    <SearchSVG fill={'#777777'} />
+                    <SearchSVG fill={theme.colorscheme === 'light' ? '#777777' : '#fff'} />
                 ) : (
                     <Pressable
                         onPress={() => {
@@ -72,8 +73,8 @@ const FilterTheTempleFromList = ({ route, data = [], setDataToRender }) => {
                 <TextInput
                     ref={textInputRef}
                     placeholder={t('Search for any temple')}
-                    placeholderTextColor={'#777777'}
-                    style={{ color: '#777777', flex: 1 }}
+                    placeholderTextColor={theme.colorscheme === 'light' ? '#777777' : '#fff'}
+                    style={{ color: theme.colorscheme === 'light' ? '#777777' : '#fff', flex: 1 }}
                     value={searchText}
                     onChangeText={(val) => {
                         setSearchText(val);

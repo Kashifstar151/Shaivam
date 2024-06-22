@@ -34,6 +34,7 @@ import getDimension from '../../Helpers/getDimension';
 import AutoHeightWebView from 'react-native-autoheight-webview';
 import BackBtnSvg from '../../components/SVGs/BackBtnSvg';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
+import { ThemeContext } from '../../Context/ThemeContext';
 
 const TempleDetails = ({ navigation }) => {
     const route = useRoute();
@@ -181,6 +182,8 @@ const TempleDetails = ({ navigation }) => {
         });
     };
 
+    const { theme } = useContext(ThemeContext);
+
     if (isFetching) {
         return (
             <View
@@ -247,7 +250,7 @@ const TempleDetails = ({ navigation }) => {
                         style={[
                             styles.wholeContainerWrapper,
                             {
-                                backgroundColor: 'white',
+                                backgroundColor: theme.colorscheme === 'light' ? '#fff' : '#333333',
                                 flex: 1,
                             },
                         ]}
@@ -262,7 +265,13 @@ const TempleDetails = ({ navigation }) => {
                             }}
                         >
                             <CustomButton
-                                svg={<BackBtnSvg fill={'#000'} width={20} height={20} />}
+                                svg={
+                                    <BackBtnSvg
+                                        fill={theme.colorscheme === 'light' ? 'black' : '#fff'}
+                                        width={20}
+                                        height={20}
+                                    />
+                                }
                                 style={{
                                     paddingVertical: 0,
                                     paddingHorizontal: 0,
@@ -304,7 +313,13 @@ const TempleDetails = ({ navigation }) => {
                                 type="TouchableOpacity"
                             /> */}
                                 <CustomButton
-                                    svg={<ShareSVG fill={'#777777'} width={18} height={18} />}
+                                    svg={
+                                        <ShareSVG
+                                            fill={theme.colorscheme === 'light' ? 'black' : '#fff'}
+                                            width={18}
+                                            height={18}
+                                        />
+                                    }
                                     style={{
                                         paddingVertical: 0,
                                         paddingHorizontal: 0,
@@ -408,7 +423,10 @@ const TempleDetails = ({ navigation }) => {
                                         {templeDetail?.Sthala_Puranam_Description && (
                                             <Text
                                                 style={{
-                                                    color: 'black',
+                                                    color:
+                                                        theme.colorscheme === 'light'
+                                                            ? 'black'
+                                                            : '#fff',
                                                     fontFamily: 'Mulish-Bold',
                                                     fontSize: 18,
                                                     paddingVertical: 10,
@@ -433,7 +451,10 @@ const TempleDetails = ({ navigation }) => {
                                         {templeDetail?.Specialities_Description && (
                                             <Text
                                                 style={{
-                                                    color: 'black',
+                                                    color:
+                                                        theme.colorscheme === 'light'
+                                                            ? 'black'
+                                                            : '#fff',
                                                     fontFamily: 'Mulish-Bold',
                                                     fontSize: 18,
                                                     paddingVertical: 10,
@@ -478,7 +499,10 @@ const TempleDetails = ({ navigation }) => {
                                         />
                                         <Text
                                             style={{
-                                                color: '#000',
+                                                color:
+                                                    theme.colorscheme === 'light'
+                                                        ? 'black'
+                                                        : '#fff',
                                                 textAlign: 'center',
 
                                                 fontFamily: 'Mulish-Bold',
@@ -523,7 +547,14 @@ const KeyValueComp = ({ keyVal, value }) => {
             }}
         >
             <View style={{ width: '25%' }}>
-                <Text style={{ fontFamily: 'Mulish-Regular', color: '#777777' }}>{keyVal}</Text>
+                <Text
+                    style={{
+                        fontFamily: 'Mulish-Regular',
+                        color: theme.colorscheme === 'light' ? '#777777' : '#fff',
+                    }}
+                >
+                    {keyVal}
+                </Text>
             </View>
             <View style={{ width: '75%' }}>
                 {keyVal == 'Head tree' ? (
@@ -532,7 +563,13 @@ const KeyValueComp = ({ keyVal, value }) => {
                         contentWidth={Dimensions.get('window').width - 10}
                     />
                 ) : (
-                    <Text style={{ color: 'black', fontFamily: 'Mulish-Regular', fontWeight: 600 }}>
+                    <Text
+                        style={{
+                            color: theme.colorscheme === 'light' ? '#777777' : '#fff',
+                            fontFamily: 'Mulish-Regular',
+                            fontWeight: 600,
+                        }}
+                    >
                         {value}
                     </Text>
                 )}

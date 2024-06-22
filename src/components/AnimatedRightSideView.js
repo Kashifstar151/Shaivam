@@ -45,6 +45,7 @@ const AnimatedRightSideView = ({ children, heading, RightIcon }) => {
                             top: screenHeight * 0.2,
                             width: screenWidth * 0.75,
                             maxHeight: screenHeight * 0.6,
+                            backgroundColor: theme.colorscheme === 'light' ? '#FFF5F5' : '#333333',
                         },
                     ]}
                 >

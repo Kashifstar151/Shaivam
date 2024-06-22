@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import templeMetaData from './AssetMapWithTempleType';
+import { ThemeContext } from '../../Context/ThemeContext';
 const CardForNearByTemple = React.memo(({ userLocation, item }) => {
     const [favState, setFavState] = useState(false);
     const onPress = () => {
@@ -16,8 +17,18 @@ const CardForNearByTemple = React.memo(({ userLocation, item }) => {
             Linking.openURL(googleMapsUrlFallBack);
         });
     };
+    const { theme } = useContext(ThemeContext);
+
     return (
-        <Pressable style={styles.topWrapperForCard} onPress={onPress}>
+        <Pressable
+            style={[
+                styles.topWrapperForCard,
+                {
+                    backgroundColor: theme.colorscheme === 'light' ? 'white' : '#3a3a3a',
+                },
+            ]}
+            onPress={onPress}
+        >
             <View style={[styles.flexRow, { paddingHorizontal: 5 }]}>
                 <View style={[styles.flexRow, { gap: 8 }]}>
                     <View
@@ -31,11 +42,24 @@ const CardForNearByTemple = React.memo(({ userLocation, item }) => {
                         ]}
                     ></View>
                     <View style={styles.textContainer}>
-                        <Text numberOfLines={1} ellipsizeMode="tail" style={styles.textBold}>
+                        <Text
+                            numberOfLines={1}
+                            ellipsizeMode="tail"
+                            style={[
+                                styles.textBold,
+                                {
+                                    color: theme.colorscheme === 'light' ? '#000' : '#fff',
+                                },
+                            ]}
+                        >
                             {item?.name}
                             {/* {item?.attributes?.Name_of_the_place} */}
                         </Text>
-                        <Text numberOfLines={1} ellipsizeMode="tail" style={{ color: 'black' }}>
+                        <Text
+                            numberOfLines={1}
+                            ellipsizeMode="tail"
+                            style={{ color: theme.colorscheme === 'light' ? '#000' : '#fff' }}
+                        >
                             {templeMetaData[item?.flag]?.fullName}
                         </Text>
                     </View>
