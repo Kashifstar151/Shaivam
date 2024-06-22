@@ -30,7 +30,6 @@ const PreviewPage = ({ navigation, setStep, email }) => {
     ] = useAddTempleImagesMutation();
 
     const { theme } = useContext(ThemeContext);
-    console.log('🚀 ~ PreviewPage ~ theme:', theme.colorscheme);
     const handleOnSubmit = () => {
         addTemple({
             Name: templadata?.templeName,
@@ -84,10 +83,13 @@ const PreviewPage = ({ navigation, setStep, email }) => {
         <View
             style={{
                 flex: 1,
-                backgroundColor: 'white',
             }}
         >
-            <ScrollView>
+            <ScrollView
+                style={{
+                    backgroundColor: theme.colorscheme === 'light' ? '#F3f3f3' : '#333333',
+                }}
+            >
                 <ImageBackground
                     source={theme.colorscheme === 'light' ? bgImg : bgImgDark}
                     resizeMode="cover"
@@ -98,7 +100,7 @@ const PreviewPage = ({ navigation, setStep, email }) => {
                     style={[
                         styles.wholeContainerWrapper,
                         {
-                            backgroundColor: 'white',
+                            backgroundColor: theme.colorscheme === 'light' ? 'white' : '#333333',
                         },
                     ]}
                 >
@@ -117,11 +119,12 @@ const PreviewPage = ({ navigation, setStep, email }) => {
                             </Pressable>
                             <Text
                                 style={{
-                                    color: 'black',
+                                    color: theme.colorscheme === 'light' ? 'black' : '#fff',
                                     fontSize: RFValue(18, 850),
                                     fontFamily: 'Lora-Bold',
                                     lineHeight: 20,
-                                }}>
+                                }}
+                            >
                                 Preview temple submission
                             </Text>
                         </View>
@@ -135,17 +138,24 @@ const PreviewPage = ({ navigation, setStep, email }) => {
                     style={{
                         paddingTop: 20,
                         paddingBottom: 80,
+                        backgroundColor: theme.colorscheme === 'light' ? '#F3f3f3' : '#333333',
                     }}
                 >
                     <KeyValueBox
                         keyName={'Temple Name'}
                         value={templadata?.templeName ?? 'Values not avaible'}
+                        titleColor={theme.colorscheme === 'light' ? '#777777' : '#fff'}
+                        valueColor={theme.colorscheme === 'light' ? '#000' : '#BDBDBD'}
                     />
                     <KeyValueBox
+                        titleColor={theme.colorscheme === 'light' ? '#777777' : '#fff'}
+                        valueColor={theme.colorscheme === 'light' ? '#000' : '#BDBDBD'}
                         keyName={'Location'}
                         value={templadata?.templeLocation?.locationName ?? 'Values not avaible'}
                     />
                     <KeyValueBox
+                        titleColor={theme.colorscheme === 'light' ? '#777777' : '#fff'}
+                        valueColor={theme.colorscheme === 'light' ? '#000' : '#BDBDBD'}
                         keyName={'Description'}
                         value={templadata?.description ?? 'Values not avaible'}
                     />
@@ -159,7 +169,7 @@ const PreviewPage = ({ navigation, setStep, email }) => {
                     width: '100%',
                     padding: 20,
                     elevation: 10,
-                    backgroundColor: 'white',
+                    backgroundColor: theme.colorscheme === 'light' ? '#F3f3f3' : '#333333',
 
                     // backgroundColor: 'green',
                 }}

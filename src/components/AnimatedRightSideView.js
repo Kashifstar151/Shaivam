@@ -94,6 +94,8 @@ const AnimatedRightSideView = ({ children, heading, RightIcon }) => {
                         {
                             top: screenHeight * 0.2,
                             maxWidth: screenWidth * 0.4,
+                            backgroundColor: theme.colorscheme === 'light' ? '#FFF5F5' : '#333333',
+                            color: theme.colorscheme === 'light' ? '#C1544E' : '#fff',
                         },
                     ]}
                 >
@@ -103,7 +105,19 @@ const AnimatedRightSideView = ({ children, heading, RightIcon }) => {
                                 <TouchableOpacity style={styles.InsiderSettingButton}>
                                     {RightIcon}
                                 </TouchableOpacity>
-                                <Text style={styles.headingText}>{heading}</Text>
+                                <Text
+                                    style={[
+                                        styles.headingText,
+                                        {
+                                            backgroundColor:
+                                                theme.colorscheme === 'light'
+                                                    ? '#FFF5F5'
+                                                    : '#333333',
+                                        },
+                                    ]}
+                                >
+                                    {heading}
+                                </Text>
                             </View>
                         </View>
                     </Pressable>
@@ -124,7 +138,7 @@ export const styles = StyleSheet.create({
     clearIcon: { alignItems: 'center' },
     openBtnWrapper: {
         position: 'absolute',
-        backgroundColor: '#FFF5F5',
+
         right: -3,
         borderTopLeftRadius: 10,
         borderBottomLeftRadius: 10,
@@ -138,8 +152,6 @@ export const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     headingText: {
-        color: '#C1544E',
-        backgroundColor: '#FFF5F5',
         zIndex: 10,
     },
 

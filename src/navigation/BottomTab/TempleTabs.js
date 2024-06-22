@@ -55,11 +55,13 @@ const TempleTab = ({ navigation }) => {
             screenOptions={{
                 tabBarStyle: [
                     styles.tabContainer,
-                    {},
+                    {
+                        backgroundColor: theme.colorscheme === 'light' ? '#C2514A' : '#111111',
+                    },
                     Platform.OS !== 'ios'
                         ? {
-                            height: 65,
-                        }
+                              height: 65,
+                          }
                         : {},
                 ],
             }}
@@ -104,15 +106,17 @@ const TempleTab = ({ navigation }) => {
                                     <Text style={[styles.tabBarLable]}>Go to Home</Text>
                                 </View>
                             )}
-                            <View
-                                style={{
-                                    marginHorizontal: 10,
-                                    height: '100%',
-                                    width: 1,
-                                    elevation: 2.5,
-                                    backgroundColor: '#C1554E',
-                                }}
-                            ></View>
+                            {theme.colorscheme === 'light' && (
+                                <View
+                                    style={{
+                                        marginHorizontal: 10,
+                                        height: '100%',
+                                        width: 1,
+                                        elevation: 2.5,
+                                        backgroundColor: '#C1554E',
+                                    }}
+                                ></View>
+                            )}
                         </View>
                     ),
                 }}
@@ -262,7 +266,6 @@ export const styles = StyleSheet.create({
         borderTopStartRadius: 10,
         position: 'absolute',
         bottom: 0,
-        backgroundColor: '#C2514A',
     },
     IconStyles: {
         paddingTop: 10,

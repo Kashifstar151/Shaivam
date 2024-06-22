@@ -82,7 +82,7 @@
 
 // new code for page nav
 
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { BottomSheetView, useBottomSheet } from '@gorhom/bottom-sheet';
 import {
     View,
@@ -101,6 +101,7 @@ import SearchTemple from './SearchTemple';
 import { useTranslation } from 'react-i18next';
 import getDimension from '../../Helpers/getDimension';
 import FilterTheTempleFromList from './FilterTheTempleFromList';
+import { ThemeContext } from '../../Context/ThemeContext';
 const NearByTemples = ({
     route,
     setRegionCoordinate,
@@ -120,12 +121,15 @@ const NearByTemples = ({
     useEffect(() => {
         setDataToRender(data);
     }, [data]);
+
+    const { theme } = useContext(ThemeContext);
     return (
         <View
             style={{
                 flex: 1,
                 width: Dimensions.get('window').width,
                 height: '100%',
+                backgroundColor: theme.colorscheme === 'light' ? 'white' : '#333333',
             }}
         >
             {snapIndex ? (
@@ -176,12 +180,12 @@ const NearByTemples = ({
                         width: '100%',
                         fontFamily: 'Lora-Bold',
                         paddingBottom: 10,
-                        backgroundColor: 'white',
+                        backgroundColor: theme.colorscheme === 'light' ? 'white' : '#333333',
                     }}
                 >
                     <Text
                         style={{
-                            color: '#222222',
+                            color: theme.colorscheme === 'light' ? '#222222' : '#fff',
                             fontSize: 18,
                             fontFamily: 'Lora-Bold',
                             paddingHorizontal: 15,

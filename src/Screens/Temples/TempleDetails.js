@@ -414,14 +414,13 @@ const TempleDetails = ({ navigation }) => {
                                                     paddingVertical: 10,
                                                 }}
                                             >
-                                                {t('Description')}
+                                                {t('Sthala Puranam')}
                                             </Text>
                                         )}
 
                                         <AutoHeightWebView
                                             style={{
                                                 width: Dimensions.get('window').width - 15,
-                                                marginTop: 35,
                                             }}
                                             originWhitelist={['*']}
                                             source={{

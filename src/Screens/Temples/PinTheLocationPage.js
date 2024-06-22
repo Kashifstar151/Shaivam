@@ -19,8 +19,8 @@ import { CustomButton, CustomLongBtn } from '../../components/Buttons';
 import TrackBackToLocSVG from '../../components/SVGs/TrackBackToLocSVG';
 import LocationLogo from '../../components/SVGs/LocationLogo';
 import { ThemeContext } from '../../Context/ThemeContext';
-import BackIcon from '../../../src/assets/Images/BackIcon.svg';
-import WhiteBackButton from '../../../src/assets/Images/arrow (1) 1.svg';
+import WhiteBackButton from '../../../src/assets/Images/BackIcon.svg';
+import BackIcon from '../../../src/assets/Images/arrow (1) 1.svg';
 import SearchTemple from './SearchTemple';
 import getDimension from '../../Helpers/getDimension';
 import { PERMISSIONS, RESULTS } from 'react-native-permissions';
@@ -203,10 +203,11 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
                         width: 40,
                         height: 40,
                         borderRadius: 40,
-                        backgroundColor: '#F3F3F3',
+                        // backgroundColor: ,
                         elevation: 20,
                         justifyContent: 'center',
                         alignItems: 'center',
+                        backgroundColor: theme.colorscheme === 'light' ? '#F3F3F3' : '#333333',
                     }}
                     onPress={() => close(1)}
                 >
@@ -280,13 +281,20 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
                     />
                 </View>
 
-                <View style={styles.lowerContainer}>
+                <View
+                    style={[
+                        styles.lowerContainer,
+                        {
+                            backgroundColor: theme.colorscheme === 'light' ? '#FFFFFF' : '#333333',
+                        },
+                    ]}
+                >
                     <Text
                         style={{
                             fontFamily: 'Lora-Bold',
                             fontSize: 16,
                             lineHeight: 21,
-                            color: '#777777',
+                            color: theme.colorscheme === 'light' ? '#777777' : '#fff',
                         }}
                     >
                         Place the marker on the temple location
@@ -294,14 +302,28 @@ const PinTheLocation = ({ setDescription, close, valueSetter }) => {
                     {userLocName?.name && (
                         <View style={styles.boldLocationNameConatiner}>
                             <LocationLogo fill={'#C1554E'} />
-                            <Text style={styles.boldTextLocation}>
-                                {userLocName.name ?? 'Dinesh Nagar'}
+                            <Text
+                                style={[
+                                    styles.boldTextLocation,
+                                    {
+                                        color: theme.colorscheme === 'light' ? '#000' : '#BDBDBD',
+                                    },
+                                ]}
+                            >
+                                {userLocName.name}
                             </Text>
                         </View>
                     )}
 
                     {userLocName?.displayName && (
-                        <Text style={styles.largeFormName}>
+                        <Text
+                            style={[
+                                styles.largeFormName,
+                                {
+                                    color: theme.colorscheme === 'light' ? '#000' : '#BDBDBD',
+                                },
+                            ]}
+                        >
                             {userLocName?.displayName ??
                                 '1234 421 - B Block, Dinesh nagar, Koramangala, Bangalore, Karnataka, India'}
                         </Text>
@@ -359,7 +381,7 @@ const styles = StyleSheet.create({
     },
 
     lowerContainer: {
-        backgroundColor: '#FFFFFF',
+        // backgroundColor: '#FFFFFF',
         padding: 15,
         flex: 1,
         justifyContent: 'space-between',

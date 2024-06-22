@@ -2,17 +2,42 @@ import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 
-const StepTitleContainer = ({ step, title, subtitle }) => {
+const StepTitleContainer = ({ step, title, subtitle, titleColor, stepColor, subtitleColor }) => {
     return (
         <View style={styles.topWrapper}>
-            <Text style={styles.stepStyle}>{`Step ${step}`}</Text>
+            <Text
+                style={[
+                    styles.stepStyle,
+                    {
+                        color: stepColor,
+                    },
+                ]}
+            >{`Step ${step}`}</Text>
             <View
                 style={{
                     gap: 4,
                 }}
             >
-                <Text style={styles.title}>{title}</Text>
-                <Text style={styles.subTitle}>{subtitle}</Text>
+                <Text
+                    style={[
+                        styles.title,
+                        {
+                            color: titleColor,
+                        },
+                    ]}
+                >
+                    {title}
+                </Text>
+                <Text
+                    style={[
+                        styles.subTitle,
+                        {
+                            color: subtitleColor,
+                        },
+                    ]}
+                >
+                    {subtitle}
+                </Text>
             </View>
         </View>
     );
@@ -24,19 +49,19 @@ const styles = StyleSheet.create({
         gap: 10,
     },
     stepStyle: {
-        color: '#C1554E',
+        // color: '',
         fontFamily: 'Mulish-Bold',
         fontSize: RFValue(14, 850),
         lineHeight: 18,
     },
     title: {
-        color: '#000',
+        // color: '#000',
         fontFamily: 'Mulish-Bold',
         fontSize: RFValue(16, 850),
         lineHeight: 21,
     },
     subTitle: {
-        color: '#777777',
+        // color: '#777777',
         fontFamily: 'Mulish',
         fontSize: RFValue(14, 850),
         lineHeight: 18,

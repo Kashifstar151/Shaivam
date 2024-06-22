@@ -3,7 +3,7 @@ import { FlatList, Image, StyleSheet, Text, View } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import getDimension from '../../../Helpers/getDimension';
 
-const KeyValueBox = ({ keyName, value }) => {
+const KeyValueBox = ({ keyName, value, titleColor, valueColor }) => {
     const { screenWidth } = getDimension();
     const RenderImage = (item) => {
         // console.log('🚀 ~ RenderImage ~ item:', item);
@@ -27,9 +27,27 @@ const KeyValueBox = ({ keyName, value }) => {
                 paddingVertical: 15,
             }}
         >
-            <Text style={[style.heading]}>{keyName}</Text>
+            <Text
+                style={[
+                    style.heading,
+                    {
+                        color: titleColor,
+                    },
+                ]}
+            >
+                {keyName}
+            </Text>
             {keyName !== 'Images' ? (
-                <Text style={style.value}>{value}</Text>
+                <Text
+                    style={[
+                        style.value,
+                        {
+                            color: valueColor,
+                        },
+                    ]}
+                >
+                    {value}
+                </Text>
             ) : (
                 <View style={style.imageRenderBoxCont}>
                     {value.length > 0 && (
@@ -45,13 +63,12 @@ const KeyValueBox = ({ keyName, value }) => {
 
 const style = StyleSheet.create({
     heading: {
-        color: '#777777',
         fontFamily: 'Mulish-SemiBold',
         fontSize: RFValue(12, 850),
         lineHeight: 16,
     },
     value: {
-        color: '#000',
+        // color: '#000',
         fontFamily: 'Mulish-SemiBold',
         fontSize: RFValue(16, 850),
         lineHeight: 21,

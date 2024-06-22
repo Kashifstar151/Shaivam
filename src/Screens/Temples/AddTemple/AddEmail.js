@@ -1,5 +1,5 @@
 import { BlurView } from '@react-native-community/blur';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AlertSVG from '../../../../assets/Images/AlertSVG.svg';
 import { CustomLongBtn } from '../../../components/Buttons';
@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { RouteTexts } from '../../../navigation/RouteText';
 import BackBtnSVG from '../../../components/SVGs/BackBtnSvg';
+import { ThemeContext } from '../../../Context/ThemeContext';
 // import BackBtnSvg from '../../../components/SVGs/BackBtnSvg';
 
 const emailReg = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
@@ -21,6 +22,7 @@ const AddEmail = ({ setStep, setEmail, navigation }) => {
         state: false,
         msg: '',
     });
+    const { theme } = useContext(ThemeContext);
     const submitHandler = () => {
         if (emailReg.test(localEmail)) {
             setEmail(() => localEmail);
@@ -64,6 +66,7 @@ const AddEmail = ({ setStep, setEmail, navigation }) => {
                         styles.innerWrapper,
                         {
                             width: screenWidth * 0.85,
+                            backgroundColor: theme.colorscheme === 'light' ? '#FFFFFF' : '#222222',
                             // height: screenHeight * 0.35,
                         },
                     ]}
@@ -84,10 +87,32 @@ const AddEmail = ({ setStep, setEmail, navigation }) => {
                             gap: 20,
                         }}
                     >
-                        <EmailSVG width={40} height={40} />
+                        <EmailSVG
+                            width={40}
+                            height={40}
+                            fill={theme.colorscheme === 'light' ? '#000' : '#fff'}
+                        />
                         <View style={{}}>
-                            <Text style={styles.mainLine}>Please add you email</Text>
-                            <Text style={styles.subLine}>Email is required</Text>
+                            <Text
+                                style={[
+                                    styles.mainLine,
+                                    {
+                                        color: theme.colorscheme === 'light' ? '#000' : '#fff',
+                                    },
+                                ]}
+                            >
+                                Please add you email
+                            </Text>
+                            <Text
+                                style={[
+                                    styles.subLine,
+                                    {
+                                        color: theme.colorscheme === 'light' ? '#000' : '#fff7',
+                                    },
+                                ]}
+                            >
+                                Email is required
+                            </Text>
                         </View>
                     </View>
 
@@ -118,10 +143,12 @@ const AddEmail = ({ setStep, setEmail, navigation }) => {
                             width: '100%',
                             borderRadius: 10,
                             paddingLeft: 20,
-                            backgroundColor: '#F3F3F3',
-                            color: '#222222',
+                            backgroundColor: theme.colorscheme === 'light' ? '#F3F3F3' : '#333333',
+                            color: theme.colorscheme === 'light' ? '#222222' : '#fff9',
                         }}
-                        placeholderTextColor={colors.grey5}
+                        placeholderTextColor={
+                            theme.colorscheme === 'light' ? colors.grey5 : '#fff5'
+                        }
                     />
 
                     {error?.state && <Text style={styles.errorText}>{error.msg}</Text>}
@@ -173,7 +200,6 @@ const styles = StyleSheet.create({
     },
 
     innerWrapper: {
-        backgroundColor: '#FFFFFF',
         overflow: 'hidden',
         borderRadius: 10,
         justifyContent: 'space-between',

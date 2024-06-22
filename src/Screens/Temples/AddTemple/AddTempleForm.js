@@ -13,7 +13,6 @@ import {
 //
 import bgImg from '../../../../assets/Images/Background.png';
 import bgImgDark from '../../../../assets/Images/BackgroundCommon.png';
-import CloseBtn from '../../../../assets/Images/CloseBtnSVG.svg';
 import { ThemeContext } from '../../../Context/ThemeContext';
 import { RFValue } from 'react-native-responsive-fontsize';
 import LocationLogo from '../../../components/SVGs/LocationLogo';
@@ -98,14 +97,23 @@ const AddTempleForm = ({ navigation, setStep }) => {
                     style={[
                         styles.wholeContainerWrapper,
                         {
-                            backgroundColor: 'white',
+                            backgroundColor: theme.colorscheme === 'light' ? '#fff' : '#333333',
                             paddingBottom: Platform.OS == 'ios' ? 180 : 80,
                         },
                     ]}
                 >
                     <View style={[styles.topBarWrapper]}>
                         <View style={styles.topBarContainer}>
-                            <Text style={styles.mainHeader}>Add a temple</Text>
+                            <Text
+                                style={[
+                                    styles.mainHeader,
+                                    {
+                                        color: theme.colorscheme === 'light' ? '#000' : '#fff',
+                                    },
+                                ]}
+                            >
+                                Add a temple
+                            </Text>
 
                             <Pressable
                                 style={{ justifyContent: 'center' }}
@@ -114,11 +122,22 @@ const AddTempleForm = ({ navigation, setStep }) => {
                                     dispatch(resetTheState());
                                 }}
                             >
-                                <CloseBtn />
+                                <Feather
+                                    name="x"
+                                    size={26}
+                                    color={theme.colorscheme === 'light' ? '#000' : '#fff'}
+                                />
                             </Pressable>
                         </View>
 
-                        <Text style={styles.subHeader}>
+                        <Text
+                            style={[
+                                styles.subHeader,
+                                {
+                                    color: theme.colorscheme === 'light' ? '#777777' : '#BDBDBD',
+                                },
+                            ]}
+                        >
                             You can add Shiva temples in India, Nepal, Srilanka. Hindu temples in
                             the rest of the world.
                         </Text>
@@ -142,9 +161,24 @@ const AddTempleForm = ({ navigation, setStep }) => {
                                 subtitle={t(
                                     'Map will open. In that point the marker to the location of the temple, you want to add.'
                                 )}
+                                stepColor={theme.colorscheme === 'light' ? '#C1554E' : '#BDBDBD'}
+                                titleColor={theme.colorscheme === 'light' ? '#000' : '#fff'}
+                                subtitleColor={
+                                    theme.colorscheme === 'light' ? '#777777' : '#BDBDBD'
+                                }
                             />
 
-                            <Text style={styles.descriptionText}>Temple location*</Text>
+                            <Text
+                                style={[
+                                    styles.descriptionText,
+                                    {
+                                        color:
+                                            theme.colorscheme === 'light' ? '#777777' : '#BDBDBD',
+                                    },
+                                ]}
+                            >
+                                Temple location*
+                            </Text>
                             <View>
                                 <LocationLogo
                                     style={{
@@ -170,7 +204,18 @@ const AddTempleForm = ({ navigation, setStep }) => {
                                         setStep(2);
                                     }}
                                     value={templadata?.templeLocation?.locationName}
-                                    style={[styles.textInputStyle, styles.selectLocationInput]}
+                                    style={[
+                                        styles.textInputStyle,
+                                        styles.selectLocationInput,
+                                        {
+                                            // backgroundColor:"#3A3A3A",
+                                            color: theme.colorscheme === 'light' ? 'black' : '#fff', // color: 'black',
+                                            backgroundColor:
+                                                theme.colorscheme === 'light'
+                                                    ? '#F3F3F3'
+                                                    : '#3A3A3A',
+                                        },
+                                    ]}
                                 />
                             </View>
                         </View>
@@ -184,16 +229,41 @@ const AddTempleForm = ({ navigation, setStep }) => {
                                 step={2}
                                 title={t('Enter the Temple name')}
                                 subtitle={t('Town/Village name followed by Swamy/Temple name')}
+                                stepColor={theme.colorscheme === 'light' ? '#C1554E' : '#BDBDBD'}
+                                titleColor={theme.colorscheme === 'light' ? '#000' : '#fff'}
+                                subtitleColor={
+                                    theme.colorscheme === 'light' ? '#777777' : '#BDBDBD'
+                                }
                             />
 
-                            <Text style={styles.descriptionText}>{t('Temple name')}*</Text>
+                            <Text
+                                style={[
+                                    styles.descriptionText,
+                                    {
+                                        color:
+                                            theme.colorscheme === 'light' ? '#777777' : '#BDBDBD',
+                                    },
+                                ]}
+                            >
+                                {t('Temple name')}*
+                            </Text>
                             <View>
                                 <TextInput
                                     placeholderTextColor={colors.grey5}
                                     placeholder="Type here"
                                     value={templadata.templeName}
                                     onChangeText={(text) => dispatch(updateTempleName(text))}
-                                    style={styles.textInputStyle}
+                                    style={[
+                                        styles.textInputStyle,
+                                        {
+                                            // backgroundColor:"#3A3A3A",
+                                            color: theme.colorscheme === 'light' ? 'black' : '#fff', // color: 'black',
+                                            backgroundColor:
+                                                theme.colorscheme === 'light'
+                                                    ? '#F3F3F3'
+                                                    : '#3A3A3A',
+                                        },
+                                    ]}
                                 />
                             </View>
                         </View>
@@ -207,9 +277,24 @@ const AddTempleForm = ({ navigation, setStep }) => {
                                 step={3}
                                 title={t('Description')}
                                 subtitle={t('A short description about the temple')}
+                                stepColor={theme.colorscheme === 'light' ? '#C1554E' : '#BDBDBD'}
+                                titleColor={theme.colorscheme === 'light' ? '#000' : '#fff'}
+                                subtitleColor={
+                                    theme.colorscheme === 'light' ? '#777777' : '#BDBDBD'
+                                }
                             />
 
-                            <Text style={styles.descriptionText}>{t('Temple Description')}</Text>
+                            <Text
+                                style={[
+                                    styles.descriptionText,
+                                    {
+                                        color:
+                                            theme.colorscheme === 'light' ? '#777777' : '#BDBDBD',
+                                    },
+                                ]}
+                            >
+                                {t('Temple Description')}
+                            </Text>
                             <View>
                                 <TextInput
                                     // selection={{ start: 30, end: 0 }}
@@ -224,7 +309,16 @@ const AddTempleForm = ({ navigation, setStep }) => {
                                     value={templadata.description}
                                     onChangeText={(text) => dispatch(updateDescription(text))}
                                     numberOfLines={4}
-                                    style={{ ...styles.textInputStyle, height: 80 }}
+                                    style={[
+                                        { ...styles.textInputStyle, height: 80 },
+                                        {
+                                            color: theme.colorscheme === 'light' ? 'black' : '#fff', // color: 'black',
+                                            backgroundColor:
+                                                theme.colorscheme === 'light'
+                                                    ? '#F3F3F3'
+                                                    : '#3A3A3A',
+                                        },
+                                    ]}
                                 />
                             </View>
                         </View>
@@ -244,7 +338,16 @@ const AddTempleForm = ({ navigation, setStep }) => {
 
                             <View>
                                 <Text
-                                    style={[styles.descriptionText, { fontFamily: 'Mulish-Bold' }]}
+                                    style={[
+                                        styles.descriptionText,
+                                        { fontFamily: 'Mulish-Bold' },
+                                        {
+                                            color:
+                                                theme.colorscheme === 'light'
+                                                    ? '#777777'
+                                                    : '#BDBDBD',
+                                        },
+                                    ]}
                                 >
                                     {t('Upload Images (You can upload multiple images)')}
                                 </Text>
@@ -257,6 +360,12 @@ const AddTempleForm = ({ navigation, setStep }) => {
                                         style={[
                                             styles.descriptionText,
                                             { fontSize: 14, marginHorizontal: 10 },
+                                            {
+                                                color:
+                                                    theme.colorscheme === 'light'
+                                                        ? '#777777'
+                                                        : '#BDBDBD',
+                                            },
                                         ]}
                                     >
                                         {t('Click here to upload photo')}
@@ -284,7 +393,14 @@ const AddTempleForm = ({ navigation, setStep }) => {
                     </View>
                 </View>
             </ScrollView>
-            <View style={styles.nextBtn}>
+            <View
+                style={[
+                    styles.nextBtn,
+                    {
+                        backgroundColor: theme.colorscheme === 'light' ? '#fff' : '#333333',
+                    },
+                ]}
+            >
                 <CustomLongBtn
                     onPress={() => {
                         if (templadata.templeLocation.locationName && templadata.templeName) {
@@ -336,21 +452,17 @@ const styles = StyleSheet.create({
     },
 
     mainHeader: {
-        color: 'black',
         fontSize: RFValue(18, 850),
         fontFamily: 'Lora-Bold',
     },
 
     subHeader: {
-        color: '#777777',
         fontSize: RFValue(14, 850),
         fontFamily: 'Mulish',
         lineHeight: 18,
     },
 
     textInputStyle: {
-        color: 'black', // color: 'black',
-        backgroundColor: '#F3F3F3',
         borderRadius: 10,
         paddingLeft: 15,
 

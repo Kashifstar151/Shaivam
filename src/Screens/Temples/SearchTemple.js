@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Keyboard, Platform, Pressable, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { View, Text, TextInput } from 'react-native';
 import SearchSVG from '../../components/SVGs/SearchSVG';
@@ -12,6 +12,7 @@ import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import * as RNLocalize from 'react-native-localize';
 import { checkPermissionAccess } from '../../Helpers/GeolocationFunc';
 import { PERMISSIONS } from 'react-native-permissions';
+import { ThemeContext } from '../../Context/ThemeContext';
 // import BackBtnSVG from '../../components/SVGs/BackBtnSvg';
 
 const SearchTemple = ({
@@ -124,18 +125,19 @@ const SearchTemple = ({
         })
     );
 
+    const { theme } = useContext(ThemeContext);
     return (
         <View style={{ flexGrow: 1 }}>
             <View
                 style={[
                     styles.wrapper,
                     {
-                        backgroundColor: '#F3F3F3',
+                        backgroundColor: theme.colorscheme === 'light' ? '#F3F3F3' : '#3A3A3A',
                     },
                 ]}
             >
                 {route !== 'filteredTemples' ? (
-                    <SearchSVG fill={'#777777'} />
+                    <SearchSVG fill={theme.colorscheme === 'light' ? '#777777' : '#fff'} />
                 ) : (
                     <Pressable
                         onPress={() => {
@@ -148,8 +150,8 @@ const SearchTemple = ({
                 <TextInput
                     ref={textInputRef}
                     placeholder={t('Search for any temple')}
-                    placeholderTextColor={'#777777'}
-                    style={{ color: '#777777', flex: 1 }}
+                    placeholderTextColor={theme.colorscheme === 'light' ? '#777777' : '#fff'}
+                    style={{ color: theme.colorscheme === 'light' ? '#777777' : '#fff', flex: 1 }}
                     value={searchText}
                     onChangeText={(val) => {
                         setSearchText(val);
@@ -199,7 +201,8 @@ const SearchTemple = ({
                                 position: 'absolute',
                                 top: 60,
                                 width: screenWidth - 40,
-                                backgroundColor: '#F3F3F3',
+                                backgroundColor:
+                                    theme.colorscheme === 'light' ? '#F3F3F3' : '#222222',
                                 borderRadius: 8,
                                 padding: 10,
                                 borderWidth: 1,
@@ -207,6 +210,9 @@ const SearchTemple = ({
                             },
                             positionSuggestionBox,
                         ]}
+                        contentContainerStyle={{
+                            paddingBottom: fetchedLocationsName.length ? 20 : 0,
+                        }}
                         keyboardShouldPersistTaps="handled"
                     >
                         {fetchedLocationsName.length ? (
@@ -223,12 +229,16 @@ const SearchTemple = ({
                                     >
                                         <Text
                                             style={{
-                                                color: '#000',
+                                                color:
+                                                    theme.colorscheme === 'light' ? '#000' : '#fff',
                                                 paddingVertical: 10,
                                                 borderBottomWidth: fetchedLocationsName[ind + 1]
                                                     ? 1
                                                     : 0,
-                                                borderColor: '#33333333',
+                                                borderColor:
+                                                    theme.colorscheme === 'light'
+                                                        ? '#33333333'
+                                                        : '#fff',
                                             }}
                                         >
                                             {item.display_name}

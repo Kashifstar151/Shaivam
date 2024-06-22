@@ -1,47 +1,67 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import AddTempleHomePageLogo from '../../../../assets/Images/Temple/AddTempleHomePage.svg';
 import { CustomLongBtn } from '../../../components/Buttons';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { ThemeContext } from '../../../Context/ThemeContext';
 
-export const EmptyList = ({ onPressOfBtn, navigation }) => (
-    <View style={style.masterContainer}>
-        <AddTempleHomePageLogo />
-        <View
-            style={{
-                paddingTop: 15,
-                width: '90%',
-                gap: 4,
-            }}
-        >
-            <Text style={[style.emptyListTextColor, style.emptyListHeading]}>
-                Submit your first entry here
-            </Text>
-            <Text style={[style.emptyListTextColor, style.emptyListSubHeading]}>
-                Once submitted, our admin will look into it and the add it into the database
-            </Text>
-        </View>
+export const EmptyList = ({ onPressOfBtn, navigation }) => {
+    const { theme } = useContext(ThemeContext);
+    return (
+        <View style={[style.masterContainer]}>
+            <AddTempleHomePageLogo />
+            <View
+                style={{
+                    paddingTop: 15,
+                    width: '90%',
+                    gap: 4,
+                }}
+            >
+                <Text
+                    style={[
+                        style.emptyListTextColor,
+                        style.emptyListHeading,
+                        {
+                            color: theme.colorscheme === 'light' ? '#000' : '#fff9',
+                        },
+                    ]}
+                >
+                    Submit your first entry here
+                </Text>
+                <Text
+                    style={[
+                        style.emptyListTextColor,
+                        style.emptyListSubHeading,
+                        {
+                            color: theme.colorscheme === 'light' ? '#000' : '#fff9',
+                        },
+                    ]}
+                >
+                    Once submitted, our admin will look into it and the add it into the database
+                </Text>
+            </View>
 
-        <View
-            style={{
-                width: '100%',
-                paddingTop: 15,
-            }}
-        >
-            <CustomLongBtn
-                onPress={onPressOfBtn}
-                text={'Add a Temple'}
-                textStyle={{
-                    color: '#4C3600',
-                    fontFamily: 'Mulish-Bold',
+            <View
+                style={{
+                    width: '100%',
+                    paddingTop: 15,
                 }}
-                containerStyle={{
-                    backgroundColor: '#FCB300',
-                }}
-            />
+            >
+                <CustomLongBtn
+                    onPress={onPressOfBtn}
+                    text={'Add a Temple'}
+                    textStyle={{
+                        color: '#4C3600',
+                        fontFamily: 'Mulish-Bold',
+                    }}
+                    containerStyle={{
+                        backgroundColor: '#FCB300',
+                    }}
+                />
+            </View>
         </View>
-    </View>
-);
+    );
+};
 
 const style = StyleSheet.create({
     emptyListHeading: {
@@ -50,7 +70,6 @@ const style = StyleSheet.create({
     },
     emptyListTextColor: {
         textAlign: 'center',
-        color: '#000',
     },
     emptyListSubHeading: {
         fontFamily: 'Mulish',

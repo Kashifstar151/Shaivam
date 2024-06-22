@@ -47,6 +47,7 @@
         "react-native-base64": "^0.2.1",
         "react-native-calendars": "^1.1304.1",
         "react-native-config": "^1.5.1",
+        "react-native-device-info": "^11.1.0",
         "react-native-draggable-flatlist": "^4.0.1",
         "react-native-fs": "^2.18.0",
         "react-native-geolocation-service": "^5.3.1",

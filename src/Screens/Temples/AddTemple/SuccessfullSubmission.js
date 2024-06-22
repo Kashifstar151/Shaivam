@@ -1,29 +1,61 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { CustomLongBtn } from '../../../components/Buttons';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useDispatch } from 'react-redux';
 import { resetTheState } from '../../../store/features/Temple/TempleSlice';
+import { ThemeContext } from '../../../Context/ThemeContext';
 
 const SuccessfullSubmission = ({ setStep, navigation }) => {
     const dispatch = useDispatch();
+    const { theme } = useContext(ThemeContext);
     return (
-        <View style={style.topContainerWrapper}>
+        <View
+            style={[
+                style.topContainerWrapper,
+                {
+                    backgroundColor: theme.colorscheme === 'light' ? '#fff' : '#333333',
+                },
+            ]}
+        >
             <View
                 style={{
                     padding: 20,
                     gap: 20,
                 }}
             >
-                <Text style={style.mainMsg}>Submitted successfully!</Text>
+                <Text
+                    style={[
+                        style.mainMsg,
+                        {
+                            color: theme.colorscheme === 'light' ? '#000' : '#fff',
+                        },
+                    ]}
+                >
+                    Submitted successfully!
+                </Text>
 
-                <Text style={style.subDetails}>
+                <Text
+                    style={[
+                        style.subDetails,
+                        {
+                            color: theme.colorscheme === 'light' ? '#000' : '#BDBDBD',
+                        },
+                    ]}
+                >
                     Our team will go through your submission, validate it and update it on to the
                     app.
                 </Text>
             </View>
 
-            <View style={style.btnWrapper}>
+            <View
+                style={[
+                    style.btnWrapper,
+                    {
+                        backgroundColor: theme.colorscheme === 'light' ? '#F3f3f3' : '#333333',
+                    },
+                ]}
+            >
                 <CustomLongBtn
                     onPress={() => {
                         setStep();
@@ -46,7 +78,6 @@ const SuccessfullSubmission = ({ setStep, navigation }) => {
 const style = StyleSheet.create({
     topContainerWrapper: {
         flex: 1,
-        backgroundColor: 'white',
         justifyContent: 'center',
         alignItems: 'center',
     },
