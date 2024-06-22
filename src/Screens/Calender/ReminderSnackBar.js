@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 export const styles = StyleSheet.create({
     main: { justifyContent: 'space-between', paddingVertical: 5, paddingHorizontal: 10, alignItems: 'center', flexDirection: 'row', height: 'auto', width: Dimensions.get('window').width - 40, borderColor: '#F0F0F0', borderWidth: 1, borderRadius: 10 }
 })
-const ReminderSnackBar = ({ recurringEvent, setRecurringEvent, hidebell, descriptionText, text, description }) => {
+const ReminderSnackBar = ({ recurringEvent, setRecurringEvent, hidebell, descriptionText, text, description, onToggle }) => {
     // const [toggleOn, setToggleOn] = useState(false)
     const { t } = useTranslation()
     return (
@@ -31,7 +31,7 @@ const ReminderSnackBar = ({ recurringEvent, setRecurringEvent, hidebell, descrip
                     // label="Example label"
                     // labelStyle={{ color: "black", fontWeight: "900" }}
                     size='small'
-                    onToggle={isOn => setRecurringEvent(!recurringEvent)}
+                    onToggle={onToggle ? isOn => onToggle(isOn) : isOn => setRecurringEvent(!recurringEvent)}
                 />
             </View>
         </View>

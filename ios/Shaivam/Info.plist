@@ -45,6 +45,20 @@
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<false/>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
@@ -102,6 +116,10 @@
 		<string>Mulish-ExtraBold.ttf</string>
 		<string>Mulish-Regular.ttf</string>
 		<string>Mulish-SemiBold.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
 	</array>
 	<key>UIFileSharingEnabled</key>
 	<true/>

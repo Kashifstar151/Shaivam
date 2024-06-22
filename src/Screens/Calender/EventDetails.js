@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Dimensions, FlatList, Image, Linking, Modal, PermissionsAndroid, Platform, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Dimensions, FlatList, Image, Linking, Modal, Platform, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import BackButton from '../../components/BackButton';
 import Background from '../../components/Background';
 import ShareIcon from '../../assets/Images/share-1.svg';
@@ -21,12 +21,13 @@ import Feather from 'react-native-vector-icons/dist/Feather';
 
 const EventDetails = ({ navigation, route }) => {
     const { item, external } = route?.params;
+    console.log("🚀 ~ EventDetails ~ external:", JSON.stringify(item, 0, 2))
     const isFocus = useIsFocused()
     const [GetReccuringById, { isSuccess: recurringSuccess }] = useLazyGetRecurringByIdQuery();
     const [GetRegularById, { isSuccess: regularSuccess }] = useLazyGetRegularByIdQuery()
 
 
-    console.log('🚀 ~ EventDetails ~ item:', JSON.stringify(item, 0, 2));
+    // console.log('🚀 ~ EventDetails ~ item:', JSON.stringify(item, 0, 2));
     const [notificationOn, setNotification] = useState(false)
     const [regionCoordinate, setRegionCoordinate] = useState(null)
     const [showModal, setShowModal] = useState(false)
@@ -37,8 +38,8 @@ const EventDetails = ({ navigation, route }) => {
         }
     }, [])
     const callApi = () => {
-        let check = item?.split('_').pop()
-        console.log("🚀 ~ callApi ~ check:", item?.split('_')[1])
+        // let check = item?.split('_').pop()
+        // console.log("🚀 ~ callApi ~ check:", item?.split('_')[1])
         if (item?.split('_')[0] == 'recurring') {
             GetReccuringById({ data: item?.split('_')[1] }).then((result) => {
                 // console.log("🚀 ~ getReccuringById ~ result:", result)
@@ -57,27 +58,43 @@ const EventDetails = ({ navigation, route }) => {
             });
         }
     }
-    const popAction = StackActions.pop(1);
+    // const popAction = StackActions.pop(1);
     useEffect(() => {
         getCurrentLocation(callbacks => {
-            // console.log("🚀 ~ useEffect ~ callbacks:", callbacks)
             setRegionCoordinate(callbacks)
         })
         // checkPermissionAccess()
         createChannel()
-    }, [isFocus])
-    useEffect(() => {
-        if (notificationOn) {
-            scheduleNotification()
-        } else {
-            // alert(true)
-            PushNotification.cancelLocalNotification(item?.id)
-            setNotification(false)
-        }
         getScheduleNotification()
 
+    }, [isFocus])
+    // useEffect(() => {
+    //     if (notificationOn) {
+    //         scheduleNotification()
+    //     } else {
+    //         if (notificationOn) {
+    //             alert(true)
+    //             PushNotification.cancelLocalNotification(item?.id)
+    //         } else {
+    //             alert(false)
+    //         }
+    //         setNotification(false)
+    //     }
 
-    }, [notificationOn])
+    // }, [notificationOn])
+
+    const toggleNotification = (is) => {
+        // alert(is)
+        setNotification(is)
+        if (is) {
+            scheduleNotification()
+
+        } else {
+            // alert(true)
+            PushNotification.cancelLocalNotification(item?.attributes?.id)
+            // setNotification(false)
+        }
+    }
     const keys = [
         {
             name: 'Start date',
@@ -93,35 +110,35 @@ const EventDetails = ({ navigation, route }) => {
         { name: 'Presenter', value: item?.attributes?.name },
     ];
     const [selectedHeader, setSelectedHeader] = useState('Direction');
-    const checkPermissionAccess = async () => {
-        // alert(true)
-        const permission = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
-        console.log('plateform version', Platform.Version)
-        if (Platform.OS === 'android' && Platform.Version >= 33) {
-            // const canScheduleExactAlarms = await PermissionsAndroid.check(
-            //     PermissionsAndroid.PERMISSIONS.SCHEDULE_EXACT_ALARM
-            // );
-            // console.log("🚀 ~ checkPermissionAccess ~ canScheduleExactAlarms:", canScheduleExactAlarms)
-            // if (!canScheduleExactAlarms) {
-            //     Alert.alert(
-            //         "Need Permission",
-            //         "Our app needs permission to schedule alarms. Please enable it in the settings.",
-            //         [
-            //             {
-            //                 text: "Cancel",
-            //                 style: "cancel"
-            //             },
-            //             {
-            //                 text: "Go to Settings",
-            //                 onPress: () => {
-            //                     Linking.openSettings();
-            //                 }
-            //             }
-            //         ]
-            //     );
-            // }
-        }
-    }
+    // const checkPermissionAccess = async () => {
+    // alert(true)
+    // const permission = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+    // console.log('plateform version', Platform.Version)
+    // if (Platform.OS === 'android' && Platform.Version >= 33) {
+    // const canScheduleExactAlarms = await PermissionsAndroid.check(
+    //     PermissionsAndroid.PERMISSIONS.SCHEDULE_EXACT_ALARM
+    // );
+    // console.log("🚀 ~ checkPermissionAccess ~ canScheduleExactAlarms:", canScheduleExactAlarms)
+    // if (!canScheduleExactAlarms) {
+    //     Alert.alert(
+    //         "Need Permission",
+    //         "Our app needs permission to schedule alarms. Please enable it in the settings.",
+    //         [
+    //             {
+    //                 text: "Cancel",
+    //                 style: "cancel"
+    //             },
+    //             {
+    //                 text: "Go to Settings",
+    //                 onPress: () => {
+    //                     Linking.openSettings();
+    //                 }
+    //             }
+    //         ]
+    //     );
+    // }
+    // }
+    // }
     const createChannel = () => {
         PushNotification.createChannel({
             channelId: 'Event',
@@ -129,23 +146,24 @@ const EventDetails = ({ navigation, route }) => {
         })
     }
     const scheduleNotification = () => {
-        console.log("item ", JSON.stringify(item, 0, 2))
+        // console.log("item ", JSON.stringify(item, 0, 2))
         PushNotification.localNotificationSchedule({
-            channelId: 'Event',
-            title: item?.title,
+            // channelId: 'Event',
+            title: item?.attributes?.title,
             category: item?.event_category,
             date: new Date(item?.start_date ? item?.start_date : item?.attributes?.start_date + 120 * 1000),
-            message: item?.attributes?.title,
-            id: item?.id,
+            message: item?.attributes?.title ? item?.attributes?.title : 'title',
+            id: item?.attributes?.id,
             allowWhileIdle: true,
-            soundName: item?.attributes?.event_category ? item?.attributes?.event_category : item?.attributes?.category
+            number: item?.attributes?.id
+            // soundName: item?.attributes?.event_category ? item?.attributes?.event_category : item?.attributes?.category
         })
     }
     const getScheduleNotification = () => {
         PushNotification.getScheduledLocalNotifications(callbacks => {
-            // console.log("🚀 ~ getScheduleNotification ~ callbacks:", callbacks)
+            console.log("🚀 ~ getScheduleNotification ~ callbacks:", callbacks)
             callbacks?.map((res) => {
-                if (res?.id == item?.id) {
+                if (res?.id == item?.attributes?.id || res?.number == item?.attributes?.id) {
                     setNotification(true)
                 }
             })
@@ -329,7 +347,7 @@ const EventDetails = ({ navigation, route }) => {
                 </Modal>
             }
             <View style={{ position: 'absolute', bottom: 20, paddingHorizontal: 20, backgroundColor: '#fff' }}>
-                <ReminderSnackBar setRecurringEvent={setNotification} recurringEvent={notificationOn} />
+                <ReminderSnackBar setRecurringEvent={setNotification} recurringEvent={notificationOn} onToggle={toggleNotification} />
             </View>
         </View>
     );
