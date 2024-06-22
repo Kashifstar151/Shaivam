@@ -177,7 +177,7 @@ const TempleDetails = ({ navigation }) => {
         const link = await buildLink();
         Share.open({
             title: 'Share Temple',
-            message: `The Shared temple is ${temple?.templeName}:  ${link}`,
+            message: `${'Temple Share'} ${temple?.templeName}:  ${link}`,
         });
     };
 
