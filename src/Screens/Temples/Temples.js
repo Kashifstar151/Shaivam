@@ -499,7 +499,15 @@ export const Temples = ({ navigation, route }) => {
                                 .map(([key, value], indx) =>
                                     !(key == 8 || key == 9) ? (
                                         <Pressable
-                                            style={styles.contWrapper}
+                                            style={[
+                                                styles.contWrapper,
+                                                {
+                                                    backgroundColor:
+                                                        theme.colorscheme === 'light'
+                                                            ? '#F3F3F3'
+                                                            : '#333333',
+                                                },
+                                            ]}
                                             onPress={() => {
                                                 // adding callback on the category btn press and navigating to the filter page
                                                 if (permissionGranted === RESULTS.GRANTED) {
