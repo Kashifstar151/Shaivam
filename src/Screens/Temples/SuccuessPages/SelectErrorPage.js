@@ -21,8 +21,6 @@ import LottieView from 'lottie-react-native';
 import { getTheLocationName } from '../../../Helpers/GeolocationFunc';
 import { useTempleErrorhandlerMutation } from '../../../store/features/Temple/TemplApiSlice';
 
-const indianMobRegex = /^[6789]\d{9}$/g;
-
 const SelectErrorPage = ({
     setShowSubmit,
     selectedError,
@@ -146,6 +144,7 @@ const SelectErrorPage = ({
                 error_type: errorList[selectedError?.id],
                 temple_id: existingTempDetail?.templeId,
                 phone_number: phoneNumber,
+                temple_name: existingTempDetail?.templeName,
             };
 
             if (selectedError?.id === 2) {
