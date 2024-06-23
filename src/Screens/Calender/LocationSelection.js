@@ -121,14 +121,15 @@ const LocationSelection = ({ calender, setSelected, close, selectedLocation }) =
         if (searchedText !== null && searchedText !== '') {
             const keys = recentKeyword ? recentKeyword : []
             const s = keys?.filter((keys) => keys !== searchedText)
-            const updated = [...s, searchedText].slice(0, 6)
+            const updated = [...s, searchedText].slice(-6)
             AsyncStorage.setItem("recentLocationSearch", JSON.stringify(updated))
         }
     }
     const getSearchedTexxs = async () => {
         const data = await AsyncStorage.getItem('recentLocationSearch')
         console.log("🚀 ~ getSearchedTexxs ~ data:", data)
-        setRecentKeywords(JSON.parse(data))
+        let arr = JSON.parse(data)
+        setRecentKeywords(arr?.reverse())
     }
     const renderRecentSearch = (item) => {
         console.log("🚀 ~ renderRecentSearch ~ item:", item)

@@ -194,7 +194,7 @@ const RenderTitle = ({ data, navigation, prevId, thalam, ThalamHeaders, flagShow
 export const styles = StyleSheet.create({
     titleText: {
         fontFamily: 'AnekTamil-Regular',
-        fontSize: 14,
+        fontSize: 15,
         // fontWeight: '500',
     },
 });
