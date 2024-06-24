@@ -188,7 +188,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
             },
             dynamicLinks.ShortLinkType.DEFAULT
         );
-        console.log('🚀 ~ buildLink ~ link:', link);
+        // console.log('🚀 ~ buildLink ~ link:', link);
         setDeeplink(link);
         // console.log("🚀 ~ link ~ link:", `https://shaivaam.page.link/org?eventId=${item?.attributes?.schedula_type ? 'recurring_' + item?.attributes?.id : 'regular_' + item?.attributes?.id}`)
         return link;
@@ -259,8 +259,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const getFavAudios = (songList) => {
         // const activeTrack = useActiveTrack();
         listfavAudios((callbacks) => {
-            // console.log('🚀 ~ useEffect ~ callbacks:', JSON.stringify(callbacks, 0, 2));
-            // setFavList(callbacks)
             const updatedArray2 = songList?.map((item2) => {
                 const match = callbacks.find((item1) => item1.id === item2.id);
                 if (match) {
@@ -270,7 +268,6 @@ const ThrimuraiSong = ({ route, navigation }) => {
                 // console.log("🚀 ~ updatedArray2 ~ match:", match)
                 // return match; // Replace with the object from array1 if there's a match
             });
-            // console.log("🚀 ~ updatedArray2 ~ updatedArray2:------------", updatedArray2)
         });
     };
 
@@ -1378,8 +1375,8 @@ GROUP BY
                     ></TouchableOpacity>
                 </View>
                 {(activeTrackState?.url && isConnected) ||
-                downloaded ||
-                activeTrackState?.isLocal ? (
+                    downloaded ||
+                    activeTrackState?.isLocal ? (
                     <AudioPlayer
                         activeTrack={activeTrackState}
                         setDownloadingLoader={setDownloadingLoader}
