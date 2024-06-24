@@ -1,5 +1,5 @@
 // filter page on the temple category
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Image, Text, View } from 'react-native';
 import TempleCard from './TempleCard';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -12,6 +12,7 @@ import {
 import { RFValue } from 'react-native-responsive-fontsize';
 import getDimension from '../../Helpers/getDimension';
 import { markerPressClbk } from './CallBacksForClick';
+import { ThemeContext } from '../../Context/ThemeContext';
 
 const snapPointsArray = ['10%', '50%', '95%'];
 const snapMap = {
@@ -51,7 +52,7 @@ const FilteredTemplesPage = ({ navigation, route }) => {
     const { screenHeight, screenWidth } = getDimension();
     const LATITUDE_DELTA = 0.5;
     const LONGITUDE_DELTA = LATITUDE_DELTA * (screenWidth / screenHeight);
-
+    const { theme } = useContext(ThemeContext);
     return (
         <BottomSheetTempleTemplate
             navigation={navigation}
@@ -83,7 +84,10 @@ const FilteredTemplesPage = ({ navigation, route }) => {
             {!(isLoading || isFetching) ? (
                 data?.temples.length ? (
                     <ScrollView
-                    // nestedScrollEnabled
+                        // nestedScrollEnabled
+                        style={{
+                            backgroundColor: theme.colorscheme === 'light' ? '#fff' : '#333333',
+                        }}
                     >
                         {data?.temples.map((item, index) => (
                             <TempleCard
@@ -111,6 +115,7 @@ const FilteredTemplesPage = ({ navigation, route }) => {
                             alignItems: 'center',
                             height: snapIndex !== 0 ? screenHeight * snapMap[snapIndex] : 'auto',
                             justifyContent: 'center',
+                            backgroundColor: theme.colorscheme === 'light' ? '#fff' : '#333333',
                         }}
                     >
                         {snapIndex !== 0 && (
@@ -124,7 +129,7 @@ const FilteredTemplesPage = ({ navigation, route }) => {
                         )}
                         <Text
                             style={{
-                                color: '#000',
+                                color: theme.colorscheme === 'light' ? '#000' : '#fff',
                                 textAlign: 'center',
                                 fontFamily: 'Mulish-Bold',
                                 fontSize: RFValue(16, 850),
@@ -138,12 +143,14 @@ const FilteredTemplesPage = ({ navigation, route }) => {
             ) : (
                 <View
                     style={{
-                        marginVertical: 20,
+                        paddingVertical: 20,
+                        backgroundColor: theme.colorscheme === 'light' ? '#fff' : '#333333',
+                        flex: 1,
                     }}
                 >
                     <Text
                         style={{
-                            color: '#000',
+                            color: theme.colorscheme === 'light' ? '#000' : '#fff',
                             paddingHorizontal: 20,
                             fontFamily: 'Mulish-Bold',
                             fontSize: RFValue(16, 850),

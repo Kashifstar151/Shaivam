@@ -1,5 +1,5 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
     Image,
     Linking,
@@ -18,6 +18,7 @@ import FileUplaoder from './FileUplaoder';
 import SpottingErrorPage from './SuccuessPages/SpottingErrorPage';
 import { useTranslation } from 'react-i18next';
 import templeMetaData from './AssetMapWithTempleType';
+import { ThemeContext } from '../../Context/ThemeContext';
 
 //
 const TempleCard = ({
@@ -41,6 +42,7 @@ const TempleCard = ({
         setModalVisible(true);
     };
     const { t } = useTranslation();
+    const { theme } = useContext(ThemeContext);
     const route = useRoute();
 
     return (
@@ -76,12 +78,24 @@ const TempleCard = ({
                     }
                 }}
             >
-                <Text style={{ color: 'black', fontFamily: 'Lora-Bold', fontSize: 18 }}>
+                <Text
+                    style={{
+                        color: theme.colorscheme === 'light' ? 'black' : '#fff',
+                        fontFamily: 'Lora-Bold',
+                        fontSize: 18,
+                    }}
+                >
                     {dataSet?.templeName}
                 </Text>
             </Pressable>
 
-            <Text style={{ color: 'black', fontFamily: 'Mulish-Regular', paddingTop: 10 }}>
+            <Text
+                style={{
+                    color: theme.colorscheme === 'light' ? 'black' : '#fff',
+                    fontFamily: 'Mulish-Regular',
+                    paddingTop: 10,
+                }}
+            >
                 {templeMetaData[dataSet.flag]?.name}
             </Text>
             {showButton && (

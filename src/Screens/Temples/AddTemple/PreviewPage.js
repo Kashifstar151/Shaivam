@@ -12,7 +12,7 @@ import {
     useAddTempleImagesMutation,
     useAddTempleMutation,
 } from '../../../store/features/Temple/TemplApiSlice';
-// import BackBtnSvg from '../../../components/SVGs/BackBtnSvg';
+import BackBtnSVG from '../../../components/SVGs/BackBtnSvg';
 
 const PreviewPage = ({ navigation, setStep, email }) => {
     const templadata = useSelector((state) => state.temple);
@@ -115,7 +115,11 @@ const PreviewPage = ({ navigation, setStep, email }) => {
                             }}
                         >
                             <Pressable onPress={() => setStep(1)}>
-                                {/* {<BackBtnSvg fill={'#222222'} />} */}
+                                {
+                                    <BackBtnSVG
+                                        fill={theme.colorscheme === 'light' ? '#222222' : '#fff'}
+                                    />
+                                }
                             </Pressable>
                             <Text
                                 style={{

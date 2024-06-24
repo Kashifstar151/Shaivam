@@ -213,18 +213,18 @@ const ThrimuraiList = ({ navigation }) => {
                             name={`${t('(1st bar Yellow)')}`}
                             // name={`${thrimurais[0]?.name}(1-7)`}
                             colors={theme.yellowGradcolors}
-                            RightImage={
-                                <EllipseSVGRight
-                                    startColor={theme.yellowGradBallRight.startColor}
-                                    stopColor={theme.yellowGradBallRight.stopColor}
-                                />
-                            }
-                            LeftImage={
-                                <EllispseSVGLeft
-                                    startColor={theme.yellowGradBallRight.startColor}
-                                    stopColor={theme.yellowGradBallRight.stopColor}
-                                />
-                            }
+                            // RightImage={
+                            //     <EllipseSVGRight
+                            //         startColor={theme.yellowGradBallRight.startColor}
+                            //         stopColor={theme.yellowGradBallRight.stopColor}
+                            //     />
+                            // }
+                            // LeftImage={
+                            //     <EllispseSVGLeft
+                            //         startColor={theme.yellowGradBallRight.startColor}
+                            //         stopColor={theme.yellowGradBallRight.stopColor}
+                            //     />
+                            // }
                         />
                     </Pressable>
 
@@ -248,18 +248,18 @@ const ThrimuraiList = ({ navigation }) => {
                             name={t('(2nd bar pink)')}
                             // name={thrimurais[8]?.name}
                             colors={theme.redGradcolors}
-                            RightImage={
-                                <EllipseSVGRight
-                                    startColor={theme.redGradBallRight.startColor}
-                                    stopColor={theme.redGradBallRight.stopColor}
-                                />
-                            }
-                            LeftImage={
-                                <EllispseSVGLeft
-                                    startColor={theme.redGradBallLeft.startColor}
-                                    stopColor={theme.redGradBallLeft.stopColor}
-                                />
-                            }
+                            // RightImage={
+                            //     <EllipseSVGRight
+                            //         startColor={theme.redGradBallRight.startColor}
+                            //         stopColor={theme.redGradBallRight.stopColor}
+                            //     />
+                            // }
+                            // LeftImage={
+                            //     <EllispseSVGLeft
+                            //         startColor={theme.redGradBallLeft.startColor}
+                            //         stopColor={theme.redGradBallLeft.stopColor}
+                            //     />
+                            // }
                         />
                     </Pressable>
 
@@ -283,18 +283,18 @@ const ThrimuraiList = ({ navigation }) => {
                             // name={thrimurais[9]?.name}
                             Icon={<BookIcon fill={theme.textColor} />}
                             colors={theme.greenGradcolors}
-                            RightImage={
-                                <EllipseSVGRight
-                                    startColor={theme.greenGradBallRight.startColor}
-                                    stopColor={theme.greenGradBallRight.stopColor}
-                                />
-                            }
-                            LeftImage={
-                                <EllispseSVGLeft
-                                    startColor={theme.greenGradBallLeft.startColor}
-                                    stopColor={theme.greenGradBallLeft.stopColor}
-                                />
-                            }
+                            // RightImage={
+                            //     <EllipseSVGRight
+                            //         startColor={theme.greenGradBallRight.startColor}
+                            //         stopColor={theme.greenGradBallRight.stopColor}
+                            //     />
+                            // }
+                            // LeftImage={
+                            //     <EllispseSVGLeft
+                            //         startColor={theme.greenGradBallLeft.startColor}
+                            //         stopColor={theme.greenGradBallLeft.stopColor}
+                            //     />
+                            // }
                         />
                     </Pressable>
 
@@ -317,18 +317,18 @@ const ThrimuraiList = ({ navigation }) => {
                             name={t('(4th bar yellow)')}
                             // name={thrimurais[9]?.name}
                             colors={theme.yellowGradcolors}
-                            RightImage={
-                                <EllipseSVGRight
-                                    startColor={theme.yellowGradBallRight.startColor}
-                                    stopColor={theme.yellowGradBallRight.stopColor}
-                                />
-                            }
-                            LeftImage={
-                                <EllispseSVGLeft
-                                    startColor={theme.yellowGradBallLeft.startColor}
-                                    stopColor={theme.yellowGradBallLeft.stopColor}
-                                />
-                            }
+                            // RightImage={
+                            //     <EllipseSVGRight
+                            //         startColor={theme.yellowGradBallRight.startColor}
+                            //         stopColor={theme.yellowGradBallRight.stopColor}
+                            //     />
+                            // }
+                            // LeftImage={
+                            //     <EllispseSVGLeft
+                            //         startColor={theme.yellowGradBallLeft.startColor}
+                            //         stopColor={theme.yellowGradBallLeft.stopColor}
+                            //     />
+                            // }
                         />
                     </Pressable>
 
@@ -351,18 +351,18 @@ const ThrimuraiList = ({ navigation }) => {
                             name={t('(5th bar pink)')}
                             // name={thrimurais[10]?.name}
                             colors={theme.redGradcolors}
-                            RightImage={
-                                <EllipseSVGRight
-                                    startColor={theme.redGradBallRight.startColor}
-                                    stopColor={theme.redGradBallRight.stopColor}
-                                />
-                            }
-                            LeftImage={
-                                <EllispseSVGLeft
-                                    startColor={theme.redGradBallLeft.startColor}
-                                    stopColor={theme.redGradBallLeft.stopColor}
-                                />
-                            }
+                            // RightImage={
+                            //     <EllipseSVGRight
+                            //         startColor={theme.redGradBallRight.startColor}
+                            //         stopColor={theme.redGradBallRight.stopColor}
+                            //     />
+                            // }
+                            // LeftImage={
+                            //     <EllispseSVGLeft
+                            //         startColor={theme.redGradBallLeft.startColor}
+                            //         stopColor={theme.redGradBallLeft.stopColor}
+                            //     />
+                            // }
                         />
                     </Pressable>
 
@@ -385,18 +385,18 @@ const ThrimuraiList = ({ navigation }) => {
                             // name={thrimurais[11]?.name}
                             Icon={<BookIcon fill={theme.textColor} />}
                             colors={theme.greenGradcolors}
-                            RightImage={
-                                <EllipseSVGRight
-                                    startColor={theme.greenGradBallRight.startColor}
-                                    stopColor={theme.greenGradBallRight.stopColor}
-                                />
-                            }
-                            LeftImage={
-                                <EllispseSVGLeft
-                                    startColor={theme.greenGradBallLeft.startColor}
-                                    stopColor={theme.greenGradBallLeft.stopColor}
-                                />
-                            }
+                            // RightImage={
+                            //     <EllipseSVGRight
+                            //         startColor={theme.greenGradBallRight.startColor}
+                            //         stopColor={theme.greenGradBallRight.stopColor}
+                            //     />
+                            // }
+                            // LeftImage={
+                            //     <EllispseSVGLeft
+                            //         startColor={theme.greenGradBallLeft.startColor}
+                            //         stopColor={theme.greenGradBallLeft.stopColor}
+                            //     />
+                            // }
                         />
                     </Pressable>
 
@@ -419,18 +419,18 @@ const ThrimuraiList = ({ navigation }) => {
                             // name={thrimurais[12]?.name}
                             Icon={<BookIcon fill={theme.textColor} />}
                             colors={theme.yellowGradcolors}
-                            RightImage={
-                                <EllipseSVGRight
-                                    startColor={theme.yellowGradBallRight.startColor}
-                                    stopColor={theme.yellowGradBallRight.stopColor}
-                                />
-                            }
-                            LeftImage={
-                                <EllispseSVGLeft
-                                    startColor={theme.yellowGradBallLeft.startColor}
-                                    stopColor={theme.yellowGradBallLeft.stopColor}
-                                />
-                            }
+                            // RightImage={
+                            //     <EllipseSVGRight
+                            //         startColor={theme.yellowGradBallRight.startColor}
+                            //         stopColor={theme.yellowGradBallRight.stopColor}
+                            //     />
+                            // }
+                            // LeftImage={
+                            //     <EllispseSVGLeft
+                            //         startColor={theme.yellowGradBallLeft.startColor}
+                            //         stopColor={theme.yellowGradBallLeft.stopColor}
+                            //     />
+                            // }
                         />
                     </Pressable>
                     {/* <Pressable

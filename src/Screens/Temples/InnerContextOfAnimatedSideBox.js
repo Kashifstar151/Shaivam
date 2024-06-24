@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import templeMetaData from './AssetMapWithTempleType';
 import { categoryBtnClbk } from './CallBacksForClick';
 import { useTranslation } from 'react-i18next';
+import { ThemeContext } from '../../Context/ThemeContext';
 
 const InnerContextOfAnimatedSideBox = ({ navigation, regionCoordinate, userLocation }) => {
     const { t } = useTranslation();
+    const { theme } = useContext(ThemeContext);
     return (
         <View style={{}}>
             {Object?.entries(templeMetaData)
@@ -39,12 +41,18 @@ const InnerContextOfAnimatedSideBox = ({ navigation, regionCoordinate, userLocat
                                         ]}
                                     >
                                         {value.metaData.letterAssociated && (
-                                            <Text style={styles.textStyleForCont}>
+                                            <Text style={[styles.textStyleForCont]}>
                                                 {value.metaData.letterAssociated}
                                             </Text>
                                         )}
                                     </View>
-                                    <Text style={{ color: '#000', fontWeight: 600, fontSize: 12 }}>
+                                    <Text
+                                        style={{
+                                            color: theme.colorscheme === 'light' ? '#000' : '#fff',
+                                            fontWeight: 600,
+                                            fontSize: 12,
+                                        }}
+                                    >
                                         {t(`${value.fullName}`)}
                                     </Text>
                                 </View>
