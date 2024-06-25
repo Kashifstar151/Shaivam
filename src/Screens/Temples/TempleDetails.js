@@ -250,7 +250,8 @@ const TempleDetails = ({ navigation }) => {
                         style={[
                             styles.wholeContainerWrapper,
                             {
-                                backgroundColor: theme.colorscheme === 'light' ? '#fff' : '#333333',
+                                backgroundColor:
+                                    theme?.colorscheme === 'light' ? '#fff' : '#333333',
                                 flex: 1,
                             },
                         ]}
@@ -416,6 +417,7 @@ const TempleDetails = ({ navigation }) => {
                                                     key={index}
                                                     keyVal={key}
                                                     value={value}
+                                                    theme={theme}
                                                 />
                                             )
                                         )}
@@ -537,7 +539,7 @@ const TempleDetails = ({ navigation }) => {
     );
 };
 
-const KeyValueComp = ({ keyVal, value }) => {
+const KeyValueComp = ({ keyVal, value, theme }) => {
     return (
         <View
             style={{
