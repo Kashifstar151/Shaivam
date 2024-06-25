@@ -1,6 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Alert, AppState, LogBox, PermissionsAndroid, Platform, View } from 'react-native';
 import { attachDb } from '../Screens/Database';
 import HomeScreen from '../Screens/Home/HomeScreen';
@@ -28,10 +28,8 @@ import CreateTrip from '../Screens/Temples/MyTrip/CreateTrip';
 import TempleSelection from '../Screens/Temples/TempleSelection';
 import TempleDetails from '../Screens/Temples/TempleDetails';
 import FilteredTemplesPage from '../Screens/Temples/FilteredTemplesPage';
-// import ImageSubmitPage from '../Screens/Temples/SuccuessPages/SpottingErrorPage';
 import SpottingErrorPage from '../Screens/Temples/SuccuessPages/SpottingErrorPage';
 import SelectErrorPage from '../Screens/Temples/SuccuessPages/SelectErrorPage';
-// import PinTheLocation from '../Screens/Temples/PinTheLocationPage';
 import Onboarding from '../Screens/OnboardingScreen/Onboarding';
 import EventDetails from '../Screens/Calender/EventDetails';
 import CreateVirtualEvent from '../Screens/Calender/CreateVirtualEvent';
@@ -47,16 +45,13 @@ import Notification from '../Screens/Notifications/Notification';
 import FestivalVideo from '../Screens/Calender/FestivalVideo';
 import SendFestivalEvent from '../Screens/Calender/SendFestivalEvent';
 import LoadingScreen from '../Screens/Loading/LoadingScreen';
-// import { ThemeContextProvider } from '../Context/ThemeContext';
+import analytics from '@react-native-firebase/analytics';
 
 const Route = () => {
     const Stack = createNativeStackNavigator();
-    // const database = SQLite.openDatabase({ name: 'songData.db', createFromLocation: 1 });
     const [showDownloading, setShowDownloading] = useState(false);
     const [isConnected, setIsConnected] = useState();
     const offlineDatabase = SQLite.openDatabase({ name: 'main.db', });
-
-    // const database = SQLite.openDatabase({ name: databaseName, });
     useEffect(() => {
         LogBox.ignoreAllLogs();
         const unsubscribe = addEventListener((state) => {
@@ -73,10 +68,16 @@ const Route = () => {
         }
     }, [isConnected]);
 
+    useEffect(() => {
+        NavigationServices.setTopLevelNavigator(navigationRef)
+    }, [navigationRef])
+
+    const routeNameRef = useRef();
+    const navigationRef = useRef();
+
     const checkConnection = async (connected) => {
 
         let localDBMetaData = JSON.parse(await AsyncStorage.getItem('DB_METADATA'));
-        // console.log("🚀 ~ checkConnection ~ localDBMetaData:", localDBMetaData)
         if (!localDBMetaData) {
             AsyncStorage.setItem('DB_METADATA', JSON.stringify(DBInfo));
             localDBMetaData = DBInfo;
@@ -128,7 +129,6 @@ const Route = () => {
                                 }
                             )
                         }
-                        // checkFileExist(localDBMetaData) 
                     }
                 })
                 .catch((err) => {
@@ -191,27 +191,6 @@ const Route = () => {
             console.log('File permissions denied', fileAccessRequest);
         }
     }
-
-    // const downloadDB = async (metaData) => {
-    //     setShowDownloading(true)
-    //     await requestFilePermissions();
-    //     const promise = await attachDb(metaData);
-    //     setShowDownloading(false);
-    //     promise
-    //         .then((res) => {
-    //             console.log('res', res);
-    //             setShowDownloading(false);
-    //             // setting the metaData once the update is done
-    //             AsyncStorage.setItem('DB_METADATA', JSON.stringify(metaData));
-    //             AsyncStorage.setItem('@database', JSON.stringify({ name: 'main.db' }));
-    //         })
-    //         .catch((error) => {
-    //             console.log('error', error);
-    //             setShowDownloading(false);
-    //             AsyncStorage.setItem('@database', JSON.stringify({ name: 'main.db' }));
-    //         });
-    // };
-
     const checkFileExist = async (metaData) => {
         let path =
             Platform.OS == 'android'
@@ -246,7 +225,6 @@ const Route = () => {
                             reject(error);
                         }
                     );
-                    // alert(true);
                     setShowDownloading(true);
 
                     console.log('downloading exist', path)
@@ -255,20 +233,10 @@ const Route = () => {
                     }, 2000);
                 } else {
                     requestFilePermissions();
-
-                    // alert(false);
                     setShowDownloading(true);
                     const promise = await attachDb(metaData);
                     await AsyncStorage.setItem('@database', JSON.stringify({ name: 'main.db' }));
                     setShowDownloading(false);
-                    // promise
-                    //     .then((res) => {
-                    //         console.log('res', res);
-                    //         setShowDownloading(false);
-                    //     })
-                    //     .catch((error) => {
-                    //         console.log('error', error);
-                    //     });
                 }
             })
             .catch((error) => {
@@ -290,7 +258,22 @@ const Route = () => {
                     />
                 </View>
             ) : (
-                <NavigationContainer ref={ref => NavigationServices.setTopLevelNavigator(ref)}>
+                <NavigationContainer
+                    ref={navigationRef}
+                    onReady={() => {
+                        routeNameRef.current = navigationRef.current.getCurrentRoute().name;
+                    }} onStateChange={async () => {
+                        const previousRouteName = routeNameRef.current;
+                        const currentRouteName = navigationRef.current.getCurrentRoute().name;
+
+                        if (previousRouteName !== currentRouteName) {
+                            await analytics().logScreenView({
+                                screen_name: currentRouteName,
+                                screen_class: currentRouteName,
+                            });
+                        }
+                        routeNameRef.current = currentRouteName;
+                    }}>
                     <Stack.Navigator
                         initialRouteName={RouteTexts.ONBOARDING_SCREEN}
                         screenOptions={{

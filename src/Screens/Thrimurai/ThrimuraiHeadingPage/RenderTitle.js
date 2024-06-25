@@ -153,7 +153,7 @@ const RenderTitle = ({ data, navigation, prevId, thalam, ThalamHeaders, flagShow
             query = `SELECT * FROM thirumurais where fkTrimuria=${data.prevId}  ORDER BY titleNo ASC `;
         }
         const query2 = `Select * from thirumurais where ${ThalamHeaders === 0 ? 'country' : 'thalam'
-            }='${data?.title}' and  fkTrimuria ${data.prevId}    and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language
+            }='${data?.title}' and  fkTrimuria ${data.prevId}    and locale='${i18n.language === 'en-IN' ? 'ro' : i18n.language
             }' ${ThalamHeaders === 0 ? 'GROUP BY thalam' : ''}  ORDER BY fkTrimuria,titleNo  ASC `;
 
         getSqlData(thalam ? query2 : query, (callbacks) => {

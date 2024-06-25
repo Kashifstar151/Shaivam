@@ -1,7 +1,5 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as RNLocalize from 'react-native-localize';
 import 'moment/min/locales';
 import moment from 'moment';
 import { ar, as, bn, en, gu, he, hi, ja, kn, ml, od, si, ta, te, ur, pa, hd } from './translations';
@@ -16,9 +14,9 @@ export const AVAILABLE_LANGUAGES = {
     // en: {
     //     translation: en,
     // },
-    // hi: {
-    //     translation: hi,
-    // },
+    hi: {
+        translation: hi,
+    },
     // kn: {
     //     translation: kn,
     // },

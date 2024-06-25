@@ -61,7 +61,7 @@ const Calender = ({ navigation }) => {
         { name: 'Events', selected: <ActiveCalender />, unSelected: <InActiveCalender /> },
     ];
     const [selectMonth, setSelectMonth] = useState(new Date().toISOString());
-    const [language, setLanguage] = useState(i18n.language == 'en-IN' ? 'en' : i18n.language == 'en' ? 'ta' : i18n.language == 'DV' ? 'hi' : 'en')
+    const [language, setLanguage] = useState(i18n.language == 'en-IN' ? 'en' : i18n.language == 'en' ? 'ta' : i18n.language == 'hi' ? 'hi' : 'en')
     const [searchText, setSearchText] = useState('');
     const [eventCategory, setEventCategory] = useState(null);
     const [selectedLocation, setSelectedLocation] = useState(null);

@@ -11,6 +11,7 @@ import {
     Platform,
     StatusBar,
     TouchableWithoutFeedback,
+    TextInput,
     // TouchableWithoutFeedback,
     // Keyboard,
     // ScrollView,
@@ -26,7 +27,6 @@ import SettingIcon from '../../../assets/Images/Settings (1) 1.svg';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { getSqlData } from '../../Database';
 import { useIsFocused } from '@react-navigation/native';
-// import { ThemeContext } from '../../../Context/ThemeContext';
 import { colors } from '../../../Helpers';
 import { useTranslation } from 'react-i18next';
 import '../../../../localization';
@@ -39,8 +39,6 @@ import PannSVG from '../../../components/SVGs/PannSVG';
 import ThalamSVG from '../../../components/SVGs/ThalamSVG';
 import DownloadIcon from '../../../assets/Images/download.svg';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
-
-// import HighlightText from '@sanar/react-native-highlight-text';
 import TrackPlayer, {
     AppKilledPlaybackBehavior,
     Capability,
@@ -52,12 +50,14 @@ import { listfavAudios, MostPlayedSongList } from '../../../Databases/AudioPlaye
 import SettingsSVG from '../../../components/SVGs/SettingsSVG';
 import HighlightedText from '../Searchscreen/HighlightedText';
 import { addEventListener, useNetInfo } from '@react-native-community/netinfo';
+import { SelectableText } from '@alentoma/react-native-selectable-text';
 
 const ThrimuraiSong = ({ route, navigation }) => {
     const isFocused = useIsFocused;
     const { data, downloaded, searchedword, downloadSong, searchScreen, songNo } =
         route.params || {};
     const { isConnected } = useNetInfo();
+    const textInputRef = useRef(null)
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
@@ -218,7 +218,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const [selectedLngCode, setSelectedLngCode] = useState(i18n.language);
     const [downloadList, setDownloadList] = useState([]);
     const langMap = {
-        'en-IN': 'RoI',
+        'en-IN': 'ro',
         English: 'en',
         Hindi: 'en',
         Tamil: 'en',
@@ -226,7 +226,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
         as: 'as',
         bn: 'bn',
         // hi: 'DV',
-        DV: 'DV',
+        DV: 'hi',
         gu: 'gu',
         he: 'he',
         ja: 'JP-KA',
@@ -597,7 +597,9 @@ GROUP BY
 
     useEffect(() => {
         Clipboard.addListener(async () => {
+            alert(true)
             fetchClipBoardString().then((string) => {
+                console.log("🚀 ~ fetchClipBoardString ~ string:", string)
                 setClipBoardString(() => string);
             });
         });
@@ -613,6 +615,12 @@ GROUP BY
             });
         }
     }, [clipBoardString]);
+    const FilterString = (e, index) => {
+        console.log(JSON.stringify(e?.start, e?.end, 0, 2), 'musicState?.songDetails')
+        let string = musicState?.songDetails[index]?.rawSong?.substring(e?.start, e?.end)
+        console.log("🚀 ~ FilterString ~ string:", string)
+        // setClipBoardString(musicState?.songDetails[index]?.rawSong)
+    }
 
     const renderText = (item) => {
         if (tamilSplit && i18n.language === 'en' && selectedLang === 'Original') {
@@ -659,21 +667,37 @@ GROUP BY
                     {searchScreen ? (
                         renderResult(renderText(item))
                     ) : (
-                        <Text
-                            key={Math.random()}
-                            selectable={true}
-                            selectionColor="orange"
-                            style={[
-                                styles.lyricsText,
-                                {
-                                    fontSize: fontSizeCount,
-                                    alignSelf: 'flex-end',
-                                    color: !darkMode ? '#000' : colors.white,
-                                },
-                            ]}
-                        >
-                            {renderText(item)}
-                        </Text>
+                        <View>
+                            {
+                                Platform.OS == 'ios' ?
+                                    <TextInput ref={textInputRef} onSelectionChange={({ nativeEvent: { selection } }) => FilterString(selection, index)} editable={false} value={renderText(item)} multiline
+                                        style={[
+                                            styles.lyricsText,
+                                            {
+                                                fontSize: fontSizeCount,
+                                                alignSelf: 'flex-end',
+                                                color: !darkMode ? '#000' : colors.white,
+                                            },
+                                        ]} />
+                                    :
+                                    <Text
+                                        key={Math.random()}
+                                        selectable={true}
+                                        selectionColor="orange"
+                                        style={[
+                                            styles.lyricsText,
+                                            {
+                                                fontSize: fontSizeCount,
+                                                alignSelf: 'flex-end',
+                                                color: !darkMode ? '#000' : colors.white,
+                                            },
+                                        ]}
+                                    >
+                                        {renderText(item)}
+                                    </Text>
+                            }
+                        </View>
+
                     )}
                 </View>
                 <Text
@@ -698,7 +722,6 @@ GROUP BY
 
     return (
         <View style={{ flex: 1, backgroundColor: colorSet?.backgroundColor }}>
-            {/* the header */}
             <AnimatedRN.View
                 style={{
                     height: Platform.OS == 'ios' ? 'auto' : statusBarHeight,
@@ -720,7 +743,6 @@ GROUP BY
             </AnimatedRN.View>
             {visibleStatusBar && (
                 <>
-                    {/* details */}
                     <View
                         style={[
                             styles.headerContainer,
@@ -1113,12 +1135,12 @@ GROUP BY
                                         averageItemLength,
                                         highestMeasuredFrameIndex,
                                     }) => {
-                                        console.log(
-                                            '🚀 ~ ThrimuraiSong ---  ~ info:',
-                                            index,
-                                            averageItemLength,
-                                            highestMeasuredFrameIndex
-                                        );
+                                        // console.log(
+                                        //     '🚀 ~ ThrimuraiSong ---  ~ info:',
+                                        //     index,
+                                        //     averageItemLength,
+                                        //     highestMeasuredFrameIndex
+                                        // );
                                         const wait = new Promise((resolve) =>
                                             setTimeout(resolve, 1000)
                                         );

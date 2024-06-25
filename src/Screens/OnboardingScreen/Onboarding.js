@@ -40,7 +40,7 @@ const Onboarding = ({ navigation }) => {
         { name: 'English', lngCode: 'en-IN' },
         { name: 'ગુજરાતી', lngCode: 'gu' },
         // { name: 'עברית', lngCode: 'he' },
-        { name: 'हिन्दी', lngCode: 'DV' },
+        { name: 'हिन्दी', lngCode: 'hi' },
         // { name: '日本語', lngCode: 'ja' },
         { name: 'ಕನ್ನಡ', lngCode: 'kn-IN' },
         { name: 'മലയാളം', lngCode: 'ml' },

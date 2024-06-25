@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingHorizontal: 20,
         flexDirection: 'row',
-        backgroundColor: 'white'
     },
 });
 
@@ -85,20 +84,20 @@ const RenderAudios = ({
          */
 
         const query = `SELECT * FROM thirumurais WHERE  fkTrimuria='${id}' ${id <= 7 || id === 10 || id === 11 ? `AND pann='${songs?.pann}'` : `AND pann =''`
-            } and  locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language
+            } and  locale='${i18n.language === 'en-IN' ? 'ro' : i18n.language
             }'  and titleS IS NOT NULL  GROUP BY titleS   ORDER BY  titleS ASC`;
 
         /*
          ? query when for temple 
          */
         const templleQuery = `Select * from thirumurais WHERE ${ThalamHeaders == 0 ? 'country' : 'thalam'
-            }='${songs?.thalam}'  and  locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language
+            }='${songs?.thalam}'  and  locale='${i18n.language === 'en-IN' ? 'ro' : i18n.language
             }' ORDER BY  fkTrimuria,titleNo  ASC LIMIT 10 OFFSET ${pageSize}`;
 
         /*
          todos: have to optimize the queries  
          */
-        const query3 = `SELECT * FROM thirumurais WHERE  author='${songs?.author}'  and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language
+        const query3 = `SELECT * FROM thirumurais WHERE  author='${songs?.author}'  and locale='${i18n.language === 'en-IN' ? 'ro' : i18n.language
             }' GROUP BY titleS ORDER by orderAuthor`;
 
         const makeQuery = thalam ? templleQuery : varakatimurai ? query3 : query;
@@ -109,7 +108,7 @@ const RenderAudios = ({
 
     const [isFetchingNextPage, setIsFetchingNextPage] = useState({ state: false, haveMore: true });
     const getSongsData = async () => {
-        const query = `SELECT * FROM thirumurais  where  locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language
+        const query = `SELECT * FROM thirumurais  where  locale='${i18n.language === 'en-IN' ? 'ro' : i18n.language
             }' and fkTrimuria ${prevId} and titleS != "" ORDER BY fkTrimuria,titleNo LIMIT 20 OFFSET ${dataLength} `;
         if (audioData?.length > 0) {
             setIsFetchingNextPage((prev) => ({ ...prev, state: true }));
@@ -152,7 +151,6 @@ const RenderAudios = ({
                 <FlatList
                     contentContainerStyle={{
                         paddingBottom: 30,
-                        backgroundColor: 'white'
                     }}
                     disableVirtualization
                     nestedScrollEnabled

@@ -80,7 +80,7 @@ const SearchScreen = ({ navigation, route }) => {
             getSqlData(
                 `SELECT * FROM thirumurais WHERE searchTitle LIKE '%${normalizeString(
                     searchText.trim()
-                )}%' and locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language}' ${!fktrimuria.has(0)
+                )}%' and locale='${i18n.language === 'en-IN' ? 'ro' : i18n.language}' ${!fktrimuria.has(0)
                     ? `and fkTrimuria IN (${[...fktrimuria].join(',')})`
                     : `and fkTrimuria IN (${[...thrimurais.map((item) => item.id)].join(',')})`
                 } GROUP BY titleS;`,
@@ -100,7 +100,7 @@ const SearchScreen = ({ navigation, route }) => {
                     : `and ts.thirumuraiId IN (${[...thrimurais.map((item) => item.id)].join(
                         ','
                     )})`
-                }  AND ts.locale='${i18n.language === 'en-IN' ? 'RoI' : i18n.language
+                }  AND ts.locale='${i18n.language === 'en-IN' ? 'ro' : i18n.language
                 }' GROUP BY   ts.thirumuraiId, ts.prevId, ts.songNo ORDER BY ts.thirumuraiId, ts.prevId, ts.songNo ASC`,
                 (callbacks) => {
                     setRawSongs(callbacks);
