@@ -106,6 +106,7 @@ const AudioPlayer = ({
     isFav,
     activeTrack,
     downloadSong,
+    setAutoPlay
 }) => {
     // console.log("🚀 ~ downloadSong:", downloadSong)
 
@@ -133,6 +134,8 @@ const AudioPlayer = ({
             console.log('first block')
             updateRecentlyPlayed(newObj);
             mostPlayed()
+            setAutoPlay(true)
+
             // done the change when song completes the padikam gets changed (tricked)
             const activeTrack = await TrackPlayer.getActiveTrack();
             if (
@@ -141,6 +144,7 @@ const AudioPlayer = ({
                 new Date(position * 1000).toISOString().substring(14, 19) >=
                 new Date(duration * 1000).toISOString().substring(14, 19)
             ) {
+                setAutoPlay(true)
                 queryForNextPrevId();
             }
         }
@@ -223,11 +227,11 @@ const AudioPlayer = ({
     // }, [playBackState])
     useEffect(() => {
         if (playBackState.state !== 'playing' && position >= 3) {
-            console.log('second bloack running'),
-                Promise.allSettled([
-                    updateRecentlyPlayed({ ...activeTrack, prevId }),
-                    mostPlayed()
-                ]);
+            // console.log('second bloack running'),
+            Promise.allSettled([
+                updateRecentlyPlayed({ ...activeTrack, prevId }),
+                mostPlayed()
+            ]);
         }
     }, [playBackState]);
 
@@ -275,11 +279,13 @@ const AudioPlayer = ({
         //     await TrackPlayer.skipToNext();
         //     await TrackPlayer.play();
         // }
+        setAutoPlay(true)
         queryForNextPrevId();
 
         // setPaused(true);
     };
     const handlePrevious = async () => {
+        setAutoPlay(true)
         queryForPreviousPrevId();
     };
     const getMostPlayedSong = () => {
@@ -293,8 +299,6 @@ const AudioPlayer = ({
     const mostPlayed = async (callbacks) => {
         let count = 1;
         let exist = false;
-        // await TrackPlayer.getActiveTrack()
-        //     .then((res) => {
         console.log("🚀 ~ .then ~ res:", activeTrack)
         let num = mostPlayedSongs.filter((value) => {
             return value?.id == activeTrack?.id;
@@ -303,7 +307,6 @@ const AudioPlayer = ({
         if (num?.length > 0) {
             let sql = `UPDATE most_played SET count=? WHERE id=?`;
             UpdateMostPlayed(sql, [num[0].count + 1, num[0].id], (callbacks) => {
-                // console.log('🚀 ~ mostPlayedSongs.map ~ callbacks:', callbacks);
             });
         } else {
             AddMostPlayed(

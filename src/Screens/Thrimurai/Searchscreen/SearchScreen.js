@@ -194,7 +194,7 @@ const SearchScreen = ({ navigation, route }) => {
         );
     };
     const renderRecentSearch = (item) => {
-        console.log('🚀 ~ renderRecentSearch ~ item:', item);
+        // console.log('🚀 ~ renderRecentSearch ~ item:', item);
         return (
             <TouchableOpacity
                 style={{
@@ -240,6 +240,7 @@ const SearchScreen = ({ navigation, route }) => {
         }
     };
     const renderResult = (item, index, key) => {
+        // console.log("🚀 ~ renderResult ~ item:", item)
         return (
             <Pressable
                 style={{ marginVertical: 10 }}

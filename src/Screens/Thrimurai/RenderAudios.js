@@ -139,6 +139,7 @@ const RenderAudios = ({
         navigation.navigate(RouteTexts.THRIMURAI_SONG, {
             data: item,
             type,
+            play: true
             // nextIndxId,
         });
     };

@@ -191,7 +191,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                                 query1: `SELECT * FROM thirumurais WHERE search_thirumurai_title LIKE`,
                                 query2: `AND fkTrimuria <=7 LIMIT 10 OFFSET 0`,
                                 allThirumirai: false,
-                                thrimurais: thrimurais.map((item) => {
+                                thrimurais: thrimurais?.map((item) => {
                                     let itemToReturn = { ...item, id: item.prevId };
                                     return itemToReturn;
                                 }),
