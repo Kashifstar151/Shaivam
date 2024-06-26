@@ -2,14 +2,18 @@ import { Image, Platform, Text, View } from 'react-native';
 import { Callout, Marker } from 'react-native-maps';
 import assetMapWithTempleType from './AssetMapWithTempleType';
 export const MarkerCallOut = ({ callback, flag, coordinate, description }) => {
+    console.log("🚀 ~ MarkerCallOut ~ callback:", JSON.stringify(callback), flag, coordinate, description)
     const extraProps =
         Platform.OS === 'ios'
             ? {
-                  icon: assetMapWithTempleType[flag]?.path
-                      ? assetMapWithTempleType[flag]?.path
-                      : null,
-              }
+                icon: assetMapWithTempleType[flag]?.path
+                    ? assetMapWithTempleType[flag]?.path
+                    : null,
+            }
             : {};
+    const removeParentheses = (str) => {
+        return str.replace(/\s*\([^)]*\)/g, '');
+    };
     return (
         <Marker
             tracksViewChanges={false}
@@ -43,7 +47,7 @@ export const MarkerCallOut = ({ callback, flag, coordinate, description }) => {
                             color: 'white',
                         }}
                     >
-                        {description ? description : 'Sorry no data available'}
+                        {description ? removeParentheses(description) : 'Sorry no data available'}
                     </Text>
                 </View>
                 <View
@@ -102,7 +106,7 @@ export const CustomMarker = ({ setPadState, callback, flag, coordinate, keyName,
             coordinate={coordinate}
             description={'This is a marker in React Natve'}
             onPress={callback ? callback : null}
-            // image={assetMapWithTempleType[1].path}
+        // image={assetMapWithTempleType[1].path}
         >
             {assetMapWithTempleType[flag]?.Svg}
             {/* <Image
