@@ -59,7 +59,6 @@ const RenderThalam = React.memo(({ prevId, item, index, navigation, ThalamHeader
                         ThalamHeaders={ThalamHeaders}
                     />
                 )
-                // <RenderAudios ThalamHeaders={ThalamHeaders} songs={item} navigation={navigation} thalam={true} />
             }
         </View>
     );

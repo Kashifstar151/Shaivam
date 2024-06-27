@@ -30,7 +30,7 @@ const Thalamurai = ({ navigation, prevId }) => {
       FROM thirumurais
       WHERE fkTrimuria ${prevId} AND thalam IS NOT NULL AND thalam != ''
       GROUP BY thalam
-      ORDER BY thalam ASC
+      ORDER BY country_sequence ASC
     )`;
     const naduQuery = `SELECT GROUP_CONCAT( country,";") AS countries
     FROM (
@@ -38,7 +38,7 @@ const Thalamurai = ({ navigation, prevId }) => {
       FROM thirumurais
       WHERE fkTrimuria ${prevId} AND country IS NOT NULL AND country != ''
       GROUP BY country
-      ORDER BY country ASC
+      ORDER BY country_sequence ASC
     )`;
 
     useEffect(() => {

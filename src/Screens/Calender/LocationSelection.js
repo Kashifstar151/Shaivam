@@ -122,7 +122,7 @@ const LocationSelection = ({ calender, setSelected, close, selectedLocation }) =
         if (searchedText !== null && searchedText !== '') {
             const keys = recentKeyword ? recentKeyword : []
             console.log("🚀 ~ setRecentSearches ~ keys:", keys, searchedText)
-            let num = arr?.filter((item) => {
+            let num = keys?.filter((item) => {
                 if (item?.searchedText == searchedText) {
                     item.count = item?.count + 1
                 }
@@ -146,7 +146,7 @@ const LocationSelection = ({ calender, setSelected, close, selectedLocation }) =
         // console.log("🚀 ~ renderRecentSearch ~ item:", item)
         return (
             <TouchableOpacity style={{ borderWidth: 1, borderColor: '#777777', width: 'auto', height: 35, borderRadius: 16, paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center', marginLeft: 10 }} onPress={() => {
-                setSearchText(item)
+                setSearchText(item?.searchedText)
                 // setTimeout(() => {
                 //     getDataFromSql(item)
                 // }, 1000)
