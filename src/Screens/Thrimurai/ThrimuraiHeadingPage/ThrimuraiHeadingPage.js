@@ -133,7 +133,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const { theme } = useContext(ThemeContext);
     const [range, setRange] = useState({});
     const { page, list, query, prevId, flagShowAudio, name } = route.params;
-    // console.log('🚀 ~ ThrimuraiHeadingPage ~ prevId---------------->:', prevId, name);
+    console.log('🚀 ~ ThrimuraiHeadingPage ~ prevId---------------->:', prevId, name);
     const headerData = [
         {
             name: 'Panmurai',
@@ -164,9 +164,9 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
     const [showLoading, setShowLoading] = useState(false);
     / Get latest DB from the disk /;
     const [thrimurais, setThrimurais] = useState(null);
-    // console.log('🚀 ~ ThrimuraiHeadingPage ~ thrimurais:', thrimurais);
+    console.log('🚀 ~ ThrimuraiHeadingPage ~ thrimurais:', thrimurais);
     useEffect(() => {
-        retrieveData();
+        retrieveData(query);
     }, []);
     const { t } = useTranslation();
     const retrieveData = async () => {
@@ -175,12 +175,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
         // alert(true)
         getSqlData(query, (callbacks) => {
             setShowLoading(false);
-            setThrimurais(() =>
-                callbacks.map((item) => {
-                    let itemToReturn = { ...item, id: item.prevId };
-                    return itemToReturn;
-                })
-            );
+            setThrimurais(callbacks);
         });
     };
     return (
@@ -191,17 +186,19 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                     <SearchInput
                         setState={setSearchedText}
                         state={searchedText}
-                        setOnFocus={() => {
-                            if (thrimurais?.length) {
-                                navigation.navigate(RouteTexts.SEARCH_SCREEN, {
-                                    query1: `SELECT * FROM thirumurais WHERE search_thirumurai_title LIKE`,
-                                    query2: `AND fkTrimuria <=7 LIMIT 10 OFFSET 0`,
-                                    allThirumirai: false,
-                                    thrimurais: thrimurais,
-                                    prevId: prevId,
-                                });
-                            }
-                        }}
+                        setOnFocus={() =>
+                            navigation.navigate(RouteTexts.SEARCH_SCREEN, {
+                                query1: `SELECT * FROM thirumurais WHERE search_thirumurai_title LIKE`,
+                                query2: `AND fkTrimuria <=7 LIMIT 10 OFFSET 0`,
+                                allThirumirai: false,
+                                thrimurais: thrimurais?.map((item) => {
+                                    let itemToReturn = { ...item, id: item.prevId };
+                                    return itemToReturn;
+                                }),
+                                prevId: prevId,
+                            })
+                        }
+                        // placeholder={'Search for anything (Eg - தோடுடைய செவியன்) '}
                         placeholder={t('Search for any Thirumurai here')}
                         styleOverwrite={{ paddingTop: 10 }}
                     />
@@ -218,7 +215,6 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                                     selectedHeader={selectedHeader}
                                     setSelectedheader={setSelectedheader}
                                     item={item}
-                                    prevId={prevId}
                                 />
                             )}
                             horizontal
@@ -233,7 +229,6 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                                     selectedHeader={selectedHeader}
                                     setSelectedheader={setSelectedheader}
                                     item={item}
-                                    prevId={prevId}
                                 />
                             )}
                             horizontal
@@ -247,6 +242,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                 }}
             >
                 {showLoading ? (
+                    // <Modal transparent presentationStyle='overFullScreen'>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <ActivityIndicator size={'small'} />
                     </View>
@@ -261,7 +257,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                                 />
                             </View>
                         ) : selectedHeader.name == 'Varalatrumurai' ? (
-                            <Varakatrimurai navigation={navigation} prevId={prevId} />
+                            <Varakatrimurai navigation={navigation} />
                         ) : selectedHeader?.name == 'Thalamurai' ? (
                             <Thalamurai navigation={navigation} prevId={prevId} />
                         ) : (
@@ -269,6 +265,7 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                                 contentContainerStyle={{ marginTop: 10, paddingBottom: 250 }}
                                 data={thrimurais}
                                 renderItem={({ item, index }) => (
+                                    // renderContents(item, index)
                                     <RenderContents
                                         item={item}
                                         index={index}

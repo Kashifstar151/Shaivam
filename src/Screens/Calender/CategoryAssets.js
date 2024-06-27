@@ -77,8 +77,8 @@ const CategoryAssets = {
         name: 'Paurnamasya',
         Svg: <Category16 />
     },
-    'Kumbabhishekam': {
-        name: 'Kumbabhishekam',
+    'Kumbabhishekam / Consecration': {
+        name: 'Kumbabhishekam / Consecration',
         Svg: <Category17 />
     }
 };

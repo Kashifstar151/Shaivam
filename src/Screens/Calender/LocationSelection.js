@@ -93,9 +93,9 @@ const LocationSelection = ({ calender, setSelected, close, selectedLocation }) =
     const fetchMyLocation = async () => {
         // alert(true)
         getCurrentLocation(async (val) => {
-            console.log("🚀 ~ getCurrentLocation ~ val:", val)
+            // console.log("🚀 ~ getCurrentLocation ~ val:", val)
             const locationDetail = await getTheLocationName({ ...val });
-            console.log("🚀 ~ getCurrentLocation ~ locationDetail:", locationDetail)
+            // console.log("🚀 ~ getCurrentLocation ~ locationDetail:", locationDetail)
             // alert(true)
             // mapRef.current?.animateCamera({ center: val }, { duration: 1000 });
             setUserLocation((prev) => ({ ...prev, ...val }));
@@ -118,29 +118,41 @@ const LocationSelection = ({ calender, setSelected, close, selectedLocation }) =
         close?.current?.close();
     };
     const setRecentSearches = () => {
+        let count = 1
         if (searchedText !== null && searchedText !== '') {
             const keys = recentKeyword ? recentKeyword : []
-            const s = keys?.filter((keys) => keys !== searchedText)
-            const updated = [...s, searchedText].slice(0, 6)
+            console.log("🚀 ~ setRecentSearches ~ keys:", keys, searchedText)
+            let num = keys?.filter((item) => {
+                if (item?.searchedText == searchedText) {
+                    item.count = item?.count + 1
+                }
+                return item?.searchedText == searchedText
+            })
+            if (num?.length == 0) {
+                arr.push({ searchedText: searchedText, count: 1 })
+            }
+            const updated = keys?.slice(-6)
+            // console.log("🚀 ~ setRecentSearches ~ updated:", keys)
             AsyncStorage.setItem("recentLocationSearch", JSON.stringify(updated))
         }
     }
     const getSearchedTexxs = async () => {
         const data = await AsyncStorage.getItem('recentLocationSearch')
         console.log("🚀 ~ getSearchedTexxs ~ data:", data)
-        setRecentKeywords(JSON.parse(data))
+        let arr = JSON.parse(data)
+        setRecentKeywords(arr)
     }
     const renderRecentSearch = (item) => {
-        console.log("🚀 ~ renderRecentSearch ~ item:", item)
+        // console.log("🚀 ~ renderRecentSearch ~ item:", item)
         return (
             <TouchableOpacity style={{ borderWidth: 1, borderColor: '#777777', width: 'auto', height: 35, borderRadius: 16, paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center', marginLeft: 10 }} onPress={() => {
-                setSearchText(item)
+                setSearchText(item?.searchedText)
                 // setTimeout(() => {
                 //     getDataFromSql(item)
                 // }, 1000)
                 // getDataFromSql()
             }}>
-                <Text style={{ fontSize: 12, fontFamily: 'Mulish-Regular' }}>{item}</Text>
+                <Text style={{ fontSize: 12, fontFamily: 'Mulish-Regular' }}>{item?.searchedText}</Text>
             </TouchableOpacity>
         )
     }

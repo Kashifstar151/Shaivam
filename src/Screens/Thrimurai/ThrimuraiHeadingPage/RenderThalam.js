@@ -6,6 +6,7 @@ import { ThemeContext } from '../../../Context/ThemeContext';
 import RenderAudios from '../RenderAudios';
 import RenderTitle from './RenderTitle';
 import { colors } from '../../../Helpers';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 const RenderThalam = React.memo(({ prevId, item, index, navigation, ThalamHeaders }) => {
     const { theme } = useContext(ThemeContext);
@@ -58,7 +59,6 @@ const RenderThalam = React.memo(({ prevId, item, index, navigation, ThalamHeader
                         ThalamHeaders={ThalamHeaders}
                     />
                 )
-                // <RenderAudios ThalamHeaders={ThalamHeaders} songs={item} navigation={navigation} thalam={true} />
             }
         </View>
     );
@@ -74,7 +74,7 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         paddingHorizontal: 20,
     },
-    chapterNameTexts: { fontSize: 11, fontWeight: '400' },
+    chapterNameTexts: { fontSize: RFValue(11), fontWeight: '400' },
     chapterTexts: { fontSize: 12, fontWeight: '500', color: '#777777', marginTop: 5 },
 });
 export default RenderThalam;

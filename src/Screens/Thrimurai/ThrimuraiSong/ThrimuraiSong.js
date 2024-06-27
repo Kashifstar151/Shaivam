@@ -11,6 +11,7 @@ import {
     Platform,
     StatusBar,
     TouchableWithoutFeedback,
+    TextInput,
     // TouchableWithoutFeedback,
     // Keyboard,
     // ScrollView,
@@ -26,7 +27,6 @@ import SettingIcon from '../../../assets/Images/Settings (1) 1.svg';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { getSqlData } from '../../Database';
 import { useIsFocused } from '@react-navigation/native';
-// import { ThemeContext } from '../../../Context/ThemeContext';
 import { colors } from '../../../Helpers';
 import { useTranslation } from 'react-i18next';
 import '../../../../localization';
@@ -39,8 +39,6 @@ import PannSVG from '../../../components/SVGs/PannSVG';
 import ThalamSVG from '../../../components/SVGs/ThalamSVG';
 import DownloadIcon from '../../../assets/Images/download.svg';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
-
-// import HighlightText from '@sanar/react-native-highlight-text';
 import TrackPlayer, {
     AppKilledPlaybackBehavior,
     Capability,
@@ -52,28 +50,27 @@ import { listfavAudios, MostPlayedSongList } from '../../../Databases/AudioPlaye
 import SettingsSVG from '../../../components/SVGs/SettingsSVG';
 import HighlightedText from '../Searchscreen/HighlightedText';
 import { addEventListener, useNetInfo } from '@react-native-community/netinfo';
+import { SelectableText } from '@alentoma/react-native-selectable-text';
+import { ThemeContext } from '../../../Context/ThemeContext';
 
 const ThrimuraiSong = ({ route, navigation }) => {
     const isFocused = useIsFocused;
     const { data, downloaded, searchedword, downloadSong, searchScreen, songNo } =
         route.params || {};
     const { isConnected } = useNetInfo();
+    const textInputRef = useRef(null)
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
     }));
-    // const bottomSheetRef = useRef(null);
     const [downloadingLoader, setDownloadingLoader] = useState(false);
-    // const snapPoints = useMemo(() => ['25%', '25%'], []);
     const [showSetting, setShowSetting] = useState(false);
-    // const language = ['Original', 'Tamil', 'English', 'Hindi'];
+    const [autoPlay, setAutoPlay] = useState(false)
     const [language, setLang] = useState(['Original', 'Tamil', 'English', 'Hindi']);
     const [selectedLang, setSelectedLang] = useState('Original');
     const [fontSizeCount, setFontSizeCount] = useState(null);
     const [isconnected, setIsConnected] = useState(isConnected);
     const [showAudioPlayer, setShowAudioPlayer] = useState(false);
-    const [deeplink, setDeeplink] = useState(null);
-    // const [refFlatList, setRefFlatList] = useState(null);
     const flatListRef = useRef(null);
     const firstRender = useRef(true);
 
@@ -168,9 +165,8 @@ const ThrimuraiSong = ({ route, navigation }) => {
         initilizeTheTheme();
         firstRender.current = false;
     }, []);
-    const [favList, setFavList] = useState(null);
+    // const [favList, setFavList] = useState(null);
     async function buildLink() {
-        // alert(true)
         const link = await dynamicLinks().buildShortLink(
             {
                 link: `https://shaivaam.page.link/org?prevId=${data?.prevId}`,
@@ -188,9 +184,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
             },
             dynamicLinks.ShortLinkType.DEFAULT
         );
-        console.log('🚀 ~ buildLink ~ link:', link);
-        setDeeplink(link);
-        // console.log("🚀 ~ link ~ link:", `https://shaivaam.page.link/org?eventId=${item?.attributes?.schedula_type ? 'recurring_' + item?.attributes?.id : 'regular_' + item?.attributes?.id}`)
+        // setDeeplink(link);
         return link;
     }
     useEffect(() => {
@@ -213,12 +207,13 @@ const ThrimuraiSong = ({ route, navigation }) => {
     // console.log('🚀 ~ ThrimuraiSong ~ musicState:', JSON.stringify(musicState, 0, 2));
     const [darkMode, setDarkMode] = useState();
     const [tamilSplit, setTamilSplit] = useState(false);
-    // const { theme, setTheme } = useContext(ThemeContext);
+    const { theme, setTheme } = useContext(ThemeContext);
+    console.log("🚀 ~ ThrimuraiSong ~ theme:", theme)
     const { t, i18n } = useTranslation();
     const [selectedLngCode, setSelectedLngCode] = useState(i18n.language);
     const [downloadList, setDownloadList] = useState([]);
     const langMap = {
-        'en-IN': 'RoI',
+        'en-IN': 'ro',
         English: 'en',
         Hindi: 'en',
         Tamil: 'en',
@@ -226,7 +221,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
         as: 'as',
         bn: 'bn',
         // hi: 'DV',
-        DV: 'DV',
+        DV: 'hi',
         gu: 'gu',
         he: 'he',
         ja: 'JP-KA',
@@ -249,44 +244,25 @@ const ThrimuraiSong = ({ route, navigation }) => {
             setColorSet((prev) => colors.light);
         }
     }, [darkMode]);
-
-    // const activeTrack = useActiveTrack();
-    // console.log(
-    //     '🚀 ~ ``````````~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~:',
-    //     activeTrack
-    // );
     const [isFav, setIsFav] = useState(false);
     const getFavAudios = (songList) => {
-        // const activeTrack = useActiveTrack();
         listfavAudios((callbacks) => {
-            // console.log('🚀 ~ useEffect ~ callbacks:', JSON.stringify(callbacks, 0, 2));
-            // setFavList(callbacks)
             const updatedArray2 = songList?.map((item2) => {
                 const match = callbacks.find((item1) => item1.id === item2.id);
                 if (match) {
                     setIsFav(true);
                 }
-                // console.log("🚀 ~ updatedArray2 ~ match:", match)
-                // console.log("🚀 ~ updatedArray2 ~ match:", match)
-                // return match; // Replace with the object from array1 if there's a match
             });
-            // console.log("🚀 ~ updatedArray2 ~ updatedArray2:------------", updatedArray2)
         });
     };
 
     const fetchAndDisplayDownloads = async () => {
         try {
-            // const keys = await AsyncStorage.getAllKeys();
             const parsedMetadata = await AsyncStorage.getItem('downloaded');
-            // console.log(
-            //     '🚀 ~ fetchAndDisplayDownloads ~ parsedMetadata:',
-            //     JSON.stringify(JSON.parse(parsedMetadata), 0, 2)
-            // );
             // const metadataKeys = keys.filter(key => key.startsWith('downloaded:'));
             // const metadata = await AsyncStorage.multiGet(metadataKeys);
             // const parsedMetadata = metadata.map(([key, value]) => JSON.parse(value));
             setDownloadList(JSON.parse(parsedMetadata));
-
             // Now `parsedMetadta` contains all of your audio files' metadata
             // You can use this data to render your downloads page
         } catch (e) {
@@ -342,33 +318,11 @@ GROUP BY
                 payload: data.filter((i) => i.localBased !== null)[0].localeBased,
             });
             getSqlData(detailQuery, (details) => {
-                // console.log('🚀 ~ getSqlData ~ data:', JSON.stringify(details, 0, 2));
-
                 const query2 = `SELECT * FROM odhuvars WHERE title='${data.filter((i) => i.tamil !== null)[0]?.tamil
                     }'`;
                 getSqlData(query2, (callbacks) => {
-                    // console.log('🚀 ~ getSqlData ~ callbacks:', JSON.stringify(callbacks, 0, 2));
                     dispatchMusic({ type: 'SONG_DETAILS', payload: details });
-                    // if (downloadList.length > 0) {
-                    //     alert(true);
-                    //     const updatedArray2 = callbacks?.map((item2) => {
-                    //         const match = downloadList.find((item1) => {
-                    //             if (item1.id === item2.id) {
-                    //                 return { ...item1, isLocal: true };
-                    //             }
-                    //         });
-                    //         return match ? { ...match } : item2; // Replace with the object from array1 if there's a match
-                    //     });
-                    //     // console.log('🚀 ~ arr ~ arr:', updatedArray2);
-                    //     console.log(
-                    //         'match of the song ---------------==========================---------------------------==============================--------------------------===============================-----------------------------==============================-------------------------------=============================----------------------------==============================-----------------------------------===============================--------------------------==============================-----------------',
-                    //         updatedArray2
-                    //     );
-                    //     dispatchMusic({ type: 'SET_SONG', payload: updatedArray2 });
-                    // } else {
-                    // }
                     dispatchMusic({ type: 'SET_SONG', payload: callbacks });
-                    // scrollToIndex();
                     scrollToIndexFlatList();
                 });
             });
@@ -396,7 +350,6 @@ GROUP BY
                 const match = downloadList?.find((item1) => item1.id === item2.id);
                 return match ? { ...match, isLocal: true } : item2; // Replace with the object from array1 if there's a match
             });
-            // console.log('🚀 ~ updatedArray2 ~ updatedArray2:', JSON.stringify(updatedArray2, 0, 2));
             setUpPlayer(updatedArray2);
         } else {
             setUpPlayer(songList);
@@ -416,26 +369,6 @@ GROUP BY
                 <HighlightedText
                     screen={'music-player'}
                     textColor={!darkMode ? '#000' : colors.white}
-                    // key={Math.random()}
-                    // selectable={true}
-                    // selectionColor="orange"
-                    // style={[
-                    //     styles.lyricsText,
-                    //     {
-                    //         fontSize: fontSizeCount,
-                    //         alignSelf: 'flex-end',
-                    //         color: !darkMode ? colors.grey6 : colors.white,
-                    //     },
-                    // ]}
-                    // highlightStyle={{
-                    //     backgroundColor: darkMode ? '#A47300' : '#F8E3B2',
-                    // }}
-                    // searchWords={[`${searchedword}`]}
-                    // textToHighlight={
-                    //     selectedLang !== 'Tamil' ? item?.rawSong : item?.tamilExplanation
-                    // }
-
-                    // text={selectedLang !== 'Tamil' ? item : item?.tamilExplanation}
                     text={item}
                     highlight={searchedword}
                     selectable={true}
@@ -463,7 +396,6 @@ GROUP BY
     };
     const setUpPlayer = useCallback(
         async (song, from) => {
-            // console.log('songs data setup players', JSON.stringify(song, 0, 2))
             try {
                 if (!TrackPlayer._initialized) {
                     await TrackPlayer.setupPlayer();
@@ -486,6 +418,9 @@ GROUP BY
                 });
                 await TrackPlayer.reset();
                 await TrackPlayer.add(song);
+                if (autoPlay) {
+                    TrackPlayer.play()
+                }
             } catch (error) {
                 await TrackPlayer.updateOptions({
                     android: {
@@ -505,6 +440,9 @@ GROUP BY
                 });
                 await TrackPlayer.reset();
                 await TrackPlayer.add(song);
+                if (autoPlay) {
+                    TrackPlayer.play()
+                }
             } finally {
                 initilizeTheRepeatState();
                 initilizeActiveTrack();
@@ -518,7 +456,6 @@ GROUP BY
         await TrackPlayer.reset();
 
         getSqlData(query, (clb) => {
-            // console.log('🚀 ~ getSqlData ~ clb:', clb);
             if (clb[0].nextPrevId) {
                 dispatchMusic({ type: 'RESET' });
                 dispatchMusic({ type: 'PREV_ID', payload: clb[0].nextPrevId });
@@ -547,7 +484,6 @@ GROUP BY
                 `SELECT addon,author,thalam,country,pann from thirumurais WHERE prevId=${musicState?.prevId}`,
                 (cb) => {
                     const { author, country, thalam, pann, addon } = cb[0];
-                    // console.log("🚀 ~ useEffect ~  cb[0]:", cb[0])
                     dispatchMusic({
                         type: 'META_DATA',
                         payload: { author, country, thalam, pann, addon },
@@ -601,6 +537,7 @@ GROUP BY
     useEffect(() => {
         Clipboard.addListener(async () => {
             fetchClipBoardString().then((string) => {
+                // console.log("🚀 ~ fetchClipBoardString ~ string:", string)
                 setClipBoardString(() => string);
             });
         });
@@ -616,6 +553,10 @@ GROUP BY
             });
         }
     }, [clipBoardString]);
+    const FilterString = (e, index) => {
+        console.log(JSON.stringify(e?.start, e?.end, 0, 2), 'musicState?.songDetails')
+        let string = musicState?.songDetails[index]?.rawSong?.substring(e?.start, e?.end)
+    }
 
     const renderText = (item) => {
         if (tamilSplit && i18n.language === 'en' && selectedLang === 'Original') {
@@ -632,8 +573,8 @@ GROUP BY
     };
     const RenderLyricsText = memo(
         ({ item, index }) => (
-            // <TouchableWithoutFeedback onPress={() => setShowSetting(false)}>
             <View
+                key={item => item?.id}
                 style={[
                     {
                         paddingBottom: 7,
@@ -648,7 +589,7 @@ GROUP BY
                         : {},
                 ]}
             >
-                <View>
+                <View key={item => item?.id}>
                     {item?.type !== null && (
                         <Text
                             style={{
@@ -662,21 +603,37 @@ GROUP BY
                     {searchScreen ? (
                         renderResult(renderText(item))
                     ) : (
-                        <Text
-                            key={Math.random()}
-                            selectable={true}
-                            selectionColor="orange"
-                            style={[
-                                styles.lyricsText,
-                                {
-                                    fontSize: fontSizeCount,
-                                    alignSelf: 'flex-end',
-                                    color: !darkMode ? '#000' : colors.white,
-                                },
-                            ]}
-                        >
-                            {renderText(item)}
-                        </Text>
+                        <View key={item => item?.id}>
+                            {
+                                Platform.OS == 'ios' ?
+                                    <TextInput key={item => item?.id} ref={textInputRef} onSelectionChange={({ nativeEvent: { selection } }) => FilterString(selection, index)} editable={false} value={renderText(item)} multiline
+                                        style={[
+                                            styles.lyricsText,
+                                            {
+                                                fontSize: fontSizeCount,
+                                                // alignSelf: 'flex-end',
+                                                color: !darkMode || theme?.colorscheme !== 'dark' ? '#000' : colors.white,
+                                            },
+                                        ]} />
+                                    :
+                                    <Text
+                                        key={item => item?.id}
+                                        selectable={true}
+                                        selectionColor="orange"
+                                        style={[
+                                            styles.lyricsText,
+                                            {
+                                                fontSize: fontSizeCount,
+                                                // alignSelf: 'flex-end',
+                                                color: !darkMode || theme?.colorscheme !== 'dark' ? '#000' : colors.white,
+                                            },
+                                        ]}
+                                    >
+                                        {renderText(item)}
+                                    </Text>
+                            }
+                        </View>
+
                     )}
                 </View>
                 <Text
@@ -685,14 +642,13 @@ GROUP BY
                         {
                             fontSize: fontSizeCount,
                             alignSelf: 'flex-end',
-                            color: !darkMode ? colors.grey6 : colors.white,
+                            color: !darkMode || theme?.colorscheme !== 'dark' ? colors.grey6 : colors.white,
                         },
                     ]}
                 >
                     {item?.songNo}
                 </Text>
             </View>
-            // </TouchableWithoutFeedback>
         ),
         (prevProps, nextProps) => {
             return prevProps.item?.prevId === nextProps.item?.prevId;
@@ -701,7 +657,6 @@ GROUP BY
 
     return (
         <View style={{ flex: 1, backgroundColor: colorSet?.backgroundColor }}>
-            {/* the header */}
             <AnimatedRN.View
                 style={{
                     height: Platform.OS == 'ios' ? 'auto' : statusBarHeight,
@@ -723,11 +678,10 @@ GROUP BY
             </AnimatedRN.View>
             {visibleStatusBar && (
                 <>
-                    {/* details */}
                     <View
                         style={[
                             styles.headerContainer,
-                            { backgroundColor: darkMode ? colors?.faintGrey : colors?.skinColor },
+                            { backgroundColor: darkMode || theme?.colorscheme == 'dark' ? colors?.faintGrey : colors?.skinColor },
                         ]}
                     >
                         <View
@@ -743,18 +697,20 @@ GROUP BY
                                             style={[
                                                 styles.iconContainer,
                                                 {
-                                                    backgroundColor: darkMode
+                                                    backgroundColor: darkMode || theme?.colorscheme == 'dark'
                                                         ? '#2B2B2B'
                                                         : '#E0AAA7',
                                                 },
                                             ]}
                                         >
                                             <AruliyavarSVG
-                                                fill={darkMode ? '#787878' : '#3A1917'}
+                                                fill={darkMode || theme?.colorscheme == 'dark' ? '#787878' : '#3A1917'}
                                             />
                                         </View>
                                         <View style={styles.textSectionDD}>
-                                            <Text style={styles.titleDropDown}>{`${t(
+                                            <Text style={[styles.titleDropDown, {
+                                                color: darkMode || theme?.colorscheme == 'dark' ? 'white' : 'dark'
+                                            }]}>{`${t(
                                                 'Aruliyavar'
                                             )}`}</Text>
                                             <Text style={styles.valueDropDown}>
@@ -769,16 +725,18 @@ GROUP BY
                                             style={[
                                                 styles.iconContainer,
                                                 {
-                                                    backgroundColor: darkMode
+                                                    backgroundColor: darkMode || theme?.colorscheme == 'dark'
                                                         ? '#2B2B2B'
                                                         : '#E0AAA7',
                                                 },
                                             ]}
                                         >
-                                            <NaduSVG fill={darkMode ? '#787878' : '#3A1917'} />
+                                            <NaduSVG fill={darkMode || theme?.colorscheme == 'dark' ? '#787878' : '#3A1917'} />
                                         </View>
                                         <View style={styles.textSectionDD}>
-                                            <Text style={styles.titleDropDown}>{`${t(
+                                            <Text style={[styles.titleDropDown, {
+                                                color: darkMode || theme?.colorscheme == 'dark' ? 'white' : 'dark'
+                                            }]}>{`${t(
                                                 'Nadu'
                                             )}`}</Text>
                                             <Text style={styles.valueDropDown}>
@@ -794,16 +752,18 @@ GROUP BY
                                             style={[
                                                 styles.iconContainer,
                                                 {
-                                                    backgroundColor: darkMode
+                                                    backgroundColor: darkMode || theme?.colorscheme == 'dark'
                                                         ? '#2B2B2B'
                                                         : '#E0AAA7',
                                                 },
                                             ]}
                                         >
-                                            <PannSVG fill={darkMode ? '#787878' : '#3A1917'} />
+                                            <PannSVG fill={darkMode || theme?.colorscheme == 'dark' ? '#787878' : '#3A1917'} />
                                         </View>
                                         <View style={styles.textSectionDD}>
-                                            <Text style={styles.titleDropDown}>{`${t(
+                                            <Text style={[styles.titleDropDown, {
+                                                color: darkMode || theme?.colorscheme == 'dark' ? 'white' : 'dark'
+                                            }]}>{`${t(
                                                 'Pann'
                                             )}`}</Text>
                                             <Text style={styles.valueDropDown}>
@@ -818,16 +778,18 @@ GROUP BY
                                             style={[
                                                 styles.iconContainer,
                                                 {
-                                                    backgroundColor: darkMode
+                                                    backgroundColor: darkMode || theme?.colorscheme == 'dark'
                                                         ? '#2B2B2B'
                                                         : '#E0AAA7',
                                                 },
                                             ]}
                                         >
-                                            <ThalamSVG fill={darkMode ? '#787878' : '#3A1917'} />
+                                            <ThalamSVG fill={darkMode || theme?.colorscheme == 'dark' ? '#787878' : '#3A1917'} />
                                         </View>
                                         <View style={styles.textSectionDD}>
-                                            <Text style={styles.titleDropDown}>{`${t(
+                                            <Text style={[styles.titleDropDown, {
+                                                color: darkMode || theme?.colorscheme == 'dark' ? 'white' : 'dark'
+                                            }]}>{`${t(
                                                 'Thalam'
                                             )}`}</Text>
                                             <Text style={styles.valueDropDown}>
@@ -876,7 +838,6 @@ GROUP BY
                                     }}
                                 >
                                     <TouchableOpacity
-                                        // onPress={scrollToIndex}
                                         style={styles.InsiderSettingButton}
                                     >
                                         <SettingIcon />
@@ -898,7 +859,7 @@ GROUP BY
                                             style={[
                                                 styles.translationText,
                                                 {
-                                                    color: darkMode ? colors.white : colors.black,
+                                                    color: darkMode || theme?.colorscheme == 'dark' ? colors.white : colors.black,
                                                 },
                                             ]}
                                         >
@@ -948,7 +909,7 @@ GROUP BY
                                             style={[
                                                 styles.TextSizeText,
                                                 {
-                                                    color: darkMode ? colors.white : colors.black,
+                                                    color: darkMode || theme?.colorscheme == 'dark' ? colors.white : colors.black,
                                                 },
                                             ]}
                                         >
@@ -965,7 +926,7 @@ GROUP BY
                                                 style={[
                                                     styles.fontSizeText,
                                                     {
-                                                        color: darkMode
+                                                        color: darkMode || theme?.colorscheme == 'dark'
                                                             ? colors.white
                                                             : colors.black,
                                                     },
@@ -988,7 +949,7 @@ GROUP BY
                                                     style={[
                                                         styles.otherOptionText,
                                                         {
-                                                            color: darkMode
+                                                            color: darkMode || theme?.colorscheme == 'dark'
                                                                 ? colors.white
                                                                 : colors.black,
                                                         },
@@ -1029,7 +990,7 @@ GROUP BY
                                                 style={[
                                                     styles.otherOptionText,
                                                     {
-                                                        color: darkMode
+                                                        color: darkMode || theme?.colorscheme == 'dark'
                                                             ? colors.white
                                                             : colors.black,
                                                     },
@@ -1110,18 +1071,13 @@ GROUP BY
                                     data={musicState?.songDetails}
                                     getItemLayOut={getItemLayOut}
                                     initialScrollIndex={songNo ? songNo - 1 : 0}
+                                    removeClippedSubviews={false}
                                     initialNumToRender={songNo ? songNo + 1 : 40}
                                     onScrollToIndexFailed={({
                                         index,
                                         averageItemLength,
                                         highestMeasuredFrameIndex,
                                     }) => {
-                                        console.log(
-                                            '🚀 ~ ThrimuraiSong ---  ~ info:',
-                                            index,
-                                            averageItemLength,
-                                            highestMeasuredFrameIndex
-                                        );
                                         const wait = new Promise((resolve) =>
                                             setTimeout(resolve, 1000)
                                         );
@@ -1177,29 +1133,19 @@ GROUP BY
                                 ref={flatListRef}
                                 data={musicState?.songDetails}
                                 getItemLayOut={getItemLayOut}
-                                // initialScrollIndex={songNo ? songNo - 1 : 0}
+                                removeClippedSubviews={false}
                                 initialNumToRender={songNo ? songNo + 1 : 40}
                                 onScrollToIndexFailed={({
                                     index,
                                     averageItemLength,
                                     highestMeasuredFrameIndex,
                                 }) => {
-                                    console.log(
-                                        '🚀 ~ ThrimuraiSong ---  ~ info:',
-                                        index,
-                                        averageItemLength,
-                                        highestMeasuredFrameIndex
-                                    );
                                     const wait = new Promise((resolve) =>
                                         setTimeout(resolve, 1000)
                                     );
                                     wait.then(() => {
                                         flatListRef.current?.scrollToIndex({
                                             index: index,
-                                            // offset:
-                                            //     averageItemLength * songNo +
-                                            //     Math.abs(highestMeasuredFrameIndex - songNo) *
-                                            //     averageItemLength,
                                             animated: true,
                                         });
                                     });
@@ -1210,110 +1156,9 @@ GROUP BY
                                 windowSize={40}
                             />
                         )}
-
-                        {/* {musicState?.songDetails?.length > 0 && (
-                                <FlatList
-                                    ListHeaderComponent={
-                                        <Text
-                                            style={[
-                                                styles.lyricsText,
-                                                {
-                                                    fontSize: fontSizeCount,
-                                                    color: !darkMode ? colors.grey6 : colors.white,
-                                                },
-                                            ]}
-                                        >
-                                            {t('Thiruchirrambalam')}
-                                        </Text>
-                                    }
-                                    ListFooterComponent={
-                                        <Text
-                                            style={[
-                                                styles.lyricsText,
-                                                {
-                                                    fontSize: fontSizeCount,
-                                                    color: !darkMode ? colors.grey6 : colors.white,
-                                                },
-                                            ]}
-                                        >
-                                            {t('Thiruchirrambalam')}
-                                        </Text>
-                                    }
-                                    keyExtractor={(item) => item?.id}
-                                    getItemLayout={getItemLayOut}
-                                    ref={flatListRef}
-                                    data={musicState?.songDetails}
-                                    initialScrollIndex={songNo ? songNo - 1 : 0}
-                                    renderItem={({ item, index }) => (
-                                        // <TouchableWithoutFeedback onPress={() => setShowSetting(false)}>
-                                        <View
-                                            style={[
-                                                {
-                                                    paddingBottom: 7,
-                                                    flexDirection: 'row',
-                                                    width: Dimensions.get('window').width - 60,
-                                                },
-                                                musicState?.songDetails[index + 1]
-                                                    ? {
-                                                        borderBottomColor: colors.grey3,
-                                                        borderBottomWidth: 1,
-                                                    }
-                                                    : {},
-                                            ]}>
-                                            <View>
-                                                {item?.type !== null && (
-                                                    <Text
-                                                        style={{
-                                                            color: colors.commonColor,
-                                                            fontFamily: 'Mulish-Regular',
-                                                        }}
-                                                    >
-                                                        {item?.type}
-                                                    </Text>
-                                                )}
-                                                {searchScreen ? (
-                                                    renderResult(item)
-                                                ) : (
-                                                    <Text
-                                                        key={Math.random()}
-                                                        selectable={true}
-                                                        selectionColor="orange"
-                                                        style={[
-                                                            styles.lyricsText,
-                                                            {
-                                                                fontSize: fontSizeCount,
-                                                                alignSelf: 'flex-end',
-                                                                color: !darkMode
-                                                                    ? colors.grey6
-                                                                    : colors.white,
-                                                            },
-                                                        ]}
-                                                    >
-                                                        {renderText(item)}
-                                                    </Text>
-                                                )}
-                                            </View>
-                                            <Text
-                                                style={[
-                                                    styles.lyricsText,
-                                                    {
-                                                        fontSize: fontSizeCount,
-                                                        alignSelf: 'flex-end',
-                                                        color: !darkMode ? colors.grey6 : colors.white,
-                                                    },
-                                                ]}
-                                            >
-                                                {item?.songNo}
-                                            </Text>
-                                        </View>
-                                        // </TouchableWithoutFeedback>
-                                    )}
-                                />
-                            )} */}
                     </View>
                 </View>
             )}
-
             <Animated.View
                 style={[
                     {
@@ -1378,10 +1223,11 @@ GROUP BY
                     ></TouchableOpacity>
                 </View>
                 {(activeTrackState?.url && isConnected) ||
-                downloaded ||
-                activeTrackState?.isLocal ? (
+                    downloaded ||
+                    activeTrackState?.isLocal ? (
                     <AudioPlayer
                         activeTrack={activeTrackState}
+                        setAutoPlay={setAutoPlay}
                         setDownloadingLoader={setDownloadingLoader}
                         visibleStatusBar={visibleStatusBar}
                         prevId={data?.prevId}

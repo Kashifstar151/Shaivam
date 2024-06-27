@@ -38,7 +38,7 @@ const Thalamurai = ({ navigation, prevId }) => {
       FROM thirumurais
       WHERE fkTrimuria ${prevId} AND country IS NOT NULL AND country != ''
       GROUP BY country
-      ORDER BY country ASC
+      ORDER BY country_sequence ASC
     )`;
 
     useEffect(() => {
