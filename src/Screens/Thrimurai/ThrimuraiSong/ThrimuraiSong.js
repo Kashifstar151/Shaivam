@@ -58,14 +58,14 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const { data, downloaded, searchedword, downloadSong, searchScreen, songNo } =
         route.params || {};
     const { isConnected } = useNetInfo();
-    const textInputRef = useRef(null)
+    const textInputRef = useRef(null);
     const translateX = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         transform: [{ translateX: withSpring(translateX.value * 1) }],
     }));
     const [downloadingLoader, setDownloadingLoader] = useState(false);
     const [showSetting, setShowSetting] = useState(false);
-    const [autoPlay, setAutoPlay] = useState(false)
+    const [autoPlay, setAutoPlay] = useState(false);
     const [language, setLang] = useState(['Original', 'Tamil', 'English', 'Hindi']);
     const [selectedLang, setSelectedLang] = useState('Original');
     const [fontSizeCount, setFontSizeCount] = useState(null);
@@ -208,7 +208,7 @@ const ThrimuraiSong = ({ route, navigation }) => {
     const [darkMode, setDarkMode] = useState();
     const [tamilSplit, setTamilSplit] = useState(false);
     const { theme, setTheme } = useContext(ThemeContext);
-    console.log("🚀 ~ ThrimuraiSong ~ theme:", theme)
+    console.log('🚀 ~ ThrimuraiSong ~ theme:', theme);
     const { t, i18n } = useTranslation();
     const [selectedLngCode, setSelectedLngCode] = useState(i18n.language);
     const [downloadList, setDownloadList] = useState([]);
@@ -318,8 +318,9 @@ GROUP BY
                 payload: data.filter((i) => i.localBased !== null)[0].localeBased,
             });
             getSqlData(detailQuery, (details) => {
-                const query2 = `SELECT * FROM odhuvars WHERE title='${data.filter((i) => i.tamil !== null)[0]?.tamil
-                    }'`;
+                const query2 = `SELECT * FROM odhuvars WHERE title='${
+                    data.filter((i) => i.tamil !== null)[0]?.tamil
+                }'`;
                 getSqlData(query2, (callbacks) => {
                     dispatchMusic({ type: 'SONG_DETAILS', payload: details });
                     dispatchMusic({ type: 'SET_SONG', payload: callbacks });
@@ -419,7 +420,7 @@ GROUP BY
                 await TrackPlayer.reset();
                 await TrackPlayer.add(song);
                 if (autoPlay) {
-                    TrackPlayer.play()
+                    TrackPlayer.play();
                 }
             } catch (error) {
                 await TrackPlayer.updateOptions({
@@ -441,7 +442,7 @@ GROUP BY
                 await TrackPlayer.reset();
                 await TrackPlayer.add(song);
                 if (autoPlay) {
-                    TrackPlayer.play()
+                    TrackPlayer.play();
                 }
             } finally {
                 initilizeTheRepeatState();
@@ -554,9 +555,9 @@ GROUP BY
         }
     }, [clipBoardString]);
     const FilterString = (e, index) => {
-        console.log(JSON.stringify(e?.start, e?.end, 0, 2), 'musicState?.songDetails')
-        let string = musicState?.songDetails[index]?.rawSong?.substring(e?.start, e?.end)
-    }
+        console.log(JSON.stringify(e?.start, e?.end, 0, 2), 'musicState?.songDetails');
+        let string = musicState?.songDetails[index]?.rawSong?.substring(e?.start, e?.end);
+    };
 
     const renderText = (item) => {
         if (tamilSplit && i18n.language === 'en' && selectedLang === 'Original') {
@@ -574,7 +575,7 @@ GROUP BY
     const RenderLyricsText = memo(
         ({ item, index }) => (
             <View
-                key={item => item?.id}
+                key={(item) => item?.id}
                 style={[
                     {
                         paddingBottom: 7,
@@ -583,13 +584,13 @@ GROUP BY
                     },
                     musicState?.songDetails[index + 1]
                         ? {
-                            borderBottomColor: colors.grey3,
-                            borderBottomWidth: 1,
-                        }
+                              borderBottomColor: colors.grey3,
+                              borderBottomWidth: 1,
+                          }
                         : {},
                 ]}
             >
-                <View key={item => item?.id}>
+                <View key={(item) => item?.id}>
                     {item?.type !== null && (
                         <Text
                             style={{
@@ -603,37 +604,50 @@ GROUP BY
                     {searchScreen ? (
                         renderResult(renderText(item))
                     ) : (
-                        <View key={item => item?.id}>
-                            {
-                                Platform.OS == 'ios' ?
-                                    <TextInput key={item => item?.id} ref={textInputRef} onSelectionChange={({ nativeEvent: { selection } }) => FilterString(selection, index)} editable={false} value={renderText(item)} multiline
-                                        style={[
-                                            styles.lyricsText,
-                                            {
-                                                fontSize: fontSizeCount,
-                                                // alignSelf: 'flex-end',
-                                                color: !darkMode || theme?.colorscheme !== 'dark' ? '#000' : colors.white,
-                                            },
-                                        ]} />
-                                    :
-                                    <Text
-                                        key={item => item?.id}
-                                        selectable={true}
-                                        selectionColor="orange"
-                                        style={[
-                                            styles.lyricsText,
-                                            {
-                                                fontSize: fontSizeCount,
-                                                // alignSelf: 'flex-end',
-                                                color: !darkMode || theme?.colorscheme !== 'dark' ? '#000' : colors.white,
-                                            },
-                                        ]}
-                                    >
-                                        {renderText(item)}
-                                    </Text>
-                            }
+                        <View key={(item) => item?.id}>
+                            {Platform.OS == 'ios' ? (
+                                <TextInput
+                                    key={(item) => item?.id}
+                                    ref={textInputRef}
+                                    onSelectionChange={({ nativeEvent: { selection } }) =>
+                                        FilterString(selection, index)
+                                    }
+                                    editable={false}
+                                    value={renderText(item)}
+                                    multiline
+                                    style={[
+                                        styles.lyricsText,
+                                        {
+                                            fontSize: fontSizeCount,
+                                            // alignSelf: 'flex-end',
+                                            color:
+                                                !darkMode || theme?.colorscheme !== 'dark'
+                                                    ? '#000'
+                                                    : colors.white,
+                                        },
+                                    ]}
+                                />
+                            ) : (
+                                <Text
+                                    key={(item) => item?.id}
+                                    selectable={true}
+                                    selectionColor="orange"
+                                    style={[
+                                        styles.lyricsText,
+                                        {
+                                            fontSize: fontSizeCount,
+                                            // alignSelf: 'flex-end',
+                                            color:
+                                                !darkMode || theme?.colorscheme !== 'dark'
+                                                    ? '#000'
+                                                    : colors.white,
+                                        },
+                                    ]}
+                                >
+                                    {renderText(item)}
+                                </Text>
+                            )}
                         </View>
-
                     )}
                 </View>
                 <Text
@@ -642,7 +656,10 @@ GROUP BY
                         {
                             fontSize: fontSizeCount,
                             alignSelf: 'flex-end',
-                            color: !darkMode || theme?.colorscheme !== 'dark' ? colors.grey6 : colors.white,
+                            color:
+                                !darkMode || theme?.colorscheme !== 'dark'
+                                    ? colors.grey6
+                                    : colors.white,
                         },
                     ]}
                 >
@@ -681,7 +698,12 @@ GROUP BY
                     <View
                         style={[
                             styles.headerContainer,
-                            { backgroundColor: darkMode || theme?.colorscheme == 'dark' ? colors?.faintGrey : colors?.skinColor },
+                            {
+                                backgroundColor:
+                                    darkMode || theme?.colorscheme == 'dark'
+                                        ? colors?.faintGrey
+                                        : colors?.skinColor,
+                            },
                         ]}
                     >
                         <View
@@ -697,22 +719,33 @@ GROUP BY
                                             style={[
                                                 styles.iconContainer,
                                                 {
-                                                    backgroundColor: darkMode || theme?.colorscheme == 'dark'
-                                                        ? '#2B2B2B'
-                                                        : '#E0AAA7',
+                                                    backgroundColor:
+                                                        darkMode || theme?.colorscheme == 'dark'
+                                                            ? '#2B2B2B'
+                                                            : '#E0AAA7',
                                                 },
                                             ]}
                                         >
                                             <AruliyavarSVG
-                                                fill={darkMode || theme?.colorscheme == 'dark' ? '#787878' : '#3A1917'}
+                                                fill={
+                                                    darkMode || theme?.colorscheme == 'dark'
+                                                        ? '#787878'
+                                                        : '#3A1917'
+                                                }
                                             />
                                         </View>
                                         <View style={styles.textSectionDD}>
-                                            <Text style={[styles.titleDropDown, {
-                                                color: darkMode || theme?.colorscheme == 'dark' ? 'white' : 'dark'
-                                            }]}>{`${t(
-                                                'Aruliyavar'
-                                            )}`}</Text>
+                                            <Text
+                                                style={[
+                                                    styles.titleDropDown,
+                                                    {
+                                                        color:
+                                                            darkMode || theme?.colorscheme == 'dark'
+                                                                ? 'white'
+                                                                : 'dark',
+                                                    },
+                                                ]}
+                                            >{`${t('Aruliyavar')}`}</Text>
                                             <Text style={styles.valueDropDown}>
                                                 {t(musicState?.metaData?.author)}
                                             </Text>
@@ -725,20 +758,33 @@ GROUP BY
                                             style={[
                                                 styles.iconContainer,
                                                 {
-                                                    backgroundColor: darkMode || theme?.colorscheme == 'dark'
-                                                        ? '#2B2B2B'
-                                                        : '#E0AAA7',
+                                                    backgroundColor:
+                                                        darkMode || theme?.colorscheme == 'dark'
+                                                            ? '#2B2B2B'
+                                                            : '#E0AAA7',
                                                 },
                                             ]}
                                         >
-                                            <NaduSVG fill={darkMode || theme?.colorscheme == 'dark' ? '#787878' : '#3A1917'} />
+                                            <NaduSVG
+                                                fill={
+                                                    darkMode || theme?.colorscheme == 'dark'
+                                                        ? '#787878'
+                                                        : '#3A1917'
+                                                }
+                                            />
                                         </View>
                                         <View style={styles.textSectionDD}>
-                                            <Text style={[styles.titleDropDown, {
-                                                color: darkMode || theme?.colorscheme == 'dark' ? 'white' : 'dark'
-                                            }]}>{`${t(
-                                                'Nadu'
-                                            )}`}</Text>
+                                            <Text
+                                                style={[
+                                                    styles.titleDropDown,
+                                                    {
+                                                        color:
+                                                            darkMode || theme?.colorscheme == 'dark'
+                                                                ? 'white'
+                                                                : 'dark',
+                                                    },
+                                                ]}
+                                            >{`${t('Nadu')}`}</Text>
                                             <Text style={styles.valueDropDown}>
                                                 {t(musicState?.metaData?.country)}
                                             </Text>
@@ -752,20 +798,33 @@ GROUP BY
                                             style={[
                                                 styles.iconContainer,
                                                 {
-                                                    backgroundColor: darkMode || theme?.colorscheme == 'dark'
-                                                        ? '#2B2B2B'
-                                                        : '#E0AAA7',
+                                                    backgroundColor:
+                                                        darkMode || theme?.colorscheme == 'dark'
+                                                            ? '#2B2B2B'
+                                                            : '#E0AAA7',
                                                 },
                                             ]}
                                         >
-                                            <PannSVG fill={darkMode || theme?.colorscheme == 'dark' ? '#787878' : '#3A1917'} />
+                                            <PannSVG
+                                                fill={
+                                                    darkMode || theme?.colorscheme == 'dark'
+                                                        ? '#787878'
+                                                        : '#3A1917'
+                                                }
+                                            />
                                         </View>
                                         <View style={styles.textSectionDD}>
-                                            <Text style={[styles.titleDropDown, {
-                                                color: darkMode || theme?.colorscheme == 'dark' ? 'white' : 'dark'
-                                            }]}>{`${t(
-                                                'Pann'
-                                            )}`}</Text>
+                                            <Text
+                                                style={[
+                                                    styles.titleDropDown,
+                                                    {
+                                                        color:
+                                                            darkMode || theme?.colorscheme == 'dark'
+                                                                ? 'white'
+                                                                : 'dark',
+                                                    },
+                                                ]}
+                                            >{`${t('Pann')}`}</Text>
                                             <Text style={styles.valueDropDown}>
                                                 {t(musicState?.metaData?.pann)}
                                             </Text>
@@ -778,20 +837,33 @@ GROUP BY
                                             style={[
                                                 styles.iconContainer,
                                                 {
-                                                    backgroundColor: darkMode || theme?.colorscheme == 'dark'
-                                                        ? '#2B2B2B'
-                                                        : '#E0AAA7',
+                                                    backgroundColor:
+                                                        darkMode || theme?.colorscheme == 'dark'
+                                                            ? '#2B2B2B'
+                                                            : '#E0AAA7',
                                                 },
                                             ]}
                                         >
-                                            <ThalamSVG fill={darkMode || theme?.colorscheme == 'dark' ? '#787878' : '#3A1917'} />
+                                            <ThalamSVG
+                                                fill={
+                                                    darkMode || theme?.colorscheme == 'dark'
+                                                        ? '#787878'
+                                                        : '#3A1917'
+                                                }
+                                            />
                                         </View>
                                         <View style={styles.textSectionDD}>
-                                            <Text style={[styles.titleDropDown, {
-                                                color: darkMode || theme?.colorscheme == 'dark' ? 'white' : 'dark'
-                                            }]}>{`${t(
-                                                'Thalam'
-                                            )}`}</Text>
+                                            <Text
+                                                style={[
+                                                    styles.titleDropDown,
+                                                    {
+                                                        color:
+                                                            darkMode || theme?.colorscheme == 'dark'
+                                                                ? 'white'
+                                                                : 'dark',
+                                                    },
+                                                ]}
+                                            >{`${t('Thalam')}`}</Text>
                                             <Text style={styles.valueDropDown}>
                                                 {t(musicState?.metaData?.thalam)}
                                             </Text>
@@ -837,9 +909,7 @@ GROUP BY
                                         flexDirection: 'row',
                                     }}
                                 >
-                                    <TouchableOpacity
-                                        style={styles.InsiderSettingButton}
-                                    >
+                                    <TouchableOpacity style={styles.InsiderSettingButton}>
                                         <SettingIcon />
                                     </TouchableOpacity>
                                     <TouchableOpacity
@@ -859,11 +929,14 @@ GROUP BY
                                             style={[
                                                 styles.translationText,
                                                 {
-                                                    color: darkMode || theme?.colorscheme == 'dark' ? colors.white : colors.black,
+                                                    color:
+                                                        darkMode || theme?.colorscheme == 'dark'
+                                                            ? colors.white
+                                                            : colors.black,
                                                 },
                                             ]}
                                         >
-                                            Translation
+                                            {t('Translation')}
                                         </Text>
                                         <FlatList
                                             horizontal
@@ -909,11 +982,14 @@ GROUP BY
                                             style={[
                                                 styles.TextSizeText,
                                                 {
-                                                    color: darkMode || theme?.colorscheme == 'dark' ? colors.white : colors.black,
+                                                    color:
+                                                        darkMode || theme?.colorscheme == 'dark'
+                                                            ? colors.white
+                                                            : colors.black,
                                                 },
                                             ]}
                                         >
-                                            Text Size
+                                            {t('Text Size')}
                                         </Text>
                                         <View style={{ flexDirection: 'row' }}>
                                             <TouchableOpacity
@@ -926,9 +1002,10 @@ GROUP BY
                                                 style={[
                                                     styles.fontSizeText,
                                                     {
-                                                        color: darkMode || theme?.colorscheme == 'dark'
-                                                            ? colors.white
-                                                            : colors.black,
+                                                        color:
+                                                            darkMode || theme?.colorscheme == 'dark'
+                                                                ? colors.white
+                                                                : colors.black,
                                                     },
                                                 ]}
                                             >
@@ -949,13 +1026,15 @@ GROUP BY
                                                     style={[
                                                         styles.otherOptionText,
                                                         {
-                                                            color: darkMode || theme?.colorscheme == 'dark'
-                                                                ? colors.white
-                                                                : colors.black,
+                                                            color:
+                                                                darkMode ||
+                                                                theme?.colorscheme == 'dark'
+                                                                    ? colors.white
+                                                                    : colors.black,
                                                         },
                                                     ]}
                                                 >
-                                                    Tamil Split
+                                                    {t('Tamil Split')}
                                                 </Text>
                                                 <Text
                                                     style={{
@@ -990,13 +1069,14 @@ GROUP BY
                                                 style={[
                                                     styles.otherOptionText,
                                                     {
-                                                        color: darkMode || theme?.colorscheme == 'dark'
-                                                            ? colors.white
-                                                            : colors.black,
+                                                        color:
+                                                            darkMode || theme?.colorscheme == 'dark'
+                                                                ? colors.white
+                                                                : colors.black,
                                                     },
                                                 ]}
                                             >
-                                                Dark Mode
+                                                {t('Dark Mode')}
                                             </Text>
                                             <Text
                                                 style={{
@@ -1005,7 +1085,7 @@ GROUP BY
                                                     fontSize: 10,
                                                 }}
                                             >
-                                                Screen will be easier on the eyes
+                                                {t('Screen will be easier on the eyes')}
                                             </Text>
                                         </View>
                                         <Switch
@@ -1170,14 +1250,14 @@ GROUP BY
 
                     orientation == 'LANDSCAPE'
                         ? {
-                            width: Dimensions.get('window').width / 2,
-                            position: 'absolute',
-                            bottom: 0,
-                        }
+                              width: Dimensions.get('window').width / 2,
+                              position: 'absolute',
+                              bottom: 0,
+                          }
                         : {
-                            position: 'relative',
-                            width: Dimensions.get('window').width,
-                        },
+                              position: 'relative',
+                              width: Dimensions.get('window').width,
+                          },
                 ]}
             >
                 {downloadingLoader && (
@@ -1223,8 +1303,8 @@ GROUP BY
                     ></TouchableOpacity>
                 </View>
                 {(activeTrackState?.url && isConnected) ||
-                    downloaded ||
-                    activeTrackState?.isLocal ? (
+                downloaded ||
+                activeTrackState?.isLocal ? (
                     <AudioPlayer
                         activeTrack={activeTrackState}
                         setAutoPlay={setAutoPlay}

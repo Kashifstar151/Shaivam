@@ -120,7 +120,7 @@ const RenderAudios = ({
                 } else {
                     setAudioData(callbacks);
                 }
-                setDataLength(dataLength + 20);
+                setDataLength(dataLength + 40);
                 setIsFetchingNextPage((prev) => ({ ...prev, state: false }));
             } else if (callbacks.error) {
                 setIsFetchingNextPage((prev) => ({ ...prev, haveMore: false, state: false }));
@@ -179,7 +179,10 @@ const RenderAudios = ({
                         );
                     }}
                     data={audioData}
-                    onEndReachedThreshold={0.6}
+                    windowSize={40}
+                    maxToRenderPerBatch={40}
+                    removeClippedSubviews={true}
+                    onEndReachedThreshold={0.8}
                     onEndReached={() => {
                         if (akarthi && isFetchingNextPage?.haveMore) {
                             getSongsData();

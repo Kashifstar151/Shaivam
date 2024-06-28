@@ -30,7 +30,7 @@ const Thalamurai = ({ navigation, prevId }) => {
       FROM thirumurais
       WHERE fkTrimuria ${prevId} AND thalam IS NOT NULL AND thalam != ''
       GROUP BY thalam
-      ORDER BY country_sequence ASC
+      ORDER BY thalam ASC
     )`;
     const naduQuery = `SELECT GROUP_CONCAT( country,";") AS countries
     FROM (
