@@ -190,9 +190,9 @@ function unzipDownloadFile(target, cb) {
         .then(() => {
             console.log('Output directory created successfully');
             unzip(sourcePath, targetPath, charset)
-                .then((path) => {
+                .then(async (path) => {
                     console.log(`unzip completed at ${path}`);
-                    AsyncStorage.setItem('@database', JSON.stringify({ name: 'main.db' }));
+                    await AsyncStorage.setItem('@database', JSON.stringify({ name: 'main.db' }));
                     // downloadFile(path, filePath)
                     return cb(path);
                 })

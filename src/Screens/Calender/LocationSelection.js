@@ -3,12 +3,12 @@ import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from '
 import Icon from 'react-native-vector-icons/dist/SimpleLineIcons';
 import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import { CustomButton } from '../../components/Buttons';
-import ButtonComp from '../Temples/Common/ButtonComp';
+// import ButtonComp from '../Temples/Common/ButtonComp';
 import TrackBackToLocSVG from '../../components/SVGs/TrackBackToLocSVG';
 import { getCurrentLocation, getTheLocationName } from '../../Helpers/GeolocationFunc';
-import TextInputCom from '../Temples/Common/TextInputCom';
+// import TextInputCom from '../Temples/Common/TextInputCom';
 import { TextInput } from 'react-native-gesture-handler';
-import SearchInput from '../../components/SearchInput';
+// import SearchInput from '../../components/SearchInput';
 import { colors } from '../../Helpers';
 import { useDebouncer } from '../../Helpers/useDebouncer';
 import { useGetListQuery } from '../../store/features/Calender/CalenderApiSlice';
@@ -79,6 +79,7 @@ const LocationSelection = ({ calender, setSelected, close, selectedLocation }) =
             }
         ).then((res) => res.json());
     useEffect(() => {
+        // console.log('dobound value', debounceVal)
         searchResultData().then((response) => {
             console.log(
                 'the response for the search of the place name is ========================== ==>',
@@ -129,7 +130,7 @@ const LocationSelection = ({ calender, setSelected, close, selectedLocation }) =
                 return item?.searchedText == searchedText
             })
             if (num?.length == 0) {
-                arr.push({ searchedText: searchedText, count: 1 })
+                keys.push({ searchedText: searchedText, count: 1 })
             }
             const updated = keys?.slice(-6)
             // console.log("🚀 ~ setRecentSearches ~ updated:", keys)

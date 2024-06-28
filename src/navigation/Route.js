@@ -91,7 +91,7 @@ const Route = () => {
                     console.log('the api response is ===>', response?.data?.[0]?.attributes, localDBMetaData?.Version);
                     if (
                         localDBMetaData?.Version &&
-                        response?.data?.[0]?.attributes.Version > localDBMetaData?.Version
+                        response?.data?.[0]?.attributes.Version !== localDBMetaData?.Version
                     ) {
                         Alert.alert('New Update Available', 'Click ok to sync latest data', [
                             {
@@ -104,17 +104,16 @@ const Route = () => {
                             },
                         ]);
                     } else {
-                        // console.log('fsjdh')
                         let data = await AsyncStorage.getItem('@database')
                         data = JSON.parse(data)
-                        console.log("🚀 ~ .then ~ data:", data)
+                        // console.log("🚀 ~ .then ~ data:", data)
                         if (data?.name == 'main.db') {
                             offlineDatabase.transaction(
                                 async (tx) => {
                                     await tx.executeSql(
                                         'ATTACH DATABASE ? AS Updated_db',
                                         [
-                                            `${RNFS.ExternalDirectoryPath}/Thrimurai/thirumuraiSong_${response?.data?.[0]?.attributes.Version}.db`,
+                                            Platform.OS == 'ios' ? `${RNFS.DocumentDirectoryPath}/Thrimurai/thirumuraiSong_${response?.data?.[0]?.attributes.Version}.db` : `${RNFS.ExternalDirectoryPath}/Thrimurai/thirumuraiSong_${response?.data?.[0]?.attributes.Version}.db`,
                                         ],
                                         async (tx, results) => {
                                             console.log("🚀 ~ results:", results)
@@ -149,31 +148,30 @@ const Route = () => {
         // }, 2000)
     };
 
-    // async function filePermissionProcess() {
-    //     try {
-    //         const granted = await PermissionsAndroid.request(
-    //             PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-    //             // PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
-    //             {
-    //                 title: 'File Permission',
-    //                 message: 'App needs access to your storage to read and write files.',
-    //                 buttonNeutral: 'Ask Me Later',
-    //                 buttonNegative: 'Cancel',
-    //                 buttonPositive: 'OK',
-    //             }
-    //         );
-    //         return { permissionType: granted, status: 'SUCCESS', error: null };
-    //     } catch (err) {
-    //         console.warn(err);
-    //         return { permissionType: null, status: 'ERROR', error: err };
-    //     }
-    // }
+    async function filePermissionProcess() {
+        try {
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+                // PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
+                {
+                    title: 'File Permission',
+                    message: 'App needs access to your storage to read and write files.',
+                    buttonNeutral: 'Ask Me Later',
+                    buttonNegative: 'Cancel',
+                    buttonPositive: 'OK',
+                }
+            );
+            return { permissionType: granted, status: 'SUCCESS', error: null };
+        } catch (err) {
+            console.warn(err);
+            return { permissionType: null, status: 'ERROR', error: err };
+        }
+    }
 
     async function requestFilePermissions() {
         let fileAccessRequest = { permissionType: null, status: null, error: null };
         if (
-            (!(Platform.constants['Release'] >= 13) && Platform.OS === 'android') ||
-            Platform.OS === 'ios'
+            (!(Platform.constants['Release'] >= 13) && Platform.OS === 'android')
         ) {
             fileAccessRequest = await filePermissionProcess();
         } else {
@@ -196,11 +194,12 @@ const Route = () => {
             Platform.OS == 'android'
                 ? `${RNFS.ExternalDirectoryPath}/Thrimurai/thirumuraiSong_${metaData.Version}.db`
                 : `${RNFS.DocumentDirectoryPath}/Thrimurai/thirumuraiSong_${metaData.Version}.db`;
+        console.log("🚀 ~ checkFileExist ~ path:", path)
         RNFS.exists(path)
             .then(async (res) => {
                 if (res == true) {
                     // InitializeDatabase()
-                    console.log(true);
+                    alert('exist');
                     requestFilePermissions();
                     AsyncStorage.setItem(
                         '@database',

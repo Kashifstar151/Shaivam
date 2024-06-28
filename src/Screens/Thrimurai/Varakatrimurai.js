@@ -16,10 +16,9 @@ const Varakatrimurai = ({ navigation, prevId }) => {
 
     useEffect(() => {
         getSqlData(
-            `select * from thirumurais WHERE fkTrimuria ${prevId} ${
-                prevId === ' IN (10,11)'
-                    ? 'and author IS NOT NULL GROUP BY author'
-                    : 'and authorNo IS NOT NULL GROUP BY authorNo'
+            `select * from thirumurais WHERE fkTrimuria ${prevId} ${prevId === ' IN (10,11)'
+                ? 'and author IS NOT NULL GROUP BY author'
+                : 'and authorNo IS NOT NULL GROUP BY authorNo'
             } `,
             (cb) => {
                 setAuthorData(cb);

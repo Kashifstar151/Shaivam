@@ -6,13 +6,14 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getList: builder.query({
             query: (date) => {
+                // console.log("🚀 ~ date:", date)
                 let startDate = moment(date?.selectMonth).get('m') == moment().get('m') ? moment(date?.selectMonth).format('YYYY-MM-DD') : moment(date?.selectMonth).startOf('month').format('YYYY-MM-DD')
                 let url = date?.selectedLocation !== null && date?.eventCategory == null ?
-                    `nearby-events?long=${date?.selectedLocation?.long}&lat=${date?.selectedLocation?.lat}&radius=15000&start_date=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}}&end_date=${startDate}` :
+                    `nearby-events?long=${date?.selectedLocation?.long}&lat=${date?.selectedLocation?.lat}&radius=150000&start_date=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&end_date=${startDate}` :
                     date?.eventCategory !== null && date?.selectedLocation == null ? `nearby-events?start_date=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&end_date=${startDate}&category=${date.eventCategory}` :
-                        date?.selectedLocation !== null && date?.eventCategory !== null ? `nearby-events?long=78.6801553&lat=10.8118335&radius=15000&start_date=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&end_date=${startDate}&category=${date.eventCategory}` :
+                        date?.selectedLocation !== null && date?.eventCategory !== null ? `nearby-events?long=${date?.selectedLocation?.long}&lat=${date?.selectedLocation?.lat}&radius=150000&start_date=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&end_date=${startDate}&category=${date.eventCategory}` :
                             `nearby-events?start_date=${moment(date?.selectMonth).endOf('month').format('YYYY-MM-DD')}&end_date=${startDate}`;
-                // console.log("🚀 ~ url:", url)
+                console.log("🚀 ~ url:", url)
                 return {
                     url: url,
                     method: 'GET',
@@ -23,10 +24,11 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
         getRecurringEventList: builder.query({
             query: (date) => {
                 let url = date?.selectedLocation !== null && date?.eventCategory == null ?
-                    `nearby-recurring-events?schedulerType=Weekly&long=${date?.selectedLocation?.lat}&lat=${date?.selectedLocation?.lat}&radius=15000` :
+                    `nearby-recurring-events?schedulerType=Weekly&long=${date?.selectedLocation?.lat}&lat=${date?.selectedLocation?.lat}&radius=150000` :
                     date?.eventCategory !== null && date?.selectedLocation == null ? `nearby-recurring-events?schedulerType=Weekly&category=${date?.eventCategory}` :
-                        date?.selectedLocation !== null && date?.eventCategory !== null ? `nearby-recurring-events?schedulerType=Weekly&long=${date?.selectedLocation?.long}&lat=${date?.selectedLocation?.lat}&radius=15000&category=${date?.eventCategory}` :
+                        date?.selectedLocation !== null && date?.eventCategory !== null ? `nearby-recurring-events?schedulerType=Weekly&long=${date?.selectedLocation?.long}&lat=${date?.selectedLocation?.lat}&radius=150000&category=${date?.eventCategory}` :
                             `nearby-recurring-events?schedulerType=Weekly`;
+                console.log("🚀 ~ url:1", url)
                 return {
                     url: url,
                     method: 'GET',
@@ -37,10 +39,11 @@ const CalenderApiSlice = ApiSlice.injectEndpoints({
         getRecurringEventMonthly: builder.query({
             query: (date) => {
                 let url = date?.selectedLocation !== null && date?.eventCategory == null ?
-                    `nearby-recurring-events?long=${date?.selectedLocation?.long}&lat=${date?.selectedLocation?.lat}&radius=50000&schedulerType=Monthly` :
+                    `nearby-recurring-events?long=${date?.selectedLocation?.long}&lat=${date?.selectedLocation?.lat}&radius=150000&schedulerType=Monthly` :
                     date?.eventCategory !== null && date?.selectedLocation == null ? `nearby-recurring-events?schedulerType=Monthly&category=${date?.eventCategory}` :
-                        date?.selectedLocation !== null && date?.eventCategory !== null ? `nearby-recurring-events?schedulerType=Monthly&long=${date?.selectedLocation?.long}&lat=${date?.selectedLocation?.lat}&radius=15000&category=${date?.eventCategory}` :
+                        date?.selectedLocation !== null && date?.eventCategory !== null ? `nearby-recurring-events?schedulerType=Monthly&long=${date?.selectedLocation?.long}&lat=${date?.selectedLocation?.lat}&radius=150000&category=${date?.eventCategory}` :
                             `nearby-recurring-events?schedulerType=Monthly`;
+                console.log("🚀 ~ url:2", url)
                 return {
                     url: url,
                     method: 'GET',

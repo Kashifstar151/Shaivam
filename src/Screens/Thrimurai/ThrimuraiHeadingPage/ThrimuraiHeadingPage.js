@@ -198,7 +198,6 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                                 prevId: prevId,
                             })
                         }
-                        // placeholder={'Search for anything (Eg - தோடுடைய செவியன்) '}
                         placeholder={t('Search for any Thirumurai here')}
                         styleOverwrite={{ paddingTop: 10 }}
                     />
@@ -265,7 +264,6 @@ const ThrimuraiHeadingPage = ({ route, navigation }) => {
                                 contentContainerStyle={{ marginTop: 10, paddingBottom: 250 }}
                                 data={thrimurais}
                                 renderItem={({ item, index }) => (
-                                    // renderContents(item, index)
                                     <RenderContents
                                         item={item}
                                         index={index}

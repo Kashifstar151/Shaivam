@@ -84,6 +84,9 @@ const Calender = ({ navigation }) => {
         isSuccess: recurringSuccess
 
     } = useGetRecurringEventListQuery({ selectedLocation, eventCategory });
+    useEffect(() => {
+        console.log('selectedLoaction', JSON.stringify(selectedLocation))
+    }, [selectedLocation])
     const {
         data: festivalEvents,
         isFetching: isfestivaldataFetching,

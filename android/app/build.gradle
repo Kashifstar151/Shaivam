@@ -130,9 +130,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-dynamic-links'
     implementation 'com.google.firebase:firebase-analytics'
     implementation project(':react-native-push-notification')
-     
-
-    
+    implementation "androidx.work:work-runtime-ktx:2.7.0"
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
