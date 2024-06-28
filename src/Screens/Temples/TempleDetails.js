@@ -6,16 +6,16 @@ import {
     ActivityIndicator,
     Dimensions,
     Image,
-    Linking,
-    Pressable,
+    // Linking,
+    // Pressable,
     StyleSheet,
     Text,
     View,
 } from 'react-native';
 import Share from 'react-native-share';
-import DownArrowSVG from '../../components/SVGs/DownArrowSVG';
-import FavSVG from '../../components/SVGs/FavSVG';
-import SearchSVG from '../../components/SVGs/SearchSVG';
+// import DownArrowSVG from '../../components/SVGs/DownArrowSVG';
+// import FavSVG from '../../components/SVGs/FavSVG';
+// import SearchSVG from '../../components/SVGs/SearchSVG';
 import ShareSVG from '../../components/SVGs/ShareSVG';
 import TempleCard from './TempleCard';
 import { CustomButton } from '../../components/Buttons';
@@ -105,7 +105,11 @@ const TempleDetails = ({ navigation }) => {
         }
         </style>
         <body>
-          ${innerFractionOfHTML}
+          ${innerFractionOfHTML} 
+          <h1>
+          ${t('Specialities')}
+          </h1>
+          ${templeDetail?.Specialities_Description}
           <script differ>
             document.addEventListener('click', function(event) {
               if (event.target.tagName === 'A') {
@@ -133,7 +137,7 @@ const TempleDetails = ({ navigation }) => {
             //           href: target.href,
             //           text: target.innerText
             //         }));
-                    
+   
             //         // Trigger a custom context menu
             //         const customEvent = new TouchEvent('contextmenu', {
             //           bubbles: true,
@@ -170,7 +174,6 @@ const TempleDetails = ({ navigation }) => {
             },
             dynamicLinks.ShortLinkType.DEFAULT
         );
-        // console.log("🚀 ~ link ~ link:", `https://shaivaam.page.link/org?eventId=${item?.attributes?.schedula_type ? 'recurring_' + item?.attributes?.id : 'regular_' + item?.attributes?.id}`)
         return link;
     }
 
@@ -188,7 +191,6 @@ const TempleDetails = ({ navigation }) => {
         return (
             <View
                 style={{
-                    // backgroundColor: 'red',
                     height: '100%',
                     justifyContent: 'center',
                     alignContent: 'center',
@@ -283,36 +285,6 @@ const TempleDetails = ({ navigation }) => {
                                 type="TouchableOpacity"
                             />
                             <View style={{ flexDirection: 'row', gap: 20, alignItems: 'center' }}>
-                                {/* <CustomButton
-                                svg={<SearchSVG fill={'#777777'} width={17} height={17} />}
-                                style={{
-                                    paddingVertical: 0,
-                                    paddingHorizontal: 0,
-                                    borderRadius: 0,
-                                }}
-                                onPress={() => {
-                                    navigation.dispatch(popAction);
-                                }}
-                                type="TouchableOpacity"
-                            /> */}
-                                {/* <CustomButton
-                                svg={
-                                    <FavSVG
-                                        outerfill={fav ? '#C1554E' : '#777777'}
-                                        innerfill={fav ? '#C1554E' : '#fff'}
-                                        fill={'#777777'}
-                                        width={14}
-                                        height={20}
-                                    />
-                                }
-                                style={{
-                                    paddingVertical: 0,
-                                    paddingHorizontal: 0,
-                                    borderRadius: 0,
-                                }}
-                                onPress={onFavBtnClick}
-                                type="TouchableOpacity"
-                            /> */}
                                 <CustomButton
                                     svg={
                                         <ShareSVG
@@ -327,11 +299,6 @@ const TempleDetails = ({ navigation }) => {
                                         borderRadius: 0,
                                     }}
                                     onPress={() => {
-                                        // navigation.dispatch(popAction);
-                                        // Share.open({
-                                        //     message: `https://www.google.com/maps/dir/?api=1&destination=${temple?.templeCoordinate?.latitude},${temple?.templeCoordinate?.longitude}`,
-                                        // });
-
                                         onShare();
                                     }}
                                     type="TouchableOpacity"
@@ -445,12 +412,12 @@ const TempleDetails = ({ navigation }) => {
                                             originWhitelist={['*']}
                                             source={{
                                                 html: embedNonClickableHTML(
-                                                    templeDetail?.Sthala_Puranam_Description
+                                                    templeDetail?.Sthala_Puranam_Description 
                                                 ),
                                             }}
                                         />
 
-                                        {templeDetail?.Specialities_Description && (
+                                        {/* {templeDetail?.Specialities_Description && (
                                             <Text
                                                 style={{
                                                     color:
@@ -465,7 +432,6 @@ const TempleDetails = ({ navigation }) => {
                                                 {t('Specialities ')}
                                             </Text>
                                         )}
-
                                         <AutoHeightWebView
                                             style={{
                                                 width: Dimensions.get('window').width - 15,
@@ -476,7 +442,7 @@ const TempleDetails = ({ navigation }) => {
                                                     templeDetail?.Specialities_Description
                                                 ),
                                             }}
-                                        />
+                                        /> */}
                                     </View>
                                 )}
 

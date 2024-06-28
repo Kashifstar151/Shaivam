@@ -91,7 +91,7 @@ const Route = () => {
                     console.log('the api response is ===>', response?.data?.[0]?.attributes, localDBMetaData?.Version);
                     if (
                         localDBMetaData?.Version &&
-                        response?.data?.[0]?.attributes.Version !== localDBMetaData?.Version
+                        response?.data?.[0]?.attributes.Version > localDBMetaData?.Version
                     ) {
                         Alert.alert('New Update Available', 'Click ok to sync latest data', [
                             {
